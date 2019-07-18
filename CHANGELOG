@@ -6,6 +6,7 @@ Version 0.410
 	* Fixed a bug in the "about" dialog (some links were non-functional)
 	* Added the theme compiler repo to the "help" menu
 	* Changed the name of the plugin editor to "Kōd"
+	* Updated connection log banner
 
 Version 0.400
 	* New major version

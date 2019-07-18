@@ -634,7 +634,7 @@ class ErkGUI(QMainWindow):
 		if len(self.display['banner-text'])>0:
 			self.writeToLog(self.display['banner-text'])
 		else:
-			#self.writeToLog(f"<b><a href=\"{OFFICIAL_REPOSITORY}\">{OFFICIAL_REPOSITORY}</a><b>")
+			self.writeToLog(f"<big><b>&nbsp;&nbsp;<a href=\"{OFFICIAL_REPOSITORY}\">Erk IRC Client {APPLICATION_VERSION}</a><b></big>")
 			#self.writeToLog(f"<b>&nbsp;&nbsp;{APPLICATION_NAME} {APPLICATION_VERSION}</b>")
 			#self.writeToLog(f"<i>&nbsp;&nbsp;Ready to connect to IRC.</i>")
 			pass
