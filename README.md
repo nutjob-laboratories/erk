@@ -6,6 +6,8 @@
 
 **Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.410**.
 
+**Erk** is not completed, but is functional enough for most IRC activities.
+
 # Features
 
 <p align="center">
