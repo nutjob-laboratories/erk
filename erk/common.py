@@ -48,7 +48,7 @@ APPLICATION_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 
-EDITOR_NAME = "erkEdit"
+EDITOR_NAME = "Kōd"
 
 GPL_NOTIFICATION = """Erk IRC Client
 Copyright (C) 2019  Dan Hetrick

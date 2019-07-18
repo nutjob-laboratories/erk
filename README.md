@@ -22,7 +22,7 @@
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Automatic channel and private message logging
 * Plugins (plugins are written in Python3, just like **Erk**)
-* A built-in plugin editor (**erkEdit**)
+* A built-in plugin editor (**Kōd**)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
 * Built-in spell checker

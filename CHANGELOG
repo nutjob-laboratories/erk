@@ -5,6 +5,7 @@ Version 0.410
 	* Fixed a bug (during server registration, if the users nick is already taken, the client would crash)
 	* Fixed a bug in the "about" dialog (some links were non-functional)
 	* Added the theme compiler repo to the "help" menu
+	* Changed the name of the plugin editor to "Kōd"
 
 Version 0.400
 	* New major version

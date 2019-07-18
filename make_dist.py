@@ -26,7 +26,7 @@ shutil.copy("./logs/logs.txt", "./dist/logs/logs.txt")
 shutil.copy("./plugins/plugins.txt", "./dist/plugins/plugins.txt")
 shutil.copy("./settings/settings.txt", "./dist/settings/settings.txt")
 
-shutil.copy("./documentation/Quirc-Plugin-Guide.pdf", "./dist/documentation/Quirc-Plugin-Guide.pdf")
+shutil.copy("./documentation/Erk-Plugin-Guide.pdf", "./dist/documentation/Erk-Plugin-Guide.pdf")
 
 shutil.copy("./themes/themes.txt", "./dist/themes/themes.txt")
 
