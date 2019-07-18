@@ -534,6 +534,10 @@ class ErkGUI(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
 
+		helpLink = QAction(QIcon(THEME_ICON),f"Official {APPLICATION_NAME} theme compiler repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-theme": self.doOpenUrl(u))
+		self.helpMenu.addAction(helpLink)
+
 		helpLink = QAction(QIcon(OPEN_SOURCE_ICON),"GNU Public License 3",self)
 		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
