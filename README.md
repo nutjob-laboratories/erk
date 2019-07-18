@@ -18,13 +18,13 @@
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Automatic channel and private message logging
-* A powerful plugin architecture (plugins are written in Python3, just like **Erk**)
+* Plugins (plugins are written in Python3, just like **Erk**)
 * A built-in plugin editor (**erkEdit**)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
 * Built-in spell checker
 * Command/nick/channel auto-completion
-* Powerful theme engine using QSS and JSON
+* A theme engine using QSS and JSON (nearly every aspect of the client, from widgets to icons, can be customized)
 
 # Requirements
 **Erk** requires Python 3, Qt5, Twisted, and qt5reactor. Qt5 and Twisted can be installed by downloading and installing the software from their respected websites, or by using [**pip**](https://pypi.org/project/pip/):
