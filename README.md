@@ -6,4 +6,9 @@
 
 # Erk
 
+<p align="center">
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot.png"></a><br>
+	<i>Erk's interface</i>
+</p>
+
 An open source IRC client.
