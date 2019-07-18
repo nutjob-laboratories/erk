@@ -2,6 +2,7 @@ Version 0.410
 	* Quirc is now known as "Erk"
 	* Source code has been updated to reflect the new name
 	* The application icons and logo have been changed to reflect the new name
+	* Fixed a bug (during server registration, if the users nick is already taken, the client would crash)
 
 Version 0.400
 	* New major version

@@ -1,2 +1,4 @@
 
 *.pyc
+settings/lastserver.json
+settings/user.json

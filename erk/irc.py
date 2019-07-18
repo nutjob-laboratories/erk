@@ -246,7 +246,7 @@ class IRC_Connection(irc.IRCClient):
 			newnick = self.gui.alternate
 		else:
 			newnick = self.nickname + "_"
-		d = systemTextDisplay(f"Nickname \"{oldnick}\" in use, changing nick to \"{newnick}\"",SYSTEM_COLOR)
+		d = systemTextDisplay(f"Nickname \"{oldnick}\" in use, changing nick to \"{newnick}\"",self.gui.maxnicklen,SYSTEM_COLOR)
 		self.setNick(newnick)
 		self.gui.writeToLog(d)
 		self.gui.nickname = newnick
