@@ -1,7 +1,7 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/logo.png"><br>
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/nutjob.png"><br>
-	<p><b>It's how you pronounce "IRC"</b></p>
+	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/howyousay.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-0.410-unstable.zip">Download Erk 0.410</a><br>
 </p>
 
