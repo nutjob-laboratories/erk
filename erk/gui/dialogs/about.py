@@ -124,6 +124,7 @@ class Dialog(QDialog):
 		linfo = QLabel(f"<small>© Dan Hetrick 2019</small><br><a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a><br><a href=\"{OFFICIAL_REPOSITORY}\"><small>Official Erk Repository</small></a>")
 		linfo.setAlignment(Qt.AlignCenter)
 		linfo.setFont(boldfont)
+		linfo.setOpenExternalLinks(True)
 
 		scinfo = QLabel(f"<a href=\"https://github.com/barrust/pyspellchecker\">pyspellchecker</a> by <a href=\"mailto:barrust@gmail.com\">Tyler Barrus</a>")
 		scinfo.setAlignment(Qt.AlignCenter)

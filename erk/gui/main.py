@@ -624,15 +624,15 @@ class ErkGUI(QMainWindow):
 
 				self.setNewFont(self.display['font'])
 
-		# img = QImage(ERK_BANNER_LOGO)
-		# cursor = QTextCursor(self.logTxt.document())
-		# cursor.insertImage(img)
+		img = QImage(ERK_LOG_BANNER)
+		cursor = QTextCursor(self.logTxt.document())
+		cursor.insertImage(img)
 		if len(self.display['banner-text'])>0:
 			self.writeToLog(self.display['banner-text'])
 		else:
 			#self.writeToLog(f"<b><a href=\"{OFFICIAL_REPOSITORY}\">{OFFICIAL_REPOSITORY}</a><b>")
 			#self.writeToLog(f"<b>&nbsp;&nbsp;{APPLICATION_NAME} {APPLICATION_VERSION}</b>")
-			self.writeToLog(f"<i>&nbsp;&nbsp;Ready to connect to IRC.</i>")
+			#self.writeToLog(f"<i>&nbsp;&nbsp;Ready to connect to IRC.</i>")
 			pass
 
 
