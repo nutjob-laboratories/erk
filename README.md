@@ -39,3 +39,7 @@ To connect to IRC servers via SSL, two additional libraries are needed:
     pip install service_identity
 
 **Erk** is being developed with Python 3.7.
+
+# What does "erk" mean?
+
+The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when one of the users in the channel suggested "Erk", because "that's how you pronouce IRC". And thus **Erk** was born.
