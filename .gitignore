@@ -2,3 +2,5 @@
 *.pyc
 settings/lastserver.json
 settings/user.json
+settings/autojoin/*
+logs/*.json
