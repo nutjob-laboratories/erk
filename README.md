@@ -16,8 +16,8 @@
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Automatic channel and private message logging
-* A powerful plugin architecture (plugins are written in Python3, just like Quirc)
-* A built-in code editor
+* A powerful plugin architecture (plugins are written in Python3, just like **Erk**)
+* A built-in plugin editor (**erkEdit**)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
 * Built-in spell checker
