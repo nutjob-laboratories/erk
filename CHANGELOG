@@ -1,0 +1,283 @@
+Version 0.410
+	* Quirc is now known as "Erk"
+	* Source code has been updated to reflect the new name
+	* The application icons and logo have been changed to reflect the new name
+
+Version 0.400
+	* New major version
+	* Changed the order in which commandline options and flags are displayed
+	* Fixed a bug in mode parsing
+	* Removed text color and background color from display functions
+	* Fixed a bug in the command history (if the history was empty, the client would crash on keyUp or keyDown)
+	* Fixed a bug where the disable plugins setting would never be saved
+	* Added a theme system (uses QSS to style widgets)
+	* "Display Connection Log" setting has been removed from the configuration
+	* Connection log is always shown on startup
+	* Removed old cruft-code from the chat window code
+	* Themes now have their own display configuration file; changes made are saved to the active theme's file
+	* Themes can now use a custom icon
+	* The settings menu has been rearraged
+	* "Auto join on invite" has been moved to the IRC menu
+	* "Edit default user information" has been moved to the IRC menu
+	* "Ignored users" has been moved to the IRC menu
+	* Added a commandline option to generate a default configuration file
+	* Added a commandline option to generate a default display configuration file
+	* Added a commandline flag to display version and exit (-v,--version)
+	* Added a commandline flag to display licence and exit (-l,--license)
+	* Added a commandline option to load a theme on startup
+	* Added a commandline option to install a theme (or themes) from a zip archive
+	* "Change URLs in chat to hyperlinks" is now on by default
+	* Added a commandline option to disable themes
+	* Added a menu option to rescan the theme directory for new themes
+	* Theme text colors are ALWAYS displayed, even in loaded chat logs
+	* Theme text colors are applied when changing themes while running
+	* Fixed a bug where QSS styles weren't being applied to context menus
+	* Themes can now use a special banner image that will be printed to the connection log on startup
+	* Themes can now customize the text printed below the banner on startup
+	* Themes can set the text and background color of the new chat divider
+	* Added a "high contrast" theme
+	* Fixed a bug where the new chat divider wouldn't get updated on theme application
+	* A check mark is now displayed next to the active theme in the theme selection sub-menu
+	* Moved the show/hide log menu option to the top of the settings menu
+	* Moved "reconnect if disconnected" setting to the connection dialogs
+	* Removed "reconnect if disconnected" setting from the main configuration file
+	* Moved "open windows for private messages" to the IRC menu
+	* Consolidated theme images into a subfolder of the theme, "images"
+	* Added the ability to customize window icons and user icons in themes
+	* The "hourglass" mouse pointer is no longer displayed while connecting to a server
+	* The mouse pointer changes to a pointing hand when the user hovers over a hyperlink in chat
+	* Added a dialog to change some of the text colors used in the chat display
+	* Fixed a bug in the "about" dialog (clicking on the pyspellchecker link did nothing)
+	* Changing the mouse to a pointing hand when hovering over links can be turned on/off
+	* Added a "help" menu to the main GUI
+	* Consolidated settings from most menus in the "settings" menu
+	* Fixed a bug where the main window would retain the title of the last main child window on disconnect
+	* Moved the "about" menu trigger to the "help" menu
+	* Themes can now have their own resources file (for custom graphics, icons, etc)
+	* Added a setting for whether a theme's resource file will be loaded or not
+	* Changed text JSON file in themes to "text.json"
+	* Moved the function call generators to the top of the context menu in the plugin editor
+	* Changed text color settings file name to "text.json", same as in themes
+	* Moved the server information widget to the beginning of server toolbars
+	* Created a new menu, "View", and moved widget viewing settings to it
+
+Version 0.303
+	* Stripped gradients from user name display in chat
+	* Removed the colour library
+	* Removed colour lib reference from "about" dialog
+	* Fixed a bug in userlist rendering
+	* Fixed a bug where renaming yourself would cause your new nick to appear wrong in the user display
+	* Fixed a bug where user renames weren't being handled locally
+	* Removal from user list for kicked users is now handled locally
+	* Combined "setMode" and "unsetMode" plugin methods into a single method named "mode"
+	* Added function call generator for mode()
+	* Added getUsers() plugin method
+	* Fixed a bug in renaming self (didn't always remember the new nickname)
+	* Added suppress() and unsuppress() plugin methods
+	* Added getWindows() and serverIDtoHost() plugin methods
+	* Ensured that no duplicate serverIDs are generated
+	* Plugins were being imported and then re-imported on load; plugins now only import once
+	* Added editor windows to the "Windows" menu
+	* Fixed a bug where the editor would display "QPyEdit" as its name (older version)
+	* Main application title is set to default if all windows have been closed
+	* Set the plugin editor's name in quirc.common
+	* Reworked Quirc's command line flags
+	* Added --maximize commandline flag
+	* Changed --server and --port command line options to positional arguments
+	* Defaults are now displayed in command line help
+	* If a server/port pair (ie, SERVER:PORT) is passed as an argument, the server and port are extracted and used
+	* Added code to use different file names for configuration loading and saving
+	* Added --config and --display command line option for loading custom configuration files
+	* IRC URLs can now be passed as a commandline argument
+	* Removed --style commanline option
+	* Added a copyright notification to the --help text
+	* Fixed a bug in the command code generator
+	* Added an option to set the number of arguments of a command in the command generator
+	* Added a "channel list" button to server toolbars and a new dialog listing channels on a server
+	* Added --install; users can install plugins from a zip archive
+	* Added --channel option for joining a specific channel on join
+	* Log tracking by network is now turned on by default
+	* Automatic reconnection is now turned off by default
+	* Added an option to enable/disable (disabled by default) the channel list toolbar button
+	* System messages now use (almost) the same HTML template as chat messages
+	* Added an option to turn off auto-chat loggins
+	* Combined the "Options" and "Display" menus into a single menu ("Settings")
+	* Tweaked the "Plugins" menu
+	* Usernames in the userlist context menu are no longer clickable
+	* Fixed a bug where server names may not display correctly while connecting
+	* IRC network links have been added to the server info menu
+	* Changed system messages to differentiate connecting from registering
+	* Added an ASCII logo to the commandline help dialog
+	* Added --nologs option to prevent log save on window close
+	* Added --nosettings option to disable the settings window
+	* Added --noeditor option to disable QuircEdit
+	* Added --nowindows to disable the windows menu
+	* Added an optional spell checker for user input
+	* Added multi-language support to spell checker (english, french, spanish, and german)
+	* Added correct spelling suggestions to the right click context menu on the user input widget
+	* User input widget can now auto-complete commands and user nicks/current channel
+	* Auto-complete is now aware of all channels the user is in on the server the window is associated with
+	* Fixed a bug where auto-complete confused channels with nicks
+	* Messages with the user's nickname can now be optionally highlighted
+	* Fixed a bug where nicks might be used when trying to autocomplete a channel name
+	* Fixed a bug in notice display
+	* If user nick highlighting is turned on, the user's nick will be highlighted in CTCP action messages
+	* Fixed command history in the user input widget
+	* Added a status bar (can be hidden with settings)
+
+Version 0.302
+	* Added --top command line flag (Quirc's window always on top)
+	* Added --path command line option (adds directory's to python's path)
+	* Added --style command line option (set Quirc's window style)
+	* Added --interval command line option (set keep-alive heartbeat interval)
+	* Added --nossl command line flag (disables SSL)
+	* Added --fullscreen command line flag (displays Quirc in full screen mode)
+	* Added a shared dictionary (named Shared) for all plugins
+	* Added /nick command
+	* Added alternate nickname option to GUI dialogs
+	* Added --server, --port, --password, and --ssl command line options to connect to a server on startup
+	* Added --nick, --username, --realname, and --alternate command line options to set default user info
+	* Cleaned up channel window menu
+	* Any errors while loading plugins are displayed to the user
+	* Added an option to supress plugin load error display
+	* Autojoin setting files have been moved to their own directory
+	* Fixed bugs in server channel window menu entries
+	* Added some icons
+	* Fixed a bug in built-in plugin methods
+	* Fixed a bug with displaying plugin-generated chat
+	* "Hourglass" cursor is displayed when trying to connect to a server
+	* Visibility of connection log is now tracked if hidden via menu or manual close
+	* Added the /color command
+	* Fixed a bug in the plugin "action" method
+	* All plugin IRC methods can optionally specify what server to send the command to
+	* Added the --editor command line flag to open QuircEdit in Quirc
+	* Added the --open command line optio to open a file in QuircEdit in Quirc
+	* Plugin methods that get IRC server information can now specify the connection to get the information from
+	* Plugin methods for public and private message are now called for outgoing chat
+	* Added the first version of the Quirc plugin documentation
+	* Added mIRC color code support
+	* Added the color plugin method
+	* Double quotes in plugin names and description are now properly escaped
+	* Punctuation and whitespace are now properly stripped from class names in the plugin generator
+	* Added in support for the IRC formatting codes for underline, bold, and italic
+	* Plugins can be reloaded (allows for editing plugins while running)
+	* Fixed a bug in the editor ("new plugin" didn't disable "save" menu option)
+	* Move "restart quirc" menu option to the main "IRC" menu
+	* Generated plugin command code are now case-insensitive for command recognition
+	* Added function call generators for msg(), notice(), action(), join(), part(), print(), away(), back(), and color()
+	* Added function call generators to QuircEdit's right click menu
+	* Channel user list display now handles joined and parted users locally
+	* Changed the "user quit" plugin event name to "server_quit"
+	* Changed the "got motd" plugin event name to "server_motd"
+	* Fixed a bug in th "Windows" menu (selected windows are now brought to the front)
+	* Added an option to disable plugin event execution
+	* Redesigned the plugin menu
+	* Fixed a bug where the "show connection log" option would always be false
+
+Version 0.301
+	* Added the /topic command
+	* Fixed a bug with operator and voiced user detection
+	* Added the ability to ignore messages from specific users
+	* Added "about" dialog
+	* Added a "raw data" event for plugins
+	* Moved connection settings to the "IRC" menu
+	* Added an option to convert URLs in chat to hyperlinks
+	* Re-arranged the menus to make a bit more sense
+	* Changed setting names in settings.json
+	* Added options to set special plugin attributes in the template generator
+	* Added "noirc" special attribute to plugins, and to the plugin generator
+	* Reworked the "Plugins" menu
+	* Fixed a bug in the /topic command
+	* Added server information menu to toolbar
+	* Added kick event to plugins
+	* Kicks are now handled and displayed by the main client
+	* The client being kicked from a channel is now handled properly
+	* Added channel banlist to the channel window info menu
+	* Added ban, unban, and kick/ban to the userlist context menu
+	* Channel bans are now displayed properly in chat
+	* Added /oper command
+	* Server errors are now displayed in red text
+	* Sent channel invitation are now documented in the client
+	* User is notified if they receive IRCop status
+	* "Quit" now correctly removes users from userlists
+	* Added /whowas command
+	* Added option to set application title to the current chat
+	* Fixed a bug in the /topic command
+	* Changed the client setting file name to "quirc.json" from "settings.json"
+	* Changed the editor setting file name to "quircedit.json" from "editor.json"
+	* Added an option to track chat logs by network name instead of server/port
+	* Added the /quit command
+	* Added an option to the editor for the "find" window to always be on top
+	* Changed setting file setting names to be human readable
+	* Current lines of code: ~5,800. Not bad for a GUI IRC client :-)
+	* Added option to editor to use 1 space for indent
+	* Added option for chat windows to be set to always on top
+
+Version 0.300
+	* Complete re-factor
+	* Support for multiple servers
+	* Added plugin support
+	* New commands: /help, /msg, /notice, /me, /join, /part, /away, /back, /invite, /kick
+	* Added in plugin editor
+	* Plugin editor now has settings for indentation, font, and word wrap
+
+Version 0.233
+	* Added new features to QPyEdit: select all, cut, copy, paste, undo, redo, zoom in, zoom out
+	* Undo and redo in QPyEdit are only enabled if the desired function is available
+	* Cut and copy are only enabled if the desired function is available
+	* Plugin documentation now contains template usage information
+	* Added msgbox method to the Plugin object
+	* Added getstring, getinteger, getdouble, and getlist methods to the Plugin object
+	* Added getfile and getsave methods to the Plugin object
+	* Added delay method to the Plugin object (sets a function to execute after a delay)
+	* Added search functions to the plugin editor
+	* Added /invite command
+	* Added "auto-join channel on invite" option
+	* Channel modes sent when joining a channel are handled properly
+	* Added the /list command
+	* List command is disabled (due to a bug in Twisted)
+	* Added /version command
+	* Made the "Ignored Users" dialog non-modal
+	* Added command templates to the plugin editor
+	* Renamed the "Plugin" menu in the plugin editor to "Templates"
+	* Changed the name of the editor to "QuircEdit"
+	* quirc.py now has a commandline option to run the plugin editor rather than the full client
+	* Added the getNickname Plugin method
+	* Added the getUptime Plugin method
+	* Added _tag attribute to plugins (for tracking)
+	* Added clearDelay Plugin method
+	* Fixed a connection bug
+	* Added option to remove size grip from the status bar
+	* Users can "reload plugins" to update with new plugins from the "Plugins" menu
+	* Errors encountered on plugin load are now displayed to the user
+	* Private user chat windows now have their own window icon
+	* Added getUserlist, getStatuslist, getHost, ignore, and unignore Plugin methods
+	* Added new plugin events: event_kick and event_quit
+	* Added event_invite plugin event method
+	* event_join will now trigger when the client joins a channel
+	* Added getTopic plugin method
+	* Changed the "Template" menu name (in QuircEdit) to "Plugin"
+	* Updated method template to reflect all commands
+	* Moved code snippets to "Snippets" menu (in QuircEdit)
+	* Added a new template: universal command (commands available to all windows)
+	* Added colorText, rainbowText, boldText, underlineText, italicText, opped, and voiced plugin methods
+
+Version 0.232
+	* Removed hotkeys for "Connect to Server", "Connect to Network", and "Ignored Users"
+	* Added /away and /back commands
+	* Command usage information is now displayed in red
+	* Added "Set topic" menu option to channel windows
+	* Channel topics set to "" are now displayed to the user
+	* Set channel modes are displayed in the "Channel" menu
+	* Added "ignore user" to the private chat window menu
+	* "Close" button on the server window only hides the window
+	* "Close" button on channel window will cause the client to leave the channel before closing the window
+	* Windows can be restored/raised with a hotkey
+	* Added user information to the status bar
+	* Added in a plugin system so users can expand functionality
+	* Added a GUI plugin editor, QPyEdit
+	* Added /docs directory, containing a PDF version of the plugin documentation
+	* Added templates to the editor for quickly adding plugins and commands
+
+Version 0.231
+	* Initial alpha release

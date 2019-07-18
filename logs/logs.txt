@@ -1,0 +1,1 @@
+Quirc stores channel and user chat logs in this directory.

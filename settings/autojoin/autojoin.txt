@@ -1,0 +1,1 @@
+Server channel autojoin settings are saved here.

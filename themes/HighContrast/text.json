@@ -1,0 +1,14 @@
+{
+    "action": "#009300",
+    "banner-text": "<b>High Contrast Theme by <a href=\"https://github.com/danhetrick\">Dan Hetrick</a></b>",
+    "error": "#FF0000",
+    "font": "Consolas,10,-1,5,50,0,0,0,0,0,Regular",
+    "highlight": "#D2B4DE",
+    "link": "#0000FF",
+    "new-chat-divider": "#000000",
+    "new-chat-divider-text": "#FFFFFF",
+    "notice": "#9C009C",
+    "self": "#FF0000",
+    "system": "#FF9C00",
+    "user": "#A9CCE3"
+}
