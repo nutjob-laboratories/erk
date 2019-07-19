@@ -192,7 +192,6 @@ DOLINKS_SETTING = "urls_to_links_in_chat"
 TITLE_ACTIVE_WINDOW_SETTING = "set_title_to_active_window"
 SAVE_LOGS_BY_NETWORK = "use_network_for_chat_log_filenames"
 DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
-DISPLAY_POINTER_ON_HYPERLINKS = "display_hyperlink_pointer"
 
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
 
@@ -962,7 +961,6 @@ def loadSettings(filename=SETTINGS_FILE):
 			HIGHLIGHT_NICK_MESSAGE: True,
 			STATUS_BAR_SETTING: True,
 			THEME_SETTING: USE_NO_THEME_SETTING,
-			DISPLAY_POINTER_ON_HYPERLINKS: False,
 			LOAD_THEME_ICONS_SETTING: True,
 		}
 		return s

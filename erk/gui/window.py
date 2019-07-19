@@ -393,34 +393,7 @@ class Interface(QMainWindow):
 
 		# Main window
 
-		class QChatDisplay(QTextBrowser):
-			# Turns mouse pointer into a pointing hand when
-			# the user hovers over a hyperlink
-			def __init__(self,parent=None):
-				self.parent = parent
-				super(QChatDisplay, self).__init__(parent)
-				self.setMouseTracking(True)
-			def mouseMoveEvent(self,event):
-				if not self.parent.parent.urlsToLinks: return
-				if not self.parent.parent.linkPointer: return
-				cursor = self.cursorForPosition(event.pos())
-				cursor.select(QTextCursor.BlockUnderCursor)
-				w = cursor.selectedText()
-				h = cursor.selection().toHtml()
-				w = w.replace(' ','')
-				if "http://" in w.lower():
-					if "<a href=" in h:
-						if "</a>" in h:
-							self.viewport().setCursor(QCursor(Qt.PointingHandCursor))
-					return
-				if "https://" in w.lower():
-					if "<a href=" in h:
-						if "</a>" in h:
-							self.viewport().setCursor(QCursor(Qt.PointingHandCursor))
-					return
-				self.viewport().setCursor(QCursor(Qt.ArrowCursor))
-
-		self.channelChatDisplay = QChatDisplay(self)
+		self.channelChatDisplay = QTextBrowser(self)
 		self.channelChatDisplay.setObjectName("channelChatDisplay")
 		self.channelChatDisplay.setFocusPolicy(Qt.NoFocus)
 

@@ -174,8 +174,6 @@ class ErkGUI(QMainWindow):
 
 		self.themeIcons = True
 
-		self.linkPointer = False
-
 		self.settings = loadSettings(self.settingsFile)
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
@@ -200,7 +198,6 @@ class ErkGUI(QMainWindow):
 		self.highlightNickMessages = self.settings[HIGHLIGHT_NICK_MESSAGE]
 		self.enableStatusBar = self.settings[STATUS_BAR_SETTING]
 		self.theme = self.settings[THEME_SETTING]
-		self.linkPointer = self.settings[DISPLAY_POINTER_ON_HYPERLINKS]
 
 		self.themeIcons = self.settings[LOAD_THEME_ICONS_SETTING]
 
@@ -367,12 +364,7 @@ class ErkGUI(QMainWindow):
 		optPretty.triggered.connect(self.togglePrettyUsers)
 		self.viewMenu.addAction(optPretty)
 
-		optPointer = QAction("Change mouse pointer on hyperlink hover",self,checkable=True)
-		optPointer.setChecked(self.linkPointer)
-		optPointer.triggered.connect(self.togglePointer)
-		self.viewMenu.addAction(optPointer)
-
-		optUptime = QAction("Server uptime",self,checkable=True)
+		optUptime = QAction("Connection uptime",self,checkable=True)
 		optUptime.setChecked(self.displayUptime)
 		optUptime.triggered.connect(self.toggleUptime)
 		self.viewMenu.addAction(optUptime)
@@ -381,6 +373,11 @@ class ErkGUI(QMainWindow):
 		optUptime.setChecked(self.displayTimestamp)
 		optUptime.triggered.connect(self.toggleTimestamp)
 		self.viewMenu.addAction(optUptime)
+
+		optIcons = QAction("Use theme icons",self,checkable=True)
+		optIcons.setChecked(self.themeIcons)
+		optIcons.triggered.connect(self.toggleIcons)
+		self.viewMenu.addAction(optIcons)
 
 		self.optMenu = menubar.addMenu("Settings")
 
@@ -1457,14 +1454,6 @@ class ErkGUI(QMainWindow):
 		self.settings[TITLE_ACTIVE_WINDOW_SETTING] = self.titleActiveWindow
 		saveSettings(self.settings,self.settingsFile)
 
-	def togglePointer(self):
-		if self.linkPointer:
-			self.linkPointer = False
-		else:
-			self.linkPointer = True
-		self.settings[DISPLAY_POINTER_ON_HYPERLINKS] = self.linkPointer
-		saveSettings(self.settings,self.settingsFile)
-
 	def toggleLinks(self):
 		if self.urlsToLinks:
 			self.urlsToLinks = False
@@ -1480,6 +1469,12 @@ class ErkGUI(QMainWindow):
 		if fileName:
 			self.newEditorWindowFile(fileName)
 
+	def markMenuEntry(self,qa):
+		f = qa.font()
+		f.setBold(True)
+		f.setItalic(True)
+		qa.setFont(f)
+
 	def buildThemeMenu(self):
 		self.themeMenu.clear()
 
@@ -1491,11 +1486,17 @@ class ErkGUI(QMainWindow):
 
 			return
 
-		nme = QAction("No theme",self,checkable=True)
+		if self.theme.lower() == USE_NO_THEME_SETTING:
+			nme = QAction("Default theme",self,checkable=True)
+		else:
+			nme = QAction(QIcon(ERK_ICON),"Default theme",self)
 		nme.triggered.connect(lambda state: self.applyTheme(USE_NO_THEME_SETTING) )
 		self.themeMenu.addAction(nme)
 		if self.theme.lower() == USE_NO_THEME_SETTING:
 			nme.setChecked(True)
+			self.markMenuEntry(nme)
+
+		if len(self.themeList)>0: self.themeMenu.addSeparator()
 
 		for t in self.themeList:
 
@@ -1504,12 +1505,14 @@ class ErkGUI(QMainWindow):
 				if self.theme == t:
 					tme = QAction(t,self,checkable=True)
 					tme.setChecked(True)
+					self.markMenuEntry(tme)
 				else:
 					tme = QAction(QIcon(icon),t,self)
 			else:
 				if self.theme == t:
 					tme = QAction(t,self,checkable=True)
 					tme.setChecked(True)
+					self.markMenuEntry(tme)
 				else:
 					tme = QAction(t,self)
 			tme.triggered.connect(lambda state,f=t: self.applyTheme(f))
@@ -1522,16 +1525,9 @@ class ErkGUI(QMainWindow):
 
 		self.themeMenu.addSeparator()
 
-		optIcons = QAction("Use theme icons",self,checkable=True)
-		optIcons.setChecked(self.themeIcons)
-		optIcons.triggered.connect(self.toggleIcons)
-		self.themeMenu.addAction(optIcons)
-
 		tme = QAction(QIcon(LOAD_ICON),"Rescan for new themes",self)
 		tme.triggered.connect(lambda state: self.reloadThemes())
 		self.themeMenu.addAction(tme)
-
-		self.themeMenu.addSeparator()
 
 		prestart = QAction(QIcon(RESTART_ICON),f"Restart {APPLICATION_NAME}",self)
 		prestart.triggered.connect(lambda state: restart_program())
@@ -1550,6 +1546,7 @@ class ErkGUI(QMainWindow):
 			saveSettings(self.settings,self.settingsFile)
 			self.displayFile = DISPLAY_CONFIGURATION
 			self.display = loadDisplay(self.displayFile)
+			importThemeResources(USE_NO_THEME_SETTING)
 
 			# Rerender window text and icons
 			for s in self.connections:
@@ -1557,9 +1554,13 @@ class ErkGUI(QMainWindow):
 					w.window.rerenderTextDisplay()
 					if w.window.is_channel:
 						w.window.redrawUserlist()
+						w.window.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
+					else:
+						w.window.setWindowIcon(QIcon(USER_WINDOW_ICON))
 					w.window.hide()
 					w.window.show()
 			return
+		importThemeResources(self.theme)
 		themeFile = getThemeQSS(theme)
 		if themeFile != None:
 			self.theme = theme
@@ -1580,6 +1581,9 @@ class ErkGUI(QMainWindow):
 				w.window.rerenderTextDisplay()
 				if w.window.is_channel:
 					w.window.redrawUserlist()
+					w.window.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
+				else:
+					w.window.setWindowIcon(QIcon(USER_WINDOW_ICON))
 				w.window.hide()
 				w.window.show()
 

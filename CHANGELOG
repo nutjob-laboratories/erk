@@ -13,6 +13,9 @@ Version 0.410
 	* Isolated resources I don't want users editing (app icon, etc) into its own resource file
 	* Removed isolated resources from the theme compiler
 	* Themes are now included in the make_dist script, as is the Erk icon
+	* Removed "hove on link mouse pointer change" option (it was stupid and waaaaay slower than default Qt)
+	* Renamed "server uptime" to "connection uptime" as it's more accurate
+	* Moved "use theme icons" menu setting to the "view" menu
 
 Version 0.400
 	* New major version
