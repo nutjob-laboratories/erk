@@ -16,6 +16,7 @@ Version 0.410
 	* Removed "hove on link mouse pointer change" option (it was stupid and waaaaay slower than default Qt)
 	* Renamed "server uptime" to "connection uptime" as it's more accurate
 	* Moved "use theme icons" menu setting to the "view" menu
+	* Changed the default log banner text to "It's how you pronounce IRC"
 
 Version 0.400
 	* New major version
