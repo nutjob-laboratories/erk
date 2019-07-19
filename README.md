@@ -53,13 +53,13 @@ Mostly because I don't like HexChat's interface.  I started using IRC in the mid
 
 When I decided to write a new IRC client, I wanted it to feature a few things:
 
-	* It had to be open source (free as in speech and as in beer)
-	* The ability to connect to multiple servers at a time (something every open source client does)
-	* Have the ability to be scripted (something most open source clients have)
-	* A full, modern GUI (HexChat is sort of modern, I guess)
-	* A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
-	* Easy to install, easy to run (if you're trying to compile HexChat, good luck, you'll need it)
-	* Focuses on the chat experience (not downloading/uploading files)
-	* Cross-platform without having to jump through hoops
+* It had to be open source (free as in speech and as in beer)
+* The ability to connect to multiple servers at a time (something every open source client does)
+* Have the ability to be scripted (something most open source clients have)
+* A full, modern GUI (HexChat is sort of modern, I guess)
+* A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
+* Easy to install, easy to run (if you're trying to compile HexChat, good luck, you'll need it)
+* Focuses on the chat experience (not downloading/uploading files)
+* Cross-platform without having to jump through hoops
 
 **Erk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
