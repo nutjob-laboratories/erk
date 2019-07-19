@@ -37,8 +37,16 @@ from datetime import datetime
 from itertools import combinations
 from zipfile import ZipFile
 import glob
-
 import importlib.util
+
+import platform
+
+if "Windows" in platform.system():
+	RUNNING_ON_WINDOWS = True
+else:
+	RUNNING_ON_WINDOWS = False
+
+PYTHON_EXECUTABLE = sys.executable
 
 # Globally load in Erk's essential resource file
 globals()["erk.erkimg"] = __import__("erk.erkimg")

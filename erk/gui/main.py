@@ -1523,7 +1523,7 @@ class ErkGUI(QMainWindow):
 
 		self.themeMenu.addSeparator()
 
-		tme = QAction(QIcon(LOAD_ICON),"Rescan for new themes",self)
+		tme = QAction(QIcon(LOAD_ICON),"Scan for new themes",self)
 		tme.triggered.connect(lambda state: self.reloadThemes())
 		self.themeMenu.addAction(tme)
 
