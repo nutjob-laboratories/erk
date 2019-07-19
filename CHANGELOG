@@ -17,6 +17,7 @@ Version 0.410
 	* Renamed "server uptime" to "connection uptime" as it's more accurate
 	* Moved "use theme icons" menu setting to the "view" menu
 	* Changed the default log banner text to "It's how you pronounce IRC"
+	* Changed "Kōd" icon
 
 Version 0.400
 	* New major version
