@@ -1139,6 +1139,13 @@ class Interface(QMainWindow):
 
 		# COMMANDS END
 
+		dosend = True
+		if user_input.isspace(): dosend = False
+		if user_input.strip() == "": dosend = False
+		if user_input == "": dosend = False
+
+		if not dosend: return
+
 		self.client.msg(self.name,user_input)
 		d = chat_display(self.nickname,user_input,self.parent.maxnicklen,self.parent.urlsToLinks,SELF_COLOR)
 		self.writeText(d)

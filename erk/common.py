@@ -40,15 +40,15 @@ import glob
 
 import importlib.util
 
-# Globally load in Erk's resource file
-#globals()["quirc.resources"] = __import__("quirc.resources")
+# Globally load in Erk's essential resource file
+globals()["erk.erkimg"] = __import__("erk.erkimg")
 
 APPLICATION_NAME = "Ərk"
 APPLICATION_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
-
 EDITOR_NAME = "Kōd"
+NORMAL_APPLICATION_NAME = "Erk"
 
 GPL_NOTIFICATION = """Ərk IRC Client
 Copyright (C) 2019  Dan Hetrick

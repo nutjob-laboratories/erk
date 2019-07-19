@@ -320,7 +320,7 @@ class ErkGUI(QMainWindow):
 		menubar = self.menuBar()
 		menubar.setContextMenuPolicy(Qt.PreventContextMenu)
 
-		ircMenu = menubar.addMenu(f"IRC")
+		ircMenu = menubar.addMenu(f"{APPLICATION_NAME}")
 
 		self.actConnect = QAction(QIcon(SERVER_ICON),"Connect to Server",self)
 		self.actConnect.triggered.connect(self.doConnectDialog)
@@ -334,13 +334,6 @@ class ErkGUI(QMainWindow):
 		self.actDisconnect.triggered.connect(self.selectDisconnect)
 		ircMenu.addAction(self.actDisconnect)
 		self.actDisconnect.setEnabled(False)
-
-		ircMenu.addSeparator()
-
-		prestart = QAction(QIcon(RESTART_ICON),f"Restart {APPLICATION_NAME}",self)
-		prestart.triggered.connect(lambda state: restart_program())
-		# self.pluginmenu.addAction(prestart)
-		ircMenu.addAction(prestart)
 
 		ircMenu.addSeparator()
 
@@ -1504,8 +1497,6 @@ class ErkGUI(QMainWindow):
 		if self.theme.lower() == USE_NO_THEME_SETTING:
 			nme.setChecked(True)
 
-		self.themeMenu.addSeparator()
-
 		for t in self.themeList:
 
 			icon = getThemeIcon(t)
@@ -1531,17 +1522,20 @@ class ErkGUI(QMainWindow):
 
 		self.themeMenu.addSeparator()
 
-
 		optIcons = QAction("Use theme icons",self,checkable=True)
 		optIcons.setChecked(self.themeIcons)
 		optIcons.triggered.connect(self.toggleIcons)
 		self.themeMenu.addAction(optIcons)
 
-
-
 		tme = QAction(QIcon(LOAD_ICON),"Rescan for new themes",self)
 		tme.triggered.connect(lambda state: self.reloadThemes())
 		self.themeMenu.addAction(tme)
+
+		self.themeMenu.addSeparator()
+
+		prestart = QAction(QIcon(RESTART_ICON),f"Restart {APPLICATION_NAME}",self)
+		prestart.triggered.connect(lambda state: restart_program())
+		self.themeMenu.addAction(prestart)
 
 	def reloadThemes(self):
 		self.themeList = getThemeList()

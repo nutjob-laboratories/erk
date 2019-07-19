@@ -11,13 +11,15 @@ os.mkdir("./dist/settings")
 os.mkdir("./dist/plugins")
 os.mkdir("./dist/logs")
 os.mkdir("./dist/documentation")
-os.mkdir("./dist/themes")
+#os.mkdir("./dist/themes")
 
 os.system("compile_resources.bat")
 
 shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./themes", "./dist/themes",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
 shutil.copy("./erk.py", "./dist/erk.py")
+shutil.copy("./erk.ico", "./dist/erk.ico")
 
 shutil.copy("./CHANGELOG", "./dist/CHANGELOG")
 shutil.copy("./LICENSE", "./dist/LICENSE")
@@ -37,5 +39,5 @@ os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.
 
 shutil.rmtree('./dist')
 
-os.rename('erk_dist.zip', f"{APPLICATION_NAME.lower()}-{APPLICATION_VERSION}-unstable.zip")
+os.rename('erk_dist.zip', f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_VERSION}-unstable.zip")
 
