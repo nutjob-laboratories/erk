@@ -125,7 +125,7 @@ class Viewer(QMainWindow):
 	def doExitSave(self,default):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Plugin As...",default,"Python File (*.py);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Plugin As...",PLUGIN_DIRECTORY,"Python File (*.py);;All Files (*)", options=options)
 		if fileName:
 			if '.py' in fileName:
 				pass
@@ -169,6 +169,15 @@ class Viewer(QMainWindow):
 		self.changed = True
 		self.parent.rebuildWindowMenu()
 
+	def processIndentation(self,text):
+		if self.indentspace:
+			i = " "
+			i = i * self.tabsize
+		else:
+			i = "\t"
+		text = text.replace(INDENT_SYMBOL,i)
+		return text
+
 	def injectPlugin(self,classname,name,version,description,issilent,isnowindows,isnoirc):
 
 		# Escape any double quotes
@@ -180,6 +189,8 @@ class Viewer(QMainWindow):
 		t = t.replace(PLUGIN_NAME,name)
 		t = t.replace(PLUGIN_VERSION,version)
 		t = t.replace(PLUGIN_DESCRIPTION,description)
+
+		t = self.processIndentation(t)
 
 		if issilent and isnowindows and isnoirc:
 			po = "self.silent,self.nowindows,self.noirc = True,True,True"
@@ -397,6 +408,8 @@ class Viewer(QMainWindow):
 
 		t = t.replace(PLUGIN_ARGCOUNT,str(argcount))
 
+		t = self.processIndentation(t)
+
 		if issilent and isnowindows and isnoirc:
 			po = "self.silent,self.nowindows,self.noirc = True,True,True"
 		elif issilent and isnowindows:
@@ -495,6 +508,8 @@ class Viewer(QMainWindow):
 
 		t = t.replace(PLUGIN_ARGCOUNT,str(argcount))
 
+		t = self.processIndentation(t)
+
 		if issilent and isnowindows and isnoirc:
 			po = "self.silent,self.nowindows,self.noirc = True,True,True"
 		elif issilent and isnowindows:
@@ -534,6 +549,8 @@ class Viewer(QMainWindow):
 		t = t.replace(PLUGIN_TRIGGER,trigger)
 
 		t = t.replace(PLUGIN_ARGCOUNT,str(argcount))
+
+		t = self.processIndentation(t)
 
 		if issilent and isnowindows and isnoirc:
 			po = "self.silent,self.nowindows,self.noirc = True,True,True"

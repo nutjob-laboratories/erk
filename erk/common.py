@@ -375,263 +375,264 @@ PLUGIN_ARGCOUNT = '%ARGCOUNT%'
 
 TEMPLATE_MODULE_LOAD = "from erk import Plugin,Shared"
 
+INDENT_SYMBOL = "%_I_%"
+
 PRIVATE_COMMAND_SKELETON = f"""
 class %CLASS%(Plugin):
 
-	def __init__(self):
-		self.name = "%NAME%"
-		self.version = "%VERSION%"
-		self.description = "%DESCRIPTION%"
-		%OPTIONS%
+%_I_%def __init__(self):
+%_I_%%_I_%self.name = "%NAME%"
+%_I_%%_I_%self.version = "%VERSION%"
+%_I_%%_I_%self.description = "%DESCRIPTION%"
+%_I_%%_I_%%OPTIONS%
 
-		self.command = "%COMMAND%"
-		self.arguments = %ARGCOUNT%
+%_I_%%_I_%self.command = "%COMMAND%"
+%_I_%%_I_%self.arguments = %ARGCOUNT%
 
-	# Executed when a public message is received
-	# Arguments:    serverID (str) - The ID of the server
-	#               channel (str) - The channel the message was sent to
-	#               user (str) - The user who sent the message
-	#               message (str) - The message
-	def {EVENT_PRIVATE}(self,serverID,user,message):
-		tokens = shlex.split(message)
-		if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-			tokens.pop(0)
+%_I_%# Executed when a public message is received
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The user who sent the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
+%_I_%%_I_%tokens = shlex.split(message)
+%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
+%_I_%%_I_%%_I_%tokens.pop(0)
 
-			# tokens = a list of arguments passed to the command
+%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
 
-			if len(tokens)!=self.arguments:
-				# Too many/too few arguments
-				return
+%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
+%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
+%_I_%%_I_%%_I_%%_I_%return
 
-			# Command functionality goes here
+%_I_%%_I_%%_I_%# Command functionality goes here
 
 """
 
 PUBLIC_COMMAND_SKELETON = f"""
 class %CLASS%(Plugin):
 
-	def __init__(self):
-		self.name = "%NAME%"
-		self.version = "%VERSION%"
-		self.description = "%DESCRIPTION%"
-		%OPTIONS%
+%_I_%def __init__(self):
+%_I_%%_I_%self.name = "%NAME%"
+%_I_%%_I_%self.version = "%VERSION%"
+%_I_%%_I_%self.description = "%DESCRIPTION%"
+%_I_%%_I_%%OPTIONS%
 
-		self.command = "%COMMAND%"
-		self.arguments = %ARGCOUNT%
+%_I_%%_I_%self.command = "%COMMAND%"
+%_I_%%_I_%self.arguments = %ARGCOUNT%
 
-	# Executed when a public message is received
-	# Arguments:    serverID (str) - The ID of the server
-	#               user (str) - The user who sent the message
-	#               message (str) - The message
-	def {EVENT_PUBLIC}(self,serverID,channel,user,message):
-		tokens = shlex.split(message)
-		if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-			tokens.pop(0)
+%_I_%# Executed when a public message is received
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               user (str) - The user who sent the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
+%_I_%%_I_%tokens = shlex.split(message)
+%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
+%_I_%%_I_%%_I_%tokens.pop(0)
 
-			# tokens = a list of arguments passed to the command
+%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
 
-			if len(tokens)!=self.arguments:
-				# Too many/too few arguments
-				return
+%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
+%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
+%_I_%%_I_%%_I_%%_I_%return
 
-			# Command functionality goes here
-
+%_I_%%_I_%%_I_%# Command functionality goes here
 """
 
 COMMAND_SKELETON = f"""
 class %CLASS%(Plugin):
 
-	def __init__(self):
-		self.name = "%NAME%"
-		self.version = "%VERSION%"
-		self.description = "%DESCRIPTION%"
-		%OPTIONS%
+%_I_%def __init__(self):
+%_I_%%_I_%self.name = "%NAME%"
+%_I_%%_I_%self.version = "%VERSION%"
+%_I_%%_I_%self.description = "%DESCRIPTION%"
+%_I_%%_I_%%OPTIONS%
 
-		self.command = "%COMMAND%"
-		self.arguments = %ARGCOUNT%
+%_I_%%_I_%self.command = "%COMMAND%"
+%_I_%%_I_%self.arguments = %ARGCOUNT%
 
-	# Executed when the text is inputted into the client
-	# Arguments:    serverID (str) - The ID of the server
-	#               source (str) - The window the client input text into
-	#               text (str) - The input text
-	def {EVENT_INPUT}(self,serverID,source,text):
-		tokens = shlex.split(text)
-		if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-			tokens.pop(0)
+%_I_%# Executed when the text is inputted into the client
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               source (str) - The window the client input text into
+%_I_%#               text (str) - The input text
+%_I_%def {EVENT_INPUT}(self,serverID,source,text):
+%_I_%%_I_%tokens = shlex.split(text)
+%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
+%_I_%%_I_%%_I_%tokens.pop(0)
 
-			if len(tokens)!=self.arguments:
-				# Too many/too few arguments
-				return
+%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
+%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
+%_I_%%_I_%%_I_%%_I_%return
 
-			# serverID = the ID of the server
-			# source = the name of the window the command was input into
-			# tokens = a list of arguments passed to the command
+%_I_%%_I_%%_I_%# serverID = the ID of the server
+%_I_%%_I_%%_I_%# source = the name of the window the command was input into
+%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
 
-			# Command functionality goes here
+%_I_%%_I_%%_I_%# Command functionality goes here
 
-			# Return a true value so the inputted text isn't
-			# sent to the IRC server as chat
-			return True
+%_I_%%_I_%%_I_%# Return a true value so the inputted text isn't
+%_I_%%_I_%%_I_%# sent to the IRC server as chat
+%_I_%%_I_%%_I_%return True
 """
 
 PLUGIN_SKELETON = f"""
 class %CLASS%(Plugin):
 
-	def __init__(self):
-		self.name = "%NAME%"
-		self.version = "%VERSION%"
-		self.description = "%DESCRIPTION%"
-		%OPTIONS%
+%_I_%def __init__(self):
+%_I_%%_I_%self.name = "%NAME%"
+%_I_%%_I_%self.version = "%VERSION%"
+%_I_%%_I_%self.description = "%DESCRIPTION%"
+%_I_%%_I_%%OPTIONS%
 
-	# =================
-	# | CLIENT EVENTS |
-	# =================
+%_I_%# =================
+%_I_%# | CLIENT EVENTS |
+%_I_%# =================
 
-	# Executed as soon as the plugin is loaded
-	def {EVENT_LOAD}(self):
-		pass
+%_I_%# Executed as soon as the plugin is loaded
+%_I_%def {EVENT_LOAD}(self):
+%_I_%%_I_%pass
 
-	# Executed when the client exits
-	def {EVENT_UNLOAD}(self):
-		pass
+%_I_%# Executed when the client exits
+%_I_%def {EVENT_UNLOAD}(self):
+%_I_%%_I_%pass
 
-	# Executed when the plugin's name is clicked in
-	# the "Plugins" menu
-	def {EVENT_MENU}(self):
-		pass
+%_I_%# Executed when the plugin's name is clicked in
+%_I_%# the "Plugins" menu
+%_I_%def {EVENT_MENU}(self):
+%_I_%%_I_%pass
 
-	# Executes roughly once per second
-	# {EVENT_TICK} is executed once for each connected server
-	# Arguments:    serverID (str) - The ID of the server
-	#               uptime (int) - The uptime of the client, in seconds 
-	def {EVENT_TICK}(self,serverID,uptime):
-		pass
+%_I_%# Executes roughly once per second
+%_I_%# {EVENT_TICK} is executed once for each connected server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               uptime (int) - The uptime of the client, in seconds 
+%_I_%def {EVENT_TICK}(self,serverID,uptime):
+%_I_%%_I_%pass
 
-	# Executed when the text is inputted into the client
-	# Arguments:    serverID (str) - The ID of the server
-	#               source (str) - The window the client input text into
-	#               text (str) - The input text
-	def {EVENT_INPUT}(self,serverID,source,text):
-		pass
+%_I_%# Executed when the text is inputted into the client
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               source (str) - The window the client input text into
+%_I_%#               text (str) - The input text
+%_I_%def {EVENT_INPUT}(self,serverID,source,text):
+%_I_%%_I_%pass
 
-	# ==============
-	# | IRC EVENTS |
-	# ==============
+%_I_%# ==============
+%_I_%# | IRC EVENTS |
+%_I_%# ==============
 
-	# Executed when the client connects to an IRC server
-	# Arguments:    serverID (str) - The ID of the server connected to
-	def {EVENT_CONNECTED}(self,serverID):
-		pass
+%_I_%# Executed when the client connects to an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server connected to
+%_I_%def {EVENT_CONNECTED}(self,serverID):
+%_I_%%_I_%pass
 
-	# Executed when the client disconnected from an IRC server
-	# Arguments:    serverID (str) - The ID of the server disconnected from
-	#               reason (str) - The reason for the disconnection
-	def {EVENT_DISCONNECTED}(self,serverID,reason):
-		pass
+%_I_%# Executed when the client disconnected from an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server disconnected from
+%_I_%#               reason (str) - The reason for the disconnection
+%_I_%def {EVENT_DISCONNECTED}(self,serverID,reason):
+%_I_%%_I_%pass
 
-	# Executed when the client registers with an IRC server
-	# Arguments:    serverID (str) - The ID of the server registered with
-	def {EVENT_REGISTERED}(self,serverID):
-		pass
+%_I_%# Executed when the client registers with an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server registered with
+%_I_%def {EVENT_REGISTERED}(self,serverID):
+%_I_%%_I_%pass
 
-	# Executed when the client receives the MOTD from a server
-	# Arguments:    serverID (str) - The ID of the server the part occurred on
-	#               motd (list) - A list of strings containing the MOTD
-	def {EVENT_MOTD}(self,serverID,motd):
-		pass
+%_I_%# Executed when the client receives the MOTD from a server
+%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
+%_I_%#               motd (list) - A list of strings containing the MOTD
+%_I_%def {EVENT_MOTD}(self,serverID,motd):
+%_I_%%_I_%pass
 
-	# Executed when the client receives a public message
-	# Arguments:    serverID (str) - The ID of the server that sent the message
-	#               channel (str) - The channel the message was sent to
-	#               user (str) - The sender of the message
-	#               message (str) - The message
-	def {EVENT_PUBLIC}(self,serverID,channel,user,message):
-		pass
+%_I_%# Executed when the client receives a public message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
+%_I_%%_I_%pass
 
-	# Executed when the client receives a private message
-	# Arguments:    serverID (str) - The ID of the server that sent the message
-	#               user (str) - The sender of the message
-	#               message (str) - The message
-	def {EVENT_PRIVATE}(self,serverID,user,message):
-		pass
+%_I_%# Executed when the client receives a private message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
+%_I_%%_I_%pass
 
-	# Executed when the client receives a notice
-	# Arguments:    serverID (str) - The ID of the server that sent the message
-	#               channel (str) - The channel the message was sent to
-	#               user (str) - The sender of the message
-	#               message (str) - The message
-	def {EVENT_NOTICE}(self,serverID,channel,user,message):
-		pass
+%_I_%# Executed when the client receives a notice
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_NOTICE}(self,serverID,channel,user,message):
+%_I_%%_I_%pass
 
-	# Executed when the client receives CTCP action message
-	# Arguments:    serverID (str) - The ID of the server that sent the message
-	#               channel (str) - The channel the message was sent to
-	#               user (str) - The sender of the message
-	#               message (str) - The message
-	def {EVENT_ACTION}(self,serverID,channel,user,message):
-		pass
+%_I_%# Executed when the client receives CTCP action message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_ACTION}(self,serverID,channel,user,message):
+%_I_%%_I_%pass
 
-	# Executed when a user joins a channel the client is in
-	# Arguments:    serverID (str) - The ID of the server the join occurred on
-	#               channel (str) - The channel joined
-	#               user (str) - The user joining
-	def {EVENT_JOIN}(self,serverID,channel,user):
-		pass
+%_I_%# Executed when a user joins a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server the join occurred on
+%_I_%#               channel (str) - The channel joined
+%_I_%#               user (str) - The user joining
+%_I_%def {EVENT_JOIN}(self,serverID,channel,user):
+%_I_%%_I_%pass
 
-	# Executed when a user leaves a channel the client is in
-	# Arguments:    serverID (str) - The ID of the server the part occurred on
-	#               channel (str) - The channel left
-	#               user (str) - The user leaving
-	def {EVENT_PART}(self,serverID,channel,user):
-		pass
+%_I_%# Executed when a user leaves a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
+%_I_%#               channel (str) - The channel left
+%_I_%#               user (str) - The user leaving
+%_I_%def {EVENT_PART}(self,serverID,channel,user):
+%_I_%%_I_%pass
 
-	# Executed when the client receives a channel invite
-	# Arguments:    serverID (str) - The ID of the server the invite occurred on
-	#               channel (str) - The channel invited to
-	#               user (str) - The user who sent the invite
-	def {EVENT_INVITE}(self,serverID,channel,user):
-		pass
+%_I_%# Executed when the client receives a channel invite
+%_I_%# Arguments:    serverID (str) - The ID of the server the invite occurred on
+%_I_%#               channel (str) - The channel invited to
+%_I_%#               user (str) - The user who sent the invite
+%_I_%def {EVENT_INVITE}(self,serverID,channel,user):
+%_I_%%_I_%pass
 
-	# Executed when the topic is changed in a channel the client is in
-	# Arguments:    serverID (str) - The ID of the server
-	#               channel (str) - The channel that had its topic changed
-	#               user (str) - The user who changed the topic
-	#               topic (str) - The new topic
-	def {EVENT_TOPIC}(self,serverID,channel,user,topic):
-		pass
+%_I_%# Executed when the topic is changed in a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel that had its topic changed
+%_I_%#               user (str) - The user who changed the topic
+%_I_%#               topic (str) - The new topic
+%_I_%def {EVENT_TOPIC}(self,serverID,channel,user,topic):
+%_I_%%_I_%pass
 
-	# Executed when a user disconnects from the IRC server
-	# Arguments:    serverID (str) - The ID of the server
-	#               user (str) - The user disconnecting
-	#               message (str) - An optional parting message
-	def {EVENT_QUIT}(self,serverID,user,message):
-		pass
+%_I_%# Executed when a user disconnects from the IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               user (str) - The user disconnecting
+%_I_%#               message (str) - An optional parting message
+%_I_%def {EVENT_QUIT}(self,serverID,user,message):
+%_I_%%_I_%pass
 
-	# Executed when the client receives a mode message
-	# Arguments:    serverID (str) - The ID of the server
-	#               mset (bool) - True for setting a mode, False for unsetting
-	#               user (str) - The user who set the mode
-	#               target (str) - The channel or user the mode was set or unset on
-	#               modes (str) - The modes set
-	#               args (list) - Any mode arguments
-	def {EVENT_MODE}(self,serverID,mset,user,target,modes,args):
-		pass
+%_I_%# Executed when the client receives a mode message
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               mset (bool) - True for setting a mode, False for unsetting
+%_I_%#               user (str) - The user who set the mode
+%_I_%#               target (str) - The channel or user the mode was set or unset on
+%_I_%#               modes (str) - The modes set
+%_I_%#               args (list) - Any mode arguments
+%_I_%def {EVENT_MODE}(self,serverID,mset,user,target,modes,args):
+%_I_%%_I_%pass
 
-	# Executed when the client receives ANY data from the server
-	# Arguments:    serverID (str) - The ID of the server
-	#               data (str) - The data sent
-	#
-	def {EVENT_RAW}(self,serverID,data):
-		pass
+%_I_%# Executed when the client receives ANY data from the server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               data (str) - The data sent
+%_I_%#
+%_I_%def {EVENT_RAW}(self,serverID,data):
+%_I_%%_I_%pass
 
-	# Executed when a user is kicked from a channel
-	# Arguments:    serverID (str) - The ID of the server
-	#               channel (str) - The channel the user was kicked from
-	#               user (str) - The user kicked
-	#               kicker (string) - The user who did the kicking
-	#               reason (string) - The optional reason for the kick
-	def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
-		pass
+%_I_%# Executed when a user is kicked from a channel
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel the user was kicked from
+%_I_%#               user (str) - The user kicked
+%_I_%#               kicker (string) - The user who did the kicking
+%_I_%#               reason (string) - The optional reason for the kick
+%_I_%def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
+%_I_%%_I_%pass
 """
 
 # Objects
