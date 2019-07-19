@@ -43,14 +43,14 @@ import importlib.util
 # Globally load in Erk's resource file
 #globals()["quirc.resources"] = __import__("quirc.resources")
 
-APPLICATION_NAME = "Erk"
+APPLICATION_NAME = "Ərk"
 APPLICATION_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 
 EDITOR_NAME = "Kōd"
 
-GPL_NOTIFICATION = """Erk IRC Client
+GPL_NOTIFICATION = """Ərk IRC Client
 Copyright (C) 2019  Dan Hetrick
 
 This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@ IRC_NETWORK_LIST = os.path.join(ERK_MODULE_DIRECTORY, "servers.txt")
 LAST_SERVER_INFORMATION_FILE = os.path.join(SETTINGS_DIRECTORY, "lastserver.json")
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
-EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "qedit.json")
+EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
 
 THEME_RESOURCE_FILE_NAME = "resources.py"

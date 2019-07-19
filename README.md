@@ -46,3 +46,20 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 # What does "erk" mean?
 
 The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when one of the users in the channel suggested "Erk", because "that's how you pronouce IRC". And thus **Erk** was born.
+
+# Another IRC client? Why not use HexChat?
+
+Mostly because I don't like HexChat's interface.  I started using IRC in the mid to late 90's, and the first client I used regularly was mIRC.  I liked the simplicity of that client in the early days of IRC, and I felt like most modern IRC clients were either u/linux-centric, focused on everything **but** chat, or weird command-line-style interfaces grafted onto a half-thought out GUI.  I wanted to use an IRC client I actually enjoyed using, and since I haven't found one yet, the only thing left to do was create one.
+
+When I decided to write a new IRC client, I wanted it to feature a few things:
+
+	* It had to be open source (free as in speech and as in beer)
+	* The ability to connect to multiple servers at a time (something every open source client does)
+	* Have the ability to be scripted (something most open source clients have)
+	* A full, modern GUI (HexChat is sort of modern, I guess)
+	* A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
+	* Easy to install, easy to run (if you're trying to compile HexChat, good luck, you'll need it)
+	* Focuses on the chat experience (not downloading/uploading files)
+	* Cross-platform without having to jump through hoops
+
+**Erk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.

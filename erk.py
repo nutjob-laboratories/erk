@@ -61,8 +61,8 @@ An open source IRC client written with Python, Qt5, and Twisted""",
 
 Available themes: {themeflat}
 
-Official Erk repository: https://github.com/nutjob-laboratories/erk
-Official Erk plugin repository: https://github.com/nutjob-laboratories/erk-plugins
+Official Ərk repository: https://github.com/nutjob-laboratories/erk
+Official Ərk plugin repository: https://github.com/nutjob-laboratories/erk-plugins
 
 Erk Copyright (C) 2019  Dan Hetrick
 """,

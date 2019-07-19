@@ -337,7 +337,7 @@ class ErkGUI(QMainWindow):
 
 		ircMenu.addSeparator()
 
-		prestart = QAction(QIcon(RESTART_ICON),"Restart Erk",self)
+		prestart = QAction(QIcon(RESTART_ICON),f"Restart {APPLICATION_NAME}",self)
 		prestart.triggered.connect(lambda state: restart_program())
 		# self.pluginmenu.addAction(prestart)
 		ircMenu.addAction(prestart)
@@ -634,7 +634,7 @@ class ErkGUI(QMainWindow):
 		if len(self.display['banner-text'])>0:
 			self.writeToLog(self.display['banner-text'])
 		else:
-			self.writeToLog(f"<big><b>&nbsp;&nbsp;<a href=\"{OFFICIAL_REPOSITORY}\">Erk IRC Client {APPLICATION_VERSION}</a><b></big>")
+			self.writeToLog(f"<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"{OFFICIAL_REPOSITORY}\">Erk IRC Client {APPLICATION_VERSION}</a><b>")
 			#self.writeToLog(f"<b>&nbsp;&nbsp;{APPLICATION_NAME} {APPLICATION_VERSION}</b>")
 			#self.writeToLog(f"<i>&nbsp;&nbsp;Ready to connect to IRC.</i>")
 			pass
