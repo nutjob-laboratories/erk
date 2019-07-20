@@ -1,7 +1,7 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/logo.png"><br>
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/howyousay.png"><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-0.410-unstable.zip"><b>Download Erk 0.410</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.410</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf">Plugin Documentation</a><br>
 	<a href="https://github.com/nutjob-laboratories/erk-plugins">Plugin Repository</a><br>
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>

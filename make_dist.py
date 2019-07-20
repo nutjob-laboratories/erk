@@ -5,6 +5,13 @@ import shutil
 
 from erk.common import *
 
+f = open("version.txt","r")
+mversion = int(f.read())
+f.close()
+f = open("version.txt","w")
+f.write(str(mversion + 1))
+f.close()
+
 
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
@@ -39,5 +46,10 @@ os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.
 
 shutil.rmtree('./dist')
 
-os.rename('erk_dist.zip', f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_VERSION}-unstable.zip")
+archive_name = f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_VERSION}.{str(mversion)}.zip"
 
+os.rename('erk_dist.zip', archive_name)
+
+shutil.copy(archive_name, "./downloads/"+archive_name)
+shutil.copy(archive_name, f"./downloads/{NORMAL_APPLICATION_NAME.lower()}-latest.zip")
+os.remove(archive_name)

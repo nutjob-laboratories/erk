@@ -2503,7 +2503,7 @@ QPushButton::menu-indicator {
 		if len(p)==2: user = p[0]
 
 		if self.highlightNickMessages:
-			if self.connections[serverid].nickname in message:
+			if self.connections[serverid].nickname.lower() in message.lower():
 				#d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,self.display['user'],self.display['highlight'],self.display['background'],True)
 				d = chat_display_highlight(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR,HIGHLIGHT_COLOR)
 			else:

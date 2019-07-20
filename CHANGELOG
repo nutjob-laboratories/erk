@@ -20,6 +20,9 @@ Version 0.410
 	* Changed "Kōd" icon
 	* When using a plugin/command generator in Kōd, the generated text's indentation will now match the user's indentation settings
 	* Fixed a bug where an incorrect initial directory was shown on the editor's "exit save"
+	* Fixed a bug where nick highlighting was case sensitive
+	* Changed to a new versioning system (MAJOR VERSION.MINOR VERSION)
+	* The text entry widget will no longer send IRC messages that consist of only whitespace, or are blank
 
 Version 0.400
 	* New major version

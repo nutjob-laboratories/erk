@@ -1063,8 +1063,6 @@ def remove_html_markup(s):
 
 	return out
 
-
-
 def inject_www_links(txt):
 	urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', txt)
 	for u in urls:
@@ -1083,8 +1081,6 @@ def chat_display_highlight(user,text,max,dolink,namecolor,foreground):
 	msg = msg.replace('!MESSAGE!',"<font color=\"" + foreground + "\">" + text + "</font>")
 
 	return msg
-
-
 
 def chat_display(user,text,max,dolink,namecolor,dobold=False):
 	text = remove_html_markup(text)
