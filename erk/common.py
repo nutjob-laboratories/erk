@@ -1449,3 +1449,145 @@ def convert_irc_color_to_html(text):
 
 
 
+LOAD_EVENT_TEMPLATE = f"""%_I_%# Executed as soon as the plugin is loaded
+%_I_%def {EVENT_LOAD}(self):
+%_I_%%_I_%pass"""
+
+UNLOAD_EVENT_TEMPLATE = f"""%_I_%# Executed when the client exits
+%_I_%def {EVENT_UNLOAD}(self):
+%_I_%%_I_%pass"""
+
+MENU_EVENT_TEMPLATE = f"""%_I_%# Executed when the plugin's name is clicked in
+%_I_%# the "Plugins" menu
+%_I_%def {EVENT_MENU}(self):
+%_I_%%_I_%pass"""
+
+TICK_EVENT_TEMPLATE = f"""%_I_%# Executes roughly once per second
+%_I_%# {EVENT_TICK} is executed once for each connected server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               uptime (int) - The uptime of the client, in seconds 
+%_I_%def {EVENT_TICK}(self,serverID,uptime):
+%_I_%%_I_%pass"""
+
+INPUT_EVENT_TEMPLATE = f"""%_I_%# Executed when the text is inputted into the client
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               source (str) - The window the client input text into
+%_I_%#               text (str) - The input text
+%_I_%def {EVENT_INPUT}(self,serverID,source,text):
+%_I_%%_I_%pass"""
+
+CONNECTED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client connects to an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server connected to
+%_I_%def {EVENT_CONNECTED}(self,serverID):
+%_I_%%_I_%pass"""
+
+DISCONNECTED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client disconnected from an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server disconnected from
+%_I_%#               reason (str) - The reason for the disconnection
+%_I_%def {EVENT_DISCONNECTED}(self,serverID,reason):
+%_I_%%_I_%pass"""
+
+REGISTERED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client registers with an IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server registered with
+%_I_%def {EVENT_REGISTERED}(self,serverID):
+%_I_%%_I_%pass"""
+
+MOTD_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives the MOTD from a server
+%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
+%_I_%#               motd (list) - A list of strings containing the MOTD
+%_I_%def {EVENT_MOTD}(self,serverID,motd):
+%_I_%%_I_%pass"""
+
+PUBLIC_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a public message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
+%_I_%%_I_%pass"""
+
+PRIVATE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a private message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
+%_I_%%_I_%pass"""
+
+NOTICE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a notice
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_NOTICE}(self,serverID,channel,user,message):
+%_I_%%_I_%pass"""
+
+ACTION_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives CTCP action message
+%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
+%_I_%#               channel (str) - The channel the message was sent to
+%_I_%#               user (str) - The sender of the message
+%_I_%#               message (str) - The message
+%_I_%def {EVENT_ACTION}(self,serverID,channel,user,message):
+%_I_%%_I_%pass"""
+
+JOIN_EVENT_TEMPLATE = f"""%_I_%# Executed when a user joins a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server the join occurred on
+%_I_%#               channel (str) - The channel joined
+%_I_%#               user (str) - The user joining
+%_I_%def {EVENT_JOIN}(self,serverID,channel,user):
+%_I_%%_I_%pass"""
+
+PART_EVENT_TEMPLATE = f"""_I_%# Executed when a user leaves a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
+%_I_%#               channel (str) - The channel left
+%_I_%#               user (str) - The user leaving
+%_I_%def {EVENT_PART}(self,serverID,channel,user):
+%_I_%%_I_%pass"""
+
+INVITE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a channel invite
+%_I_%# Arguments:    serverID (str) - The ID of the server the invite occurred on
+%_I_%#               channel (str) - The channel invited to
+%_I_%#               user (str) - The user who sent the invite
+%_I_%def {EVENT_INVITE}(self,serverID,channel,user):
+%_I_%%_I_%pass"""
+
+TOPIC_EVENT_TEMPLATE = f"""%_I_%# Executed when the topic is changed in a channel the client is in
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel that had its topic changed
+%_I_%#               user (str) - The user who changed the topic
+%_I_%#               topic (str) - The new topic
+%_I_%def {EVENT_TOPIC}(self,serverID,channel,user,topic):
+%_I_%%_I_%pass"""
+
+QUIT_EVENT_TEMPLATE = f"""%_I_%# Executed when a user disconnects from the IRC server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               user (str) - The user disconnecting
+%_I_%#               message (str) - An optional parting message
+%_I_%def {EVENT_QUIT}(self,serverID,user,message):
+%_I_%%_I_%pass"""
+
+MODE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a mode message
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               mset (bool) - True for setting a mode, False for unsetting
+%_I_%#               user (str) - The user who set the mode
+%_I_%#               target (str) - The channel or user the mode was set or unset on
+%_I_%#               modes (str) - The modes set
+%_I_%#               args (list) - Any mode arguments
+%_I_%def {EVENT_MODE}(self,serverID,mset,user,target,modes,args):
+%_I_%%_I_%pass"""
+
+RAW_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives ANY data from the server
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               data (str) - The data sent
+%_I_%#
+%_I_%def {EVENT_RAW}(self,serverID,data):
+%_I_%%_I_%pass"""
+
+KICK_EVENT_TEMPLATE = f"""%_I_%# Executed when a user is kicked from a channel
+%_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel the user was kicked from
+%_I_%#               user (str) - The user kicked
+%_I_%#               kicker (string) - The user who did the kicking
+%_I_%#               reason (string) - The optional reason for the kick
+%_I_%def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
+%_I_%%_I_%pass"""
+

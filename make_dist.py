@@ -51,5 +51,6 @@ archive_name = f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_VERSION}.{str(mv
 os.rename('erk_dist.zip', archive_name)
 
 shutil.copy(archive_name, "./downloads/"+archive_name)
+os.remove(f"./downloads/{NORMAL_APPLICATION_NAME.lower()}-latest.zip")
 shutil.copy(archive_name, f"./downloads/{NORMAL_APPLICATION_NAME.lower()}-latest.zip")
 os.remove(archive_name)
