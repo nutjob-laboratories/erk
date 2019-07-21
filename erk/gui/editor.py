@@ -384,12 +384,13 @@ class Viewer(QMainWindow):
 
 		self.injectPublicCommand(classname,name,version,description,trigger,issilent,isnowindows,isnoirc,argcount)
 
-	def addToBeginning(self,text):
+	def addToBeginning(self,text,appendspace=False):
 
 		code = self.editor.toPlainText()
 		self.editor.clear()
 		# self.editor.setPlainText(code)
 		self.editor.insertPlainText(text)
+		if appendspace: self.editor.appendPlainText("")
 		self.editor.appendPlainText(code)
 		
 
@@ -648,6 +649,16 @@ class Viewer(QMainWindow):
 	def insertEventTemplate(self,code):
 		self.editor.insertPlainText(self.processIndentation(code))
 
+	def insertBootstapTemplate(self,code):
+
+		i = TEMPLATE_MODULE_LOAD
+		if i in self.editor.toPlainText():
+			pass
+		else:
+			self.addToBeginning(i,True)
+
+		self.editor.insertPlainText(self.processIndentation(code))
+
 	def contextMenu(self,location):
 		#print(location)
 		menu = self.editor.createStandardContextMenu()
@@ -657,99 +668,97 @@ class Viewer(QMainWindow):
 		menu.addSeparator()
 
 
-		eventMenu = QMenu("Erk events")
+		eventMenu = QMenu("Events")
 		eventMenu.setIcon(QIcon(ERK_ICON))
-		menu.insertMenu(menu.actions()[0],eventMenu)
 
-		pluEvTemp = QAction("Load",self)
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Load",self)
 		pluEvTemp.triggered.connect(lambda state,f=LOAD_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Unload",self)
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Unload",self)
 		pluEvTemp.triggered.connect(lambda state,f=UNLOAD_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Menu click",self)
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Menu click",self)
 		pluEvTemp.triggered.connect(lambda state,f=MENU_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Tick",self)
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Tick",self)
 		pluEvTemp.triggered.connect(lambda state,f=TICK_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Input",self)
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Input",self)
 		pluEvTemp.triggered.connect(lambda state,f=INPUT_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Connected",self)
+		pluEvTemp = QAction(QIcon(SERVER_ICON),"Connected",self)
 		pluEvTemp.triggered.connect(lambda state,f=CONNECTED_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Disconnected",self)
+		pluEvTemp = QAction(QIcon(SERVER_ICON),"Disconnected",self)
 		pluEvTemp.triggered.connect(lambda state,f=DISCONNECTED_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Registered",self)
+		pluEvTemp = QAction(QIcon(SERVER_ICON),"Registered",self)
 		pluEvTemp.triggered.connect(lambda state,f=REGISTERED_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("MOTD",self)
+		pluEvTemp = QAction(QIcon(SERVER_ICON),"MOTD",self)
 		pluEvTemp.triggered.connect(lambda state,f=MOTD_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Public message",self)
-		pluEvTemp.triggered.connect(lambda state,f=PUBLIC_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Private message",self)
-		pluEvTemp.triggered.connect(lambda state,f=PRIVATE_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Notice message",self)
-		pluEvTemp.triggered.connect(lambda state,f=NOTICE_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Action message",self)
-		pluEvTemp.triggered.connect(lambda state,f=ACTION_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Join",self)
-		pluEvTemp.triggered.connect(lambda state,f=JOIN_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Part",self)
-		pluEvTemp.triggered.connect(lambda state,f=PART_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Invite",self)
-		pluEvTemp.triggered.connect(lambda state,f=INVITE_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Topic",self)
-		pluEvTemp.triggered.connect(lambda state,f=TOPIC_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Quit",self)
-		pluEvTemp.triggered.connect(lambda state,f=QUIT_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Mode",self)
-		pluEvTemp.triggered.connect(lambda state,f=MODE_EVENT_TEMPLATE: self.insertEventTemplate(f))
-		eventMenu.addAction(pluEvTemp)
-
-		pluEvTemp = QAction("Raw input",self)
+		pluEvTemp = QAction(QIcon(SERVER_ICON),"Raw input",self)
 		pluEvTemp.triggered.connect(lambda state,f=RAW_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
-		pluEvTemp = QAction("Kick",self)
+		pluEvTemp = QAction(QIcon(PUBLIC_ICON),"Public message",self)
+		pluEvTemp.triggered.connect(lambda state,f=PUBLIC_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(PUBLIC_ICON),"Private message",self)
+		pluEvTemp.triggered.connect(lambda state,f=PRIVATE_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(PUBLIC_ICON),"Notice message",self)
+		pluEvTemp.triggered.connect(lambda state,f=NOTICE_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(PUBLIC_ICON),"Action message",self)
+		pluEvTemp.triggered.connect(lambda state,f=ACTION_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(CHANNEL_WINDOW_ICON),"Join",self)
+		pluEvTemp.triggered.connect(lambda state,f=JOIN_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(CHANNEL_WINDOW_ICON),"Part",self)
+		pluEvTemp.triggered.connect(lambda state,f=PART_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(CHANNEL_WINDOW_ICON),"Topic",self)
+		pluEvTemp.triggered.connect(lambda state,f=TOPIC_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(CHANNEL_WINDOW_ICON),"Mode",self)
+		pluEvTemp.triggered.connect(lambda state,f=MODE_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(USER_ICON),"Invite",self)
+		pluEvTemp.triggered.connect(lambda state,f=INVITE_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(USER_ICON),"Quit",self)
+		pluEvTemp.triggered.connect(lambda state,f=QUIT_EVENT_TEMPLATE: self.insertEventTemplate(f))
+		eventMenu.addAction(pluEvTemp)
+
+		pluEvTemp = QAction(QIcon(USER_ICON),"Kick",self)
 		pluEvTemp.triggered.connect(lambda state,f=KICK_EVENT_TEMPLATE: self.insertEventTemplate(f))
 		eventMenu.addAction(pluEvTemp)
 
 		#funcMenu = menu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC function calls")
-		funcMenu = QMenu("IRC function calls")
+		funcMenu = QMenu("IRC")
 		funcMenu.setIcon(QIcon(CHANNEL_WINDOW_ICON))
-		menu.insertMenu(menu.actions()[0],funcMenu)
-
+		
 		plugCmdMsg = QAction(QIcon(PUBLIC_ICON),"msg()",self)
 		plugCmdMsg.triggered.connect(lambda state,f="msg": self.generateMsgFunctionCall(f))
 		funcMenu.addAction(plugCmdMsg)
@@ -787,15 +796,45 @@ class Viewer(QMainWindow):
 		funcMenu.addAction(plugCmdMode)
 
 		#erkMenu = menu.addMenu(QIcon(ERK_ICON),"Client function calls")
-		erkMenu = QMenu("Client function calls")
+		erkMenu = QMenu("Client")
 		erkMenu.setIcon(QIcon(ERK_ICON))
-		menu.insertMenu(menu.actions()[0],erkMenu)
 
 		plugCmdPrint = QAction(QIcon(WINDOW_ICON),"print()",self)
 		plugCmdPrint.triggered.connect(self.generatePrintFunctionCall)
 		erkMenu.addAction(plugCmdPrint)
 
-		menu.insertSeparator(menu.actions()[3])
+		pluEvTemp = QAction(QIcon(ERK_ICON),"Plugin bootstrap",self)
+		pluEvTemp.triggered.connect(lambda state,f=PLUGIN_START_TEMPLATE: self.insertBootstapTemplate(f))
+		erkMenu.addAction(pluEvTemp)
+
+		# injectLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
+		injectLabel = QLabel("<div style=\"text-align: center;\"><i><small>&nbsp;&nbsp;Plugin methods&nbsp;&nbsp;</small></i></div>")
+		injectAction = QWidgetAction(self)
+		injectAction.setDefaultWidget(injectLabel)
+
+		eventLabel = QLabel("<div style=\"text-align: center;\"><i><small>&nbsp;&nbsp;Plugin events&nbsp;&nbsp;</small></i></div>")
+		injectEvent = QWidgetAction(self)
+		injectEvent.setDefaultWidget(eventLabel)
+
+		# menu.insertAction(menu.actions()[0],injectAction)
+
+		menu.insertSeparator(menu.actions()[0])
+
+		menu.insertMenu(menu.actions()[0],eventMenu) # erk events
+
+		menu.insertAction(menu.actions()[0],injectEvent)
+		
+		menu.insertSeparator(menu.actions()[0])
+
+		menu.insertMenu(menu.actions()[0],erkMenu) # client methods
+		menu.insertMenu(menu.actions()[0],funcMenu) # irc methods
+
+
+		
+
+		menu.insertAction(menu.actions()[0],injectAction)
+
+		# menu.insertSeparator(menu.actions()[6])
 
 		action = menu.exec_(self.editor.mapToGlobal(location))
 
@@ -958,6 +997,12 @@ class Viewer(QMainWindow):
 		pluginsMenu.addAction(mispriv)
 
 		settingsMenu = self.menubar.addMenu("Settings")
+
+		aboutd = QAction(QIcon(ABOUT_ICON),f"About {EDITOR_NAME}",self)
+		aboutd.triggered.connect(lambda state,f=0: self.parent.doAboutKod(self))
+		settingsMenu.addAction(aboutd)
+
+		settingsMenu.addSeparator()
 
 		optFont = QAction(QIcon(FONT_ICON),"Set font",self)
 		optFont.triggered.connect(self.getFont)

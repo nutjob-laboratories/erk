@@ -56,6 +56,7 @@ APPLICATION_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 EDITOR_NAME = "Kōd"
+EDITOR_VERSION = "0.54"
 NORMAL_APPLICATION_NAME = "Erk"
 
 GPL_NOTIFICATION = """Ərk IRC Client
@@ -251,6 +252,8 @@ QT_IMAGE = ":/qt.png"
 PYTHON_IMAGE = ":/python.png"
 TWISTED_IMAGE = ":/twisted.png"
 ICONS8_IMAGE = ":/icons8.png"
+
+KOD_LOGO_IMAGE = ":/kodlogo.png"
 
 # Icons
 
@@ -1591,3 +1594,12 @@ KICK_EVENT_TEMPLATE = f"""%_I_%# Executed when a user is kicked from a channel
 %_I_%def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
 %_I_%%_I_%pass"""
 
+PLUGIN_START_TEMPLATE = f"""class MyPluginClass(Plugin):
+%_I_%def __init__(self):
+%_I_%%_I_%self.name = "Plugin"
+%_I_%%_I_%self.version = "1.0"
+%_I_%%_I_%self.description = "A plugin."
+%_I_%%_I_%self.silent = False
+%_I_%%_I_%self.nowindows = False
+%_I_%%_I_%self.noirc = False
+"""

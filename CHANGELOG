@@ -24,6 +24,10 @@ Version 0.410
 	* Changed to a new versioning system (MAJOR VERSION.MINOR VERSION)
 	* The text entry widget will no longer send IRC messages that consist of only whitespace, or are blank
 	* Added event template generators to the editors context menu
+	* Made the editor context menu prettier
+	* Added a option to generate a plugin bootstrap to the editor's context menu
+	* Added an "about" dialog to the plugin editor
+	* If any "about" dialog is summoned, any mazimized windows will be normalized
 
 Version 0.400
 	* New major version
