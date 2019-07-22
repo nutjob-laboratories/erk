@@ -172,8 +172,9 @@ class ErkGUI(QMainWindow):
 		self.highlightNickMessages = True
 		self.enableStatusBar = True
 		self.theme = USE_NO_THEME_SETTING
-
 		self.themeIcons = True
+
+		self.profanityFilter = False
 
 		self.settings = loadSettings(self.settingsFile)
 
@@ -201,6 +202,8 @@ class ErkGUI(QMainWindow):
 		self.theme = self.settings[THEME_SETTING]
 
 		self.themeIcons = self.settings[LOAD_THEME_ICONS_SETTING]
+
+		self.profanityFilter = self.settings[PROFANITY_FILTER_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -447,6 +450,14 @@ class ErkGUI(QMainWindow):
 		optAlive.triggered.connect(self.toggleAlive)
 		self.chatSettings.addAction(optAlive)
 
+
+		optFilter = QAction("Filter profanity",self,checkable=True)
+		optFilter.setChecked(self.profanityFilter)
+		optFilter.triggered.connect(self.toggleFilter)
+		self.chatSettings.addAction(optFilter)
+
+
+
 		self.spellMenu = self.optMenu.addMenu(QIcon(SPELL_ICON),"Spell check")
 
 		self.optSpellCheck = QAction("Enabled",self,checkable=True)
@@ -517,15 +528,15 @@ class ErkGUI(QMainWindow):
 
 		self.helpMenu.addSeparator()
 
-		helpLink = QAction(QIcon(ERK_ICON),f"Official {APPLICATION_NAME} repository",self)
+		helpLink = QAction(QIcon(ERK_ICON),f"{APPLICATION_NAME} source code repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
 
-		helpLink = QAction(QIcon(PLUGIN_ICON),f"Official {APPLICATION_NAME} plugin repository",self)
+		helpLink = QAction(QIcon(PLUGIN_ICON),f"{APPLICATION_NAME} plugin repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
 
-		helpLink = QAction(QIcon(THEME_ICON),f"Official {APPLICATION_NAME} theme compiler repository",self)
+		helpLink = QAction(QIcon(THEME_ICON),f"{APPLICATION_NAME} theme compiler repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-theme": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
 
@@ -1187,6 +1198,15 @@ class ErkGUI(QMainWindow):
 			self.joinInvite = True
 
 		self.settings[INVITE_SETTING] = self.joinInvite
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleFilter(self):
+		if self.profanityFilter:
+			self.profanityFilter = False
+		else:
+			self.profanityFilter = True
+
+		self.settings[PROFANITY_FILTER_SETTING] = self.profanityFilter
 		saveSettings(self.settings,self.settingsFile)
 
 	def toggleAlive(self):
@@ -2531,6 +2551,9 @@ QPushButton::menu-indicator {
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
+		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+
 		if self.highlightNickMessages:
 			if self.connections[serverid].nickname.lower() in message.lower():
 				#d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,self.display['user'],self.display['highlight'],self.display['background'],True)
@@ -2578,6 +2601,9 @@ QPushButton::menu-indicator {
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
+
+		if self.profanityFilter:
+			message = filterProfanityFromText(message)
 
 		for w in self.windows[serverid]:
 			if w.window.name == user:
@@ -2647,6 +2673,9 @@ QPushButton::menu-indicator {
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
+		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+
 		is_channel = True
 		if len(channel)>1 and channel[0]!="#": is_channel = False
 
@@ -2696,6 +2725,9 @@ QPushButton::menu-indicator {
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
+
+		if self.profanityFilter:
+			message = filterProfanityFromText(message)
 
 		if channel==self.connections[serverid].nickname:
 			channel = user

@@ -131,9 +131,14 @@ class Dialog(QDialog):
 		scinfo.setFont(boldfont)
 		scinfo.setOpenExternalLinks(True)
 
+		sinfo = QLabel(f"<small>{PYTHON_IMPLEMENTATION} {PYTHON_VERSION} - Qt {QT_VERSION_STR} - PyQt {PYQT_VERSION_STR}</small>")
+		sinfo.setAlignment(Qt.AlignCenter)
+		sinfo.setFont(boldfont)
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(logo)
 		finalLayout.addWidget(dinfo)
+		finalLayout.addWidget(sinfo)
 		finalLayout.addLayout(technology)
 		finalLayout.addWidget(scinfo)
 		finalLayout.addWidget(linfo)

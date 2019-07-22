@@ -998,12 +998,6 @@ class Viewer(QMainWindow):
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
-		aboutd = QAction(QIcon(ABOUT_ICON),f"About {EDITOR_NAME}",self)
-		aboutd.triggered.connect(lambda state,f=0: self.parent.doAboutKod(self))
-		settingsMenu.addAction(aboutd)
-
-		settingsMenu.addSeparator()
-
 		optFont = QAction(QIcon(FONT_ICON),"Set font",self)
 		optFont.triggered.connect(self.getFont)
 		settingsMenu.addAction(optFont)
@@ -1061,6 +1055,32 @@ class Viewer(QMainWindow):
 		self.optFind.setChecked(self.findOnTop)
 		self.optFind.triggered.connect(self.toggleFindtop)
 		settingsMenu.addAction(self.optFind)
+
+		helpMenu = self.menubar.addMenu("Help")
+
+		aboutd = QAction(QIcon(ABOUT_ICON),f"About {EDITOR_NAME}",self)
+		aboutd.triggered.connect(lambda state,f=0: self.parent.doAboutKod(self))
+		helpMenu.addAction(aboutd)
+
+		helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(ERK_ICON),f"{APPLICATION_NAME} source code repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.doOpenUrl(u))
+		helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(PLUGIN_ICON),f"{APPLICATION_NAME} plugin repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.doOpenUrl(u))
+		helpMenu.addAction(helpLink)
+
+		helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(LINK_ICON),"RFC 1459",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.doOpenUrl(u))
+		helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"RFC 2812",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.doOpenUrl(u))
+		helpMenu.addAction(helpLink)
 
 		#settingsMenu.addSeparator()
 

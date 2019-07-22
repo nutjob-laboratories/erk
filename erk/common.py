@@ -38,15 +38,24 @@ from itertools import combinations
 from zipfile import ZipFile
 import glob
 import importlib.util
-
 import platform
+import string
+import random
 
+(SYSTEM_BITS,LINKAGE)=platform.architecture()
 if "Windows" in platform.system():
 	RUNNING_ON_WINDOWS = True
 else:
 	RUNNING_ON_WINDOWS = False
+	if sys.maxsize > 2**32:
+		SYSTEM_BITS = "64bit"
+	else:
+		SYSTEM_BITS = "32bit"
 
+SYSTEM_PLATFORM = platform.platform()
 PYTHON_EXECUTABLE = sys.executable
+PYTHON_IMPLEMENTATION = platform.python_implementation()
+PYTHON_VERSION = platform.python_version()
 
 # Globally load in Erk's essential resource file
 globals()["erk.erkimg"] = __import__("erk.erkimg")
@@ -58,6 +67,7 @@ PROGRAM_FILENAME = "erk.py"
 EDITOR_NAME = "Kōd"
 EDITOR_VERSION = "0.54"
 NORMAL_APPLICATION_NAME = "Erk"
+
 
 GPL_NOTIFICATION = """Ərk IRC Client
 Copyright (C) 2019  Dan Hetrick
@@ -92,6 +102,15 @@ USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
+
+PROFANITY_LIST = os.path.join(ERK_MODULE_DIRECTORY, "profanity.txt")
+
+f = open(PROFANITY_LIST,"r")
+cursewords = f.read()
+f.close()
+
+PROFANITY = cursewords.split("\n")
+PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+"]
 
 THEME_RESOURCE_FILE_NAME = "resources.py"
 THEME_ICON_FILE_NAME = "icon.png"
@@ -201,8 +220,9 @@ DOLINKS_SETTING = "urls_to_links_in_chat"
 TITLE_ACTIVE_WINDOW_SETTING = "set_title_to_active_window"
 SAVE_LOGS_BY_NETWORK = "use_network_for_chat_log_filenames"
 DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
-
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
+
+PROFANITY_FILTER_SETTING = "filter_profanity"
 
 PLUGINS_ENABLED_SETTING = "execute_plugin_events"
 ENABLE_LIST_SETTING = "enable_channel_list_button"
@@ -687,6 +707,27 @@ class Whois(object):
 
 # Functions
 
+def censorWord(word):
+	result = ''
+	last = '+'
+	for letter in word:
+		
+		nl = random.choice(PROFANITY_SYMBOLS)
+		while nl == last:
+			nl = random.choice(PROFANITY_SYMBOLS)
+		last = nl
+		result = result + nl
+	return result
+
+def filterProfanityFromText(text):
+	clean = []
+	for word in text.split(' '):
+		nopunc = word.translate(str.maketrans("","", string.punctuation))
+		if nopunc in PROFANITY:
+			word = censorWord(word)
+		clean.append(word)
+	return ' '.join(clean)
+
 def importThemeResources(theme):
 	if theme==USE_NO_THEME_SETTING:
 		globals()["erk.resources"] = __import__("erk.resources")
@@ -974,6 +1015,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			STATUS_BAR_SETTING: True,
 			THEME_SETTING: USE_NO_THEME_SETTING,
 			LOAD_THEME_ICONS_SETTING: True,
+			PROFANITY_FILTER_SETTING: False,
 		}
 		return s
 

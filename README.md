@@ -28,6 +28,7 @@
 * Built-in spell checker
 * Command/nick/channel auto-completion
 * A theme engine using QSS and JSON (nearly every aspect of the client, from widgets to icons, can be customized)
+* Optional profanity filter
 
 # Requirements
 **Erk** requires Python 3, Qt5, Twisted, and qt5reactor. Qt5 and Twisted can be installed by downloading and installing the software from their respected websites, or by using [**pip**](https://pypi.org/project/pip/):

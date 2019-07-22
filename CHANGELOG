@@ -28,6 +28,11 @@ Version 0.410
 	* Added a option to generate a plugin bootstrap to the editor's context menu
 	* Added an "about" dialog to the plugin editor
 	* If any "about" dialog is summoned, any mazimized windows will be normalized
+	* Removed the repetitive "official"s from the about menu
+	* Added platform information to the "About" dialogs
+	* Added a "help" menu to the editor
+	* Moved the "about kod" menu entry to the help menu in the editor
+	* Added an optional profanity filter
 
 Version 0.400
 	* New major version
