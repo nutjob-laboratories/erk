@@ -33,6 +33,9 @@ Version 0.410
 	* Added a "help" menu to the editor
 	* Moved the "about kod" menu entry to the help menu in the editor
 	* Added an optional profanity filter
+	* Renamed the "view" dialog to "Display"
+	* Re-organized the "Settings" menu
+	* Added an option to display channel topics in the title of channel windows
 
 Version 0.400
 	* New major version

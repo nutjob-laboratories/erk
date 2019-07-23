@@ -110,7 +110,7 @@ cursewords = f.read()
 f.close()
 
 PROFANITY = cursewords.split("\n")
-PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+"]
+PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
 
 THEME_RESOURCE_FILE_NAME = "resources.py"
 THEME_ICON_FILE_NAME = "icon.png"
@@ -234,6 +234,8 @@ AUTOCOMPLETE_ENTITIES = "enable_nick_channel_autocomplete"
 HIGHLIGHT_NICK_MESSAGE = "enable_nick_message_highlight"
 STATUS_BAR_SETTING = "enable_status_bar"
 
+TOPIC_TITLE_SETTING = "display_channel_topic_in_title"
+
 THEME_SETTING = "theme"
 
 EDITOR_FONT_SETTING = "font"
@@ -348,6 +350,7 @@ QTICON_ICON = ":/qticon.png"
 PYQT_ICON = ":/pyqt.png"
 OPEN_SOURCE_ICON = ":/opensource.png"
 AUTOCOMPLETE_ICON = ":/autocomplete.png"
+SETTINGS_ICON = ":/settings.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
@@ -707,24 +710,27 @@ class Whois(object):
 
 # Functions
 
-def censorWord(word):
+def censorWord(word,punc=True):
 	result = ''
 	last = '+'
 	for letter in word:
-		
-		nl = random.choice(PROFANITY_SYMBOLS)
-		while nl == last:
+		if punc:
+			random.shuffle(PROFANITY_SYMBOLS)		
 			nl = random.choice(PROFANITY_SYMBOLS)
-		last = nl
-		result = result + nl
+			while nl == last:
+				nl = random.choice(PROFANITY_SYMBOLS)
+			last = nl
+			result = result + nl
+		else:
+			result = result + "*"
 	return result
 
-def filterProfanityFromText(text):
+def filterProfanityFromText(text,punc=True):
 	clean = []
 	for word in text.split(' '):
 		nopunc = word.translate(str.maketrans("","", string.punctuation))
 		if nopunc in PROFANITY:
-			word = censorWord(word)
+			word = censorWord(word,punc)
 		clean.append(word)
 	return ' '.join(clean)
 
@@ -1016,6 +1022,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			THEME_SETTING: USE_NO_THEME_SETTING,
 			LOAD_THEME_ICONS_SETTING: True,
 			PROFANITY_FILTER_SETTING: False,
+			TOPIC_TITLE_SETTING: True,
 		}
 		return s
 

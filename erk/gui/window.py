@@ -87,6 +87,8 @@ class Interface(QMainWindow):
 		self.serverid = serverid
 		self.subwindow = subwindow
 
+		self.topic = ''
+
 		self.loaded = False
 		self.ontop = False
 
