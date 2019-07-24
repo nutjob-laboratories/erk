@@ -175,10 +175,10 @@ class ErkGUI(QMainWindow):
 		self.enableStatusBar = True
 		self.theme = USE_NO_THEME_SETTING
 		self.themeIcons = True
-
 		self.profanityFilter = False
-
 		self.topicInTitle = True
+
+		self.stripIRCcolor = False
 
 		self.settings = loadSettings(self.settingsFile)
 
@@ -210,6 +210,8 @@ class ErkGUI(QMainWindow):
 		self.profanityFilter = self.settings[PROFANITY_FILTER_SETTING]
 
 		self.topicInTitle = self.settings[TOPIC_TITLE_SETTING]
+
+		self.stripIRCcolor = self.settings[STRIP_IRC_COLORS_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -384,6 +386,33 @@ class ErkGUI(QMainWindow):
 
 		# self.viewMenu.addSeparator()
 
+		self.msgMenu = self.viewMenu.addMenu(QIcon(PUBLIC_ICON),"Messages")
+
+		self.optStrip = QAction("Strip IRC colors from messages",self,checkable=True)
+		self.optStrip.setChecked(self.stripIRCcolor)
+		self.optStrip.triggered.connect(self.toggleStrip)
+		self.msgMenu.addAction(self.optStrip)
+
+		self.optFilter = QAction("Censor profanity in messages",self,checkable=True)
+		self.optFilter.setChecked(self.profanityFilter)
+		self.optFilter.triggered.connect(self.toggleFilter)
+		self.msgMenu.addAction(self.optFilter)
+
+		optUptime = QAction("Display timestamps",self,checkable=True)
+		optUptime.setChecked(self.displayTimestamp)
+		optUptime.triggered.connect(self.toggleTimestamp)
+		self.msgMenu.addAction(optUptime)
+
+		optHightlightNick = QAction("Highlight messages containing your nickname",self,checkable=True)
+		optHightlightNick.setChecked(self.highlightNickMessages)
+		optHightlightNick.triggered.connect(self.toggleNickHighlight)
+		self.msgMenu.addAction(optHightlightNick)
+
+		optPrivate = QAction("Open windows for incoming private messages",self,checkable=True)
+		optPrivate.setChecked(self.openWindowOnIncomingPrivate)
+		optPrivate.triggered.connect(self.togglePrivateWindow)
+		self.msgMenu.addAction(optPrivate)
+
 		self.faceMenu = self.viewMenu.addMenu(QIcon(WINDOW_ICON),"Interface")
 
 		optStatus = QAction("Display status bar",self,checkable=True)
@@ -410,26 +439,6 @@ class ErkGUI(QMainWindow):
 		optEnableList.setChecked(self.channelListEnabled)
 		optEnableList.triggered.connect(self.toggleListEnable)
 		self.faceMenu.addAction(optEnableList)
-
-		optUptime = QAction("Display timestamps",self,checkable=True)
-		optUptime.setChecked(self.displayTimestamp)
-		optUptime.triggered.connect(self.toggleTimestamp)
-		self.faceMenu.addAction(optUptime)
-
-		optHightlightNick = QAction("Highlight messages containing your nickname",self,checkable=True)
-		optHightlightNick.setChecked(self.highlightNickMessages)
-		optHightlightNick.triggered.connect(self.toggleNickHighlight)
-		self.faceMenu.addAction(optHightlightNick)
-
-		optPrivate = QAction("Open windows for incoming private messages",self,checkable=True)
-		optPrivate.setChecked(self.openWindowOnIncomingPrivate)
-		optPrivate.triggered.connect(self.togglePrivateWindow)
-		self.faceMenu.addAction(optPrivate)
-
-		self.optFilter = QAction("Filter profanity from chat",self,checkable=True)
-		self.optFilter.setChecked(self.profanityFilter)
-		self.optFilter.triggered.connect(self.toggleFilter)
-		self.faceMenu.addAction(self.optFilter)
 
 
 		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
@@ -1311,6 +1320,16 @@ class ErkGUI(QMainWindow):
 			self.joinInvite = True
 
 		self.settings[INVITE_SETTING] = self.joinInvite
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleStrip(self):
+
+		if self.stripIRCcolor:
+			self.stripIRCcolor = False
+		else:
+			self.stripIRCcolor = True
+
+		self.settings[STRIP_IRC_COLORS_SETTING] = self.stripIRCcolor
 		saveSettings(self.settings,self.settingsFile)
 
 	def toggleTopic(self):
@@ -2684,6 +2703,9 @@ QPushButton::menu-indicator {
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
+		if self.stripIRCcolor:
+			message = strip_color(message)
+
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
 
@@ -2734,6 +2756,9 @@ QPushButton::menu-indicator {
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
+
+		if self.stripIRCcolor:
+			message = strip_color(message)
 
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
@@ -2806,6 +2831,9 @@ QPushButton::menu-indicator {
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
+		if self.stripIRCcolor:
+			message = strip_color(message)
+
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
 
@@ -2858,6 +2886,9 @@ QPushButton::menu-indicator {
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
+
+		if self.stripIRCcolor:
+			message = strip_color(message)
 
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)

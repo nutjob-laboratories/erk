@@ -221,8 +221,9 @@ TITLE_ACTIVE_WINDOW_SETTING = "set_title_to_active_window"
 SAVE_LOGS_BY_NETWORK = "use_network_for_chat_log_filenames"
 DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
-
 PROFANITY_FILTER_SETTING = "filter_profanity"
+
+STRIP_IRC_COLORS_SETTING = "strip_irc_colors"
 
 PLUGINS_ENABLED_SETTING = "execute_plugin_events"
 ENABLE_LIST_SETTING = "enable_channel_list_button"
@@ -1023,6 +1024,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			LOAD_THEME_ICONS_SETTING: True,
 			PROFANITY_FILTER_SETTING: False,
 			TOPIC_TITLE_SETTING: True,
+			STRIP_IRC_COLORS_SETTING: False,
 		}
 		return s
 
@@ -1652,3 +1654,61 @@ PLUGIN_START_TEMPLATE = f"""class MyPluginClass(Plugin):
 %_I_%%_I_%self.nowindows = False
 %_I_%%_I_%self.noirc = False
 """
+
+def strip_color(text):
+
+	html_tag = "font"
+
+	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
+	for c in combos:
+		fore = c[0]
+		back = c[1]
+
+		t = f"\x03{fore},{back}"
+		text = text.replace(t,'')
+
+	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
+	for c in combos:
+		fore = c[0]
+		back = c[1]
+
+		t = f"\x03{fore},{back}"
+		text = text.replace(t,'')
+
+	text = text.replace("\x0310","")
+	text = text.replace("\x0311","")
+	text = text.replace("\x0312","")
+	text = text.replace("\x0313","")
+	text = text.replace("\x0314","")
+	text = text.replace("\x0315","")
+
+	text = text.replace("\x0300","")
+	text = text.replace("\x0301","")
+	text = text.replace("\x0302","")
+	text = text.replace("\x0303","")
+	text = text.replace("\x0304","")
+	text = text.replace("\x0305","")
+	text = text.replace("\x0306","")
+	text = text.replace("\x0307","")
+	text = text.replace("\x0308","")
+	text = text.replace("\x0309","")
+
+	text = text.replace("\x030","")
+	text = text.replace("\x031","")
+	text = text.replace("\x032","")
+	text = text.replace("\x033","")
+	text = text.replace("\x034","")
+	text = text.replace("\x035","")
+	text = text.replace("\x036","")
+	text = text.replace("\x037","")
+	text = text.replace("\x038","")
+	text = text.replace("\x039","")
+
+	text = text.replace("\x03","")
+
+	text = text.replace("\x02","")
+	text = text.replace("\x1D","")
+	text = text.replace("\x1F","")
+	text = text.replace("\x0F","")
+
+	return text

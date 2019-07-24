@@ -13,7 +13,7 @@ Version 0.410
 	* Isolated resources I don't want users editing (app icon, etc) into its own resource file
 	* Removed isolated resources from the theme compiler
 	* Themes are now included in the make_dist script, as is the Erk icon
-	* Removed "hove on link mouse pointer change" option (it was stupid and waaaaay slower than default Qt)
+	* Removed "hover on link mouse pointer change" option (it was stupid and waaaaay slower than default Qt)
 	* Renamed "server uptime" to "connection uptime" as it's more accurate
 	* Moved "use theme icons" menu setting to the "view" menu
 	* Changed the default log banner text to "It's how you pronounce IRC"
@@ -33,9 +33,10 @@ Version 0.410
 	* Added a "help" menu to the editor
 	* Moved the "about kod" menu entry to the help menu in the editor
 	* Added an optional profanity filter
-	* Renamed the "view" dialog to "Display"
+	* Renamed the "View" menu to "Display"
 	* Re-organized the "Settings" menu
 	* Added an option to display channel topics in the title of channel windows
+	* Added an option to strip IRC colors from incoming messages
 
 Version 0.400
 	* New major version
