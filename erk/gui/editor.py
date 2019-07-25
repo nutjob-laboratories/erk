@@ -46,6 +46,7 @@ import erk.gui.dialogs.newplugin as PluginDialog
 import erk.gui.dialogs.newcommand as CommandDialog
 
 import erk.gui.find as FindWindow
+import erk.gui.findreplace as FindReplaceWindow
 
 import erk.gui.dialogs.pluginmsg as CommandMsgDialog
 import erk.gui.dialogs.pluginjoin as CommandJoinDialog
@@ -607,6 +608,19 @@ class Viewer(QMainWindow):
 
 		x = self.parent.newFindWindow(self)
 
+	def doFindReplace(self):
+
+		if self.findWindow != None:
+			self.findWindow.showNormal()
+			return
+
+		if self.parent==None:
+			self.findWindow = FindReplaceWindow.Viewer(self,True)
+			self.findWindow.show()
+			return
+
+		x = self.parent.newFindReplaceWindow(self)
+
 	def setFindWindow(self,obj):
 		self.findWindow = obj
 
@@ -925,6 +939,11 @@ class Viewer(QMainWindow):
 		mefind.triggered.connect(self.doFind)
 		mefind.setShortcut("Ctrl+F")
 		editMenu.addAction(mefind)
+
+		mefindrep = QAction(QIcon(WHOIS_ICON),"Find and replace",self)
+		mefindrep.triggered.connect(self.doFindReplace)
+		#mefind.setShortcut("Ctrl+F")
+		editMenu.addAction(mefindrep)
 
 		editMenu.addSeparator()
 

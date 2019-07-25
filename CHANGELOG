@@ -37,6 +37,9 @@ Version 0.410
 	* Re-organized the "Settings" menu
 	* Added an option to display channel topics in the title of channel windows
 	* Added an option to strip IRC colors from incoming messages
+	* Fixed a bug where the "find" dialog would display incorrectly if the parent editor window was maximized
+	* Added a "find and replace" option to the editor's "Edit" menu
+	* Added a "find and replace" dialog
 
 Version 0.400
 	* New major version

@@ -247,6 +247,7 @@ EDITOR_FIND_ON_TOP = "find_window_always_on_top"
 
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 FIND_WINDOW_TITLE = "Find"
+FIND_REPLACE_WINDOW_TITLE = "Find and replace"
 
 IRC_00 = "#FFFFFF"
 IRC_01 = "#000000"

@@ -58,6 +58,7 @@ import erk.gui.window as Window
 
 import erk.gui.editor as EditorWindow
 import erk.gui.find as FindWindow
+import erk.gui.findreplace as FindReplaceWindow
 
 import erk.gui.dialogs.connect as ConnectDialog
 import erk.gui.dialogs.networks as NetworkDialog
@@ -1085,7 +1086,9 @@ class ErkGUI(QMainWindow):
 
 	def newFindWindow(self,editobj):
 		newEditSW = QMdiSubWindow()
+
 		newEdit = FindWindow.Viewer(editobj)
+
 		newEditSW.setWidget(newEdit)
 		newEdit.subwindow = newEditSW
 		self.MDI.addSubWindow(newEditSW)
@@ -1112,6 +1115,46 @@ class ErkGUI(QMainWindow):
 		# No resize
 		# This is also set in the __init__ of find window
 		newEditSW.setFixedSize(newEditSW.sizeHint())
+
+		if editobj.isMaximized():
+			editobj.showNormal()
+
+		newEditSW.show()
+
+	def newFindReplaceWindow(self,editobj):
+		newEditSW = QMdiSubWindow()
+
+		newEdit = FindReplaceWindow.Viewer(editobj)
+
+		newEditSW.setWidget(newEdit)
+		newEdit.subwindow = newEditSW
+		self.MDI.addSubWindow(newEditSW)
+
+		newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.CustomizeWindowHint)
+		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMinimizeButtonHint)
+		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+
+		if editobj.findOnTop:
+			newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.WindowStaysOnTopHint)
+
+		editobj.setFindWindow(newEditSW)
+		newEdit.setSubwindow(newEditSW)
+
+		if editobj.filename != "":
+			f = os.path.basename(editobj.filename)
+			newEditSW.setWindowTitle(f"Find in {f}")
+
+		# Center window
+		wx = (self.MDI.width()/2)-(newEditSW.width()/2)
+		wy = (self.MDI.height()/2)-(newEditSW.height()/2)
+		newEditSW.move(wx,wy)
+
+		# No resize
+		# This is also set in the __init__ of find window
+		newEditSW.setFixedSize(newEditSW.sizeHint())
+
+		if editobj.isMaximized():
+			editobj.showNormal()
 
 		newEditSW.show()
 
