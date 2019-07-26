@@ -223,10 +223,8 @@ DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
 PROFANITY_FILTER_SETTING = "filter_profanity"
 STRIP_IRC_COLORS_SETTING = "strip_irc_colors"
-
 SYSTEM_TRAY_SETTING = "system_tray_icon"
 SYSTEM_TRAY_FLASH_SETTING = "system_tray_flash"
-
 PLUGINS_ENABLED_SETTING = "execute_plugin_events"
 ENABLE_LIST_SETTING = "enable_channel_list_button"
 ENABLE_SPELL_CHECK = "enable_spell_checking"
@@ -236,9 +234,7 @@ AUTOCOMPLETE_COMMANDS = "enable_command_autocomplete"
 AUTOCOMPLETE_ENTITIES = "enable_nick_channel_autocomplete"
 HIGHLIGHT_NICK_MESSAGE = "enable_nick_message_highlight"
 STATUS_BAR_SETTING = "enable_status_bar"
-
 TOPIC_TITLE_SETTING = "display_channel_topic_in_title"
-
 THEME_SETTING = "theme"
 
 EDITOR_FONT_SETTING = "font"
@@ -357,6 +353,9 @@ AUTOCOMPLETE_ICON = ":/autocomplete.png"
 SETTINGS_ICON = ":/settings.png"
 FLASH_ICON = ":/flash.png"
 TRAY_ICON = ":/tray.png"
+
+MINIMIZE_ICON = ":/minimize.png"
+MAXIMIZE_ICON = ":/maximize.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>

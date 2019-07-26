@@ -194,7 +194,6 @@ class ErkGUI(QMainWindow):
 		self.profanityFilter = False
 		self.topicInTitle = True
 		self.stripIRCcolor = False
-
 		self.showTray = True
 		self.flashTray = True
 
@@ -226,7 +225,6 @@ class ErkGUI(QMainWindow):
 		self.profanityFilter = self.settings[PROFANITY_FILTER_SETTING]
 		self.topicInTitle = self.settings[TOPIC_TITLE_SETTING]
 		self.stripIRCcolor = self.settings[STRIP_IRC_COLORS_SETTING]
-
 		self.showTray = self.settings[SYSTEM_TRAY_SETTING]
 		self.flashTray = self.settings[SYSTEM_TRAY_FLASH_SETTING]
 
@@ -332,7 +330,19 @@ class ErkGUI(QMainWindow):
 		# Create system tray icon
 		self.tray = QSystemTrayIcon(self)
 		self.tray.setIcon(self.ERK_ICON)
-		if self.showTray: self.tray.show()
+
+		# Create system tray menu
+		traymenu = QMenu()
+
+		trayLabel = QLabel(f"<big>{APPLICATION_NAME} {APPLICATION_VERSION}</big>")
+		f = trayLabel.font()
+		f.setBold(True)
+		trayLabel.setFont(f)
+		trayLabel.setAlignment(Qt.AlignCenter)
+		trayLabelAction = QWidgetAction(self)
+		trayLabelAction.setDefaultWidget(trayLabel)
+		traymenu.addAction(trayLabelAction)	
+		traymenu.addSeparator()
 
 		# Create master log
 		self.log = self.buildDockLog()
@@ -358,10 +368,12 @@ class ErkGUI(QMainWindow):
 		self.actConnect = QAction(QIcon(SERVER_ICON),"Connect to Server",self)
 		self.actConnect.triggered.connect(self.doConnectDialog)
 		ircMenu.addAction(self.actConnect)
+		traymenu.addAction(self.actConnect)
 
 		self.actNetwork = QAction(QIcon(NETWORK_ICON),"Connect to Network",self)
 		self.actNetwork.triggered.connect(self.doNetworkDialog)
 		ircMenu.addAction(self.actNetwork)
+		traymenu.addAction(self.actNetwork)
 
 		self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.actDisconnect.triggered.connect(self.selectDisconnect)
@@ -369,10 +381,30 @@ class ErkGUI(QMainWindow):
 		self.actDisconnect.setEnabled(False)
 
 		ircMenu.addSeparator()
+		traymenu.addSeparator()
+
+		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize window",self)
+		trayMin.triggered.connect(self.showMinimized)
+		traymenu.addAction(trayMin)
+
+		trayMin = QAction(QIcon(MAXIMIZE_ICON),f"Maximize window",self)
+		trayMin.triggered.connect(self.showMaximized)
+		traymenu.addAction(trayMin)
+
+		trayMin = QAction(QIcon(WINDOW_ICON),f"Normalize window",self)
+		trayMin.triggered.connect(self.showNormal)
+		traymenu.addAction(trayMin)
+
+		traymenu.addSeparator()
 
 		actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
 		actExit.triggered.connect(self.close)
 		ircMenu.addAction(actExit)
+		traymenu.addAction(actExit)
+
+		# "Install" system tray menu
+		self.tray.setContextMenu(traymenu)
+		if self.showTray: self.tray.show()
 
 		if not self.block_plugins:
 			self.pluginmenu = menubar.addMenu("Plugins")
@@ -468,6 +500,20 @@ class ErkGUI(QMainWindow):
 		self.winTopic.triggered.connect(self.toggleTopic)
 		self.faceMenu.addAction(self.winTopic)
 
+		self.trayMenu = self.viewMenu.addMenu(QIcon(TRAY_ICON),"System Tray")
+
+		optSystray = QAction("Show icon in system tray",self,checkable=True)
+		optSystray.setChecked(self.showTray)
+		optSystray.triggered.connect(self.toggleTray)
+		self.trayMenu.addAction(optSystray)
+
+		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
+		self.optFlash.setChecked(self.flashTray)
+		self.optFlash.triggered.connect(self.toggleFlash)
+		self.trayMenu.addAction(self.optFlash)
+
+		if not self.showTray: self.optFlash.setEnabled(False)
+
 		self.optMenu = menubar.addMenu("Settings")
 
 		self.actUser = QAction(QIcon(USER_ICON),"Edit default user information",self)
@@ -556,20 +602,6 @@ class ErkGUI(QMainWindow):
 		self.optSaveChat.setChecked(self.saveLogsOnExit)
 		self.optSaveChat.triggered.connect(self.toggleSaveLogs)
 		self.miscMenu.addAction(self.optSaveChat)
-
-		self.trayMenu = self.optMenu.addMenu(QIcon(TRAY_ICON),"System Tray")
-
-		optSystray = QAction("Show icon in system tray",self,checkable=True)
-		optSystray.setChecked(self.showTray)
-		optSystray.triggered.connect(self.toggleTray)
-		self.trayMenu.addAction(optSystray)
-
-		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
-		self.optFlash.setChecked(self.flashTray)
-		self.optFlash.triggered.connect(self.toggleFlash)
-		self.trayMenu.addAction(self.optFlash)
-
-		if not self.showTray: self.optFlash.setEnabled(False)
 
 
 		self.windowMenu = menubar.addMenu("Windows")
