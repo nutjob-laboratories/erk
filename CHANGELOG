@@ -40,6 +40,9 @@ Version 0.410
 	* Fixed a bug where the "find" dialog would display incorrectly if the parent editor window was maximized
 	* Added a "find and replace" option to the editor's "Edit" menu
 	* Added a "find and replace" dialog
+	* Window status bar is now off by default
+	* Added a system tray icon option (off by default)
+	* Added an option to cause the system tray icon to flash on receipt of a message (if the window is minimized)
 
 Version 0.400
 	* New major version

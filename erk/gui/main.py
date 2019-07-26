@@ -82,6 +82,16 @@ class ErkGUI(QMainWindow):
 	"""The GUI class for the main client.
 	"""
 
+	def changeEvent(self,event):
+
+		if event.type() == QEvent.WindowStateChange:
+			if event.oldState() and Qt.WindowMinimized:
+				# window has been minimized
+				pass
+			elif event.oldState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
+				# window is not minimized
+				pass
+
 	def __init__(self,app,block_plugins=False,config=None,display=None,parent=None):
 		super(ErkGUI, self).__init__(parent)
 
@@ -150,6 +160,11 @@ class ErkGUI(QMainWindow):
 
 		app.setFont(self.font)
 
+		self.ERK_ICON = QIcon(TRAY_ICON)
+		self.FLASH_ICON = QIcon(FLASH_ICON)
+		self.FLASH_STATE = 0
+		self.IS_FLASHING = False
+
 		self.FORCE_PROFANITY_FILTER = False
 
 		self.displayTimestamp = True
@@ -178,8 +193,10 @@ class ErkGUI(QMainWindow):
 		self.themeIcons = True
 		self.profanityFilter = False
 		self.topicInTitle = True
-
 		self.stripIRCcolor = False
+
+		self.showTray = True
+		self.flashTray = True
 
 		self.settings = loadSettings(self.settingsFile)
 
@@ -205,14 +222,13 @@ class ErkGUI(QMainWindow):
 		self.highlightNickMessages = self.settings[HIGHLIGHT_NICK_MESSAGE]
 		self.enableStatusBar = self.settings[STATUS_BAR_SETTING]
 		self.theme = self.settings[THEME_SETTING]
-
 		self.themeIcons = self.settings[LOAD_THEME_ICONS_SETTING]
-
 		self.profanityFilter = self.settings[PROFANITY_FILTER_SETTING]
-
 		self.topicInTitle = self.settings[TOPIC_TITLE_SETTING]
-
 		self.stripIRCcolor = self.settings[STRIP_IRC_COLORS_SETTING]
+
+		self.showTray = self.settings[SYSTEM_TRAY_SETTING]
+		self.flashTray = self.settings[SYSTEM_TRAY_FLASH_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -312,6 +328,11 @@ class ErkGUI(QMainWindow):
 		pix = QPixmap(MDI_BACKGROUND)
 		backgroundBrush = QBrush(pix)
 		self.MDI.setBackground(backgroundBrush)
+
+		# Create system tray icon
+		self.tray = QSystemTrayIcon(self)
+		self.tray.setIcon(self.ERK_ICON)
+		if self.showTray: self.tray.show()
 
 		# Create master log
 		self.log = self.buildDockLog()
@@ -447,34 +468,6 @@ class ErkGUI(QMainWindow):
 		self.winTopic.triggered.connect(self.toggleTopic)
 		self.faceMenu.addAction(self.winTopic)
 
-
-		#self.viewMenu.addSeparator()
-
-		# optStatus = QAction("Status bar",self,checkable=True)
-		# optStatus.setChecked(self.enableStatusBar)
-		# optStatus.triggered.connect(self.toggleStatus)
-		# self.viewMenu.addAction(optStatus)
-
-		# optPretty = QAction("HexChat style user lists",self,checkable=True)
-		# optPretty.setChecked(self.prettyUserlist)
-		# optPretty.triggered.connect(self.togglePrettyUsers)
-		# self.viewMenu.addAction(optPretty)
-
-		# optUptime = QAction("Connection uptime",self,checkable=True)
-		# optUptime.setChecked(self.displayUptime)
-		# optUptime.triggered.connect(self.toggleUptime)
-		# self.viewMenu.addAction(optUptime)
-
-		# optUptime = QAction("Timestamps",self,checkable=True)
-		# optUptime.setChecked(self.displayTimestamp)
-		# optUptime.triggered.connect(self.toggleTimestamp)
-		# self.viewMenu.addAction(optUptime)
-
-		# optIcons = QAction("Use theme icons",self,checkable=True)
-		# optIcons.setChecked(self.themeIcons)
-		# optIcons.triggered.connect(self.toggleIcons)
-		# self.viewMenu.addAction(optIcons)
-
 		self.optMenu = menubar.addMenu("Settings")
 
 		self.actUser = QAction(QIcon(USER_ICON),"Edit default user information",self)
@@ -486,44 +479,6 @@ class ErkGUI(QMainWindow):
 		self.optMenu.addAction(self.actIgnore)
 
 		self.optMenu.addSeparator()
-
-		# self.actUser = QAction(QIcon(USER_ICON),"Default user information",self)
-		# self.actUser.triggered.connect(self.doUserDialog)
-		# self.optMenu.addAction(self.actUser)
-
-		# self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
-		# self.actIgnore.triggered.connect(self.doIgnoreDialog)
-		# self.optMenu.addAction(self.actIgnore)
-
-		#self.optMenu.addSeparator()
-
-		# self.optFont = QAction(QIcon(FONT_ICON),"Font",self)
-		# self.optFont.triggered.connect(self.getFont)
-		# self.optMenu.addAction(self.optFont)
-
-		# pf = self.display["font"].split(',')
-		# mf = pf[0]
-		# ms = pf[1]
-		# self.optFont.setText(f"Font ({mf}, {ms}pt)")
-
-		# self.actColors = QAction(QIcon(COLOR_ICON),"Colors",self)
-		# self.actColors.triggered.connect(self.doColorDialog)
-		# self.optMenu.addAction(self.actColors)
-
-		# self.themeMenu = self.optMenu.addMenu(QIcon(THEME_ICON),"Theme")
-		# self.buildThemeMenu()
-
-		#self.logsMenu = self.optMenu.addMenu(QIcon(LOG_ICON),"Logs")
-
-		# optNetworkChat = QAction("Save chat logs by network name",self,checkable=True)
-		# optNetworkChat.setChecked(self.logChatByNetwork)
-		# optNetworkChat.triggered.connect(self.toggleNetworkChat)
-		# self.logsMenu.addAction(optNetworkChat)
-
-		# self.optSaveChat = QAction("Save chat logs on window close",self,checkable=True)
-		# self.optSaveChat.setChecked(self.saveLogsOnExit)
-		# self.optSaveChat.triggered.connect(self.toggleSaveLogs)
-		# self.logsMenu.addAction(self.optSaveChat)
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
@@ -537,25 +492,10 @@ class ErkGUI(QMainWindow):
 		optInvite.triggered.connect(self.toggleInvite)
 		self.chatSettings.addAction(optInvite)
 
-		# optPrivate = QAction("Open windows for incoming private messages",self,checkable=True)
-		# optPrivate.setChecked(self.openWindowOnIncomingPrivate)
-		# optPrivate.triggered.connect(self.togglePrivateWindow)
-		# self.chatSettings.addAction(optPrivate)
-
-		# optHightlightNick = QAction("Highlight messages with your nickname",self,checkable=True)
-		# optHightlightNick.setChecked(self.highlightNickMessages)
-		# optHightlightNick.triggered.connect(self.toggleNickHighlight)
-		# self.chatSettings.addAction(optHightlightNick)
-
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
 		optAlive.triggered.connect(self.toggleAlive)
 		self.chatSettings.addAction(optAlive)
-
-		# self.optFilter = QAction("Filter profanity",self,checkable=True)
-		# self.optFilter.setChecked(self.profanityFilter)
-		# self.optFilter.triggered.connect(self.toggleFilter)
-		# self.chatSettings.addAction(self.optFilter)
 
 		self.spellMenu = self.optMenu.addMenu(QIcon(SPELL_ICON),"Spell check")
 
@@ -607,16 +547,6 @@ class ErkGUI(QMainWindow):
 
 		self.miscMenu = self.optMenu.addMenu(QIcon(LOG_ICON),"Logs")
 
-		# optTitle = QAction("Set title to current active window",self,checkable=True)
-		# optTitle.setChecked(self.titleActiveWindow)
-		# optTitle.triggered.connect(self.toggleTitle)
-		# self.miscMenu.addAction(optTitle)
-
-		# optEnableList = QAction("Enable toolbar channel list button",self,checkable=True)
-		# optEnableList.setChecked(self.channelListEnabled)
-		# optEnableList.triggered.connect(self.toggleListEnable)
-		# self.miscMenu.addAction(optEnableList)
-
 		optNetworkChat = QAction("Save chat logs by network name",self,checkable=True)
 		optNetworkChat.setChecked(self.logChatByNetwork)
 		optNetworkChat.triggered.connect(self.toggleNetworkChat)
@@ -627,16 +557,19 @@ class ErkGUI(QMainWindow):
 		self.optSaveChat.triggered.connect(self.toggleSaveLogs)
 		self.miscMenu.addAction(self.optSaveChat)
 
-		#self.optMenu.addSeparator()
+		self.trayMenu = self.optMenu.addMenu(QIcon(TRAY_ICON),"System Tray")
 
-		# self.actUser = QAction(QIcon(USER_ICON),"Default user information",self)
-		# self.actUser.triggered.connect(self.doUserDialog)
-		# self.optMenu.addAction(self.actUser)
+		optSystray = QAction("Show icon in system tray",self,checkable=True)
+		optSystray.setChecked(self.showTray)
+		optSystray.triggered.connect(self.toggleTray)
+		self.trayMenu.addAction(optSystray)
 
-		# self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
-		# self.actIgnore.triggered.connect(self.doIgnoreDialog)
-		# self.optMenu.addAction(self.actIgnore)
+		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
+		self.optFlash.setChecked(self.flashTray)
+		self.optFlash.triggered.connect(self.toggleFlash)
+		self.trayMenu.addAction(self.optFlash)
 
+		if not self.showTray: self.optFlash.setEnabled(False)
 
 
 		self.windowMenu = menubar.addMenu("Windows")
@@ -952,6 +885,34 @@ class ErkGUI(QMainWindow):
 			y = y + 1
 
 		if y!=self.windowcount: self.rebuildWindowMenu()
+
+		# Stop flashing tray icon if the window is no longer minimized
+		if self.showTray:
+			if self.flashTray:
+				if not self.isMinimized():
+					if self.IS_FLASHING:
+						self.IS_FLASHING = False
+						self.FLASH_STATE = 0
+						self.tray.setIcon(self.ERK_ICON)
+			else:
+				if self.tray.icon() != self.ERK_ICON:
+					self.tray.setIcon(self.ERK_ICON)
+
+
+		# Flash tray icon
+		if self.showTray:
+			if self.flashTray:
+				if self.IS_FLASHING:
+					if self.FLASH_STATE==0:
+						self.tray.setIcon(self.ERK_ICON)
+						self.FLASH_STATE = 1
+					else:
+						self.tray.setIcon(self.FLASH_ICON)
+						self.FLASH_STATE = 0
+				else:
+					if self.FLASH_STATE==1:
+						self.FLASH_STATE = 0
+						self.tray.setIcon(self.ERK_ICON)
 
 		# Execute event
 		for plugin in self.packages.plugins:
@@ -1618,6 +1579,28 @@ class ErkGUI(QMainWindow):
 				x.window.userTextInput.moveCursor(QTextCursor.End)
 		
 		self.settings[ENABLE_SPELL_CHECK] = self.spellCheck
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleTray(self):
+		if self.showTray:
+			self.showTray = False
+			self.tray.hide()
+			self.optFlash.setEnabled(False)
+		else:
+			self.showTray = True
+			self.tray.show()
+			self.optFlash.setEnabled(True)
+
+		self.settings[SYSTEM_TRAY_SETTING] = self.showTray
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleFlash(self):
+		if self.flashTray:
+			self.flashTray = False
+		else:
+			self.flashTray = True
+
+		self.settings[SYSTEM_TRAY_FLASH_SETTING] = self.flashTray
 		saveSettings(self.settings,self.settingsFile)
 
 	def toggleSaveLogs(self):
@@ -2752,6 +2735,9 @@ QPushButton::menu-indicator {
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
 
+		if self.isMinimized():
+			self.IS_FLASHING = True
+
 		if self.highlightNickMessages:
 			if self.connections[serverid].nickname.lower() in message.lower():
 				#d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,self.display['user'],self.display['highlight'],self.display['background'],True)
@@ -2805,6 +2791,9 @@ QPushButton::menu-indicator {
 
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
+
+		if self.isMinimized():
+			self.IS_FLASHING = True
 
 		for w in self.windows[serverid]:
 			if w.window.name == user:
@@ -2880,6 +2869,9 @@ QPushButton::menu-indicator {
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
 
+		if self.isMinimized():
+			self.IS_FLASHING = True
+
 		is_channel = True
 		if len(channel)>1 and channel[0]!="#": is_channel = False
 
@@ -2936,10 +2928,11 @@ QPushButton::menu-indicator {
 		if self.profanityFilter:
 			message = filterProfanityFromText(message)
 
+		if self.isMinimized():
+			self.IS_FLASHING = True
+
 		if channel==self.connections[serverid].nickname:
 			channel = user
-
-
 
 		for w in self.windows[serverid]:
 			if w.window.name == channel:

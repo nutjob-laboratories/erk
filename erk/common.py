@@ -222,8 +222,10 @@ SAVE_LOGS_BY_NETWORK = "use_network_for_chat_log_filenames"
 DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
 PROFANITY_FILTER_SETTING = "filter_profanity"
-
 STRIP_IRC_COLORS_SETTING = "strip_irc_colors"
+
+SYSTEM_TRAY_SETTING = "system_tray_icon"
+SYSTEM_TRAY_FLASH_SETTING = "system_tray_flash"
 
 PLUGINS_ENABLED_SETTING = "execute_plugin_events"
 ENABLE_LIST_SETTING = "enable_channel_list_button"
@@ -353,6 +355,8 @@ PYQT_ICON = ":/pyqt.png"
 OPEN_SOURCE_ICON = ":/opensource.png"
 AUTOCOMPLETE_ICON = ":/autocomplete.png"
 SETTINGS_ICON = ":/settings.png"
+FLASH_ICON = ":/flash.png"
+TRAY_ICON = ":/tray.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
@@ -1020,12 +1024,14 @@ def loadSettings(filename=SETTINGS_FILE):
 			AUTOCOMPLETE_COMMANDS: True,
 			AUTOCOMPLETE_ENTITIES: True,
 			HIGHLIGHT_NICK_MESSAGE: True,
-			STATUS_BAR_SETTING: True,
+			STATUS_BAR_SETTING: False,
 			THEME_SETTING: USE_NO_THEME_SETTING,
 			LOAD_THEME_ICONS_SETTING: True,
 			PROFANITY_FILTER_SETTING: False,
 			TOPIC_TITLE_SETTING: True,
 			STRIP_IRC_COLORS_SETTING: False,
+			SYSTEM_TRAY_SETTING: False,
+			SYSTEM_TRAY_FLASH_SETTING: True,
 		}
 		return s
 
