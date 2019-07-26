@@ -55,7 +55,7 @@ Mostly because I don't like HexChat's interface.  I started using IRC in the mid
 When I decided to write a new IRC client, I wanted it to feature a few things:
 
 * It had to be open source (free as in speech and as in beer)
-* The ability to connect to multiple servers at a time (something every open source client does)
+* The ability to connect to multiple servers at a time (something almost every open source client does)
 * Have the ability to be scripted (something most open source clients have)
 * A full, modern GUI (HexChat is sort of modern, I guess)
 * A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
