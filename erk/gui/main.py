@@ -197,6 +197,12 @@ class ErkGUI(QMainWindow):
 		self.showTray = True
 		self.flashTray = True
 
+		# NO SUPPORT FOR SAVING THIS TO CONFIG
+		# TODO: ADD TO CONFIG FILE, MENUS, ETC
+		self.loadLogsOnJoin = True
+		self.maxlogsize = MAX_LOG_SIZE_DEFAULT
+		# THIS ISN'T IN THE CHANGELOG EITHER
+
 		self.settings = loadSettings(self.settingsFile)
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
@@ -227,6 +233,9 @@ class ErkGUI(QMainWindow):
 		self.stripIRCcolor = self.settings[STRIP_IRC_COLORS_SETTING]
 		self.showTray = self.settings[SYSTEM_TRAY_SETTING]
 		self.flashTray = self.settings[SYSTEM_TRAY_FLASH_SETTING]
+
+		self.loadLogsOnJoin = self.settings[LOAD_LOG_SETTING]
+		self.maxlogsize = self.settings[LOAD_LOG_SIZE]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -603,6 +612,52 @@ class ErkGUI(QMainWindow):
 		self.optSaveChat.triggered.connect(self.toggleSaveLogs)
 		self.miscMenu.addAction(self.optSaveChat)
 
+
+		optLoadChat = QAction("Automatically display saved logs in client",self,checkable=True)
+		optLoadChat.setChecked(self.loadLogsOnJoin)
+		optLoadChat.triggered.connect(self.toggleLoadChat)
+		self.miscMenu.addAction(optLoadChat)
+
+		self.logsizeMenu = self.miscMenu.addMenu(QIcon(LOG_ICON),"Log display size")
+
+		self.sizeAll = QAction("Full",self,checkable=True)
+		self.sizeAll.triggered.connect(lambda state,l=0: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeAll)
+
+		self.logsizeMenu.addSeparator()
+
+		self.sizeOne = QAction("100 lines",self,checkable=True)
+		self.sizeOne.triggered.connect(lambda state,l=100: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeOne)
+
+		self.sizeTwo = QAction("200 lines",self,checkable=True)
+		self.sizeTwo.triggered.connect(lambda state,l=200: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeTwo)
+
+		self.sizeThree = QAction("300 lines",self,checkable=True)
+		self.sizeThree.triggered.connect(lambda state,l=300: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeThree)
+
+		self.sizeFour = QAction("400 lines",self,checkable=True)
+		self.sizeFour.triggered.connect(lambda state,l=400: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeFour)
+
+		self.sizeFive = QAction("500 lines",self,checkable=True)
+		self.sizeFive.triggered.connect(lambda state,l=500: self.setLoadLogSize(l) )
+		self.logsizeMenu.addAction(self.sizeFive)
+
+		if self.maxlogsize==0:
+			self.sizeAll.setChecked(True)
+		elif self.maxlogsize==100:
+			self.sizeOne.setChecked(True)
+		elif self.maxlogsize==200:
+			self.sizeTwo.setChecked(True)
+		elif self.maxlogsize==300:
+			self.sizeThree.setChecked(True)
+		elif self.maxlogsize==400:
+			self.sizeFour.setChecked(True)
+		elif self.maxlogsize==500:
+			self.sizeFive.setChecked(True)
 
 		self.windowMenu = menubar.addMenu("Windows")
 
@@ -1269,6 +1324,31 @@ class ErkGUI(QMainWindow):
 	# Menu Functions
 	# ==============
 
+	def setLoadLogSize(self,s):
+		self.maxlogsize = s
+		self.settings[LOAD_LOG_SIZE] = self.maxlogsize
+		saveSettings(self.settings,self.settingsFile)
+
+		self.sizeAll.setChecked(False)
+		self.sizeOne.setChecked(False)
+		self.sizeTwo.setChecked(False)
+		self.sizeThree.setChecked(False)
+		self.sizeFour.setChecked(False)
+		self.sizeFive.setChecked(False)
+
+		if s == 0:
+			self.sizeAll.setChecked(True)
+		elif s == 100:
+			self.sizeOne.setChecked(True)
+		elif s == 200:
+			self.sizeTwo.setChecked(True)
+		elif s == 300:
+			self.sizeThree.setChecked(True)
+		elif s == 400:
+			self.sizeFour.setChecked(True)
+		elif s == 500:
+			self.sizeFive.setChecked(True)
+
 	def manualHideDock(self,visible):
 		if visible:
 			self.displayConnectionLog = True
@@ -1633,6 +1713,15 @@ class ErkGUI(QMainWindow):
 			self.flashTray = True
 
 		self.settings[SYSTEM_TRAY_FLASH_SETTING] = self.flashTray
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleLoadChat(self):
+		if self.loadLogsOnJoin:
+			self.loadLogsOnJoin = False
+		else:
+			self.loadLogsOnJoin = True
+
+		self.settings[LOAD_LOG_SETTING] = self.loadLogsOnJoin
 		saveSettings(self.settings,self.settingsFile)
 
 	def toggleSaveLogs(self):

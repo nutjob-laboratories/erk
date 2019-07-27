@@ -199,6 +199,8 @@ AUTOJOIN_DELIMITER = "/"
 MAX_DEFAULT_NICKNAME_SIZE = 16
 MAX_SERVER_NICKNAME_SIZE = 20
 
+MAX_LOG_SIZE_DEFAULT = 300
+
 INITIAL_WINDOW_WIDTH = 500
 INITIAL_WINDOW_HEIGHT = 350
 
@@ -236,6 +238,9 @@ HIGHLIGHT_NICK_MESSAGE = "enable_nick_message_highlight"
 STATUS_BAR_SETTING = "enable_status_bar"
 TOPIC_TITLE_SETTING = "display_channel_topic_in_title"
 THEME_SETTING = "theme"
+
+LOAD_LOG_SETTING = "automatically_load_log"
+LOAD_LOG_SIZE = "log_display_size"
 
 EDITOR_FONT_SETTING = "font"
 EDITOR_WORD_WRAP_SETTING = "word_wrap"
@@ -1031,6 +1036,8 @@ def loadSettings(filename=SETTINGS_FILE):
 			STRIP_IRC_COLORS_SETTING: False,
 			SYSTEM_TRAY_SETTING: False,
 			SYSTEM_TRAY_FLASH_SETTING: True,
+			LOAD_LOG_SETTING: True,
+			LOAD_LOG_SIZE: MAX_LOG_SIZE_DEFAULT,
 		}
 		return s
 
@@ -1070,6 +1077,17 @@ def saveLog(serverid,name,logs):
 
 	with open(logfile, "w") as writelog:
 		json.dump(logs, writelog, indent=4, sort_keys=True)
+
+def appendLog(serverid,name,logs):
+	f = encodeLogName(serverid,name)
+	logfile = os.path.join(LOG_DIRECTORY,f)
+
+	slog = loadLog(serverid,name)
+	for e in logs:
+		slog.append(e)
+
+	with open(logfile, "a") as writelog:
+		json.dump(slog, writelog, indent=4, sort_keys=True)
 
 def loadLog(serverid,name):
 	f = encodeLogName(serverid,name)

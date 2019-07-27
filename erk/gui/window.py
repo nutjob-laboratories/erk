@@ -100,7 +100,7 @@ class Interface(QMainWindow):
 		self.nickname = client.nickname
 
 		# Load in any logs, if they exist
-		self.log = loadLog(self.serverhost,name)
+		#self.log = loadLog(self.serverhost,name)
 
 		self.hidden = False
 
@@ -281,6 +281,16 @@ class Interface(QMainWindow):
 		self.menuAway.setVisible(False)
 		d = systemTextDisplay(f"You have been set as back.",self.parent.maxnicklen,SYSTEM_COLOR)
 		self.writeText(d)
+
+	def trimLog(self,ilog):
+		count = 0
+		shortlog = []
+		for line in reversed(ilog):
+			count = count + 1
+			shortlog.append(line)
+			if count >= self.parent.maxlogsize:
+				break
+		return list(reversed(shortlog))
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -458,39 +468,51 @@ class Interface(QMainWindow):
 		#self.newChatDivider = self.newChatDivider.replace(NEW_CHAT_DIVIDER_TEXT_COLOR,self.parent.display["new-chat-divider-text"])
 		#self.newChatDivider = self.newChatDivider.replace(NEW_CHAT_DIVIDER_BACKGROUND_COLOR,self.parent.display["new-chat-divider"])
 
-		# Now, load in logs
-		if len(self.log)>0:
-			for line in self.log:
-				if len(line[LOG_TEXT])>0:
-					text = line[LOG_TEXT]
-					timestamp = line[LOG_TIMESTAMP]
+		if self.parent.loadLogsOnJoin:
 
-					if self.displayTimestamp:
-						# pretty = datetime.utcfromtimestamp(timestamp).strftime('%H:%M:%S')
-						pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
-						pretty = "&nbsp;" + pretty + "&nbsp;"
-						tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
-						text = text.replace("!TIMESTAMP!",tt)
-					else:
-						text = text.replace("!TIMESTAMP!","")
+			# Load in any logs, if they exist
+			self.log = loadLog(self.serverhost,self.name)
 
-					# Apply colors
-					text = self.applyColors(text,self.parent.display)
+			# Limit the size of the loaded log
+			if self.parent.maxlogsize <= 0:
+				shortlog = self.log
+			elif len(self.log)>self.parent.maxlogsize:
+				shortlog = self.trimLog(self.log)
+			else:
+				shortlog = self.log
 
-					# self.channelChatDisplay.append(line[LOG_TEXT])
-					self.channelChatDisplay.append(text)
+			# Now, load in logs
+			# if len(self.log)>0:
+			# 	for line in self.log:
 
-				#print(datetime.utcfromtimestamp(line[LOG_TIMESTAMP]).strftime('%m/%d/%y %H:%M'))
+			if len(shortlog)>0:
+				for line in shortlog:
 
-			# chatDivider = self.newChatDivider.replace(NEW_CHAT_DIVIDER_TEXT_COLOR,self.parent.display["new-chat-divider-text"])
-			# chatDivider = chatDivider.replace(NEW_CHAT_DIVIDER_BACKGROUND_COLOR,self.parent.display["new-chat-divider"])
-			chatDivider = self.applyColors(self.newChatDivider,self.parent.display)
+					if len(line[LOG_TEXT])>0:
+						text = line[LOG_TEXT]
+						timestamp = line[LOG_TIMESTAMP]
 
-			# self.channelChatDisplay.append(self.newChatDivider)
-			self.channelChatDisplay.append(chatDivider)
-			e = [0,self.newChatDivider]
-			self.log.append(e)
-			self.channelChatDisplay.moveCursor(QTextCursor.End)
+						if self.displayTimestamp:
+							pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+							pretty = "&nbsp;" + pretty + "&nbsp;"
+							tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
+							text = text.replace("!TIMESTAMP!",tt)
+						else:
+							text = text.replace("!TIMESTAMP!","")
+
+						# Apply colors
+						text = self.applyColors(text,self.parent.display)
+
+						self.channelChatDisplay.append(text)
+
+				chatDivider = self.applyColors(self.newChatDivider,self.parent.display)
+
+				self.channelChatDisplay.append(chatDivider)
+				e = [0,self.newChatDivider]
+				self.log.append(e)
+				self.channelChatDisplay.moveCursor(QTextCursor.End)
+		else:
+			self.log = []
 
 		# Interface is built and loaded
 		self.loaded = True
@@ -498,7 +520,15 @@ class Interface(QMainWindow):
 	def rerenderTextDisplay(self):
 
 		self.channelChatDisplay.clear()
-		for line in self.log:
+
+		if len(self.log)>self.parent.maxlogsize:
+			shortlog = self.trimLog(self.log)
+		else:
+			shortlog = self.log
+
+		# for line in self.log:
+		for line in shortlog:
+
 			if len(line[LOG_TEXT])>0:
 				text = line[LOG_TEXT]
 				timestamp = line[LOG_TIMESTAMP]
@@ -1175,7 +1205,17 @@ class Interface(QMainWindow):
 
 		if self.parent.saveLogsOnExit:
 		# saveLog(self.serverid,self.name,self.log)
-			saveLog(self.serverhost,self.name,self.log)
+			if self.parent.loadLogsOnJoin:
+				saveLog(self.serverhost,self.name,self.log)
+			else:
+				# appendLog(self.serverhost,self.name,self.log)
+				oldlog = loadLog(self.serverhost,self.name)
+				for line in self.log:
+					if line in oldlog: continue
+					oldlog.append(line)
+				#oldlog.extend(self.log)
+
+				saveLog(self.serverhost,self.name,oldlog)
 
 		# If this is a channel window closing, part the channel
 		if self.is_channel:
