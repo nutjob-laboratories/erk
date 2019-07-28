@@ -196,6 +196,7 @@ class ErkGUI(QMainWindow):
 		self.stripIRCcolor = False
 		self.showTray = True
 		self.flashTray = True
+		self.menuTray = True
 
 		# NO SUPPORT FOR SAVING THIS TO CONFIG
 		# TODO: ADD TO CONFIG FILE, MENUS, ETC
@@ -233,9 +234,10 @@ class ErkGUI(QMainWindow):
 		self.stripIRCcolor = self.settings[STRIP_IRC_COLORS_SETTING]
 		self.showTray = self.settings[SYSTEM_TRAY_SETTING]
 		self.flashTray = self.settings[SYSTEM_TRAY_FLASH_SETTING]
-
 		self.loadLogsOnJoin = self.settings[LOAD_LOG_SETTING]
 		self.maxlogsize = self.settings[LOAD_LOG_SIZE]
+
+		self.menuTray = self.settings[SYSTEM_TRAY_MENU]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -316,7 +318,45 @@ class ErkGUI(QMainWindow):
 		# Build the UI
 		self.buildUI()
 
+	def destroyTrayMenu(self):
+		traymenu = QMenu()
+		self.tray.setContextMenu(traymenu)
 
+	def buildTrayMenu(self):
+		traymenu = QMenu()
+
+		trayLabel = QLabel(f"<big>{APPLICATION_NAME} {APPLICATION_VERSION}</big>")
+		f = trayLabel.font()
+		f.setBold(True)
+		trayLabel.setFont(f)
+		trayLabel.setAlignment(Qt.AlignCenter)
+		trayLabelAction = QWidgetAction(self)
+		trayLabelAction.setDefaultWidget(trayLabel)
+		traymenu.addAction(trayLabelAction)	
+		traymenu.addSeparator()
+
+		traymenu.addAction(self.actConnect)
+		traymenu.addAction(self.actNetwork)
+
+		traymenu.addSeparator()
+
+		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize window",self)
+		trayMin.triggered.connect(self.showMinimized)
+		traymenu.addAction(trayMin)
+
+		trayMin = QAction(QIcon(MAXIMIZE_ICON),f"Maximize window",self)
+		trayMin.triggered.connect(self.showMaximized)
+		traymenu.addAction(trayMin)
+
+		trayMin = QAction(QIcon(WINDOW_ICON),f"Normalize window",self)
+		trayMin.triggered.connect(self.showNormal)
+		traymenu.addAction(trayMin)
+
+		traymenu.addSeparator()
+
+		traymenu.addAction(self.actExit)
+
+		self.tray.setContextMenu(traymenu)
 
 	def buildUI(self):
 		"""Builds the GUI for Erk.
@@ -339,20 +379,7 @@ class ErkGUI(QMainWindow):
 		# Create system tray icon
 		self.tray = QSystemTrayIcon(self)
 		self.tray.setIcon(self.ERK_ICON)
-
-		# Create system tray menu
-		traymenu = QMenu()
-
-		trayLabel = QLabel(f"<big>{APPLICATION_NAME} {APPLICATION_VERSION}</big>")
-		f = trayLabel.font()
-		f.setBold(True)
-		trayLabel.setFont(f)
-		trayLabel.setAlignment(Qt.AlignCenter)
-		trayLabelAction = QWidgetAction(self)
-		trayLabelAction.setDefaultWidget(trayLabel)
-		traymenu.addAction(trayLabelAction)	
-		traymenu.addSeparator()
-
+		
 		# Create master log
 		self.log = self.buildDockLog()
 		self.addDockWidget(Qt.BottomDockWidgetArea,self.log)
@@ -377,12 +404,12 @@ class ErkGUI(QMainWindow):
 		self.actConnect = QAction(QIcon(SERVER_ICON),"Connect to Server",self)
 		self.actConnect.triggered.connect(self.doConnectDialog)
 		ircMenu.addAction(self.actConnect)
-		traymenu.addAction(self.actConnect)
+		
 
 		self.actNetwork = QAction(QIcon(NETWORK_ICON),"Connect to Network",self)
 		self.actNetwork.triggered.connect(self.doNetworkDialog)
 		ircMenu.addAction(self.actNetwork)
-		traymenu.addAction(self.actNetwork)
+		
 
 		self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.actDisconnect.triggered.connect(self.selectDisconnect)
@@ -390,29 +417,15 @@ class ErkGUI(QMainWindow):
 		self.actDisconnect.setEnabled(False)
 
 		ircMenu.addSeparator()
-		traymenu.addSeparator()
+		
 
-		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize window",self)
-		trayMin.triggered.connect(self.showMinimized)
-		traymenu.addAction(trayMin)
-
-		trayMin = QAction(QIcon(MAXIMIZE_ICON),f"Maximize window",self)
-		trayMin.triggered.connect(self.showMaximized)
-		traymenu.addAction(trayMin)
-
-		trayMin = QAction(QIcon(WINDOW_ICON),f"Normalize window",self)
-		trayMin.triggered.connect(self.showNormal)
-		traymenu.addAction(trayMin)
-
-		traymenu.addSeparator()
-
-		actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
-		actExit.triggered.connect(self.close)
-		ircMenu.addAction(actExit)
-		traymenu.addAction(actExit)
+		self.actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
+		self.actExit.triggered.connect(self.close)
+		ircMenu.addAction(self.actExit)
+		
 
 		# "Install" system tray menu
-		self.tray.setContextMenu(traymenu)
+		if self.menuTray: self.buildTrayMenu()
 		if self.showTray: self.tray.show()
 
 		if not self.block_plugins:
@@ -520,7 +533,13 @@ class ErkGUI(QMainWindow):
 		self.optFlash.triggered.connect(self.toggleFlash)
 		self.trayMenu.addAction(self.optFlash)
 
+		self.optTrayMenu = QAction("Right-click icon for menu",self,checkable=True)
+		self.optTrayMenu.setChecked(self.menuTray)
+		self.optTrayMenu.triggered.connect(self.toggleTrayMenu)
+		self.trayMenu.addAction(self.optTrayMenu)
+
 		if not self.showTray: self.optFlash.setEnabled(False)
+		if not self.showTray: self.optTrayMenu.setEnabled(False)
 
 		self.optMenu = menubar.addMenu("Settings")
 
@@ -1691,15 +1710,28 @@ class ErkGUI(QMainWindow):
 		self.settings[ENABLE_SPELL_CHECK] = self.spellCheck
 		saveSettings(self.settings,self.settingsFile)
 
+	def toggleTrayMenu(self):
+		if self.menuTray:
+			self.menuTray = False
+			self.destroyTrayMenu()
+		else:
+			self.menuTray = True
+			self.buildTrayMenu()
+
+		self.settings[SYSTEM_TRAY_MENU] = self.menuTray
+		saveSettings(self.settings,self.settingsFile)
+
 	def toggleTray(self):
 		if self.showTray:
 			self.showTray = False
 			self.tray.hide()
 			self.optFlash.setEnabled(False)
+			self.optTrayMenu.setEnabled(False)
 		else:
 			self.showTray = True
 			self.tray.show()
 			self.optFlash.setEnabled(True)
+			self.optTrayMenu.setEnabled(True)
 
 		self.settings[SYSTEM_TRAY_SETTING] = self.showTray
 		saveSettings(self.settings,self.settingsFile)

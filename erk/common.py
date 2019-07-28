@@ -62,6 +62,7 @@ globals()["erk.erkimg"] = __import__("erk.erkimg")
 
 APPLICATION_NAME = "Ərk"
 APPLICATION_VERSION = "0.410"
+APPLICATION_MAJOR_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 EDITOR_NAME = "Kōd"
@@ -247,9 +248,10 @@ HIGHLIGHT_NICK_MESSAGE = "enable_nick_message_highlight"
 STATUS_BAR_SETTING = "enable_status_bar"
 TOPIC_TITLE_SETTING = "display_channel_topic_in_title"
 THEME_SETTING = "theme"
-
 LOAD_LOG_SETTING = "automatically_load_log"
 LOAD_LOG_SIZE = "log_display_size"
+
+SYSTEM_TRAY_MENU = "system_tray_menu"
 
 EDITOR_FONT_SETTING = "font"
 EDITOR_WORD_WRAP_SETTING = "word_wrap"
@@ -1047,6 +1049,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			SYSTEM_TRAY_FLASH_SETTING: True,
 			LOAD_LOG_SETTING: True,
 			LOAD_LOG_SIZE: MAX_LOG_SIZE_DEFAULT,
+			SYSTEM_TRAY_MENU: True,
 		}
 		return s
 

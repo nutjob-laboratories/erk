@@ -15,6 +15,16 @@ shutil.copy("version.txt", "./erk/minor.txt")
 
 from erk.common import *
 
+x = open("README.txt",mode="r", encoding='latin-1')
+t = str(x.read())
+x.close()
+t = t.replace("!_VERSION_!",APPLICATION_MAJOR_VERSION)
+t = t.replace("!_FULL_VERSION_!",APPLICATION_VERSION)
+os.remove("README.md")
+f = open("README.md",mode="w", encoding='latin-1')
+f.write(t)
+f.close()
+
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
 os.mkdir("./dist/plugins")

@@ -48,6 +48,7 @@ Version 0.410
 	* Added a limit to the size of displayed logs (should speed up performance)
 	* Users can now control how much of the log is loaded for display (or even if it is loaded at all)
 	* Changed build script (and application code) to inject minor version number into the software
+	* Added an option to turn the system tray icon right-click menu on and off
 
 Version 0.400
 	* New major version
