@@ -65,7 +65,7 @@ APPLICATION_VERSION = "0.410"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 EDITOR_NAME = "Kōd"
-EDITOR_VERSION = "0.54"
+EDITOR_VERSION = "0.57"
 NORMAL_APPLICATION_NAME = "Erk"
 
 
@@ -102,6 +102,15 @@ USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
+
+MINOR_VERSION = os.path.join(ERK_MODULE_DIRECTORY, "minor.txt")
+
+f = open(MINOR_VERSION,"r")
+vminor = f.read()
+f.close()
+
+APPLICATION_VERSION = APPLICATION_VERSION + "." + vminor
+EDITOR_VERSION = EDITOR_VERSION + "." + vminor
 
 PROFANITY_LIST = os.path.join(ERK_MODULE_DIRECTORY, "profanity.txt")
 
