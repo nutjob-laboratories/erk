@@ -483,26 +483,25 @@ class ErkGUI(QMainWindow):
 		optStatus.triggered.connect(self.toggleStatus)
 		self.faceMenu.addAction(optStatus)
 
-		optPretty = QAction("HexChat style user lists",self,checkable=True)
-		optPretty.setChecked(self.prettyUserlist)
-		optPretty.triggered.connect(self.togglePrettyUsers)
-		self.faceMenu.addAction(optPretty)
-
 		optUptime = QAction("Display connection uptime",self,checkable=True)
 		optUptime.setChecked(self.displayUptime)
 		optUptime.triggered.connect(self.toggleUptime)
 		self.faceMenu.addAction(optUptime)
-
-		optTitle = QAction("Window title set to active user/channel title",self,checkable=True)
-		optTitle.setChecked(self.titleActiveWindow)
-		optTitle.triggered.connect(self.toggleTitle)
-		self.faceMenu.addAction(optTitle)
 
 		optEnableList = QAction("Enable toolbar channel list button",self,checkable=True)
 		optEnableList.setChecked(self.channelListEnabled)
 		optEnableList.triggered.connect(self.toggleListEnable)
 		self.faceMenu.addAction(optEnableList)
 
+		optPretty = QAction("HexChat style user lists",self,checkable=True)
+		optPretty.setChecked(self.prettyUserlist)
+		optPretty.triggered.connect(self.togglePrettyUsers)
+		self.faceMenu.addAction(optPretty)
+
+		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
+		optTitle.setChecked(self.titleActiveWindow)
+		optTitle.triggered.connect(self.toggleTitle)
+		self.faceMenu.addAction(optTitle)
 
 		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
 		self.winTopic.setChecked(self.topicInTitle)
@@ -542,15 +541,15 @@ class ErkGUI(QMainWindow):
 		optLinks.triggered.connect(self.toggleLinks)
 		self.chatSettings.addAction(optLinks)
 
-		optInvite = QAction("Automatic join on channel invite",self,checkable=True)
-		optInvite.setChecked(self.joinInvite)
-		optInvite.triggered.connect(self.toggleInvite)
-		self.chatSettings.addAction(optInvite)
-
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
 		optAlive.triggered.connect(self.toggleAlive)
 		self.chatSettings.addAction(optAlive)
+
+		optInvite = QAction("Automatic join on channel invite",self,checkable=True)
+		optInvite.setChecked(self.joinInvite)
+		optInvite.triggered.connect(self.toggleInvite)
+		self.chatSettings.addAction(optInvite)
 
 		self.spellMenu = self.optMenu.addMenu(QIcon(SPELL_ICON),"Spell check")
 
@@ -612,7 +611,6 @@ class ErkGUI(QMainWindow):
 		self.optSaveChat.triggered.connect(self.toggleSaveLogs)
 		self.miscMenu.addAction(self.optSaveChat)
 
-
 		optLoadChat = QAction("Automatically display saved logs in client",self,checkable=True)
 		optLoadChat.setChecked(self.loadLogsOnJoin)
 		optLoadChat.triggered.connect(self.toggleLoadChat)
@@ -620,7 +618,7 @@ class ErkGUI(QMainWindow):
 
 		self.logsizeMenu = self.miscMenu.addMenu(QIcon(LOG_ICON),"Log display size")
 
-		self.sizeAll = QAction("Full",self,checkable=True)
+		self.sizeAll = QAction("All lines",self,checkable=True)
 		self.sizeAll.triggered.connect(lambda state,l=0: self.setLoadLogSize(l) )
 		self.logsizeMenu.addAction(self.sizeAll)
 
