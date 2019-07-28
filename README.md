@@ -59,7 +59,7 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 * Have the ability to be scripted (something most open source clients have)
 * A full, modern GUI (HexChat is sort of modern, I guess)
 * A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
-* Easy to install, easy to run (if you're trying to compile HexChat, good luck, you'll need it)
+* Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
 * Focuses on the chat experience (not downloading/uploading files)
 * Cross-platform without having to jump through hoops
 
