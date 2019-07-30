@@ -47,10 +47,11 @@ if "Windows" in platform.system():
 	RUNNING_ON_WINDOWS = True
 else:
 	RUNNING_ON_WINDOWS = False
-	if sys.maxsize > 2**32:
-		SYSTEM_BITS = "64bit"
-	else:
-		SYSTEM_BITS = "32bit"
+
+if sys.maxsize > 2**32:
+	SYSTEM_BITS = "64bit"
+else:
+	SYSTEM_BITS = "32bit"
 
 SYSTEM_PLATFORM = platform.platform()
 PYTHON_EXECUTABLE = sys.executable
@@ -61,12 +62,12 @@ PYTHON_VERSION = platform.python_version()
 globals()["erk.erkimg"] = __import__("erk.erkimg")
 
 APPLICATION_NAME = "Ərk"
-APPLICATION_VERSION = "0.410"
-APPLICATION_MAJOR_VERSION = "0.410"
+APPLICATION_VERSION = "0.411"
+APPLICATION_MAJOR_VERSION = "0.411"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 EDITOR_NAME = "Kōd"
-EDITOR_VERSION = "0.57"
+EDITOR_VERSION = "0.58"
 NORMAL_APPLICATION_NAME = "Erk"
 
 

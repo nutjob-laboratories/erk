@@ -4,10 +4,13 @@ import sys
 import shutil
 
 f = open("version.txt","r")
-mversion = int(f.read())
+mversion = f.read()
 f.close()
 f = open("version.txt","w")
-f.write(str(mversion + 1))
+if mversion == "":
+	f.write("0")
+else:
+	f.write(str(int(mversion) + 1))
 f.close()
 
 os.remove("./erk/data/minor.txt")

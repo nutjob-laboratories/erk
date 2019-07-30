@@ -94,6 +94,8 @@ optgroup.add_argument( "--interval", type=int,help="Keep-alive heartbeat interva
 optgroup.add_argument( "--maximize", help=f"Display maximized", action="store_true")
 optgroup.add_argument( "--fullscreen", help=f"Displays in full screen mode", action="store_true")
 optgroup.add_argument( "--ontop", help=f"{APPLICATION_NAME}'s window is always on top", action="store_true")
+optgroup.add_argument( "--noprofanity", help=f"Force profanity filter on", action="store_true")
+optgroup.add_argument( "--nocolors", help=f"Force IRC color filter on", action="store_true")
 
 themegroup = parser.add_argument_group('Themes')
 
@@ -206,16 +208,11 @@ if __name__ == '__main__':
 			else:
 				erkClient = ErkGUI(app,False)
 
-	# if args.noplugins:
-	# 	if args.config:
-	# 		erkClient = ErkGUI(app,True,args.config)
-	# 	else:
-	# 		erkClient = ErkGUI(app,True)
-	# else:
-	# 	if args.config:
-	# 		erkClient = ErkGUI(app,False,args.config)
-	# 	else:
-	# 		erkClient = ErkGUI(app,False)
+	if args.noprofanity:
+		erkClient.FORCE_PROFANITY_FILTER = True
+
+	if args.nocolors:
+		erkClient.FORCE_NOCOLORS = True
 
 	if args.theme:
 		if args.theme in themeList:

@@ -166,6 +166,7 @@ class ErkGUI(QMainWindow):
 		self.IS_FLASHING = False
 
 		self.FORCE_PROFANITY_FILTER = False
+		self.FORCE_NOCOLORS = False
 
 		self.displayTimestamp = True
 		self.displayUptime = True
@@ -2950,8 +2951,12 @@ QPushButton::menu-indicator {
 
 		if self.stripIRCcolor:
 			message = strip_color(message)
+		elif self.FORCE_NOCOLORS:
+			message = strip_color(message)
 
 		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+		elif self.FORCE_PROFANITY_FILTER:
 			message = filterProfanityFromText(message)
 
 		if self.isMinimized():
@@ -3007,8 +3012,12 @@ QPushButton::menu-indicator {
 
 		if self.stripIRCcolor:
 			message = strip_color(message)
+		elif self.FORCE_NOCOLORS:
+			message = strip_color(message)
 
 		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+		elif self.FORCE_PROFANITY_FILTER:
 			message = filterProfanityFromText(message)
 
 		if self.isMinimized():
@@ -3084,8 +3093,12 @@ QPushButton::menu-indicator {
 
 		if self.stripIRCcolor:
 			message = strip_color(message)
+		elif self.FORCE_NOCOLORS:
+			message = strip_color(message)
 
 		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+		elif self.FORCE_PROFANITY_FILTER:
 			message = filterProfanityFromText(message)
 
 		if self.isMinimized():
@@ -3143,8 +3156,12 @@ QPushButton::menu-indicator {
 
 		if self.stripIRCcolor:
 			message = strip_color(message)
+		elif self.FORCE_NOCOLORS:
+			message = strip_color(message)
 
 		if self.profanityFilter:
+			message = filterProfanityFromText(message)
+		elif self.FORCE_PROFANITY_FILTER:
 			message = filterProfanityFromText(message)
 
 		if self.isMinimized():

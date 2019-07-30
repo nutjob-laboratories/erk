@@ -1,3 +1,7 @@
+Version 0.411
+	* Added a commandline flag to force the profanity filter on
+	* Added a commandline flag to force no IRC color display
+
 Version 0.410
 	* Quirc is now known as "Erk"
 	* Source code has been updated to reflect the new name
