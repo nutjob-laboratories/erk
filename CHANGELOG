@@ -54,6 +54,7 @@ Version 0.410
 	* Moved user configuration files to its own directory in the "settings" directory named "user"
 	* Cleaned up server toolbars (buttons for channel list and join channel are now in the server info menu, etc.)
 	* Cleaned up the server info menu
+	* "Flattened" the disconnect button on the server toolbars
 
 Version 0.400
 	* New major version

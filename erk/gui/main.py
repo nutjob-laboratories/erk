@@ -501,7 +501,7 @@ class ErkGUI(QMainWindow):
 		optUptime.triggered.connect(self.toggleUptime)
 		self.faceMenu.addAction(optUptime)
 
-		optEnableList = QAction("Enable channel list entry in server information menu",self,checkable=True)
+		optEnableList = QAction("Enable channel list entry in server information",self,checkable=True)
 		optEnableList.setChecked(self.channelListEnabled)
 		optEnableList.triggered.connect(self.toggleListEnable)
 		self.faceMenu.addAction(optEnableList)
@@ -2385,6 +2385,7 @@ QPushButton::menu-indicator {
 		buttonDisco.clicked.connect(lambda state,serv=serverid: self.doToolbarDisconnect(serv))
 		servbar.addWidget(buttonDisco)
 		buttonDisco.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
+		buttonDisco.setStyleSheet(pbcss)
 
 
 		# Stack toolbars if there's more than one
