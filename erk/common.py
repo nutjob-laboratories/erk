@@ -97,24 +97,31 @@ THEMES_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "themes")
 
 # Files
 DISPLAY_CONFIGURATION = os.path.join(SETTINGS_DIRECTORY, "text.json")
-IRC_NETWORK_LIST = os.path.join(ERK_MODULE_DIRECTORY, "servers.txt")
-LAST_SERVER_INFORMATION_FILE = os.path.join(SETTINGS_DIRECTORY, "lastserver.json")
-USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
-IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
 
-MINOR_VERSION = os.path.join(ERK_MODULE_DIRECTORY, "minor.txt")
+# User settings files
+USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
+LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
+USER_FILE = os.path.join(USER_INFO_DIRECTORY, "user.json")
+IGNORE_FILE = os.path.join(USER_INFO_DIRECTORY, "ignore.json")
 
+# Module data files
+ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
+IRC_NETWORK_LIST = os.path.join(ERK_DATA_DIRECTORY, "servers.txt")
+MINOR_VERSION = os.path.join(ERK_DATA_DIRECTORY, "minor.txt")
+PROFANITY_LIST = os.path.join(ERK_DATA_DIRECTORY, "profanity.txt")
+
+# Read in the application's minor version
 f = open(MINOR_VERSION,"r")
 vminor = f.read()
 f.close()
 
+# Set the version number to contain the minor version
 APPLICATION_VERSION = APPLICATION_VERSION + "." + vminor
 EDITOR_VERSION = EDITOR_VERSION + "." + vminor
 
-PROFANITY_LIST = os.path.join(ERK_MODULE_DIRECTORY, "profanity.txt")
-
+# Load in the profanity data file
 f = open(PROFANITY_LIST,"r")
 cursewords = f.read()
 f.close()
@@ -1012,10 +1019,45 @@ def saveSettings(settings,filename=SETTINGS_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
+def updateSettings(s):
+	if not TIMESTAMP_SETTING in s: s[TIMESTAMP_SETTING] = True
+	if not UPTIME_SETTING in s: s[UPTIME_SETTING] = True
+	if not KEEPALIVE_SETTING in s: s[KEEPALIVE_SETTING] = True
+	if not INVITE_SETTING in s: s[INVITE_SETTING] = False
+	if not PRIVATEWINDOW_SETTING in s: s[PRIVATEWINDOW_SETTING] = True
+	if not INITIALWIDTH_SETTING in s: s[INITIALWIDTH_SETTING] = INITIAL_WINDOW_WIDTH
+	if not INITIALHEIGHT_SETTING in s: s[INITIALHEIGHT_SETTING] = INITIAL_WINDOW_HEIGHT
+	if not PRETTYUSER_SETTING in s: s[PRETTYUSER_SETTING] = True
+	if not DOLINKS_SETTING in s: s[DOLINKS_SETTING] = True
+	if not TITLE_ACTIVE_WINDOW_SETTING in s: s[TITLE_ACTIVE_WINDOW_SETTING] = True
+	if not SAVE_LOGS_BY_NETWORK in s: s[SAVE_LOGS_BY_NETWORK] = True
+	if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
+	if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
+	if not ENABLE_LIST_SETTING in s: s[ENABLE_LIST_SETTING] = False
+	if not AUTO_SAVE_CHAT_LOGS in s: s[AUTO_SAVE_CHAT_LOGS] = True
+	if not ENABLE_SPELL_CHECK in s: s[ENABLE_SPELL_CHECK] = True
+	if not SPELL_CHECK_LANGUAGE in s: s[SPELL_CHECK_LANGUAGE] = "en"
+	if not AUTOCOMPLETE_COMMANDS in s: s[AUTOCOMPLETE_COMMANDS] = True
+	if not AUTOCOMPLETE_ENTITIES in s: s[AUTOCOMPLETE_ENTITIES] = True
+	if not HIGHLIGHT_NICK_MESSAGE in s: s[HIGHLIGHT_NICK_MESSAGE] = True
+	if not STATUS_BAR_SETTING in s: s[STATUS_BAR_SETTING] = False
+	if not THEME_SETTING in s: s[THEME_SETTING] = USE_NO_THEME_SETTING
+	if not LOAD_THEME_ICONS_SETTING in s: s[LOAD_THEME_ICONS_SETTING] = True
+	if not PROFANITY_FILTER_SETTING in s: s[PROFANITY_FILTER_SETTING] = False
+	if not TOPIC_TITLE_SETTING in s: s[TOPIC_TITLE_SETTING] = True
+	if not STRIP_IRC_COLORS_SETTING in s: s[STRIP_IRC_COLORS_SETTING] = False
+	if not SYSTEM_TRAY_SETTING in s: s[SYSTEM_TRAY_SETTING] = False
+	if not SYSTEM_TRAY_FLASH_SETTING in s: s[SYSTEM_TRAY_FLASH_SETTING] = True
+	if not LOAD_LOG_SETTING in s: s[LOAD_LOG_SETTING] = True
+	if not LOAD_LOG_SIZE in s: s[LOAD_LOG_SIZE] = MAX_LOG_SIZE_DEFAULT
+	if not SYSTEM_TRAY_MENU in s: s[SYSTEM_TRAY_MENU] = True
+	return s
+
 def loadSettings(filename=SETTINGS_FILE):
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_settings:
 			data = json.load(read_settings)
+			data = updateSettings(data)
 			return data
 	else:
 		s = {

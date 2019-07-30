@@ -10,8 +10,8 @@ f = open("version.txt","w")
 f.write(str(mversion + 1))
 f.close()
 
-os.remove("./erk/minor.txt")
-shutil.copy("version.txt", "./erk/minor.txt")
+os.remove("./erk/data/minor.txt")
+shutil.copy("version.txt", "./erk/data/minor.txt")
 
 from erk.common import *
 

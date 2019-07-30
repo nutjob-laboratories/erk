@@ -501,7 +501,7 @@ class ErkGUI(QMainWindow):
 		optUptime.triggered.connect(self.toggleUptime)
 		self.faceMenu.addAction(optUptime)
 
-		optEnableList = QAction("Enable toolbar channel list button",self,checkable=True)
+		optEnableList = QAction("Enable channel list entry in server information menu",self,checkable=True)
 		optEnableList.setChecked(self.channelListEnabled)
 		optEnableList.triggered.connect(self.toggleListEnable)
 		self.faceMenu.addAction(optEnableList)
@@ -1772,7 +1772,10 @@ class ErkGUI(QMainWindow):
 		saveSettings(self.settings,self.settingsFile)
 
 		for sid in self.toolbars:
-			self.toolbars[sid].buttonList.setEnabled(self.channelListEnabled)
+			#self.toolbars[sid].buttonList.setEnabled(self.channelListEnabled)
+			self.rebuildServerInfoMenu(sid)
+
+
 
 	def toggleNetworkChat(self):
 		if self.logChatByNetwork:
@@ -2069,6 +2072,16 @@ class ErkGUI(QMainWindow):
 
 		self.toolbars[serverid].servinfo.clear()
 
+		# Spacer
+		el = QLabel(" ",self)
+		el.setAlignment(Qt.AlignCenter)
+		f = el.font()
+		f.setPointSize(2)
+		el.setFont(f)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.toolbars[serverid].servinfo.addAction(e)
+
 		el = QLabel(self.generateNetworkLink(network),self)
 		el.setOpenExternalLinks(True)
 		el.setAlignment(Qt.AlignCenter)
@@ -2076,7 +2089,25 @@ class ErkGUI(QMainWindow):
 		e.setDefaultWidget(el)
 		self.toolbars[serverid].servinfo.addAction(e)
 
+		# Spacer
+		self.toolbars[serverid].servinfo.addAction(e)
+
+		#self.toolbars[serverid].servinfo.addSeparator()
+
+
+		if self.channelListEnabled:
+			listChannels = QAction(QIcon(LIST_ICON),"List channels",self)
+			listChannels.triggered.connect(lambda state,serv=serverid: self.doToolbarListChannels(serv))
+			self.toolbars[serverid].servinfo.addAction(listChannels)
+
+
+		joinChannel = QAction(QIcon(CHANNEL_WINDOW_ICON),"Join channel",self)
+		joinChannel.triggered.connect(lambda state,serv=serverid: self.doToolbarJoinKey(serv))
+		self.toolbars[serverid].servinfo.addAction(joinChannel)
+
 		self.toolbars[serverid].servinfo.addSeparator()
+
+
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channels:</b> {maxchannels}",self)
 		e = QWidgetAction(self)
@@ -2165,6 +2196,10 @@ class ErkGUI(QMainWindow):
 			prefixmenu.addAction(e)
 		self.toolbars[serverid].servinfo.addMenu(prefixmenu)
 
+		# INSERT CHANNEL LIST
+
+		
+
 	# ========================
 	# Special Widget Functions
 	# ========================
@@ -2207,31 +2242,34 @@ class ErkGUI(QMainWindow):
 		servbar.setAllowedAreas( Qt.TopToolBarArea | Qt.BottomToolBarArea )
 		servbar.setContextMenuPolicy(Qt.PreventContextMenu)
 
-		buttonNick = QPushButton()
-		buttonNick.setIcon(QIcon(USER_ICON))
-		buttonNick.setToolTip("Change Nickname")
-		buttonNick.clicked.connect(lambda state,serv=serverid: self.doNickChange(serv))
-		servbar.addWidget(buttonNick)
-		buttonNick.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
+		# buttonNick = QPushButton()
+		# buttonNick.setIcon(QIcon(USER_ICON))
+		# buttonNick.setToolTip("Change Nickname")
+		# buttonNick.clicked.connect(lambda state,serv=serverid: self.doNickChange(serv))
+		# servbar.addWidget(buttonNick)
+		# buttonNick.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
 
-		buttonKey = QPushButton()
-		buttonKey.setIcon(QIcon(CHANNEL_WINDOW_ICON))
-		buttonKey.setToolTip("Join Channel")
-		buttonKey.clicked.connect(lambda state,serv=serverid: self.doToolbarJoinKey(serv))
-		servbar.addWidget(buttonKey)
-		buttonKey.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
+		# buttonKey = QPushButton()
+		# buttonKey.setIcon(QIcon(CHANNEL_WINDOW_ICON))
+		# buttonKey.setToolTip("Join Channel")
+		# buttonKey.clicked.connect(lambda state,serv=serverid: self.doToolbarJoinKey(serv))
+		# servbar.addWidget(buttonKey)
+		# buttonKey.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
 
-		servbar.buttonList = QPushButton()
-		servbar.buttonList.setIcon(QIcon(LIST_ICON))
-		servbar.buttonList.setToolTip("List Channels")
-		servbar.buttonList.clicked.connect(lambda state,serv=serverid: self.doToolbarListChannels(serv))
-		servbar.addWidget(servbar.buttonList)
-		servbar.buttonList.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
+		# servbar.buttonList = QPushButton()
+		# servbar.buttonList.setIcon(QIcon(LIST_ICON))
+		# servbar.buttonList.setToolTip("List Channels")
+		# servbar.buttonList.clicked.connect(lambda state,serv=serverid: self.doToolbarListChannels(serv))
+		# servbar.addWidget(servbar.buttonList)
+		# servbar.buttonList.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
 
-		if self.channelListEnabled:
-			servbar.buttonList.setEnabled(True)
-		else:
-			servbar.buttonList.setEnabled(False)
+		# if self.channelListEnabled:
+		# 	servbar.buttonList.setEnabled(True)
+		# else:
+		# 	servbar.buttonList.setEnabled(False)
+
+
+
 
 		#servbar.addSeparator()
 
@@ -2264,6 +2302,13 @@ QPushButton::menu-indicator {
 		servbar.servinfo = QMenu(self)
 		servbar.servLabel.setMenu(servbar.servinfo)
 
+
+
+		# servbar.servLabel.setIcon(QIcon(SERVER_ICON))
+		# servbar.servLabel.setIconSize(QSize(15,15))
+
+
+
 		servbar.addWidget(servbar.servLabel)
 
 		servbar.addWidget(QLabel(" "))
@@ -2272,15 +2317,37 @@ QPushButton::menu-indicator {
 
 		servbar.addWidget(QLabel(" "))
 
-		n = self.connections[serverid].nickname
-		servbar.nickname = QLabel(f"<b>{n}</b>")
-		servbar.addWidget(servbar.nickname)
+		# n = self.connections[serverid].nickname
+		# servbar.nickname = QLabel(f"<b>{n}</b>")
+		# servbar.addWidget(servbar.nickname)
+		# servbar.nickname.setAlignment(Qt.AlignCenter)
 
-		servbar.nickname.setAlignment(Qt.AlignCenter)
+		n = self.connections[serverid].nickname
+		servbar.nickname = QPushButton(" "+n)
+		servbar.nickname.setStyleSheet(pbcss)
+		servbar.nickname.clicked.connect(lambda state,serv=serverid: self.doNickChange(serv))
+
+		f = servbar.nickname.font()
+		f.setBold(True)
+		servbar.nickname.setFont(f)
+
+		servbar.nickname.setIcon(QIcon(USER_ICON))
+		servbar.nickname.setIconSize(QSize(15,15))
+
+		servbar.addWidget(servbar.nickname)
 
 		servbar.addWidget(QLabel(" "))
 
 		servbar.addSeparator()
+
+		# buttonKey = QPushButton()
+		# buttonKey.setIcon(QIcon(CHANNEL_WINDOW_ICON))
+		# buttonKey.setToolTip("Join Channel")
+		# buttonKey.clicked.connect(lambda state,serv=serverid: self.doToolbarJoinKey(serv))
+		# servbar.addWidget(buttonKey)
+		# buttonKey.setFixedHeight(TOOLBAR_BUTTON_HEIGHT)
+
+		# servbar.addSeparator()
 
 		servbar.addWidget(QLabel(" "))
 
@@ -2619,8 +2686,8 @@ QPushButton::menu-indicator {
 	def renamed(self,serverid,nick,oldnick,displaytarget):
 
 		isme = False
-		if self.toolbars[serverid].nickname.text()==f"<b>{oldnick}</b>":
-			self.toolbars[serverid].nickname.setText(f"<b>{nick}</b>")
+		if self.toolbars[serverid].nickname.text()==f" {oldnick}":
+			self.toolbars[serverid].nickname.setText(f" {nick}")
 			isme = True
 
 		for w in self.windows[serverid]:

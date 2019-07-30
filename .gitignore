@@ -11,3 +11,5 @@ settings/erk.json
 version.txt
 *.odt#
 README.txt
+settings/user/lastserver.json
+settings/user/user.json

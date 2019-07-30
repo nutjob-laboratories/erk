@@ -49,6 +49,11 @@ Version 0.410
 	* Users can now control how much of the log is loaded for display (or even if it is loaded at all)
 	* Changed build script (and application code) to inject minor version number into the software
 	* Added an option to turn the system tray icon right-click menu on and off
+	* Added code to update any existing configuration files with new settings at default values
+	* Moved non-code data files in the Erk module into their own directory
+	* Moved user configuration files to its own directory in the "settings" directory named "user"
+	* Cleaned up server toolbars (buttons for channel list and join channel are now in the server info menu, etc.)
+	* Cleaned up the server info menu
 
 Version 0.400
 	* New major version
