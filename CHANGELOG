@@ -1,6 +1,9 @@
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
 	* Added a commandline flag to force no IRC color display
+	* Changed the name of the "Ərk" menu to "IRC"
+	* Cleaned up the server information menu
+	* Added a "change nick" entry to the server information menu
 
 Version 0.410
 	* Quirc is now known as "Erk"
