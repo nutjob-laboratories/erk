@@ -524,10 +524,10 @@ class ErkGUI(QMainWindow):
 
 		self.trayMenu = self.viewMenu.addMenu(QIcon(TRAY_ICON),"System Tray")
 
-		optSystray = QAction("Show icon in system tray",self,checkable=True)
-		optSystray.setChecked(self.showTray)
-		optSystray.triggered.connect(self.toggleTray)
-		self.trayMenu.addAction(optSystray)
+		self.optSystray = QAction("Show icon in system tray",self,checkable=True)
+		self.optSystray.setChecked(self.showTray)
+		self.optSystray.triggered.connect(self.toggleTray)
+		self.trayMenu.addAction(self.optSystray)
 
 		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
 		self.optFlash.setChecked(self.flashTray)
@@ -848,6 +848,24 @@ class ErkGUI(QMainWindow):
 						u.append(n)
 		return u
 
+	def forceNoIRCColors(self):
+		self.FORCE_NOCOLORS = True
+		self.optStrip.setChecked(True)
+		self.optStrip.setEnabled(False)
+
+
+	def forceProfanityFilter(self):
+		self.FORCE_PROFANITY_FILTER = True
+		self.optFilter.setChecked(True)
+		self.optFilter.setEnabled(False)
+
+	def disableSystray(self):
+		self.showTray = False
+		self.tray.hide()
+		self.optSystray.setEnabled(False)
+		self.optFlash.setEnabled(False)
+		self.optTrayMenu.setEnabled(False)
+
 	def disableThemes(self):
 		self.themesEnabled = False
 		self.buildThemeMenu()
@@ -871,6 +889,7 @@ class ErkGUI(QMainWindow):
 	def turnOffLogging(self):
 		self.saveLogsOnExit = False
 		self.optSaveChat.setChecked(False)
+		self.optSaveChat.setEnabled(False)
 
 	def addSuppress(self,text):
 		for i in self.suppress:

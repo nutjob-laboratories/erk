@@ -125,14 +125,23 @@ forbidGroup.add_argument( "--nossl", help=f"Disable SSL", action="store_true")
 forbidGroup.add_argument( "--noeditor", help=f"Disable {EDITOR_NAME}", action="store_true")
 forbidGroup.add_argument( "--nowindows", help=f"Disable windows menu", action="store_true")
 forbidGroup.add_argument( "--nothemes", help=f"Disable themes", action="store_true")
+forbidGroup.add_argument( "--nosystray", help=f"Disable system tray icon", action="store_true")
 
 devgroup = parser.add_argument_group('Plugin development')
 
 devgroup.add_argument("-e", "--editor", help=f"Opens {EDITOR_NAME}", action="store_true")
 devgroup.add_argument("-o","--open", type=str,help=f"Open file in {EDITOR_NAME}",default=None, metavar="FILE")
 devgroup.add_argument("-i","--install", type=str,help=f"Install plugin(s) from zip file",default=None, metavar="ZIP_FILE")
+devgroup.add_argument("-z","--zipplugins", type=str,help=f"Archive all installed plugins",default=None, metavar="ZIP_FILE")
+
+logGroup = parser.add_argument_group('Log exporting')
+
+logGroup.add_argument("--exporttext", type=str,help=f"Exports all logs as text", metavar="ZIP_FILE")
+logGroup.add_argument("--exporthtml", type=str,help=f"Exports all logs as HTML", metavar="ZIP_FILE")
+
 
 args = parser.parse_args()
+
 
 if args.licence:
 	print(GPL_NOTIFICATION)
@@ -182,6 +191,34 @@ if __name__ == '__main__':
 			print(f"Error installing theme(s) from {args.install_theme}")
 			sys.exit(1)
 
+	if args.zipplugins:
+		pc = exportPluginsToZip(args.zipplugins)
+		if pc > 0:
+			print(f"{str(pc)} plugin(s) zipped to {args.zipplugins}")
+			sys.exit(0)
+		else:
+			print(f"No plugins found in {PLUGIN_DIRECTORY}")
+			sys.exit(1)
+
+	if args.exporttext:
+		lc = exportLogsAsText(args.exporttext)
+		if lc>0:
+			print(f"{str(lc)} log(s) zipped to {args.exporttext}")
+			sys.exit(0)
+		else:
+			print(f"No logs found in {LOG_DIRECTORY}")
+			sys.exit(1)
+
+	if args.exporthtml:
+		lc = exportLogsAsHTML(args.exporthtml)
+		if lc>0:
+			print(f"{str(lc)} log(s) zipped to {args.exporthtml}")
+			sys.exit(0)
+		else:
+			print(f"No logs found in {LOG_DIRECTORY}")
+			sys.exit(1)
+
+
 	app = QApplication([])
 	app.setStyle("Windows")
 
@@ -209,10 +246,10 @@ if __name__ == '__main__':
 				erkClient = ErkGUI(app,False)
 
 	if args.noprofanity:
-		erkClient.FORCE_PROFANITY_FILTER = True
+		erkClient.forceProfanityFilter()
 
 	if args.nocolors:
-		erkClient.FORCE_NOCOLORS = True
+		erkClient.forceNoIRCColors()
 
 	if args.theme:
 		if args.theme in themeList:
@@ -253,6 +290,9 @@ if __name__ == '__main__':
 
 	if args.nothemes:
 		erkClient.disableThemes()
+
+	if args.nosystray:
+		erkClient.disableSystray()
 
 	user = get_user()
 	

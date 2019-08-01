@@ -739,6 +739,77 @@ class Whois(object):
 
 # Functions
 
+def exportLogsAsText(outfile):
+	logs = []
+	for root, directories, files in os.walk(LOG_DIRECTORY): 
+		for filename in files:
+			f = os.path.join(root,filename)
+			fn, file_extension = os.path.splitext(f)
+			if file_extension.lower() == ".json":
+				with open(f, "r") as read_log:
+					data = json.load(read_log)
+				data = convertLogToPlaintext(data)
+				entry = [filename.replace(".json",".txt"),data]
+				logs.append(entry)
+
+	count = len(logs)
+	if count>0:
+		with ZipFile(outfile,"w") as zip:
+			for l in logs:
+				zip.writestr(l[0],l[1])
+	return count
+
+def exportLogsAsHTML(outfile):
+	logs = []
+	display = loadDisplay()
+	for root, directories, files in os.walk(LOG_DIRECTORY): 
+		for filename in files:
+			f = os.path.join(root,filename)
+			fn, file_extension = os.path.splitext(f)
+			if file_extension.lower() == ".json":
+				with open(f, "r") as read_log:
+					data = json.load(read_log)
+				data = convertLogToHtml(data)
+
+				data = data.replace(SYSTEM_COLOR,display["system"])
+				data = data.replace(SELF_COLOR,display["self"])
+				data = data.replace(USER_COLOR,display["user"])
+				data = data.replace(ACTION_COLOR,display["action"])
+				data = data.replace(NOTICE_COLOR,display["notice"])
+				data = data.replace(ERROR_COLOR,display["error"])
+				data = data.replace(HIGHLIGHT_COLOR,display["highlight"])
+				data = data.replace(LINK_COLOR,display["link"])
+
+
+				entry = [filename.replace(".json",".html"),data]
+				logs.append(entry)
+
+	count = len(logs)
+	if count>0:
+		with ZipFile(outfile,"w") as zip:
+			for l in logs:
+				zip.writestr(l[0],l[1])
+	return count
+
+def exportPluginsToZip(outfile):
+	plugins = []
+	for root, directories, files in os.walk(PLUGIN_DIRECTORY): 
+		for filename in files:
+			if "__pycache__" in filename: continue
+			if "plugins.txt" in filename: continue
+
+			f = os.path.join(root,filename)
+			plugins.append(f)
+
+	count = len(plugins)
+	if count>0:
+		with ZipFile(outfile,"w") as zip:
+			for p in plugins:
+
+				af = p.replace(PLUGIN_DIRECTORY,'')
+				zip.write(p,arcname=af)
+	return count
+
 def censorWord(word,punc=True):
 	result = ''
 	last = '+'
