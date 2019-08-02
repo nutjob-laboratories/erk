@@ -338,6 +338,7 @@ class ErkGUI(QMainWindow):
 
 		traymenu.addAction(self.actConnect)
 		traymenu.addAction(self.actNetwork)
+		traymenu.addAction(self.actDisconnect)
 
 		traymenu.addSeparator()
 

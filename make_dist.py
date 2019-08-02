@@ -8,9 +8,14 @@ mversion = f.read()
 f.close()
 f = open("version.txt","w")
 if mversion == "":
-	f.write("0")
+	f.write("00")
 else:
-	f.write(str(int(mversion) + 1))
+	v = int(mversion)
+	if (v+1)<10:
+		v = "0" + str(v+1)
+	else:
+		v = str(v+1)
+	f.write(v)
 f.close()
 
 os.remove("./erk/data/minor.txt")

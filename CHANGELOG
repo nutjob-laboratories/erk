@@ -9,6 +9,7 @@ Version 0.411
 	* Turning off chat logging from the commandline is now reflected in the GUI
 	* Added a commandline command to zip all installed plugins into an archive
 	* Added commandline commands to export all logs to text or html (in an archive)
+	* Added a "disconnect" option to the system tray icon menu
 
 Version 0.410
 	* Quirc is now known as "Erk"
