@@ -342,6 +342,11 @@ class ErkGUI(QMainWindow):
 
 		traymenu.addSeparator()
 
+		if not self.block_plugins:
+			traymenu.addMenu(self.pluginTray)
+
+			traymenu.addSeparator()
+
 		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize window",self)
 		trayMin.triggered.connect(self.showMinimized)
 		traymenu.addAction(trayMin)
@@ -426,16 +431,19 @@ class ErkGUI(QMainWindow):
 		ircMenu.addAction(self.actExit)
 		
 
-		# "Install" system tray menu
-		if self.menuTray: self.buildTrayMenu()
-		if self.showTray: self.tray.show()
-
 		if not self.block_plugins:
 			self.pluginmenu = menubar.addMenu("Plugins")
 
 			self.pluginmenu.setToolTipsVisible(True)
 
+			self.pluginTray = QMenu("Plugins")
+			self.pluginTray.setIcon(QIcon(PLUGIN_ICON))
+
 			self.buildPluginMenu()
+
+		# "Install" system tray menu
+		if self.menuTray: self.buildTrayMenu()
+		if self.showTray: self.tray.show()
 
 		self.viewMenu = menubar.addMenu("Display")
 
@@ -1961,8 +1969,88 @@ class ErkGUI(QMainWindow):
 
 		
 
+	# def buildPluginMenu(self):
+	# 	self.pluginmenu.clear()
+
+	# 	if len(self.packages.plugins)>0:
+
+	# 		pi = {}
+	# 		fi = {}
+	# 		for p in self.packages.plugins:
+	# 			if p._package in pi:
+	# 				file = p.__file__
+	# 				e = [p.name,p.version,p.description,file]
+	# 				pi[p._package].append(e)
+	# 				fi[p._package] = file
+	# 			else:
+	# 				pi[p._package] = []
+	# 				file = p.__file__
+	# 				e = [p.name,p.version,p.description,file]
+	# 				pi[p._package].append(e)
+	# 				fi[p._package] = file
+
+	# 		for key in pi:
+	# 			pmenu = self.pluginmenu.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
+	# 			pmenu.setToolTipsVisible(True)
+
+	# 			if self.editorEnabled:
+	# 				x = pmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
+	# 				x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
+
+	# 				pmenu.addSeparator()
+
+	# 			for qclass in pi[key]:
+	# 				pname = qclass[0]
+	# 				pversion = qclass[1]
+	# 				pdescription = qclass[2]
+	# 				x = pmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
+	# 				x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
+	# 				x.setToolTip(pdescription)
+	# 	else:
+
+	# 		nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
+	# 		nopluginsLabelAction = QWidgetAction(self)
+	# 		nopluginsLabelAction.setDefaultWidget(nopluginsLabel)
+	# 		self.pluginmenu.addAction(nopluginsLabelAction)
+	# 		self.pluginmenu.addSeparator()
+
+	# 	actReload = QAction(QIcon(LOAD_ICON),"Reload all plugins",self)
+	# 	actReload.triggered.connect(self.reloadPlugins)
+	# 	self.pluginmenu.addAction(actReload)
+
+	# 	self.pluginmenu.addSeparator()
+
+	# 	if self.editorEnabled:
+	# 		# newEditorWindow
+	# 		actNewEdit = QAction(QIcon(EDIT_ICON),f"{EDITOR_NAME} Plugin Editor",self)
+	# 		actNewEdit.triggered.connect(self.newEditorWindow)
+	# 		self.pluginmenu.addAction(actNewEdit)
+
+	# 		actFileEdit = QAction(QIcon(EDIT_FILE_ICON),f"Open file in {EDITOR_NAME}",self)
+	# 		actFileEdit.triggered.connect(self.openInEditor)
+	# 		self.pluginmenu.addAction(actFileEdit)
+
+	# 		self.pluginmenu.addSeparator()
+
+	# 	optErrors = QAction("Display plugin load errors",self,checkable=True)
+	# 	optErrors.setChecked(self.showPluginErrors)
+	# 	optErrors.triggered.connect(self.togglePluginErrors)
+	# 	self.pluginmenu.addAction(optErrors)
+
+	# 	if self.pluginsEnabled:
+	# 		# show disable plugins entry
+	# 		actPlug = QAction(QIcon(DISABLE_ICON),"Disable plugins",self)
+	# 	else:
+	# 		# show enable plugins entry
+	# 		actPlug = QAction(QIcon(ENABLE_ICON),"Enable plugins",self)
+	# 	actPlug.triggered.connect(self.togglePlugEnable)
+	# 	self.pluginmenu.addAction(actPlug)
+
+	# BEGIN SYSTRAY PLUGIN MENU
+
 	def buildPluginMenu(self):
 		self.pluginmenu.clear()
+		self.pluginTray.clear()
 
 		if len(self.packages.plugins)>0:
 
@@ -1985,17 +2073,29 @@ class ErkGUI(QMainWindow):
 				pmenu = self.pluginmenu.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
 				pmenu.setToolTipsVisible(True)
 
+				ptmenu = self.pluginTray.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
+				ptmenu.setToolTipsVisible(True)
+
 				if self.editorEnabled:
 					x = pmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
 					x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
 
 					pmenu.addSeparator()
 
+					x = ptmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
+					x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
+
+					ptmenu.addSeparator()
+
 				for qclass in pi[key]:
 					pname = qclass[0]
 					pversion = qclass[1]
 					pdescription = qclass[2]
 					x = pmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
+					x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
+					x.setToolTip(pdescription)
+
+					x = ptmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
 					x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
 					x.setToolTip(pdescription)
 		else:
@@ -2006,11 +2106,21 @@ class ErkGUI(QMainWindow):
 			self.pluginmenu.addAction(nopluginsLabelAction)
 			self.pluginmenu.addSeparator()
 
+			nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
+			nopluginsLabelAction = QWidgetAction(self)
+			nopluginsLabelAction.setDefaultWidget(nopluginsLabel)
+			self.pluginTray.addAction(nopluginsLabelAction)
+			self.pluginTray.addSeparator()
+
 		actReload = QAction(QIcon(LOAD_ICON),"Reload all plugins",self)
 		actReload.triggered.connect(self.reloadPlugins)
 		self.pluginmenu.addAction(actReload)
 
 		self.pluginmenu.addSeparator()
+
+		self.pluginTray.addAction(actReload)
+
+		self.pluginTray.addSeparator()
 
 		if self.editorEnabled:
 			# newEditorWindow
@@ -2018,16 +2128,24 @@ class ErkGUI(QMainWindow):
 			actNewEdit.triggered.connect(self.newEditorWindow)
 			self.pluginmenu.addAction(actNewEdit)
 
+			self.pluginTray.addAction(actNewEdit)
+
 			actFileEdit = QAction(QIcon(EDIT_FILE_ICON),f"Open file in {EDITOR_NAME}",self)
 			actFileEdit.triggered.connect(self.openInEditor)
 			self.pluginmenu.addAction(actFileEdit)
 
+			self.pluginTray.addAction(actFileEdit)
+
 			self.pluginmenu.addSeparator()
+
+			self.pluginTray.addSeparator()
 
 		optErrors = QAction("Display plugin load errors",self,checkable=True)
 		optErrors.setChecked(self.showPluginErrors)
 		optErrors.triggered.connect(self.togglePluginErrors)
 		self.pluginmenu.addAction(optErrors)
+
+		self.pluginTray.addAction(optErrors)
 
 		if self.pluginsEnabled:
 			# show disable plugins entry
@@ -2038,6 +2156,10 @@ class ErkGUI(QMainWindow):
 		actPlug.triggered.connect(self.togglePlugEnable)
 		self.pluginmenu.addAction(actPlug)
 
+		self.pluginTray.addAction(actPlug)
+
+
+	# END SYSTRAY PLUGIN MENU
 		
 
 	def togglePlugEnable(self):

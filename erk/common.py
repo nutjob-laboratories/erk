@@ -452,9 +452,8 @@ class %CLASS%(Plugin):
 %_I_%%_I_%self.command = "%COMMAND%"
 %_I_%%_I_%self.arguments = %ARGCOUNT%
 
-%_I_%# Executed when a public message is received
+%_I_%# Executed when a private message is received
 %_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel the message was sent to
 %_I_%#               user (str) - The user who sent the message
 %_I_%#               message (str) - The message
 %_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
@@ -486,6 +485,7 @@ class %CLASS%(Plugin):
 
 %_I_%# Executed when a public message is received
 %_I_%# Arguments:    serverID (str) - The ID of the server
+%_I_%#               channel (str) - The channel the message was sent to
 %_I_%#               user (str) - The user who sent the message
 %_I_%#               message (str) - The message
 %_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):

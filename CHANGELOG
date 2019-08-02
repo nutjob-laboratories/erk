@@ -10,6 +10,8 @@ Version 0.411
 	* Added a commandline command to zip all installed plugins into an archive
 	* Added commandline commands to export all logs to text or html (in an archive)
 	* Added a "disconnect" option to the system tray icon menu
+	* Fixed a bug in the code generator
+	* Added a "plugins" menu to the systray icon menu (identical to the main "plugins" menu)
 
 Version 0.410
 	* Quirc is now known as "Erk"
