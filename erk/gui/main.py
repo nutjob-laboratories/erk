@@ -345,19 +345,22 @@ class ErkGUI(QMainWindow):
 		if not self.block_plugins:
 			traymenu.addMenu(self.pluginTray)
 
-			traymenu.addSeparator()
+		self.stwinmenu = QMenu("Window")
+		self.stwinmenu.setIcon(QIcon(RESTORE_ICON))
 
-		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize window",self)
+		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize",self)
 		trayMin.triggered.connect(self.showMinimized)
-		traymenu.addAction(trayMin)
+		self.stwinmenu.addAction(trayMin)
 
-		trayMin = QAction(QIcon(MAXIMIZE_ICON),f"Maximize window",self)
+		trayMin = QAction(QIcon(MAXIMIZE_ICON),f"Maximize",self)
 		trayMin.triggered.connect(self.showMaximized)
-		traymenu.addAction(trayMin)
+		self.stwinmenu.addAction(trayMin)
 
-		trayMin = QAction(QIcon(WINDOW_ICON),f"Normalize window",self)
+		trayMin = QAction(QIcon(RESTORE_ICON),f"Normal",self)
 		trayMin.triggered.connect(self.showNormal)
-		traymenu.addAction(trayMin)
+		self.stwinmenu.addAction(trayMin)
+
+		traymenu.addMenu(self.stwinmenu)
 
 		traymenu.addSeparator()
 

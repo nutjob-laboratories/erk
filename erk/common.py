@@ -377,6 +377,7 @@ AUTOCOMPLETE_ICON = ":/autocomplete.png"
 SETTINGS_ICON = ":/settings.png"
 FLASH_ICON = ":/flash.png"
 TRAY_ICON = ":/tray.png"
+RESTORE_ICON = ":/restore.png"
 
 MINIMIZE_ICON = ":/minimize.png"
 MAXIMIZE_ICON = ":/maximize.png"

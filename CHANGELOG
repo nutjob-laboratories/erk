@@ -12,6 +12,7 @@ Version 0.411
 	* Added a "disconnect" option to the system tray icon menu
 	* Fixed a bug in the code generator
 	* Added a "plugins" menu to the systray icon menu (identical to the main "plugins" menu)
+	* Moved the "window" settings in the systray menu to it's own submenu
 
 Version 0.410
 	* Quirc is now known as "Erk"
