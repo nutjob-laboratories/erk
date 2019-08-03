@@ -13,6 +13,11 @@ Version 0.411
 	* Fixed a bug in the code generator
 	* Added a "plugins" menu to the systray icon menu (identical to the main "plugins" menu)
 	* Moved the "window" settings in the systray menu to it's own submenu
+	* Cleaned up the text in the "Display" menu
+	* Moved "URLs to hyperlinks" from the "Settings" menu to the "Display" menu
+	* Renamed the "Text Colors" menu entry to "Colors"
+	* Added the ability to disable plugins (plugin names, if placed in the "disabled.txt" file, will be disabled)
+	* Added a commandline option to list all installed plugins
 
 Version 0.410
 	* Quirc is now known as "Erk"

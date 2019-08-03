@@ -1,0 +1,14 @@
+/*
+	Any plugin name (or plugin name and version) entered here will be disabled.
+	Enter one plugin name (and optional version) per line. If the name of a plugin
+	contains whitespace, put the name in quotes. Plugin names are case-sensitive.
+
+	Examples:
+
+		myplugin
+		myplugin 1.0
+		"This is my plugin"
+		"This is my other plugin" 2.5
+
+	This file can use C/C++ style comments.
+*/

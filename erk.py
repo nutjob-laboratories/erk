@@ -134,6 +134,8 @@ devgroup.add_argument("-o","--open", type=str,help=f"Open file in {EDITOR_NAME}"
 devgroup.add_argument("-i","--install", type=str,help=f"Install plugin(s) from zip file",default=None, metavar="ZIP_FILE")
 devgroup.add_argument("-z","--zipplugins", type=str,help=f"Archive all installed plugins",default=None, metavar="ZIP_FILE")
 
+devgroup.add_argument("-L", "--list-plugins", help=f"Lists all installed plugins", action="store_true")
+
 logGroup = parser.add_argument_group('Log exporting')
 
 logGroup.add_argument("--exporttext", type=str,help=f"Exports all logs as text", metavar="ZIP_FILE")
@@ -172,6 +174,28 @@ if args.path:
 			print("Error adding directory to path!")
 			print(f"\"{d}\" doesn't exist or is not a directory.")
 			sys.exit(1)
+
+if args.list_plugins:
+	from erk.plugins import PluginCollection
+	packages = PluginCollection('plugins')
+	numplugs = len(packages.plugins)
+	if numplugs==0:
+		print("No plugins installed.")
+		sys.exit(0)
+	elif numplugs==1:
+		print("1 plugin installed.")
+	else:
+		print(str(numplugs)+" plugins installed.")
+	pi = {}
+	for p in packages.plugins:
+		if p._package in pi:
+			pi[p._package].append(p.name+" "+p.version)
+		else:
+			pi[p._package] = []
+			pi[p._package].append(p.name+" "+p.version)
+	for key in pi:
+		print(key + ": " + ", ".join(pi[key])   )
+	sys.exit(0)
 
 if __name__ == '__main__':
 

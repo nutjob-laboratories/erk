@@ -31,6 +31,7 @@
 
 from collections import defaultdict
 import fnmatch
+import shlex
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -248,6 +249,8 @@ class ErkGUI(QMainWindow):
 		self.windowsEnabled = True
 		self.themesEnabled = True
 
+		self.disabled = get_disabled()
+
 		self.themeList = getThemeList()
 
 		# Load in icon resource file from theme, if possible
@@ -293,6 +296,7 @@ class ErkGUI(QMainWindow):
 
 			# Add GUI reference to all plugins
 			for plugin in self.packages.plugins:
+				if self.isPluginDisabled(plugin): continue
 				plugin._setGui(self)
 				# Load in event_load
 				event = getattr(plugin, EVENT_LOAD, None)
@@ -466,7 +470,7 @@ class ErkGUI(QMainWindow):
 		ms = pf[1]
 		self.optFont.setText(f"Font ({mf}, {ms}pt)")
 
-		self.actColors = QAction(QIcon(COLOR_ICON),"Text colors",self)
+		self.actColors = QAction(QIcon(COLOR_ICON),"Colors",self)
 		self.actColors.triggered.connect(self.doColorDialog)
 		self.viewMenu.addAction(self.actColors)
 
@@ -477,15 +481,20 @@ class ErkGUI(QMainWindow):
 
 		self.msgMenu = self.viewMenu.addMenu(QIcon(PUBLIC_ICON),"Messages")
 
-		self.optStrip = QAction("Strip IRC colors from messages",self,checkable=True)
+		self.optStrip = QAction("Strip IRC colors",self,checkable=True)
 		self.optStrip.setChecked(self.stripIRCcolor)
 		self.optStrip.triggered.connect(self.toggleStrip)
 		self.msgMenu.addAction(self.optStrip)
 
-		self.optFilter = QAction("Censor profanity in messages",self,checkable=True)
+		self.optFilter = QAction("Censor profanity",self,checkable=True)
 		self.optFilter.setChecked(self.profanityFilter)
 		self.optFilter.triggered.connect(self.toggleFilter)
 		self.msgMenu.addAction(self.optFilter)
+
+		optLinks = QAction("Convert URLs to hyperlinks",self,checkable=True)
+		optLinks.setChecked(self.urlsToLinks)
+		optLinks.triggered.connect(self.toggleLinks)
+		self.msgMenu.addAction(optLinks)
 
 		optUptime = QAction("Display timestamps",self,checkable=True)
 		optUptime.setChecked(self.displayTimestamp)
@@ -567,11 +576,6 @@ class ErkGUI(QMainWindow):
 		self.optMenu.addSeparator()
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
-
-		optLinks = QAction("Convert URLs in chat to hyperlinks",self,checkable=True)
-		optLinks.setChecked(self.urlsToLinks)
-		optLinks.triggered.connect(self.toggleLinks)
-		self.chatSettings.addAction(optLinks)
 
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
@@ -1011,7 +1015,8 @@ class ErkGUI(QMainWindow):
 	def heartbeat(self):
 		self.uptime = self.uptime + 1
 
-		if not self.connected: self.setWindowTitle(DEFAULT_WINDOW_TITLE)
+		if not self.connected:
+			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 
 		y = 0
 		for w in self.connections:
@@ -1052,6 +1057,7 @@ class ErkGUI(QMainWindow):
 
 		# Execute event
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			event = getattr(plugin, EVENT_TICK, None)
 			if callable(event):
 				for c in self.connections:
@@ -1103,6 +1109,7 @@ class ErkGUI(QMainWindow):
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			event = getattr(plugin, EVENT_UNLOAD, None)
 			if callable(event):
 				if self.pluginsEnabled:
@@ -2051,6 +2058,18 @@ class ErkGUI(QMainWindow):
 
 	# BEGIN SYSTRAY PLUGIN MENU
 
+	def isPluginDisabled(self,plugin):
+		for f in self.disabled:
+			fp = shlex.split(f)
+			if len(fp)==2:
+				if fp[0]==plugin.name:
+					if fp[1]==plugin.version:
+						return True
+			elif len(fp)>=1:
+				if fp[0]==plugin.name:
+					return True
+		return False
+
 	def buildPluginMenu(self):
 		self.pluginmenu.clear()
 		self.pluginTray.clear()
@@ -2098,9 +2117,42 @@ class ErkGUI(QMainWindow):
 					x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
 					x.setToolTip(pdescription)
 
-					x = ptmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
-					x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
-					x.setToolTip(pdescription)
+					y = ptmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
+					y.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
+					y.setToolTip(pdescription)
+
+					# Check to see if the plugin has been disabled via the disabled file
+					# for f in self.disabled:
+					# 	if f == f"{pname} {pversion}":
+					# 		x.setEnabled(False)
+					# 		x.setText(f"{pname} {pversion} (disabled)")
+					# 		y.setEnabled(False)
+					# 		y.setText(f"{pname} {pversion} (disabled)")
+					# 		break
+					# 	if f == pname:
+					# 		x.setEnabled(False)
+					# 		x.setText(f"{pname} {pversion} (disabled)")
+					# 		y.setEnabled(False)
+					# 		y.setText(f"{pname} {pversion} (disabled)")
+					# 		break
+
+					for f in self.disabled:
+						fp = shlex.split(f)
+						if len(fp)==2:
+							if fp[0]==pname:
+								if fp[1]==pversion:
+									x.setEnabled(False)
+									x.setText(f"{pname} {pversion} (disabled)")
+									y.setEnabled(False)
+									y.setText(f"{pname} {pversion} (disabled)")
+									break
+						elif len(fp)>=1:
+							if fp[0]==pname:
+								x.setEnabled(False)
+								x.setText(f"{pname} {pversion} (disabled)")
+								y.setEnabled(False)
+								y.setText(f"{pname} {pversion} (disabled)")
+								break
 		else:
 
 			nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
@@ -2865,6 +2917,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_CONNECTED, None)
 			if callable(event):
@@ -2887,6 +2940,7 @@ QPushButton::menu-indicator {
 			reason = "Connection error"
 
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_DISCONNECTED, None)
 			if callable(event):
@@ -2947,6 +3001,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_REGISTERED, None)
 			if callable(event):
@@ -3059,6 +3114,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_PUBLIC, None)
 			if callable(event):
@@ -3117,6 +3173,7 @@ QPushButton::menu-indicator {
 
 				# Execute plugin events
 				for plugin in self.packages.plugins:
+					if self.isPluginDisabled(plugin): continue
 					plugin._setIrc(self.connections[serverid])
 					event = getattr(plugin, EVENT_PRIVATE, None)
 					if callable(event):
@@ -3145,6 +3202,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_PRIVATE, None)
 			if callable(event):
@@ -3208,6 +3266,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_NOTICE, None)
 			if callable(event):
@@ -3281,6 +3340,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_ACTION, None)
 			if callable(event):
@@ -3291,6 +3351,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_JOIN, None)
 			if callable(event):
@@ -3312,6 +3373,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_PART, None)
 			if callable(event):
@@ -3332,6 +3394,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_KICK, None)
 			if callable(event):
@@ -3353,6 +3416,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_KICK, None)
 			if callable(event):
@@ -3424,6 +3488,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_MODE, None)
 			if callable(event):
@@ -3617,6 +3682,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_QUIT, None)
 			if callable(event):
@@ -3668,6 +3734,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_TOPIC, None)
 			if callable(event):
@@ -3698,6 +3765,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_INVITE, None)
 			if callable(event):
@@ -3737,6 +3805,7 @@ QPushButton::menu-indicator {
 
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_MOTD, None)
 			if callable(event):
@@ -3751,6 +3820,7 @@ QPushButton::menu-indicator {
 	def irc_raw(self,serverid,line):
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.connections[serverid])
 			event = getattr(plugin, EVENT_RAW, None)
 			if callable(event):
@@ -3783,6 +3853,7 @@ QPushButton::menu-indicator {
 	def executeMenuClick(self,pclass):
 		# Execute plugin events
 		for plugin in self.packages.plugins:
+			if self.isPluginDisabled(plugin): continue
 			if plugin.name == pclass[0]:
 				if plugin.version == pclass[1]:
 					if plugin.description == pclass[2]:

@@ -101,6 +101,24 @@ DISPLAY_CONFIGURATION = os.path.join(SETTINGS_DIRECTORY, "text.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 
+DISABLED_PLUGINS_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.txt")
+
+def save_disabled(dlist,fname=DISABLED_PLUGINS_FILE):
+	olist = "\n".join(dlist)
+	f = open(fname,"w")
+	f.write(olist)
+	f.close()
+
+def get_disabled(fname=DISABLED_PLUGINS_FILE):
+	if os.path.isfile(fname):
+		f = open(fname,"r")
+		dlist = f.read()
+		f.close()
+		dlist = commentRemover(dlist)
+		return dlist.split("\n")
+	else:
+		return []
+
 # User settings files
 USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
 LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
@@ -1863,3 +1881,65 @@ def strip_color(text):
 	text = text.replace("\x0F","")
 
 	return text
+
+# https://gist.github.com/ChunMinChang/88bfa5842396c1fbbc5b
+def removeComments(text):
+	""" remove c-style comments.
+		text: blob of text with comments (can include newlines)
+		returns: text with comments removed
+	"""
+	pattern = r"""
+							##  --------- COMMENT ---------
+		   //.*?$           ##  Start of // .... comment
+		 |                  ##
+		   /\*              ##  Start of /* ... */ comment
+		   [^*]*\*+         ##  Non-* followed by 1-or-more *'s
+		   (                ##
+			 [^/*][^*]*\*+  ##
+		   )*               ##  0-or-more things which don't start with /
+							##    but do end with '*'
+		   /                ##  End of /* ... */ comment
+		 |                  ##  -OR-  various things which aren't comments:
+		   (                ##
+							##  ------ " ... " STRING ------
+			 "              ##  Start of " ... " string
+			 (              ##
+			   \\.          ##  Escaped char
+			 |              ##  -OR-
+			   [^"\\]       ##  Non "\ characters
+			 )*             ##
+			 "              ##  End of " ... " string
+		   |                ##  -OR-
+							##
+							##  ------ ' ... ' STRING ------
+			 '              ##  Start of ' ... ' string
+			 (              ##
+			   \\.          ##  Escaped char
+			 |              ##  -OR-
+			   [^'\\]       ##  Non '\ characters
+			 )*             ##
+			 '              ##  End of ' ... ' string
+		   |                ##  -OR-
+							##
+							##  ------ ANYTHING ELSE -------
+			 .              ##  Anything other char
+			 [^/"'\\]*      ##  Chars which doesn't start a comment, string
+		   )                ##    or escape
+	"""
+	regex = re.compile(pattern, re.VERBOSE|re.MULTILINE|re.DOTALL)
+	noncomments = [m.group(2) for m in regex.finditer(text) if m.group(2)]
+
+	return "".join(noncomments)
+
+def commentRemover(text):
+	def replacer(match):
+		s = match.group(0)
+		if s.startswith('/'):
+			return " " # note: a space and not an empty string
+		else:
+			return s
+	pattern = re.compile(
+		r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"',
+		re.DOTALL | re.MULTILINE
+	)
+	return re.sub(pattern, replacer, text)
