@@ -43,6 +43,8 @@ from erk.common import *
 
 from erk.gui.spelledit import *
 
+import emoji
+
 def getTimestamp():
 	return datetime.timestamp(datetime.now())
 
@@ -1151,6 +1153,10 @@ class Interface(QMainWindow):
 		if user_input == "": dosend = False
 
 		if not dosend: return
+
+		# Inject emojis
+		if self.parent.emojis:
+			user_input = emoji.emojize(user_input,use_aliases=True)
 
 		self.client.msg(self.name,user_input)
 		d = chat_display(self.nickname,user_input,self.parent.maxnicklen,self.parent.urlsToLinks,SELF_COLOR)

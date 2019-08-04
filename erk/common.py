@@ -43,7 +43,8 @@ import string
 import random
 
 (SYSTEM_BITS,LINKAGE)=platform.architecture()
-if "Windows" in platform.system():
+SYSTEM = platform.system()
+if "Windows" in SYSTEM:
 	RUNNING_ON_WINDOWS = True
 else:
 	RUNNING_ON_WINDOWS = False
@@ -227,6 +228,9 @@ ACTION_MESSAGE_TEMPLATE = """
 
 SYSTEM_MESSAGE_DISPLAY_SYMBOL = "\u2666"	# UTF-8 "diamond" symbol
 
+# SYSTEM_MESSAGE_DISPLAY_SYMBOL = "\ud83d\udcac".encode('utf-16', 'surrogatepass').decode('utf-16')
+# SYSTEM_MESSAGE_DISPLAY_SYMBOL = "<small>" + SYSTEM_MESSAGE_DISPLAY_SYMBOL + "</small>"
+
 LOG_TIMESTAMP = 0
 LOG_TEXT = 1
 
@@ -276,8 +280,9 @@ TOPIC_TITLE_SETTING = "display_channel_topic_in_title"
 THEME_SETTING = "theme"
 LOAD_LOG_SETTING = "automatically_load_log"
 LOAD_LOG_SIZE = "log_display_size"
-
 SYSTEM_TRAY_MENU = "system_tray_menu"
+
+EMOJI_SETTING = "use_emojis"
 
 EDITOR_FONT_SETTING = "font"
 EDITOR_WORD_WRAP_SETTING = "word_wrap"
@@ -1142,6 +1147,7 @@ def updateSettings(s):
 	if not LOAD_LOG_SETTING in s: s[LOAD_LOG_SETTING] = True
 	if not LOAD_LOG_SIZE in s: s[LOAD_LOG_SIZE] = MAX_LOG_SIZE_DEFAULT
 	if not SYSTEM_TRAY_MENU in s: s[SYSTEM_TRAY_MENU] = True
+	if not EMOJI_SETTING in s: s[EMOJI_SETTING] = True
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -1183,6 +1189,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			LOAD_LOG_SETTING: True,
 			LOAD_LOG_SIZE: MAX_LOG_SIZE_DEFAULT,
 			SYSTEM_TRAY_MENU: True,
+			EMOJI_SETTING: True,
 		}
 		return s
 

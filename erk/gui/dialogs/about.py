@@ -131,17 +131,22 @@ class Dialog(QDialog):
 		scinfo.setFont(boldfont)
 		scinfo.setOpenExternalLinks(True)
 
-		sinfo = QLabel(f"<small>{PYTHON_IMPLEMENTATION} {PYTHON_VERSION} - Qt {QT_VERSION_STR} - PyQt {PYQT_VERSION_STR}</small>")
-		sinfo.setAlignment(Qt.AlignCenter)
-		sinfo.setFont(boldfont)
+		eminfo = QLabel(f"<a href=\"https://github.com/carpedm20/emoji\">emoji</a> by <a href=\"http://carpedm20.github.io/about/\">Taehoon Kim</a> and <a href=\"http://twitter.com/geowurster/\">Kevin Wurster</a>")
+		eminfo.setAlignment(Qt.AlignCenter)
+		eminfo.setFont(boldfont)
+		eminfo.setOpenExternalLinks(True)
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(logo)
 		finalLayout.addWidget(dinfo)
-		finalLayout.addWidget(sinfo)
+		finalLayout.addWidget(QLabel(" "))
 		finalLayout.addLayout(technology)
 		finalLayout.addWidget(scinfo)
+		finalLayout.addWidget(eminfo)
+
+		finalLayout.addWidget(QLabel(" "))
 		finalLayout.addWidget(linfo)
+		
 		
 		self.setWindowFlags(self.windowFlags()
                     ^ QtCore.Qt.WindowContextHelpButtonHint)

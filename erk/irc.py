@@ -137,6 +137,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.id = nid
 
+		self.gui.connecting(self.id,self,host,port)
+
 		self.users = {}
 
 		self.whois_data = {}

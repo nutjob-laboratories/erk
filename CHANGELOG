@@ -18,6 +18,11 @@ Version 0.411
 	* Renamed the "Text Colors" menu entry to "Colors"
 	* Added the ability to disable plugins (plugin names, if placed in the "disabled.txt" file, will be disabled)
 	* Added a commandline option to list all installed plugins
+	* Removed system information from the "About" dialog
+	* A system message is now displayed while trying to connect to a server
+	* Users can now send emojis in messages (using colon codes like :innocent: or :smirk:)
+	* Emoji colon codes can be disabled (or enabled) from the "Settings" menu
+	* Added information for the "emoji" Python library to the "About" menu
 
 Version 0.410
 	* Quirc is now known as "Erk"
