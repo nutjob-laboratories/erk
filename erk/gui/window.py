@@ -782,6 +782,7 @@ class Interface(QMainWindow):
 		# Execute plugin events
 		handled = False
 		for plugin in self.parent.packages.plugins:
+			if self.parent.isPluginDisabled(plugin): continue
 			plugin._setIrc(self.client)
 			event = getattr(plugin, EVENT_INPUT, None)
 			if callable(event):
@@ -1159,6 +1160,7 @@ class Interface(QMainWindow):
 			# channel chat
 			# Execute plugin events
 			for plugin in self.parent.packages.plugins:
+				if self.parent.isPluginDisabled(plugin): continue
 				plugin._setIrc(self.client)
 				event = getattr(plugin, EVENT_PUBLIC, None)
 				if callable(event):
@@ -1167,6 +1169,7 @@ class Interface(QMainWindow):
 			# private chat
 			# Execute plugin events
 			for plugin in self.parent.packages.plugins:
+				if self.parent.isPluginDisabled(plugin): continue
 				plugin._setIrc(self.client)
 				event = getattr(plugin, EVENT_PRIVATE, None)
 				if callable(event):
