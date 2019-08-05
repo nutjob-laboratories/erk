@@ -8,7 +8,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.411.07**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.411.08**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
@@ -31,6 +31,7 @@
 * A theme engine using QSS and JSON (nearly every aspect of the client, from widgets to icons, can be customized)
 * Optional profanity filter
 * Emoji support
+* ASCIImoji support
 
 # Requirements
 **Erk** requires Python 3, Qt5, Twisted, and qt5reactor. Qt5 and Twisted can be installed by downloading and installing the software from their respected websites, or by using [**pip**](https://pypi.org/project/pip/):

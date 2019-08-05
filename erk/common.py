@@ -131,6 +131,7 @@ ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 IRC_NETWORK_LIST = os.path.join(ERK_DATA_DIRECTORY, "servers.txt")
 MINOR_VERSION = os.path.join(ERK_DATA_DIRECTORY, "minor.txt")
 PROFANITY_LIST = os.path.join(ERK_DATA_DIRECTORY, "profanity.txt")
+ASCIIEMOJI_LIST = os.path.join(ERK_DATA_DIRECTORY, "asciiemoji.json")
 
 # Read in the application's minor version
 f = open(MINOR_VERSION,"r")
@@ -148,6 +149,11 @@ f.close()
 
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
+
+# Read in the ascii emoji list
+ASCIIEMOJIS = {}
+with open(ASCIIEMOJI_LIST, "r",encoding="utf-8") as read_emojis:
+	ASCIIEMOJIS = json.load(read_emojis)
 
 THEME_RESOURCE_FILE_NAME = "resources.py"
 THEME_ICON_FILE_NAME = "icon.png"
@@ -281,8 +287,9 @@ THEME_SETTING = "theme"
 LOAD_LOG_SETTING = "automatically_load_log"
 LOAD_LOG_SIZE = "log_display_size"
 SYSTEM_TRAY_MENU = "system_tray_menu"
-
 EMOJI_SETTING = "use_emojis"
+
+ASCIIEMOJI_SETTING = "use_asciimojis"
 
 EDITOR_FONT_SETTING = "font"
 EDITOR_WORD_WRAP_SETTING = "word_wrap"
@@ -763,6 +770,12 @@ class Whois(object):
 
 # Functions
 
+def inject_asciiemojis(data,symbol=":"):
+	for key in ASCIIEMOJIS:
+		for word in ASCIIEMOJIS[key]["words"]:
+			data = data.replace(symbol+word+symbol,ASCIIEMOJIS[key]["ascii"])
+	return data
+
 def exportLogsAsText(outfile):
 	logs = []
 	for root, directories, files in os.walk(LOG_DIRECTORY): 
@@ -1148,6 +1161,7 @@ def updateSettings(s):
 	if not LOAD_LOG_SIZE in s: s[LOAD_LOG_SIZE] = MAX_LOG_SIZE_DEFAULT
 	if not SYSTEM_TRAY_MENU in s: s[SYSTEM_TRAY_MENU] = True
 	if not EMOJI_SETTING in s: s[EMOJI_SETTING] = True
+	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = False
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -1189,7 +1203,8 @@ def loadSettings(filename=SETTINGS_FILE):
 			LOAD_LOG_SETTING: True,
 			LOAD_LOG_SIZE: MAX_LOG_SIZE_DEFAULT,
 			SYSTEM_TRAY_MENU: True,
-			EMOJI_SETTING: True,
+			EMOJI_SETTING: False,
+			ASCIIEMOJI_SETTING: True,
 		}
 		return s
 

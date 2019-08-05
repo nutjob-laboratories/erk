@@ -199,8 +199,8 @@ class ErkGUI(QMainWindow):
 		self.showTray = True
 		self.flashTray = True
 		self.menuTray = True
-
-		self.emojis = True
+		self.emojis = False
+		self.asciimojis = True
 
 		# NO SUPPORT FOR SAVING THIS TO CONFIG
 		# TODO: ADD TO CONFIG FILE, MENUS, ETC
@@ -241,8 +241,9 @@ class ErkGUI(QMainWindow):
 		self.loadLogsOnJoin = self.settings[LOAD_LOG_SETTING]
 		self.maxlogsize = self.settings[LOAD_LOG_SIZE]
 		self.menuTray = self.settings[SYSTEM_TRAY_MENU]
-
 		self.emojis = self.settings[EMOJI_SETTING]
+
+		self.asciimojis = self.settings[ASCIIEMOJI_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -494,12 +495,6 @@ class ErkGUI(QMainWindow):
 		self.optFilter.triggered.connect(self.toggleFilter)
 		self.msgMenu.addAction(self.optFilter)
 
-
-		
-
-
-
-
 		optLinks = QAction("Convert URLs to hyperlinks",self,checkable=True)
 		optLinks.setChecked(self.urlsToLinks)
 		optLinks.triggered.connect(self.toggleLinks)
@@ -590,6 +585,11 @@ class ErkGUI(QMainWindow):
 		self.optEmoji.setChecked(self.emojis)
 		self.optEmoji.triggered.connect(self.toggleEmoji)
 		self.chatSettings.addAction(self.optEmoji)
+
+		self.optAsciiMoji = QAction("Use ASCIImoji colon codes",self,checkable=True)
+		self.optAsciiMoji.setChecked(self.asciimojis)
+		self.optAsciiMoji.triggered.connect(self.toggleAsciiEmoji)
+		self.chatSettings.addAction(self.optAsciiMoji)
 
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
@@ -1536,6 +1536,15 @@ class ErkGUI(QMainWindow):
 			self.emojis = True
 
 		self.settings[EMOJI_SETTING] = self.emojis
+		saveSettings(self.settings,self.settingsFile)
+
+	def toggleAsciiEmoji(self):
+		if self.asciimojis:
+			self.asciimojis = False
+		else:
+			self.asciimojis = True
+
+		self.settings[ASCIIEMOJI_SETTING] = self.asciimojis
 		saveSettings(self.settings,self.settingsFile)
 
 

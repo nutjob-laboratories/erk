@@ -136,6 +136,11 @@ class Dialog(QDialog):
 		eminfo.setFont(boldfont)
 		eminfo.setOpenExternalLinks(True)
 
+		aminfo = QLabel(f"<a href=\"https://github.com/hpcodecraft/ASCIImoji\">ASCIImoji</a> by <a href=\"mailto:thesquidpeople@gmail.com\">Volker Wieban</a>")
+		aminfo.setAlignment(Qt.AlignCenter)
+		aminfo.setFont(boldfont)
+		aminfo.setOpenExternalLinks(True)
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(logo)
 		finalLayout.addWidget(dinfo)
@@ -143,6 +148,7 @@ class Dialog(QDialog):
 		finalLayout.addLayout(technology)
 		finalLayout.addWidget(scinfo)
 		finalLayout.addWidget(eminfo)
+		finalLayout.addWidget(aminfo)
 
 		finalLayout.addWidget(QLabel(" "))
 		finalLayout.addWidget(linfo)

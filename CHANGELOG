@@ -22,7 +22,12 @@ Version 0.411
 	* A system message is now displayed while trying to connect to a server
 	* Users can now send emojis in messages (using colon codes like :innocent: or :smirk:)
 	* Emoji colon codes can be disabled (or enabled) from the "Settings" menu
-	* Added information for the "emoji" Python library to the "About" menu
+	* Added information for the "emoji" Python library to the "About" dialog
+	* Added support for ASCIImoji colon codes in messages
+	* Added information for "ASCIImojis" to the "About dialog"
+	* ASCIImoji colon codes can be disabled from the "Settings" menu
+	* Emoji colon codes are now disabled by default
+	* ASCIImoji colon codes are now enabled by default
 
 Version 0.410
 	* Quirc is now known as "Erk"
