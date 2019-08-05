@@ -160,6 +160,14 @@ THEME_ICON_FILE_NAME = "icon.png"
 THEME_QSS_FILE_NAME = "widgets.qss"
 THEME_JSON_FILE_NAME = "text.json"
 
+# Create any necessary directories if they don't exist
+if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
+if not os.path.isdir(AUTOJOIN_DIRECTORY): os.mkdir(AUTOJOIN_DIRECTORY)
+if not os.path.isdir(USER_INFO_DIRECTORY): os.mkdir(USER_INFO_DIRECTORY)
+if not os.path.isdir(THEMES_DIRECTORY): os.mkdir(THEMES_DIRECTORY)
+if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
+if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
+
 # Globals
 DEFAULT_NICKNAME = "erk"
 DEFAULT_USERNAME = "erk"
