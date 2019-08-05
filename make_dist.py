@@ -57,7 +57,7 @@ shutil.copy("./settings/settings.txt", "./dist/settings/settings.txt")
 
 shutil.copy("./documentation/Erk-Plugin-Guide.pdf", "./dist/documentation/Erk-Plugin-Guide.pdf")
 
-shutil.copy("./themes/themes.txt", "./dist/themes/themes.txt")
+#shutil.copy("./themes/themes.txt", "./dist/themes/themes.txt")
 
 
 #shutil.copy("./data/user.json", "./dist/data/user.json")

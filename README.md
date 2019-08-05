@@ -26,15 +26,15 @@
 * A built-in plugin editor (**Kōd**)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
-* Built-in spell checker
+* Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 * Command/nick/channel auto-completion
-* A theme engine using QSS and JSON (nearly every aspect of the client, from widgets to icons, can be customized)
+* A theme engine using [QSS](https://doc.qt.io/qt-5/stylesheet-syntax.html) and [JSON](https://www.json.org/) (nearly every aspect of the client, from widgets to icons, can be customized)
 * Optional profanity filter
-* Emoji support
-* ASCIImoji support
+* [Emoji](https://en.wikipedia.org/wiki/Emoji) support
+* [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
 
 # Requirements
-**Erk** requires Python 3, Qt5, Twisted, and qt5reactor. Qt5 and Twisted can be installed by downloading and installing the software from their respected websites, or by using [**pip**](https://pypi.org/project/pip/):
+**Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
 
     pip install pyqt5
     pip install Twisted
@@ -51,7 +51,11 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 ## What can **Erk** plugins do?
 
-Just about anything Python can do! Plugins can cause the client to join and part channels, send chat messages, and anything else an IRC client can do. Plus, since **Erk** plugins are written in Python3, plugins can load libraries and access functionality not built into **Erk**. If you are familiar with Twisted, you can even get the IRC client object created by Twisted (and used by **Erk** for all IRC functions).
+Just about anything Python can do! Plugins can cause the client to join and part channels, send chat messages, and anything else an IRC client can do. Plus, since **Erk** plugins are written in Python3, plugins can load libraries and access functionality not built into **Erk**. If you are familiar with Twisted, you can even get the IRC client object created by Twisted (and used by **Erk** for all IRC functions). Here are some example plugins:
+
+* [**_Echo.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/Echo.py) - Repeats any public messages to the channel it the message was sent from.
+* [**_ChatCounter.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/ChatCounter.py) - Counts every instance of chat sent to all channels the client is "in"; other users can see the total number of messages by sending the client `!count` as a private message.
+* [**_DuckDuckGo.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/DuckDuckGo.py) - Users can sent `!quack` followed by a person, place, thing, topic, or concept to any channel chat the client is "in" to get a short abstract summary from DuckDuckGo about the requested item.
 
 ## What does "erk" mean?
 
