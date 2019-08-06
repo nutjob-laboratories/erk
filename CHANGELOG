@@ -29,6 +29,9 @@ Version 0.411
 	* Emoji colon codes are now disabled by default
 	* ASCIImoji colon codes are now enabled by default
 	* Emojis/ASCIImojis are now injected into messages sent by plugins (if they are enabled)
+	* Moved emoji settings to their own menu
+	* Added WWW links to emoji/ASCIImoji colon code lists
+	* Patched two missing ASCIImojis to the built-in list
 
 Version 0.410
 	* Quirc is now known as "Erk"

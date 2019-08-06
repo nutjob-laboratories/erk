@@ -581,16 +581,6 @@ class ErkGUI(QMainWindow):
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
-		self.optEmoji = QAction("Use emoji colon codes",self,checkable=True)
-		self.optEmoji.setChecked(self.emojis)
-		self.optEmoji.triggered.connect(self.toggleEmoji)
-		self.chatSettings.addAction(self.optEmoji)
-
-		self.optAsciiMoji = QAction("Use ASCIImoji colon codes",self,checkable=True)
-		self.optAsciiMoji.setChecked(self.asciimojis)
-		self.optAsciiMoji.triggered.connect(self.toggleAsciiEmoji)
-		self.chatSettings.addAction(self.optAsciiMoji)
-
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
 		optAlive.triggered.connect(self.toggleAlive)
@@ -600,6 +590,35 @@ class ErkGUI(QMainWindow):
 		optInvite.setChecked(self.joinInvite)
 		optInvite.triggered.connect(self.toggleInvite)
 		self.chatSettings.addAction(optInvite)
+
+		self.emojiSettings = self.optMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
+
+		self.optEmoji = QAction("Use emoji colon codes",self,checkable=True)
+		self.optEmoji.setChecked(self.emojis)
+		self.optEmoji.triggered.connect(self.toggleEmoji)
+		self.emojiSettings.addAction(self.optEmoji)
+
+		# https://www.webfx.com/tools/emoji-cheat-sheet/
+		helpLink = QAction(QIcon(LINK_ICON),"Emoji colon code list",self)
+		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.doOpenUrl(u))
+		f = helpLink.font()
+		f.setItalic(True)
+		helpLink.setFont(f)
+		self.emojiSettings.addAction(helpLink)
+
+		self.emojiSettings.addSeparator()
+
+		self.optAsciiMoji = QAction("Use ASCIImoji colon codes",self,checkable=True)
+		self.optAsciiMoji.setChecked(self.asciimojis)
+		self.optAsciiMoji.triggered.connect(self.toggleAsciiEmoji)
+		self.emojiSettings.addAction(self.optAsciiMoji)
+
+		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji colon code list",self)
+		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.doOpenUrl(u))
+		f = helpLink.font()
+		f.setItalic(True)
+		helpLink.setFont(f)
+		self.emojiSettings.addAction(helpLink)
 
 		self.spellMenu = self.optMenu.addMenu(QIcon(SPELL_ICON),"Spell check")
 

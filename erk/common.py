@@ -416,9 +416,9 @@ SETTINGS_ICON = ":/settings.png"
 FLASH_ICON = ":/flash.png"
 TRAY_ICON = ":/tray.png"
 RESTORE_ICON = ":/restore.png"
-
 MINIMIZE_ICON = ":/minimize.png"
 MAXIMIZE_ICON = ":/maximize.png"
+EMOJI_ICON = ":/emoji.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
