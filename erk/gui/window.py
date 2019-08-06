@@ -783,7 +783,9 @@ class Interface(QMainWindow):
 		if self.parent.emojis:
 			user_input = emoji.emojize(user_input,use_aliases=True)
 
-		user_input = inject_asciiemojis(user_input)
+		# Inject ASCIImojis
+		if self.parent.asciimojis:
+			user_input = inject_asciiemojis(user_input)
 
 		# PLUGINS BEGIN
 

@@ -29,6 +29,7 @@ import string
 import imp
 
 import json
+import emoji
 
 from erk.common import *
 
@@ -76,6 +77,9 @@ class Plugin(object):
 		clientnick = ''
 		sid = None
 
+		if self._gui.emojis: text = emoji.emojize(text,use_aliases=True)
+		if self._gui.asciimojis: text = inject_asciiemojis(text)
+
 		if serverid==None:
 			if self._irc!=None:
 				self._irc.msg(target,text)
@@ -119,6 +123,9 @@ class Plugin(object):
 		clientnick = ''
 		sid = None
 
+		if self._gui.emojis: text = emoji.emojize(text,use_aliases=True)
+		if self._gui.asciimojis: text = inject_asciiemojis(text)
+
 		if serverid==None:
 			if self._irc!=None:
 				self._irc.notice(target,text)
@@ -160,6 +167,9 @@ class Plugin(object):
 
 		clientnick = ''
 		sid = None
+
+		if self._gui.emojis: text = emoji.emojize(text,use_aliases=True)
+		if self._gui.asciimojis: text = inject_asciiemojis(text)
 
 		if serverid==None:
 			if self._irc!=None:
@@ -440,6 +450,9 @@ class Plugin(object):
 			self.silent = False
 
 		if self.silent: return
+
+		if self._gui.emojis: text = emoji.emojize(text,use_aliases=True)
+		if self._gui.asciimojis: text = inject_asciiemojis(text)
 
 		if not window:
 			self._gui.printToActiveWindow(text)
