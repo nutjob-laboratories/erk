@@ -89,7 +89,6 @@ optgroup = parser.add_argument_group('Options')
 
 optgroup.add_argument("-h", "--help", help=f"Displays help", action="help")
 
-optgroup.add_argument( "--path", type=str, help="Adds a directory to the plugin path", action="append", metavar="DIRECTORY")
 optgroup.add_argument( "--interval", type=int,help="Keep-alive heartbeat interval (120 seconds)", default=120, metavar="NUMBER")
 optgroup.add_argument( "--maximize", help=f"Display maximized", action="store_true")
 optgroup.add_argument( "--fullscreen", help=f"Displays in full screen mode", action="store_true")
@@ -120,21 +119,10 @@ forbidGroup = parser.add_argument_group('Disable features')
 
 forbidGroup.add_argument( "--nologs", help=f"Don't save chat logs on window close", action="store_true")
 forbidGroup.add_argument( "--nosettings", help=f"Disable settings menu", action="store_true")
-forbidGroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
 forbidGroup.add_argument( "--nossl", help=f"Disable SSL", action="store_true")
-forbidGroup.add_argument( "--noeditor", help=f"Disable {EDITOR_NAME}", action="store_true")
 forbidGroup.add_argument( "--nowindows", help=f"Disable windows menu", action="store_true")
 forbidGroup.add_argument( "--nothemes", help=f"Disable themes", action="store_true")
 forbidGroup.add_argument( "--nosystray", help=f"Disable system tray icon", action="store_true")
-
-devgroup = parser.add_argument_group('Plugin development')
-
-devgroup.add_argument("-e", "--editor", help=f"Opens {EDITOR_NAME}", action="store_true")
-devgroup.add_argument("-o","--open", type=str,help=f"Open file in {EDITOR_NAME}",default=None, metavar="FILE")
-devgroup.add_argument("-i","--install", type=str,help=f"Install plugin(s) from zip file",default=None, metavar="ZIP_FILE")
-devgroup.add_argument("-z","--zipplugins", type=str,help=f"Archive all installed plugins",default=None, metavar="ZIP_FILE")
-
-devgroup.add_argument("-L", "--list-plugins", help=f"Lists all installed plugins", action="store_true")
 
 logGroup = parser.add_argument_group('Log exporting')
 
@@ -166,46 +154,7 @@ if args.generate_display:
 		json.dump(config, write_data, indent=4, sort_keys=True)
 		sys.exit(0)
 
-if args.path:
-	for d in args.path:
-		if os.path.isdir(d):
-			sys.path.append(d)
-		else:
-			print("Error adding directory to path!")
-			print(f"\"{d}\" doesn't exist or is not a directory.")
-			sys.exit(1)
-
-if args.list_plugins:
-	from erk.plugins import PluginCollection
-	packages = PluginCollection('plugins')
-	numplugs = len(packages.plugins)
-	if numplugs==0:
-		print("No plugins installed.")
-		sys.exit(0)
-	elif numplugs==1:
-		print("1 plugin installed.")
-	else:
-		print(str(numplugs)+" plugins installed.")
-	pi = {}
-	for p in packages.plugins:
-		if p._package in pi:
-			pi[p._package].append(p.name+" "+p.version)
-		else:
-			pi[p._package] = []
-			pi[p._package].append(p.name+" "+p.version)
-	for key in pi:
-		print(key + ": " + ", ".join(pi[key])   )
-	sys.exit(0)
-
 if __name__ == '__main__':
-
-	if args.install:
-		if installPluginFromZip(args.install):
-			print(f"Installed plugin(s) from {args.install}")
-			sys.exit(0)
-		else:
-			print(f"Error installing plugin(s) from {args.install}")
-			sys.exit(1)
 
 	if args.install_theme:
 		if installThemeFromZip(args.install_theme):
@@ -213,15 +162,6 @@ if __name__ == '__main__':
 			sys.exit(0)
 		else:
 			print(f"Error installing theme(s) from {args.install_theme}")
-			sys.exit(1)
-
-	if args.zipplugins:
-		pc = exportPluginsToZip(args.zipplugins)
-		if pc > 0:
-			print(f"{str(pc)} plugin(s) zipped to {args.zipplugins}")
-			sys.exit(0)
-		else:
-			print(f"No plugins found in {PLUGIN_DIRECTORY}")
 			sys.exit(1)
 
 	if args.exporttext:
@@ -246,28 +186,16 @@ if __name__ == '__main__':
 	app = QApplication([])
 	app.setStyle("Windows")
 
-	if args.noplugins:
-		if args.config:
-			if args.display:
-				erkClient = ErkGUI(app,True,args.config,args.display)
-			else:
-				erkClient = ErkGUI(app,True,args.config)
+	if args.config:
+		if args.display:
+			erkClient = ErkGUI(app,args.config,args.display)
 		else:
-			if args.display:
-				erkClient = ErkGUI(app,True,None,args.display)
-			else:
-				erkClient = ErkGUI(app,True)
+			erkClient = ErkGUI(app,args.config)
 	else:
-		if args.config:
-			if args.display:
-				erkClient = ErkGUI(app,False,args.config,args.display)
-			else:
-				erkClient = ErkGUI(app,False,args.config)
+		if args.display:
+			erkClient = ErkGUI(app,None,args.display)
 		else:
-			if args.display:
-				erkClient = ErkGUI(app,False,None,args.display)
-			else:
-				erkClient = ErkGUI(app,False)
+			erkClient = ErkGUI(app)
 
 	if args.noprofanity:
 		erkClient.forceProfanityFilter()
@@ -298,6 +226,7 @@ if __name__ == '__main__':
 		if args.maximize:
 			erkClient.showMaximized()
 		else:
+			
 			erkClient.show()
 
 	if args.nologs:
@@ -305,9 +234,6 @@ if __name__ == '__main__':
 
 	if args.nosettings:
 		erkClient.hideSettingsMenu()
-
-	if args.noeditor:
-		erkClient.disableEditor()
 
 	if args.nowindows:
 		erkClient.disableWindowsMenu()
@@ -392,11 +318,5 @@ if __name__ == '__main__':
 
 		ci = [nickname,username,realname,alternate,server,port,args.password,args.ssl]
 		erkClient.connectToIRC(ci)
-
-	if args.editor:
-		erkClient.newEditorWindowMaximized()
-
-	if args.open:
-		erkClient.newEditorWindowFileMaximized(args.open)
 
 	reactor.run()

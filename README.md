@@ -2,13 +2,11 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/logo.png"><br>
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/howyousay.png"><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.411</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf">Plugin Documentation</a><br>
-	<a href="https://github.com/nutjob-laboratories/erk-plugins">Plugin Repository</a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.412</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.411.10**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.412.00**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
@@ -22,8 +20,6 @@
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Automatic channel and private message logging
-* Plugins (plugins are written in Python3, just like **Erk**)
-* A built-in plugin editor (**Kōd**)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
@@ -48,14 +44,6 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 **Erk** is being developed with Python 3.7.
 
 # Frequently asked questions
-
-## What can **Erk** plugins do?
-
-Just about anything Python can do! Plugins can cause the client to join and part channels, send chat messages, and anything else an IRC client can do. Plus, since **Erk** plugins are written in Python3, plugins can load libraries and access functionality not built into **Erk**. If you are familiar with Twisted, you can even get the IRC client object created by Twisted (and used by **Erk** for all IRC functions). Here are some example plugins:
-
-* [**_Echo.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/Echo.py) - Repeats any public messages to the channel it the message was sent from.
-* [**_ChatCounter.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/ChatCounter.py) - Counts every instance of chat sent to all channels the client is "in"; other users can see the total number of messages by sending the client `!count` as a private message.
-* [**_DuckDuckGo.py_**](https://github.com/nutjob-laboratories/erk-plugins/blob/master/DuckDuckGo.py) - Users can sent `!quack` followed by a person, place, thing, topic, or concept to any channel chat the client is "in" to get a short abstract summary from DuckDuckGo about the requested item.
 
 ## What does "erk" mean?
 

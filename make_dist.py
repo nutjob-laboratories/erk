@@ -35,9 +35,8 @@ f.close()
 
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
-os.mkdir("./dist/plugins")
 os.mkdir("./dist/logs")
-os.mkdir("./dist/documentation")
+#os.mkdir("./dist/documentation")
 #os.mkdir("./dist/themes")
 
 os.system("compile_resources.bat")
@@ -52,10 +51,8 @@ shutil.copy("./CHANGELOG", "./dist/CHANGELOG")
 shutil.copy("./LICENSE", "./dist/LICENSE")
 shutil.copy("./README.md", "./dist/README.md")
 shutil.copy("./logs/logs.txt", "./dist/logs/logs.txt")
-shutil.copy("./plugins/plugins.txt", "./dist/plugins/plugins.txt")
 shutil.copy("./settings/settings.txt", "./dist/settings/settings.txt")
 
-shutil.copy("./documentation/Erk-Plugin-Guide.pdf", "./dist/documentation/Erk-Plugin-Guide.pdf")
 
 #shutil.copy("./themes/themes.txt", "./dist/themes/themes.txt")
 

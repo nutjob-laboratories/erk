@@ -63,14 +63,11 @@ PYTHON_VERSION = platform.python_version()
 globals()["erk.erkimg"] = __import__("erk.erkimg")
 
 APPLICATION_NAME = "Ərk"
-APPLICATION_VERSION = "0.411"
-APPLICATION_MAJOR_VERSION = "0.411"
+APPLICATION_VERSION = "0.412"
+APPLICATION_MAJOR_VERSION = "0.412"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
-EDITOR_NAME = "Kōd"
-EDITOR_VERSION = "0.58"
 NORMAL_APPLICATION_NAME = "Erk"
-
 
 GPL_NOTIFICATION = """Ərk IRC Client
 Copyright (C) 2019  Dan Hetrick
@@ -93,7 +90,7 @@ INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
-PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
+#PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 AUTOJOIN_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "autojoin")
 THEMES_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "themes")
 
@@ -102,23 +99,23 @@ DISPLAY_CONFIGURATION = os.path.join(SETTINGS_DIRECTORY, "text.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 
-DISABLED_PLUGINS_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.txt")
+#DISABLED_PLUGINS_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.txt")
 
-def save_disabled(dlist,fname=DISABLED_PLUGINS_FILE):
-	olist = "\n".join(dlist)
-	f = open(fname,"w")
-	f.write(olist)
-	f.close()
+# def save_disabled(dlist,fname=DISABLED_PLUGINS_FILE):
+# 	olist = "\n".join(dlist)
+# 	f = open(fname,"w")
+# 	f.write(olist)
+# 	f.close()
 
-def get_disabled(fname=DISABLED_PLUGINS_FILE):
-	if os.path.isfile(fname):
-		f = open(fname,"r")
-		dlist = f.read()
-		f.close()
-		dlist = commentRemover(dlist)
-		return dlist.split("\n")
-	else:
-		return []
+# def get_disabled(fname=DISABLED_PLUGINS_FILE):
+# 	if os.path.isfile(fname):
+# 		f = open(fname,"r")
+# 		dlist = f.read()
+# 		f.close()
+# 		dlist = commentRemover(dlist)
+# 		return dlist.split("\n")
+# 	else:
+# 		return []
 
 # User settings files
 USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
@@ -140,7 +137,6 @@ f.close()
 
 # Set the version number to contain the minor version
 APPLICATION_VERSION = APPLICATION_VERSION + "." + vminor
-EDITOR_VERSION = EDITOR_VERSION + "." + vminor
 
 # Load in the profanity data file
 f = open(PROFANITY_LIST,"r")
@@ -165,7 +161,7 @@ if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 if not os.path.isdir(AUTOJOIN_DIRECTORY): os.mkdir(AUTOJOIN_DIRECTORY)
 if not os.path.isdir(USER_INFO_DIRECTORY): os.mkdir(USER_INFO_DIRECTORY)
 if not os.path.isdir(THEMES_DIRECTORY): os.mkdir(THEMES_DIRECTORY)
-if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
+#if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Globals
@@ -275,13 +271,11 @@ PRETTYUSER_SETTING = "pretty_user_lists"
 DOLINKS_SETTING = "urls_to_links_in_chat"
 TITLE_ACTIVE_WINDOW_SETTING = "set_title_to_active_window"
 SAVE_LOGS_BY_NETWORK = "use_network_for_chat_log_filenames"
-DISPLAY_PLUGIN_ERRORS_SETTING = "display_plugin_load_errors"
 LOAD_THEME_ICONS_SETTING = "use_theme_icons"
 PROFANITY_FILTER_SETTING = "filter_profanity"
 STRIP_IRC_COLORS_SETTING = "strip_irc_colors"
 SYSTEM_TRAY_SETTING = "system_tray_icon"
 SYSTEM_TRAY_FLASH_SETTING = "system_tray_flash"
-PLUGINS_ENABLED_SETTING = "execute_plugin_events"
 ENABLE_LIST_SETTING = "enable_channel_list_button"
 ENABLE_SPELL_CHECK = "enable_spell_checking"
 SPELL_CHECK_LANGUAGE = "spell_check_language"
@@ -296,18 +290,9 @@ LOAD_LOG_SETTING = "automatically_load_log"
 LOAD_LOG_SIZE = "log_display_size"
 SYSTEM_TRAY_MENU = "system_tray_menu"
 EMOJI_SETTING = "use_emojis"
-
 ASCIIEMOJI_SETTING = "use_asciimojis"
 
-EDITOR_FONT_SETTING = "font"
-EDITOR_WORD_WRAP_SETTING = "word_wrap"
-EDITOR_SPACES_TAB_SETTING = "use_spaces_instead_of_tab_for_indent"
-EDITOR_NUMBER_OF_SPACES = "number_of_spaces_to_indent"
-EDITOR_FIND_ON_TOP = "find_window_always_on_top"
-
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
-FIND_WINDOW_TITLE = "Find"
-FIND_REPLACE_WINDOW_TITLE = "Find and replace"
 
 IRC_00 = "#FFFFFF"
 IRC_01 = "#000000"
@@ -337,7 +322,7 @@ PYTHON_IMAGE = ":/python.png"
 TWISTED_IMAGE = ":/twisted.png"
 ICONS8_IMAGE = ":/icons8.png"
 
-KOD_LOGO_IMAGE = ":/kodlogo.png"
+#KOD_LOGO_IMAGE = ":/kodlogo.png"
 
 # Icons
 
@@ -365,37 +350,40 @@ NEW_WINDOW_ICON = ":/newwindow.png"
 WHOIS_ICON = ":/whois.png"
 LOG_ICON = ":/log.png"
 KICK_ICON = ":/kick.png"
-PLUGIN_ICON = ":/plugin.png"
-EDIT_ICON = ":/edit.png"
-SAVEAS_ICON = ":/saveas.png"
-OPEN_ICON = ":/open.png"
-SELECTALL_ICON = ":/selectall.png"
-CUT_ICON = ":/cut.png"
-COPY_ICON = ":/copy.png"
-UNDO_ICON = ":/undo.png"
-REDO_ICON = ":/redo.png"
-INDENT_ICON = ":/indent.png"
-WRAP_ICON = ":/wrap.png"
-COMMAND_ICON = ":/command.png"
+#PLUGIN_ICON = ":/plugin.png"
+#EDIT_ICON = ":/edit.png"
+#SAVEAS_ICON = ":/saveas.png"
+#OPEN_ICON = ":/open.png"
+# SELECTALL_ICON = ":/selectall.png"
+# CUT_ICON = ":/cut.png"
+# COPY_ICON = ":/copy.png"
+# UNDO_ICON = ":/undo.png"
+# REDO_ICON = ":/redo.png"
+# INDENT_ICON = ":/indent.png"
+# WRAP_ICON = ":/wrap.png"
+# COMMAND_ICON = ":/command.png"
 RESTART_ICON = ":/restart.png"
-NEWFILE_ICON = ":/newfile.png"
+# NEWFILE_ICON = ":/newfile.png"
 LOAD_ICON = ":/load.png"
-PACKAGE_ICON = ":/package.png"
+# PACKAGE_ICON = ":/package.png"
+
 PUBLIC_ICON = ":/public.png"
-PRIVATE_ICON = ":/private.png"
+
+#PRIVATE_ICON = ":/private.png"
+
 OPERATOR_ICON = ":/operator.png"
 VOICED_ICON = ":/voiced.png"
 NORMAL_ICON = ":/normal.png"
 ABOUT_ICON = ":/about.png"
 IGNORE_ICON = ":/ignore.png"
 UNIGNORE_ICON = ":/unignore.png"
-EDIT_FILE_ICON = ":/editfile.png"
-INDIVIDUAL_PACKAGE_ICON = ":/ipackage.png"
+#EDIT_FILE_ICON = ":/editfile.png"
+#INDIVIDUAL_PACKAGE_ICON = ":/ipackage.png"
 KICKBAN_ICON = ":/kickban.png"
 USERS_ICON = ":/users.png"
 WINDOW_ICON = ":/window.png"
 ENABLE_ICON = ":/enable.png"
-DISABLE_ICON = ":/disable.png"
+#DISABLE_ICON = ":/disable.png"
 LIST_ICON = ":/list.png"
 DISPLAY_ICON = ":/display.png"
 SPELL_ICON = ":/spell.png"
@@ -439,302 +427,6 @@ USER_MENU_TITLE = f"""
   <td style="text-align: left; vertical-align: middle;"><img src=\"{USER_ICON}\" width=\"22\" height=\"22\">&nbsp;</td>
   <td style="text-align: left; vertical-align: middle;"><b>!USER!!SPACER!</b></td>
 </tr></tbody></table>
-"""
-
-# Plugins
-
-# Event names
-EVENT_LOAD        = "load"
-EVENT_UNLOAD      = "unload"
-EVENT_CONNECTED     = "server_connected"
-EVENT_DISCONNECTED    = "server_disconnected"
-EVENT_REGISTERED    = "server_registered"
-EVENT_PUBLIC      = "message_public"
-EVENT_PRIVATE     = "message_private"
-EVENT_NOTICE      = "message_notice"
-EVENT_ACTION      = "message_action"
-EVENT_JOIN        = "channel_join"
-EVENT_PART        = "channel_part"
-EVENT_MODE        = "server_mode"
-EVENT_QUIT        = "server_quit"
-EVENT_TOPIC       = "channel_topic"
-EVENT_INVITE      = "channel_invite"
-EVENT_MOTD        = "server_motd"
-EVENT_MENU        = "menu"
-EVENT_TICK        = "tick"
-EVENT_INPUT       = "input"
-EVENT_RAW       = "server_raw"
-EVENT_KICK        = "channel_kick"
-
-PLUGIN_CLASS = '%CLASS%'
-PLUGIN_NAME = '%NAME%'
-PLUGIN_VERSION = '%VERSION%'
-PLUGIN_DESCRIPTION = '%DESCRIPTION%'
-PLUGIN_TRIGGER = '%COMMAND%'
-PLUGIN_OPTIONS = '%OPTIONS%'
-
-PLUGIN_ARGCOUNT = '%ARGCOUNT%'
-
-TEMPLATE_MODULE_LOAD = "from erk import Plugin,Shared"
-
-INDENT_SYMBOL = "%_I_%"
-
-PRIVATE_COMMAND_SKELETON = f"""
-class %CLASS%(Plugin):
-
-%_I_%def __init__(self):
-%_I_%%_I_%self.name = "%NAME%"
-%_I_%%_I_%self.version = "%VERSION%"
-%_I_%%_I_%self.description = "%DESCRIPTION%"
-%_I_%%_I_%%OPTIONS%
-
-%_I_%%_I_%self.command = "%COMMAND%"
-%_I_%%_I_%self.arguments = %ARGCOUNT%
-
-%_I_%# Executed when a private message is received
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               user (str) - The user who sent the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
-%_I_%%_I_%tokens = shlex.split(message)
-%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-%_I_%%_I_%%_I_%tokens.pop(0)
-
-%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
-
-%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
-%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
-%_I_%%_I_%%_I_%%_I_%return
-
-%_I_%%_I_%%_I_%# Command functionality goes here
-
-"""
-
-PUBLIC_COMMAND_SKELETON = f"""
-class %CLASS%(Plugin):
-
-%_I_%def __init__(self):
-%_I_%%_I_%self.name = "%NAME%"
-%_I_%%_I_%self.version = "%VERSION%"
-%_I_%%_I_%self.description = "%DESCRIPTION%"
-%_I_%%_I_%%OPTIONS%
-
-%_I_%%_I_%self.command = "%COMMAND%"
-%_I_%%_I_%self.arguments = %ARGCOUNT%
-
-%_I_%# Executed when a public message is received
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The user who sent the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
-%_I_%%_I_%tokens = shlex.split(message)
-%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-%_I_%%_I_%%_I_%tokens.pop(0)
-
-%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
-
-%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
-%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
-%_I_%%_I_%%_I_%%_I_%return
-
-%_I_%%_I_%%_I_%# Command functionality goes here
-"""
-
-COMMAND_SKELETON = f"""
-class %CLASS%(Plugin):
-
-%_I_%def __init__(self):
-%_I_%%_I_%self.name = "%NAME%"
-%_I_%%_I_%self.version = "%VERSION%"
-%_I_%%_I_%self.description = "%DESCRIPTION%"
-%_I_%%_I_%%OPTIONS%
-
-%_I_%%_I_%self.command = "%COMMAND%"
-%_I_%%_I_%self.arguments = %ARGCOUNT%
-
-%_I_%# Executed when the text is inputted into the client
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               source (str) - The window the client input text into
-%_I_%#               text (str) - The input text
-%_I_%def {EVENT_INPUT}(self,serverID,source,text):
-%_I_%%_I_%tokens = shlex.split(text)
-%_I_%%_I_%if len(tokens)>0 and tokens[0].lower()==self.command.lower():
-%_I_%%_I_%%_I_%tokens.pop(0)
-
-%_I_%%_I_%%_I_%if len(tokens)!=self.arguments:
-%_I_%%_I_%%_I_%%_I_%# Too many/too few arguments
-%_I_%%_I_%%_I_%%_I_%return
-
-%_I_%%_I_%%_I_%# serverID = the ID of the server
-%_I_%%_I_%%_I_%# source = the name of the window the command was input into
-%_I_%%_I_%%_I_%# tokens = a list of arguments passed to the command
-
-%_I_%%_I_%%_I_%# Command functionality goes here
-
-%_I_%%_I_%%_I_%# Return a true value so the inputted text isn't
-%_I_%%_I_%%_I_%# sent to the IRC server as chat
-%_I_%%_I_%%_I_%return True
-"""
-
-PLUGIN_SKELETON = f"""
-class %CLASS%(Plugin):
-
-%_I_%def __init__(self):
-%_I_%%_I_%self.name = "%NAME%"
-%_I_%%_I_%self.version = "%VERSION%"
-%_I_%%_I_%self.description = "%DESCRIPTION%"
-%_I_%%_I_%%OPTIONS%
-
-%_I_%# =================
-%_I_%# | CLIENT EVENTS |
-%_I_%# =================
-
-%_I_%# Executed as soon as the plugin is loaded
-%_I_%def {EVENT_LOAD}(self):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client exits
-%_I_%def {EVENT_UNLOAD}(self):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the plugin's name is clicked in
-%_I_%# the "Plugins" menu
-%_I_%def {EVENT_MENU}(self):
-%_I_%%_I_%pass
-
-%_I_%# Executes roughly once per second
-%_I_%# {EVENT_TICK} is executed once for each connected server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               uptime (int) - The uptime of the client, in seconds 
-%_I_%def {EVENT_TICK}(self,serverID,uptime):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the text is inputted into the client
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               source (str) - The window the client input text into
-%_I_%#               text (str) - The input text
-%_I_%def {EVENT_INPUT}(self,serverID,source,text):
-%_I_%%_I_%pass
-
-%_I_%# ==============
-%_I_%# | IRC EVENTS |
-%_I_%# ==============
-
-%_I_%# Executed when the client connects to an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server connected to
-%_I_%def {EVENT_CONNECTED}(self,serverID):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client disconnected from an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server disconnected from
-%_I_%#               reason (str) - The reason for the disconnection
-%_I_%def {EVENT_DISCONNECTED}(self,serverID,reason):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client registers with an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server registered with
-%_I_%def {EVENT_REGISTERED}(self,serverID):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives the MOTD from a server
-%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
-%_I_%#               motd (list) - A list of strings containing the MOTD
-%_I_%def {EVENT_MOTD}(self,serverID,motd):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives a public message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives a private message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives a notice
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_NOTICE}(self,serverID,channel,user,message):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives CTCP action message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_ACTION}(self,serverID,channel,user,message):
-%_I_%%_I_%pass
-
-%_I_%# Executed when a user joins a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server the join occurred on
-%_I_%#               channel (str) - The channel joined
-%_I_%#               user (str) - The user joining
-%_I_%def {EVENT_JOIN}(self,serverID,channel,user):
-%_I_%%_I_%pass
-
-%_I_%# Executed when a user leaves a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
-%_I_%#               channel (str) - The channel left
-%_I_%#               user (str) - The user leaving
-%_I_%def {EVENT_PART}(self,serverID,channel,user):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives a channel invite
-%_I_%# Arguments:    serverID (str) - The ID of the server the invite occurred on
-%_I_%#               channel (str) - The channel invited to
-%_I_%#               user (str) - The user who sent the invite
-%_I_%def {EVENT_INVITE}(self,serverID,channel,user):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the topic is changed in a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel that had its topic changed
-%_I_%#               user (str) - The user who changed the topic
-%_I_%#               topic (str) - The new topic
-%_I_%def {EVENT_TOPIC}(self,serverID,channel,user,topic):
-%_I_%%_I_%pass
-
-%_I_%# Executed when a user disconnects from the IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               user (str) - The user disconnecting
-%_I_%#               message (str) - An optional parting message
-%_I_%def {EVENT_QUIT}(self,serverID,user,message):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives a mode message
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               mset (bool) - True for setting a mode, False for unsetting
-%_I_%#               user (str) - The user who set the mode
-%_I_%#               target (str) - The channel or user the mode was set or unset on
-%_I_%#               modes (str) - The modes set
-%_I_%#               args (list) - Any mode arguments
-%_I_%def {EVENT_MODE}(self,serverID,mset,user,target,modes,args):
-%_I_%%_I_%pass
-
-%_I_%# Executed when the client receives ANY data from the server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               data (str) - The data sent
-%_I_%#
-%_I_%def {EVENT_RAW}(self,serverID,data):
-%_I_%%_I_%pass
-
-%_I_%# Executed when a user is kicked from a channel
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel the user was kicked from
-%_I_%#               user (str) - The user kicked
-%_I_%#               kicker (string) - The user who did the kicking
-%_I_%#               reason (string) - The optional reason for the kick
-%_I_%def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
-%_I_%%_I_%pass
 """
 
 # Objects
@@ -836,25 +528,6 @@ def exportLogsAsHTML(outfile):
 				zip.writestr(l[0],l[1])
 	return count
 
-def exportPluginsToZip(outfile):
-	plugins = []
-	for root, directories, files in os.walk(PLUGIN_DIRECTORY): 
-		for filename in files:
-			if "__pycache__" in filename: continue
-			if "plugins.txt" in filename: continue
-
-			f = os.path.join(root,filename)
-			plugins.append(f)
-
-	count = len(plugins)
-	if count>0:
-		with ZipFile(outfile,"w") as zip:
-			for p in plugins:
-
-				af = p.replace(PLUGIN_DIRECTORY,'')
-				zip.write(p,arcname=af)
-	return count
-
 def censorWord(word,punc=True):
 	result = ''
 	last = '+'
@@ -942,19 +615,6 @@ def installThemeFromZip(filename,password=None):
 		zip.extractall(path=THEMES_DIRECTORY,pwd=password)
 	return True
 
-def installPluginFromZip(filename,password=None):
-	if os.path.isfile(filename):
-		 PLUGZIP = filename
-	else:
-		PLUGZIP = os.path.join(INSTALL_DIRECTORY, filename)
-		if not os.path.isfile(PLUGZIP):
-			# zip file not found
-			return False
-	
-	with ZipFile(PLUGZIP,"r") as zip:
-		zip.extractall(path=PLUGIN_DIRECTORY,pwd=password)
-	return True
-
 def get_ignore():
 	if os.path.isfile(IGNORE_FILE):
 		with open(IGNORE_FILE, "r") as read_ignore:
@@ -975,27 +635,6 @@ def restart_program_no_arg():
 	python = sys.executable
 	sys.argv.pop()
 	os.execl(python, python, * sys.argv)
-
-
-def get_editor_settings():
-	if os.path.isfile(EDITOR_SETTINGS_FILE):
-		with open(EDITOR_SETTINGS_FILE, "r") as read_settings:
-			data = json.load(read_settings)
-			return data
-	else:
-		si = {
-			EDITOR_FONT_SETTING: "Consolas,10,-1,5,50,0,0,0,0,0,Regular",
-			EDITOR_WORD_WRAP_SETTING: False,
-			EDITOR_SPACES_TAB_SETTING: True,
-			EDITOR_NUMBER_OF_SPACES: 2,
-			EDITOR_FIND_ON_TOP: True,
-
-		}
-		return si
-
-def save_editor_settings(data):
-	with open(EDITOR_SETTINGS_FILE, "w") as write_data:
-		json.dump(data, write_data, indent=4, sort_keys=True)
 
 def timestamp_to_date(ts):
 	dt_object = datetime.fromtimestamp(int(ts))
@@ -1148,8 +787,8 @@ def updateSettings(s):
 	if not DOLINKS_SETTING in s: s[DOLINKS_SETTING] = True
 	if not TITLE_ACTIVE_WINDOW_SETTING in s: s[TITLE_ACTIVE_WINDOW_SETTING] = True
 	if not SAVE_LOGS_BY_NETWORK in s: s[SAVE_LOGS_BY_NETWORK] = True
-	if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
-	if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
+	#if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
+	#if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
 	if not ENABLE_LIST_SETTING in s: s[ENABLE_LIST_SETTING] = False
 	if not AUTO_SAVE_CHAT_LOGS in s: s[AUTO_SAVE_CHAT_LOGS] = True
 	if not ENABLE_SPELL_CHECK in s: s[ENABLE_SPELL_CHECK] = True
@@ -1191,8 +830,8 @@ def loadSettings(filename=SETTINGS_FILE):
 			DOLINKS_SETTING: True,
 			TITLE_ACTIVE_WINDOW_SETTING: True,
 			SAVE_LOGS_BY_NETWORK: True,
-			DISPLAY_PLUGIN_ERRORS_SETTING: True,
-			PLUGINS_ENABLED_SETTING: True,
+			#DISPLAY_PLUGIN_ERRORS_SETTING: True,
+			#PLUGINS_ENABLED_SETTING: True,
 			ENABLE_LIST_SETTING: False,
 			AUTO_SAVE_CHAT_LOGS: True,
 			ENABLE_SPELL_CHECK: True,
@@ -1442,23 +1081,6 @@ def convertLogToHtml(log):
 		d.append(f"{time} {text}")
 	return "\n".join(d)
 
-def plugin_color(text,fore,back=None):
-	if fore<0: return text
-	if fore>15: return text
-	if back!=None:
-		if back<0: return text
-		if back>15: return text
-
-	if back!=None:
-		fc = str(fore)
-		bc = str(back)
-		if len(fc)==1: fc = "0"+fc
-		if len(bc)==1: bc = "0"+bc
-		return chr(3)+fc+","+bc+text+chr(3)
-	else:
-		fc = str(fore)
-		if len(fc)==1: fc = "0"+fc
-		return chr(3)+fore+text+chr(3)
 
 def irc_color_full(fore,back,text):
 
@@ -1699,160 +1321,6 @@ def convert_irc_color_to_html(text):
 	text = fout
 
 	return text
-
-
-
-LOAD_EVENT_TEMPLATE = f"""%_I_%# Executed as soon as the plugin is loaded
-%_I_%def {EVENT_LOAD}(self):
-%_I_%%_I_%pass"""
-
-UNLOAD_EVENT_TEMPLATE = f"""%_I_%# Executed when the client exits
-%_I_%def {EVENT_UNLOAD}(self):
-%_I_%%_I_%pass"""
-
-MENU_EVENT_TEMPLATE = f"""%_I_%# Executed when the plugin's name is clicked in
-%_I_%# the "Plugins" menu
-%_I_%def {EVENT_MENU}(self):
-%_I_%%_I_%pass"""
-
-TICK_EVENT_TEMPLATE = f"""%_I_%# Executes roughly once per second
-%_I_%# {EVENT_TICK} is executed once for each connected server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               uptime (int) - The uptime of the client, in seconds 
-%_I_%def {EVENT_TICK}(self,serverID,uptime):
-%_I_%%_I_%pass"""
-
-INPUT_EVENT_TEMPLATE = f"""%_I_%# Executed when the text is inputted into the client
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               source (str) - The window the client input text into
-%_I_%#               text (str) - The input text
-%_I_%def {EVENT_INPUT}(self,serverID,source,text):
-%_I_%%_I_%pass"""
-
-CONNECTED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client connects to an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server connected to
-%_I_%def {EVENT_CONNECTED}(self,serverID):
-%_I_%%_I_%pass"""
-
-DISCONNECTED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client disconnected from an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server disconnected from
-%_I_%#               reason (str) - The reason for the disconnection
-%_I_%def {EVENT_DISCONNECTED}(self,serverID,reason):
-%_I_%%_I_%pass"""
-
-REGISTERED_EVENT_TEMPLATE = f"""%_I_%# Executed when the client registers with an IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server registered with
-%_I_%def {EVENT_REGISTERED}(self,serverID):
-%_I_%%_I_%pass"""
-
-MOTD_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives the MOTD from a server
-%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
-%_I_%#               motd (list) - A list of strings containing the MOTD
-%_I_%def {EVENT_MOTD}(self,serverID,motd):
-%_I_%%_I_%pass"""
-
-PUBLIC_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a public message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PUBLIC}(self,serverID,channel,user,message):
-%_I_%%_I_%pass"""
-
-PRIVATE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a private message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_PRIVATE}(self,serverID,user,message):
-%_I_%%_I_%pass"""
-
-NOTICE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a notice
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_NOTICE}(self,serverID,channel,user,message):
-%_I_%%_I_%pass"""
-
-ACTION_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives CTCP action message
-%_I_%# Arguments:    serverID (str) - The ID of the server that sent the message
-%_I_%#               channel (str) - The channel the message was sent to
-%_I_%#               user (str) - The sender of the message
-%_I_%#               message (str) - The message
-%_I_%def {EVENT_ACTION}(self,serverID,channel,user,message):
-%_I_%%_I_%pass"""
-
-JOIN_EVENT_TEMPLATE = f"""%_I_%# Executed when a user joins a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server the join occurred on
-%_I_%#               channel (str) - The channel joined
-%_I_%#               user (str) - The user joining
-%_I_%def {EVENT_JOIN}(self,serverID,channel,user):
-%_I_%%_I_%pass"""
-
-PART_EVENT_TEMPLATE = f"""_I_%# Executed when a user leaves a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server the part occurred on
-%_I_%#               channel (str) - The channel left
-%_I_%#               user (str) - The user leaving
-%_I_%def {EVENT_PART}(self,serverID,channel,user):
-%_I_%%_I_%pass"""
-
-INVITE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a channel invite
-%_I_%# Arguments:    serverID (str) - The ID of the server the invite occurred on
-%_I_%#               channel (str) - The channel invited to
-%_I_%#               user (str) - The user who sent the invite
-%_I_%def {EVENT_INVITE}(self,serverID,channel,user):
-%_I_%%_I_%pass"""
-
-TOPIC_EVENT_TEMPLATE = f"""%_I_%# Executed when the topic is changed in a channel the client is in
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel that had its topic changed
-%_I_%#               user (str) - The user who changed the topic
-%_I_%#               topic (str) - The new topic
-%_I_%def {EVENT_TOPIC}(self,serverID,channel,user,topic):
-%_I_%%_I_%pass"""
-
-QUIT_EVENT_TEMPLATE = f"""%_I_%# Executed when a user disconnects from the IRC server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               user (str) - The user disconnecting
-%_I_%#               message (str) - An optional parting message
-%_I_%def {EVENT_QUIT}(self,serverID,user,message):
-%_I_%%_I_%pass"""
-
-MODE_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives a mode message
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               mset (bool) - True for setting a mode, False for unsetting
-%_I_%#               user (str) - The user who set the mode
-%_I_%#               target (str) - The channel or user the mode was set or unset on
-%_I_%#               modes (str) - The modes set
-%_I_%#               args (list) - Any mode arguments
-%_I_%def {EVENT_MODE}(self,serverID,mset,user,target,modes,args):
-%_I_%%_I_%pass"""
-
-RAW_EVENT_TEMPLATE = f"""%_I_%# Executed when the client receives ANY data from the server
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               data (str) - The data sent
-%_I_%#
-%_I_%def {EVENT_RAW}(self,serverID,data):
-%_I_%%_I_%pass"""
-
-KICK_EVENT_TEMPLATE = f"""%_I_%# Executed when a user is kicked from a channel
-%_I_%# Arguments:    serverID (str) - The ID of the server
-%_I_%#               channel (str) - The channel the user was kicked from
-%_I_%#               user (str) - The user kicked
-%_I_%#               kicker (string) - The user who did the kicking
-%_I_%#               reason (string) - The optional reason for the kick
-%_I_%def {EVENT_KICK}(self,serverID,channel,user,kicker,reason):
-%_I_%%_I_%pass"""
-
-PLUGIN_START_TEMPLATE = f"""class MyPluginClass(Plugin):
-%_I_%def __init__(self):
-%_I_%%_I_%self.name = "Plugin"
-%_I_%%_I_%self.version = "1.0"
-%_I_%%_I_%self.description = "A plugin."
-%_I_%%_I_%self.silent = False
-%_I_%%_I_%self.nowindows = False
-%_I_%%_I_%self.noirc = False
-"""
 
 def strip_color(text):
 

@@ -787,23 +787,6 @@ class Interface(QMainWindow):
 		if self.parent.asciimojis:
 			user_input = inject_asciiemojis(user_input)
 
-		# PLUGINS BEGIN
-
-		# Execute plugin events
-		handled = False
-		for plugin in self.parent.packages.plugins:
-			if self.parent.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.client)
-			event = getattr(plugin, EVENT_INPUT, None)
-			if callable(event):
-				if self.parent.pluginsEnabled:
-					if event(self.serverid,self.name,user_input):
-						handled = True
-
-		if handled: return
-
-		# PLUGINS END
-
 		# COMMANDS BEGIN
 
 		try:
@@ -1165,25 +1148,6 @@ class Interface(QMainWindow):
 		self.client.msg(self.name,user_input)
 		d = chat_display(self.nickname,user_input,self.parent.maxnicklen,self.parent.urlsToLinks,SELF_COLOR)
 		self.writeText(d)
-
-		if self.name[0]=="#":
-			# channel chat
-			# Execute plugin events
-			for plugin in self.parent.packages.plugins:
-				if self.parent.isPluginDisabled(plugin): continue
-				plugin._setIrc(self.client)
-				event = getattr(plugin, EVENT_PUBLIC, None)
-				if callable(event):
-					if self.parent.pluginsEnabled: event(self.serverid,self.name,self.nickname,user_input)
-		else:
-			# private chat
-			# Execute plugin events
-			for plugin in self.parent.packages.plugins:
-				if self.parent.isPluginDisabled(plugin): continue
-				plugin._setIrc(self.client)
-				event = getattr(plugin, EVENT_PRIVATE, None)
-				if callable(event):
-					if self.parent.pluginsEnabled: event(self.serverid,self.nickname,user_input)
 
 	def setTopic(self,topic):
 		self.setWindowTitle(" "+f"{self.name} - {topic}")

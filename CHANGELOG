@@ -1,3 +1,6 @@
+Version 0.412
+	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client
+
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
 	* Added a commandline flag to force no IRC color display

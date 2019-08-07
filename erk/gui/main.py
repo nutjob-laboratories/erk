@@ -57,10 +57,6 @@ from erk.uptime import UptimeHeartbeat
 
 import erk.gui.window as Window
 
-import erk.gui.editor as EditorWindow
-import erk.gui.find as FindWindow
-import erk.gui.findreplace as FindReplaceWindow
-
 import erk.gui.dialogs.connect as ConnectDialog
 import erk.gui.dialogs.networks as NetworkDialog
 import erk.gui.dialogs.join as JoinDialog
@@ -74,7 +70,6 @@ import erk.gui.dialogs.aboutkod as AboutKodDialog
 
 import erk.gui.dialogs.channellist as ChannelListDialog
 
-from erk.plugins import PluginCollection
 
 from erk.common import *
 
@@ -93,12 +88,11 @@ class ErkGUI(QMainWindow):
 				# window is not minimized
 				pass
 
-	def __init__(self,app,block_plugins=False,config=None,display=None,parent=None):
+	def __init__(self,app,config=None,display=None,parent=None):
 		super(ErkGUI, self).__init__(parent)
 
 		self.app = app
 		self.parent = parent
-		self.block_plugins = block_plugins
 
 
 		if config!=None:
@@ -180,9 +174,9 @@ class ErkGUI(QMainWindow):
 		self.urlsToLinks = True
 		self.titleActiveWindow = True
 		self.logChatByNetwork = False
-		self.showPluginErrors = True
+		#self.showPluginErrors = True
 		self.displayConnectionLog = True
-		self.pluginsEnabled = True
+		#self.pluginsEnabled = True
 		self.channelListEnabled = False
 		self.saveLogsOnExit = True
 		self.spellCheck = True
@@ -201,12 +195,8 @@ class ErkGUI(QMainWindow):
 		self.menuTray = True
 		self.emojis = False
 		self.asciimojis = True
-
-		# NO SUPPORT FOR SAVING THIS TO CONFIG
-		# TODO: ADD TO CONFIG FILE, MENUS, ETC
 		self.loadLogsOnJoin = True
 		self.maxlogsize = MAX_LOG_SIZE_DEFAULT
-		# THIS ISN'T IN THE CHANGELOG EITHER
 
 		self.settings = loadSettings(self.settingsFile)
 
@@ -221,8 +211,6 @@ class ErkGUI(QMainWindow):
 		self.urlsToLinks = self.settings[DOLINKS_SETTING]
 		self.titleActiveWindow = self.settings[TITLE_ACTIVE_WINDOW_SETTING]
 		self.logChatByNetwork = self.settings[SAVE_LOGS_BY_NETWORK]
-		self.showPluginErrors = self.settings[DISPLAY_PLUGIN_ERRORS_SETTING]
-		self.pluginsEnabled = self.settings[PLUGINS_ENABLED_SETTING]
 		self.channelListEnabled = self.settings[ENABLE_LIST_SETTING]
 		self.saveLogsOnExit = self.settings[AUTO_SAVE_CHAT_LOGS]
 		self.spellCheck = self.settings[ENABLE_SPELL_CHECK]
@@ -253,8 +241,6 @@ class ErkGUI(QMainWindow):
 		self.windowsEnabled = True
 		self.themesEnabled = True
 
-		self.disabled = get_disabled()
-
 		self.themeList = getThemeList()
 
 		# Load in icon resource file from theme, if possible
@@ -263,50 +249,6 @@ class ErkGUI(QMainWindow):
 			importThemeResources(self.theme)
 		else:
 			importThemeResources(USE_NO_THEME_SETTING)
-
-		if self.block_plugins:
-
-			class EmptyPlugins(object):
-				def __init__(self):
-					self.plugins = []
-
-			self.packages = EmptyPlugins()
-
-		else:
-
-			# Load plugins
-			self.packages = PluginCollection('plugins')
-
-			# Display plugin loading errors
-			if len(self.packages.errors)>0:
-
-				if self.showPluginErrors:
-					for e in self.packages.errors:
-						pname = e.pop(0)
-						pplug = e.pop(0)
-						erlist = f"Error loading {pplug}<ul>"
-						for l in e:
-							erlist = erlist + "<li>" + l + "</li>"
-						erlist = erlist + "</ul>"
-
-						msg = QMessageBox()
-						msg.setWindowIcon(QIcon(ERK_ICON))
-						msg.setIcon(QMessageBox.Critical)
-						msg.setText(erlist)
-						msg.setWindowTitle(pname)
-						msg.exec_()
-
-				self.packages.errors = []
-
-			# Add GUI reference to all plugins
-			for plugin in self.packages.plugins:
-				if self.isPluginDisabled(plugin): continue
-				plugin._setGui(self)
-				# Load in event_load
-				event = getattr(plugin, EVENT_LOAD, None)
-				if callable(event):
-					if self.pluginsEnabled:
-						event()
 
 		self.ignore = get_ignore()
 
@@ -349,9 +291,6 @@ class ErkGUI(QMainWindow):
 		traymenu.addAction(self.actDisconnect)
 
 		traymenu.addSeparator()
-
-		if not self.block_plugins:
-			traymenu.addMenu(self.pluginTray)
 
 		self.stwinmenu = QMenu("Window")
 		self.stwinmenu.setIcon(QIcon(RESTORE_ICON))
@@ -440,17 +379,6 @@ class ErkGUI(QMainWindow):
 		self.actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
 		self.actExit.triggered.connect(self.close)
 		ircMenu.addAction(self.actExit)
-		
-
-		if not self.block_plugins:
-			self.pluginmenu = menubar.addMenu("Plugins")
-
-			self.pluginmenu.setToolTipsVisible(True)
-
-			self.pluginTray = QMenu("Plugins")
-			self.pluginTray.setIcon(QIcon(PLUGIN_ICON))
-
-			self.buildPluginMenu()
 
 		# "Install" system tray menu
 		if self.menuTray: self.buildTrayMenu()
@@ -742,10 +670,6 @@ class ErkGUI(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
 
-		helpLink = QAction(QIcon(PLUGIN_ICON),f"{APPLICATION_NAME} plugin repository",self)
-		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.doOpenUrl(u))
-		self.helpMenu.addAction(helpLink)
-
 		helpLink = QAction(QIcon(THEME_ICON),f"{APPLICATION_NAME} theme compiler repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-theme": self.doOpenUrl(u))
 		self.helpMenu.addAction(helpLink)
@@ -923,10 +847,6 @@ class ErkGUI(QMainWindow):
 		self.windowsEnabled = False
 		self.rebuildWindowMenu()
 
-	def disableEditor(self):
-		self.editorEnabled = False
-		self.buildPluginMenu()
-
 	def hideSettingsMenu(self):
 		self.optMenu.clear()
 
@@ -1088,16 +1008,6 @@ class ErkGUI(QMainWindow):
 						self.FLASH_STATE = 0
 						self.tray.setIcon(self.ERK_ICON)
 
-		# Execute event
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			event = getattr(plugin, EVENT_TICK, None)
-			if callable(event):
-				for c in self.connections:
-					plugin._setIrc(self.connections[c])
-					if self.pluginsEnabled:
-						event(c,self.uptime)
-
 	def servBeat(self,serverid):
 
 		if not self.toolbars[serverid]: return
@@ -1139,14 +1049,6 @@ class ErkGUI(QMainWindow):
 				i.window.close()
 
 		self.uptimeTimer.stop()
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			event = getattr(plugin, EVENT_UNLOAD, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event()
 
 		self.app.quit()
 
@@ -1221,128 +1123,6 @@ class ErkGUI(QMainWindow):
 			self.logTxt.setSource(QUrl())
 			self.logTxt.moveCursor(QTextCursor.End)
 
-	def newFindWindow(self,editobj):
-		newEditSW = QMdiSubWindow()
-
-		newEdit = FindWindow.Viewer(editobj)
-
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.CustomizeWindowHint)
-		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMinimizeButtonHint)
-		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMaximizeButtonHint)
-
-		if editobj.findOnTop:
-			newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.WindowStaysOnTopHint)
-
-		editobj.setFindWindow(newEditSW)
-		newEdit.setSubwindow(newEditSW)
-
-		if editobj.filename != "":
-			f = os.path.basename(editobj.filename)
-			newEditSW.setWindowTitle(f"Find in {f}")
-
-		# Center window
-		wx = (self.MDI.width()/2)-(newEditSW.width()/2)
-		wy = (self.MDI.height()/2)-(newEditSW.height()/2)
-		newEditSW.move(wx,wy)
-
-		# No resize
-		# This is also set in the __init__ of find window
-		newEditSW.setFixedSize(newEditSW.sizeHint())
-
-		if editobj.isMaximized():
-			editobj.showNormal()
-
-		newEditSW.show()
-
-	def newFindReplaceWindow(self,editobj):
-		newEditSW = QMdiSubWindow()
-
-		newEdit = FindReplaceWindow.Viewer(editobj)
-
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.CustomizeWindowHint)
-		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMinimizeButtonHint)
-		newEditSW.setWindowFlags(newEditSW.windowFlags() & ~Qt.WindowMaximizeButtonHint)
-
-		if editobj.findOnTop:
-			newEditSW.setWindowFlags(newEditSW.windowFlags() | Qt.WindowStaysOnTopHint)
-
-		editobj.setFindWindow(newEditSW)
-		newEdit.setSubwindow(newEditSW)
-
-		if editobj.filename != "":
-			f = os.path.basename(editobj.filename)
-			newEditSW.setWindowTitle(f"Find in {f}")
-
-		# Center window
-		wx = (self.MDI.width()/2)-(newEditSW.width()/2)
-		wy = (self.MDI.height()/2)-(newEditSW.height()/2)
-		newEditSW.move(wx,wy)
-
-		# No resize
-		# This is also set in the __init__ of find window
-		newEditSW.setFixedSize(newEditSW.sizeHint())
-
-		if editobj.isMaximized():
-			editobj.showNormal()
-
-		newEditSW.show()
-
-	def newEditorWindow(self):
-		newEditSW = QMdiSubWindow()
-		newEdit = EditorWindow.Viewer(None,self)
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.resize(INITIAL_WINDOW_WIDTH,INITIAL_WINDOW_HEIGHT)
-
-		newEditSW.show()
-
-		self.rebuildWindowMenu()
-
-	def newEditorWindowFile(self,file):
-		newEditSW = QMdiSubWindow()
-		newEdit = EditorWindow.Viewer(file,self)
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.resize(INITIAL_WINDOW_WIDTH,INITIAL_WINDOW_HEIGHT)
-
-		newEditSW.show()
-
-		self.rebuildWindowMenu()
-
-	def newEditorWindowMaximized(self):
-		newEditSW = QMdiSubWindow()
-		newEdit = EditorWindow.Viewer(None,self)
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.showMaximized()
-
-		self.rebuildWindowMenu()
-
-	def newEditorWindowFileMaximized(self,file):
-		newEditSW = QMdiSubWindow()
-		newEdit = EditorWindow.Viewer(file,self)
-		newEditSW.setWidget(newEdit)
-		newEdit.subwindow = newEditSW
-		self.MDI.addSubWindow(newEditSW)
-
-		newEditSW.showMaximized()
-
-		self.rebuildWindowMenu()
-
 	def createUserWindow(self,serverid,user):
 		for w in self.windows[serverid]:
 			if w.window.name == user:
@@ -1366,48 +1146,6 @@ class ErkGUI(QMainWindow):
 
 		e = [sw,w,serverid]
 		self.channel_list_windows.append(e)
-
-	def reloadPlugins(self):
-
-		loaded = []
-
-		for p in self.packages.plugins:
-			e = p._package + p._class + p.name + p.version + p.description
-			loaded.append(e)
-
-		self.packages.reload_plugins(True)
-
-		for p in self.packages.plugins:
-			p._setGui(self)
-			e = p._package + p._class + p.name + p.version + p.description
-
-			if e in loaded: continue
-
-			event = getattr(p, EVENT_LOAD, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event()
-
-		# Display plugin loading errors
-		if len(self.packages.errors)>0:
-
-			if self.showPluginErrors:
-				for e in self.packages.errors:
-					pname = e.pop(0)
-					pplug = e.pop(0)
-					erlist = f"Error loading {pplug}<ul>"
-					for l in e:
-						erlist = erlist + "<li>" + l + "</li>"
-					erlist = erlist + "</ul>"
-
-					msg = QMessageBox()
-					msg.setWindowIcon(QIcon(ERK_ICON))
-					msg.setIcon(QMessageBox.Critical)
-					msg.setText(erlist)
-					msg.setWindowTitle(pname)
-					msg.exec_()
-
-		self.buildPluginMenu()
 
 	# ==============
 	# Menu Functions
@@ -1475,14 +1213,6 @@ class ErkGUI(QMainWindow):
 			self.optShowLog.setIcon(QIcon(NOCONSOLE_ICON))
 		# self.settings[DISPLAY_LOG_SETTING] = self.displayConnectionLog
 		# saveSettings(self.settings,self.settingsFile)
-
-	def togglePluginErrors(self):
-		if self.showPluginErrors:
-			self.showPluginErrors = False
-		else:
-			self.showPluginErrors = True
-		self.settings[DISPLAY_PLUGIN_ERRORS_SETTING] = self.showPluginErrors
-		saveSettings(self.settings,self.settingsFile)
 
 	def togglePrettyUsers(self):
 		if self.prettyUserlist:
@@ -1679,18 +1409,6 @@ class ErkGUI(QMainWindow):
 				f.setItalic(True)
 				win.setFont(f)
 				servMenu.addAction(win)
-
-		if len(self.editor_windows)>0:
-
-			self.windowMenu.addSeparator()
-
-			for w in self.editor_windows:
-				e = w.title
-				e = e.replace(f"{EDITOR_NAME} - ","")
-				win = QAction(QIcon(EDIT_ICON),e,self)
-				win.triggered.connect(lambda state,f=w,y=w.subwindow: self.restoreChatWindow(f,y))
-				self.windowMenu.addAction(win)
-				self.windowcount = self.windowcount + 1
 
 	def restoreChatWindow(self,win,subwin):
 		# Unminimize window if the window is minimized
@@ -1895,13 +1613,6 @@ class ErkGUI(QMainWindow):
 		self.settings[DOLINKS_SETTING] = self.urlsToLinks
 		saveSettings(self.settings,self.settingsFile)
 
-	def openInEditor(self):
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Open Plugin", PLUGIN_DIRECTORY,"Python File (*.py);;All Files (*)", options=options)
-		if fileName:
-			self.newEditorWindowFile(fileName)
-
 	def markMenuEntry(self,qa):
 		f = qa.font()
 		f.setBold(True)
@@ -2027,255 +1738,6 @@ class ErkGUI(QMainWindow):
 					w.window.setWindowIcon(QIcon(USER_WINDOW_ICON))
 				w.window.hide()
 				w.window.show()
-
-		
-
-	# def buildPluginMenu(self):
-	# 	self.pluginmenu.clear()
-
-	# 	if len(self.packages.plugins)>0:
-
-	# 		pi = {}
-	# 		fi = {}
-	# 		for p in self.packages.plugins:
-	# 			if p._package in pi:
-	# 				file = p.__file__
-	# 				e = [p.name,p.version,p.description,file]
-	# 				pi[p._package].append(e)
-	# 				fi[p._package] = file
-	# 			else:
-	# 				pi[p._package] = []
-	# 				file = p.__file__
-	# 				e = [p.name,p.version,p.description,file]
-	# 				pi[p._package].append(e)
-	# 				fi[p._package] = file
-
-	# 		for key in pi:
-	# 			pmenu = self.pluginmenu.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
-	# 			pmenu.setToolTipsVisible(True)
-
-	# 			if self.editorEnabled:
-	# 				x = pmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
-	# 				x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
-
-	# 				pmenu.addSeparator()
-
-	# 			for qclass in pi[key]:
-	# 				pname = qclass[0]
-	# 				pversion = qclass[1]
-	# 				pdescription = qclass[2]
-	# 				x = pmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
-	# 				x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
-	# 				x.setToolTip(pdescription)
-	# 	else:
-
-	# 		nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
-	# 		nopluginsLabelAction = QWidgetAction(self)
-	# 		nopluginsLabelAction.setDefaultWidget(nopluginsLabel)
-	# 		self.pluginmenu.addAction(nopluginsLabelAction)
-	# 		self.pluginmenu.addSeparator()
-
-	# 	actReload = QAction(QIcon(LOAD_ICON),"Reload all plugins",self)
-	# 	actReload.triggered.connect(self.reloadPlugins)
-	# 	self.pluginmenu.addAction(actReload)
-
-	# 	self.pluginmenu.addSeparator()
-
-	# 	if self.editorEnabled:
-	# 		# newEditorWindow
-	# 		actNewEdit = QAction(QIcon(EDIT_ICON),f"{EDITOR_NAME} Plugin Editor",self)
-	# 		actNewEdit.triggered.connect(self.newEditorWindow)
-	# 		self.pluginmenu.addAction(actNewEdit)
-
-	# 		actFileEdit = QAction(QIcon(EDIT_FILE_ICON),f"Open file in {EDITOR_NAME}",self)
-	# 		actFileEdit.triggered.connect(self.openInEditor)
-	# 		self.pluginmenu.addAction(actFileEdit)
-
-	# 		self.pluginmenu.addSeparator()
-
-	# 	optErrors = QAction("Display plugin load errors",self,checkable=True)
-	# 	optErrors.setChecked(self.showPluginErrors)
-	# 	optErrors.triggered.connect(self.togglePluginErrors)
-	# 	self.pluginmenu.addAction(optErrors)
-
-	# 	if self.pluginsEnabled:
-	# 		# show disable plugins entry
-	# 		actPlug = QAction(QIcon(DISABLE_ICON),"Disable plugins",self)
-	# 	else:
-	# 		# show enable plugins entry
-	# 		actPlug = QAction(QIcon(ENABLE_ICON),"Enable plugins",self)
-	# 	actPlug.triggered.connect(self.togglePlugEnable)
-	# 	self.pluginmenu.addAction(actPlug)
-
-	# BEGIN SYSTRAY PLUGIN MENU
-
-	def isPluginDisabled(self,plugin):
-		for f in self.disabled:
-			fp = shlex.split(f)
-			if len(fp)==2:
-				if fp[0]==plugin.name:
-					if fp[1]==plugin.version:
-						return True
-			elif len(fp)>=1:
-				if fp[0]==plugin.name:
-					return True
-		return False
-
-	def buildPluginMenu(self):
-		self.pluginmenu.clear()
-		self.pluginTray.clear()
-
-		if len(self.packages.plugins)>0:
-
-			pi = {}
-			fi = {}
-			for p in self.packages.plugins:
-				if p._package in pi:
-					file = p.__file__
-					e = [p.name,p.version,p.description,file]
-					pi[p._package].append(e)
-					fi[p._package] = file
-				else:
-					pi[p._package] = []
-					file = p.__file__
-					e = [p.name,p.version,p.description,file]
-					pi[p._package].append(e)
-					fi[p._package] = file
-
-			for key in pi:
-				pmenu = self.pluginmenu.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
-				pmenu.setToolTipsVisible(True)
-
-				ptmenu = self.pluginTray.addMenu(QIcon(INDIVIDUAL_PACKAGE_ICON),key)
-				ptmenu.setToolTipsVisible(True)
-
-				if self.editorEnabled:
-					x = pmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
-					x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
-
-					pmenu.addSeparator()
-
-					x = ptmenu.addAction(QIcon(EDIT_FILE_ICON),"Edit Package")
-					x.triggered.connect(lambda state,f=fi[key]: self.newEditorWindowFile(f))
-
-					ptmenu.addSeparator()
-
-				for qclass in pi[key]:
-					pname = qclass[0]
-					pversion = qclass[1]
-					pdescription = qclass[2]
-					x = pmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
-					x.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
-					x.setToolTip(pdescription)
-
-					y = ptmenu.addAction(QIcon(PLUGIN_ICON),f"{pname} {pversion}")
-					y.triggered.connect(lambda state,f=qclass: self.executeMenuClick(f))
-					y.setToolTip(pdescription)
-
-					# Check to see if the plugin has been disabled via the disabled file
-					# for f in self.disabled:
-					# 	if f == f"{pname} {pversion}":
-					# 		x.setEnabled(False)
-					# 		x.setText(f"{pname} {pversion} (disabled)")
-					# 		y.setEnabled(False)
-					# 		y.setText(f"{pname} {pversion} (disabled)")
-					# 		break
-					# 	if f == pname:
-					# 		x.setEnabled(False)
-					# 		x.setText(f"{pname} {pversion} (disabled)")
-					# 		y.setEnabled(False)
-					# 		y.setText(f"{pname} {pversion} (disabled)")
-					# 		break
-
-					for f in self.disabled:
-						fp = shlex.split(f)
-						if len(fp)==2:
-							if fp[0]==pname:
-								if fp[1]==pversion:
-									x.setEnabled(False)
-									x.setText(f"{pname} {pversion} (disabled)")
-									y.setEnabled(False)
-									y.setText(f"{pname} {pversion} (disabled)")
-									break
-						elif len(fp)>=1:
-							if fp[0]==pname:
-								x.setEnabled(False)
-								x.setText(f"{pname} {pversion} (disabled)")
-								y.setEnabled(False)
-								y.setText(f"{pname} {pversion} (disabled)")
-								break
-		else:
-
-			nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
-			nopluginsLabelAction = QWidgetAction(self)
-			nopluginsLabelAction.setDefaultWidget(nopluginsLabel)
-			self.pluginmenu.addAction(nopluginsLabelAction)
-			self.pluginmenu.addSeparator()
-
-			nopluginsLabel = QLabel("<p><div style=\"text-align: center;\"><i><b><big>No plugins loaded</big></b></i></div></p>")
-			nopluginsLabelAction = QWidgetAction(self)
-			nopluginsLabelAction.setDefaultWidget(nopluginsLabel)
-			self.pluginTray.addAction(nopluginsLabelAction)
-			self.pluginTray.addSeparator()
-
-		actReload = QAction(QIcon(LOAD_ICON),"Reload all plugins",self)
-		actReload.triggered.connect(self.reloadPlugins)
-		self.pluginmenu.addAction(actReload)
-
-		self.pluginmenu.addSeparator()
-
-		self.pluginTray.addAction(actReload)
-
-		self.pluginTray.addSeparator()
-
-		if self.editorEnabled:
-			# newEditorWindow
-			actNewEdit = QAction(QIcon(EDIT_ICON),f"{EDITOR_NAME} Plugin Editor",self)
-			actNewEdit.triggered.connect(self.newEditorWindow)
-			self.pluginmenu.addAction(actNewEdit)
-
-			self.pluginTray.addAction(actNewEdit)
-
-			actFileEdit = QAction(QIcon(EDIT_FILE_ICON),f"Open file in {EDITOR_NAME}",self)
-			actFileEdit.triggered.connect(self.openInEditor)
-			self.pluginmenu.addAction(actFileEdit)
-
-			self.pluginTray.addAction(actFileEdit)
-
-			self.pluginmenu.addSeparator()
-
-			self.pluginTray.addSeparator()
-
-		optErrors = QAction("Display plugin load errors",self,checkable=True)
-		optErrors.setChecked(self.showPluginErrors)
-		optErrors.triggered.connect(self.togglePluginErrors)
-		self.pluginmenu.addAction(optErrors)
-
-		self.pluginTray.addAction(optErrors)
-
-		if self.pluginsEnabled:
-			# show disable plugins entry
-			actPlug = QAction(QIcon(DISABLE_ICON),"Disable plugins",self)
-		else:
-			# show enable plugins entry
-			actPlug = QAction(QIcon(ENABLE_ICON),"Enable plugins",self)
-		actPlug.triggered.connect(self.togglePlugEnable)
-		self.pluginmenu.addAction(actPlug)
-
-		self.pluginTray.addAction(actPlug)
-
-
-	# END SYSTRAY PLUGIN MENU
-		
-
-	def togglePlugEnable(self):
-		if self.pluginsEnabled:
-			self.pluginsEnabled = False
-		else:
-			self.pluginsEnabled = True
-		self.buildPluginMenu()
-		self.settings[PLUGINS_ENABLED_SETTING] = self.pluginsEnabled
-		saveSettings(self.settings,self.settingsFile)
 	
 	def generateNetworkLink(self,net):
 		if net.lower() == "efnet":
@@ -2970,15 +2432,6 @@ QPushButton::menu-indicator {
 		d = systemTextDisplay(f"Registering with {serverhost}...",self.maxnicklen,SYSTEM_COLOR)
 		self.writeToLog(d)
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_CONNECTED, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid)
-
 	def disconnect(self,serverid,reason):
 
 		#serverhost = self.connections[serverid].hostname
@@ -2988,19 +2441,10 @@ QPushButton::menu-indicator {
 		else:
 			serverhost = self.connections[serverid].hostname
 
-		# Execute plugin events
 		if "closed clean" in f"{reason}":
 			reason = "Quit IRC"
 		else:
 			reason = "Connection error"
-
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_DISCONNECTED, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,reason)
 
 		if self.connections[serverid].alive:
 			self.connections[serverid].stopHeartbeat()
@@ -3053,15 +2497,6 @@ QPushButton::menu-indicator {
 			serverhost = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
 		else:
 			serverhost = self.connections[serverid].hostname
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_REGISTERED, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid)
 
 		# We're connected, so make the "Disconnect" menu item enabled
 		self.actDisconnect.setEnabled(True)
@@ -3167,15 +2602,6 @@ QPushButton::menu-indicator {
 
 		self.writeToChatWindow(serverid,channel,d)
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_PUBLIC, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user,message)
-
 	def privateMessage(self,serverid,user,message):
 
 		# Check to see if the message is on the suppress list
@@ -3225,15 +2651,6 @@ QPushButton::menu-indicator {
 					# Window exists
 					d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
 					self.writeToChatWindow(serverid,user,d)
-
-				# Execute plugin events
-				for plugin in self.packages.plugins:
-					if self.isPluginDisabled(plugin): continue
-					plugin._setIrc(self.connections[serverid])
-					event = getattr(plugin, EVENT_PRIVATE, None)
-					if callable(event):
-						if self.pluginsEnabled:
-							event(serverid,user,message)
 				return
 
 		if self.openWindowOnIncomingPrivate:
@@ -3254,15 +2671,6 @@ QPushButton::menu-indicator {
 				link = encodeWindowLink(serverid,user)
 				d = log_chat_display(f"<b>[{serverid}] <a href=\"{link}\">{user}</a></b>",message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
 				self.writeToLog(d)
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_PRIVATE, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,user,message)
 
 	def noticeMessage(self,serverid,channel,user,message):
 
@@ -3318,15 +2726,6 @@ QPushButton::menu-indicator {
 		else:
 			d = notice_display(user,message,self.maxnicklen,self.urlsToLinks,NOTICE_COLOR)
 		self.writeToLog(d)
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_NOTICE, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user,message)
 
 	def actionMessage(self,serverid,channel,user,message):
 
@@ -3393,25 +2792,7 @@ QPushButton::menu-indicator {
 
 		self.writeToChatWindow(serverid,channel,d)
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_ACTION, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user,message)
-
 	def userJoined(self,serverid,user,channel):
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_JOIN, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user)
 
 		p = user.split("!")
 		duser = user
@@ -3426,15 +2807,6 @@ QPushButton::menu-indicator {
 
 	def userParted(self,serverid,user,channel):
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_PART, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user)
-
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
@@ -3446,15 +2818,6 @@ QPushButton::menu-indicator {
 					w.window.removeUser(user)
 
 	def gotKicked(self,serverid,channel,kicker,message):
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_KICK, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,self.connections[serverid].nickname,kicker,message)
 
 		# Close the channel window
 		for w in self.windows[serverid]:
@@ -3468,15 +2831,6 @@ QPushButton::menu-indicator {
 		self.writeToLog(d)
 
 	def userKicked(self,serverid,kickee,channel,kicker,message):
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_KICK, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,kickee,kicker,message)
 
 		# p = user.split("!")
 		# if len(p)==2: user = p[0]
@@ -3540,15 +2894,6 @@ QPushButton::menu-indicator {
 			if a == None: continue
 			cleaned.append(a)
 		args = cleaned
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_MODE, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,mset,user,channel,modes,args)
 
 		p = user.split('!')
 		if len(p)==2:
@@ -3735,15 +3080,6 @@ QPushButton::menu-indicator {
 
 	def ircQuit(self,serverid,user,message):
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_QUIT, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,user,message)
-
 		p = user.split("!")
 		if len(p)==2: user = p[0]
 
@@ -3787,15 +3123,6 @@ QPushButton::menu-indicator {
 
 	def topic(self,serverid,user,channel,topic):
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_TOPIC, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user,topic)
-
 		p = user.split('!')
 		if len(p)--2: user = p[0]
 		
@@ -3817,15 +3144,6 @@ QPushButton::menu-indicator {
 		self.updateActiveChild(self.MDI.activeSubWindow())
 
 	def invite(self,serverid,user,channel):
-
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_INVITE, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,channel,user)
 
 		p = user.split('!')
 		if len(p)--2: user = p[0]
@@ -3858,29 +3176,13 @@ QPushButton::menu-indicator {
 
 	def motd(self,serverid,motd):
 
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_MOTD, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,motd)
-
 		# def motd_display(text,max,dolink,namecolor,foreground,background):
 		motd = "<br>".join(motd)
 		d = motd_display(motd,self.maxnicklen,self.urlsToLinks,SYSTEM_COLOR)
 		self.writeToLog(d)
 
 	def irc_raw(self,serverid,line):
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			plugin._setIrc(self.connections[serverid])
-			event = getattr(plugin, EVENT_RAW, None)
-			if callable(event):
-				if self.pluginsEnabled:
-					event(serverid,line)
+		pass
 
 	def channelListStart(self,serverid):
 		self.createChannelListWindow(serverid)
@@ -3906,16 +3208,7 @@ QPushButton::menu-indicator {
 			self.writeToLog(d)
 
 	def executeMenuClick(self,pclass):
-		# Execute plugin events
-		for plugin in self.packages.plugins:
-			if self.isPluginDisabled(plugin): continue
-			if plugin.name == pclass[0]:
-				if plugin.version == pclass[1]:
-					if plugin.description == pclass[2]:
-						event = getattr(plugin, EVENT_MENU, None)
-						if callable(event):
-							if self.pluginsEnabled:
-								event()
+		pass
 
 
 	def serveroptions(self,serverid,options):
