@@ -8,6 +8,7 @@ Version 0.412
 	* Fixed a bug in loading built-in resources
 	* Moved the "Display" menu to be after the "Settings" menu
 	* Moved some of the graphics from erkimages.py to resources.py
+	* Made the title of the systray menu smaller
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

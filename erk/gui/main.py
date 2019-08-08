@@ -274,7 +274,7 @@ class ErkGUI(QMainWindow):
 	def buildTrayMenu(self):
 		traymenu = QMenu()
 
-		trayLabel = QLabel(f"<big>{APPLICATION_NAME} {APPLICATION_VERSION}</big>")
+		trayLabel = QLabel(f"{APPLICATION_NAME} {APPLICATION_VERSION}")
 		f = trayLabel.font()
 		f.setBold(True)
 		trayLabel.setFont(f)
@@ -377,10 +377,6 @@ class ErkGUI(QMainWindow):
 		self.actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
 		self.actExit.triggered.connect(self.close)
 		ircMenu.addAction(self.actExit)
-
-		# "Install" system tray menu
-		if self.menuTray: self.buildTrayMenu()
-		if self.showTray: self.tray.show()
 
 		# self.viewMenu.addSeparator()
 
@@ -632,6 +628,9 @@ class ErkGUI(QMainWindow):
 		elif self.maxlogsize==500:
 			self.sizeFive.setChecked(True)
 
+		# "Install" system tray menu
+		if self.menuTray: self.buildTrayMenu()
+		if self.showTray: self.tray.show()
 
 		self.viewMenu = menubar.addMenu("Display")
 
