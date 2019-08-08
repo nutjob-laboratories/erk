@@ -1,5 +1,6 @@
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client
+	* Moved the default resource files into erk.data
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

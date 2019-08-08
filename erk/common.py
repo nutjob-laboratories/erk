@@ -60,7 +60,7 @@ PYTHON_IMPLEMENTATION = platform.python_implementation()
 PYTHON_VERSION = platform.python_version()
 
 # Globally load in Erk's essential resource file
-globals()["erk.erkimg"] = __import__("erk.erkimg")
+globals()["erk.data.erkimg"] = __import__("erk.data.erkimg")
 
 APPLICATION_NAME = "Ərk"
 APPLICATION_VERSION = "0.412"
@@ -554,19 +554,19 @@ def filterProfanityFromText(text,punc=True):
 
 def importThemeResources(theme):
 	if theme==USE_NO_THEME_SETTING:
-		globals()["erk.resources"] = __import__("erk.resources")
+		globals()["erk.data.resources"] = __import__("erk.data.resources")
 		return
 
 	f = os.path.join(THEMES_DIRECTORY, theme)
 	f = os.path.join(f, THEME_RESOURCE_FILE_NAME)
 	if not os.path.isfile(f):
-			globals()["erk.resources"] = __import__("erk.resources")
+			globals()["erk.data.resources"] = __import__("erk.data.resources")
 			return
 
-	spec = importlib.util.spec_from_file_location("erk.resources", f)
+	spec = importlib.util.spec_from_file_location("erk.data.resources", f)
 	foo = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(foo)
-	globals()["erk.resources"] = foo
+	globals()["erk.data.resources"] = foo
 
 def getThemeList():
 	themes = []
