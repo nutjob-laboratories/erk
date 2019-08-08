@@ -90,7 +90,6 @@ INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
-#PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 AUTOJOIN_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "autojoin")
 THEMES_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "themes")
 
@@ -98,24 +97,6 @@ THEMES_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "themes")
 DISPLAY_CONFIGURATION = os.path.join(SETTINGS_DIRECTORY, "text.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
-
-#DISABLED_PLUGINS_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.txt")
-
-# def save_disabled(dlist,fname=DISABLED_PLUGINS_FILE):
-# 	olist = "\n".join(dlist)
-# 	f = open(fname,"w")
-# 	f.write(olist)
-# 	f.close()
-
-# def get_disabled(fname=DISABLED_PLUGINS_FILE):
-# 	if os.path.isfile(fname):
-# 		f = open(fname,"r")
-# 		dlist = f.read()
-# 		f.close()
-# 		dlist = commentRemover(dlist)
-# 		return dlist.split("\n")
-# 	else:
-# 		return []
 
 # User settings files
 USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
@@ -161,7 +142,6 @@ if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 if not os.path.isdir(AUTOJOIN_DIRECTORY): os.mkdir(AUTOJOIN_DIRECTORY)
 if not os.path.isdir(USER_INFO_DIRECTORY): os.mkdir(USER_INFO_DIRECTORY)
 if not os.path.isdir(THEMES_DIRECTORY): os.mkdir(THEMES_DIRECTORY)
-#if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Globals
@@ -322,8 +302,6 @@ PYTHON_IMAGE = ":/python.png"
 TWISTED_IMAGE = ":/twisted.png"
 ICONS8_IMAGE = ":/icons8.png"
 
-#KOD_LOGO_IMAGE = ":/kodlogo.png"
-
 # Icons
 
 ERK_ICON = ":/erk.png"
@@ -350,40 +328,19 @@ NEW_WINDOW_ICON = ":/newwindow.png"
 WHOIS_ICON = ":/whois.png"
 LOG_ICON = ":/log.png"
 KICK_ICON = ":/kick.png"
-#PLUGIN_ICON = ":/plugin.png"
-#EDIT_ICON = ":/edit.png"
-#SAVEAS_ICON = ":/saveas.png"
-#OPEN_ICON = ":/open.png"
-# SELECTALL_ICON = ":/selectall.png"
-# CUT_ICON = ":/cut.png"
-# COPY_ICON = ":/copy.png"
-# UNDO_ICON = ":/undo.png"
-# REDO_ICON = ":/redo.png"
-# INDENT_ICON = ":/indent.png"
-# WRAP_ICON = ":/wrap.png"
-# COMMAND_ICON = ":/command.png"
 RESTART_ICON = ":/restart.png"
-# NEWFILE_ICON = ":/newfile.png"
 LOAD_ICON = ":/load.png"
-# PACKAGE_ICON = ":/package.png"
-
 PUBLIC_ICON = ":/public.png"
-
-#PRIVATE_ICON = ":/private.png"
-
 OPERATOR_ICON = ":/operator.png"
 VOICED_ICON = ":/voiced.png"
 NORMAL_ICON = ":/normal.png"
 ABOUT_ICON = ":/about.png"
 IGNORE_ICON = ":/ignore.png"
 UNIGNORE_ICON = ":/unignore.png"
-#EDIT_FILE_ICON = ":/editfile.png"
-#INDIVIDUAL_PACKAGE_ICON = ":/ipackage.png"
 KICKBAN_ICON = ":/kickban.png"
 USERS_ICON = ":/users.png"
 WINDOW_ICON = ":/window.png"
 ENABLE_ICON = ":/enable.png"
-#DISABLE_ICON = ":/disable.png"
 LIST_ICON = ":/list.png"
 DISPLAY_ICON = ":/display.png"
 SPELL_ICON = ":/spell.png"
@@ -407,6 +364,8 @@ RESTORE_ICON = ":/restore.png"
 MINIMIZE_ICON = ":/minimize.png"
 MAXIMIZE_ICON = ":/maximize.png"
 EMOJI_ICON = ":/emoji.png"
+
+INTERFACE_ICON = ":/interface.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
@@ -470,10 +429,10 @@ class Whois(object):
 
 # Functions
 
-def inject_asciiemojis(data,symbol=":"):
+def inject_asciiemojis(data):
 	for key in ASCIIEMOJIS:
 		for word in ASCIIEMOJIS[key]["words"]:
-			data = data.replace(symbol+word+symbol,ASCIIEMOJIS[key]["ascii"])
+			data = data.replace("("+word+")",ASCIIEMOJIS[key]["ascii"])
 	return data
 
 def exportLogsAsText(outfile):
@@ -554,19 +513,19 @@ def filterProfanityFromText(text,punc=True):
 
 def importThemeResources(theme):
 	if theme==USE_NO_THEME_SETTING:
-		globals()["erk.data.resources"] = __import__("erk.data.resources")
+		globals()["erk.resources"] = __import__("erk.data.resources")
 		return
 
 	f = os.path.join(THEMES_DIRECTORY, theme)
 	f = os.path.join(f, THEME_RESOURCE_FILE_NAME)
 	if not os.path.isfile(f):
-			globals()["erk.data.resources"] = __import__("erk.data.resources")
+			globals()["erk.resources"] = __import__("erk.data.resources")
 			return
 
-	spec = importlib.util.spec_from_file_location("erk.data.resources", f)
+	spec = importlib.util.spec_from_file_location("erk.resources", f)
 	foo = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(foo)
-	globals()["erk.data.resources"] = foo
+	globals()["erk.resources"] = foo
 
 def getThemeList():
 	themes = []
@@ -787,8 +746,6 @@ def updateSettings(s):
 	if not DOLINKS_SETTING in s: s[DOLINKS_SETTING] = True
 	if not TITLE_ACTIVE_WINDOW_SETTING in s: s[TITLE_ACTIVE_WINDOW_SETTING] = True
 	if not SAVE_LOGS_BY_NETWORK in s: s[SAVE_LOGS_BY_NETWORK] = True
-	#if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
-	#if not DISPLAY_PLUGIN_ERRORS_SETTING in s: s[DISPLAY_PLUGIN_ERRORS_SETTING] = True
 	if not ENABLE_LIST_SETTING in s: s[ENABLE_LIST_SETTING] = False
 	if not AUTO_SAVE_CHAT_LOGS in s: s[AUTO_SAVE_CHAT_LOGS] = True
 	if not ENABLE_SPELL_CHECK in s: s[ENABLE_SPELL_CHECK] = True
@@ -808,7 +765,7 @@ def updateSettings(s):
 	if not LOAD_LOG_SIZE in s: s[LOAD_LOG_SIZE] = MAX_LOG_SIZE_DEFAULT
 	if not SYSTEM_TRAY_MENU in s: s[SYSTEM_TRAY_MENU] = True
 	if not EMOJI_SETTING in s: s[EMOJI_SETTING] = True
-	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = False
+	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = True
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -830,8 +787,6 @@ def loadSettings(filename=SETTINGS_FILE):
 			DOLINKS_SETTING: True,
 			TITLE_ACTIVE_WINDOW_SETTING: True,
 			SAVE_LOGS_BY_NETWORK: True,
-			#DISPLAY_PLUGIN_ERRORS_SETTING: True,
-			#PLUGINS_ENABLED_SETTING: True,
 			ENABLE_LIST_SETTING: False,
 			AUTO_SAVE_CHAT_LOGS: True,
 			ENABLE_SPELL_CHECK: True,
@@ -850,7 +805,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			LOAD_LOG_SETTING: True,
 			LOAD_LOG_SIZE: MAX_LOG_SIZE_DEFAULT,
 			SYSTEM_TRAY_MENU: True,
-			EMOJI_SETTING: False,
+			EMOJI_SETTING: True,
 			ASCIIEMOJI_SETTING: True,
 		}
 		return s

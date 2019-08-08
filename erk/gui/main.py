@@ -174,9 +174,7 @@ class ErkGUI(QMainWindow):
 		self.urlsToLinks = True
 		self.titleActiveWindow = True
 		self.logChatByNetwork = False
-		#self.showPluginErrors = True
 		self.displayConnectionLog = True
-		#self.pluginsEnabled = True
 		self.channelListEnabled = False
 		self.saveLogsOnExit = True
 		self.spellCheck = True
@@ -384,34 +382,90 @@ class ErkGUI(QMainWindow):
 		if self.menuTray: self.buildTrayMenu()
 		if self.showTray: self.tray.show()
 
-		self.viewMenu = menubar.addMenu("Display")
-
-		self.optShowLog = QAction(QIcon(NOCONSOLE_ICON),"Hide connection log",self)
-		self.optShowLog.setChecked(self.displayConnectionLog)
-		self.optShowLog.triggered.connect(self.toggleShowLog)
-		self.viewMenu.addAction(self.optShowLog)
-
-		self.viewMenu.addSeparator()
-
-		self.optFont = QAction(QIcon(FONT_ICON),"Font",self)
-		self.optFont.triggered.connect(self.getFont)
-		self.viewMenu.addAction(self.optFont)
-
-		pf = self.display["font"].split(',')
-		mf = pf[0]
-		ms = pf[1]
-		self.optFont.setText(f"Font ({mf}, {ms}pt)")
-
-		self.actColors = QAction(QIcon(COLOR_ICON),"Colors",self)
-		self.actColors.triggered.connect(self.doColorDialog)
-		self.viewMenu.addAction(self.actColors)
-
-		self.themeMenu = self.viewMenu.addMenu(QIcon(THEME_ICON),"Theme")
-		self.buildThemeMenu()
-
 		# self.viewMenu.addSeparator()
 
-		self.msgMenu = self.viewMenu.addMenu(QIcon(PUBLIC_ICON),"Messages")
+		self.optMenu = menubar.addMenu("Settings")
+
+		self.actUser = QAction(QIcon(USER_ICON),"Edit default user information",self)
+		self.actUser.triggered.connect(self.doUserDialog)
+		self.optMenu.addAction(self.actUser)
+
+		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
+		self.actIgnore.triggered.connect(self.doIgnoreDialog)
+		self.optMenu.addAction(self.actIgnore)
+
+		self.optMenu.addSeparator()
+
+		self.faceMenu = self.optMenu.addMenu(QIcon(INTERFACE_ICON),"Interface")
+
+		self.faceTrayMenu = self.faceMenu.addMenu(QIcon(SETTINGS_ICON),"System Tray")
+
+		self.optSystray = QAction("Show icon in system tray",self,checkable=True)
+		self.optSystray.setChecked(self.showTray)
+		self.optSystray.triggered.connect(self.toggleTray)
+		self.faceTrayMenu.addAction(self.optSystray)
+
+		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
+		self.optFlash.setChecked(self.flashTray)
+		self.optFlash.triggered.connect(self.toggleFlash)
+		self.faceTrayMenu.addAction(self.optFlash)
+
+		self.optTrayMenu = QAction("Right-click icon for menu",self,checkable=True)
+		self.optTrayMenu.setChecked(self.menuTray)
+		self.optTrayMenu.triggered.connect(self.toggleTrayMenu)
+		self.faceTrayMenu.addAction(self.optTrayMenu)
+
+		if not self.showTray: self.optFlash.setEnabled(False)
+		if not self.showTray: self.optTrayMenu.setEnabled(False)
+
+		self.widgetMenu = self.faceMenu.addMenu(QIcon(ERK_ICON),"Features")
+
+		optStatus = QAction("Display status bar",self,checkable=True)
+		optStatus.setChecked(self.enableStatusBar)
+		optStatus.triggered.connect(self.toggleStatus)
+		self.widgetMenu.addAction(optStatus)
+
+		optUptime = QAction("Display connection uptime",self,checkable=True)
+		optUptime.setChecked(self.displayUptime)
+		optUptime.triggered.connect(self.toggleUptime)
+		self.widgetMenu.addAction(optUptime)
+
+		optPretty = QAction("HexChat style user lists",self,checkable=True)
+		optPretty.setChecked(self.prettyUserlist)
+		optPretty.triggered.connect(self.togglePrettyUsers)
+		self.widgetMenu.addAction(optPretty)
+
+		optEnableList = QAction("Enable channel listing",self,checkable=True)
+		optEnableList.setChecked(self.channelListEnabled)
+		optEnableList.triggered.connect(self.toggleListEnable)
+		self.widgetMenu.addAction(optEnableList)
+
+		self.winsetMenu = self.faceMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
+
+		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
+		optTitle.setChecked(self.titleActiveWindow)
+		optTitle.triggered.connect(self.toggleTitle)
+		self.winsetMenu.addAction(optTitle)
+
+		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
+		self.winTopic.setChecked(self.topicInTitle)
+		self.winTopic.triggered.connect(self.toggleTopic)
+		self.winsetMenu.addAction(self.winTopic)
+		
+		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
+
+		optAlive = QAction("Keep connection alive",self,checkable=True)
+		optAlive.setChecked(self.keepAlive)
+		optAlive.triggered.connect(self.toggleAlive)
+		self.chatSettings.addAction(optAlive)
+
+		optInvite = QAction("Automatic join on channel invite",self,checkable=True)
+		optInvite.setChecked(self.joinInvite)
+		optInvite.triggered.connect(self.toggleInvite)
+		self.chatSettings.addAction(optInvite)
+
+
+		self.msgMenu = self.optMenu.addMenu(QIcon(PUBLIC_ICON),"Messages")
 
 		self.optStrip = QAction("Strip IRC colors",self,checkable=True)
 		self.optStrip.setChecked(self.stripIRCcolor)
@@ -443,82 +497,6 @@ class ErkGUI(QMainWindow):
 		optPrivate.triggered.connect(self.togglePrivateWindow)
 		self.msgMenu.addAction(optPrivate)
 
-		self.faceMenu = self.viewMenu.addMenu(QIcon(WINDOW_ICON),"Interface")
-
-		optStatus = QAction("Display status bar",self,checkable=True)
-		optStatus.setChecked(self.enableStatusBar)
-		optStatus.triggered.connect(self.toggleStatus)
-		self.faceMenu.addAction(optStatus)
-
-		optUptime = QAction("Display connection uptime",self,checkable=True)
-		optUptime.setChecked(self.displayUptime)
-		optUptime.triggered.connect(self.toggleUptime)
-		self.faceMenu.addAction(optUptime)
-
-		optEnableList = QAction("Enable channel list entry in server information",self,checkable=True)
-		optEnableList.setChecked(self.channelListEnabled)
-		optEnableList.triggered.connect(self.toggleListEnable)
-		self.faceMenu.addAction(optEnableList)
-
-		optPretty = QAction("HexChat style user lists",self,checkable=True)
-		optPretty.setChecked(self.prettyUserlist)
-		optPretty.triggered.connect(self.togglePrettyUsers)
-		self.faceMenu.addAction(optPretty)
-
-		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
-		optTitle.setChecked(self.titleActiveWindow)
-		optTitle.triggered.connect(self.toggleTitle)
-		self.faceMenu.addAction(optTitle)
-
-		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
-		self.winTopic.setChecked(self.topicInTitle)
-		self.winTopic.triggered.connect(self.toggleTopic)
-		self.faceMenu.addAction(self.winTopic)
-
-		self.trayMenu = self.viewMenu.addMenu(QIcon(TRAY_ICON),"System Tray")
-
-		self.optSystray = QAction("Show icon in system tray",self,checkable=True)
-		self.optSystray.setChecked(self.showTray)
-		self.optSystray.triggered.connect(self.toggleTray)
-		self.trayMenu.addAction(self.optSystray)
-
-		self.optFlash = QAction("Flash icon on message receipt",self,checkable=True)
-		self.optFlash.setChecked(self.flashTray)
-		self.optFlash.triggered.connect(self.toggleFlash)
-		self.trayMenu.addAction(self.optFlash)
-
-		self.optTrayMenu = QAction("Right-click icon for menu",self,checkable=True)
-		self.optTrayMenu.setChecked(self.menuTray)
-		self.optTrayMenu.triggered.connect(self.toggleTrayMenu)
-		self.trayMenu.addAction(self.optTrayMenu)
-
-		if not self.showTray: self.optFlash.setEnabled(False)
-		if not self.showTray: self.optTrayMenu.setEnabled(False)
-
-		self.optMenu = menubar.addMenu("Settings")
-
-		self.actUser = QAction(QIcon(USER_ICON),"Edit default user information",self)
-		self.actUser.triggered.connect(self.doUserDialog)
-		self.optMenu.addAction(self.actUser)
-
-		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
-		self.actIgnore.triggered.connect(self.doIgnoreDialog)
-		self.optMenu.addAction(self.actIgnore)
-
-		self.optMenu.addSeparator()
-		
-		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
-
-		optAlive = QAction("Keep connection alive",self,checkable=True)
-		optAlive.setChecked(self.keepAlive)
-		optAlive.triggered.connect(self.toggleAlive)
-		self.chatSettings.addAction(optAlive)
-
-		optInvite = QAction("Automatic join on channel invite",self,checkable=True)
-		optInvite.setChecked(self.joinInvite)
-		optInvite.triggered.connect(self.toggleInvite)
-		self.chatSettings.addAction(optInvite)
-
 		self.emojiSettings = self.optMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
 
 		self.optEmoji = QAction("Use emoji colon codes",self,checkable=True)
@@ -536,12 +514,12 @@ class ErkGUI(QMainWindow):
 
 		self.emojiSettings.addSeparator()
 
-		self.optAsciiMoji = QAction("Use ASCIImoji colon codes",self,checkable=True)
+		self.optAsciiMoji = QAction("Use ASCIImoji parentheses codes",self,checkable=True)
 		self.optAsciiMoji.setChecked(self.asciimojis)
 		self.optAsciiMoji.triggered.connect(self.toggleAsciiEmoji)
 		self.emojiSettings.addAction(self.optAsciiMoji)
 
-		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji colon code list",self)
+		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji parentheses code list",self)
 		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.doOpenUrl(u))
 		f = helpLink.font()
 		f.setItalic(True)
@@ -653,6 +631,33 @@ class ErkGUI(QMainWindow):
 			self.sizeFour.setChecked(True)
 		elif self.maxlogsize==500:
 			self.sizeFive.setChecked(True)
+
+
+		self.viewMenu = menubar.addMenu("Display")
+
+		self.optShowLog = QAction(QIcon(NOCONSOLE_ICON),"Hide connection log",self)
+		self.optShowLog.setChecked(self.displayConnectionLog)
+		self.optShowLog.triggered.connect(self.toggleShowLog)
+		self.viewMenu.addAction(self.optShowLog)
+
+		self.viewMenu.addSeparator()
+
+		self.optFont = QAction(QIcon(FONT_ICON),"Font",self)
+		self.optFont.triggered.connect(self.getFont)
+		self.viewMenu.addAction(self.optFont)
+
+		pf = self.display["font"].split(',')
+		mf = pf[0]
+		ms = pf[1]
+		self.optFont.setText(f"Font ({mf}, {ms}pt)")
+
+		self.actColors = QAction(QIcon(COLOR_ICON),"Colors",self)
+		self.actColors.triggered.connect(self.doColorDialog)
+		self.viewMenu.addAction(self.actColors)
+
+		self.themeMenu = self.viewMenu.addMenu(QIcon(THEME_ICON),"Theme")
+		self.buildThemeMenu()
+
 
 		self.windowMenu = menubar.addMenu("Windows")
 

@@ -1,6 +1,13 @@
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client
 	* Moved the default resource files into erk.data
+	* ASCIImojis now use parentheses codes (such as (bear) or (smile))
+	* Emojis and ASCIImojis are now enabled by default
+	* Moved most settings in the "Display" menu to the "Settings" menu
+	* Separated settings in the "Settings" menu into categories
+	* Fixed a bug in loading built-in resources
+	* Moved the "Display" menu to be after the "Settings" menu
+	* Moved some of the graphics from erkimages.py to resources.py
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
