@@ -272,6 +272,8 @@ SYSTEM_TRAY_MENU = "system_tray_menu"
 EMOJI_SETTING = "use_emojis"
 ASCIIEMOJI_SETTING = "use_asciimojis"
 
+CHAT_TOOLBAR_SETTING = "window_toolbars"
+
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
 IRC_00 = "#FFFFFF"
@@ -364,7 +366,6 @@ RESTORE_ICON = ":/restore.png"
 MINIMIZE_ICON = ":/minimize.png"
 MAXIMIZE_ICON = ":/maximize.png"
 EMOJI_ICON = ":/emoji.png"
-
 INTERFACE_ICON = ":/interface.png"
 
 OPERATOR_MENU_TITLE = f"""
@@ -766,6 +767,7 @@ def updateSettings(s):
 	if not SYSTEM_TRAY_MENU in s: s[SYSTEM_TRAY_MENU] = True
 	if not EMOJI_SETTING in s: s[EMOJI_SETTING] = True
 	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = True
+	if not CHAT_TOOLBAR_SETTING in s: s[CHAT_TOOLBAR_SETTING] = True
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -807,6 +809,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			SYSTEM_TRAY_MENU: True,
 			EMOJI_SETTING: True,
 			ASCIIEMOJI_SETTING: True,
+			CHAT_TOOLBAR_SETTING: True,
 		}
 		return s
 

@@ -30,8 +30,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-import fnmatch
-import shlex
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -196,6 +194,12 @@ class ErkGUI(QMainWindow):
 		self.loadLogsOnJoin = True
 		self.maxlogsize = MAX_LOG_SIZE_DEFAULT
 
+		# WINDOW TOOLBARS ARE IN AND WORKING
+		# THIS VARIABLE HAS NOT BEEN SET UP WITH A CONFIG FILE ENTRY
+		self.windowToolbars = True
+		# IT ALSO HASN'T BEEN ADDED AS AN OPTION IN THE GUI
+		# TODO: CHANGE COLOR OF TOOLBAR NAME IF THERE ARE UNSEEN MESSAGES
+
 		self.settings = loadSettings(self.settingsFile)
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
@@ -228,8 +232,9 @@ class ErkGUI(QMainWindow):
 		self.maxlogsize = self.settings[LOAD_LOG_SIZE]
 		self.menuTray = self.settings[SYSTEM_TRAY_MENU]
 		self.emojis = self.settings[EMOJI_SETTING]
-
 		self.asciimojis = self.settings[ASCIIEMOJI_SETTING]
+
+		self.windowToolbars = self.settings[CHAT_TOOLBAR_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -257,8 +262,6 @@ class ErkGUI(QMainWindow):
 		self.uptimeTimer.start()
 
 		self.connected = False
-
-		self.suppress = []
 
 		self.editor_windows = []
 
@@ -437,6 +440,11 @@ class ErkGUI(QMainWindow):
 		self.widgetMenu.addAction(optEnableList)
 
 		self.winsetMenu = self.faceMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
+
+		topWinTool = QAction("Chat window toolbars",self,checkable=True)
+		topWinTool.setChecked(self.windowToolbars)
+		topWinTool.triggered.connect(self.toggleWinToolbars)
+		self.winsetMenu.addAction(topWinTool)
 
 		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
 		optTitle.setChecked(self.titleActiveWindow)
@@ -864,18 +872,6 @@ class ErkGUI(QMainWindow):
 		self.optSaveChat.setChecked(False)
 		self.optSaveChat.setEnabled(False)
 
-	def addSuppress(self,text):
-		for i in self.suppress:
-			if i==text: return
-		self.suppress.append(text)
-
-	def removeSuppress(self,text):
-		clean = []
-		for i in self.suppress:
-			if i==text: continue
-			clean.append(i)
-		self.suppress = clean
-
 	def updateActiveChild(self,subWindow):
 		if not self.titleActiveWindow: return
 		try:
@@ -884,6 +880,13 @@ class ErkGUI(QMainWindow):
 			if w==f" Version {APPLICATION_VERSION}":
 				return
 			self.setWindowTitle(w)
+			for c in self.connections:
+				for x in self.windows[c]:
+					if x.subwindow.windowTitle()==w:
+						x.window.active = True
+						x.window.toolNameNormal()
+					else:
+						x.window.active = False
 		except:
 			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 
@@ -979,9 +982,6 @@ class ErkGUI(QMainWindow):
 		for w in self.connections:
 			for x in self.windows[w]: y = y + 1
 
-		for w in self.editor_windows:
-			y = y + 1
-
 		if y!=self.windowcount: self.rebuildWindowMenu()
 
 		# Stop flashing tray icon if the window is no longer minimized
@@ -1067,6 +1067,11 @@ class ErkGUI(QMainWindow):
 			if w.window.name == target:
 				w.window.writeText(text)
 
+	def notifyChatWindow(self,serverid,target):
+		for w in self.windows[serverid]:
+			if w.window.name == target:
+				if not w.window.active: w.window.toolNameRed()
+
 	def writeToAll(self,serverid,text):
 		for w in self.windows[serverid]:
 			w.window.writeText(text)
@@ -1096,10 +1101,15 @@ class ErkGUI(QMainWindow):
 	def setToAway(self,serverid,msg=None):
 		for w in self.windows[serverid]:
 			w.window.setAway(msg)
+		self.toolbars[serverid].awaylabel.setText("<i>(away)</i>")
+		if msg != None:
+			self.toolbars[serverid].awaylabel.setToolTip(msg)
 
 	def setToBack(self,serverid):
 		for w in self.windows[serverid]:
 			w.window.setBack()
+		self.toolbars[serverid].awaylabel.setText("")
+		self.toolbars[serverid].awaylabel.setToolTip("")
 
 	def destroyWindow(self,serverid,name):
 		cleaned = []
@@ -1575,6 +1585,22 @@ class ErkGUI(QMainWindow):
 		self.settings[AUTO_SAVE_CHAT_LOGS] = self.saveLogsOnExit
 		saveSettings(self.settings,self.settingsFile)
 
+	def toggleWinToolbars(self):
+		if self.windowToolbars:
+			self.windowToolbars = False
+		else:
+			self.windowToolbars = True
+
+		for c in self.connections:
+			for x in self.windows[c]:
+				if self.windowToolbars:
+					x.window.showToolbar()
+				else:
+					x.window.showMenus()
+
+		self.settings[CHAT_TOOLBAR_SETTING] = self.windowToolbars
+		saveSettings(self.settings,self.settingsFile)
+
 	def toggleListEnable(self):
 		if self.channelListEnabled:
 			self.channelListEnabled = False
@@ -1999,6 +2025,13 @@ QPushButton::menu-indicator {
 		servbar.nickname.setIconSize(QSize(15,15))
 
 		servbar.addWidget(servbar.nickname)
+
+		servbar.addWidget(QLabel(" "))
+
+		servbar.awaylabel = QLabel("")
+		servbar.awaylabel.setAlignment(Qt.AlignCenter)
+		#servbar.awaylabel.setVisible(False)
+		servbar.addWidget(servbar.awaylabel)
 
 		servbar.addWidget(QLabel(" "))
 
@@ -2605,13 +2638,9 @@ QPushButton::menu-indicator {
 			d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
 
 		self.writeToChatWindow(serverid,channel,d)
+		self.notifyChatWindow(serverid,channel)
 
 	def privateMessage(self,serverid,user,message):
-
-		# Check to see if the message is on the suppress list
-		do_not_suppress = True
-		for i in self.suppress:
-			if fnmatch.fnmatch(message,i): do_not_suppress = False
 
 		# Ignore messages from users on the ignore list
 		i = user.split("!")
@@ -2655,6 +2684,7 @@ QPushButton::menu-indicator {
 					# Window exists
 					d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
 					self.writeToChatWindow(serverid,user,d)
+					self.notifyChatWindow(serverid,user)
 				return
 
 		if self.openWindowOnIncomingPrivate:
@@ -2668,6 +2698,7 @@ QPushButton::menu-indicator {
 				# Write to it
 				d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
 				self.writeToChatWindow(serverid,user,d)
+				self.notifyChatWindow(serverid,user)
 
 				self.rebuildWindowMenu()
 		else:
@@ -2722,6 +2753,7 @@ QPushButton::menu-indicator {
 					# Window exists
 					d = notice_display(user,message,self.maxnicklen,self.urlsToLinks,NOTICE_COLOR)
 					self.writeToChatWindow(serverid,channel,d)
+					self.notifyChatWindow(serverid,channel)
 					return
 
 		# 
@@ -2781,6 +2813,7 @@ QPushButton::menu-indicator {
 					d = action_display(user,message,self.urlsToLinks,ACTION_COLOR,False,HIGHLIGHT_COLOR,self.connections[serverid].nickname)
 
 				self.writeToChatWindow(serverid,channel,d)
+				self.notifyChatWindow(serverid,channel)
 				return
 
 		# Window doesn't exist, so create it
@@ -2795,6 +2828,7 @@ QPushButton::menu-indicator {
 			d = action_display(user,message,self.urlsToLinks,ACTION_COLOR,False,HIGHLIGHT_COLOR,self.connections[serverid].nickname)
 
 		self.writeToChatWindow(serverid,channel,d)
+		self.notifyChatWindow(serverid,channel)
 
 	def userJoined(self,serverid,user,channel):
 

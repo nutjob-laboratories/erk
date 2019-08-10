@@ -9,6 +9,11 @@ Version 0.412
 	* Moved the "Display" menu to be after the "Settings" menu
 	* Moved some of the graphics from erkimages.py to resources.py
 	* Made the title of the systray menu smaller
+	* Removed private message suppression (plugin leftover)
+	* Removed dependencies for fnmatch and shlex from main.py
+	* Away status is now displayed on the server toolbar
+	* Added optional toolbars to all chat windows
+	* Moved default (unthemeable) graphics to its own namespace
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

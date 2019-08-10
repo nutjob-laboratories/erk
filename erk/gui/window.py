@@ -89,6 +89,8 @@ class Interface(QMainWindow):
 		self.serverid = serverid
 		self.subwindow = subwindow
 
+		self.active = True
+
 		self.topic = ''
 
 		self.loaded = False
@@ -293,6 +295,20 @@ class Interface(QMainWindow):
 			if count >= self.parent.maxlogsize:
 				break
 		return list(reversed(shortlog))
+
+	def toolNameRed(self):
+		self.toolbarName.setStyleSheet("color: red;")
+
+	def toolNameNormal(self):
+		self.toolbarName.setStyleSheet("")
+
+	def showMenus(self):
+		self.menubar.setVisible(True)
+		self.toolbar.setVisible(False)
+
+	def showToolbar(self):
+		self.menubar.setVisible(False)
+		self.toolbar.setVisible(True)
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -310,21 +326,29 @@ class Interface(QMainWindow):
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
 		self.status.setSizeGripEnabled(False)
 
+		self.toolbar = QToolBar(self)
+		self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+		#self.toolbar.setIconSize(QSize(25,25))
+		self.toolbar.setFloatable(True)
+		self.toolbar.setAllowedAreas( Qt.TopToolBarArea | Qt.BottomToolBarArea )
+		self.toolbar.setContextMenuPolicy(Qt.PreventContextMenu)
+
 		
-		menubar = self.menuBar()
+		self.menubar = self.menuBar()
+
+		self.toolbarName = QLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
+		self.toolbar.addWidget(self.toolbarName)
+
+		self.toolbar.addSeparator()
 
 		if self.is_channel:
 
-			actMenu = menubar.addMenu("Channel")
+			actMenu = self.menubar.addMenu("Channel")
 
 			self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
 			self.menuAway.setFont(self.parent.fontitalic)
 			actMenu.addAction(self.menuAway)
 			self.menuAway.setVisible(False)
-
-			self.actText = QAction(QIcon(SAVE_ICON),"Export log as plaintext",self)
-			self.actText.triggered.connect(self.saveAsTextDialog)
-			actMenu.addAction(self.actText)
 
 			self.actModes = actMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"Modes")
 
@@ -332,7 +356,49 @@ class Interface(QMainWindow):
 
 			actMenu.addSeparator()
 
-			clipMenu = actMenu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
+			self.actPart = QAction(QIcon(EXIT_ICON),"Leave channel",self)
+			self.actPart.triggered.connect(self.close)
+			actMenu.addAction(self.actPart)
+
+			self.rebuildModesMenu()
+
+			self.toolbarMain = QPushButton("Modes  ")
+			self.toolbarMain.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarMain.setMenu(self.actModes)
+			self.toolbarMain.setIcon(QIcon(LIST_ICON))
+
+			self.toolbar.addWidget(self.toolbarMain)
+
+			#self.toolbar.addSeparator()
+
+			self.toolbarBans = QPushButton("Bans  ")
+			self.toolbarBans.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarBans.setMenu(self.actBans)
+			self.toolbarBans.setIcon(QIcon(BAN_ICON))
+
+			self.toolbar.addWidget(self.toolbarBans)
+
+			#self.toolbar.addSeparator()
+
+			optMenu = self.menubar.addMenu("Options")
+
+			optTime = QAction("Display timestamp",self,checkable=True)
+			optTime.setChecked(self.displayTimestamp)
+			optTime.triggered.connect(self.toggleTimestamp)
+			optMenu.addAction(optTime)
+
+			topOntop = QAction("Always on top",self,checkable=True)
+			topOntop.setChecked(self.ontop)
+			topOntop.triggered.connect(self.toggleTop)
+			optMenu.addAction(topOntop)
+
+			optMenu.addSeparator()
+
+			self.actText = QAction(QIcon(SAVE_ICON),"Export log as plaintext",self)
+			self.actText.triggered.connect(self.saveAsTextDialog)
+			optMenu.addAction(self.actText)
+
+			clipMenu = optMenu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
 
 			self.actSaveUrl = QAction(QIcon(SERVER_ICON),"IRC server/channel URL",self)
 			self.actSaveUrl.triggered.connect(self.doIRCUrlCopy)
@@ -346,38 +412,25 @@ class Interface(QMainWindow):
 			self.actSaveUsers.triggered.connect(self.doUserCopy)
 			clipMenu.addAction(self.actSaveUsers)
 
-			actMenu.addSeparator()
+			self.toolbarOptions = QPushButton("Options  ")
+			self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarOptions.setMenu(optMenu)
+			self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
 
-			self.actPart = QAction(QIcon(EXIT_ICON),"Leave channel",self)
-			self.actPart.triggered.connect(self.close)
-			actMenu.addAction(self.actPart)
+			self.toolbar.addWidget(self.toolbarOptions)
 
-			self.rebuildModesMenu()
+			self.toolbar.addWidget(QLabel(" "))
 
-			optMenu = menubar.addMenu("Options")
-
-			optTime = QAction("Display timestamp",self,checkable=True)
-			optTime.setChecked(self.displayTimestamp)
-			optTime.triggered.connect(self.toggleTimestamp)
-			optMenu.addAction(optTime)
-
-			topOntop = QAction("Always on top",self,checkable=True)
-			topOntop.setChecked(self.ontop)
-			topOntop.triggered.connect(self.toggleTop)
-			optMenu.addAction(topOntop)
+			#self.toolbar.addSeparator()
 
 		else:
 
 			# User window
-			actMenu = menubar.addMenu("Private")
+			actMenu = self.menubar.addMenu("Private")
 
 			self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
 			actMenu.addAction(self.menuAway)
 			self.menuAway.setVisible(False)
-
-			self.actText = QAction(QIcon(SAVE_ICON),"Export log as plaintext",self)
-			self.actText.triggered.connect(self.saveAsTextDialog)
-			actMenu.addAction(self.actText)
 
 			actMenu.addSeparator()
 
@@ -385,7 +438,7 @@ class Interface(QMainWindow):
 			self.actPart.triggered.connect(self.close)
 			actMenu.addAction(self.actPart)
 
-			optMenu = menubar.addMenu("Options")
+			optMenu = self.menubar.addMenu("Options")
 
 			optTime = QAction("Display timestamp",self,checkable=True)
 			optTime.setChecked(self.displayTimestamp)
@@ -396,6 +449,42 @@ class Interface(QMainWindow):
 			topOntop.setChecked(self.ontop)
 			topOntop.triggered.connect(self.toggleTop)
 			optMenu.addAction(topOntop)
+
+			optMenu.addSeparator()
+
+			self.actText = QAction(QIcon(SAVE_ICON),"Export log as plaintext",self)
+			self.actText.triggered.connect(self.saveAsTextDialog)
+			optMenu.addAction(self.actText)
+
+			self.toolbarOptions = QPushButton("Options  ")
+			self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarOptions.setMenu(optMenu)
+			self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
+
+			self.toolbar.addWidget(self.toolbarOptions)
+
+		self.toolbar.addWidget(QLabel("     "))
+
+		spacer = QWidget()
+		spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+		self.toolbar.addWidget(spacer)
+
+		buttonLeave = QPushButton()
+		buttonLeave.setIcon(QIcon(TOOLBAR_DISCONNECT_ICON))
+		buttonLeave.setToolTip(f"Leave {self.name}")
+		buttonLeave.clicked.connect(self.close)
+		self.toolbar.addWidget(buttonLeave)
+		buttonLeave.setFixedHeight(25)
+		buttonLeave.setStyleSheet("QPushButton { border: 0px; }")
+
+		if self.parent.windowToolbars:
+			self.menubar.setVisible(False)
+			self.toolbar.setVisible(True)
+		else:
+			self.menubar.setVisible(True)
+			self.toolbar.setVisible(False)
+
+		
 
 
 		if self.is_channel:
@@ -1200,6 +1289,8 @@ class Interface(QMainWindow):
 				self.kicked = False
 			else:
 				self.client.part(self.name)
+
+		self.toolbar.close()
 
 		self.subwindow.close()
 		self.close()
