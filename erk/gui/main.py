@@ -30,6 +30,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from datetime import datetime
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -1083,6 +1084,17 @@ class ErkGUI(QMainWindow):
 
 	def writeToLog(self,text):
 		text = self.applyColors(text,self.display)
+
+		# Add timestamp
+		t = datetime.timestamp(datetime.now())
+		pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
+		pretty = "&nbsp;" + pretty + "&nbsp;"
+		tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
+
+		text = text.replace("!TIMESTAMP!",tt)
+
+		#text = tt + text
+
 		self.logTxt.append(text)
 		self.logTxt.moveCursor(QTextCursor.End)
 
