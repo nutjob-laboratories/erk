@@ -14,6 +14,8 @@ Version 0.412
 	* Away status is now displayed on the server toolbar
 	* Added optional toolbars to all chat windows
 	* Moved default (unthemeable) graphics to its own namespace
+	* Clicking on the channel/user name in the chat toolbar shows the channel's/user's window
+	* Added window controls (minimize, maximize, normalize) to the chat toolbar
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

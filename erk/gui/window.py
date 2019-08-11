@@ -67,17 +67,38 @@ class Interface(QMainWindow):
 
 	def changeEvent(self,event):
 
-		if event.type() == QEvent.WindowStateChange:
-			if event.oldState() and Qt.WindowMinimized:
-				# window has been minimized
-				pass
-			elif event.oldState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
-				# window is not minimized
-				pass
+		# if event.type() == QEvent.WindowStateChange:
+		# 	if event.oldState() and Qt.WindowMinimized:
+		# 		# window has been minimized
+		# 		self.stateMinimized = True
+		# 		self.stateNormal = False
+		# 		self.stateMaximized = False
+		# 	elif event.oldState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
+		# 		# window is not minimized
+		# 		self.stateNormal = False
+		# 		self.stateMinimized = False
+		# 		self.stateMaximized = True
+		# 	else:
+		# 		self.stateNormal = True
+		# 		self.stateMinimized = False
+		# 		self.stateMaximized = False
 
 		if self.loaded:
 			self.channelChatDisplay.moveCursor(QTextCursor.End)
 			self.channelChatDisplay.update()
+
+
+	def toolMini(self):
+		if self.isMinimized():
+			self.showNormal()
+		else:
+			self.showMinimized()
+
+	def toolMaxi(self):
+		if self.isMaximized():
+			self.showNormal()
+		else:
+			self.showMaximized()
 
 
 	def __init__(self,name,client,serverid,subwindow,parent=None):
@@ -88,6 +109,10 @@ class Interface(QMainWindow):
 		self.parent = parent
 		self.serverid = serverid
 		self.subwindow = subwindow
+
+		self.stateNormal = True
+		self.stateMinimized = False
+		self.stateMaximized = False
 
 		self.active = True
 
@@ -309,6 +334,7 @@ class Interface(QMainWindow):
 	def showToolbar(self):
 		self.menubar.setVisible(False)
 		self.toolbar.setVisible(True)
+
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -332,12 +358,20 @@ class Interface(QMainWindow):
 		self.toolbar.setFloatable(True)
 		self.toolbar.setAllowedAreas( Qt.TopToolBarArea | Qt.BottomToolBarArea )
 		self.toolbar.setContextMenuPolicy(Qt.PreventContextMenu)
-
 		
 		self.menubar = self.menuBar()
 
-		self.toolbarName = QLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
+		class NameLabel(QLabel):
+			clicked = pyqtSignal()
+
+			def mousePressEvent(self,event):
+				self.clicked.emit()
+
+		# self.toolbarName = QLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
+		self.toolbarName = NameLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
 		self.toolbar.addWidget(self.toolbarName)
+
+		self.toolbarName.clicked.connect(self.showNormal)
 
 		self.toolbar.addSeparator()
 
@@ -468,6 +502,38 @@ class Interface(QMainWindow):
 		spacer = QWidget()
 		spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 		self.toolbar.addWidget(spacer)
+
+		# WINDOW CONTROLS
+
+		self.buttonMinimize = QPushButton()
+		self.buttonMinimize.setIcon(QIcon(MINIMIZE_ICON))
+		# self.buttonMinimize.clicked.connect(self.showMinimized)
+		self.buttonMinimize.clicked.connect(self.toolMini)
+		self.buttonMinimize.setFixedHeight(25)
+		self.buttonMinimize.setStyleSheet("QPushButton { border: 0px; }")
+
+		self.buttonMaximize = QPushButton()
+		self.buttonMaximize.setIcon(QIcon(MAXIMIZE_ICON))
+		# self.buttonMaximize.clicked.connect(self.showMaximized)
+		self.buttonMaximize.clicked.connect(self.toolMaxi)
+		self.buttonMaximize.setFixedHeight(25)
+		self.buttonMaximize.setStyleSheet("QPushButton { border: 0px; }")
+
+		self.buttonNormalize = QPushButton()
+		self.buttonNormalize.setIcon(QIcon(RESTORE_ICON))
+		self.buttonNormalize.clicked.connect(self.showNormal)
+		self.buttonNormalize.setFixedHeight(25)
+		self.buttonNormalize.setStyleSheet("QPushButton { border: 0px; }")
+
+		self.toolbar.addWidget(self.buttonMinimize)
+		self.toolbar.addWidget(self.buttonMaximize)
+		self.toolbar.addWidget(self.buttonNormalize)
+		
+		
+
+		self.toolbar.addWidget(QLabel("  "))
+
+		# WINDOW CONTROLS
 
 		buttonLeave = QPushButton()
 		buttonLeave.setIcon(QIcon(TOOLBAR_DISCONNECT_ICON))
