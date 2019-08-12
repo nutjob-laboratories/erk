@@ -19,6 +19,7 @@ Version 0.412
 	* Timestamps are now displayed in connection log messages
 	* Added an option to save the connection log contents to file
 	* Added an option to export JSON configuration to file
+	* Moved the resources in erkimages.py to a new namespace
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
