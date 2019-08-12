@@ -17,6 +17,8 @@ Version 0.412
 	* Clicking on the channel/user name in the chat toolbar shows the channel's/user's window
 	* Added window controls (minimize, maximize, normalize) to the chat toolbar
 	* Timestamps are now displayed in connection log messages
+	* Added an option to save the connection log contents to file
+	* Added an option to export JSON configuration to file
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

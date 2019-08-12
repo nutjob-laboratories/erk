@@ -367,6 +367,7 @@ MINIMIZE_ICON = ":/minimize.png"
 MAXIMIZE_ICON = ":/maximize.png"
 EMOJI_ICON = ":/emoji.png"
 INTERFACE_ICON = ":/interface.png"
+JSON_ICON = ":/json.png"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>

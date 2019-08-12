@@ -268,6 +268,8 @@ class ErkGUI(QMainWindow):
 
 		self.channel_list_windows = []
 
+		self.cLog = []
+
 		# Build the UI
 		self.buildUI()
 
@@ -316,6 +318,33 @@ class ErkGUI(QMainWindow):
 		traymenu.addAction(self.actExit)
 
 		self.tray.setContextMenu(traymenu)
+
+	def saveConnectionLog(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save log As...",INSTALL_DIRECTORY,"Text Files (*.txt);;All Files (*)", options=options)
+		if fileName:
+			self.FILENAME = fileName
+			if '.' in fileName:
+				pass
+			else:
+				fileName = fileName + '.txt'
+			chatlog = open(fileName,"w")
+			l = convertLogToPlaintext(self.cLog)
+			chatlog.write(l)
+			chatlog.close()
+
+	def saveConfigFile(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save log As...",INSTALL_DIRECTORY,"JSON Files (*.json);;All Files (*)", options=options)
+		if fileName:
+			self.FILENAME = fileName
+			if '.' in fileName:
+				pass
+			else:
+				fileName = fileName + '.json'
+			saveSettings(self.settings,fileName)
 
 	def buildUI(self):
 		"""Builds the GUI for Erk.
@@ -390,9 +419,17 @@ class ErkGUI(QMainWindow):
 		self.actUser.triggered.connect(self.doUserDialog)
 		self.optMenu.addAction(self.actUser)
 
-		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
+		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Edit ignored user list",self)
 		self.actIgnore.triggered.connect(self.doIgnoreDialog)
 		self.optMenu.addAction(self.actIgnore)
+
+		self.saveLog = QAction(QIcon(SAVE_ICON),"Save connection log to file",self)
+		self.saveLog.triggered.connect(self.saveConnectionLog)
+		self.optMenu.addAction(self.saveLog)
+
+		self.saveConfig = QAction(QIcon(JSON_ICON),"Export configuration",self)
+		self.saveConfig.triggered.connect(self.saveConfigFile)
+		self.optMenu.addAction(self.saveConfig)
 
 		self.optMenu.addSeparator()
 
@@ -1090,6 +1127,8 @@ class ErkGUI(QMainWindow):
 		pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
 		pretty = "&nbsp;" + pretty + "&nbsp;"
 		tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
+
+		self.cLog.append([t,text])
 
 		text = text.replace("!TIMESTAMP!",tt)
 
