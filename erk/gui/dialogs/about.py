@@ -141,6 +141,11 @@ class Dialog(QDialog):
 		aminfo.setFont(boldfont)
 		aminfo.setOpenExternalLinks(True)
 
+		hcinfo = QLabel(f"<a href=\"http://apocalyptech.com/linux/qt/qcombobox_html/\">htmlwidgets.py</a> by <a href=\"mailto:cj@apocalyptech.com\">CJ</a>")
+		hcinfo.setAlignment(Qt.AlignCenter)
+		hcinfo.setFont(boldfont)
+		hcinfo.setOpenExternalLinks(True)
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(logo)
 		finalLayout.addWidget(dinfo)
@@ -149,7 +154,7 @@ class Dialog(QDialog):
 		finalLayout.addWidget(scinfo)
 		finalLayout.addWidget(eminfo)
 		finalLayout.addWidget(aminfo)
-
+		finalLayout.addWidget(hcinfo)
 		finalLayout.addWidget(QLabel(" "))
 		finalLayout.addWidget(linfo)
 		

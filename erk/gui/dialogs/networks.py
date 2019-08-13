@@ -38,6 +38,8 @@ from erk.common import *
 
 import erk.gui.dialogs.add_channel as AddChannelDialog
 
+from erk.gui.htmlwidgets import HTMLComboBox
+
 class Dialog(QDialog):
 
 	@staticmethod
@@ -129,7 +131,6 @@ class Dialog(QDialog):
 
 		self.user_data = get_user()
 
-
 		self.setWindowTitle(f"Connect to Network")
 		self.setWindowIcon(QIcon(NETWORK_ICON))
 
@@ -147,10 +148,12 @@ class Dialog(QDialog):
 		ctLayout.addWidget(self.connType)
 		ctLayout.addStretch()
 
-		self.servers = QComboBox(self)
+		# self.servers = QComboBox(self)
+		self.servers = HTMLComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
 		script = open(IRC_NETWORK_LIST,"r")
+		counter = 0
 		for line in script:
 			x = line.split(":")
 			if len(x) != 4: continue
@@ -162,7 +165,9 @@ class Dialog(QDialog):
 				if not self.can_do_ssl: continue
 			#print(self.can_do_ssl)
 			self.StoredData.append(x)
-			self.servers.addItem(x[0])
+			# self.servers.addItem(x[2] + "\t\t" + x[0])
+			self.servers.addItem("<b>" + x[2] + "</b> - <i>" + x[0] + "</i> ")
+			counter = counter + 1
 
 		self.StoredServer = self.servers.currentIndex()
 

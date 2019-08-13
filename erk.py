@@ -291,6 +291,12 @@ if __name__ == '__main__':
 				channel=p[0]
 				chankey=p[1]
 
+				# check to see if the channel starts with a #,
+				# and if not, prepend it
+				if len(channel)>0:
+					if channel[:1]!="#":
+						channel = "#" + channel
+
 		p = args.clserver.split(":")
 		if len(p)==2:
 			server = p[0]
@@ -309,6 +315,12 @@ if __name__ == '__main__':
 				key = p[1]
 			else:
 				channel = args.channel
+
+			# check to see if the channel starts with a #,
+			# and if not, prepend it
+			if len(channel)>0:
+				if channel[:1]!="#":
+					channel = "#" + channel
 
 		if channel!=None:
 			erkClient.commandlineJoinChannel = channel

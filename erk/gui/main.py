@@ -65,7 +65,6 @@ import erk.gui.dialogs.ignore as IgnoreDialog
 import erk.gui.dialogs.colors as ColorDialog
 
 import erk.gui.dialogs.about as AboutDialog
-import erk.gui.dialogs.aboutkod as AboutKodDialog
 
 import erk.gui.dialogs.channellist as ChannelListDialog
 

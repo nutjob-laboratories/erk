@@ -13,3 +13,6 @@ version.txt
 README.txt
 settings/user/lastserver.json
 settings/user/user.json
+conv.py
+hexchat_servlist.conf
+NETWORKS.txt
