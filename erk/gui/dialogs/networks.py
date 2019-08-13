@@ -153,7 +153,6 @@ class Dialog(QDialog):
 		self.servers.activated.connect(self.setServer)
 
 		script = open(IRC_NETWORK_LIST,"r")
-		counter = 0
 		for line in script:
 			x = line.split(":")
 			if len(x) != 4: continue
@@ -163,11 +162,13 @@ class Dialog(QDialog):
 			x[3].strip()
 			if "ssl" in x[3]:
 				if not self.can_do_ssl: continue
+
+			if x[2] == UNKNOWN_NETWORK: x[2] = "Unknown"
+
 			#print(self.can_do_ssl)
 			self.StoredData.append(x)
 			# self.servers.addItem(x[2] + "\t\t" + x[0])
 			self.servers.addItem("<b>" + x[2] + "</b> - <i>" + x[0] + "</i> ")
-			counter = counter + 1
 
 		self.StoredServer = self.servers.currentIndex()
 

@@ -240,6 +240,8 @@ DEFAULT_USERMODE_DISPLAY = "<i>None</i>"
 
 USE_NO_THEME_SETTING = "none"
 
+UNKNOWN_NETWORK = "!_UNKNOWN_!"
+
 TIMESTAMP_SETTING = "display_timestamp"
 UPTIME_SETTING = "display_uptime"
 KEEPALIVE_SETTING = "keep_connection_alive"
@@ -271,8 +273,9 @@ LOAD_LOG_SIZE = "log_display_size"
 SYSTEM_TRAY_MENU = "system_tray_menu"
 EMOJI_SETTING = "use_emojis"
 ASCIIEMOJI_SETTING = "use_asciimojis"
-
 CHAT_TOOLBAR_SETTING = "window_toolbars"
+
+SAVE_SERVER_SETTING = "save_servers"
 
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
@@ -769,6 +772,7 @@ def updateSettings(s):
 	if not EMOJI_SETTING in s: s[EMOJI_SETTING] = True
 	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = True
 	if not CHAT_TOOLBAR_SETTING in s: s[CHAT_TOOLBAR_SETTING] = True
+	if not SAVE_SERVER_SETTING in s: s[SAVE_SERVER_SETTING] = True
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -811,6 +815,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			EMOJI_SETTING: True,
 			ASCIIEMOJI_SETTING: True,
 			CHAT_TOOLBAR_SETTING: True,
+			SAVE_SERVER_SETTING: True,
 		}
 		return s
 

@@ -193,12 +193,9 @@ class ErkGUI(QMainWindow):
 		self.asciimojis = True
 		self.loadLogsOnJoin = True
 		self.maxlogsize = MAX_LOG_SIZE_DEFAULT
-
-		# WINDOW TOOLBARS ARE IN AND WORKING
-		# THIS VARIABLE HAS NOT BEEN SET UP WITH A CONFIG FILE ENTRY
 		self.windowToolbars = True
-		# IT ALSO HASN'T BEEN ADDED AS AN OPTION IN THE GUI
-		# TODO: CHANGE COLOR OF TOOLBAR NAME IF THERE ARE UNSEEN MESSAGES
+
+		self.saveServers = True
 
 		self.settings = loadSettings(self.settingsFile)
 
@@ -233,8 +230,9 @@ class ErkGUI(QMainWindow):
 		self.menuTray = self.settings[SYSTEM_TRAY_MENU]
 		self.emojis = self.settings[EMOJI_SETTING]
 		self.asciimojis = self.settings[ASCIIEMOJI_SETTING]
-
 		self.windowToolbars = self.settings[CHAT_TOOLBAR_SETTING]
+
+		self.saveServers = self.settings[SAVE_SERVER_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -495,6 +493,11 @@ class ErkGUI(QMainWindow):
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
+		optSaveServ = QAction("Save connected servers",self,checkable=True)
+		optSaveServ.setChecked(self.saveServers)
+		optSaveServ.triggered.connect(self.toggleSaveServ)
+		self.chatSettings.addAction(optSaveServ)
+
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
 		optAlive.triggered.connect(self.toggleAlive)
@@ -504,7 +507,6 @@ class ErkGUI(QMainWindow):
 		optInvite.setChecked(self.joinInvite)
 		optInvite.triggered.connect(self.toggleInvite)
 		self.chatSettings.addAction(optInvite)
-
 
 		self.msgMenu = self.optMenu.addMenu(QIcon(PUBLIC_ICON),"Messages")
 
@@ -1310,6 +1312,15 @@ class ErkGUI(QMainWindow):
 			mf = pf[0]
 			ms = pf[1]
 			self.optFont.setText(f"Font ({mf}, {ms}pt)")
+
+	def toggleSaveServ(self):
+		if self.saveServers:
+			self.saveServers = False
+		else:
+			self.saveServers = True
+
+		self.settings[SAVE_SERVER_SETTING] = self.saveServers
+		saveSettings(self.settings,self.settingsFile)
 
 	def toggleInvite(self):
 
@@ -2623,6 +2634,56 @@ QPushButton::menu-indicator {
 		# Update status bar
 		self.updateStatusBar()
 
+		# If we're not going to save the server, return
+		if not self.saveServers: return
+
+		# Don't save passwords that require a password
+		if self.connections[serverid].password != '': return
+
+		# Check to see if the server we're connected to is in the
+		# IRC network list, and if not, save it
+		script = open(IRC_NETWORK_LIST,"r")
+		netlist = []
+		for line in script:
+			x = line.split(":")
+			if len(x) != 4: continue
+			x[0].strip()	# host
+			x[1].strip()	# port
+			x[2].strip()	# network
+			x[3].strip()	# "ssl" or "normal"
+
+			if self.connections[serverid].host == x[0]:
+				if self.connections[serverid].port == int(x[1]):
+					# The server has been found, so return
+					return
+			#line.strip()
+			netlist.append(line)
+		script.close()
+
+		# Build a server entry
+		ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
+		if self.connections[serverid].network=="":
+			cnet = UNKNOWN_NETWORK
+		else:
+			cnet = self.connections[serverid].network
+		ent = ent + ":" + cnet + ":"
+
+		if self.connections[serverid].usessl:
+			ent = ent + "ssl"
+		else:
+			ent = ent + "normal"
+
+		ent = ent + "\n"
+
+		# Insert new server entry at the beginning of the network list
+		netlist.insert(0,ent)
+
+		# Write the new network list to file
+		script = open(IRC_NETWORK_LIST,"w")
+		script.write("".join(netlist))
+		script.close()
+
+
 	def joined(self,serverid,channel):
 
 		# Create the channel window, store it, and show it
@@ -3375,6 +3436,42 @@ QPushButton::menu-indicator {
 		if network != "":
 			servhost = self.connections[serverid].hostname
 			self.connections[serverid].network = network
+
+			# If the client is set to save connected servers,
+			# update the server file
+			if self.saveServers:
+
+				# Don't update servers with a password
+				if self.connections[serverid].password != '': return
+
+				# Update the IRC network file with the network name
+				# of the current connection
+				changed = False
+				script = open(IRC_NETWORK_LIST,"r")
+				netlist = []
+				for line in script:
+					x = line.split(":")
+					if len(x) != 4: continue
+					x[0].strip()	# host
+					x[1].strip()	# port
+					x[2].strip()	# network
+					x[3].strip()	# "ssl" or "normal"
+
+					if self.connections[serverid].host == x[0]:
+						if self.connections[serverid].port == int(x[1]):
+							if x[2] != UNKNOWN_NETWORK:
+								break
+							line = line.replace(x[2],network)
+							changed = True
+					#line.strip()
+					netlist.append(line)
+				script.close()
+
+				if changed:
+					# Write the new network list to file
+					script = open(IRC_NETWORK_LIST,"w")
+					script.write("".join(netlist))
+					script.close()
 
 		if maxchannels > 0: self.connections[serverid].maxchannels = maxchannels
 		if channellen > 0: self.connections[serverid].channellen = channellen

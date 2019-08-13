@@ -54,7 +54,7 @@ def connect(host,port,nick,username=None,ircname=None,gui=None,password=None):
 	reactor.connectTCP(host,port,bot)
 
 def connectSSL(host,port,nick,username=None,ircname=None,gui=None,password=None):
-	bot = IRC_Connection_Factory(nick,username,ircname,gui,password,host,port)
+	bot = IRC_Connection_Factory(nick,username,ircname,gui,password,host,port,True)
 	reactor.connectSSL(host,port,bot,ssl.ClientContextFactory())
 
 def reconnect(host,port,nick,username=None,ircname=None,gui=None,password=None):
@@ -62,7 +62,7 @@ def reconnect(host,port,nick,username=None,ircname=None,gui=None,password=None):
 	reactor.connectTCP(host,port,bot)
 
 def reconnectSSL(host,port,nick,username=None,ircname=None,gui=None,password=None):
-	bot = IRC_ReConnection_Factory(nick,username,ircname,gui,password,host,port)
+	bot = IRC_ReConnection_Factory(nick,username,ircname,gui,password,host,port,True)
 	reactor.connectSSL(host,port,bot,ssl.ClientContextFactory())
 
 client = None
@@ -116,16 +116,19 @@ class IRC_Connection(irc.IRCClient):
 
 		self.gui.serveroptions(self.id,self.options)
 
-	def __init__(self,nickname,username,realname,gui,password,host,port):
+	def __init__(self,nickname,username,realname,gui,password,host,port,usessl):
 		self.nickname = nickname
 		self.username = username
 		self.realname = realname
 		if password != None:
 			self.password = password
+		else:
+			self.password = ''
 		self.gui = gui
 		self.host = host
 		self.port = port
 		self.ircnetwork = ""
+		self.usessl = usessl
 
 		self.oldnick = nickname
 
@@ -596,7 +599,7 @@ class IRC_Connection(irc.IRCClient):
 		return irc.IRCClient.lineReceived(self, line)
 
 class IRC_Connection_Factory(protocol.ClientFactory):
-	def __init__(self,nickname,username,realname,gui,password,host,port):
+	def __init__(self,nickname,username,realname,gui,password,host,port,usessl=False):
 		self.nickname = nickname
 		self.username = username
 		self.realname = realname
@@ -604,9 +607,10 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		self.password = password
 		self.host = host
 		self.port = port
+		self.usessl = usessl
 
 	def buildProtocol(self, addr):
-		bot = IRC_Connection(self.nickname,self.username,self.realname,self.gui,self.password,self.host,self.port)
+		bot = IRC_Connection(self.nickname,self.username,self.realname,self.gui,self.password,self.host,self.port,self.usessl)
 		bot.factory = self
 		return bot
 
@@ -617,7 +621,7 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		pass
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
-	def __init__(self,nickname,username,realname,gui,password,host,port):
+	def __init__(self,nickname,username,realname,gui,password,host,port,usessl=False):
 		self.nickname = nickname
 		self.username = username
 		self.realname = realname
@@ -625,9 +629,10 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		self.password = password
 		self.host = host
 		self.port = port
+		self.usessl = usessl
 
 	def buildProtocol(self, addr):
-		bot = IRC_Connection(self.nickname,self.username,self.realname,self.gui,self.password,self.host,self.port)
+		bot = IRC_Connection(self.nickname,self.username,self.realname,self.gui,self.password,self.host,self.port,self.usessl)
 		bot.factory = self
 		return bot
 
