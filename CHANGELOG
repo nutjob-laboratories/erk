@@ -32,6 +32,7 @@ Version 0.412
 	* GREATLY expanded the number of IRC networks that will show a WWW link in the server info menu
 	* Fixed a bug where servers from the built-in list would get saved as new servers
 	* The built-in server list is now loaded into memory on program start
+	* Window control buttons on chat toolbars are now disabled if the toolbar is not floating
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

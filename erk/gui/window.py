@@ -335,6 +335,21 @@ class Interface(QMainWindow):
 		self.menubar.setVisible(False)
 		self.toolbar.setVisible(True)
 
+	# self.toolbar.addWidget(self.buttonMinimize)
+	# self.toolbar.addWidget(self.buttonMaximize)
+	# self.toolbar.addWidget(self.buttonNormalize)
+
+	def toolbarMoved(self,moved):
+		if moved:
+			# toolbar is floating
+			self.buttonMinimize.setEnabled(True)
+			self.buttonMaximize.setEnabled(True)
+			self.buttonNormalize.setEnabled(True)
+		else:
+			# toolbar is fixed
+			self.buttonMinimize.setEnabled(False)
+			self.buttonMaximize.setEnabled(False)
+			self.buttonNormalize.setEnabled(False)
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -358,6 +373,8 @@ class Interface(QMainWindow):
 		self.toolbar.setFloatable(True)
 		self.toolbar.setAllowedAreas( Qt.TopToolBarArea | Qt.BottomToolBarArea )
 		self.toolbar.setContextMenuPolicy(Qt.PreventContextMenu)
+
+		self.toolbar.topLevelChanged.connect(self.toolbarMoved)
 		
 		self.menubar = self.menuBar()
 
@@ -525,11 +542,13 @@ class Interface(QMainWindow):
 		self.buttonNormalize.setFixedHeight(25)
 		self.buttonNormalize.setStyleSheet("QPushButton { border: 0px; }")
 
+		self.buttonMinimize.setEnabled(False)
+		self.buttonMaximize.setEnabled(False)
+		self.buttonNormalize.setEnabled(False)
+
 		self.toolbar.addWidget(self.buttonMinimize)
 		self.toolbar.addWidget(self.buttonMaximize)
 		self.toolbar.addWidget(self.buttonNormalize)
-		
-		
 
 		self.toolbar.addWidget(QLabel("  "))
 
