@@ -29,6 +29,7 @@ Version 0.412
 	* Moved saved server list to the user settings/info directory
 	* Saved servers are now underlined in the "connect to network" dialog
 	* Changed the "server" icon
+	* GREATLY expanded the number of IRC networks that will show a WWW link in the server info menu
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

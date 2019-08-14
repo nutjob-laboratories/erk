@@ -1832,22 +1832,223 @@ class ErkGUI(QMainWindow):
 				w.window.show()
 	
 	def generateNetworkLink(self,net):
-		if net.lower() == "efnet":
-			return f"<big><big><b><a href=\"http://www.efnet.org/\">EFnet</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "quakenet":
-			return f"<big><big><b><a href=\"https://www.quakenet.org/\">Quakenet</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "dalnet":
-			return f"<big><big><b><a href=\"https://www.dal.net/\">DALnet</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "gamesurge":
-			return f"<big><big><b><a href=\"https://gamesurge.net/\">Gamesurge</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "freenode":
-			return f"<big><big><b><a href=\"https://freenode.net/\">Freenode</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "swiftirc":
-			return f"<big><big><b><a href=\"https://www.swiftirc.net/\">SwiftIRC</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "undernet":
-			return f"<big><big><b><a href=\"http://www.undernet.org/\">Undernet</a></b></big></big><br><small>IRC Network</small>"
-		if net.lower() == "ircnet":
-			return f"<big><big><b><a href=\"http://www.ircnet.org/\">IRCnet</a></b></big></big><br><small>IRC Network</small>"
+		
+		if net.lower() =="2600net":
+			return f"<big><big><b><a href=\"https://www.scuttled.net/\">2600net</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="accessirc":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/AccessIRC/\">AccessIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="afternet":
+			return f"<big><big><b><a href=\"https://www.afternet.org/\">AfterNET</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="aitvaras":
+			return f"<big><big><b><a href=\"http://www.aitvaras.eu/\">Aitvaras</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="anthrochat":
+			return f"<big><big><b><a href=\"https://www.anthrochat.net/\">Anthrochat</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="arcnet":
+			return f"<big><big><b><a href=\"http://arcnet-irc.org/\">ARCNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="austnet":
+			return f"<big><big><b><a href=\"https://www.austnet.org/\">AustNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="azzurranet":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/Azzurra/\">AzzurraNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="betachat":
+			return f"<big><big><b><a href=\"https://betachat.net/\">BetaChat</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="buddyim":
+			return f"<big><big><b><a href=\"https://irc-source.com/net/BuddyIM\">BuddyIM</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="canternet":
+			return f"<big><big><b><a href=\"https://canternet.org/\">Canternet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="chat4all":
+			return f"<big><big><b><a href=\"https://chat4all.net/\">Chat4all</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="chatjunkies":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/ChatJunkies/\">ChatJunkies</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="chatnet":
+			return f"<big><big><b><a href=\"http://www.chatnet.org/\">ChatNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="chatspike":
+			return f"<big><big><b><a href=\"https://www.chatspike.net/\">ChatSpike</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="dalnet":
+			return f"<big><big><b><a href=\"https://www.dal.net/\">DALnet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="darkmyst":
+			return f"<big><big><b><a href=\"https://www.darkmyst.org/\">DarkMyst</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="dark-tou-net":
+			return f"<big><big><b><a href=\"https://irc-source.com/net/Dark-Tou-Net\">Dark-Tou-Net</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="deltaanime":
+			return f"<big><big><b><a href=\"http://www.thefullwiki.org/DeltaAnime\">DeltaAnime</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="efnet":
+			return f"<big><big><b><a href=\"http://www.efnet.org/\">EFnet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="electrocode":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/ElectroCode/\">ElectroCode</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="enterthegame":
+			return f"<big><big><b><a href=\"http://www.enterthegame.com/\">EnterTheGame</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="entropynet":
+			return f"<big><big><b><a href=\"https://entropynet.net/\">EntropyNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="espernet":
+			return f"<big><big><b><a href=\"https://esper.net/\">EsperNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="euirc":
+			return f"<big><big><b><a href=\"https://www.euirc.net/\">EUIrc</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="europnet":
+			return f"<big><big><b><a href=\"https://chat.europnet.org/\">EuropNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="fdfnet":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/FDFnet/\">FDFNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="freenode":
+			return f"<big><big><b><a href=\"https://freenode.net/\">freenode</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="furnet":
+			return f"<big><big><b><a href=\"https://en.wikifur.com/wiki/FurNet_(IRC)\">Furnet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="galaxynet":
+			return f"<big><big><b><a href=\"http://www.galaxynet.com/default.php?id=148\">GalaxyNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="gamesurge":
+			return f"<big><big><b><a href=\"https://gamesurge.net/\">GameSurge</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="geeksirc":
+			return f"<big><big><b><a href=\"https://twitter.com/geeksirc?lang=en\">GeeksIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="geekshed":
+			return f"<big><big><b><a href=\"http://www.geekshed.net/\">GeekShed</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="gimpnet":
+			return f"<big><big><b><a href=\"https://www.gimp.org/irc.html\">GIMPNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="globalgamers":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/GlobalGamers/\">GlobalGamers</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="hashmark":
+			return f"<big><big><b><a href=\"https://www.hashmark.net/\">Hashmark</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="idlemonkeys":
+			return f"<big><big><b><a href=\"https://www.net-force.nl/\">IdleMonkeys</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="indirectirc":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/IndirectIRC/\">IndirectIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="interlinked":
+			return f"<big><big><b><a href=\"https://twitter.com/interlinkedirc\">Interlinked</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="irc4fun":
+			return f"<big><big><b><a href=\"https://irc4fun.net/index.php?page=start\">IRC4Fun</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="irchighway":
+			return f"<big><big><b><a href=\"https://irchighway.net/\">IRCHighWay</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="ircnet":
+			return f"<big><big><b><a href=\"http://www.ircnet.org/\">IRCNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="irctoo.net":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/IRCtoo/\">Irctoo.net</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="kbfail":
+			return f"<big><big><b><a href=\"http://www.kbfail.net/\">KBFail</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="krstarica":
+			return f"<big><big><b><a href=\"https://pricaonica.krstarica.com/\">Krstarica</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="librairc":
+			return f"<big><big><b><a href=\"http://www.librairc.net/\">LibraIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="mindforge":
+			return f"<big><big><b><a href=\"https://mindforge.org/en/\">MindForge</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="mixxnet":
+			return f"<big><big><b><a href=\"https://www.mixxnet.net/\">MIXXnet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="moznet":
+			return f"<big><big><b><a href=\"https://wiki.mozilla.org/IRC\">Moznet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="obsidianirc":
+			return f"<big><big><b><a href=\"https://twitter.com/obsidianirc\">ObsidianIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="oceanius":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/Oceanius/\">Oceanius</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="oftc":
+			return f"<big><big><b><a href=\"https://www.oftc.net/\">OFTC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="pirc.pl":
+			return f"<big><big><b><a href=\"https://pirc.pl/\">PIRC.PL</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="ponychat":
+			return f"<big><big><b><a href=\"https://github.com/PonyChat\">PonyChat</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="ptnet.org":
+			return f"<big><big><b><a href=\"https://www.ptnet.org/\">PTNet.org</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="quakenet":
+			return f"<big><big><b><a href=\"https://www.quakenet.org/\">QuakeNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="rizon":
+			return f"<big><big><b><a href=\"https://www.rizon.net/\">Rizon</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="serenity-irc":
+			return f"<big><big><b><a href=\"http://www.serenity-irc.net/\">Serenity-IRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="slashnet":
+			return f"<big><big><b><a href=\"http://slashnet.org/\">SlashNET</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="snoonet":
+			return f"<big><big><b><a href=\"https://snoonet.org/irc-servers/\">Snoonet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="solidirc":
+			return f"<big><big><b><a href=\"http://search.mibbit.com/networks/solidirc\">SolidIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="sorcerynet":
+			return f"<big><big><b><a href=\"https://www.sorcery.net/\">SorceryNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="spotchat":
+			return f"<big><big><b><a href=\"http://www.spotchat.org/\">SpotChat</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="station51":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/Station51.net/\">Station51</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="stormbit":
+			return f"<big><big><b><a href=\"https://stormbit.net/\">StormBit</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="swiftirc":
+			return f"<big><big><b><a href=\"https://swiftirc.net/\">SwiftIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="synirc":
+			return f"<big><big><b><a href=\"https://www.synirc.net/\">synIRC</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="techtronix":
+			return f"<big><big><b><a href=\"https://search.mibbit.com/channels/Techtronix\">Techtronix</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="turlinet":
+			return f"<big><big><b><a href=\"https://www.servx.org/\">TURLINet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="undernet":
+			return f"<big><big><b><a href=\"http://www.undernet.org/\">UnderNet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="worldnet":
+			return f"<big><big><b><a href=\"https://netsplit.de/networks/Worldnet/\">Worldnet</a></big></big><br><small>IRC Network</small>"
+
+		if net.lower() =="xertion":
+			return f"<big><big><b><a href=\"http://www.xertion.org/\">Xertion</a></big></big><br><small>IRC Network</small>"
+
 		return f"<big><big><b>{net}</b></big></big><br><small>IRC Network</small>"
 
 
