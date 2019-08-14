@@ -171,8 +171,9 @@ class Dialog(QDialog):
 				self.StoredData.append(x)
 				self.servers.addItem("<u><b>" + x[2] + "</b></u> - <u><i>" + x[0] + "</i></u> ")
 
-		script = open(IRC_NETWORK_LIST,"r")
-		for line in script:
+		# script = open(IRC_NETWORK_LIST,"r")
+		# for line in script:
+		for line in IRC_NETWORK_LIST:
 			x = line.split(":")
 			if len(x) != 4: continue
 			x[0].strip()

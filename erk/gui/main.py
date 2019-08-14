@@ -2843,8 +2843,9 @@ QPushButton::menu-indicator {
 		if self.connections[serverid].password != '': return
 
 		# Make sure the server isn't in the stored server list
-		script = open(IRC_NETWORK_LIST,"r")
-		for line in script:
+		# script = open(IRC_NETWORK_LIST,"r")
+		# for line in script:
+		for line in IRC_NETWORK_LIST:
 			x = line.split(":")
 			if len(x) != 4: continue
 			x[0].strip()	# host

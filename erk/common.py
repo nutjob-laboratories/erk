@@ -112,6 +112,12 @@ MINOR_VERSION = os.path.join(ERK_DATA_DIRECTORY, "minor.txt")
 PROFANITY_LIST = os.path.join(ERK_DATA_DIRECTORY, "profanity.txt")
 ASCIIEMOJI_LIST = os.path.join(ERK_DATA_DIRECTORY, "asciiemoji.json")
 
+# Load in the network list
+f = open(IRC_NETWORK_LIST,"r")
+networkservers = f.read()
+f.close()
+IRC_NETWORK_LIST = networkservers.split("\n")
+
 # Read in the application's minor version
 f = open(MINOR_VERSION,"r")
 vminor = f.read()
