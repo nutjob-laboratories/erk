@@ -2842,8 +2842,23 @@ QPushButton::menu-indicator {
 		# Don't save passwords that require a password
 		if self.connections[serverid].password != '': return
 
+		# Make sure the server isn't in the stored server list
+		script = open(IRC_NETWORK_LIST,"r")
+		for line in script:
+			x = line.split(":")
+			if len(x) != 4: continue
+			x[0].strip()	# host
+			x[1].strip()	# port
+			x[2].strip()	# network
+			x[3].strip()	# "ssl" or "normal"
+
+			if self.connections[serverid].host == x[0]:
+				if self.connections[serverid].port == int(x[1]):
+					# The server has been found, so return
+					return
+
 		# Check to see if the server we're connected to is in the
-		# IRC network list, and if not, save it
+		# saved server list, and if not, save it
 		netlist = []
 		if os.path.isfile(SAVED_SERVERS_FILE):
 			script = open(SAVED_SERVERS_FILE,"r")
