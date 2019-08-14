@@ -34,6 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+import os
+
 from erk.common import *
 
 import erk.gui.dialogs.add_channel as AddChannelDialog
@@ -152,6 +154,23 @@ class Dialog(QDialog):
 		self.servers = HTMLComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
+		if os.path.isfile(SAVED_SERVERS_FILE):
+			script = open(SAVED_SERVERS_FILE,"r")
+			for line in script:
+				x = line.split(":")
+				if len(x) != 4: continue
+				x[0].strip()
+				x[1].strip()
+				x[2].strip()
+				x[3].strip()
+				if "ssl" in x[3]:
+					if not self.can_do_ssl: continue
+
+				if x[2] == UNKNOWN_NETWORK: x[2] = "Unknown"
+
+				self.StoredData.append(x)
+				self.servers.addItem("<u><b>" + x[2] + "</b></u> - <u><i>" + x[0] + "</i></u> ")
+
 		script = open(IRC_NETWORK_LIST,"r")
 		for line in script:
 			x = line.split(":")
@@ -165,9 +184,7 @@ class Dialog(QDialog):
 
 			if x[2] == UNKNOWN_NETWORK: x[2] = "Unknown"
 
-			#print(self.can_do_ssl)
 			self.StoredData.append(x)
-			# self.servers.addItem(x[2] + "\t\t" + x[0])
 			self.servers.addItem("<b>" + x[2] + "</b> - <i>" + x[0] + "</i> ")
 
 		self.StoredServer = self.servers.currentIndex()

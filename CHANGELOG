@@ -26,6 +26,9 @@ Version 0.412
 	* The network config dialog has been made a bit better looking
 	* Removed the "about" dialog for the code editor (as it's no longer in the client)
 	* Added an option to save connected IRC servers to the IRC network list
+	* Moved saved server list to the user settings/info directory
+	* Saved servers are now underlined in the "connect to network" dialog
+	* Changed the "server" icon
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

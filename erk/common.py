@@ -103,6 +103,7 @@ USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
 LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
 USER_FILE = os.path.join(USER_INFO_DIRECTORY, "user.json")
 IGNORE_FILE = os.path.join(USER_INFO_DIRECTORY, "ignore.json")
+SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "servers.txt")
 
 # Module data files
 ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")

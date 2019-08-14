@@ -16,3 +16,4 @@ settings/user/user.json
 conv.py
 hexchat_servlist.conf
 NETWORKS.txt
+settings/user/servers.txt

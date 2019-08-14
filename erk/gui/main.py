@@ -31,6 +31,7 @@
 
 from collections import defaultdict
 from datetime import datetime
+import os
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -2642,23 +2643,24 @@ QPushButton::menu-indicator {
 
 		# Check to see if the server we're connected to is in the
 		# IRC network list, and if not, save it
-		script = open(IRC_NETWORK_LIST,"r")
 		netlist = []
-		for line in script:
-			x = line.split(":")
-			if len(x) != 4: continue
-			x[0].strip()	# host
-			x[1].strip()	# port
-			x[2].strip()	# network
-			x[3].strip()	# "ssl" or "normal"
+		if os.path.isfile(SAVED_SERVERS_FILE):
+			script = open(SAVED_SERVERS_FILE,"r")
+			for line in script:
+				x = line.split(":")
+				if len(x) != 4: continue
+				x[0].strip()	# host
+				x[1].strip()	# port
+				x[2].strip()	# network
+				x[3].strip()	# "ssl" or "normal"
 
-			if self.connections[serverid].host == x[0]:
-				if self.connections[serverid].port == int(x[1]):
-					# The server has been found, so return
-					return
-			#line.strip()
-			netlist.append(line)
-		script.close()
+				if self.connections[serverid].host == x[0]:
+					if self.connections[serverid].port == int(x[1]):
+						# The server has been found, so return
+						return
+				#line.strip()
+				netlist.append(line)
+			script.close()
 
 		# Build a server entry
 		ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
@@ -2676,10 +2678,13 @@ QPushButton::menu-indicator {
 		ent = ent + "\n"
 
 		# Insert new server entry at the beginning of the network list
-		netlist.insert(0,ent)
+		if len(netlist)==0:
+			netlist.append(ent)
+		else:
+			netlist.insert(0,ent)
 
 		# Write the new network list to file
-		script = open(IRC_NETWORK_LIST,"w")
+		script = open(SAVED_SERVERS_FILE,"w")
 		script.write("".join(netlist))
 		script.close()
 
@@ -3446,32 +3451,33 @@ QPushButton::menu-indicator {
 
 				# Update the IRC network file with the network name
 				# of the current connection
-				changed = False
-				script = open(IRC_NETWORK_LIST,"r")
-				netlist = []
-				for line in script:
-					x = line.split(":")
-					if len(x) != 4: continue
-					x[0].strip()	# host
-					x[1].strip()	# port
-					x[2].strip()	# network
-					x[3].strip()	# "ssl" or "normal"
+				if os.path.isfile(SAVED_SERVERS_FILE):
+					changed = False
+					script = open(SAVED_SERVERS_FILE,"r")
+					netlist = []
+					for line in script:
+						x = line.split(":")
+						if len(x) != 4: continue
+						x[0].strip()	# host
+						x[1].strip()	# port
+						x[2].strip()	# network
+						x[3].strip()	# "ssl" or "normal"
 
-					if self.connections[serverid].host == x[0]:
-						if self.connections[serverid].port == int(x[1]):
-							if x[2] != UNKNOWN_NETWORK:
-								break
-							line = line.replace(x[2],network)
-							changed = True
-					#line.strip()
-					netlist.append(line)
-				script.close()
-
-				if changed:
-					# Write the new network list to file
-					script = open(IRC_NETWORK_LIST,"w")
-					script.write("".join(netlist))
+						if self.connections[serverid].host == x[0]:
+							if self.connections[serverid].port == int(x[1]):
+								if x[2] != UNKNOWN_NETWORK:
+									break
+								line = line.replace(x[2],network)
+								changed = True
+						#line.strip()
+						netlist.append(line)
 					script.close()
+
+					if changed:
+						# Write the new network list to file
+						script = open(SAVED_SERVERS_FILE,"w")
+						script.write("".join(netlist))
+						script.close()
 
 		if maxchannels > 0: self.connections[serverid].maxchannels = maxchannels
 		if channellen > 0: self.connections[serverid].channellen = channellen
