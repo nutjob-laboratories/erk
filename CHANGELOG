@@ -33,6 +33,9 @@ Version 0.412
 	* Fixed a bug where servers from the built-in list would get saved as new servers
 	* The built-in server list is now loaded into memory on program start
 	* Window control buttons on chat toolbars are now disabled if the toolbar is not floating
+	* The built-in server list is now checked when IRC network names become known
+	* Added a note to the "connect to network" dialog to show which entries are saved servers
+	* Changed the name of the saved server list to "servers.conf"
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

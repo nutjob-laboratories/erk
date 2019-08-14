@@ -103,7 +103,7 @@ USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
 LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
 USER_FILE = os.path.join(USER_INFO_DIRECTORY, "user.json")
 IGNORE_FILE = os.path.join(USER_INFO_DIRECTORY, "ignore.json")
-SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "servers.txt")
+SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "servers.conf")
 
 # Module data files
 ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
@@ -281,7 +281,6 @@ SYSTEM_TRAY_MENU = "system_tray_menu"
 EMOJI_SETTING = "use_emojis"
 ASCIIEMOJI_SETTING = "use_asciimojis"
 CHAT_TOOLBAR_SETTING = "window_toolbars"
-
 SAVE_SERVER_SETTING = "save_servers"
 
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"

@@ -154,6 +154,7 @@ class Dialog(QDialog):
 		self.servers = HTMLComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
+		loaded_saved = False
 		if os.path.isfile(SAVED_SERVERS_FILE):
 			script = open(SAVED_SERVERS_FILE,"r")
 			for line in script:
@@ -170,6 +171,7 @@ class Dialog(QDialog):
 
 				self.StoredData.append(x)
 				self.servers.addItem("<u><b>" + x[2] + "</b></u> - <u><i>" + x[0] + "</i></u> ")
+				loaded_saved = True
 
 		# script = open(IRC_NETWORK_LIST,"r")
 		# for line in script:
@@ -204,7 +206,12 @@ class Dialog(QDialog):
 		#fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
-		fstoreLayout.addWidget(QLabel(" "))
+		if loaded_saved:
+			self.prevNote = QLabel("<small><small><i>Saved servers are <u>underlined</u></i></small></small>")
+			self.prevNote.setAlignment(Qt.AlignCenter)
+			fstoreLayout.addWidget(self.prevNote)
+		else:
+			fstoreLayout.addWidget(QLabel(" "))
 		fstoreLayout.addWidget(self.recon)
 
 		servBox = QGroupBox("IRC Network")

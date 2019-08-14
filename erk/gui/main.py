@@ -3666,6 +3666,22 @@ QPushButton::menu-indicator {
 				# Don't update servers with a password
 				if self.connections[serverid].password != '': return
 
+				# Check to see if the current connection is in the
+				# built-in server list
+				for line in IRC_NETWORK_LIST:
+					x = line.split(":")
+					if len(x) != 4: continue
+					x[0].strip()	# host
+					x[1].strip()	# port
+					x[2].strip()	# network
+					x[3].strip()	# "ssl" or "normal"
+
+					if self.connections[serverid].host == x[0]:
+						if self.connections[serverid].port == int(x[1]):
+							# Connection is in the built-in server list,
+							# so return
+							return
+
 				# Update the IRC network file with the network name
 				# of the current connection
 				if os.path.isfile(SAVED_SERVERS_FILE):
@@ -3686,7 +3702,6 @@ QPushButton::menu-indicator {
 									break
 								line = line.replace(x[2],network)
 								changed = True
-						#line.strip()
 						netlist.append(line)
 					script.close()
 
