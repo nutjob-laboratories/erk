@@ -3611,10 +3611,10 @@ QPushButton::menu-indicator {
 
 				# Update the IRC network file with the network name
 				# of the current connection
+				netlist = []
 				if os.path.isfile(SAVED_SERVERS_FILE):
 					changed = False
 					script = open(SAVED_SERVERS_FILE,"r")
-					netlist = []
 					for line in script:
 						x = line.split(":")
 						if len(x) != 4: continue
@@ -3630,25 +3630,25 @@ QPushButton::menu-indicator {
 						netlist.append(line)
 					script.close()
 
-					# Build server entry
-					ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
-					ent = ent + ":" + self.connections[serverid].network + ":"
-					if self.connections[serverid].usessl:
-						ent = ent + "ssl"
-					else:
-						ent = ent + "normal"
-					ent = ent + "\n"
+				# Build server entry
+				ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
+				ent = ent + ":" + self.connections[serverid].network + ":"
+				if self.connections[serverid].usessl:
+					ent = ent + "ssl"
+				else:
+					ent = ent + "normal"
+				ent = ent + "\n"
 
-					# Insert new server entry at the beginning of the server list
-					if len(netlist)==0:
-						netlist.append(ent)
-					else:
-						netlist.insert(0,ent)
+				# Insert new server entry at the beginning of the server list
+				if len(netlist)==0:
+					netlist.append(ent)
+				else:
+					netlist.insert(0,ent)
 
-					# Save the new server list
-					script = open(SAVED_SERVERS_FILE,"w")
-					script.write("".join(netlist))
-					script.close()
+				# Save the new server list
+				script = open(SAVED_SERVERS_FILE,"w")
+				script.write("".join(netlist))
+				script.close()
 
 		if maxchannels > 0: self.connections[serverid].maxchannels = maxchannels
 		if channellen > 0: self.connections[serverid].channellen = channellen
