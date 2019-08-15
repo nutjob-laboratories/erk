@@ -635,7 +635,7 @@ class ErkGUI(QMainWindow):
 		optLoadChat.triggered.connect(self.toggleLoadChat)
 		self.miscMenu.addAction(optLoadChat)
 
-		self.logsizeMenu = self.miscMenu.addMenu(QIcon(LOG_ICON),"Log display size")
+		self.logsizeMenu = self.miscMenu.addMenu(QIcon(INTERFACE_ICON),"Log display size")
 
 		self.sizeAll = QAction("All lines",self,checkable=True)
 		self.sizeAll.triggered.connect(lambda state,l=0: self.setLoadLogSize(l) )
