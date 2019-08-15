@@ -295,7 +295,7 @@ class ErkGUI(QMainWindow):
 		traymenu.addSeparator()
 
 		self.stwinmenu = QMenu("Window")
-		self.stwinmenu.setIcon(QIcon(RESTORE_ICON))
+		self.stwinmenu.setIcon(QIcon(WINDOW_ICON))
 
 		trayMin = QAction(QIcon(MINIMIZE_ICON),f"Minimize",self)
 		trayMin.triggered.connect(self.showMinimized)
