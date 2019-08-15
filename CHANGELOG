@@ -39,6 +39,8 @@ Version 0.412
 	* Fixed a bug in incoming private messages
 	* Changed icons for public and private chat windows
 	* Changed window related icons to look more unified
+	* Changed icon for "locked" channels
+	* Converted chat toolbar menus to push buttons
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

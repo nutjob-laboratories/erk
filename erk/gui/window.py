@@ -385,10 +385,14 @@ class Interface(QMainWindow):
 				self.clicked.emit()
 
 		# self.toolbarName = QLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
-		self.toolbarName = NameLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
+		self.toolbarName = NameLabel("&nbsp;<b><big>"+self.name+"</big></b>")
 		self.toolbar.addWidget(self.toolbarName)
 
 		self.toolbarName.clicked.connect(self.showNormal)
+
+		# self.toolbar.addWidget(QLabel("  "))
+
+		self.toolbar.addWidget(QLabel(" "))
 
 		self.toolbar.addSeparator()
 
@@ -413,21 +417,37 @@ class Interface(QMainWindow):
 
 			self.rebuildModesMenu()
 
-			self.toolbarMain = QPushButton("Modes  ")
-			self.toolbarMain.setStyleSheet("QPushButton { border: 0px; }")
+			#self.toolbarMain = QPushButton("Modes ")
+
+			self.toolbarMain = QPushButton("")
+			self.toolbarMain.setToolTip(f"Channel modes")
+
+			#self.toolbarMain.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarMain.setMenu(self.actModes)
-			self.toolbarMain.setIcon(QIcon(LIST_ICON))
+			self.toolbarMain.setIcon(QIcon(CHANNEL_WINDOW_ICON))
+
+			self.toolbarMain.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
 
 			self.toolbar.addWidget(self.toolbarMain)
 
+			#self.toolbar.addWidget(QLabel("  "))
+
 			#self.toolbar.addSeparator()
 
-			self.toolbarBans = QPushButton("Bans  ")
-			self.toolbarBans.setStyleSheet("QPushButton { border: 0px; }")
+			# self.toolbarBans = QPushButton("Bans ")
+
+			self.toolbarBans = QPushButton("")
+			self.toolbarBans.setToolTip(f"Channel bans")
+
+			#self.toolbarBans.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarBans.setMenu(self.actBans)
 			self.toolbarBans.setIcon(QIcon(BAN_ICON))
 
+			self.toolbarBans.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
+
 			self.toolbar.addWidget(self.toolbarBans)
+
+			#self.toolbar.addWidget(QLabel("  "))
 
 			#self.toolbar.addSeparator()
 
@@ -463,14 +483,20 @@ class Interface(QMainWindow):
 			self.actSaveUsers.triggered.connect(self.doUserCopy)
 			clipMenu.addAction(self.actSaveUsers)
 
-			self.toolbarOptions = QPushButton("Options  ")
-			self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
+			# self.toolbarOptions = QPushButton("Options ")
+
+			self.toolbarOptions = QPushButton("")
+			self.toolbarOptions.setToolTip(f"Options")
+
+			#self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarOptions.setMenu(optMenu)
 			self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
 
+			self.toolbarOptions.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
+
 			self.toolbar.addWidget(self.toolbarOptions)
 
-			self.toolbar.addWidget(QLabel(" "))
+			#self.toolbar.addWidget(QLabel(" "))
 
 			#self.toolbar.addSeparator()
 
