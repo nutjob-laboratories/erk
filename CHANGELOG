@@ -41,6 +41,9 @@ Version 0.412
 	* Changed window related icons to look more unified
 	* Changed icon for "locked" channels
 	* Converted chat toolbar menus to push buttons
+	* Changed the "hide console" icon
+	* Removed several unused icons
+	* Changed the "kick" icon
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
