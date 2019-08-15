@@ -36,6 +36,9 @@ Version 0.412
 	* The built-in server list is now checked when IRC network names become known
 	* Added a note to the "connect to network" dialog to show which entries are saved servers
 	* Changed the name of the saved server list to "servers.conf"
+	* Fixed a bug in incoming private messages
+	* Changed icons for public and private chat windows
+	* Changed window related icons to look more unified
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

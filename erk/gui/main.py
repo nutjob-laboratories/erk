@@ -3013,32 +3013,29 @@ QPushButton::menu-indicator {
 		for w in self.windows[serverid]:
 			if w.window.name == user:
 
-				if do_not_suppress:
-					# Window exists
-					d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
-					self.writeToChatWindow(serverid,user,d)
-					self.notifyChatWindow(serverid,user)
+				# Window exists
+				d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
+				self.writeToChatWindow(serverid,user,d)
+				self.notifyChatWindow(serverid,user)
 				return
 
 		if self.openWindowOnIncomingPrivate:
 
-			if do_not_suppress:
-				# Window doesn't exist, so create it
-				userWindow = Window.createNew(user,self.connections[serverid],serverid,self.MDI,self)
-				self.windows[serverid].append(userWindow)
-				userWindow.window.show()
+			# Window doesn't exist, so create it
+			userWindow = Window.createNew(user,self.connections[serverid],serverid,self.MDI,self)
+			self.windows[serverid].append(userWindow)
+			userWindow.window.show()
 
-				# Write to it
-				d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
-				self.writeToChatWindow(serverid,user,d)
-				self.notifyChatWindow(serverid,user)
+			# Write to it
+			d = chat_display(user,message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
+			self.writeToChatWindow(serverid,user,d)
+			self.notifyChatWindow(serverid,user)
 
-				self.rebuildWindowMenu()
+			self.rebuildWindowMenu()
 		else:
-			if do_not_suppress:
-				link = encodeWindowLink(serverid,user)
-				d = log_chat_display(f"<b>[{serverid}] <a href=\"{link}\">{user}</a></b>",message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
-				self.writeToLog(d)
+			link = encodeWindowLink(serverid,user)
+			d = log_chat_display(f"<b>[{serverid}] <a href=\"{link}\">{user}</a></b>",message,self.maxnicklen,self.urlsToLinks,USER_COLOR)
+			self.writeToLog(d)
 
 	def noticeMessage(self,serverid,channel,user,message):
 
