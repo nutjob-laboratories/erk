@@ -2836,76 +2836,6 @@ QPushButton::menu-indicator {
 		# Update status bar
 		self.updateStatusBar()
 
-		# If we're not going to save the server, return
-		if not self.saveServers: return
-
-		# Don't save passwords that require a password
-		if self.connections[serverid].password != '': return
-
-		# Make sure the server isn't in the stored server list
-		# script = open(IRC_NETWORK_LIST,"r")
-		# for line in script:
-		for line in IRC_NETWORK_LIST:
-			x = line.split(":")
-			if len(x) != 4: continue
-			x[0].strip()	# host
-			x[1].strip()	# port
-			x[2].strip()	# network
-			x[3].strip()	# "ssl" or "normal"
-
-			if self.connections[serverid].host == x[0]:
-				if self.connections[serverid].port == int(x[1]):
-					# The server has been found, so return
-					return
-
-		# Check to see if the server we're connected to is in the
-		# saved server list, and if not, save it
-		netlist = []
-		if os.path.isfile(SAVED_SERVERS_FILE):
-			script = open(SAVED_SERVERS_FILE,"r")
-			for line in script:
-				x = line.split(":")
-				if len(x) != 4: continue
-				x[0].strip()	# host
-				x[1].strip()	# port
-				x[2].strip()	# network
-				x[3].strip()	# "ssl" or "normal"
-
-				if self.connections[serverid].host == x[0]:
-					if self.connections[serverid].port == int(x[1]):
-						# The server has been found, so return
-						return
-				#line.strip()
-				netlist.append(line)
-			script.close()
-
-		# Build a server entry
-		ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
-		if self.connections[serverid].network=="":
-			cnet = UNKNOWN_NETWORK
-		else:
-			cnet = self.connections[serverid].network
-		ent = ent + ":" + cnet + ":"
-
-		if self.connections[serverid].usessl:
-			ent = ent + "ssl"
-		else:
-			ent = ent + "normal"
-
-		ent = ent + "\n"
-
-		# Insert new server entry at the beginning of the network list
-		if len(netlist)==0:
-			netlist.append(ent)
-		else:
-			netlist.insert(0,ent)
-
-		# Write the new network list to file
-		script = open(SAVED_SERVERS_FILE,"w")
-		script.write("".join(netlist))
-		script.close()
-
-
 	def joined(self,serverid,channel):
 
 		# Create the channel window, store it, and show it
@@ -3695,18 +3625,30 @@ QPushButton::menu-indicator {
 
 						if self.connections[serverid].host == x[0]:
 							if self.connections[serverid].port == int(x[1]):
-								if x[2] != UNKNOWN_NETWORK:
-									break
-								line = line.replace(x[2],network)
-								changed = True
+								# Servers already saved, so return
+								return
 						netlist.append(line)
 					script.close()
 
-					if changed:
-						# Write the new network list to file
-						script = open(SAVED_SERVERS_FILE,"w")
-						script.write("".join(netlist))
-						script.close()
+					# Build server entry
+					ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
+					ent = ent + ":" + self.connections[serverid].network + ":"
+					if self.connections[serverid].usessl:
+						ent = ent + "ssl"
+					else:
+						ent = ent + "normal"
+					ent = ent + "\n"
+
+					# Insert new server entry at the beginning of the server list
+					if len(netlist)==0:
+						netlist.append(ent)
+					else:
+						netlist.insert(0,ent)
+
+					# Save the new server list
+					script = open(SAVED_SERVERS_FILE,"w")
+					script.write("".join(netlist))
+					script.close()
 
 		if maxchannels > 0: self.connections[serverid].maxchannels = maxchannels
 		if channellen > 0: self.connections[serverid].channellen = channellen

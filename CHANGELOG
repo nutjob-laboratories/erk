@@ -46,6 +46,7 @@ Version 0.412
 	* Changed the "kick" icon
 	* Replaced "blue UI" icons
 	* Changed the server icon
+	* The "save server" process has been streamlined, and is less vulnerable to a race condition
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
