@@ -345,11 +345,19 @@ class Interface(QMainWindow):
 			self.buttonMinimize.setEnabled(True)
 			self.buttonMaximize.setEnabled(True)
 			self.buttonNormalize.setEnabled(True)
+
+			self.buttonMinimize.setIcon(QIcon(MINIMIZE_ICON))
+			self.buttonMaximize.setIcon(QIcon(MAXIMIZE_ICON))
+			self.buttonNormalize.setIcon(QIcon(RESTORE_ICON))
 		else:
 			# toolbar is fixed
 			self.buttonMinimize.setEnabled(False)
 			self.buttonMaximize.setEnabled(False)
 			self.buttonNormalize.setEnabled(False)
+
+			self.buttonMinimize.setIcon(QIcon(BLANK_ICON))
+			self.buttonMaximize.setIcon(QIcon(BLANK_ICON))
+			self.buttonNormalize.setIcon(QIcon(BLANK_ICON))
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -384,17 +392,14 @@ class Interface(QMainWindow):
 			def mousePressEvent(self,event):
 				self.clicked.emit()
 
-		# self.toolbarName = QLabel("&nbsp;<b><big>"+self.name+"</big></b>&nbsp;&nbsp;")
 		self.toolbarName = NameLabel("&nbsp;<b><big>"+self.name+"</big></b>")
 		self.toolbar.addWidget(self.toolbarName)
 
 		self.toolbarName.clicked.connect(self.showNormal)
 
-		# self.toolbar.addWidget(QLabel("  "))
 
 		self.toolbar.addWidget(QLabel(" "))
 
-		self.toolbar.addSeparator()
 
 		if self.is_channel:
 
@@ -417,39 +422,17 @@ class Interface(QMainWindow):
 
 			self.rebuildModesMenu()
 
-			#self.toolbarMain = QPushButton("Modes ")
-
-			self.toolbarMain = QPushButton("")
+			self.toolbarMain = QPushButton(" Modes ")
 			self.toolbarMain.setToolTip(f"Channel modes")
 
-			#self.toolbarMain.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarMain.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarMain.setMenu(self.actModes)
-			self.toolbarMain.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 
-			self.toolbarMain.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
-
-			self.toolbar.addWidget(self.toolbarMain)
-
-			#self.toolbar.addWidget(QLabel("  "))
-
-			#self.toolbar.addSeparator()
-
-			# self.toolbarBans = QPushButton("Bans ")
-
-			self.toolbarBans = QPushButton("")
+			self.toolbarBans = QPushButton(" Bans ")
 			self.toolbarBans.setToolTip(f"Channel bans")
 
-			#self.toolbarBans.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarBans.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarBans.setMenu(self.actBans)
-			self.toolbarBans.setIcon(QIcon(BAN_ICON))
-
-			self.toolbarBans.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
-
-			self.toolbar.addWidget(self.toolbarBans)
-
-			#self.toolbar.addWidget(QLabel("  "))
-
-			#self.toolbar.addSeparator()
 
 			optMenu = self.menubar.addMenu("Options")
 
@@ -483,22 +466,17 @@ class Interface(QMainWindow):
 			self.actSaveUsers.triggered.connect(self.doUserCopy)
 			clipMenu.addAction(self.actSaveUsers)
 
-			# self.toolbarOptions = QPushButton("Options ")
 
-			self.toolbarOptions = QPushButton("")
-			self.toolbarOptions.setToolTip(f"Options")
-
-			#self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
+			self.toolbarOptions = QPushButton(" Options ")
+			self.toolbarOptions.setToolTip(f"Window options")
+			self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarOptions.setMenu(optMenu)
-			self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
 
-			self.toolbarOptions.setStyleSheet("QPushButton::menu-indicator{width:0px;}")
+			self.toolbar.addSeparator()
 
+			self.toolbar.addWidget(self.toolbarMain)
+			self.toolbar.addWidget(self.toolbarBans)
 			self.toolbar.addWidget(self.toolbarOptions)
-
-			#self.toolbar.addWidget(QLabel(" "))
-
-			#self.toolbar.addSeparator()
 
 		else:
 
@@ -533,10 +511,10 @@ class Interface(QMainWindow):
 			self.actText.triggered.connect(self.saveAsTextDialog)
 			optMenu.addAction(self.actText)
 
-			self.toolbarOptions = QPushButton("Options  ")
+			self.toolbarOptions = QPushButton(" Options ")
 			self.toolbarOptions.setStyleSheet("QPushButton { border: 0px; }")
 			self.toolbarOptions.setMenu(optMenu)
-			self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
+			#self.toolbarOptions.setIcon(QIcon(SETTINGS_ICON))
 
 			self.toolbar.addWidget(self.toolbarOptions)
 
@@ -549,21 +527,21 @@ class Interface(QMainWindow):
 		# WINDOW CONTROLS
 
 		self.buttonMinimize = QPushButton()
-		self.buttonMinimize.setIcon(QIcon(MINIMIZE_ICON))
+		self.buttonMinimize.setIcon(QIcon(BLANK_ICON))
 		# self.buttonMinimize.clicked.connect(self.showMinimized)
 		self.buttonMinimize.clicked.connect(self.toolMini)
 		self.buttonMinimize.setFixedHeight(25)
 		self.buttonMinimize.setStyleSheet("QPushButton { border: 0px; }")
 
 		self.buttonMaximize = QPushButton()
-		self.buttonMaximize.setIcon(QIcon(MAXIMIZE_ICON))
+		self.buttonMaximize.setIcon(QIcon(BLANK_ICON))
 		# self.buttonMaximize.clicked.connect(self.showMaximized)
 		self.buttonMaximize.clicked.connect(self.toolMaxi)
 		self.buttonMaximize.setFixedHeight(25)
 		self.buttonMaximize.setStyleSheet("QPushButton { border: 0px; }")
 
 		self.buttonNormalize = QPushButton()
-		self.buttonNormalize.setIcon(QIcon(RESTORE_ICON))
+		self.buttonNormalize.setIcon(QIcon(BLANK_ICON))
 		self.buttonNormalize.clicked.connect(self.showNormal)
 		self.buttonNormalize.setFixedHeight(25)
 		self.buttonNormalize.setStyleSheet("QPushButton { border: 0px; }")

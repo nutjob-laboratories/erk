@@ -47,6 +47,10 @@ Version 0.412
 	* Replaced "blue UI" icons
 	* Changed the server icon
 	* The "save server" process has been streamlined, and is less vulnerable to a race condition
+	* Chat toolbars cleaned up
+	* Window state buttons on the chat toolbars are now hidden if the toolbar is docked
+	* Created a "blank" icon (to display no icon if desired)
+	* New icons for operators and voiced users
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
