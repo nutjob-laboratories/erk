@@ -36,6 +36,7 @@ import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from PyQt5.QtMultimedia import *
 from PyQt5 import QtCore
 
 SSL_IS_AVAILABLE = True
@@ -196,6 +197,8 @@ class ErkGUI(QMainWindow):
 		self.maxlogsize = MAX_LOG_SIZE_DEFAULT
 		self.windowToolbars = True
 
+		self.unreadNotify = False
+
 		self.saveServers = True
 
 		self.settings = loadSettings(self.settingsFile)
@@ -232,8 +235,9 @@ class ErkGUI(QMainWindow):
 		self.emojis = self.settings[EMOJI_SETTING]
 		self.asciimojis = self.settings[ASCIIEMOJI_SETTING]
 		self.windowToolbars = self.settings[CHAT_TOOLBAR_SETTING]
-
 		self.saveServers = self.settings[SAVE_SERVER_SETTING]
+
+		self.unreadNotify = self.settings[NOTIFICATION_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -267,6 +271,9 @@ class ErkGUI(QMainWindow):
 		self.channel_list_windows = []
 
 		self.cLog = []
+
+		# Load notification sound
+		self.notifySound = QSound(NOTIFICATION_SOUND)
 
 		# Build the UI
 		self.buildUI()
@@ -469,6 +476,11 @@ class ErkGUI(QMainWindow):
 		optPretty.setChecked(self.prettyUserlist)
 		optPretty.triggered.connect(self.togglePrettyUsers)
 		self.widgetMenu.addAction(optPretty)
+
+		optNotify = QAction("Audio notification of unread messages",self,checkable=True)
+		optNotify.setChecked(self.unreadNotify)
+		optNotify.triggered.connect(self.toggleNotifySound)
+		self.widgetMenu.addAction(optNotify)
 
 		optEnableList = QAction("Enable channel listing",self,checkable=True)
 		optEnableList.setChecked(self.channelListEnabled)
@@ -1110,7 +1122,8 @@ class ErkGUI(QMainWindow):
 	def notifyChatWindow(self,serverid,target):
 		for w in self.windows[serverid]:
 			if w.window.name == target:
-				if not w.window.active: w.window.toolNameRed()
+				if not w.window.active:
+					w.window.toolNameRed()
 
 	def writeToAll(self,serverid,text):
 		for w in self.windows[serverid]:
@@ -1302,6 +1315,16 @@ class ErkGUI(QMainWindow):
 
 		self.settings[PRIVATEWINDOW_SETTING] = self.openWindowOnIncomingPrivate
 		saveSettings(self.settings,self.settingsFile)
+
+	def toggleNotifySound(self):
+		if self.unreadNotify:
+			self.unreadNotify = False
+		else:
+			self.unreadNotify = True
+
+		self.settings[NOTIFICATION_SETTING] = self.unreadNotify
+		saveSettings(self.settings,self.settingsFile)
+
 
 	def getFont(self):
 		font, ok = QFontDialog.getFont()

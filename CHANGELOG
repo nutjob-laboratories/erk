@@ -51,6 +51,8 @@ Version 0.412
 	* Window state buttons on the chat toolbars are now hidden if the toolbar is docked
 	* Created a "blank" icon (to display no icon if desired)
 	* New icons for operators and voiced users
+	* Reorganized the resource folder, and updated build scripts to match
+	* Added an option to play a sound when a non-active chat window receives a message
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

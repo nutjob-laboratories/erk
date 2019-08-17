@@ -283,6 +283,8 @@ ASCIIEMOJI_SETTING = "use_asciimojis"
 CHAT_TOOLBAR_SETTING = "window_toolbars"
 SAVE_SERVER_SETTING = "save_servers"
 
+NOTIFICATION_SETTING = "play_unread_notification"
+
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
 IRC_00 = "#FFFFFF"
@@ -303,7 +305,6 @@ IRC_14 = "#808080"
 IRC_15 = "#D3D3D3"
 
 # Graphics
-
 MDI_BACKGROUND = ":/background.png"
 ERK_LOG_WATERMARK = ":/logbg.png"
 ERK_BANNER_LOGO = ":/logo.png"
@@ -314,7 +315,6 @@ TWISTED_IMAGE = ":/twisted.png"
 ICONS8_IMAGE = ":/icons8.png"
 
 # Icons
-
 ERK_ICON = ":/erk.png"
 SERVER_ICON = ":/server.png"
 NETWORK_ICON = ":/network.png"
@@ -342,9 +342,9 @@ KICK_ICON = ":/kick.png"
 RESTART_ICON = ":/restart.png"
 LOAD_ICON = ":/load.png"
 PUBLIC_ICON = ":/public.png"
-OPERATOR_ICON = ":/operator.png"
-VOICED_ICON = ":/voiced.png"
-NORMAL_ICON = ":/normal.png"
+OPERATOR_ICON = ":/chanoperator.png"
+VOICED_ICON = ":/chanvoiced.png"
+NORMAL_ICON = ":/chanuser.png"
 ABOUT_ICON = ":/about.png"
 IGNORE_ICON = ":/ignore.png"
 UNIGNORE_ICON = ":/unignore.png"
@@ -376,6 +376,9 @@ EMOJI_ICON = ":/emoji.png"
 INTERFACE_ICON = ":/interface.png"
 JSON_ICON = ":/json.png"
 BLANK_ICON = ":/blank.png"
+
+# Sounds
+NOTIFICATION_SOUND = ":/notification.wav"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
@@ -778,6 +781,7 @@ def updateSettings(s):
 	if not ASCIIEMOJI_SETTING in s: s[ASCIIEMOJI_SETTING] = True
 	if not CHAT_TOOLBAR_SETTING in s: s[CHAT_TOOLBAR_SETTING] = True
 	if not SAVE_SERVER_SETTING in s: s[SAVE_SERVER_SETTING] = True
+	if not NOTIFICATION_SETTING in s: s[NOTIFICATION_SETTING] = False
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -821,6 +825,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			ASCIIEMOJI_SETTING: True,
 			CHAT_TOOLBAR_SETTING: True,
 			SAVE_SERVER_SETTING: True,
+			NOTIFICATION_SETTING: False,
 		}
 		return s
 

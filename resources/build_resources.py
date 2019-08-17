@@ -4,15 +4,20 @@ import os
 
 fl = []
 
-for file in glob.glob("*.png"):
-	fl.append(f"<file>{file}</file>")
+target = os.path.join("icons", "*.png")
+for file in glob.glob(target):
+	b = os.path.basename(file)
+	fl.append(f"<file alias=\"{b}\">{file}</file>")
 
-# fl.append("<file>cnr.otf</file>")
+target = os.path.join("gui", "*.png")
+for file in glob.glob(target):
+	b = os.path.basename(file)
+	fl.append(f"<file alias=\"{b}\">{file}</file>")
 
-# fl.append("<file>DejaVuSansMono.ttf</file>")
-# fl.append("<file>DejaVuSansMono-Bold.ttf</file>")
-
-# fl.append("<file>style.qss</file>")
+target = os.path.join("sound", "*.wav")
+for file in glob.glob(target):
+	b = os.path.basename(file)
+	fl.append(f"<file alias=\"{b}\">{file}</file>")
 
 rfiles = "\n".join(fl)
 

@@ -37,6 +37,7 @@ import shlex
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from PyQt5.QtMultimedia import *
 from PyQt5 import QtCore
 
 from erk.common import *
@@ -159,6 +160,8 @@ class Interface(QMainWindow):
 		self.is_op = False
 		self.is_voiced = False
 		self.away = False
+
+		self.notified = False
 
 		self.buildInterface()
 
@@ -323,9 +326,16 @@ class Interface(QMainWindow):
 
 	def toolNameRed(self):
 		self.toolbarName.setStyleSheet("color: red;")
+		if self.parent.unreadNotify:
+			if not self.notified:
+				self.notified = True
+
+				# Play notification sound
+				self.parent.notifySound.play()
 
 	def toolNameNormal(self):
 		self.toolbarName.setStyleSheet("")
+		self.notified = False
 
 	def showMenus(self):
 		self.menubar.setVisible(True)
