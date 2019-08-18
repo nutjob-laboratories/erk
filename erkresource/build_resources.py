@@ -18,7 +18,7 @@ rfiles = "\n".join(fl)
 
 out = f"""
 <RCC>
-<qresource>
+<qresource prefix="/core">
 {rfiles}
 </qresource>
 </RCC>
