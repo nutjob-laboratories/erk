@@ -123,11 +123,13 @@ forbidGroup.add_argument( "--nossl", help=f"Disable SSL", action="store_true")
 forbidGroup.add_argument( "--nowindows", help=f"Disable windows menu", action="store_true")
 forbidGroup.add_argument( "--nothemes", help=f"Disable themes", action="store_true")
 forbidGroup.add_argument( "--nosystray", help=f"Disable system tray icon", action="store_true")
+forbidGroup.add_argument( "--nosound", help=f"Disable audio notifications", action="store_true")
+forbidGroup.add_argument( "--nosaved", help=f"Disable loading and saving stored server connections", action="store_true")
 
 logGroup = parser.add_argument_group('Log exporting')
 
-logGroup.add_argument("--exporttext", type=str,help=f"Exports all logs as text", metavar="ZIP_FILE")
-logGroup.add_argument("--exporthtml", type=str,help=f"Exports all logs as HTML", metavar="ZIP_FILE")
+logGroup.add_argument("--exporttext", type=str,help=f"Exports all logs as text", metavar="ZIP")
+logGroup.add_argument("--exporthtml", type=str,help=f"Exports all logs as HTML", metavar="ZIP")
 
 
 args = parser.parse_args()
@@ -243,6 +245,12 @@ if __name__ == '__main__':
 
 	if args.nosystray:
 		erkClient.disableSystray()
+
+	if args.nosound:
+		erkClient.disableSound()
+
+	if args.nosaved:
+		erkClient.disableSave()
 
 	user = get_user()
 	

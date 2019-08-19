@@ -272,6 +272,10 @@ class ErkGUI(QMainWindow):
 
 		self.cLog = []
 
+		self.noSound = False
+
+		self.noSaved = False
+
 		# Load notification sound
 		self.notifySound = QSound(NOTIFICATION_SOUND)
 
@@ -477,10 +481,10 @@ class ErkGUI(QMainWindow):
 		optPretty.triggered.connect(self.togglePrettyUsers)
 		self.widgetMenu.addAction(optPretty)
 
-		optNotify = QAction("Audio notification of unread messages",self,checkable=True)
-		optNotify.setChecked(self.unreadNotify)
-		optNotify.triggered.connect(self.toggleNotifySound)
-		self.widgetMenu.addAction(optNotify)
+		self.optNotify = QAction("Audio notification of unread messages",self,checkable=True)
+		self.optNotify.setChecked(self.unreadNotify)
+		self.optNotify.triggered.connect(self.toggleNotifySound)
+		self.widgetMenu.addAction(self.optNotify)
 
 		optEnableList = QAction("Enable channel listing",self,checkable=True)
 		optEnableList.setChecked(self.channelListEnabled)
@@ -506,10 +510,10 @@ class ErkGUI(QMainWindow):
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
-		optSaveServ = QAction("Save connected servers",self,checkable=True)
-		optSaveServ.setChecked(self.saveServers)
-		optSaveServ.triggered.connect(self.toggleSaveServ)
-		self.chatSettings.addAction(optSaveServ)
+		self.optSaveServ = QAction("Save connected servers",self,checkable=True)
+		self.optSaveServ.setChecked(self.saveServers)
+		self.optSaveServ.triggered.connect(self.toggleSaveServ)
+		self.chatSettings.addAction(self.optSaveServ)
 
 		optAlive = QAction("Keep connection alive",self,checkable=True)
 		optAlive.setChecked(self.keepAlive)
@@ -895,6 +899,14 @@ class ErkGUI(QMainWindow):
 		self.FORCE_PROFANITY_FILTER = True
 		self.optFilter.setChecked(True)
 		self.optFilter.setEnabled(False)
+
+	def disableSave(self):
+		self.noSaved = True
+		self.optSaveServ.setEnabled(False)
+
+	def disableSound(self):
+		self.noSound = True
+		self.optNotify.setEnabled(False)
 
 	def disableSystray(self):
 		self.showTray = False
@@ -3612,6 +3624,9 @@ QPushButton::menu-indicator {
 			# If the client is set to save connected servers,
 			# update the server file
 			if self.saveServers:
+
+				# Don't save servers if saving is disabled
+				if self.noSaved: return
 
 				# Don't update servers with a password
 				if self.connections[serverid].password != '': return

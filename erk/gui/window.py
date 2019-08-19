@@ -330,8 +330,10 @@ class Interface(QMainWindow):
 			if not self.notified:
 				self.notified = True
 
-				# Play notification sound
-				self.parent.notifySound.play()
+				# Don't play sound if sound is enabled
+				if not self.parent.noSound:
+					# Play notification sound
+					self.parent.notifySound.play()
 
 	def toolNameNormal(self):
 		self.toolbarName.setStyleSheet("")

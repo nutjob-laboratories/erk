@@ -53,6 +53,8 @@ Version 0.412
 	* New icons for operators and voiced users
 	* Reorganized the resource folder, and updated build scripts to match
 	* Added an option to play a sound when a non-active chat window receives a message
+	* Added a commandline flag to disable sounds
+	* Added a commandline flag to disable loading and saving stored server information
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

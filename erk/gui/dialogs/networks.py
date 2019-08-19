@@ -155,23 +155,26 @@ class Dialog(QDialog):
 		self.servers.activated.connect(self.setServer)
 
 		loaded_saved = False
-		if os.path.isfile(SAVED_SERVERS_FILE):
-			script = open(SAVED_SERVERS_FILE,"r")
-			for line in script:
-				x = line.split(":")
-				if len(x) != 4: continue
-				x[0].strip()
-				x[1].strip()
-				x[2].strip()
-				x[3].strip()
-				if "ssl" in x[3]:
-					if not self.can_do_ssl: continue
 
-				if x[2] == UNKNOWN_NETWORK: x[2] = "Unknown"
+		# Block loading saved servers if that is disabled
+		if not self.parent.noSaved:
+			if os.path.isfile(SAVED_SERVERS_FILE):
+				script = open(SAVED_SERVERS_FILE,"r")
+				for line in script:
+					x = line.split(":")
+					if len(x) != 4: continue
+					x[0].strip()
+					x[1].strip()
+					x[2].strip()
+					x[3].strip()
+					if "ssl" in x[3]:
+						if not self.can_do_ssl: continue
 
-				self.StoredData.append(x)
-				self.servers.addItem("<u><b>" + x[2] + "</b></u> - <u><i>" + x[0] + "</i></u> ")
-				loaded_saved = True
+					if x[2] == UNKNOWN_NETWORK: x[2] = "Unknown"
+
+					self.StoredData.append(x)
+					self.servers.addItem("<u><b>" + x[2] + "</b></u> - <u><i>" + x[0] + "</i></u> ")
+					loaded_saved = True
 
 		# script = open(IRC_NETWORK_LIST,"r")
 		# for line in script:
