@@ -199,9 +199,16 @@ class ErkGUI(QMainWindow):
 
 		self.unreadNotify = False
 
+		self.nickMention = True
+		self.lastMention = 0
+		self.mentionLimit = 10
+
 		self.saveServers = True
 
 		self.settings = loadSettings(self.settingsFile)
+
+		self.nickMention = self.settings[MENTION_SETTING]
+		self.mentionLimit = self.settings[MENTION_THROTTLE]
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
 		self.displayUptime = self.settings[UPTIME_SETTING]
@@ -278,6 +285,7 @@ class ErkGUI(QMainWindow):
 
 		# Load notification sound
 		self.notifySound = QSound(NOTIFICATION_SOUND)
+		self.mentionSound = QSound(MENTION_SOUND)
 
 		# Build the UI
 		self.buildUI()
@@ -444,6 +452,57 @@ class ErkGUI(QMainWindow):
 
 		self.faceMenu = self.optMenu.addMenu(QIcon(INTERFACE_ICON),"Interface")
 
+		self.widgetMenu = self.faceMenu.addMenu(QIcon(ERK_ICON),"Features")
+
+		optStatus = QAction("Display status bar",self,checkable=True)
+		optStatus.setChecked(self.enableStatusBar)
+		optStatus.triggered.connect(self.toggleStatus)
+		self.widgetMenu.addAction(optStatus)
+
+		optUptime = QAction("Display connection uptime",self,checkable=True)
+		optUptime.setChecked(self.displayUptime)
+		optUptime.triggered.connect(self.toggleUptime)
+		self.widgetMenu.addAction(optUptime)
+
+		optPretty = QAction("HexChat style user lists",self,checkable=True)
+		optPretty.setChecked(self.prettyUserlist)
+		optPretty.triggered.connect(self.togglePrettyUsers)
+		self.widgetMenu.addAction(optPretty)
+
+		optEnableList = QAction("Enable channel listing",self,checkable=True)
+		optEnableList.setChecked(self.channelListEnabled)
+		optEnableList.triggered.connect(self.toggleListEnable)
+		self.widgetMenu.addAction(optEnableList)
+
+		self.soundMenu = self.faceMenu.addMenu(QIcon(SOUND_ICON),"Sounds")
+
+		self.optNotify = QAction("Audio notification of unread messages",self,checkable=True)
+		self.optNotify.setChecked(self.unreadNotify)
+		self.optNotify.triggered.connect(self.toggleNotifySound)
+		self.soundMenu.addAction(self.optNotify)
+
+		self.optMentions = QAction("Audio notification of nick mentions",self,checkable=True)
+		self.optMentions.setChecked(self.nickMention)
+		self.optMentions.triggered.connect(self.toggleMentionSound)
+		self.soundMenu.addAction(self.optMentions)
+
+		self.winsetMenu = self.faceMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
+
+		topWinTool = QAction("Chat window toolbars",self,checkable=True)
+		topWinTool.setChecked(self.windowToolbars)
+		topWinTool.triggered.connect(self.toggleWinToolbars)
+		self.winsetMenu.addAction(topWinTool)
+
+		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
+		optTitle.setChecked(self.titleActiveWindow)
+		optTitle.triggered.connect(self.toggleTitle)
+		self.winsetMenu.addAction(optTitle)
+
+		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
+		self.winTopic.setChecked(self.topicInTitle)
+		self.winTopic.triggered.connect(self.toggleTopic)
+		self.winsetMenu.addAction(self.winTopic)
+
 		self.faceTrayMenu = self.faceMenu.addMenu(QIcon(SETTINGS_ICON),"System Tray")
 
 		self.optSystray = QAction("Show icon in system tray",self,checkable=True)
@@ -463,50 +522,6 @@ class ErkGUI(QMainWindow):
 
 		if not self.showTray: self.optFlash.setEnabled(False)
 		if not self.showTray: self.optTrayMenu.setEnabled(False)
-
-		self.widgetMenu = self.faceMenu.addMenu(QIcon(ERK_ICON),"Features")
-
-		optStatus = QAction("Display status bar",self,checkable=True)
-		optStatus.setChecked(self.enableStatusBar)
-		optStatus.triggered.connect(self.toggleStatus)
-		self.widgetMenu.addAction(optStatus)
-
-		optUptime = QAction("Display connection uptime",self,checkable=True)
-		optUptime.setChecked(self.displayUptime)
-		optUptime.triggered.connect(self.toggleUptime)
-		self.widgetMenu.addAction(optUptime)
-
-		optPretty = QAction("HexChat style user lists",self,checkable=True)
-		optPretty.setChecked(self.prettyUserlist)
-		optPretty.triggered.connect(self.togglePrettyUsers)
-		self.widgetMenu.addAction(optPretty)
-
-		self.optNotify = QAction("Audio notification of unread messages",self,checkable=True)
-		self.optNotify.setChecked(self.unreadNotify)
-		self.optNotify.triggered.connect(self.toggleNotifySound)
-		self.widgetMenu.addAction(self.optNotify)
-
-		optEnableList = QAction("Enable channel listing",self,checkable=True)
-		optEnableList.setChecked(self.channelListEnabled)
-		optEnableList.triggered.connect(self.toggleListEnable)
-		self.widgetMenu.addAction(optEnableList)
-
-		self.winsetMenu = self.faceMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
-
-		topWinTool = QAction("Chat window toolbars",self,checkable=True)
-		topWinTool.setChecked(self.windowToolbars)
-		topWinTool.triggered.connect(self.toggleWinToolbars)
-		self.winsetMenu.addAction(topWinTool)
-
-		optTitle = QAction("Application title set to active user/channel title",self,checkable=True)
-		optTitle.setChecked(self.titleActiveWindow)
-		optTitle.triggered.connect(self.toggleTitle)
-		self.winsetMenu.addAction(optTitle)
-
-		self.winTopic = QAction("Display topic in channel window title",self,checkable=True)
-		self.winTopic.setChecked(self.topicInTitle)
-		self.winTopic.triggered.connect(self.toggleTopic)
-		self.winsetMenu.addAction(self.winTopic)
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
@@ -1327,6 +1342,16 @@ class ErkGUI(QMainWindow):
 
 		self.settings[PRIVATEWINDOW_SETTING] = self.openWindowOnIncomingPrivate
 		saveSettings(self.settings,self.settingsFile)
+
+	def toggleMentionSound(self):
+		if self.nickMention:
+			self.nickMention = False
+		else:
+			self.nickMention = True
+
+		self.settings[MENTION_SETTING] = self.nickMention
+		saveSettings(self.settings,self.settingsFile)
+
 
 	def toggleNotifySound(self):
 		if self.unreadNotify:
@@ -2925,6 +2950,15 @@ QPushButton::menu-indicator {
 
 		if self.isMinimized():
 			self.IS_FLASHING = True
+
+		if self.nickMention:
+			if self.connections[serverid].nickname.lower() in message.lower():
+				if self.lastMention > self.uptime:
+					# too soon
+					pass
+				else:
+					self.mentionSound.play()
+					self.lastMention = self.uptime + self.mentionLimit
 
 		if self.highlightNickMessages:
 			if self.connections[serverid].nickname.lower() in message.lower():

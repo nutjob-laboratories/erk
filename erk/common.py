@@ -282,8 +282,10 @@ EMOJI_SETTING = "use_emojis"
 ASCIIEMOJI_SETTING = "use_asciimojis"
 CHAT_TOOLBAR_SETTING = "window_toolbars"
 SAVE_SERVER_SETTING = "save_servers"
-
 NOTIFICATION_SETTING = "play_unread_notification"
+
+MENTION_SETTING = "play_mention_notification"
+MENTION_THROTTLE = 10
 
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
@@ -361,6 +363,7 @@ SETTINGS_ICON = ":/settings.png"
 EMOJI_ICON = ":/emoji.png"
 INTERFACE_ICON = ":/interface.png"
 JSON_ICON = ":/json.png"
+SOUND_ICON = ":/sounds.png"
 
 ERK_ICON = ":/core/erk.png"
 BLANK_ICON = ":/core/blank.png"
@@ -380,7 +383,8 @@ ICONS8_IMAGE = ":/core/icons8.png"
 TRAY_ICON = ":/core/tray.png"
 
 # Sounds
-NOTIFICATION_SOUND = ":/notification.wav"
+NOTIFICATION_SOUND = ":/unread.wav"
+MENTION_SOUND = ":/mention.wav"
 
 OPERATOR_MENU_TITLE = f"""
 <table style="width: 100%;" border="0"><tbody><tr>
@@ -824,6 +828,9 @@ def updateSettings(s):
 	if not CHAT_TOOLBAR_SETTING in s: s[CHAT_TOOLBAR_SETTING] = True
 	if not SAVE_SERVER_SETTING in s: s[SAVE_SERVER_SETTING] = True
 	if not NOTIFICATION_SETTING in s: s[NOTIFICATION_SETTING] = False
+
+	if not MENTION_SETTING in s: s[MENTION_SETTING] = False
+	if not MENTION_THROTTLE in s: s[MENTION_THROTTLE] = 60
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -868,6 +875,8 @@ def loadSettings(filename=SETTINGS_FILE):
 			CHAT_TOOLBAR_SETTING: True,
 			SAVE_SERVER_SETTING: True,
 			NOTIFICATION_SETTING: False,
+			MENTION_SETTING: False,
+			MENTION_THROTTLE: 60,
 		}
 		return s
 
