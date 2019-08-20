@@ -600,7 +600,7 @@ def save_server(host,port,network,usessl,password):
 			data = json.load(read_servers)
 		for e in data:
 			if e["host"]==host:
-				if e["port"]==port:
+				if e["port"]==str(port):
 					return
 		sinfo = {
 			"host": host,
