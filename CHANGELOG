@@ -59,6 +59,7 @@ Version 0.412
 	* Changed saved server filename to "history.json"
 	* Saved servers can now contain passwords
 	* Server password entry in the "connect to server" dialog is now masked
+	* Changed wording in the GUI and commandline from "saved server" to "connection history"
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

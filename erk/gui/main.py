@@ -510,7 +510,7 @@ class ErkGUI(QMainWindow):
 		
 		self.chatSettings = self.optMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"IRC")
 
-		self.optSaveServ = QAction("Save connected servers",self,checkable=True)
+		self.optSaveServ = QAction("Save connection history",self,checkable=True)
 		self.optSaveServ.setChecked(self.saveServers)
 		self.optSaveServ.triggered.connect(self.toggleSaveServ)
 		self.chatSettings.addAction(self.optSaveServ)
