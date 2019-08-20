@@ -249,7 +249,7 @@ if __name__ == '__main__':
 	if args.nosound:
 		erkClient.disableSound()
 
-	if args.nosaved:
+	if args.nohistory:
 		erkClient.disableSave()
 
 	user = get_user()
