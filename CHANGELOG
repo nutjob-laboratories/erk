@@ -55,6 +55,10 @@ Version 0.412
 	* Added an option to play a sound when a non-active chat window receives a message
 	* Added a commandline flag to disable sounds
 	* Added a commandline flag to disable loading and saving stored server information
+	* Converted saved servers file to JSON
+	* Changed saved server filename to "history.json"
+	* Saved servers can now contain passwords
+	* Server password entry in the "connect to server" dialog is now masked
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on

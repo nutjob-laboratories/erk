@@ -103,7 +103,7 @@ USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
 LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
 USER_FILE = os.path.join(USER_INFO_DIRECTORY, "user.json")
 IGNORE_FILE = os.path.join(USER_INFO_DIRECTORY, "ignore.json")
-SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "servers.conf")
+SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "history.json")
 
 # Module data files
 ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
@@ -588,6 +588,46 @@ def installThemeFromZip(filename,password=None):
 	with ZipFile(THEMEZIP,"r") as zip:
 		zip.extractall(path=THEMES_DIRECTORY,pwd=password)
 	return True
+
+# SAVED_SERVERS_FILE
+def save_server(host,port,network,usessl,password):
+	if os.path.isfile(SAVED_SERVERS_FILE):
+		with open(SAVED_SERVERS_FILE, "r") as read_servers:
+			data = json.load(read_servers)
+		for e in data:
+			if e["host"]==host:
+				if e["port"]==port:
+					return
+		sinfo = {
+			"host": host,
+			"port": str(port),
+			"password": password,
+			"ssl": usessl,
+			"network": network
+		}
+		data.insert(0,sinfo)
+		with open(SAVED_SERVERS_FILE, "w") as write_data:
+			json.dump(data, write_data, indent=4, sort_keys=True)
+	else:
+		data = []
+		sinfo = {
+			"host": host,
+			"port": str(port),
+			"password": password,
+			"ssl": usessl,
+			"network": network
+		}
+		data.append(sinfo)
+		with open(SAVED_SERVERS_FILE, "w") as write_data:
+			json.dump(data, write_data, indent=4, sort_keys=True)
+
+def get_saved_servers():
+	if os.path.isfile(SAVED_SERVERS_FILE):
+		with open(SAVED_SERVERS_FILE, "r") as read_servers:
+			data = json.load(read_servers)
+			return data
+	else:
+		return []
 
 def get_ignore():
 	if os.path.isfile(IGNORE_FILE):

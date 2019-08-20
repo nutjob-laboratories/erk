@@ -163,6 +163,7 @@ class Dialog(QDialog):
 		passLayout = QHBoxLayout()
 		self.passLabel = QLabel("Password")
 		self.password = QLineEdit(last_server["password"])
+		self.password.setEchoMode(QLineEdit.Password)
 		passLayout.addWidget(self.passLabel)
 		passLayout.addStretch()
 		passLayout.addWidget(self.password)

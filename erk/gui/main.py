@@ -3628,8 +3628,7 @@ QPushButton::menu-indicator {
 				# Don't save servers if saving is disabled
 				if self.noSaved: return
 
-				# Don't update servers with a password
-				if self.connections[serverid].password != '': return
+				# BEGIN NEW SAVED SERVER
 
 				# Check to see if the current connection is in the
 				# built-in server list
@@ -3647,46 +3646,75 @@ QPushButton::menu-indicator {
 							# so return
 							return
 
-				# Update the IRC network file with the network name
-				# of the current connection
-				netlist = []
-				if os.path.isfile(SAVED_SERVERS_FILE):
-					changed = False
-					script = open(SAVED_SERVERS_FILE,"r")
-					for line in script:
-						x = line.split(":")
-						if len(x) != 4: continue
-						x[0].strip()	# host
-						x[1].strip()	# port
-						x[2].strip()	# network
-						x[3].strip()	# "ssl" or "normal"
-
-						if self.connections[serverid].host == x[0]:
-							if self.connections[serverid].port == int(x[1]):
-								# Servers already saved, so return
-								return
-						netlist.append(line)
-					script.close()
-
-				# Build server entry
-				ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
-				ent = ent + ":" + self.connections[serverid].network + ":"
+				# def save_server(host,port,network,usessl,password):
 				if self.connections[serverid].usessl:
-					ent = ent + "ssl"
+					savessl=True
 				else:
-					ent = ent + "normal"
-				ent = ent + "\n"
+					savessl=False
 
-				# Insert new server entry at the beginning of the server list
-				if len(netlist)==0:
-					netlist.append(ent)
-				else:
-					netlist.insert(0,ent)
+				save_server(self.connections[serverid].host,self.connections[serverid].port,self.connections[serverid].network,savessl,self.connections[serverid].password)
 
-				# Save the new server list
-				script = open(SAVED_SERVERS_FILE,"w")
-				script.write("".join(netlist))
-				script.close()
+				# END NEW SAVED SERVER
+
+				# # Don't update servers with a password
+				# if self.connections[serverid].password != '': return
+
+				# # Check to see if the current connection is in the
+				# # built-in server list
+				# for line in IRC_NETWORK_LIST:
+				# 	x = line.split(":")
+				# 	if len(x) != 4: continue
+				# 	x[0].strip()	# host
+				# 	x[1].strip()	# port
+				# 	x[2].strip()	# network
+				# 	x[3].strip()	# "ssl" or "normal"
+
+				# 	if self.connections[serverid].host == x[0]:
+				# 		if self.connections[serverid].port == int(x[1]):
+				# 			# Connection is in the built-in server list,
+				# 			# so return
+				# 			return
+
+				# # Update the IRC network file with the network name
+				# # of the current connection
+				# netlist = []
+				# if os.path.isfile(SAVED_SERVERS_FILE):
+				# 	changed = False
+				# 	script = open(SAVED_SERVERS_FILE,"r")
+				# 	for line in script:
+				# 		x = line.split(":")
+				# 		if len(x) != 4: continue
+				# 		x[0].strip()	# host
+				# 		x[1].strip()	# port
+				# 		x[2].strip()	# network
+				# 		x[3].strip()	# "ssl" or "normal"
+
+				# 		if self.connections[serverid].host == x[0]:
+				# 			if self.connections[serverid].port == int(x[1]):
+				# 				# Servers already saved, so return
+				# 				return
+				# 		netlist.append(line)
+				# 	script.close()
+
+				# # Build server entry
+				# ent = self.connections[serverid].host + ":" + str(self.connections[serverid].port)
+				# ent = ent + ":" + self.connections[serverid].network + ":"
+				# if self.connections[serverid].usessl:
+				# 	ent = ent + "ssl"
+				# else:
+				# 	ent = ent + "normal"
+				# ent = ent + "\n"
+
+				# # Insert new server entry at the beginning of the server list
+				# if len(netlist)==0:
+				# 	netlist.append(ent)
+				# else:
+				# 	netlist.insert(0,ent)
+
+				# # Save the new server list
+				# script = open(SAVED_SERVERS_FILE,"w")
+				# script.write("".join(netlist))
+				# script.close()
 
 		if maxchannels > 0: self.connections[serverid].maxchannels = maxchannels
 		if channellen > 0: self.connections[serverid].channellen = channellen
