@@ -828,9 +828,7 @@ def updateSettings(s):
 	if not CHAT_TOOLBAR_SETTING in s: s[CHAT_TOOLBAR_SETTING] = True
 	if not SAVE_SERVER_SETTING in s: s[SAVE_SERVER_SETTING] = True
 	if not NOTIFICATION_SETTING in s: s[NOTIFICATION_SETTING] = False
-
 	if not MENTION_SETTING in s: s[MENTION_SETTING] = False
-	if not MENTION_THROTTLE in s: s[MENTION_THROTTLE] = 60
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -876,7 +874,6 @@ def loadSettings(filename=SETTINGS_FILE):
 			SAVE_SERVER_SETTING: True,
 			NOTIFICATION_SETTING: False,
 			MENTION_SETTING: False,
-			MENTION_THROTTLE: 60,
 		}
 		return s
 

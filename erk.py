@@ -89,12 +89,13 @@ optgroup = parser.add_argument_group('Options')
 
 optgroup.add_argument("-h", "--help", help=f"Displays help", action="help")
 
-optgroup.add_argument( "--interval", type=int,help="Keep-alive heartbeat interval (120 seconds)", default=120, metavar="NUMBER")
+optgroup.add_argument( "--interval", type=int,help="Keep-alive heartbeat interval (120 seconds)", default=120, metavar="SECONDS")
 optgroup.add_argument( "--maximize", help=f"Display maximized", action="store_true")
 optgroup.add_argument( "--fullscreen", help=f"Displays in full screen mode", action="store_true")
 optgroup.add_argument( "--ontop", help=f"{APPLICATION_NAME}'s window is always on top", action="store_true")
 optgroup.add_argument( "--noprofanity", help=f"Force profanity filter on", action="store_true")
 optgroup.add_argument( "--nocolors", help=f"Force IRC color filter on", action="store_true")
+optgroup.add_argument( "--throttle", type=int,help="Throttle notification sounds (60 seconds)", default=60, metavar="SECONDS")
 
 themegroup = parser.add_argument_group('Themes')
 
@@ -216,6 +217,8 @@ if __name__ == '__main__':
 		erkClient.setWindowFlags(erkClient.windowFlags() | Qt.WindowStaysOnTopHint)
 
 	erkClient.heartbeatInterval = args.interval
+
+	erkClient.mentionLimit = args.throttle
 
 	if args.nossl:
 		erkClient.can_use_ssl = False

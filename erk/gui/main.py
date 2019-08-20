@@ -201,14 +201,11 @@ class ErkGUI(QMainWindow):
 
 		self.nickMention = True
 		self.lastMention = 0
-		self.mentionLimit = 10
+		self.mentionLimit = 60
 
 		self.saveServers = True
 
 		self.settings = loadSettings(self.settingsFile)
-
-		self.nickMention = self.settings[MENTION_SETTING]
-		self.mentionLimit = self.settings[MENTION_THROTTLE]
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
 		self.displayUptime = self.settings[UPTIME_SETTING]
@@ -243,8 +240,15 @@ class ErkGUI(QMainWindow):
 		self.asciimojis = self.settings[ASCIIEMOJI_SETTING]
 		self.windowToolbars = self.settings[CHAT_TOOLBAR_SETTING]
 		self.saveServers = self.settings[SAVE_SERVER_SETTING]
-
 		self.unreadNotify = self.settings[NOTIFICATION_SETTING]
+
+		self.nickMention = self.settings[MENTION_SETTING]
+		# self.mentionLimit = self.settings[MENTION_THROTTLE]
+
+		# try:
+		# 	self.mentionLimit = int(self.mentionLimit)
+		# except:
+		# 	self.mentionLimit = 60
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -922,6 +926,7 @@ class ErkGUI(QMainWindow):
 	def disableSound(self):
 		self.noSound = True
 		self.optNotify.setEnabled(False)
+		self.optMentions.setEnabled(False)
 
 	def disableSystray(self):
 		self.showTray = False
@@ -2951,14 +2956,15 @@ QPushButton::menu-indicator {
 		if self.isMinimized():
 			self.IS_FLASHING = True
 
-		if self.nickMention:
-			if self.connections[serverid].nickname.lower() in message.lower():
-				if self.lastMention > self.uptime:
-					# too soon
-					pass
-				else:
-					self.mentionSound.play()
-					self.lastMention = self.uptime + self.mentionLimit
+		if not self.noSound:
+			if self.nickMention:
+				if self.connections[serverid].nickname.lower() in message.lower():
+					if self.lastMention > self.uptime:
+						# too soon
+						pass
+					else:
+						self.mentionSound.play()
+						self.lastMention = self.uptime + self.mentionLimit
 
 		if self.highlightNickMessages:
 			if self.connections[serverid].nickname.lower() in message.lower():
@@ -3008,6 +3014,16 @@ QPushButton::menu-indicator {
 
 		if self.isMinimized():
 			self.IS_FLASHING = True
+
+		if not self.noSound:
+			if self.nickMention:
+				if self.connections[serverid].nickname.lower() in message.lower():
+					if self.lastMention > self.uptime:
+						# too soon
+						pass
+					else:
+						self.mentionSound.play()
+						self.lastMention = self.uptime + self.mentionLimit
 
 		for w in self.windows[serverid]:
 			if w.window.name == user:
