@@ -301,16 +301,16 @@ class Interface(QMainWindow):
 		self.away = True
 		if msg!=None:
 			d = systemTextDisplay(f"You have been set as away ({msg}).",self.parent.maxnicklen,SYSTEM_COLOR)
-			self.menuAway.setText(f"You are away ({msg}).")
+			#self.menuAway.setText(f"You are away ({msg}).")
 		else:
 			d = systemTextDisplay(f"You have been set as away.",self.parent.maxnicklen,SYSTEM_COLOR)
-			self.menuAway.setText(f"You are away.")
+			#self.menuAway.setText(f"You are away.")
 		self.writeText(d)
-		self.menuAway.setVisible(True)
+		#self.menuAway.setVisible(True)
 
 	def setBack(self):
 		self.away = False
-		self.menuAway.setVisible(False)
+		#self.menuAway.setVisible(False)
 		d = systemTextDisplay(f"You have been set as back.",self.parent.maxnicklen,SYSTEM_COLOR)
 		self.writeText(d)
 
@@ -347,10 +347,6 @@ class Interface(QMainWindow):
 		self.menubar.setVisible(False)
 		self.toolbar.setVisible(True)
 
-	# self.toolbar.addWidget(self.buttonMinimize)
-	# self.toolbar.addWidget(self.buttonMaximize)
-	# self.toolbar.addWidget(self.buttonNormalize)
-
 	def toolbarMoved(self,moved):
 		if moved:
 			# toolbar is floating
@@ -370,6 +366,10 @@ class Interface(QMainWindow):
 			self.buttonMinimize.setIcon(QIcon(BLANK_ICON))
 			self.buttonMaximize.setIcon(QIcon(BLANK_ICON))
 			self.buttonNormalize.setIcon(QIcon(BLANK_ICON))
+
+	def toolbarNameClicked(self):
+		if not self.active:
+			self.showNormal()
 		
 	def buildInterface(self):
 		self.setWindowTitle(" "+self.name)
@@ -407,7 +407,7 @@ class Interface(QMainWindow):
 		self.toolbarName = NameLabel("&nbsp;<b><big>"+self.name+"</big></b>")
 		self.toolbar.addWidget(self.toolbarName)
 
-		self.toolbarName.clicked.connect(self.showNormal)
+		self.toolbarName.clicked.connect(self.toolbarNameClicked)
 
 
 		self.toolbar.addWidget(QLabel(" "))
@@ -417,10 +417,10 @@ class Interface(QMainWindow):
 
 			actMenu = self.menubar.addMenu("Channel")
 
-			self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
-			self.menuAway.setFont(self.parent.fontitalic)
-			actMenu.addAction(self.menuAway)
-			self.menuAway.setVisible(False)
+			# self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
+			# self.menuAway.setFont(self.parent.fontitalic)
+			# actMenu.addAction(self.menuAway)
+			# self.menuAway.setVisible(False)
 
 			self.actModes = actMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),"Modes")
 
@@ -495,11 +495,11 @@ class Interface(QMainWindow):
 			# User window
 			actMenu = self.menubar.addMenu("Private")
 
-			self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
-			actMenu.addAction(self.menuAway)
-			self.menuAway.setVisible(False)
+			# self.menuAway = QAction(QIcon(USER_ICON),"You are away.",self)
+			# actMenu.addAction(self.menuAway)
+			# self.menuAway.setVisible(False)
 
-			actMenu.addSeparator()
+			# actMenu.addSeparator()
 
 			self.actPart = QAction(QIcon(EXIT_ICON),"Close Window",self)
 			self.actPart.triggered.connect(self.close)
@@ -584,9 +584,6 @@ class Interface(QMainWindow):
 		else:
 			self.menubar.setVisible(True)
 			self.toolbar.setVisible(False)
-
-		
-
 
 		if self.is_channel:
 			self.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))

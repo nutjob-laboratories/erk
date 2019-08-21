@@ -63,8 +63,8 @@ PYTHON_VERSION = platform.python_version()
 globals()["erk.data.erkimg"] = __import__("erk.data.erkimg")
 
 APPLICATION_NAME = "Ərk"
-APPLICATION_VERSION = "0.412"
-APPLICATION_MAJOR_VERSION = "0.412"
+APPLICATION_VERSION = "0.413"
+APPLICATION_MAJOR_VERSION = "0.413"
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 NORMAL_APPLICATION_NAME = "Erk"
