@@ -199,7 +199,7 @@ class ErkGUI(QMainWindow):
 
 		self.unreadNotify = False
 
-		self.nickMention = True
+		self.nickMention = False
 		self.lastMention = 0
 		self.mentionLimit = 60
 
@@ -243,12 +243,6 @@ class ErkGUI(QMainWindow):
 		self.unreadNotify = self.settings[NOTIFICATION_SETTING]
 
 		self.nickMention = self.settings[MENTION_SETTING]
-		# self.mentionLimit = self.settings[MENTION_THROTTLE]
-
-		# try:
-		# 	self.mentionLimit = int(self.mentionLimit)
-		# except:
-		# 	self.mentionLimit = 60
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -454,9 +448,9 @@ class ErkGUI(QMainWindow):
 
 		self.optMenu.addSeparator()
 
-		self.faceMenu = self.optMenu.addMenu(QIcon(INTERFACE_ICON),"Interface")
+		#self.faceMenu = self.optMenu.addMenu(QIcon(INTERFACE_ICON),"Interface")
 
-		self.widgetMenu = self.faceMenu.addMenu(QIcon(ERK_ICON),"Features")
+		self.widgetMenu = self.optMenu.addMenu(QIcon(INTERFACE_ICON),"Interface")
 
 		optStatus = QAction("Display status bar",self,checkable=True)
 		optStatus.setChecked(self.enableStatusBar)
@@ -478,19 +472,7 @@ class ErkGUI(QMainWindow):
 		optEnableList.triggered.connect(self.toggleListEnable)
 		self.widgetMenu.addAction(optEnableList)
 
-		self.soundMenu = self.faceMenu.addMenu(QIcon(SOUND_ICON),"Sounds")
-
-		self.optNotify = QAction("Audio notification of unread messages",self,checkable=True)
-		self.optNotify.setChecked(self.unreadNotify)
-		self.optNotify.triggered.connect(self.toggleNotifySound)
-		self.soundMenu.addAction(self.optNotify)
-
-		self.optMentions = QAction("Audio notification of nick mentions",self,checkable=True)
-		self.optMentions.setChecked(self.nickMention)
-		self.optMentions.triggered.connect(self.toggleMentionSound)
-		self.soundMenu.addAction(self.optMentions)
-
-		self.winsetMenu = self.faceMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
+		self.winsetMenu = self.optMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
 
 		topWinTool = QAction("Chat window toolbars",self,checkable=True)
 		topWinTool.setChecked(self.windowToolbars)
@@ -507,7 +489,7 @@ class ErkGUI(QMainWindow):
 		self.winTopic.triggered.connect(self.toggleTopic)
 		self.winsetMenu.addAction(self.winTopic)
 
-		self.faceTrayMenu = self.faceMenu.addMenu(QIcon(SETTINGS_ICON),"System Tray")
+		self.faceTrayMenu = self.optMenu.addMenu(QIcon(SETTINGS_ICON),"System Tray")
 
 		self.optSystray = QAction("Show icon in system tray",self,checkable=True)
 		self.optSystray.setChecked(self.showTray)
@@ -710,6 +692,18 @@ class ErkGUI(QMainWindow):
 			self.sizeFour.setChecked(True)
 		elif self.maxlogsize==500:
 			self.sizeFive.setChecked(True)
+
+		self.soundMenu = self.optMenu.addMenu(QIcon(SOUND_ICON),"Sounds")
+
+		self.optNotify = QAction("Audio notification of unread messages",self,checkable=True)
+		self.optNotify.setChecked(self.unreadNotify)
+		self.optNotify.triggered.connect(self.toggleNotifySound)
+		self.soundMenu.addAction(self.optNotify)
+
+		self.optMentions = QAction("Audio notification of nick mentions",self,checkable=True)
+		self.optMentions.setChecked(self.nickMention)
+		self.optMentions.triggered.connect(self.toggleMentionSound)
+		self.soundMenu.addAction(self.optMentions)
 
 		# "Install" system tray menu
 		if self.menuTray: self.buildTrayMenu()

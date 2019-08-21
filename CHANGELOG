@@ -62,6 +62,8 @@ Version 0.412
 	* Changed wording in the GUI and commandline from "saved server" to "connection history"
 	* Added an option to play a sound when the user's nick is mentioned in public chat
 	* Added a commandline option to throttle audio notifications
+	* Rearranged settings menu
+	* Changed the "font" icon
 
 Version 0.411
 	* Added a commandline flag to force the profanity filter on
