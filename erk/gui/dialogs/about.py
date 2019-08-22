@@ -43,7 +43,7 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle(f" Version {APPLICATION_VERSION}")
+		self.setWindowTitle(DEFAULT_ABOUT_DIALOG_TITLE)
 		self.setWindowIcon(QIcon(ERK_ICON))
 
 		boldfont = self.font()
@@ -117,11 +117,11 @@ class Dialog(QDialog):
 		technology.addLayout(qtBox)
 		technology.addLayout(icons8Box)
 
-		dinfo = QLabel(f"Open Source Internet Relay Chat Client")
+		dinfo = QLabel(f"Version {APPLICATION_VERSION}<br>Open Source Internet Relay Chat Client")
 		dinfo.setAlignment(Qt.AlignCenter)
 		dinfo.setFont(boldfont)
 
-		linfo = QLabel(f"<small>© Dan Hetrick 2019</small><br><a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a><br><a href=\"{OFFICIAL_REPOSITORY}\"><small>Official Erk Repository</small></a>")
+		linfo = QLabel(f"<small>© Dan Hetrick 2019</small><br><a href=\"{OFFICIAL_REPOSITORY}\"><small>Official Erk Repository</small></a>")
 		linfo.setAlignment(Qt.AlignCenter)
 		linfo.setFont(boldfont)
 		linfo.setOpenExternalLinks(True)
@@ -146,17 +146,48 @@ class Dialog(QDialog):
 		hcinfo.setFont(boldfont)
 		hcinfo.setOpenExternalLinks(True)
 
+		gnuinfo = QLabel(f"<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a>")
+		gnuinfo.setAlignment(Qt.AlignCenter)
+		gnuinfo.setFont(boldfont)
+		gnuinfo.setOpenExternalLinks(True)
+
+		techBox = QGroupBox()
+		techBox.setAlignment(Qt.AlignHCenter)
+
+		techLayout = QVBoxLayout()
+		techLayout.addLayout(technology)
+
+		techLayout.addWidget(scinfo)
+		techLayout.addWidget(eminfo)
+		techLayout.addWidget(aminfo)
+		techLayout.addWidget(hcinfo)
+		
+		techBox.setLayout(techLayout)
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(logo)
 		finalLayout.addWidget(dinfo)
-		finalLayout.addWidget(QLabel(" "))
-		finalLayout.addLayout(technology)
-		finalLayout.addWidget(scinfo)
-		finalLayout.addWidget(eminfo)
-		finalLayout.addWidget(aminfo)
-		finalLayout.addWidget(hcinfo)
-		finalLayout.addWidget(QLabel(" "))
+		
+
+		#finalLayout.addWidget(QLabel(" "))
+
+		#finalLayout.addStretch()
+
+		# finalLayout.addLayout(technology)
+		# finalLayout.addWidget(scinfo)
+		# finalLayout.addWidget(eminfo)
+		# finalLayout.addWidget(aminfo)
+		# finalLayout.addWidget(hcinfo)
+
+		finalLayout.addWidget(techBox)
+
+		finalLayout.addWidget(gnuinfo)
 		finalLayout.addWidget(linfo)
+
+
+		#finalLayout.addWidget(QLabel(" "))
+		#finalLayout.addStretch()
+		
 		
 		
 		self.setWindowFlags(self.windowFlags()

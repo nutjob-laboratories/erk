@@ -975,7 +975,7 @@ class ErkGUI(QMainWindow):
 		try:
 			w = subWindow.windowTitle()
 			# Ignore the about window
-			if w==f" Version {APPLICATION_VERSION}":
+			if w==DEFAULT_ABOUT_DIALOG_TITLE:
 				return
 			self.setWindowTitle(w)
 			for c in self.connections:
