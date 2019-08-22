@@ -2,6 +2,10 @@ Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window
 	* Removed "away" status display in window's menu
 	* Fixed a bug where away status was not set properly
+	* Timestamps can now optionally use a 12-hour clock instead of a 24-hour clock
+	* Added an option to display (or not to display) seconds in timestamps
+	* Moved timestamp settings to their own submenu in the "Settings" menu
+	* Changed how timestamps are rendered
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

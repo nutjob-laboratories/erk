@@ -6,7 +6,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.00**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.01**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 

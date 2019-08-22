@@ -682,8 +682,17 @@ class Interface(QMainWindow):
 						timestamp = line[LOG_TIMESTAMP]
 
 						if self.displayTimestamp:
-							pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
-							pretty = "&nbsp;" + pretty + "&nbsp;"
+							#pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+							if self.parent.timestampSeconds:
+								secs = ':%S'
+							else:
+								secs = ''
+							if self.parent.timestamp24:
+								pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M' + secs)
+							else:
+								pretty = datetime.fromtimestamp(timestamp).strftime('%I:%M' + secs)
+
+							#pretty = "&nbsp;" + pretty + "&nbsp;"
 							tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
 							text = text.replace("!TIMESTAMP!",tt)
 						else:
@@ -730,8 +739,19 @@ class Interface(QMainWindow):
 
 				if self.displayTimestamp:
 					# pretty = datetime.utcfromtimestamp(timestamp).strftime('%H:%M:%S')
-					pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
-					pretty = "&nbsp;" + pretty + "&nbsp;"
+
+					#pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+
+					if self.parent.timestampSeconds:
+						secs = ':%S'
+					else:
+						secs = ''
+					if self.parent.timestamp24:
+						pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M' + secs)
+					else:
+						pretty = datetime.fromtimestamp(timestamp).strftime('%I:%M' + secs)
+
+					#pretty = "&nbsp;" + pretty + "&nbsp;"
 					tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
 					text = text.replace("!TIMESTAMP!",tt)
 				else:
@@ -926,8 +946,16 @@ class Interface(QMainWindow):
 		self.log.append([t,text])
 
 		if self.displayTimestamp:
-			pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
-			pretty = "&nbsp;" + pretty + "&nbsp;"
+			#pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
+			if self.parent.timestampSeconds:
+				secs = ':%S'
+			else:
+				secs = ''
+			if self.parent.timestamp24:
+				pretty = datetime.fromtimestamp(t).strftime('%H:%M' + secs)
+			else:
+				pretty = datetime.fromtimestamp(t).strftime('%I:%M' + secs)
+			#pretty = "&nbsp;" + pretty + "&nbsp;"
 			tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
 			text = text.replace("!TIMESTAMP!",tt)
 		else:

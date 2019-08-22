@@ -205,6 +205,10 @@ class ErkGUI(QMainWindow):
 
 		self.saveServers = True
 
+		self.timestamp24 = True
+
+		self.timestampSeconds = True
+
 		self.settings = loadSettings(self.settingsFile)
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
@@ -243,6 +247,10 @@ class ErkGUI(QMainWindow):
 		self.unreadNotify = self.settings[NOTIFICATION_SETTING]
 
 		self.nickMention = self.settings[MENTION_SETTING]
+
+		self.timestamp24 = self.settings[USE_24_TIMESTAMP_SETTING]
+
+		self.timestampSeconds = self.settings[TIMESTAMP_DISPLAY_SECONDS_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -543,11 +551,6 @@ class ErkGUI(QMainWindow):
 		optLinks.triggered.connect(self.toggleLinks)
 		self.msgMenu.addAction(optLinks)
 
-		optUptime = QAction("Display timestamps",self,checkable=True)
-		optUptime.setChecked(self.displayTimestamp)
-		optUptime.triggered.connect(self.toggleTimestamp)
-		self.msgMenu.addAction(optUptime)
-
 		optHightlightNick = QAction("Highlight messages containing your nickname",self,checkable=True)
 		optHightlightNick.setChecked(self.highlightNickMessages)
 		optHightlightNick.triggered.connect(self.toggleNickHighlight)
@@ -692,6 +695,23 @@ class ErkGUI(QMainWindow):
 			self.sizeFour.setChecked(True)
 		elif self.maxlogsize==500:
 			self.sizeFive.setChecked(True)
+
+		self.timestampSettings = self.optMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
+
+		optUptime = QAction("Display timestamps",self,checkable=True)
+		optUptime.setChecked(self.displayTimestamp)
+		optUptime.triggered.connect(self.toggleTimestamp)
+		self.timestampSettings.addAction(optUptime)
+
+		opt24Timestamp = QAction("Use 24-hour clock for timestamps",self,checkable=True)
+		opt24Timestamp.setChecked(self.timestamp24)
+		opt24Timestamp.triggered.connect(self.toggle24Timestamp)
+		self.timestampSettings.addAction(opt24Timestamp)
+
+		optTimestampSeconds = QAction("Display seconds in timestamps",self,checkable=True)
+		optTimestampSeconds.setChecked(self.timestampSeconds)
+		optTimestampSeconds.triggered.connect(self.toggleTimestampSeconds)
+		self.timestampSettings.addAction(optTimestampSeconds)
 
 		self.soundMenu = self.optMenu.addMenu(QIcon(SOUND_ICON),"Sounds")
 
@@ -1165,8 +1185,16 @@ class ErkGUI(QMainWindow):
 
 		# Add timestamp
 		t = datetime.timestamp(datetime.now())
-		pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
-		pretty = "&nbsp;" + pretty + "&nbsp;"
+		#pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
+		if self.timestampSeconds:
+			secs = ':%S'
+		else:
+			secs = ''
+		if self.timestamp24:
+			pretty = datetime.fromtimestamp(t).strftime('%H:%M' + secs)
+		else:
+			pretty = datetime.fromtimestamp(t).strftime('%I:%M' + secs)
+		#pretty = "&nbsp;" + pretty + "&nbsp;"
 		tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
 
 		self.cLog.append([t,text])
@@ -1319,6 +1347,35 @@ class ErkGUI(QMainWindow):
 			self.optShowLog.setIcon(QIcon(NOCONSOLE_ICON))
 		# self.settings[DISPLAY_LOG_SETTING] = self.displayConnectionLog
 		# saveSettings(self.settings,self.settingsFile)
+
+	def toggleTimestampSeconds(self):
+		if self.timestampSeconds:
+			self.timestampSeconds = False
+		else:
+			self.timestampSeconds = True
+
+		for c in self.connections:
+			for w in self.windows[c]:
+				if w.window.is_channel:
+					w.window.rerenderTextDisplay()
+
+		self.settings[TIMESTAMP_DISPLAY_SECONDS_SETTING] = self.timestampSeconds
+		saveSettings(self.settings,self.settingsFile)
+
+
+	def toggle24Timestamp(self):
+		if self.timestamp24:
+			self.timestamp24 = False
+		else:
+			self.timestamp24 = True
+
+		for c in self.connections:
+			for w in self.windows[c]:
+				if w.window.is_channel:
+					w.window.rerenderTextDisplay()
+
+		self.settings[USE_24_TIMESTAMP_SETTING] = self.timestamp24
+		saveSettings(self.settings,self.settingsFile)
 
 	def togglePrettyUsers(self):
 		if self.prettyUserlist:

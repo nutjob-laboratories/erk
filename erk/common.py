@@ -175,7 +175,9 @@ NEW_CHAT_DIVIDER_BACKGROUND_COLOR = "?_!BAK!_?"
 
 NEW_CHAT_DIVIDER = f"""<table style="width: 100%; height: 5px;" border="0"><tbody><tr><td style="background-color: {NEW_CHAT_DIVIDER_BACKGROUND_COLOR}; font-size:small;"><i>&nbsp; <font color="{NEW_CHAT_DIVIDER_TEXT_COLOR}"> New chat </font> &nbsp;</i></td></tr></tbody></table>"""
 
-TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:center;"><i>!TIME!</i></td><td style="font-size:small;">&nbsp;</td>"""
+#TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:center;">[!TIME!]</td><td style="font-size:small;">&nbsp;</td>"""
+
+TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;">[!TIME!]</td><td style="font-size:small;">&nbsp;</td>"""
 
 SYSTEM_MESSAGE_TEMPLATE = f"""
 <table style="width: 100%;" border="0">
@@ -285,7 +287,11 @@ SAVE_SERVER_SETTING = "save_servers"
 NOTIFICATION_SETTING = "play_unread_notification"
 
 MENTION_SETTING = "play_mention_notification"
-MENTION_THROTTLE = 10
+MENTION_THROTTLE = 60
+
+USE_24_TIMESTAMP_SETTING = "use_24hr_timestamp"
+
+TIMESTAMP_DISPLAY_SECONDS_SETTING = "display_timestamp_seconds"
 
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
@@ -364,6 +370,8 @@ EMOJI_ICON = ":/emoji.png"
 INTERFACE_ICON = ":/interface.png"
 JSON_ICON = ":/json.png"
 SOUND_ICON = ":/sounds.png"
+
+TIMESTAMP_ICON = ":/timestamp.png"
 
 ERK_ICON = ":/core/erk.png"
 BLANK_ICON = ":/core/blank.png"
@@ -829,6 +837,8 @@ def updateSettings(s):
 	if not SAVE_SERVER_SETTING in s: s[SAVE_SERVER_SETTING] = True
 	if not NOTIFICATION_SETTING in s: s[NOTIFICATION_SETTING] = False
 	if not MENTION_SETTING in s: s[MENTION_SETTING] = False
+	if not USE_24_TIMESTAMP_SETTING in s: s[USE_24_TIMESTAMP_SETTING] = True
+	if not TIMESTAMP_DISPLAY_SECONDS_SETTING in s: s[TIMESTAMP_DISPLAY_SECONDS_SETTING] = True
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -874,6 +884,8 @@ def loadSettings(filename=SETTINGS_FILE):
 			SAVE_SERVER_SETTING: True,
 			NOTIFICATION_SETTING: False,
 			MENTION_SETTING: False,
+			USE_24_TIMESTAMP_SETTING: True,
+			TIMESTAMP_DISPLAY_SECONDS_SETTING: True,
 		}
 		return s
 
