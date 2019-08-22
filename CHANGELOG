@@ -7,6 +7,7 @@ Version 0.413
 	* Moved timestamp settings to their own submenu in the "Settings" menu
 	* Changed how timestamps are rendered
 	* Changed the "About" dialog's layout
+	* Fixed a bug where timestamps wouldn't change when settings changed
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

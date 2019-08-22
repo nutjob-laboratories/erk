@@ -1180,6 +1180,41 @@ class ErkGUI(QMainWindow):
 			for w in self.windows[c]:
 				w.window.writeText(text)
 
+	def rerenderLog(self):
+		self.logTxt.clear()
+
+		for line in self.cLog:
+			if len(line[LOG_TEXT])>0:
+				text = line[LOG_TEXT]
+				timestamp = line[LOG_TIMESTAMP]
+
+				if timestamp == 0:
+					# Apply colors
+					text = self.applyColors(text,self.display)
+					self.logTxt.append(text)
+					continue
+
+				if self.timestampSeconds:
+					secs = ':%S'
+				else:
+					secs = ''
+				if self.timestamp24:
+					pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M' + secs)
+				else:
+					pretty = datetime.fromtimestamp(timestamp).strftime('%I:%M' + secs)
+
+				tt = TIMESTAMP_TEMPLATE.replace("!TIME!",pretty)
+				if self.displayTimestamp:
+					text = text.replace("!TIMESTAMP!",tt)
+				else:
+					text = text.replace("!TIMESTAMP!","")
+
+				# Apply colors
+				text = self.applyColors(text,self.display)
+				self.logTxt.append(text)
+				self.logTxt.moveCursor(QTextCursor.End)
+
+
 	def writeToLog(self,text):
 		text = self.applyColors(text,self.display)
 
@@ -1359,6 +1394,8 @@ class ErkGUI(QMainWindow):
 				if w.window.is_channel:
 					w.window.rerenderTextDisplay()
 
+		self.rerenderLog()
+
 		self.settings[TIMESTAMP_DISPLAY_SECONDS_SETTING] = self.timestampSeconds
 		saveSettings(self.settings,self.settingsFile)
 
@@ -1373,6 +1410,8 @@ class ErkGUI(QMainWindow):
 			for w in self.windows[c]:
 				if w.window.is_channel:
 					w.window.rerenderTextDisplay()
+
+		self.rerenderLog()
 
 		self.settings[USE_24_TIMESTAMP_SETTING] = self.timestamp24
 		saveSettings(self.settings,self.settingsFile)
@@ -1550,6 +1589,8 @@ class ErkGUI(QMainWindow):
 				for w in self.windows[s]:
 					w.window.displayTimestamp = True
 					w.window.rerenderTextDisplay()
+
+		self.rerenderLog()
 
 		self.settings[TIMESTAMP_SETTING] = self.displayTimestamp
 		saveSettings(self.settings,self.settingsFile)
