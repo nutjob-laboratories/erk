@@ -1,1 +1,0 @@
-Quirc stores connection, user, and client settings in this directory.

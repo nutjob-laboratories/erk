@@ -99,7 +99,7 @@ SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 # User settings files
 LAST_SERVER_INFORMATION_FILE = os.path.join(SETTINGS_DIRECTORY, "lastserver.json")
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
-IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
+IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignored.json")
 SAVED_SERVERS_FILE = os.path.join(SETTINGS_DIRECTORY, "history.json")
 USER_AUTOJOIN_FILE = os.path.join(SETTINGS_DIRECTORY, "autojoin.json")
 

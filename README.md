@@ -26,6 +26,7 @@
 * Command/nick/channel auto-completion
 * A theme engine using [QSS](https://doc.qt.io/qt-5/stylesheet-syntax.html) and [JSON](https://www.json.org/) (nearly every aspect of the client, from widgets to icons, can be customized)
 * An extremely customizable interface
+* All configuration files use JSON
 * Optional profanity filter
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) support
 * [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support

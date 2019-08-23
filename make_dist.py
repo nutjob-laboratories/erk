@@ -50,8 +50,8 @@ shutil.copy("./erk.ico", "./dist/erk.ico")
 shutil.copy("./CHANGELOG", "./dist/CHANGELOG")
 shutil.copy("./LICENSE", "./dist/LICENSE")
 shutil.copy("./README.md", "./dist/README.md")
-shutil.copy("./logs/logs.txt", "./dist/logs/logs.txt")
-shutil.copy("./settings/settings.txt", "./dist/settings/settings.txt")
+#shutil.copy("./logs/logs.txt", "./dist/logs/logs.txt")
+#shutil.copy("./settings/settings.txt", "./dist/settings/settings.txt")
 
 
 #shutil.copy("./themes/themes.txt", "./dist/themes/themes.txt")
