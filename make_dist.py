@@ -44,6 +44,9 @@ os.system("compile_resources.bat")
 shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./themes", "./dist/themes",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
+shutil.copytree("./emoji", "./dist/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./spellchecker", "./dist/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+
 shutil.copy("./erk.py", "./dist/erk.py")
 shutil.copy("./erk.ico", "./dist/erk.ico")
 

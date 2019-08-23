@@ -12,6 +12,7 @@ Version 0.413
 	* Channel autojoins are now saved in a single JSON file in the "settings" directory
 	* Removed directory placeholders (necessary directories are created if needed)
 	* Changed file name of "ignore.json" to "ignored.json"
+	* Fixed distribution build script (several needed libraries weren't being added to it)
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client
