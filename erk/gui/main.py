@@ -289,6 +289,8 @@ class ErkGUI(QMainWindow):
 
 		self.noSaved = False
 
+		self.do_not_rerender_log = True
+
 		# Load notification sound
 		self.notifySound = QSound(NOTIFICATION_SOUND)
 		self.mentionSound = QSound(MENTION_SOUND)
@@ -874,6 +876,8 @@ class ErkGUI(QMainWindow):
 			self.writeToLog(f"<i>&nbsp;&nbsp;\"It's how you pronounce IRC\"</i>")
 			pass
 
+		self.do_not_rerender_log = True
+
 
 	def updateStatusBar(self):
 		servers = 0
@@ -1181,6 +1185,7 @@ class ErkGUI(QMainWindow):
 				w.window.writeText(text)
 
 	def rerenderLog(self):
+		if self.do_not_rerender_log: return
 		self.logTxt.clear()
 
 		for line in self.cLog:
@@ -1240,6 +1245,8 @@ class ErkGUI(QMainWindow):
 
 		self.logTxt.append(text)
 		self.logTxt.moveCursor(QTextCursor.End)
+
+		self.do_not_rerender_log = False
 
 	def serverMessage(self,serverid,channel,message):
 		for w in self.windows[serverid]:

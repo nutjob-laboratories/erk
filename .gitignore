@@ -25,3 +25,5 @@ settings/user/servers.conf
 notification.wav
 settings/user/history.json
 settings/user/autojoin.json
+settings/autojoin.json
+settings/history.json
