@@ -8,6 +8,8 @@ Version 0.413
 	* Changed how timestamps are rendered
 	* Changed the "About" dialog's layout
 	* Fixed a bug where timestamps wouldn't change when settings changed
+	* Moved all setting files in the "settings/user" directory to the "settings" directory
+	* Channel autojoins are now saved in a single JSON file in the "settings" directory
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

@@ -24,3 +24,4 @@ NETWORK_LINKS.txt
 settings/user/servers.conf
 notification.wav
 settings/user/history.json
+settings/user/autojoin.json

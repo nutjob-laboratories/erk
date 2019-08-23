@@ -90,20 +90,20 @@ INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
-AUTOJOIN_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "autojoin")
 THEMES_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "themes")
 
 # Files
 DISPLAY_CONFIGURATION = os.path.join(SETTINGS_DIRECTORY, "text.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
-EDITOR_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "kod.json")
 
 # User settings files
-USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
-LAST_SERVER_INFORMATION_FILE = os.path.join(USER_INFO_DIRECTORY, "lastserver.json")
-USER_FILE = os.path.join(USER_INFO_DIRECTORY, "user.json")
-IGNORE_FILE = os.path.join(USER_INFO_DIRECTORY, "ignore.json")
-SAVED_SERVERS_FILE = os.path.join(USER_INFO_DIRECTORY, "history.json")
+#USER_INFO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
+
+LAST_SERVER_INFORMATION_FILE = os.path.join(SETTINGS_DIRECTORY, "lastserver.json")
+USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
+IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
+SAVED_SERVERS_FILE = os.path.join(SETTINGS_DIRECTORY, "history.json")
+USER_AUTOJOIN_FILE = os.path.join(SETTINGS_DIRECTORY, "autojoin.json")
 
 # Module data files
 ERK_DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
@@ -146,8 +146,8 @@ THEME_JSON_FILE_NAME = "text.json"
 
 # Create any necessary directories if they don't exist
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
-if not os.path.isdir(AUTOJOIN_DIRECTORY): os.mkdir(AUTOJOIN_DIRECTORY)
-if not os.path.isdir(USER_INFO_DIRECTORY): os.mkdir(USER_INFO_DIRECTORY)
+#if not os.path.isdir(AUTOJOIN_DIRECTORY): os.mkdir(AUTOJOIN_DIRECTORY)
+#if not os.path.isdir(USER_INFO_DIRECTORY): os.mkdir(USER_INFO_DIRECTORY)
 if not os.path.isdir(THEMES_DIRECTORY): os.mkdir(THEMES_DIRECTORY)
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
@@ -741,19 +741,68 @@ def is_integer(n):
 		return False
 	return True
 
+# NEW AUTOJOIN CODE
+
+# USER_AUTOJOIN_FILE
+
 def save_autojoin_channels(server,chans):
-	AUTOJOIN_FILE = os.path.join(AUTOJOIN_DIRECTORY, f"{server}.json")
-	with open(AUTOJOIN_FILE, "w") as write_data:
-		json.dump(chans, write_data, indent=4, sort_keys=True)
+	if os.path.isfile(USER_AUTOJOIN_FILE):
+		with open(USER_AUTOJOIN_FILE, "r") as read_server:
+			data = json.load(read_server)
+
+		out = []
+		for entry in data:
+			if entry["host"] == server:
+				schans = entry["channels"]
+				nentry = {
+					"host": server,
+					"channels": chans
+				}
+				out.append(nentry)
+			else:
+				out.append(entry)
+
+		with open(USER_AUTOJOIN_FILE, "w") as write_data:
+			json.dump(out, write_data, indent=4, sort_keys=True)
+	else:
+		entry = {
+			"host": server,
+			"channels": chans
+		}
+		out = [ entry ]
+
+		with open(USER_AUTOJOIN_FILE, "w") as write_data:
+			json.dump(out, write_data, indent=4, sort_keys=True)
+
 
 def get_autojoins(server):
-	AUTOJOIN_FILE = os.path.join(AUTOJOIN_DIRECTORY, f"{server}.json")
-	if os.path.isfile(AUTOJOIN_FILE):
-		with open(AUTOJOIN_FILE, "r") as read_server:
+	if os.path.isfile(USER_AUTOJOIN_FILE):
+		with open(USER_AUTOJOIN_FILE, "r") as read_server:
 			data = json.load(read_server)
-			return data
+
+		for entry in data:
+			if entry["host"] == server:
+				return entry["channels"]
+
+		return []
 	else:
 		return []
+
+# END NEW AUTOJOIN CODE
+
+# def save_autojoin_channels(server,chans):
+# 	AUTOJOIN_FILE = os.path.join(AUTOJOIN_DIRECTORY, f"{server}.json")
+# 	with open(AUTOJOIN_FILE, "w") as write_data:
+# 		json.dump(chans, write_data, indent=4, sort_keys=True)
+
+# def get_autojoins(server):
+# 	AUTOJOIN_FILE = os.path.join(AUTOJOIN_DIRECTORY, f"{server}.json")
+# 	if os.path.isfile(AUTOJOIN_FILE):
+# 		with open(AUTOJOIN_FILE, "r") as read_server:
+# 			data = json.load(read_server)
+# 			return data
+# 	else:
+# 		return []
 
 def save_last_server(host,port,password,ssl):
 	sinfo = {
