@@ -14,6 +14,7 @@ Version 0.413
 	* Changed file name of "ignore.json" to "ignored.json"
 	* Fixed distribution build script (several needed libraries weren't being added to it)
 	* The connection will not be rerendered if nothing has been written to it
+	* Fixed a bug where autojoin channels would not be stored (or used)
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

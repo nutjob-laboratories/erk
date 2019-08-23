@@ -747,25 +747,38 @@ def save_autojoin_channels(server,chans):
 			data = json.load(read_server)
 
 		out = []
+		found = False
 		for entry in data:
-			if entry["host"] == server:
+			if entry["host"].lower() == server.lower():
+				found = True
 				schans = entry["channels"]
-				nentry = {
+				for c in chans:
+					schans.append(c)
+				schans = list(dict.fromkeys(schans))
+				ent = {
 					"host": server,
-					"channels": chans
+					"channels": schans
 				}
-				out.append(nentry)
+				out.append(ent)
 			else:
 				out.append(entry)
+
+		if not found:
+			ent = {
+				"host": server,
+				"channels": chans
+			}
+			out.append(ent)
 
 		with open(USER_AUTOJOIN_FILE, "w") as write_data:
 			json.dump(out, write_data, indent=4, sort_keys=True)
 	else:
-		entry = {
+		out = []
+		ent = {
 			"host": server,
 			"channels": chans
 		}
-		out = [ entry ]
+		out.append(ent)
 
 		with open(USER_AUTOJOIN_FILE, "w") as write_data:
 			json.dump(out, write_data, indent=4, sort_keys=True)
