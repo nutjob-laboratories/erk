@@ -126,6 +126,7 @@ forbidGroup.add_argument( "--nothemes", help=f"Disable themes", action="store_tr
 forbidGroup.add_argument( "--nosystray", help=f"Disable system tray icon", action="store_true")
 forbidGroup.add_argument( "--nosound", help=f"Disable audio notifications", action="store_true")
 forbidGroup.add_argument( "--nohistory", help=f"Disable loading and saving server history", action="store_true")
+forbidGroup.add_argument( "--noautojoin", help=f"Disable autojoining channels", action="store_true")
 
 logGroup = parser.add_argument_group('Log exporting')
 
@@ -254,6 +255,9 @@ if __name__ == '__main__':
 
 	if args.nohistory:
 		erkClient.disableSave()
+
+	if args.noautojoin:
+		erkClient.no_autojoin = True
 
 	user = get_user()
 	

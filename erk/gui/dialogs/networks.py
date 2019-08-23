@@ -343,6 +343,8 @@ class Dialog(QDialog):
 		chanBox = QGroupBox("Auto-Join Channels")
 		chanBox.setLayout(autoJoinLayout)
 
+		if self.parent.no_autojoin: chanBox.setVisible(False)
+
 		#############################
 
 		# Buttons

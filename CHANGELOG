@@ -17,6 +17,7 @@ Version 0.413
 	* Fixed a bug where autojoin channels would not be stored (or used)
 	* Channel keys are no longer displayed in the autojoin list display
 	* Channel key is masked when adding a channel to autojoin
+	* Added a commandline option to disable channel autojoins
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

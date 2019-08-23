@@ -291,6 +291,8 @@ class ErkGUI(QMainWindow):
 
 		self.do_not_rerender_log = True
 
+		self.no_autojoin = False
+
 		# Load notification sound
 		self.notifySound = QSound(NOTIFICATION_SOUND)
 		self.mentionSound = QSound(MENTION_SOUND)
@@ -2968,14 +2970,15 @@ QPushButton::menu-indicator {
 		d = systemTextDisplay(f"Registered with {serverhost}!",self.maxnicklen,SYSTEM_COLOR)
 		self.writeToLog(d)
 
-		autojoins = get_autojoins(self.connections[serverid].host)
-		for c in autojoins:
-			p = c.split(AUTOJOIN_DELIMITER)
-			if len(p)==2:
-				# got a key
-				self.connections[serverid].join(p[0],p[1])
-			else:
-				self.connections[serverid].join(c)
+		if not self.no_autojoin:
+			autojoins = get_autojoins(self.connections[serverid].host)
+			for c in autojoins:
+				p = c.split(AUTOJOIN_DELIMITER)
+				if len(p)==2:
+					# got a key
+					self.connections[serverid].join(p[0],p[1])
+				else:
+					self.connections[serverid].join(c)
 
 		self.timers[serverid].start()	# Start the server uptime counter
 
