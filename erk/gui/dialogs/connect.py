@@ -53,6 +53,8 @@ class HostQLineEdit(QLineEdit):
 		else:
 			aj = []
 
+		self.AUTOJOINS = aj
+
 		for c in aj:
 			p = c.split('/')
 			if len(p)==2:
