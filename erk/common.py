@@ -291,6 +291,8 @@ USE_24_TIMESTAMP_SETTING = "use_24hr_timestamp"
 
 TIMESTAMP_DISPLAY_SECONDS_SETTING = "display_timestamp_seconds"
 
+RECONNECT_SETTING = "reconnect_on_disconnect"
+
 DEFAULT_WINDOW_TITLE = f" {APPLICATION_NAME}"
 
 IRC_00 = "#FFFFFF"
@@ -896,6 +898,7 @@ def updateSettings(s):
 	if not MENTION_SETTING in s: s[MENTION_SETTING] = False
 	if not USE_24_TIMESTAMP_SETTING in s: s[USE_24_TIMESTAMP_SETTING] = True
 	if not TIMESTAMP_DISPLAY_SECONDS_SETTING in s: s[TIMESTAMP_DISPLAY_SECONDS_SETTING] = True
+	if not RECONNECT_SETTING in s: s[RECONNECT_SETTING] = False
 	return s
 
 def loadSettings(filename=SETTINGS_FILE):
@@ -943,6 +946,7 @@ def loadSettings(filename=SETTINGS_FILE):
 			MENTION_SETTING: False,
 			USE_24_TIMESTAMP_SETTING: True,
 			TIMESTAMP_DISPLAY_SECONDS_SETTING: True,
+			RECONNECT_SETTING: False,
 		}
 		return s
 

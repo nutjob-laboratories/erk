@@ -72,8 +72,11 @@ class Dialog(QDialog):
 
 		if self.RECONNECT:
 			recon = 1
+			self.parent.settings[RECONNECT_SETTING] = True
 		else:
 			recon = 0
+			self.parent.settings[RECONNECT_SETTING] = False
+		saveSettings(self.parent.settings,self.parent.settingsFile)
 
 		if len(h)!=4:
 			# saved server, use saved password
@@ -247,6 +250,8 @@ class Dialog(QDialog):
 			self.connType.setText(f"Connect via TCP/IP to port {self.StoredData[self.StoredServer][1]}")
 
 		self.recon = QCheckBox("Reconnect on disconnection",self)
+		self.recon.setChecked(self.parent.settings[RECONNECT_SETTING])
+		self.RECONNECT = self.parent.settings[RECONNECT_SETTING]
 		self.recon.stateChanged.connect(self.clickRecon)
 
 		fstoreLayout = QVBoxLayout()

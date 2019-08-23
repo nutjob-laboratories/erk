@@ -209,6 +209,8 @@ class ErkGUI(QMainWindow):
 
 		self.timestampSeconds = True
 
+		self.reconnectOnDisconnect = False
+
 		self.settings = loadSettings(self.settingsFile)
 
 		self.displayTimestamp = self.settings[TIMESTAMP_SETTING]
@@ -251,6 +253,8 @@ class ErkGUI(QMainWindow):
 		self.timestamp24 = self.settings[USE_24_TIMESTAMP_SETTING]
 
 		self.timestampSeconds = self.settings[TIMESTAMP_DISPLAY_SECONDS_SETTING]
+
+		self.reconnectOnDisconnect = self.settings[RECONNECT_SETTING]
 
 		self.maxnicklen = MAX_DEFAULT_NICKNAME_SIZE
 
@@ -1012,8 +1016,13 @@ class ErkGUI(QMainWindow):
 
 			if recon==1:
 				sreconnect = True
+				#self.reconnectOnDisconnect = True
 			else:
 				sreconnect = False
+				#self.reconnectOnDisconnect = False
+
+			# self.settings[RECONNECT_SETTING] = self.reconnectOnDisconnect
+			# saveSettings(self.settings,self.settingsFile)
 
 		if use_ssl==1:
 			use_ssl = True

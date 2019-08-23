@@ -94,8 +94,12 @@ class Dialog(QDialog):
 			use_ssl = 0
 		if self.RECONNECT:
 			recon = 1
+			self.parent.settings[RECONNECT_SETTING] = True
 		else:
 			recon = 0
+			self.parent.settings[RECONNECT_SETTING] = False
+		saveSettings(self.parent.settings,self.parent.settingsFile)
+		
 		retval = map(str, [self.nick.text(), self.username.text(), self.realname.text(), self.alternative.text(), self.host.text(), self.port.text(), self.password.text()])
 		retval = list(retval)
 		retval.append(str(use_ssl))
@@ -194,7 +198,12 @@ class Dialog(QDialog):
 		self.ssl.stateChanged.connect(self.clickSSL)
 
 		self.recon = QCheckBox("Reconnect on disconnection",self)
+		self.recon.setChecked(self.parent.settings[RECONNECT_SETTING])
+		self.RECONNECT = self.parent.settings[RECONNECT_SETTING]
 		self.recon.stateChanged.connect(self.clickRecon)
+
+		# self.settings[RECONNECT_SETTING]
+
 
 		if last_server["ssl"]:
 			self.ssl.toggle()
