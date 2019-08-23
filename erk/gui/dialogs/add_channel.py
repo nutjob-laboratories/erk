@@ -53,11 +53,13 @@ class Dialog(QDialog):
 			item = QListWidgetItem(f"{channel}")
 			item.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 			self.parent.autoChannels.addItem(item)
+			self.parent.AUTOJOINS.append(f"{channel}")
 
 		else:
-			item = QListWidgetItem(f"{channel}{AUTOJOIN_DELIMITER}{key}")
+			item = QListWidgetItem(f"{channel}")
 			item.setIcon(QIcon(LOCKED_ICON))
 			self.parent.autoChannels.addItem(item)
+			self.parent.AUTOJOINS.append(f"{channel}{AUTOJOIN_DELIMITER}{key}")
 
 		self.close()
 
@@ -79,6 +81,7 @@ class Dialog(QDialog):
 		keyLayout = QHBoxLayout()
 		self.keyLabel = QLabel("Key")
 		self.key = QLineEdit()
+		self.key.setEchoMode(QLineEdit.Password)
 		keyLayout.addWidget(self.keyLabel)
 		keyLayout.addStretch()
 		keyLayout.addWidget(self.key)

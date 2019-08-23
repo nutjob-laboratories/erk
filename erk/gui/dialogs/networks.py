@@ -54,9 +54,9 @@ class Dialog(QDialog):
 
 	def return_strings(self):
 
-		items = [] 
-		for index in range(self.autoChannels.count()): 
-			 items.append(self.autoChannels.item(index).text())
+		# items = [] 
+		# for index in range(self.autoChannels.count()): 
+		# 	 items.append(self.autoChannels.item(index).text())
 
 		h = self.StoredData[self.StoredServer]
 		if "ssl" in h[3]:
@@ -66,7 +66,9 @@ class Dialog(QDialog):
 		host = h[0]
 		port = int(h[1])
 
-		if len(items)>0: save_autojoin_channels(host,items)
+		#if len(items)>0: save_autojoin_channels(host,items)
+
+		if len(self.AUTOJOINS)>0: save_autojoin_channels(host,self.AUTOJOINS)
 
 		if self.RECONNECT:
 			recon = 1
@@ -97,10 +99,11 @@ class Dialog(QDialog):
 
 		self.autoChannels.clear()
 		host = self.StoredData[self.StoredServer][0]
-		for c in get_autojoins(host):
+		self.AUTOJOINS = get_autojoins(host)
+		for c in self.AUTOJOINS:
 			p = c.split('/')
 			if len(p)==2:
-				item = QListWidgetItem(c)
+				item = QListWidgetItem(p[0])
 				item.setIcon(QIcon(LOCKED_ICON))
 				self.autoChannels.addItem(item)
 			else:
@@ -116,10 +119,26 @@ class Dialog(QDialog):
 		self.removeSel()
 
 	def removeSel(self):
-	    listItems=self.autoChannels.selectedItems()
-	    if not listItems: return        
-	    for item in listItems:
-	       self.autoChannels.takeItem(self.autoChannels.row(item))
+		listItems=self.autoChannels.selectedItems()
+		if not listItems: return        
+		for item in listItems:
+			self.autoChannels.takeItem(self.autoChannels.row(item))
+
+			e = item.text()
+			clean = []
+			for i in self.AUTOJOINS:
+				p = i.split(AUTOJOIN_DELIMITER)
+				if len(p)==2:
+					if p[0] == e:
+						continue
+					else:
+						clean.append(i)
+				else:
+					if i == e:
+						continue
+					else:
+						clean.append(i)
+			self.AUTOJOINS = clean
 
 	def clickRecon(self):
 		if self.RECONNECT:
@@ -292,10 +311,12 @@ class Dialog(QDialog):
 		self.autoChannels = QListWidget(self)
 		self.autoChannels.setMaximumWidth(175)
 		#self.parent.autoChannels.addItem(f"{channel}")
-		for c in get_autojoins(inithost):
+		self.AUTOJOINS = get_autojoins(inithost)
+		# for c in get_autojoins(inithost):
+		for c in self.AUTOJOINS:
 			p = c.split('/')
 			if len(p)==2:
-				item = QListWidgetItem(c)
+				item = QListWidgetItem(p[0])
 				item.setIcon(QIcon(LOCKED_ICON))
 				self.autoChannels.addItem(item)
 			else:
@@ -345,7 +366,7 @@ class Dialog(QDialog):
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
-                    ^ QtCore.Qt.WindowContextHelpButtonHint)
+					^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
 

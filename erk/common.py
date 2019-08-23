@@ -752,12 +752,9 @@ def save_autojoin_channels(server,chans):
 			if entry["host"].lower() == server.lower():
 				found = True
 				schans = entry["channels"]
-				for c in chans:
-					schans.append(c)
-				schans = list(dict.fromkeys(schans))
 				ent = {
 					"host": server,
-					"channels": schans
+					"channels": chans
 				}
 				out.append(ent)
 			else:

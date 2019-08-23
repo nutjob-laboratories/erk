@@ -78,11 +78,13 @@ class Dialog(QDialog):
 
 	def return_strings(self):
 
-		items = [] 
-		for index in range(self.autoChannels.count()): 
-			 items.append(self.autoChannels.item(index).text())
+		# items = [] 
+		# for index in range(self.autoChannels.count()): 
+		# 	 items.append(self.autoChannels.item(index).text())
 
-		if len(items)>0: save_autojoin_channels(self.host.text(),items)
+		#if len(items)>0: save_autojoin_channels(self.host.text(),items)
+
+		if len(self.AUTOJOINS)>0: save_autojoin_channels(self.host.text(),self.AUTOJOINS)
 
 		if self.DIALOG_CONNECT_VIA_SSL:
 			use_ssl = 1
@@ -115,7 +117,23 @@ class Dialog(QDialog):
 		listItems=self.autoChannels.selectedItems()
 		if not listItems: return        
 		for item in listItems:
-		   self.autoChannels.takeItem(self.autoChannels.row(item))
+			self.autoChannels.takeItem(self.autoChannels.row(item))
+		   
+			e = item.text()
+			clean = []
+			for i in self.AUTOJOINS:
+				p = i.split(AUTOJOIN_DELIMITER)
+				if len(p)==2:
+					if p[0] == e:
+						continue
+					else:
+						clean.append(i)
+				else:
+					if i == e:
+						continue
+					else:
+						clean.append(i)
+			self.AUTOJOINS = clean
 
 	def clickRecon(self):
 		if self.RECONNECT:
@@ -152,6 +170,8 @@ class Dialog(QDialog):
 			aj = get_autojoins(last_server["host"])
 		else:
 			aj = []
+
+		self.AUTOJOINS = aj
 
 		portLayout = QHBoxLayout()
 		self.portLabel = QLabel("Port")
@@ -238,7 +258,8 @@ class Dialog(QDialog):
 		for c in aj:
 			p = c.split('/')
 			if len(p)==2:
-				item = QListWidgetItem(c)
+				#dname = p[0] + "/" + ( "*"*len(p[1])  )
+				item = QListWidgetItem(p[0])
 				item.setIcon(QIcon(LOCKED_ICON))
 				self.autoChannels.addItem(item)
 			else:
