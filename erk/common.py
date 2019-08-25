@@ -36,11 +36,18 @@ import re
 from datetime import datetime
 from itertools import combinations
 from zipfile import ZipFile
+import zipfile
 import glob
 import importlib.util
 import platform
 import string
 import random
+
+try:
+	import zlib
+	ZIP_COMPRESSION = zipfile.ZIP_DEFLATED
+except:
+	ZIP_COMPRESSION = zipfile.ZIP_STORED
 
 (SYSTEM_BITS,LINKAGE)=platform.architecture()
 SYSTEM = platform.system()
@@ -455,6 +462,51 @@ class Whois(object):
 		self.server = ''
 
 # Functions
+
+def import_settings(fname,password=None):
+	with ZipFile(fname, 'r') as zipObj:
+		listOfFileNames = zipObj.namelist()
+		for fileName in listOfFileNames:
+			if fileName == "erk.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "text.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "lastserver.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "user.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "ignored.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "history.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+			if fileName == "autojoin.json":
+				print(f"Importing {fileName}")
+				zipObj.extract(fileName,SETTINGS_DIRECTORY)
+
+def zip_settings(fname):
+	configlist = []
+	for config in os.listdir(SETTINGS_DIRECTORY):
+		configlist.append(config)
+
+	if len(configlist)==0: return False
+
+	if not ".zip" in fname:
+		fname = fname + ".zip"
+	
+	zf = ZipFile(fname,mode="w")
+
+	for config in configlist:
+		fullname = os.path.join(SETTINGS_DIRECTORY,config)
+		zf.write(fullname,arcname=config,compress_type=ZIP_COMPRESSION)
+	zf.close()
+
+	return True
 
 def inject_asciiemojis(data):
 	for key in ASCIIEMOJIS:

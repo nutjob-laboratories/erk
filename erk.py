@@ -106,8 +106,10 @@ configgroup = parser.add_argument_group('Configuration')
 
 configgroup.add_argument("-c","--config", type=str,help=f"Use FILE for configuration",default=None, metavar="FILE")
 configgroup.add_argument("-d","--display", type=str,help=f"Use FILE for display configuration",default=None, metavar="FILE")
-configgroup.add_argument("--generate-config", type=str,help=f"Writes a default config file to FILE",default=None, metavar="FILE")
-configgroup.add_argument("--generate-display", type=str,help=f"Writes a default display config file to FILE",default=None, metavar="FILE")
+configgroup.add_argument("--new-config", type=str,help=f"Writes a default config file to FILE",default=None, metavar="FILE")
+configgroup.add_argument("--new-display", type=str,help=f"Writes a default display config file to FILE",default=None, metavar="FILE")
+configgroup.add_argument("--save", type=str,help=f"Save all setting files to a zip FILE",default=None, metavar="FILE", dest="zipsettings")
+configgroup.add_argument("--import", type=str,help=f"Imports settings from a zip FILE",default=None, metavar="FILE", dest="importsettings")
 
 usergroup = parser.add_argument_group('Set user defaults')
 
@@ -136,6 +138,18 @@ logGroup.add_argument("--exporthtml", type=str,help=f"Exports all logs as HTML",
 
 args = parser.parse_args()
 
+# zip_settings("COCAINE.zip")
+if args.importsettings:
+	import_settings(args.importsettings)
+	sys.exit(0)
+
+if args.zipsettings:
+	if zip_settings(args.zipsettings):
+		print("Configuration files archived")
+		sys.exit(0)
+	else:
+		print("Error creating zip archive")
+		sys.exit(1)
 
 if args.licence:
 	print(GPL_NOTIFICATION)
@@ -145,16 +159,16 @@ if args.version:
 	print(APPLICATION_VERSION)
 	sys.exit(0)
 
-if args.generate_config:
+if args.new_config:
 	config = loadSettings('')
-	with open(args.generate_config, "w") as write_data:
+	with open(args.new_config, "w") as write_data:
 		json.dump(config, write_data, indent=4, sort_keys=True)
-	if not args.generate_display:
+	if not args.new_display:
 		sys.exit(0)
 
-if args.generate_display:
+if args.new_display:
 	config = loadDisplay('')
-	with open(args.generate_display, "w") as write_data:
+	with open(args.new_display, "w") as write_data:
 		json.dump(config, write_data, indent=4, sort_keys=True)
 		sys.exit(0)
 
