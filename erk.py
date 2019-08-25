@@ -129,6 +129,9 @@ forbidGroup.add_argument( "--nosystray", help=f"Disable system tray icon", actio
 forbidGroup.add_argument( "--nosound", help=f"Disable audio notifications", action="store_true")
 forbidGroup.add_argument( "--nohistory", help=f"Disable loading and saving server history", action="store_true")
 forbidGroup.add_argument( "--noautojoin", help=f"Disable autojoining channels", action="store_true")
+forbidGroup.add_argument( "--noignore", help=f"Disable user ignoring", action="store_true")
+forbidGroup.add_argument( "--nodisplay", help=f"Disable display setting editing", action="store_true")
+forbidGroup.add_argument( "--nomenu", help=f"Disable application menu", action="store_true")
 
 logGroup = parser.add_argument_group('Log exporting')
 
@@ -272,6 +275,15 @@ if __name__ == '__main__':
 
 	if args.noautojoin:
 		erkClient.no_autojoin = True
+
+	if args.noignore:
+		erkClient.disableIgnore()
+
+	if args.nodisplay:
+		erkClient.disableDisplay()
+
+	if args.nomenu:
+		erkClient.disableMenu()
 
 	user = get_user()
 	

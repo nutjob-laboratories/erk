@@ -6,7 +6,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.11**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.12**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
@@ -61,7 +61,6 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 
 * It had to be open source (free as in speech and as in beer)
 * The ability to connect to multiple servers at a time (something almost every open source client does)
-* Have the ability to be scripted (something most open source clients have)
 * A full, modern GUI (HexChat is sort of modern, I guess)
 * A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)

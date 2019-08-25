@@ -297,6 +297,10 @@ class ErkGUI(QMainWindow):
 
 		self.no_autojoin = False
 
+		self.disable_ignore = False
+
+		self.no_menu = False
+
 		# Load notification sound
 		self.notifySound = QSound(NOTIFICATION_SOUND)
 		self.mentionSound = QSound(MENTION_SOUND)
@@ -415,10 +419,10 @@ class ErkGUI(QMainWindow):
 			self.log.hide()
 
 		# Creates the master menu
-		menubar = self.menuBar()
-		menubar.setContextMenuPolicy(Qt.PreventContextMenu)
+		self.menubar = self.menuBar()
+		self.menubar.setContextMenuPolicy(Qt.PreventContextMenu)
 
-		ircMenu = menubar.addMenu("IRC")
+		ircMenu = self.menubar.addMenu("IRC")
 
 		self.actConnect = QAction(QIcon(SERVER_ICON),"Connect to Server",self)
 		self.actConnect.triggered.connect(self.doConnectDialog)
@@ -444,7 +448,7 @@ class ErkGUI(QMainWindow):
 
 		# self.viewMenu.addSeparator()
 
-		self.optMenu = menubar.addMenu("Settings")
+		self.optMenu = self.menubar.addMenu("Settings")
 
 		self.actUser = QAction(QIcon(USER_ICON),"Edit default user information",self)
 		self.actUser.triggered.connect(self.doUserDialog)
@@ -737,7 +741,7 @@ class ErkGUI(QMainWindow):
 		if self.menuTray: self.buildTrayMenu()
 		if self.showTray: self.tray.show()
 
-		self.viewMenu = menubar.addMenu("Display")
+		self.viewMenu = self.menubar.addMenu("Display")
 
 		self.optShowLog = QAction(QIcon(NOCONSOLE_ICON),"Hide connection log",self)
 		self.optShowLog.setChecked(self.displayConnectionLog)
@@ -763,11 +767,11 @@ class ErkGUI(QMainWindow):
 		self.buildThemeMenu()
 
 
-		self.windowMenu = menubar.addMenu("Windows")
+		self.windowMenu = self.menubar.addMenu("Windows")
 
 		self.rebuildWindowMenu()
 
-		self.helpMenu = menubar.addMenu("Help")
+		self.helpMenu = self.menubar.addMenu("Help")
 
 		helpLink = QAction(QIcon(ABOUT_ICON),f"About {APPLICATION_NAME}",self)
 		helpLink.triggered.connect(self.doAbout)
@@ -966,6 +970,21 @@ class ErkGUI(QMainWindow):
 	def disableWindowsMenu(self):
 		self.windowsEnabled = False
 		self.rebuildWindowMenu()
+
+	def disableIgnore(self):
+		self.disable_ignore = True
+		self.actIgnore.setVisible(False)
+
+	def disableDisplay(self):
+		self.viewMenu.clear()
+
+		noDisplayLabel = QLabel("<i>&nbsp;&nbsp;Display cannot be changed&nbsp;&nbsp;</i>")
+		noDisplayAction = QWidgetAction(self)
+		noDisplayAction.setDefaultWidget(noDisplayLabel)
+		self.viewMenu.addAction(noDisplayAction)
+
+	def disableMenu(self):
+		self.menubar.setVisible(False)
 
 	def hideSettingsMenu(self):
 		self.optMenu.clear()
@@ -3033,23 +3052,24 @@ QPushButton::menu-indicator {
 	def publicMessage(self,serverid,channel,user,message):
 
 		# Ignore messages from users on the ignore list
-		i = user.split("!")
-		for u in self.ignore:
-			if len(i)==2:
-				nick = i[0]
-				hostmask = i[1]
-				h = hostmask.split('@')
-				username = h[0]
-				host = h[1]
+		if not self.disable_ignore:
+			i = user.split("!")
+			for u in self.ignore:
+				if len(i)==2:
+					nick = i[0]
+					hostmask = i[1]
+					h = hostmask.split('@')
+					username = h[0]
+					host = h[1]
 
-				if u==nick:
-					return
+					if u==nick:
+						return
 
-				if u==host:
-					return
-			else:
-				if u==i:
-					return
+					if u==host:
+						return
+				else:
+					if u==i:
+						return
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
@@ -3092,23 +3112,24 @@ QPushButton::menu-indicator {
 	def privateMessage(self,serverid,user,message):
 
 		# Ignore messages from users on the ignore list
-		i = user.split("!")
-		for u in self.ignore:
-			if len(i)==2:
-				nick = i[0]
-				hostmask = i[1]
-				h = hostmask.split('@')
-				username = h[0]
-				host = h[1]
+		if not self.disable_ignore:
+			i = user.split("!")
+			for u in self.ignore:
+				if len(i)==2:
+					nick = i[0]
+					hostmask = i[1]
+					h = hostmask.split('@')
+					username = h[0]
+					host = h[1]
 
-				if u==nick:
-					return
+					if u==nick:
+						return
 
-				if u==host:
-					return
-			else:
-				if u==i:
-					return
+					if u==host:
+						return
+				else:
+					if u==i:
+						return
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
@@ -3166,23 +3187,24 @@ QPushButton::menu-indicator {
 	def noticeMessage(self,serverid,channel,user,message):
 
 		# Ignore messages from users on the ignore list
-		i = user.split("!")
-		for u in self.ignore:
-			if len(i)==2:
-				nick = i[0]
-				hostmask = i[1]
-				h = hostmask.split('@')
-				username = h[0]
-				host = h[1]
+		if not self.disable_ignore:
+			i = user.split("!")
+			for u in self.ignore:
+				if len(i)==2:
+					nick = i[0]
+					hostmask = i[1]
+					h = hostmask.split('@')
+					username = h[0]
+					host = h[1]
 
-				if u==nick:
-					return
+					if u==nick:
+						return
 
-				if u==host:
-					return
-			else:
-				if u==i:
-					return
+					if u==host:
+						return
+				else:
+					if u==i:
+						return
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]
@@ -3222,23 +3244,24 @@ QPushButton::menu-indicator {
 	def actionMessage(self,serverid,channel,user,message):
 
 		# Ignore messages from users on the ignore list
-		i = user.split("!")
-		for u in self.ignore:
-			if len(i)==2:
-				nick = i[0]
-				hostmask = i[1]
-				h = hostmask.split('@')
-				username = h[0]
-				host = h[1]
+		if not self.disable_ignore:
+			i = user.split("!")
+			for u in self.ignore:
+				if len(i)==2:
+					nick = i[0]
+					hostmask = i[1]
+					h = hostmask.split('@')
+					username = h[0]
+					host = h[1]
 
-				if u==nick:
-					return
+					if u==nick:
+						return
 
-				if u==host:
-					return
-			else:
-				if u==i:
-					return
+					if u==host:
+						return
+				else:
+					if u==i:
+						return
 
 		p = user.split("!")
 		if len(p)==2: user = p[0]

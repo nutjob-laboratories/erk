@@ -1574,9 +1574,11 @@ class Interface(QMainWindow):
 			# if self.is_op: menu.addSeparator()
 			menu.addSeparator()
 
-			actIgnore = menu.addAction(QIcon(IGNORE_ICON),'Ignore user')
+			if not self.parent.disable_ignore:
+				actIgnore = menu.addAction(QIcon(IGNORE_ICON),'Ignore user')
 
-			actUnIgnore = menu.addAction(QIcon(UNIGNORE_ICON),'Unignore user')
+			if not self.parent.disable_ignore:
+				actUnIgnore = menu.addAction(QIcon(UNIGNORE_ICON),'Unignore user')
 
 			actOp = menu.addAction(QIcon(PLUS_ICON),'Give ops')
 			actDeop = menu.addAction(QIcon(MINUS_ICON),'Take ops')
@@ -1639,32 +1641,34 @@ class Interface(QMainWindow):
 					actUnban.setVisible(False)
 					actKickBan.setVisible(True)
 
-			if ignored:
-				actIgnore.setVisible(False)
-				actUnIgnore.setVisible(True)
-			else:
-				actIgnore.setVisible(True)
-				actUnIgnore.setVisible(False)
+			if not self.parent.disable_ignore:
+				if ignored:
+					actIgnore.setVisible(False)
+					actUnIgnore.setVisible(True)
+				else:
+					actIgnore.setVisible(True)
+					actUnIgnore.setVisible(False)
 
 
 			action = menu.exec_(self.channelUserDisplay.mapToGlobal(event.pos()))
 
-			if action == actUnIgnore:
-				clean = []
-				for ui in self.parent.ignore:
-					if ui==user: continue
-					if ui==host: continue
-					clean.append(ui)
-				self.parent.ignore = clean
-				save_ignore(self.parent.ignore)
-				return True
+			if not self.parent.disable_ignore:
+				if action == actUnIgnore:
+					clean = []
+					for ui in self.parent.ignore:
+						if ui==user: continue
+						if ui==host: continue
+						clean.append(ui)
+					self.parent.ignore = clean
+					save_ignore(self.parent.ignore)
+					return True
 
-			if action == actIgnore:
-				if len(host)>0:
-					self.parent.ignore.append(host)
-				else:
-					self.parent.ignore.append(user)
-				save_ignore(self.parent.ignore)
+				if action == actIgnore:
+					if len(host)>0:
+						self.parent.ignore.append(host)
+					else:
+						self.parent.ignore.append(user)
+					save_ignore(self.parent.ignore)
 				return True
 
 			if action == actKickBan:
