@@ -104,8 +104,8 @@ themegroup.add_argument("-T","--install-theme", type=str,help=f"Install theme(s)
 
 configgroup = parser.add_argument_group('Configuration')
 
-configgroup.add_argument("-c","--config", type=str,help=f"Use FILE for configuration",default=None, metavar="FILE")
-configgroup.add_argument("-d","--display", type=str,help=f"Use FILE for display configuration",default=None, metavar="FILE")
+configgroup.add_argument("--config", type=str,help=f"Use FILE for configuration",default=None, metavar="FILE")
+configgroup.add_argument("--display", type=str,help=f"Use FILE for display configuration",default=None, metavar="FILE")
 configgroup.add_argument("--new-config", type=str,help=f"Writes a default config file to FILE",default=None, metavar="FILE")
 configgroup.add_argument("--new-display", type=str,help=f"Writes a default display config file to FILE",default=None, metavar="FILE")
 configgroup.add_argument("--save", type=str,help=f"Save all setting files to a zip FILE",default=None, metavar="FILE", dest="zipsettings")
@@ -135,8 +135,8 @@ forbidGroup.add_argument( "--nomenu", help=f"Disable application menu", action="
 
 logGroup = parser.add_argument_group('Log exporting')
 
-logGroup.add_argument("--exporttext", type=str,help=f"Exports all logs as text", metavar="ZIP")
-logGroup.add_argument("--exporthtml", type=str,help=f"Exports all logs as HTML", metavar="ZIP")
+logGroup.add_argument("--export-text", type=str,help=f"Exports all logs as text to a zip archive", metavar="ZIP", dest="exporttext")
+logGroup.add_argument("--export-html", type=str,help=f"Exports all logs as HTML to a zip archive", metavar="ZIP", dest="exporthtml")
 
 
 args = parser.parse_args()

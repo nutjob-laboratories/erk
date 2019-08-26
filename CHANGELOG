@@ -24,6 +24,8 @@ Version 0.413
 	* Added a commandline option to disable user ignoring
 	* Added a commandline option to disable the "Display" menu
 	* Added a commandline option to disable the main application menu
+	* Shortened commandline flags for "config" and "display"
+	* Cleaned up some of the commandline help text and option names
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client
