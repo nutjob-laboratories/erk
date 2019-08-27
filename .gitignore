@@ -27,3 +27,4 @@ settings/user/history.json
 settings/user/autojoin.json
 settings/autojoin.json
 settings/history.json
+rebuild_readme.py
