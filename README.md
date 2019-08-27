@@ -1,12 +1,12 @@
 
 <p align="center">
-	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/logo.png"><br>
+	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/erk_keyboard_logo.png"><br>
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/howyousay.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.413</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.14**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.15**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
