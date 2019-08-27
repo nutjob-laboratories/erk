@@ -6,7 +6,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.13**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.14**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
@@ -19,19 +19,36 @@
 
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
-* Automatic channel and private message logging
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * Extensive commandline configuration options
+	* More than 30 commandline options
+	* Options include:
+		* `--fullscreen` to launch **Erk** in full screen mode
+		* `--ontop` to display the **Erk** client "on top" of all other windows
+		* `--nologs` to prevent chat logging
+		* ...and many more!
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
-* Command/nick/channel auto-completion
-* A theme engine using [QSS](https://doc.qt.io/qt-5/stylesheet-syntax.html) and [JSON](https://www.json.org/) (nearly every aspect of the client, from widgets to icons, can be customized)
-* An extremely customizable interface
+	* Supports English, Spanish, French, and German
+	* Right click on misspelled words for suggested spellings/words
+* A theme engine using [QSS](https://doc.qt.io/qt-5/stylesheet-syntax.html) and [JSON](https://www.json.org/)
+	* Nearly every aspect of the client, from widgets to icons, can be customized
 * All configuration files use JSON
-* Optional profanity filter
-* [Emoji](https://en.wikipedia.org/wiki/Emoji) support
-* [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
-* Server connection history
+	* Setting files can be exported to a zip archive
+	* Setting files can be imported from a zip archive
+* Command/nick/channel auto-completion
+	* Type the first few letters of a command, nickname, or channel, and hit the tab key
+* [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
+	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
+	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)
 * Optional audio notifications
+	* Notify if unread chat messages are received
+	* Notify if your nickname is mentioned in public chat
+* Server connection history
+	* **Erk** will remember every server it connects to
+* Optional profanity filter
+* An extremely customizable interface
+* Automatic channel and private message logging
+
 
 # Requirements
 **Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):

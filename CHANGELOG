@@ -26,6 +26,8 @@ Version 0.413
 	* Added a commandline option to disable the main application menu
 	* Shortened commandline flags for "config" and "display"
 	* Cleaned up some of the commandline help text and option names
+	* If log loading/display is disabled, the menu to select the size of the display will be disabled
+	* If spell checking is disabled, the menu options to set spell check language will be disabled
 
 Version 0.412
 	* Removed plugins, the plugin editor, and all plugin-related code and graphics from the client

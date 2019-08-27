@@ -575,13 +575,13 @@ class ErkGUI(QMainWindow):
 
 		self.emojiSettings = self.optMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
 
-		self.optEmoji = QAction("Use emoji colon codes",self,checkable=True)
+		self.optEmoji = QAction("Use emoji shortcodes",self,checkable=True)
 		self.optEmoji.setChecked(self.emojis)
 		self.optEmoji.triggered.connect(self.toggleEmoji)
 		self.emojiSettings.addAction(self.optEmoji)
 
 		# https://www.webfx.com/tools/emoji-cheat-sheet/
-		helpLink = QAction(QIcon(LINK_ICON),"Emoji colon code list",self)
+		helpLink = QAction(QIcon(LINK_ICON),"Emoji shortcode list",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.doOpenUrl(u))
 		f = helpLink.font()
 		f.setItalic(True)
@@ -590,12 +590,12 @@ class ErkGUI(QMainWindow):
 
 		self.emojiSettings.addSeparator()
 
-		self.optAsciiMoji = QAction("Use ASCIImoji parentheses codes",self,checkable=True)
+		self.optAsciiMoji = QAction("Use ASCIImoji shortcodes",self,checkable=True)
 		self.optAsciiMoji.setChecked(self.asciimojis)
 		self.optAsciiMoji.triggered.connect(self.toggleAsciiEmoji)
 		self.emojiSettings.addAction(self.optAsciiMoji)
 
-		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji parentheses code list",self)
+		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji shortcode list",self)
 		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.doOpenUrl(u))
 		f = helpLink.font()
 		f.setItalic(True)
@@ -636,6 +636,12 @@ class ErkGUI(QMainWindow):
 		if self.spellCheckLanguage=="es": self.scSpanish.setChecked(True)
 		if self.spellCheckLanguage=="de": self.scGerman.setChecked(True)
 
+		if not self.spellCheck:
+			self.scEnglish.setEnabled(False)
+			self.scFrench.setEnabled(False)
+			self.scSpanish.setEnabled(False)
+			self.scGerman.setEnabled(False)
+
 		self.autocompMenu = self.optMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Auto-complete")
 
 		optEnableAutoCommand = QAction("Auto-complete commands",self,checkable=True)
@@ -668,6 +674,8 @@ class ErkGUI(QMainWindow):
 		self.miscMenu.addAction(optLoadChat)
 
 		self.logsizeMenu = self.miscMenu.addMenu(QIcon(INTERFACE_ICON),"Log display size")
+
+		if not self.loadLogsOnJoin: self.logsizeMenu.setEnabled(False)
 
 		self.sizeAll = QAction("All lines",self,checkable=True)
 		self.sizeAll.triggered.connect(lambda state,l=0: self.setLoadLogSize(l) )
@@ -1776,8 +1784,16 @@ class ErkGUI(QMainWindow):
 	def toggleSpellCheck(self):
 		if self.spellCheck:
 			self.spellCheck = False
+			self.scEnglish.setEnabled(False)
+			self.scFrench.setEnabled(False)
+			self.scSpanish.setEnabled(False)
+			self.scGerman.setEnabled(False)
 		else:
 			self.spellCheck = True
+			self.scEnglish.setEnabled(True)
+			self.scFrench.setEnabled(True)
+			self.scSpanish.setEnabled(True)
+			self.scGerman.setEnabled(True)
 
 		for w in self.connections:
 			for x in self.windows[w]:
@@ -1826,8 +1842,10 @@ class ErkGUI(QMainWindow):
 	def toggleLoadChat(self):
 		if self.loadLogsOnJoin:
 			self.loadLogsOnJoin = False
+			self.logsizeMenu.setEnabled(False)
 		else:
 			self.loadLogsOnJoin = True
+			self.logsizeMenu.setEnabled(True)
 
 		self.settings[LOAD_LOG_SETTING] = self.loadLogsOnJoin
 		saveSettings(self.settings,self.settingsFile)
