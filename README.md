@@ -40,6 +40,8 @@
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)
 	* Example chat:
 		* <p><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png"></p>
+		* wraithnix: I can't believe the bus is late `:rage:`
+		* wraithnix: (tableflip)
 * Optional audio notifications
 	* Notify if unread chat messages are received
 	* Notify if your nickname is mentioned in public chat
