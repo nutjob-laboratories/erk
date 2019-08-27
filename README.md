@@ -5,7 +5,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk-theme">Theme Compiler Repository</a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.16**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.413.17**.
 
 **Erk** is fully functional for use. Features are still being added/completed and bugs are being fixed, but it is ready for daily use.
 
@@ -38,6 +38,7 @@
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
 	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)
+	* ![Asciimojis and emojis](https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png "Example chat")
 * Optional audio notifications
 	* Notify if unread chat messages are received
 	* Notify if your nickname is mentioned in public chat
