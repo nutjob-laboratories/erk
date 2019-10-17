@@ -12,7 +12,7 @@ for file in glob.glob(target):
 target = os.path.join("gui", "*.png")
 for file in glob.glob(target):
 	b = os.path.basename(file)
-	fl.append(f"<file alias=\"{b}\">{file}</file>")
+	fl.append(f"<file alias=\"gui-{b}\">{file}</file>")
 
 target = os.path.join("sound", "*.wav")
 for file in glob.glob(target):

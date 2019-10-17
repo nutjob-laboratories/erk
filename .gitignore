@@ -1,30 +1,11 @@
 
 *.pyc
-settings/lastserver.json
+logs/EFnet-#themaxx.json
+logs/efnet.port80.se-6667.json
+logs/localhost-6667.json
+logs/MYNet-#themaxx.json
 settings/user.json
-settings/autojoin/*
-logs/*.json
-icons8-sign-language-e-100.png
-icons8-sign-language-k-100.png
-icons8-sign-language-r-100 (2).png
+settings/style.json
+settings/lastserver.json
 settings/erk.json
-version.txt
-*.odt#
-README.txt
-settings/user/lastserver.json
-settings/user/user.json
-conv.py
-hexchat_servlist.conf
-NETWORKS.txt
-settings/user/servers.txt
-linkcode.txt
-gn.py
-NETWORK_LINKS.txt
-.google-cookie
-settings/user/servers.conf
-notification.wav
-settings/user/history.json
-settings/user/autojoin.json
-settings/autojoin.json
-settings/history.json
-rebuild_readme.py
+settings/channels.json
