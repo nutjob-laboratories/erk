@@ -103,6 +103,91 @@ class Window(QMainWindow):
 			self.channelChatDisplay.setSource(QUrl())
 			self.channelChatDisplay.moveCursor(QTextCursor.End)
 
+	def server_options(self,options):
+
+		# Options are sent in chunks: not every option
+		# will be set in each chunk
+
+		supports = []
+		maxchannels = 0
+		maxnicklen = 0
+		nicklen = 0
+		channellen = 0
+		topiclen = 0
+		kicklen = 0
+		awaylen = 0
+		maxtargets = 0
+		modes = 0
+		maxmodes = []
+		chanmodes = []
+		prefix = []
+		cmds = []
+		casemapping = "none"
+
+		for o in options:
+			if "=" in o:
+				p = o.split("=")
+				if len(p)>1:
+					if p[0].lower() == "maxchannels": maxchannels = int(p[1])
+					if p[0].lower() == "maxnicklen": maxnicklen = int(p[1])
+					if p[0].lower() == "nicklen": nicklen = int(p[1])
+					if p[0].lower() == "channellen": channellen = int(p[1])
+					if p[0].lower() == "topiclen": topiclen = int(p[1])
+					if p[0].lower() == "kicklen": kicklen = int(p[1])
+					if p[0].lower() == "awaylen": awaylen = int(p[1])
+					if p[0].lower() == "maxtargets": maxtargets = int(p[1])
+					if p[0].lower() == "modes": modes = int(p[1])
+					if p[0].lower() == "casemapping": casemapping = p[1]
+
+					if p[0].lower() == "cmds":
+						for c in p[1].split(","):
+							cmds.append(c)
+
+					if p[0].lower() == "prefix":
+						pl = p[1].split(")")
+						if len(pl)>=2:
+							pl[0] = pl[0][1:]	# get rid of prefixed (
+
+							for i in range(len(pl[0])):
+								entry = [ pl[0][i], pl[1][i] ]
+								prefix.append(entry)
+
+					if p[0].lower() == "chanmodes":
+						for e in p[1].split(","):
+							chanmodes.append(e)
+
+					if p[0].lower() == "maxlist":
+						for e in p[1].split(","):
+							ml = e.split(':')
+							if len(ml)==2:
+								entry = [ml[0],int(ml[1])]
+								maxmodes.append(entry)
+			else:
+				supports.append(o)
+
+		if len(maxmodes)>0: self.maxmodes = maxmodes
+		if maxnicklen>0: self.maxnicklen = maxnicklen
+		if maxchannels > 0: self.maxchannels = maxchannels
+		if channellen > 0: self.channellen = channellen
+		if topiclen > 0: self.topiclen = topiclen
+		if kicklen > 0: self.kicklen = kicklen
+		if awaylen > 0: self.awaylen = awaylen
+		if maxtargets > 0: self.maxtargets = maxtargets
+		if modes > 0: self.modes = modes
+		if casemapping != "": self.casemapping = casemapping
+
+		if len(cmds)>0:
+			for c in cmds:
+				self.cmds.append(c)
+
+		if len(prefix)>0: self.prefix = prefix
+		if len(chanmodes)>0: self.chanmodes = chanmodes
+		if len(supports)>0:
+			for s in supports:
+				self.supports.append(s)
+
+		self.rebuildServerInfoMenu()
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -116,6 +201,28 @@ class Window(QMainWindow):
 
 		self.is_channel = False
 		self.is_console = True
+
+		self.network_url = None
+
+		# BEGIN IRC SERVER INFO
+
+		self.maxnicklen = 0
+		self.maxchannels = 0
+		self.channellen = 0
+		self.topiclen = 0
+		self.kicklen = 0
+		self.awaylen = 0
+		self.maxtargets = 0
+		self.network = ""
+		self.casemapping = ""
+		self.cmds = []
+		self.prefix = []
+		self.chanmodes = []
+		self.supports = []
+		self.modes = 0
+		self.maxmodes = []
+
+		# END IRC SERVER INFO
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CONSOLE_WINDOW))
@@ -153,6 +260,15 @@ class Window(QMainWindow):
 
 		serverMenu = self.menubar.addMenu("Server")
 		serverMenu.setFont(menuBoldText)
+
+		self.servNetLink = QAction(QIcon(IRCNET_ICON),"Unknown IRC Network",self)
+		self.servNetLink.triggered.connect(self.menuServNetLink)
+		serverMenu.addAction(self.servNetLink)
+
+		self.serverInfoMenu = serverMenu.addMenu(QIcon(SERVER_ICON),self.name)
+		self.rebuildServerInfoMenu()
+
+		serverMenu.addSeparator()
 
 		self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
 		self.actNick.triggered.connect(self.menuNick)
@@ -245,6 +361,12 @@ class Window(QMainWindow):
 				msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["system"],message,timestamp )
 			self.writeText(msg)
 
+	def menuServNetLink(self):
+		if self.network_url:
+			u = QUrl()
+			u.setUrl(self.network_url)
+			QDesktopServices.openUrl(u)
+
 	def menuDisconnect(self):
 		self.gui.disconnectFromIRC(self.client)
 
@@ -269,3 +391,110 @@ class Window(QMainWindow):
 		if not nick: return
 
 		self.client.setNick(nick)
+
+	def rebuildServerInfoMenu(self):
+
+		supports = self.supports # list
+		maxchannels = self.maxchannels
+		maxnicklen = self.maxnicklen
+		channellen = self.channellen
+		topiclen = self.topiclen
+		kicklen = self.kicklen
+		awaylen = self.awaylen
+		maxtargets = self.maxtargets
+		modes = self.modes
+		chanmodes = self.chanmodes #list
+		prefix = self.prefix # list
+		cmds = self.cmds # list
+		network = self.network
+		casemapping = self.casemapping
+		maxmodes = self.maxmodes
+
+		self.serverInfoMenu.clear()
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channels:</b> {maxchannels}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum nick length:</b> {maxnicklen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channel length:</b> {channellen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum topic length:</b> {topiclen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum kick length:</b> {kicklen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum away length:</b> {awaylen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum message targets:</b> {maxtargets}&nbsp;&nbsp;",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum modes per user:</b> {modes}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		self.serverInfoMenu.addAction(e)
+
+		self.serverInfoMenu.addSeparator()
+
+		maxmodesmenu = QMenu("Maximum modes",self)
+		for c in maxmodes:
+			e = QAction(F"{c[0]}: {c[1]}", self) 
+			maxmodesmenu.addAction(e)
+		self.serverInfoMenu.addMenu(maxmodesmenu)
+
+		cmdmenu = QMenu("Commands",self)
+		for c in cmds:
+			e = QAction(F"{c}", self) 
+			cmdmenu.addAction(e)
+		self.serverInfoMenu.addMenu(cmdmenu)
+
+		supportsmenu = QMenu("Supports",self)
+		for c in supports:
+			e = QAction(F"{c}", self) 
+			supportsmenu.addAction(e)
+		self.serverInfoMenu.addMenu(supportsmenu)
+
+		chanmodemenu = QMenu("Channel modes",self)
+		ct = 0
+		for c in chanmodes:
+			if ct==0:
+				ctype = "A"
+			elif ct==1:
+				ctype = "B"
+			elif ct==2:
+				ctype = "C"
+			elif ct==3:
+				ctype = "D"
+			e = QAction(F"{ctype}: {c}", self) 
+			chanmodemenu.addAction(e)
+			ct = ct + 1
+		self.serverInfoMenu.addMenu(chanmodemenu)
+
+		prefixmenu = QMenu("Prefixes",self)
+		for c in prefix:
+			m = c[0]
+			s = c[1]
+			if s=="&": s="&&"
+			e = QAction(F"{m}: {s}", self)
+			if m=="o": e.setIcon(QIcon(USER_OPERATOR))
+			if m=="v": e.setIcon(QIcon(USER_VOICED))
+			prefixmenu.addAction(e)
+		self.serverInfoMenu.addMenu(prefixmenu)

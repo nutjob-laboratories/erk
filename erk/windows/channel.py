@@ -317,12 +317,6 @@ class Window(QMainWindow):
 		self.actJoin.triggered.connect(self.menuJoin)
 		serverMenu.addAction(self.actJoin)
 
-		serverMenu.addSeparator()
-
-		self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		self.actDisconnect.triggered.connect(self.menuDisconnect)
-		serverMenu.addAction(self.actDisconnect)
-
 		self.actModes = self.menubar.addMenu("Modes")
 		self.rebuildModesMenu()
 

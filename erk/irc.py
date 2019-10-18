@@ -130,6 +130,8 @@ class IRC_Connection(irc.IRCClient):
 					self.network = p[1]
 					self.gui.irc_network_and_hostname(self,p[1],self.hostname)
 
+		self.gui.irc_options(self,options)
+
 	def __init__(self,**kwargs):
 
 		config(self,**kwargs)

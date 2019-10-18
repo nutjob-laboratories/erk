@@ -70,6 +70,11 @@ class Erk(QMainWindow):
 	# | IRC EVENTS BEGIN |
 	# |==================|
 
+	def irc_options(self,obj,optiondata):
+		for c in self.connections:
+			if c.id==obj.id:
+				c.console.server_options(optiondata)
+
 	def irc_whois(self,obj,whoisdata):
 
 		pretty = datetime.fromtimestamp(int(whoisdata.signon)).strftime('%B %d, %Y at %H:%M:%S')
@@ -472,6 +477,18 @@ class Erk(QMainWindow):
 
 		self.serverLog(obj,"Server is a part of the  "+network+" network")
 		self.serverLog(obj,"Server's hostname is  "+hostname)
+
+		c.console.setWindowTitle(" "+hostname+" ("+network+")")
+
+		x = c.console.serverInfoMenu.menuAction()
+		x.setText(hostname)
+		c.console.servNetLink.setText(network+" IRC Network")
+
+		nurl = get_network_url(network)
+		if nurl:
+			c.console.network_url = nurl
+
+		self.buildWindowMenu()
 
 	def irc_notice(self,obj,user,target,text):
 		p = user.split('!')
@@ -1502,7 +1519,14 @@ class Erk(QMainWindow):
 
 		for c in self.connections:
 			# c.console
-			win = QAction(QIcon(CONSOLE_WINDOW),c.connection.server+":"+str(c.connection.port),self)
+			if c.connection.hostname:
+				ctitle = c.connection.hostname
+			else:
+				ctitle = c.connection.server+":"+str(c.connection.port)
+
+			# win = QAction(QIcon(CONSOLE_WINDOW),c.connection.server+":"+str(c.connection.port),self)
+			win = QAction(QIcon(CONSOLE_WINDOW),ctitle,self)
+
 			win.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
 			self.windowMenu.addAction(win)
 

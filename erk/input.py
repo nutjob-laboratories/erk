@@ -57,6 +57,18 @@ def handle_chat_input(obj,text,is_user=False):
 	tokens = unescape_single_quotes(tokens)
 
 	if len(tokens)==2:
+		if tokens[0].lower()=="/whois":
+			tokens.pop(0)	# remove command
+			target = tokens.pop(0)
+			obj.client.sendLine(f"WHOIS {target}")
+			return
+	if len(tokens)==1:
+		if tokens[0].lower()=="/whois":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /whois NICKNAME" )
+			obj.gui.writeToChannel(obj.client,obj.name,msg)
+			return
+
+	if len(tokens)==2:
 		if tokens[0].lower()=="/nick":
 			tokens.pop(0)	# remove command
 			target = tokens.pop(0)
@@ -200,6 +212,18 @@ def handle_console_input(obj,text):
 	etext = escape_single_quotes(text)
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
+
+	if len(tokens)==2:
+		if tokens[0].lower()=="/whois":
+			tokens.pop(0)	# remove command
+			target = tokens.pop(0)
+			obj.client.sendLine(f"WHOIS {target}")
+			return
+	if len(tokens)==1:
+		if tokens[0].lower()=="/whois":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /whois NICKNAME" )
+			obj.gui.writeToConsole(obj.client,msg)
+			return
 
 	if len(tokens)==2:
 		if tokens[0].lower()=="/nick":

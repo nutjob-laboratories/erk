@@ -173,12 +173,6 @@ class Window(QMainWindow):
 		self.actWhois.triggered.connect(self.menuWhois)
 		serverMenu.addAction(self.actWhois)
 
-		serverMenu.addSeparator()
-
-		self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		self.actDisconnect.triggered.connect(self.menuDisconnect)
-		serverMenu.addAction(self.actDisconnect)
-
 		# Load logs if necessary
 		if self.gui.load_logs_on_start:
 			self.log = loadLog(self.client.network,self.name)
