@@ -1197,7 +1197,7 @@ class Erk(QMainWindow):
 
 		# IRC Menu
 
-		ircMenu = self.menubar.addMenu("IRC")
+		ircMenu = self.menubar.addMenu(APPLICATION_NAME)
 
 		ircMenu.setFont(menuBoldText)
 
@@ -1212,6 +1212,18 @@ class Erk(QMainWindow):
 		if CONNECT_NETWORK_SHORTCUT!=None:
 			self.actNetwork.setShortcut(CONNECT_NETWORK_SHORTCUT)
 		ircMenu.addAction(self.actNetwork)
+
+		ircMenu.addSeparator()
+
+		self.actOnTop = QAction("Always On Top",self,checkable=True)
+		self.actOnTop.setChecked(self.window_on_top)
+		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
+		ircMenu.addAction(self.actOnTop)
+
+		self.actFullscreen = QAction("Full Screen",self,checkable=True)
+		self.actFullscreen.setChecked(self.window_fullscreen)
+		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
+		ircMenu.addAction(self.actFullscreen)
 
 		ircMenu.addSeparator()
 
@@ -1259,16 +1271,6 @@ class Erk(QMainWindow):
 		mf = pf[0]
 		ms = pf[1]
 		self.actFont.setText(f"Font ({mf}, {ms}pt)")
-
-		self.actOnTop = QAction("Always on top",self,checkable=True)
-		self.actOnTop.setChecked(self.window_on_top)
-		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
-		settingsMenu.addAction(self.actOnTop)
-
-		self.actFullscreen = QAction("Full screen",self,checkable=True)
-		self.actFullscreen.setChecked(self.window_fullscreen)
-		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
-		settingsMenu.addAction(self.actFullscreen)
 
 		settingsMenu.addSeparator()
 

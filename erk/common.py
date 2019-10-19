@@ -161,7 +161,6 @@ PYTHON_SMALL_ICON = ":/gui-pyicon.png"
 QT_SMALL_ICON = ":/gui-qticon.png"
 PYQT_ICON = ":/gui-pyqt.png"
 
-#MENU_SERVER_ICON = ":/gui-server.png"
 MENU_ARROW_ICON = ":/gui-right_arrow.png"
 
 IRCNET_ICON = ":/gui-ircnet.png"
@@ -200,11 +199,8 @@ KICK_ICON = ":/kick.png"
 IGNORE_ICON = ":/ignore.png"
 UNIGNORE_ICON = ":/unignore.png"
 WHOIS_ICON = ":/whois.png"
-#IRCNET_ICON = ":/ircnet.png"
-#NO_IRCNET_ICON = ":/no_ircnet.png"
-
-#RIGHT_ARROW_ICON = ":/right_arrow.png"
-
+KICKBAN_ICON = ":/kickban.png"
+SERVER_SETTINGS_ICON = ":/ssettings.png"
 
 # =====================
 # | WINDOW MANAGEMENT |

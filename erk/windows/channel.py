@@ -313,7 +313,6 @@ class Window(QMainWindow):
 		# Status bar
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
-		#self.status_text = QLabel("<i>"+self.client.server+":"+str(self.client.port)+"</i>&nbsp;")
 		if self.client.hostname!=self.client.server:
 			self.status_text = QLabel("<i>"+self.client.hostname+" ("+self.client.network+") - "+self.client.server+":"+str(self.client.port)+"</i>&nbsp;")
 		else:
@@ -326,17 +325,6 @@ class Window(QMainWindow):
 		self.menubar = self.menuBar()
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
-
-		# serverMenu = self.menubar.addMenu("Server")
-		# serverMenu.setFont(menuBoldText)
-
-		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		# self.actNick.triggered.connect(self.menuNick)
-		# serverMenu.addAction(self.actNick)
-
-		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		# self.actJoin.triggered.connect(self.menuJoin)
-		# serverMenu.addAction(self.actJoin)
 
 		self.actModes = self.menubar.addMenu("Modes")
 		self.rebuildModesMenu()
@@ -625,9 +613,11 @@ class Window(QMainWindow):
 				is_ignored = self.gui.is_ignored(self.client,user_hostmask)
 				p = user_hostmask.split('@')
 				ignoremask = '*@'+p[1]
+				banmask = '*!*@'+p[1]
 			else:
 				is_ignored = self.gui.is_ignored(self.client,user_nick)
 				ignoremask = user_nick
+				banmask = user_nick
 
 			# Menu for clicking on own nickname
 			if user_nick == self.client.nickname:
@@ -704,14 +694,18 @@ class Window(QMainWindow):
 			menu.addSeparator()
 
 			if client_is_op:
-				if user_is_op: actDeop = menu.addAction(QIcon(MINUS_ICON),'Take op status')
-				if not user_is_op: actOp = menu.addAction(QIcon(PLUS_ICON),'Give op status')
+				opMenu = menu.addMenu(QIcon(USER_OPERATOR),"Operator Actions")
+
+				if user_is_op: actDeop = opMenu.addAction(QIcon(MINUS_ICON),'Take op status')
+				if not user_is_op: actOp = opMenu.addAction(QIcon(PLUS_ICON),'Give op status')
 
 				if not user_is_op:
-					if user_is_voiced: actDevoice = menu.addAction(QIcon(MINUS_ICON),'Take voiced status')
-					if not user_is_voiced: actVoice = menu.addAction(QIcon(PLUS_ICON),'Give voiced status')
+					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),'Take voiced status')
+					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),'Give voiced status')
 
-				actKick = menu.addAction(QIcon(KICK_ICON),'Kick')
+				actKick = opMenu.addAction(QIcon(KICK_ICON),'Kick')
+				actBan = opMenu.addAction(QIcon(BAN_ICON),'Ban')
+				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),'Kick/Ban')
 
 			if is_ignored:
 				actUnignore = menu.addAction(QIcon(UNIGNORE_ICON),'Unignore')
@@ -791,6 +785,15 @@ class Window(QMainWindow):
 			if client_is_op:
 
 				if action == actKick:
+					self.client.kick(self.name,user_nick)
+					return True
+
+				if action == actBan:
+					self.client.mode(self.name,True,"b",None,None,banmask)
+					return True
+
+				if action == actKickBan:
+					self.client.mode(self.name,True,"b",None,None,banmask)
 					self.client.kick(self.name,user_nick)
 					return True
 

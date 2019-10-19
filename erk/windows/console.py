@@ -262,32 +262,6 @@ class Window(QMainWindow):
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
 
-		# serverMenu = self.menubar.addMenu("Server")
-		# serverMenu.setFont(menuBoldText)
-
-		# self.servNetLink = QAction(QIcon(IRCNET_ICON),"Unknown IRC Network",self)
-		# self.servNetLink.triggered.connect(self.menuServNetLink)
-		# serverMenu.addAction(self.servNetLink)
-
-		# self.serverInfoMenu = serverMenu.addMenu(QIcon(SERVER_ICON),self.name)
-		# self.rebuildServerInfoMenu()
-
-		# serverMenu.addSeparator()
-
-		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		# self.actNick.triggered.connect(self.menuNick)
-		# serverMenu.addAction(self.actNick)
-
-		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		# self.actJoin.triggered.connect(self.menuJoin)
-		# serverMenu.addAction(self.actJoin)
-
-		# serverMenu.addSeparator()
-
-		# self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		# self.actDisconnect.triggered.connect(self.menuDisconnect)
-		# serverMenu.addAction(self.actDisconnect)
-
 		# Load logs if necessary
 		cid = self.client.server+":"+str(self.client.port)
 		if self.gui.load_logs_on_start:
@@ -402,8 +376,6 @@ class Window(QMainWindow):
 	def restoreMe(self):
 		self.gui.restoreConsole(self.client)
 
-
-
 	def buildConnectionMenu(self,mdimenu):
 
 		supports = self.supports # list
@@ -418,7 +390,6 @@ class Window(QMainWindow):
 		chanmodes = self.chanmodes #list
 		prefix = self.prefix # list
 		cmds = self.cmds # list
-		#network = self.network
 		casemapping = self.casemapping
 		maxmodes = self.maxmodes
 
@@ -503,7 +474,7 @@ class Window(QMainWindow):
 		servmenu.addAction(consoleC)
 
 		infomenu = servmenu.addMenu("Server Settings")
-		infomenu.setIcon(QIcon(HOST_ICON))
+		infomenu.setIcon(QIcon(SERVER_SETTINGS_ICON))
 
 		#servmenu.addSeparator()
 
@@ -609,10 +580,6 @@ class Window(QMainWindow):
 		conJoinChannel.triggered.connect(self.menuJoin)
 		servmenu.addAction(conJoinChannel)
 
-		#servmenu.addSeparator()
-
 		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		conDisconnect.triggered.connect(self.menuDisconnect)
 		servmenu.addAction(conDisconnect)
-
-		#return servmenu
