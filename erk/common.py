@@ -113,6 +113,7 @@ INPUT_COMMANDS = {
 	"/topic": "/topic ",
 	"/oper": "/oper ",
 	"/invite": "/invite ",
+	"/quit": "/quit ",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",
@@ -124,6 +125,7 @@ CONSOLE_COMMANDS = {
 	"/topic": "/topic ",
 	"/oper": "/oper ",
 	"/invite": "/invite ",
+	"/quit": "/quit ",
 }
 
 GLYPH_SELF = '@'

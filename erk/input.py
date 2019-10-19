@@ -56,6 +56,25 @@ def handle_chat_input(obj,text,is_user=False):
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
 
+	if len(tokens)>=2:
+		if tokens[0].lower()=="/quit":
+			tokens.pop(0)	# remove command
+			msg = ' '.join(tokens)
+			obj.gui.disconnecting = True
+			if obj.client.reconnect:
+				cid = obj.client.server+":"+str(obj.client.port)
+				obj.gui.disconnected.append(cid)
+			obj.client.quit(msg)
+			return
+	if len(tokens)==1:
+		if tokens[0].lower()=="/quit":
+			obj.gui.disconnecting = True
+			if obj.client.reconnect:
+				cid = obj.client.server+":"+str(obj.client.port)
+				obj.gui.disconnected.append(cid)
+			obj.client.quit()
+			return
+
 	if is_user:
 		if len(tokens)>=3:
 			if tokens[0].lower()=="/invite":
@@ -319,6 +338,25 @@ def handle_console_input(obj,text):
 	etext = escape_single_quotes(text)
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
+
+	if len(tokens)>=2:
+		if tokens[0].lower()=="/quit":
+			tokens.pop(0)	# remove command
+			msg = ' '.join(tokens)
+			obj.gui.disconnecting = True
+			if obj.client.reconnect:
+				cid = obj.client.server+":"+str(obj.client.port)
+				obj.gui.disconnected.append(cid)
+			obj.client.quit(msg)
+			return
+	if len(tokens)==1:
+		if tokens[0].lower()=="/quit":
+			obj.gui.disconnecting = True
+			if obj.client.reconnect:
+				cid = obj.client.server+":"+str(obj.client.port)
+				obj.gui.disconnected.append(cid)
+			obj.client.quit()
+			return
 
 	if len(tokens)>=3:
 		if tokens[0].lower()=="/invite":
