@@ -158,20 +158,20 @@ class Window(QMainWindow):
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
 
-		serverMenu = self.menubar.addMenu("Server")
-		serverMenu.setFont(menuBoldText)
+		# serverMenu = self.menubar.addMenu("Server")
+		# serverMenu.setFont(menuBoldText)
 
-		self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		self.actNick.triggered.connect(self.menuNick)
-		serverMenu.addAction(self.actNick)
+		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
+		# self.actNick.triggered.connect(self.menuNick)
+		# serverMenu.addAction(self.actNick)
 
-		self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		self.actJoin.triggered.connect(self.menuJoin)
-		serverMenu.addAction(self.actJoin)
+		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		# self.actJoin.triggered.connect(self.menuJoin)
+		# serverMenu.addAction(self.actJoin)
 
-		self.actWhois = QAction(QIcon(WHOIS_ICON),"WHOIS",self)
-		self.actWhois.triggered.connect(self.menuWhois)
-		serverMenu.addAction(self.actWhois)
+		# self.actWhois = QAction(QIcon(WHOIS_ICON),"WHOIS",self)
+		# self.actWhois.triggered.connect(self.menuWhois)
+		# serverMenu.addAction(self.actWhois)
 
 		# Load logs if necessary
 		if self.gui.load_logs_on_start:

@@ -56,6 +56,44 @@ def handle_chat_input(obj,text,is_user=False):
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
 
+	if is_user:
+		if len(tokens)>2:
+			if tokens[0].lower()=="/topic":
+				tokens.pop(0)	# remove command
+				target = tokens.pop(0)
+				topic = ' '.join(tokens)
+				if target[:1]=='#':
+					obj.client.topic(target,topic)
+					return
+				else:
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid channel name" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					return
+		if len(tokens)<=2:
+			if tokens[0].lower()=="/topic":
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+				obj.gui.writeToChannel(obj.client,obj.name,msg)
+				return
+	else:
+		if len(tokens)>=2:
+			if tokens[0].lower()=="/topic":
+				tokens.pop(0)	# remove command
+				target = tokens.pop(0)
+				topic = ' '.join(tokens)
+				if target[:1]=='#':
+					obj.client.topic(target,topic)
+					return
+				else:
+					obj.client.topic(obj.name,target+' '+topic)
+					return
+		if len(tokens)==1:
+			if tokens[0].lower()=="/topic":
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic [CHANNEL] NEW_TOPIC" )
+				obj.gui.writeToChannel(obj.client,obj.name,msg)
+				return
+
 	if len(tokens)==2:
 		if tokens[0].lower()=="/whois":
 			tokens.pop(0)	# remove command
@@ -212,6 +250,26 @@ def handle_console_input(obj,text):
 	etext = escape_single_quotes(text)
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
+
+	if len(tokens)>2:
+		if tokens[0].lower()=="/topic":
+			tokens.pop(0)	# remove command
+			target = tokens.pop(0)
+			topic = ' '.join(tokens)
+			if target[:1]=='#':
+				obj.client.topic(target,topic)
+				return
+			else:
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid channel name" )
+				obj.gui.writeToConsole(obj.client,msg)
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+				obj.gui.writeToConsole(obj.client,msg)
+				return
+	if len(tokens)<=2:
+		if tokens[0].lower()=="/topic":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+			obj.gui.writeToConsole(obj.client,msg)
+		return
 
 	if len(tokens)==2:
 		if tokens[0].lower()=="/whois":

@@ -5,6 +5,8 @@ Version 0.500
 	* Added a server/network name display to the console's "Server" menu
 	* Console window titles now reflect the server's hostname and network
 	* Added a "Connections" menu to the main window
+	* Added the /topic command
+	* Removed "Server" menus from channel and user chat windows
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

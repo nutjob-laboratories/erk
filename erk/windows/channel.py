@@ -327,16 +327,16 @@ class Window(QMainWindow):
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
 
-		serverMenu = self.menubar.addMenu("Server")
-		serverMenu.setFont(menuBoldText)
+		# serverMenu = self.menubar.addMenu("Server")
+		# serverMenu.setFont(menuBoldText)
 
-		self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		self.actNick.triggered.connect(self.menuNick)
-		serverMenu.addAction(self.actNick)
+		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
+		# self.actNick.triggered.connect(self.menuNick)
+		# serverMenu.addAction(self.actNick)
 
-		self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		self.actJoin.triggered.connect(self.menuJoin)
-		serverMenu.addAction(self.actJoin)
+		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		# self.actJoin.triggered.connect(self.menuJoin)
+		# serverMenu.addAction(self.actJoin)
 
 		self.actModes = self.menubar.addMenu("Modes")
 		self.rebuildModesMenu()

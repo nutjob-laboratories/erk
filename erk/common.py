@@ -110,6 +110,7 @@ INPUT_COMMANDS = {
 	"/join": "/join ",
 	"/part": "/part ",
 	"/whois": "/whois ",
+	"/topic": "/topic ",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",
@@ -118,6 +119,7 @@ CONSOLE_COMMANDS = {
 	"/join": "/join ",
 	"/part": "/part ",
 	"/whois": "/whois ",
+	"/topic": "/topic ",
 }
 
 GLYPH_SELF = '@'
