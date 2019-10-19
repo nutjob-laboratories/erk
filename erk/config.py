@@ -56,6 +56,7 @@ SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
 TEXT_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "style.json")
 CHANNELS_FILE = os.path.join(SETTINGS_DIRECTORY, "channels.json")
 IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
+HISTORY_FILE = os.path.join(SETTINGS_DIRECTORY, "history.json")
 
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
@@ -85,8 +86,11 @@ SETTING_HYPERLINKS					= "link_urls_in_chat"
 SETTING_STRIP_HTML					= "strip_html_from_chat"
 SETTING_PROFANITY_FILTER			= "do_not_display_profanity"
 SETTING_LOG_PRIVATE_CHAT			= "save_private_chat_logs"
-
 SETTING_HIDE_PRIVATE_CHAT			= "hide_private_chat_on_close"
+
+SETTING_SAVE_HISTORY				= "save_server_history"
+
+UNKNOWN_IRC_NETWORK = "Unknown"
 
 # Create any necessary directories if they don't exist
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
@@ -225,6 +229,7 @@ def patch_config_file(data):
 	if not SETTING_PROFANITY_FILTER in data: data[SETTING_PROFANITY_FILTER] = False
 	if not SETTING_LOG_PRIVATE_CHAT in data: data[SETTING_LOG_PRIVATE_CHAT] = False
 	if not SETTING_HIDE_PRIVATE_CHAT in data: data[SETTING_HIDE_PRIVATE_CHAT] = True
+	if not SETTING_SAVE_HISTORY in data: data[SETTING_SAVE_HISTORY] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -265,6 +270,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_PROFANITY_FILTER: False,
 			SETTING_LOG_PRIVATE_CHAT: False,
 			SETTING_HIDE_PRIVATE_CHAT: True,
+			SETTING_SAVE_HISTORY: True,
 		}
 		save_settings(si)
 		return si
@@ -284,6 +290,77 @@ def get_network_list(filename=NETWORK_FILE):
 			servlist.append(p)
 			line = fp.readline()
 	return servlist
+
+def get_history_list(filename=HISTORY_FILE):
+	history_list = []
+	h = get_history()
+	for entry in h:
+		if entry["ssl"]:
+			s = 'ssl'
+		else:
+			s = 'normal'
+		e = [ entry["server"],entry["port"],entry["network"],s,entry["password"] ]
+		history_list.append(e)
+	return history_list
+
+def get_history(filename=HISTORY_FILE):
+	if os.path.isfile(filename):
+		with open(filename, "r") as read_history:
+			data = json.load(read_history)
+			return data
+	else:
+		return []
+
+def update_history_network(server,port,network,filename=HISTORY_FILE):
+	h = get_history()
+	new_history = []
+	found = False
+	for entry in h:
+		if entry["server"].lower()==server.lower():
+			if entry["port"]==port:
+				if entry["network"] == UNKNOWN_IRC_NETWORK:
+					found = True
+					entry["network"] = network
+		new_history.append(entry)
+	if found:
+		with open(filename, "w") as write_data:
+			json.dump(new_history, write_data, indent=4, sort_keys=True)
+			return
+
+def add_history(server,port,password,ssl,network,filename=HISTORY_FILE):
+	# Make sure this isn't an entry in the network list
+	for p in get_network_list():
+		if len(p)>5: continue
+		if len(p)<4: continue
+		if p[0]==server:
+			if p[1]==str(port):
+				return
+	if not password: password = ''
+	h = get_history()
+	new_history = []
+	found = False
+	for entry in h:
+		if entry["server"].lower()==server.lower():
+			if entry["port"]==port:
+				found = True
+				entry["password"] = password
+				entry["ssl"] = ssl
+		new_history.append(entry)
+	if found:
+		with open(filename, "w") as write_data:
+			json.dump(new_history, write_data, indent=4, sort_keys=True)
+			return
+	entry = {
+		"server": server,
+		"port": port,
+		"password": password,
+		"ssl": ssl,
+		"network": network,
+	}
+	new_history.insert(0,entry)
+	with open(filename, "w") as write_data:
+		json.dump(new_history, write_data, indent=4, sort_keys=True)
+
 
 def get_user(filename=USER_FILE):
 	if os.path.isfile(filename):

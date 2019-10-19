@@ -74,6 +74,14 @@ class Dialog(QDialog):
 		host = h[0]
 		port = int(h[1])
 
+		if len(h)==5:
+			if h[4]=='':
+				password = None
+			else:
+				password = h[4]
+		else:
+			password = None
+
 		# Save user info
 		user = {
 			"nickname": self.nick.text(),
@@ -94,7 +102,7 @@ class Dialog(QDialog):
 		else:
 			channels = []
 
-		retval = ConnectInfo(host,port,None,use_ssl,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
+		retval = ConnectInfo(host,port,password,use_ssl,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
 
 		return retval
 
@@ -181,15 +189,26 @@ class Dialog(QDialog):
 		self.servers.activated.connect(self.setServer)
 
 		servlist = get_network_list()
+		historylist = get_history_list()
+
+		servlist = historylist + servlist
 
 		for entry in servlist:
-			if len(entry) != 4: continue
+			# if len(entry) != 4: continue
+			if len(entry) > 5: continue
+			if len(entry) < 4: continue
+
+			if len(entry)==4:
+				ENTRY_ICON = IRC_NETWORK_ICON
+			else:
+				ENTRY_ICON = SAVED_SERVER_ICON
+
 			if "ssl" in entry[3]:
 				if not self.can_do_ssl: continue
 
 			self.StoredData.append(entry)
 			# self.servers.addItem("<b>" + entry[2] + "</b> - <i>" + entry[0] + "</i> ")
-			self.servers.addItem(entry[2] + " - " + entry[0])
+			self.servers.addItem(QIcon(ENTRY_ICON),entry[2] + " - " + entry[0])
 
 		self.StoredServer = self.servers.currentIndex()
 
@@ -340,6 +359,8 @@ class Dialog(QDialog):
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
+
+		self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 
 		self.setLayout(finalLayout)
 

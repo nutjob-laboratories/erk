@@ -126,6 +126,7 @@ CONSOLE_COMMANDS = {
 	"/oper": "/oper ",
 	"/invite": "/invite ",
 	"/quit": "/quit ",
+	"/raw": "/raw ",
 }
 
 GLYPH_SELF = '@'
@@ -171,6 +172,9 @@ MENU_ARROW_ICON = ":/gui-right_arrow.png"
 
 IRCNET_ICON = ":/gui-ircnet.png"
 NO_IRCNET_ICON = ":/gui-no_ircnet.png"
+
+IRC_NETWORK_ICON = ":/gui-network.png"
+SAVED_SERVER_ICON = ":/gui-saved.png"
 
 # ---------
 # | ICONS |
@@ -279,9 +283,9 @@ def ErrorDialog(message,title="Error",icon=ERK_ICON):
 
 import erk.dialogs.connect as Connect
 
-def ConnectDialog():
-	x = Connect.Dialog(SSL_AVAILABLE)
-	info = x.get_connect_information(SSL_AVAILABLE)
+def ConnectDialog(obj):
+	x = Connect.Dialog(SSL_AVAILABLE,obj)
+	info = x.get_connect_information(SSL_AVAILABLE,obj)
 
 	if not info: return None
 	return info

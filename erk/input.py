@@ -340,6 +340,18 @@ def handle_console_input(obj,text):
 	tokens = unescape_single_quotes(tokens)
 
 	if len(tokens)>=2:
+		if tokens[0].lower()=="/raw":
+			tokens.pop(0)	# remove command
+			msg = ' '.join(tokens)
+			obj.client.sendLine(msg)
+			return
+	if len(tokens)==1:
+		if tokens[0].lower()=="/raw":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /raw COMMAND ..." )
+			obj.gui.writeToConsole(obj.client,msg)
+			return
+
+	if len(tokens)>=2:
 		if tokens[0].lower()=="/quit":
 			tokens.pop(0)	# remove command
 			msg = ' '.join(tokens)

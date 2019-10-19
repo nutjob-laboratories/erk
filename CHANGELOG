@@ -15,6 +15,8 @@ Version 0.500
 	* Added the /invite command
 	* Changed the filename of "mdi.py" to "main.py"
 	* Added the /quit command
+	* Added the /raw command to the console
+	* Added the option to save connection history
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

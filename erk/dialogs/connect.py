@@ -97,6 +97,10 @@ class Dialog(QDialog):
 		# Save server info
 		save_last_server(self.host.text(),self.port.text(),self.password.text(),self.DIALOG_CONNECT_VIA_SSL,self.RECONNECT,self.AUTOJOIN_CHANNELS)
 
+		# Save history
+		if self.parent.save_server_history:
+			add_history(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,UNKNOWN_IRC_NETWORK)
+
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
 
 		return retval
@@ -338,6 +342,8 @@ class Dialog(QDialog):
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
+
+		self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 
 		self.setLayout(finalLayout)
 

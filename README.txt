@@ -26,8 +26,9 @@
 		* wraithnix: I can't believe the bus is late `:rage:`
 		* wraithnix: (tableflip)
 * Optional profanity filter
-* An extremely customizable interface
 * Automatic channel and private message logging
+* Optional server connection history
+* A built-in list of over 80 IRC servers to connect to
 
 
 # Requirements

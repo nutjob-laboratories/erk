@@ -544,6 +544,9 @@ class Erk(QMainWindow):
 
 		self.buildConnectionsMenu()
 
+		if self.save_server_history:
+			update_history_network(obj.server,obj.port,network)
+
 	def triggerRebuildConnections(self):
 		self.buildConnectionsMenu()
 
@@ -1214,6 +1217,8 @@ class Erk(QMainWindow):
 		self.log_private_chat						= self.settings[SETTING_LOG_PRIVATE_CHAT]
 		self.hide_private_chat						= self.settings[SETTING_HIDE_PRIVATE_CHAT]
 
+		self.save_server_history					= self.settings[SETTING_SAVE_HISTORY]
+
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
@@ -1262,6 +1267,11 @@ class Erk(QMainWindow):
 		if CONNECT_NETWORK_SHORTCUT!=None:
 			self.actNetwork.setShortcut(CONNECT_NETWORK_SHORTCUT)
 		ircMenu.addAction(self.actNetwork)
+
+		self.actSaveHistory = QAction("Save server history",self,checkable=True)
+		self.actSaveHistory.setChecked(self.save_server_history)
+		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
+		ircMenu.addAction(self.actSaveHistory)
 
 		ircMenu.addSeparator()
 
@@ -1565,6 +1575,14 @@ class Erk(QMainWindow):
 		else:
 			self.convert_links_in_chat = True
 		self.settings[SETTING_HYPERLINKS] = self.convert_links_in_chat
+		save_settings(self.settings,self.settings_file)
+
+	def menuToggleHistory(self):
+		if self.save_server_history:
+			self.save_server_history = False
+		else:
+			self.save_server_history = True
+		self.settings[SETTING_SAVE_HISTORY] = self.save_server_history
 		save_settings(self.settings,self.settings_file)
 
 	def menuToggleHideChat(self):
@@ -1894,7 +1912,7 @@ class Erk(QMainWindow):
 			self.connectToIRCServer(info)
 
 	def menuConnect(self):
-		info = ConnectDialog()
+		info = ConnectDialog(self)
 		if info!=None:
 			if len(info.autojoin)>0:
 				self.autojoins[info.server] = info.autojoin
