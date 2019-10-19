@@ -70,6 +70,56 @@ class Erk(QMainWindow):
 	# | IRC EVENTS BEGIN |
 	# |==================|
 
+	def irc_invited(self,obj,user,target,channel):
+		if target==obj.nickname:
+			# the client was invited
+			dmsg = user+" invited you to "+channel
+			self.serverLog(obj,dmsg)
+
+			rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+			try:
+				w = self.MDI.activeSubWindow()
+				win = w.window
+				if win.is_console: return
+				win.writeText(rmsg)
+			except:
+				pass
+		else:
+			p = user.split('!')
+			if len(p)==2:
+				user = p[0]
+
+			dmsg = user+" invited "+target+" to the channel"
+			rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+			self.writeToChannel(obj,channel,rmsg)
+			self.writeToChannelLog(obj,channel,'',dmsg)
+
+	def irc_inviting(self,obj,target,channel):
+
+		dmsg = "Invitation to "+channel+" sent to "+target
+		self.serverLog(obj,dmsg)
+
+		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		try:
+			w = self.MDI.activeSubWindow()
+			win = w.window
+			if win.is_console: return
+			win.writeText(rmsg)
+		except:
+			pass
+
+	def irc_you_are_oper(self,obj):
+		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],"You are an IRC operator" )
+		self.serverLog(obj,"You are an IRC operator")
+
+		try:
+			w = self.MDI.activeSubWindow()
+			win = w.window
+			if win.is_console: return
+			win.writeText(rmsg)
+		except:
+			pass
+
 	def irc_options(self,obj,optiondata):
 		for c in self.connections:
 			if c.id==obj.id:

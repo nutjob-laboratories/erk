@@ -432,7 +432,7 @@ class IRC_Connection(irc.IRCClient):
 		
 
 	def irc_RPL_YOUREOPER(self, prefix, params):
-		pass
+		self.gui.irc_you_are_oper(self)
 
 	def irc_RPL_TIME(self, prefix, params):
 		t = params[2]
@@ -451,12 +451,16 @@ class IRC_Connection(irc.IRCClient):
 		target = params[0]
 		channel = params[1]
 
+		self.gui.irc_invited(self,prefix,target,channel)
+
 		
 
 
 	def irc_RPL_INVITING(self,prefix,params):
 		user = params[1]
 		channel = params[2]
+
+		self.gui.irc_inviting(self,user,channel)
 
 		
 

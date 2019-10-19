@@ -57,6 +57,75 @@ def handle_chat_input(obj,text,is_user=False):
 	tokens = unescape_single_quotes(tokens)
 
 	if is_user:
+		if len(tokens)>=3:
+			if tokens[0].lower()=="/invite":
+				tokens.pop(0)	# remove command
+				channel = tokens.pop(0)
+				users = tokens
+				if channel[:1]=='#':
+					for u in users:
+						obj.client.sendLine(f"INVITE {u} {channel}")
+					return
+				else:
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+channel+"\" is not a valid channel name" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite CHANNEL USER [USER ...]" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					return
+		if len(tokens)<3:
+			if tokens[0].lower()=="/invite":
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite CHANNEL USER [USER ...]" )
+				obj.gui.writeToChannel(obj.client,obj.name,msg)
+				return
+	else:
+		if len(tokens)>2:
+			if tokens[0].lower()=="/invite":
+				tokens.pop(0)	# remove command
+				channel = tokens.pop(0)
+				users = tokens
+				if channel[:1]=='#':
+					for u in users:
+						obj.client.sendLine(f"INVITE {u} {channel}")
+					return
+				else:
+					obj.client.sendLine(f"INVITE {channel} {obj.name}")
+					for u in users:
+						obj.client.sendLine(f"INVITE {u} {obj.name}")
+					return
+		if len(tokens)==2:
+			if tokens[0].lower()=="/invite":
+				tokens.pop(0)	# remove command
+				target = tokens.pop(0)
+				if target[:1]=='#':
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid user name" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite [CHANNEL] USER [USER ...]" )
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					return
+				else:
+					obj.client.sendLine(f"INVITE {target} {obj.name}")
+					return
+		if len(tokens)==1:
+			if tokens[0].lower()=="/invite":
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite [CHANNEL] USER [USER ...]" )
+				obj.gui.writeToChannel(obj.client,obj.name,msg)
+				return
+
+
+	if len(tokens)==3:
+		if tokens[0].lower()=="/oper":
+			tokens.pop(0)	# remove command
+			username = tokens.pop(0)
+			password = tokens.pop(0)
+			obj.client.sendLine(f"OPER {username} {password}")
+			return
+	if len(tokens)!=3:
+		if tokens[0].lower()=="/oper":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /oper USERNAME PASSWORD" )
+			obj.gui.writeToChannel(obj.client,obj.name,msg)
+			return
+
+	if is_user:
 		if len(tokens)>2:
 			if tokens[0].lower()=="/topic":
 				tokens.pop(0)	# remove command
@@ -251,6 +320,40 @@ def handle_console_input(obj,text):
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
 
+	if len(tokens)>=3:
+		if tokens[0].lower()=="/invite":
+			tokens.pop(0)	# remove command
+			channel = tokens.pop(0)
+			users = tokens
+			if channel[:1]=='#':
+				for u in users:
+					obj.client.sendLine(f"INVITE {u} {channel}")
+				return
+			else:
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+channel+"\" is not a valid channel name" )
+				obj.gui.writeToConsole(obj.client,msg)
+				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite CHANNEL USER [USER ...]" )
+				obj.gui.writeToConsole(obj.client,msg)
+				return
+	if len(tokens)<3:
+		if tokens[0].lower()=="/invite":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite CHANNEL USER [USER ...]" )
+			obj.gui.writeToConsole(obj.client,msg)
+			return
+
+	if len(tokens)==3:
+		if tokens[0].lower()=="/oper":
+			tokens.pop(0)	# remove command
+			username = tokens.pop(0)
+			password = tokens.pop(0)
+			obj.client.sendLine(f"OPER {username} {password}")
+			return
+	if len(tokens)!=3:
+		if tokens[0].lower()=="/oper":
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /oper USERNAME PASSWORD" )
+			obj.gui.writeToConsole(obj.client,msg)
+			return
+
 	if len(tokens)>2:
 		if tokens[0].lower()=="/topic":
 			tokens.pop(0)	# remove command
@@ -269,7 +372,7 @@ def handle_console_input(obj,text):
 		if tokens[0].lower()=="/topic":
 			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
 			obj.gui.writeToConsole(obj.client,msg)
-		return
+			return
 
 	if len(tokens)==2:
 		if tokens[0].lower()=="/whois":

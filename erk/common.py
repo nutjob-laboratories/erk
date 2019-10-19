@@ -111,6 +111,8 @@ INPUT_COMMANDS = {
 	"/part": "/part ",
 	"/whois": "/whois ",
 	"/topic": "/topic ",
+	"/oper": "/oper ",
+	"/invite": "/invite ",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",
@@ -120,6 +122,8 @@ CONSOLE_COMMANDS = {
 	"/part": "/part ",
 	"/whois": "/whois ",
 	"/topic": "/topic ",
+	"/oper": "/oper ",
+	"/invite": "/invite ",
 }
 
 GLYPH_SELF = '@'
