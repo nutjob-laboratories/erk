@@ -205,6 +205,7 @@ class IRC_Connection(irc.IRCClient):
 		self.gui.irc_nick_changed(self,self.nickname,nick)
 		self.nickname = nick
 		#self.gui.irc_nick(self,nick)
+		self.gui.buildConnectionsMenu()
 
 	def userJoined(self, user, channel):
 		if user.split('!')[0] == self.nickname:

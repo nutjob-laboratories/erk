@@ -75,6 +75,7 @@ class Window(QMainWindow):
 			event.accept()
 		else:
 			# Don't close the console, just hide it
+			self.gui.triggerRebuildConnections()
 			self.subwindow.hide()
 			event.ignore()
 
@@ -186,7 +187,7 @@ class Window(QMainWindow):
 			for s in supports:
 				self.supports.append(s)
 
-		self.rebuildServerInfoMenu()
+		#self.rebuildServerInfoMenu()
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -203,6 +204,9 @@ class Window(QMainWindow):
 		self.is_console = True
 
 		self.network_url = None
+		self.network = "Unknown"
+
+		self.hostname = None
 
 		# BEGIN IRC SERVER INFO
 
@@ -213,7 +217,7 @@ class Window(QMainWindow):
 		self.kicklen = 0
 		self.awaylen = 0
 		self.maxtargets = 0
-		self.network = ""
+		#self.network = ""
 		self.casemapping = ""
 		self.cmds = []
 		self.prefix = []
@@ -258,31 +262,31 @@ class Window(QMainWindow):
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
 
-		serverMenu = self.menubar.addMenu("Server")
-		serverMenu.setFont(menuBoldText)
+		# serverMenu = self.menubar.addMenu("Server")
+		# serverMenu.setFont(menuBoldText)
 
-		self.servNetLink = QAction(QIcon(IRCNET_ICON),"Unknown IRC Network",self)
-		self.servNetLink.triggered.connect(self.menuServNetLink)
-		serverMenu.addAction(self.servNetLink)
+		# self.servNetLink = QAction(QIcon(IRCNET_ICON),"Unknown IRC Network",self)
+		# self.servNetLink.triggered.connect(self.menuServNetLink)
+		# serverMenu.addAction(self.servNetLink)
 
-		self.serverInfoMenu = serverMenu.addMenu(QIcon(SERVER_ICON),self.name)
-		self.rebuildServerInfoMenu()
+		# self.serverInfoMenu = serverMenu.addMenu(QIcon(SERVER_ICON),self.name)
+		# self.rebuildServerInfoMenu()
 
-		serverMenu.addSeparator()
+		# serverMenu.addSeparator()
 
-		self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		self.actNick.triggered.connect(self.menuNick)
-		serverMenu.addAction(self.actNick)
+		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
+		# self.actNick.triggered.connect(self.menuNick)
+		# serverMenu.addAction(self.actNick)
 
-		self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		self.actJoin.triggered.connect(self.menuJoin)
-		serverMenu.addAction(self.actJoin)
+		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		# self.actJoin.triggered.connect(self.menuJoin)
+		# serverMenu.addAction(self.actJoin)
 
-		serverMenu.addSeparator()
+		# serverMenu.addSeparator()
 
-		self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		self.actDisconnect.triggered.connect(self.menuDisconnect)
-		serverMenu.addAction(self.actDisconnect)
+		# self.actDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		# self.actDisconnect.triggered.connect(self.menuDisconnect)
+		# serverMenu.addAction(self.actDisconnect)
 
 		# Load logs if necessary
 		cid = self.client.server+":"+str(self.client.port)
@@ -392,7 +396,15 @@ class Window(QMainWindow):
 
 		self.client.setNick(nick)
 
-	def rebuildServerInfoMenu(self):
+	def closeMe(self):
+		self.gui.closeConsole(self.client)
+
+	def restoreMe(self):
+		self.gui.restoreConsole(self.client)
+
+
+
+	def buildConnectionMenu(self,mdimenu):
 
 		supports = self.supports # list
 		maxchannels = self.maxchannels
@@ -406,71 +418,154 @@ class Window(QMainWindow):
 		chanmodes = self.chanmodes #list
 		prefix = self.prefix # list
 		cmds = self.cmds # list
-		network = self.network
+		#network = self.network
 		casemapping = self.casemapping
 		maxmodes = self.maxmodes
 
-		self.serverInfoMenu.clear()
+
+		if self.hostname:
+			server_host = self.hostname
+		else:
+			p = self.name.split(":")
+			if len(p)==2:
+				server_host = p[0]
+			else:
+				server_host = self.name
+
+		netname = self.network+" Network"
+
+		if self.network_url:
+			micon = IRCNET_ICON
+		else:
+			micon = NO_IRCNET_ICON
+
+		MENU_WIDTH = 20
+		TRUNC_WIDTH = MENU_WIDTH-3
+
+		MENU_SMALL_WIDTH = 23
+		TRUNC_SMALL_WIDTH = MENU_SMALL_WIDTH-3
+
+		server_host = (server_host[:TRUNC_WIDTH] + '...') if len(server_host) > MENU_WIDTH else server_host
+
+		netname = (netname[:TRUNC_SMALL_WIDTH] + '...') if len(netname) > MENU_SMALL_WIDTH else netname
+
+		if len(server_host)<MENU_WIDTH:
+			server_host = server_host + ( '&nbsp;' * ( MENU_WIDTH-len(server_host)    )   )
+
+		if len(netname)<MENU_WIDTH:
+			netname = netname + ( '&nbsp;' * ( MENU_WIDTH-len(netname)    )   )
+
+
+		lhtml=f'''
+<table style="width: 100%" border="0">
+  <tbody>
+	<tr>
+	  <td style="text-align: center; vertical-align: middle;"> &nbsp;<img src="!ICON!" width="35" height="35"> </td>
+	  <td>
+		<table style="width: 100%" border="0">
+		  <tbody>
+			<tr>
+			  <td><b>!HOST!</b></td>
+			</tr>
+			<tr>
+			  <td><small>!NET!</small></td>
+			</tr>
+			<tr>
+			  <td><small><i>!NICK!</i></small></td>
+			</tr>
+		  </tbody>
+		</table>
+	  </td>
+	  <td style="text-align: right; vertical-align: middle;"><img src="!ARROW!" width="15" height="15"></td>
+	</tr>
+  </tbody>
+</table>'''
+
+		lhtml = lhtml.replace('!HOST!',server_host)
+		lhtml = lhtml.replace('!NET!',netname)
+		lhtml = lhtml.replace('!NICK!',self.client.nickname)
+
+		lhtml = lhtml.replace('!ARROW!',MENU_ARROW_ICON)
+		lhtml = lhtml.replace('!ICON!',micon)
+
+		namenetworkLabel = QLabel(lhtml)
+		namenetworkAction = QWidgetAction(self)
+		namenetworkAction.setDefaultWidget(namenetworkLabel)
+		mdimenu.addAction(namenetworkAction)
+
+		servmenu = QMenu()
+		namenetworkAction.setMenu(servmenu)
+
+		mdimenu.addSeparator()
+
+		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Console",self)
+		consoleC.triggered.connect(self.restoreMe)
+		servmenu.addAction(consoleC)
+
+		infomenu = servmenu.addMenu("Server Settings")
+		infomenu.setIcon(QIcon(HOST_ICON))
+
+		#servmenu.addSeparator()
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channels:</b> {maxchannels}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum nick length:</b> {maxnicklen}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channel length:</b> {channellen}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum topic length:</b> {topiclen}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum kick length:</b> {kicklen}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum away length:</b> {awaylen}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum message targets:</b> {maxtargets}&nbsp;&nbsp;",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum modes per user:</b> {modes}",self)
 		e = QWidgetAction(self)
 		e.setDefaultWidget(el)
-		self.serverInfoMenu.addAction(e)
+		infomenu.addAction(e)
 
-		self.serverInfoMenu.addSeparator()
+		infomenu.addSeparator()
 
 		maxmodesmenu = QMenu("Maximum modes",self)
 		for c in maxmodes:
 			e = QAction(F"{c[0]}: {c[1]}", self) 
 			maxmodesmenu.addAction(e)
-		self.serverInfoMenu.addMenu(maxmodesmenu)
+		infomenu.addMenu(maxmodesmenu)
 
 		cmdmenu = QMenu("Commands",self)
 		for c in cmds:
 			e = QAction(F"{c}", self) 
 			cmdmenu.addAction(e)
-		self.serverInfoMenu.addMenu(cmdmenu)
+		infomenu.addMenu(cmdmenu)
 
 		supportsmenu = QMenu("Supports",self)
 		for c in supports:
 			e = QAction(F"{c}", self) 
 			supportsmenu.addAction(e)
-		self.serverInfoMenu.addMenu(supportsmenu)
+		infomenu.addMenu(supportsmenu)
 
 		chanmodemenu = QMenu("Channel modes",self)
 		ct = 0
@@ -486,7 +581,7 @@ class Window(QMainWindow):
 			e = QAction(F"{ctype}: {c}", self) 
 			chanmodemenu.addAction(e)
 			ct = ct + 1
-		self.serverInfoMenu.addMenu(chanmodemenu)
+		infomenu.addMenu(chanmodemenu)
 
 		prefixmenu = QMenu("Prefixes",self)
 		for c in prefix:
@@ -497,4 +592,27 @@ class Window(QMainWindow):
 			if m=="o": e.setIcon(QIcon(USER_OPERATOR))
 			if m=="v": e.setIcon(QIcon(USER_VOICED))
 			prefixmenu.addAction(e)
-		self.serverInfoMenu.addMenu(prefixmenu)
+		infomenu.addMenu(prefixmenu)
+
+		if self.network_url:
+			servNetLink = QAction(QIcon(LINK_ICON),self.network+" Website",self)
+			servNetLink.triggered.connect(self.menuServNetLink)
+			servmenu.addAction(servNetLink)
+
+		servmenu.addSeparator()
+
+		conChangeNick = QAction(QIcon(USER_ICON),"Change Nickname",self)
+		conChangeNick.triggered.connect(self.menuNick)
+		servmenu.addAction(conChangeNick)
+
+		conJoinChannel = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		conJoinChannel.triggered.connect(self.menuJoin)
+		servmenu.addAction(conJoinChannel)
+
+		#servmenu.addSeparator()
+
+		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		conDisconnect.triggered.connect(self.menuDisconnect)
+		servmenu.addAction(conDisconnect)
+
+		#return servmenu

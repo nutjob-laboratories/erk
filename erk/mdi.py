@@ -75,6 +75,8 @@ class Erk(QMainWindow):
 			if c.id==obj.id:
 				c.console.server_options(optiondata)
 
+		self.buildConnectionsMenu()
+
 	def irc_whois(self,obj,whoisdata):
 
 		pretty = datetime.fromtimestamp(int(whoisdata.signon)).strftime('%B %d, %Y at %H:%M:%S')
@@ -464,6 +466,8 @@ class Erk(QMainWindow):
 
 		if obj.server in self.autojoins: del self.autojoins[obj.server]
 
+		#self.buildConnectionsMenu()
+
 	def irc_motd(self,obj,motd):
 		c = self.fetchConnection(obj)
 		msg = render_system(self, self.styles["timestamp"],self.styles["system"],"<br>".join(motd) )
@@ -474,21 +478,44 @@ class Erk(QMainWindow):
 		c = self.fetchConnection(obj)
 		c.network = network
 		c.hostname = hostname
+		c.console.hostname = hostname
 
 		self.serverLog(obj,"Server is a part of the  "+network+" network")
 		self.serverLog(obj,"Server's hostname is  "+hostname)
 
 		c.console.setWindowTitle(" "+hostname+" ("+network+")")
 
-		x = c.console.serverInfoMenu.menuAction()
-		x.setText(hostname)
-		c.console.servNetLink.setText(network+" IRC Network")
-
+		c.console.network = network
 		nurl = get_network_url(network)
 		if nurl:
 			c.console.network_url = nurl
 
 		self.buildWindowMenu()
+
+		self.buildConnectionsMenu()
+
+	def triggerRebuildConnections(self):
+		self.buildConnectionsMenu()
+
+	def buildConnectionsMenu(self):
+		# self.connectionsMenu
+		self.connectionsMenu.clear()
+		scount = 0
+		for c in self.connections:
+			# m = c.console.buildConnectionMenu()
+			# self.connectionsMenu.addMenu(m)
+			try:
+				c.console.buildConnectionMenu(self.connectionsMenu)
+				scount = scount + 1
+			except:
+				pass
+
+		if scount==0:
+			noConnectionsLabel = QLabel(f"&nbsp;<i>Not connected to any servers.</i>&nbsp;")
+			noConnectionsAction = QWidgetAction(self)
+			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
+			self.connectionsMenu.addAction(noConnectionsAction)
+
 
 	def irc_notice(self,obj,user,target,text):
 		p = user.split('!')
@@ -620,8 +647,11 @@ class Erk(QMainWindow):
 
 			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 			self.buildWindowMenu()
+			
 		except:
 			pass
+
+		self.buildConnectionsMenu()		
 
 	def irc_connect(self,obj):
 		
@@ -637,6 +667,8 @@ class Erk(QMainWindow):
 		# ccon.writeText("Connected!")
 
 		self.buildWindowMenu()
+
+		self.buildConnectionsMenu()
 
 	def irc_client_joined(self,obj,channel):
 
@@ -916,6 +948,17 @@ class Erk(QMainWindow):
 				if channel in c.windows:
 					c.windows[channel].setKey(text)
 
+	def restoreConsole(self,obj):
+		# win.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
+		for c in self.connections:
+			if c.id==obj.id:
+				self.restoreWindow(c.console,c.console.subwindow)
+
+	def closeConsole(self,obj):
+		for c in self.connections:
+			if c.id==obj.id:
+				c.console.close()
+
 	def restoreWindow(self,win,subwin):
 		# Unminimize window if the window is minimized
 		win.setWindowState(win.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
@@ -1181,6 +1224,12 @@ class Erk(QMainWindow):
 		if EXIT_SHORTCUT!=None:
 			self.actExit.setShortcut(EXIT_SHORTCUT)
 		ircMenu.addAction(self.actExit)
+
+		# CONNECTIONS MENU
+
+		self.connectionsMenu = self.menubar.addMenu("Connections")
+
+		self.buildConnectionsMenu()
 
 		# Edit Menu
 
@@ -1524,11 +1573,10 @@ class Erk(QMainWindow):
 			else:
 				ctitle = c.connection.server+":"+str(c.connection.port)
 
-			# win = QAction(QIcon(CONSOLE_WINDOW),c.connection.server+":"+str(c.connection.port),self)
-			win = QAction(QIcon(CONSOLE_WINDOW),ctitle,self)
-
-			win.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
-			self.windowMenu.addAction(win)
+			namenetworkLabel = QLabel("&nbsp;<small><i><b>"+ctitle+"</b></i></small>")
+			namenetworkAction = QWidgetAction(self)
+			namenetworkAction.setDefaultWidget(namenetworkLabel)
+			self.windowMenu.addAction(namenetworkAction)
 
 			for win in c.windows:
 				if c.windows[win].is_channel:

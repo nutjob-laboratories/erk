@@ -48,6 +48,27 @@ import erk.dialogs.new_nick as NicknameDialog
 
 class Window(QMainWindow):
 
+	#def changeEvent(self,event):
+
+		#if event.type() == QEvent.WindowStateChange:
+			#if event.oldState() and Qt.WindowMinimized:
+		# 		# window has been minimized
+		# 		self.stateMinimized = True
+		# 		self.stateNormal = False
+		# 		self.stateMaximized = False
+				#pass
+			#elif event.oldState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
+		# 		# window is not minimized
+		# 		self.stateNormal = False
+		# 		self.stateMinimized = False
+		# 		self.stateMaximized = True
+				#pass
+			#else:
+		# 		self.stateNormal = True
+		# 		self.stateMinimized = False
+		# 		self.stateMaximized = False
+				#self.rerenderText()
+
 	def add_to_log(self,user,msg):
 		t = datetime.timestamp(datetime.now())
 		e = [t,user,msg]
