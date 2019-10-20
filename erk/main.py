@@ -669,13 +669,20 @@ class Erk(QMainWindow):
 			c.console.close()
 			
 			clean = []
+			autjoin = []
 			for c in self.connections:
 				if c.id==obj.id:
 					for w in c.windows:
+						if c.windows[w].is_channel:
+							autojoin.append(c.windows[w].name)
 						c.windows[w].close()
 					continue
 				clean.append(c)
 			self.connections = clean
+
+			# Save all open channel windows so that
+			# we rejoin them on reconnect
+			self.autojoins[obj.server] = autojoin
 
 			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 			self.buildWindowMenu()
