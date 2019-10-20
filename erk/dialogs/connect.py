@@ -343,8 +343,6 @@ class Dialog(QDialog):
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
-		self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-
 		self.setLayout(finalLayout)
 
 	def buttonAdd(self):
