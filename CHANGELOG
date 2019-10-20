@@ -17,6 +17,9 @@ Version 0.500
 	* Added the /quit command
 	* Added the /raw command to the console
 	* Added the option to save connection history
+	* Made the main "Erk" menu prettier, and a bit easier to understand
+	* Moved "Always on top" and "Full screen" options to their own "Settings" submenu ("Display")
+	* Added the "save history" option to the "Connections" menu
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

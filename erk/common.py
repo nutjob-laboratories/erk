@@ -176,6 +176,9 @@ NO_IRCNET_ICON = ":/gui-no_ircnet.png"
 IRC_NETWORK_ICON = ":/gui-network.png"
 SAVED_SERVER_ICON = ":/gui-saved.png"
 
+FANCY_CONNECT_ICON = ":/gui-fancy_server.png"
+FANCY_NETWORK_ICON = ":/gui-fancy_network.png"
+
 # ---------
 # | ICONS |
 # ---------
@@ -211,6 +214,7 @@ UNIGNORE_ICON = ":/unignore.png"
 WHOIS_ICON = ":/whois.png"
 KICKBAN_ICON = ":/kickban.png"
 SERVER_SETTINGS_ICON = ":/ssettings.png"
+DISPLAY_ICON = ":/display.png"
 
 # =====================
 # | WINDOW MANAGEMENT |
@@ -526,3 +530,61 @@ def get_network_url(net):
 		return "http://www.xertion.org/"
 
 	return None
+
+FANCY_MENU_ICON_SIZE = str(MENU_ICON_SIZE)
+
+def fancyMenuAction(self,icon,title,description,func):
+
+	fancyLabel = MenuLabel( menuHtml(icon,title,description) )
+	fancyAction = QWidgetAction(self)
+	fancyAction.setDefaultWidget(fancyLabel)
+	fancyLabel.clicked.connect(func)
+
+	return fancyAction
+
+class MenuLabel(QLabel):
+	clicked=pyqtSignal()
+
+	def __init__(self, parent=None):
+		QLabel.__init__(self, parent)
+		self.installEventFilter(self)
+
+	def mousePressEvent(self, ev):
+		self.clicked.emit()
+
+	def eventFilter(self, object, event):
+		if event.type() == QEvent.Enter:
+			col = self.palette().highlight().color().name()
+			highlight = QColor(col).name()
+
+			col = self.palette().highlightedText().color().name()
+			highlight_text = QColor(col).name()
+			
+			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
+			return True
+		elif event.type() == QEvent.Leave:
+			self.setStyleSheet('')
+		return False
+
+def menuHtml(icon,text,description):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{FANCY_MENU_ICON_SIZE}" height="{FANCY_MENU_ICON_SIZE}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''

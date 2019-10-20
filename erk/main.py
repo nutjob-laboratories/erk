@@ -514,7 +514,9 @@ class Erk(QMainWindow):
 					else:
 						obj.join(channel[0])
 
-		if obj.server in self.autojoins: del self.autojoins[obj.server]
+		# Don't delete autojoin info in memory so that channels
+		# can be autojoined on reconnection
+		#if obj.server in self.autojoins: del self.autojoins[obj.server]
 
 		#self.buildConnectionsMenu()
 
@@ -546,29 +548,6 @@ class Erk(QMainWindow):
 
 		if self.save_server_history:
 			update_history_network(obj.server,obj.port,network)
-
-	def triggerRebuildConnections(self):
-		self.buildConnectionsMenu()
-
-	def buildConnectionsMenu(self):
-		# self.connectionsMenu
-		self.connectionsMenu.clear()
-		scount = 0
-		for c in self.connections:
-			# m = c.console.buildConnectionMenu()
-			# self.connectionsMenu.addMenu(m)
-			try:
-				c.console.buildConnectionMenu(self.connectionsMenu)
-				scount = scount + 1
-			except:
-				pass
-
-		if scount==0:
-			noConnectionsLabel = QLabel(f"&nbsp;<i>Not connected to any servers.</i>&nbsp;")
-			noConnectionsAction = QWidgetAction(self)
-			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
-			self.connectionsMenu.addAction(noConnectionsAction)
-
 
 	def irc_notice(self,obj,user,target,text):
 		p = user.split('!')
@@ -1252,50 +1231,27 @@ class Erk(QMainWindow):
 
 		# IRC Menu
 
-		ircMenu = self.menubar.addMenu(APPLICATION_NAME)
+		self.ircMenu = self.menubar.addMenu(APPLICATION_NAME)
 
-		ircMenu.setFont(menuBoldText)
+		self.ircMenu.setFont(menuBoldText)
 
-		self.actConnect = QAction(QIcon(SERVER_ICON),"Connect",self)
-		self.actConnect.triggered.connect(self.menuConnect)
-		if CONNECT_SERVER_SHORTCUT!=None:
-			self.actConnect.setShortcut(CONNECT_SERVER_SHORTCUT)
-		ircMenu.addAction(self.actConnect)
+		self.actConnect = fancyMenuAction(self,FANCY_CONNECT_ICON,"Connect","Connect to an IRC server",self.menuConnect)
+		self.ircMenu.addAction(self.actConnect)
 
-		self.actNetwork = QAction(QIcon(NETWORK_ICON),"Networks",self)
-		self.actNetwork.triggered.connect(self.menuNetwork)
-		if CONNECT_NETWORK_SHORTCUT!=None:
-			self.actNetwork.setShortcut(CONNECT_NETWORK_SHORTCUT)
-		ircMenu.addAction(self.actNetwork)
+		self.actNetwork = fancyMenuAction(self,FANCY_NETWORK_ICON,"Servers","Select server from a list",self.menuNetwork)
+		self.ircMenu.addAction(self.actNetwork)
 
-		self.actSaveHistory = QAction("Save server history",self,checkable=True)
-		self.actSaveHistory.setChecked(self.save_server_history)
-		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
-		ircMenu.addAction(self.actSaveHistory)
-
-		ircMenu.addSeparator()
-
-		self.actOnTop = QAction("Always On Top",self,checkable=True)
-		self.actOnTop.setChecked(self.window_on_top)
-		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
-		ircMenu.addAction(self.actOnTop)
-
-		self.actFullscreen = QAction("Full Screen",self,checkable=True)
-		self.actFullscreen.setChecked(self.window_fullscreen)
-		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
-		ircMenu.addAction(self.actFullscreen)
-
-		ircMenu.addSeparator()
+		self.ircMenu.addSeparator()
 
 		self.actRestart = QAction(QIcon(RESTART_ICON),"Restart",self)
 		self.actRestart.triggered.connect(self.menuRestart)
-		ircMenu.addAction(self.actRestart)
+		self.ircMenu.addAction(self.actRestart)
 
 		self.actExit = QAction(QIcon(EXIT_ICON),"Exit",self)
 		self.actExit.triggered.connect(self.close)
 		if EXIT_SHORTCUT!=None:
 			self.actExit.setShortcut(EXIT_SHORTCUT)
-		ircMenu.addAction(self.actExit)
+		self.ircMenu.addAction(self.actExit)
 
 		# CONNECTIONS MENU
 
@@ -1333,6 +1289,18 @@ class Erk(QMainWindow):
 		self.actFont.setText(f"Font ({mf}, {ms}pt)")
 
 		settingsMenu.addSeparator()
+
+		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
+
+		self.actOnTop = QAction("Always On Top",self,checkable=True)
+		self.actOnTop.setChecked(self.window_on_top)
+		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
+		displaySubMenu.addAction(self.actOnTop)
+
+		self.actFullscreen = QAction("Full Screen",self,checkable=True)
+		self.actFullscreen.setChecked(self.window_fullscreen)
+		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
+		displaySubMenu.addAction(self.actFullscreen)
 
 		windowSubMenu = settingsMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
 
@@ -1917,6 +1885,35 @@ class Erk(QMainWindow):
 			if len(info.autojoin)>0:
 				self.autojoins[info.server] = info.autojoin
 			self.connectToIRCServer(info)
+
+	def triggerRebuildConnections(self):
+		self.buildConnectionsMenu()
+
+	def buildConnectionsMenu(self):
+		# self.connectionsMenu
+		self.connectionsMenu.clear()
+		scount = 0
+		for c in self.connections:
+			# m = c.console.buildConnectionMenu()
+			# self.connectionsMenu.addMenu(m)
+			try:
+				c.console.buildConnectionMenu(self.connectionsMenu)
+				scount = scount + 1
+			except:
+				pass
+
+		if scount==0:
+			noConnectionsLabel = QLabel(f"&nbsp;<i>Not connected to any servers.</i>&nbsp;")
+			noConnectionsAction = QWidgetAction(self)
+			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
+			self.connectionsMenu.addAction(noConnectionsAction)
+
+		self.connectionsMenu.addSeparator()
+
+		self.actSaveHistory = QAction("Save server history",self,checkable=True)
+		self.actSaveHistory.setChecked(self.save_server_history)
+		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
+		self.connectionsMenu.addAction(self.actSaveHistory)
 
 	# |=============|
 	# | QT CODE END |
