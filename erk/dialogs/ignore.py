@@ -35,32 +35,10 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.common import *
-from erk.config import *
 
 import erk.dialogs.add_ignore as AddIgnoreDialog
 
 class Dialog(QDialog):
-
-	# @staticmethod
-	# def get_ignored_users(parent=None):
-	# 	dialog = Dialog(parent)
-	# 	r = dialog.exec_()
-	# 	if r:
-	# 		return dialog.return_list()
-	# 	return None
-
-	# def return_list(self):
-
-	# 	items = [] 
-	# 	for index in range(self.ignoredUsers.count()): 
-	# 		 items.append(self.ignoredUsers.item(index).text())
-
-	# 	return items
-
-	# def closeEvent(self, event):
-	# 	if self.subwindow != None:
-	# 		self.subwindow.close()
-	# 	self.close()
 
 	def doOkay(self):
 		

@@ -48,7 +48,6 @@ except Exception as exception:
 	SSL_IS_AVAILABLE = False
 
 from erk.common import *
-from erk.config import *
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
 import erk.dialogs.edit_user as EditUserDialog
@@ -518,7 +517,7 @@ class Erk(QMainWindow):
 		# can be autojoined on reconnection
 		#if obj.server in self.autojoins: del self.autojoins[obj.server]
 
-		#self.buildConnectionsMenu()
+		self.buildConnectionsMenu()
 
 	def irc_motd(self,obj,motd):
 		c = self.fetchConnection(obj)
@@ -669,7 +668,7 @@ class Erk(QMainWindow):
 			c.console.close()
 			
 			clean = []
-			autjoin = []
+			autojoin = []
 			for c in self.connections:
 				if c.id==obj.id:
 					for w in c.windows:
@@ -804,12 +803,17 @@ class Erk(QMainWindow):
 
 
 	def irc_nick_changed(self,obj,oldnick,newnick):
-		self.serverLog(obj,oldnick+" is now known as "+newnick)
+		if obj.nickname==oldnick:
+			self.serverLog(obj,"You are now known as "+newnick)
+		else:
+			self.serverLog(obj,oldnick+" is now known as "+newnick)
 		renamed_user_window = False
 		newwin = None
 		for c in self.connections:
 			if c.id==obj.id:
 				for channel in c.windows:
+					if obj.nickname==oldnick:
+						c.windows[channel].update_nick(newnick)
 					if not c.windows[channel].is_channel:
 						if channel==oldnick:
 							newwin = c.windows[channel]
@@ -817,6 +821,7 @@ class Erk(QMainWindow):
 							newwin.setWindowTitle(" "+newnick)
 							renamed_user_window = True
 							continue
+						continue
 					clean = []
 					found = False
 					for u in c.windows[channel].users:
@@ -841,9 +846,14 @@ class Erk(QMainWindow):
 						c.windows[channel].users = clean
 						c.windows[channel].refreshUserlist()
 
-						msg = render_system(self, self.styles["timestamp"],self.styles["system"], oldnick+" is now known as "+newnick )
-						self.writeToChannel(obj,channel, msg )
-						self.writeToChannelLog(obj,channel,'',oldnick+" is now known as "+newnick)
+						if obj.nickname==oldnick:
+							msg = render_system(self, self.styles["timestamp"],self.styles["system"], "You are now known as "+newnick )
+							self.writeToChannel(obj,channel, msg )
+							self.writeToChannelLog(obj,channel,'',"You are now known as "+newnick)
+						else:
+							msg = render_system(self, self.styles["timestamp"],self.styles["system"], oldnick+" is now known as "+newnick )
+							self.writeToChannel(obj,channel, msg )
+							self.writeToChannelLog(obj,channel,'',oldnick+" is now known as "+newnick)
 
 		if renamed_user_window:
 			if newwin:

@@ -32,10 +32,7 @@
 import sys
 import os
 
-INSTALL_DIRECTORY = sys.path[0]
-ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
-DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
-MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
+from erk.config import *
 
 mvf=open(MINOR_VERSION_FILE, "r")
 MINOR_VERSION = mvf.read()
@@ -306,11 +303,6 @@ def NetworkDialog():
 # =====================
 # | SUPPORT FUNCTIONS |
 # =====================
-
-
-ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "asciimoji.txt")
-EMOJI_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "emoji.txt")
-EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "emoji_alias.txt")
 
 def load_asciimoji_autocomplete():
 	ASCIIMOJI_AUTOCOMPLETE = []

@@ -32,7 +32,6 @@
 import shlex
 
 from erk.common import *
-from erk.config import *
 import emoji
 
 def escape_single_quotes(text):

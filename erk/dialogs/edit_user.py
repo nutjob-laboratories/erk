@@ -36,7 +36,6 @@ from PyQt5.QtMultimedia import *
 from PyQt5 import QtCore
 
 from erk.common import *
-from erk.config import *
 
 class Dialog(QDialog):
 

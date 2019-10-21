@@ -183,6 +183,15 @@ class SpellTextEdit(QPlainTextEdit):
 						text = self.textCursor().selectedText()
 
 					for c in self.parent.gui.EMOJI_AUTOCOMPLETE:
+
+						# Case sensitive
+						if fnmatch.fnmatchcase(c,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(c)
+							cursor.endEditBlock()
+							return
+
+						# Case insensitive
 						if fnmatch.fnmatch(c,f"{text}*"):
 							cursor.beginEditBlock()
 							cursor.insertText(c)

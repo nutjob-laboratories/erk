@@ -38,7 +38,6 @@ from PyQt5.QtMultimedia import *
 from PyQt5 import QtCore
 
 from erk.common import *
-from erk.config import *
 from erk.spelledit import *
 import erk.input
 
@@ -64,6 +63,7 @@ class Window(QMainWindow):
 
 			self.subwindow.close()
 			self.close()
+			self.gui.triggerRebuildConnections()
 			event.accept()
 		elif self.gui.disconnecting:
 
@@ -72,6 +72,7 @@ class Window(QMainWindow):
 			self.subwindow.close()
 			self.close()
 			self.gui.disconnecting = False
+			self.gui.triggerRebuildConnections()
 			event.accept()
 		else:
 			# Don't close the console, just hide it

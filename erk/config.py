@@ -58,9 +58,16 @@ CHANNELS_FILE = os.path.join(SETTINGS_DIRECTORY, "channels.json")
 IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
 HISTORY_FILE = os.path.join(SETTINGS_DIRECTORY, "history.json")
 
+MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
+
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
+
+AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
+ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.txt")
+EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
+EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
 SETTING_OPEN_PRIVATE_WINDOWS		= "open_windows_for_private_messages"
 SETTING_CHAT_STATUS_BARS			= "display_chat_window_status_bars"

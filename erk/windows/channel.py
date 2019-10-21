@@ -38,7 +38,6 @@ from PyQt5.QtMultimedia import *
 from PyQt5 import QtCore
 
 from erk.common import *
-from erk.config import *
 import erk.input
 
 from erk.spelledit import *
@@ -47,27 +46,6 @@ import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 
 class Window(QMainWindow):
-
-	#def changeEvent(self,event):
-
-		#if event.type() == QEvent.WindowStateChange:
-			#if event.oldState() and Qt.WindowMinimized:
-		# 		# window has been minimized
-		# 		self.stateMinimized = True
-		# 		self.stateNormal = False
-		# 		self.stateMaximized = False
-				#pass
-			#elif event.oldState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
-		# 		# window is not minimized
-		# 		self.stateNormal = False
-		# 		self.stateMinimized = False
-		# 		self.stateMaximized = True
-				#pass
-			#else:
-		# 		self.stateNormal = True
-		# 		self.stateMinimized = False
-		# 		self.stateMaximized = False
-				#self.rerenderText()
 
 	def add_to_log(self,user,msg):
 		t = datetime.timestamp(datetime.now())
@@ -245,6 +223,9 @@ class Window(QMainWindow):
 		self.key = key
 		self.rebuildModesMenu()
 
+	def update_nick(self,newnick):
+		self.status_nick.setText("<b><small>"+newnick+"</small></b>")
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -314,10 +295,17 @@ class Window(QMainWindow):
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
 		if self.client.hostname!=self.client.server:
-			self.status_text = QLabel("<i>"+self.client.hostname+" ("+self.client.network+") - "+self.client.server+":"+str(self.client.port)+"</i>&nbsp;")
+			self.status_text = QLabel("<i><small>"+self.client.hostname+" ("+self.client.network+") - "+self.client.server+":"+str(self.client.port)+"</small></i>&nbsp;")
 		else:
 			self.status_text = QLabel("<i>"+self.client.hostname+" ("+self.client.network+")</i>&nbsp;")
 		self.status_text.setAlignment(Qt.AlignRight)
+
+		self.status_nick = QLabel("<b><small>"+self.client.nickname+"</small></b>")
+		self.status_nick.setAlignment(Qt.AlignLeft)
+
+		# self.status.addPermanentWidget(self.status_text,1)
+		self.status.addPermanentWidget(self.status_nick,0)
+		self.status.addPermanentWidget(QLabel(" "),1)
 		self.status.addPermanentWidget(self.status_text,1)
 
 		if not self.gui.display_status_bar_on_chat_windows: self.status.hide()
