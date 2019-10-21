@@ -224,7 +224,7 @@ class Window(QMainWindow):
 		self.rebuildModesMenu()
 
 	def update_nick(self,newnick):
-		self.status_nick.setText("<b><small>"+newnick+"</small></b>")
+		self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -300,7 +300,7 @@ class Window(QMainWindow):
 			self.status_text = QLabel("<i>"+self.client.hostname+" ("+self.client.network+")</i>&nbsp;")
 		self.status_text.setAlignment(Qt.AlignRight)
 
-		self.status_nick = QLabel("<b><small>"+self.client.nickname+"</small></b>")
+		self.status_nick = QLabel("&nbsp;<b><small>"+self.client.nickname+"</small></b>")
 		self.status_nick.setAlignment(Qt.AlignLeft)
 
 		# self.status.addPermanentWidget(self.status_text,1)

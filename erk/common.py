@@ -91,6 +91,37 @@ class ErkStyle(QProxyStyle):
 		else:
 			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
 
+class QHLine(QFrame):
+	def __init__(self):
+		super(QHLine, self).__init__()
+		self.setFrameShape(QFrame.HLine)
+		self.setFrameShadow(QFrame.Sunken)
+
+
+class MenuLabel(QLabel):
+	clicked=pyqtSignal()
+
+	def __init__(self, parent=None):
+		QLabel.__init__(self, parent)
+		self.installEventFilter(self)
+
+	def mousePressEvent(self, ev):
+		self.clicked.emit()
+
+	def eventFilter(self, object, event):
+		if event.type() == QEvent.Enter:
+			col = self.palette().highlight().color().name()
+			highlight = QColor(col).name()
+
+			col = self.palette().highlightedText().color().name()
+			highlight_text = QColor(col).name()
+			
+			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
+			return True
+		elif event.type() == QEvent.Leave:
+			self.setStyleSheet('')
+		return False
+
 # =============
 # | RESOURCES |
 # =============
@@ -559,30 +590,6 @@ def fancyMenuAction(self,icon,title,description,func):
 	fancyLabel.clicked.connect(func)
 
 	return fancyAction
-
-class MenuLabel(QLabel):
-	clicked=pyqtSignal()
-
-	def __init__(self, parent=None):
-		QLabel.__init__(self, parent)
-		self.installEventFilter(self)
-
-	def mousePressEvent(self, ev):
-		self.clicked.emit()
-
-	def eventFilter(self, object, event):
-		if event.type() == QEvent.Enter:
-			col = self.palette().highlight().color().name()
-			highlight = QColor(col).name()
-
-			col = self.palette().highlightedText().color().name()
-			highlight_text = QColor(col).name()
-			
-			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
-			return True
-		elif event.type() == QEvent.Leave:
-			self.setStyleSheet('')
-		return False
 
 def menuHtml(icon,text,description):
 	return f'''

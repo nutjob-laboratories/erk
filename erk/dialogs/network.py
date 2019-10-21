@@ -108,11 +108,16 @@ class Dialog(QDialog):
 	def setServer(self):
 		self.StoredServer = self.servers.currentIndex()
 
-		self.netType.setText("<b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b>")
-		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"Connect via SSL to port {self.StoredData[self.StoredServer][1]}")
+		if self.StoredServer in self.saved_entries:
+			self.entryType.setText("<small><i>Saved Server</i></small>")
 		else:
-			self.connType.setText(f"Connect via TCP/IP to port {self.StoredData[self.StoredServer][1]}")
+			self.entryType.setText("")
+
+		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
+		if "ssl" in self.StoredData[self.StoredServer][3]:
+			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+		else:
+			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
 
 	def clickReconnect(self,state):
 		if state == Qt.Checked:
@@ -151,7 +156,7 @@ class Dialog(QDialog):
 		channels = loadChannels()
 		last_server = get_last_server()
 
-		self.setWindowTitle("Connect to Network")
+		self.setWindowTitle("Connect to IRC")
 		self.setWindowIcon(QIcon(NETWORK_ICON))
 
 		self.tabs = QTabWidget()
@@ -159,7 +164,7 @@ class Dialog(QDialog):
 		self.user_tab = QWidget()
 		self.channels_tab = QWidget()
 
-		self.tabs.addTab(self.server_tab,"Network")
+		self.tabs.addTab(self.server_tab,"Servers")
 		self.tabs.addTab(self.user_tab,"User")
 		self.tabs.addTab(self.channels_tab,"Channels")
 
@@ -168,10 +173,21 @@ class Dialog(QDialog):
 		self.tabs.setFont(f)
 
 		# Server information
+		self.entryType = QLabel("")
 		self.connType = QLabel("")
 		self.netType = QLabel("")
-		self.description = QLabel("Select an IRC network")
+		self.description = QLabel("<big>Select a server</big>")
 		self.description.setAlignment(Qt.AlignCenter)
+
+		f = self.connType.font()
+		f.setBold(False)
+		self.connType.setFont(f)
+		self.entryType.setFont(f)
+
+		etLayout = QHBoxLayout()
+		etLayout.addStretch()
+		etLayout.addWidget(self.entryType)
+		etLayout.addStretch()
 
 		ntLayout = QHBoxLayout()
 		ntLayout.addStretch()
@@ -183,17 +199,20 @@ class Dialog(QDialog):
 		ctLayout.addWidget(self.connType)
 		ctLayout.addStretch()
 
-		# self.servers = HTMLComboBox(self)
 		self.servers = QComboBox(self)
 		self.servers.activated.connect(self.setServer)
+
+		self.servers.setFrame(False)
 
 		servlist = get_network_list()
 		historylist = get_history_list()
 
 		servlist = historylist + servlist
+		self.saved_entries = []
 
+		counter = -1
 		for entry in servlist:
-			# if len(entry) != 4: continue
+			counter = counter + 1
 			if len(entry) > 5: continue
 			if len(entry) < 4: continue
 
@@ -201,21 +220,26 @@ class Dialog(QDialog):
 				ENTRY_ICON = IRC_NETWORK_ICON
 			else:
 				ENTRY_ICON = SAVED_SERVER_ICON
+				self.saved_entries.append(counter)
 
 			if "ssl" in entry[3]:
 				if not self.can_do_ssl: continue
 
 			self.StoredData.append(entry)
-			# self.servers.addItem("<b>" + entry[2] + "</b> - <i>" + entry[0] + "</i> ")
 			self.servers.addItem(QIcon(ENTRY_ICON),entry[2] + " - " + entry[0])
 
 		self.StoredServer = self.servers.currentIndex()
 
-		self.netType.setText("<b>"+self.StoredData[self.StoredServer][2]+"</b>")
-		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"Connect via SSL to port {self.StoredData[self.StoredServer][1]}")
+		if self.StoredServer in self.saved_entries:
+			self.entryType.setText("<small><i>Saved Server</i></small>")
 		else:
-			self.connType.setText(f"Connect via TCP/IP to port {self.StoredData[self.StoredServer][1]}")
+			self.entryType.setText("")
+
+		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
+		if "ssl" in self.StoredData[self.StoredServer][3]:
+			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+		else:
+			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
 
 		self.reconnect = QCheckBox("Reconnect on disconnection",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
@@ -226,12 +250,14 @@ class Dialog(QDialog):
 		fstoreLayout = QVBoxLayout()
 		fstoreLayout.addWidget(self.description)
 		fstoreLayout.addWidget(self.servers)
+		fstoreLayout.addStretch()
+		fstoreLayout.addWidget(QHLine())
+		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
-		# fstoreLayout.addWidget(self.reconnect)
+		fstoreLayout.addLayout(etLayout)
+		fstoreLayout.addStretch()
 
-		#servBox = QGroupBox("IRC Network")
-		#servBox.setLayout(fstoreLayout)
 		self.server_tab.setLayout(fstoreLayout)
 
 		# USER INFO BEGIN
@@ -283,9 +309,6 @@ class Dialog(QDialog):
 		nurLayout.addLayout(userLayout)
 		nurLayout.addLayout(realLayout)
 
-		#nickBox = QGroupBox("User Information")
-		#nickBox.setLayout(nurLayout)
-
 		self.user_tab.setLayout(nurLayout)
 
 		# USER INFO END
@@ -301,8 +324,6 @@ class Dialog(QDialog):
 		self.autoChannels = QListWidget(self)
 		self.autoChannels.setMaximumHeight(100)
 
-		#self.autoChannels.setMaximumWidth( self.calculate_text_entry_size(self.realname,20)  )
-
 		self.addChannelButton = QPushButton("+")
 		self.addChannelButton.clicked.connect(self.buttonAdd)
 
@@ -310,12 +331,10 @@ class Dialog(QDialog):
 		self.removeChannelButton.clicked.connect(self.buttonRemove)
 
 		buttonLayout = QHBoxLayout()
-		#buttonLayout.addStretch()
 		buttonLayout.addWidget(self.addChannelButton)
 		buttonLayout.addWidget(self.removeChannelButton)
 
 		autoJoinLayout = QVBoxLayout()
-		# autoJoinLayout.addWidget(self.do_autojoin)
 		autoJoinLayout.addWidget(self.autoChannels)
 		autoJoinLayout.addLayout(buttonLayout)
 
@@ -345,10 +364,7 @@ class Dialog(QDialog):
 		buttons.rejected.connect(self.reject)
 
 		vLayout = QVBoxLayout()
-		#vLayout.addWidget(nickBox)
-		#vLayout.addWidget(servBox)
 		vLayout.addWidget(self.tabs)
-		# vLayout.addWidget(self.reconnect)
 		vLayout.addWidget(self.reconnect)
 		vLayout.addWidget(self.do_autojoin)
 
@@ -375,7 +391,6 @@ class Dialog(QDialog):
 			self.close()
 			return
 
-		#print(channel,key)
 		if key == "":
 			item = QListWidgetItem(f"{channel}")
 			item.setIcon(QIcon(CHANNEL_WINDOW))
@@ -390,7 +405,6 @@ class Dialog(QDialog):
 		self.autojoins.append(e)
 
 	def buttonRemove(self):
-		#self.removeSel()
 		try:
 			channel = self.autoChannels.currentItem().text()
 			i = self.autoChannels.currentRow()
