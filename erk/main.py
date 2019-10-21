@@ -1675,6 +1675,8 @@ class Erk(QMainWindow):
 			namenetworkAction.setDefaultWidget(namenetworkLabel)
 			self.windowMenu.addAction(namenetworkAction)
 
+			namenetworkLabel.setAlignment(Qt.AlignHCenter)
+
 			for win in c.windows:
 				if c.windows[win].is_channel:
 					cwin = QAction(QIcon(CHANNEL_WINDOW),c.windows[win].name,self)
@@ -1957,8 +1959,8 @@ class Erk(QMainWindow):
 		self.connectionsMenu.clear()
 		scount = 0
 		for c in self.connections:
-			# m = c.console.buildConnectionMenu()
-			# self.connectionsMenu.addMenu(m)
+			# c.console.buildConnectionMenu(self.connectionsMenu)
+			# scount = scount + 1
 			try:
 				c.console.buildConnectionMenu(self.connectionsMenu)
 				scount = scount + 1

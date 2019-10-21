@@ -165,11 +165,6 @@ PYTHON_SMALL_ICON = ":/gui-pyicon.png"
 QT_SMALL_ICON = ":/gui-qticon.png"
 PYQT_ICON = ":/gui-pyqt.png"
 
-MENU_ARROW_ICON = ":/gui-right_arrow.png"
-
-IRCNET_ICON = ":/gui-ircnet.png"
-NO_IRCNET_ICON = ":/gui-no_ircnet.png"
-
 IRC_NETWORK_ICON = ":/gui-network.png"
 SAVED_SERVER_ICON = ":/gui-saved.png"
 

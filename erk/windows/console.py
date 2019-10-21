@@ -394,7 +394,6 @@ class Window(QMainWindow):
 		casemapping = self.casemapping
 		maxmodes = self.maxmodes
 
-
 		if self.hostname:
 			server_host = self.hostname
 		else:
@@ -404,71 +403,12 @@ class Window(QMainWindow):
 			else:
 				server_host = self.name
 
-		netname = self.network+" Network"
 
-		if self.network_url:
-			micon = IRCNET_ICON
-		else:
-			micon = NO_IRCNET_ICON
-
-		MENU_WIDTH = 20
-		TRUNC_WIDTH = MENU_WIDTH-3
-
-		MENU_SMALL_WIDTH = 23
-		TRUNC_SMALL_WIDTH = MENU_SMALL_WIDTH-3
-
-		server_host = (server_host[:TRUNC_WIDTH] + '...') if len(server_host) > MENU_WIDTH else server_host
-
-		netname = (netname[:TRUNC_SMALL_WIDTH] + '...') if len(netname) > MENU_SMALL_WIDTH else netname
-
-		if len(server_host)<MENU_WIDTH:
-			server_host = server_host + ( '&nbsp;' * ( MENU_WIDTH-len(server_host)    )   )
-
-		if len(netname)<MENU_WIDTH:
-			netname = netname + ( '&nbsp;' * ( MENU_WIDTH-len(netname)    )   )
-
-
-		lhtml=f'''
-<table style="width: 100%" border="0">
-  <tbody>
-	<tr>
-	  <td style="text-align: center; vertical-align: middle;"> &nbsp;<img src="!ICON!" width="35" height="35"> </td>
-	  <td>
-		<table style="width: 100%" border="0">
-		  <tbody>
-			<tr>
-			  <td><b>!HOST!</b></td>
-			</tr>
-			<tr>
-			  <td><small>!NET!</small></td>
-			</tr>
-			<tr>
-			  <td><small><i>!NICK!</i></small></td>
-			</tr>
-		  </tbody>
-		</table>
-	  </td>
-	  <td style="text-align: right; vertical-align: middle;"><img src="!ARROW!" width="15" height="15"></td>
-	</tr>
-  </tbody>
-</table>'''
-
-		lhtml = lhtml.replace('!HOST!',server_host)
-		lhtml = lhtml.replace('!NET!',netname)
-		lhtml = lhtml.replace('!NICK!',self.client.nickname)
-
-		lhtml = lhtml.replace('!ARROW!',MENU_ARROW_ICON)
-		lhtml = lhtml.replace('!ICON!',micon)
-
-		namenetworkLabel = QLabel(lhtml)
-		namenetworkAction = QWidgetAction(self)
-		namenetworkAction.setDefaultWidget(namenetworkLabel)
-		mdimenu.addAction(namenetworkAction)
+		servName = QAction(QIcon(HOST_ICON),server_host,self)
+		mdimenu.addAction(servName)
 
 		servmenu = QMenu()
-		namenetworkAction.setMenu(servmenu)
-
-		mdimenu.addSeparator()
+		servName.setMenu(servmenu)
 
 		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Console",self)
 		consoleC.triggered.connect(self.restoreMe)
@@ -477,7 +417,12 @@ class Window(QMainWindow):
 		infomenu = servmenu.addMenu("Server Settings")
 		infomenu.setIcon(QIcon(SERVER_SETTINGS_ICON))
 
-		#servmenu.addSeparator()
+		if self.network_url:
+			servNetLink = QAction(QIcon(LINK_ICON),self.network+" Website",self)
+			servNetLink.triggered.connect(self.menuServNetLink)
+			servmenu.addAction(servNetLink)
+
+		servmenu.addSeparator()
 
 		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channels:</b> {maxchannels}",self)
 		e = QWidgetAction(self)
@@ -566,11 +511,6 @@ class Window(QMainWindow):
 			prefixmenu.addAction(e)
 		infomenu.addMenu(prefixmenu)
 
-		if self.network_url:
-			servNetLink = QAction(QIcon(LINK_ICON),self.network+" Website",self)
-			servNetLink.triggered.connect(self.menuServNetLink)
-			servmenu.addAction(servNetLink)
-
 		servmenu.addSeparator()
 
 		conChangeNick = QAction(QIcon(USER_ICON),"Change Nickname",self)
@@ -584,3 +524,5 @@ class Window(QMainWindow):
 		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		conDisconnect.triggered.connect(self.menuDisconnect)
 		servmenu.addAction(conDisconnect)
+
+		#mdimenu.addSeparator()

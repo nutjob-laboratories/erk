@@ -95,7 +95,6 @@ SETTING_PROFANITY_FILTER			= "do_not_display_profanity"
 SETTING_LOG_PRIVATE_CHAT			= "save_private_chat_logs"
 SETTING_HIDE_PRIVATE_CHAT			= "hide_private_chat_on_close"
 SETTING_SAVE_HISTORY				= "save_server_history"
-
 SETTING_ASCIIMOJI_AUTOCOMPLETE		= "autocomplete_asciimojis"
 SETTING_EMOJI_AUTOCOMPLETE			= "autocomplete_emojis"
 
