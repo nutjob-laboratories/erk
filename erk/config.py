@@ -87,8 +87,10 @@ SETTING_STRIP_HTML					= "strip_html_from_chat"
 SETTING_PROFANITY_FILTER			= "do_not_display_profanity"
 SETTING_LOG_PRIVATE_CHAT			= "save_private_chat_logs"
 SETTING_HIDE_PRIVATE_CHAT			= "hide_private_chat_on_close"
-
 SETTING_SAVE_HISTORY				= "save_server_history"
+
+SETTING_ASCIIMOJI_AUTOCOMPLETE		= "autocomplete_asciimojis"
+SETTING_EMOJI_AUTOCOMPLETE			= "autocomplete_emojis"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
 
@@ -230,6 +232,8 @@ def patch_config_file(data):
 	if not SETTING_LOG_PRIVATE_CHAT in data: data[SETTING_LOG_PRIVATE_CHAT] = False
 	if not SETTING_HIDE_PRIVATE_CHAT in data: data[SETTING_HIDE_PRIVATE_CHAT] = True
 	if not SETTING_SAVE_HISTORY in data: data[SETTING_SAVE_HISTORY] = True
+	if not SETTING_ASCIIMOJI_AUTOCOMPLETE in data: data[SETTING_ASCIIMOJI_AUTOCOMPLETE] = True
+	if not SETTING_EMOJI_AUTOCOMPLETE in data: data[SETTING_EMOJI_AUTOCOMPLETE] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -271,6 +275,8 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_LOG_PRIVATE_CHAT: False,
 			SETTING_HIDE_PRIVATE_CHAT: True,
 			SETTING_SAVE_HISTORY: True,
+			SETTING_ASCIIMOJI_AUTOCOMPLETE: True,
+			SETTING_EMOJI_AUTOCOMPLETE: True,
 		}
 		save_settings(si)
 		return si

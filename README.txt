@@ -18,6 +18,7 @@
 	* Right click on misspelled words for suggested spellings/words
 * Command/nick/channel auto-completion
 	* Type the first few letters of a command, nickname, or channel, and hit the tab key
+	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
 	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)

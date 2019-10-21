@@ -1202,8 +1202,8 @@ class Erk(QMainWindow):
 		self.window_fullscreen						= False
 		self.log_private_chat						= self.settings[SETTING_LOG_PRIVATE_CHAT]
 		self.hide_private_chat						= self.settings[SETTING_HIDE_PRIVATE_CHAT]
-
 		self.save_server_history					= self.settings[SETTING_SAVE_HISTORY]
+		self.filter_profanity						= self.settings[SETTING_PROFANITY_FILTER]
 
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
@@ -1211,7 +1211,17 @@ class Erk(QMainWindow):
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 
-		self.filter_profanity = self.settings[SETTING_PROFANITY_FILTER]
+		self.autocomplete_asciimoji = self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE]
+		self.ASCIIMOJI_AUTOCOMPLETE = []
+
+		if self.autocomplete_asciimoji:
+			self.ASCIIMOJI_AUTOCOMPLETE = load_asciimoji_autocomplete()
+
+		self.autocomplete_emoji = self.settings[SETTING_EMOJI_AUTOCOMPLETE]
+		self.EMOJI_AUTOCOMPLETE = []
+
+		if self.autocomplete_emoji:
+			self.EMOJI_AUTOCOMPLETE = load_emoji_autocomplete()
 
 		f = QFont()
 		f.fromString(self.font_string)
@@ -1347,6 +1357,16 @@ class Erk(QMainWindow):
 		self.actAutoNicks.setChecked(self.autocomplete_nicks)
 		self.actAutoNicks.triggered.connect(self.menuAutoNicks)
 		autoSubMenu.addAction(self.actAutoNicks)
+
+		self.actAutoAsciimoji = QAction("Autocomplete ASCIImojis",self,checkable=True)
+		self.actAutoAsciimoji.setChecked(self.autocomplete_asciimoji)
+		self.actAutoAsciimoji.triggered.connect(self.menuAutoAsciimoji)
+		autoSubMenu.addAction(self.actAutoAsciimoji)
+
+		self.actAutoEmoji = QAction("Autocomplete Emojis",self,checkable=True)
+		self.actAutoEmoji.setChecked(self.autocomplete_emoji)
+		self.actAutoEmoji.triggered.connect(self.menuAutoEmoji)
+		autoSubMenu.addAction(self.actAutoEmoji)
 
 		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
 
@@ -1536,6 +1556,28 @@ class Erk(QMainWindow):
 		x = EditUserDialog.Dialog()
 		e = x.get_user_information()
 
+	def menuAutoEmoji(self):
+		if self.autocomplete_emoji:
+			self.autocomplete_emoji = False
+			self.EMOJI_AUTOCOMPLETE = []
+		else:
+			self.autocomplete_emoji = True
+			if len(self.EMOJI_AUTOCOMPLETE)==0:
+				self.EMOJI_AUTOCOMPLETE = load_emoji_autocomplete()
+		self.settings[SETTING_EMOJI_AUTOCOMPLETE] = self.autocomplete_emoji
+		save_settings(self.settings,self.settings_file)
+
+	def menuAutoAsciimoji(self):
+		if self.autocomplete_asciimoji:
+			self.autocomplete_asciimoji = False
+			self.ASCIIMOJI_AUTOCOMPLETE = []
+		else:
+			self.autocomplete_asciimoji = True
+			if len(self.ASCIIMOJI_AUTOCOMPLETE)==0:
+				self.ASCIIMOJI_AUTOCOMPLETE = load_asciimoji_autocomplete()
+		self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE] = self.autocomplete_asciimoji
+		save_settings(self.settings,self.settings_file)
+
 	def menuStripHtml(self):
 		if self.strip_html_from_chat:
 			self.strip_html_from_chat = False
@@ -1662,16 +1704,20 @@ class Erk(QMainWindow):
 	def menuEmoji(self):
 		if self.use_emojis:
 			self.use_emojis = False
+			self.actAutoEmoji.setEnabled(False)
 		else:
 			self.use_emojis = True
+			self.actAutoEmoji.setEnabled(True)
 		self.settings[SETTING_EMOJI] = self.use_emojis
 		save_settings(self.settings,self.settings_file)
 
 	def menuAsciimoji(self):
 		if self.use_asciimojis:
 			self.use_asciimojis = False
+			self.actAutoAsciimoji.setEnabled(False)
 		else:
 			self.use_asciimojis = True
+			self.actAutoAsciimoji.setEnabled(True)
 		self.settings[SETTING_ASCIIMOJI] = self.use_asciimojis
 		save_settings(self.settings,self.settings_file)
 

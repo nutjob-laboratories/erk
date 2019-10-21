@@ -307,6 +307,37 @@ def NetworkDialog():
 # | SUPPORT FUNCTIONS |
 # =====================
 
+
+ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "asciimoji.txt")
+EMOJI_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "emoji.txt")
+EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(DATA_DIRECTORY, "emoji_alias.txt")
+
+def load_asciimoji_autocomplete():
+	ASCIIMOJI_AUTOCOMPLETE = []
+	with open(ASCIIMOJI_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			ASCIIMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	return ASCIIMOJI_AUTOCOMPLETE
+
+def load_emoji_autocomplete():
+	EMOJI_AUTOCOMPLETE = []
+	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			EMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	with open(EMOJI_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			EMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	return EMOJI_AUTOCOMPLETE
+
 def restart_program():
 	python = sys.executable
 	os.execl(python, python, * sys.argv)

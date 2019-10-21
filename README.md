@@ -4,7 +4,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.500</b></a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.009**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.010**.
 
 **Erk** is functional for use. Most basic features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -18,6 +18,7 @@
 	* Right click on misspelled words for suggested spellings/words
 * Command/nick/channel auto-completion
 	* Type the first few letters of a command, nickname, or channel, and hit the tab key
+	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
 	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)

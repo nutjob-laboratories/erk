@@ -147,6 +147,48 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.endEditBlock()
 							return
 
+			if self.parent.gui.use_asciimojis:
+				if self.parent.gui.autocomplete_asciimoji:
+
+					# Autocomplete ASCIImojis
+					cursor.select(QTextCursor.WordUnderCursor)
+					oldpos = cursor.position()
+					cursor.select(QTextCursor.WordUnderCursor)
+					newpos = cursor.selectionStart() - 1
+					cursor.setPosition(newpos,QTextCursor.MoveAnchor)
+					cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
+					self.setTextCursor(cursor)
+					if self.textCursor().hasSelection():
+						text = self.textCursor().selectedText()
+
+					for c in self.parent.gui.ASCIIMOJI_AUTOCOMPLETE:
+						if fnmatch.fnmatch(c,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(c)
+							cursor.endEditBlock()
+							return
+
+			if self.parent.gui.use_emojis:
+				if self.parent.gui.autocomplete_emoji:
+
+					# Autocomplete emojis
+					cursor.select(QTextCursor.WordUnderCursor)
+					oldpos = cursor.position()
+					cursor.select(QTextCursor.WordUnderCursor)
+					newpos = cursor.selectionStart() - 1
+					cursor.setPosition(newpos,QTextCursor.MoveAnchor)
+					cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
+					self.setTextCursor(cursor)
+					if self.textCursor().hasSelection():
+						text = self.textCursor().selectedText()
+
+					for c in self.parent.gui.EMOJI_AUTOCOMPLETE:
+						if fnmatch.fnmatch(c,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(c)
+							cursor.endEditBlock()
+							return
+
 
 			cursor.movePosition(QTextCursor.End)
 			self.setTextCursor(cursor)
