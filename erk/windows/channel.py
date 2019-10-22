@@ -223,7 +223,10 @@ class Window(QMainWindow):
 		self.rebuildModesMenu()
 
 	def update_nick(self,newnick):
-		self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
+		if self.is_away:
+			self.status_nick.setText("&nbsp;<b><small>"+newnick+" (away)</small></b>")
+		else:
+			self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -245,6 +248,8 @@ class Window(QMainWindow):
 		self.modeson = ''
 		self.modesoff = ''
 		self.key = ''
+
+		self.is_away = False
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW))

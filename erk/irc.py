@@ -99,6 +99,31 @@ class IRC_Connection(irc.IRCClient):
 
 	heartbeatInterval = 120
 
+
+
+	def irc_RPL_AWAY(self,prefix,params):
+		user = params[1]
+		msg = params[2]
+
+		self.gui.irc_user_away(self,user,msg)
+
+
+	def irc_RPL_UNAWAY(self,prefix,params):
+		msg = params[1]
+
+		self.is_away = False
+
+		self.gui.irc_not_away(self,msg)
+
+	def irc_RPL_NOWAWAY(self,prefix,params):
+
+		msg = params[1]
+
+		self.is_away = True
+
+		self.gui.irc_is_away(self,msg)
+
+
 	def irc_RPL_BANLIST(self,prefix,params):
 		channel = params[1]
 		ban = params[2]
@@ -145,6 +170,8 @@ class IRC_Connection(irc.IRCClient):
 		self.banlists = defaultdict(list)
 
 		self.whois = {}
+
+		self.is_away = False
 
 
 	def connectionMade(self):

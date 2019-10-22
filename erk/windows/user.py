@@ -97,7 +97,10 @@ class Window(QMainWindow):
 			self.channelChatDisplay.moveCursor(QTextCursor.End)
 
 	def update_nick(self,newnick):
-		self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
+		if self.is_away:
+			self.status_nick.setText("&nbsp;<b><small>"+newnick+" (away)</small></b>")
+		else:
+			self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -112,6 +115,8 @@ class Window(QMainWindow):
 
 		self.is_channel = False
 		self.is_console = False
+
+		self.is_away = False
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(USER_WINDOW))

@@ -29,6 +29,9 @@ Version 0.500
 	* Added a space before the nickname on the chat status bars
 	* Made the "Servers" dialog a little prettier, and cleaned up the code
 	* Removed QtMultimedia requirement, as the library is not being used
+	* Added a watermark to the console background (to distinguish it from a chat window)
+	* Added "/away" and "/back" commands
+	* Chat window status bars are now turned on by default
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

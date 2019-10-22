@@ -141,6 +141,8 @@ INPUT_COMMANDS = {
 	"/oper": "/oper ",
 	"/invite": "/invite ",
 	"/quit": "/quit ",
+	"/away": "/away ",
+	"/back": "/back",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",
@@ -154,6 +156,8 @@ CONSOLE_COMMANDS = {
 	"/invite": "/invite ",
 	"/quit": "/quit ",
 	"/raw": "/raw ",
+	"/away": "/away ",
+	"/back": "/back",
 }
 
 GLYPH_SELF = '@'
@@ -200,6 +204,8 @@ SAVED_SERVER_ICON = ":/gui-saved.png"
 
 FANCY_CONNECT_ICON = ":/gui-fancy_server.png"
 FANCY_NETWORK_ICON = ":/gui-fancy_network.png"
+
+CONSOLE_BACKGROUND = ":/gui-console_background.png"
 
 # ---------
 # | ICONS |

@@ -68,6 +68,57 @@ class Erk(QMainWindow):
 	# | IRC EVENTS BEGIN |
 	# |==================|
 
+	def irc_is_away(self,obj,message):
+		dmsg = "You have been marked as being away"
+		self.serverLog(obj,dmsg)
+
+		for c in self.connections:
+			if c.id==obj.id:
+				for channel in c.windows:
+					c.windows[channel].is_away = True
+					c.windows[channel].update_nick(obj.nickname)
+
+		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		try:
+			w = self.MDI.activeSubWindow()
+			win = w.window
+			if win.is_console: return
+			win.writeText(rmsg)
+		except:
+			pass
+
+	def irc_not_away(self,obj,message):
+		dmsg = "You are no longer marked as being away"
+		self.serverLog(obj,dmsg)
+
+		for c in self.connections:
+			if c.id==obj.id:
+				for channel in c.windows:
+					c.windows[channel].is_away = False
+					c.windows[channel].update_nick(obj.nickname)
+
+		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		try:
+			w = self.MDI.activeSubWindow()
+			win = w.window
+			if win.is_console: return
+			win.writeText(rmsg)
+		except:
+			pass
+
+	def irc_user_away(self,obj,user,message):
+		dmsg = user+" is away: "+message
+		self.serverLog(obj,dmsg)
+
+		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		try:
+			w = self.MDI.activeSubWindow()
+			win = w.window
+			if win.is_console: return
+			win.writeText(rmsg)
+		except:
+			pass
+
 	def irc_invited(self,obj,user,target,channel):
 		if target==obj.nickname:
 			# the client was invited

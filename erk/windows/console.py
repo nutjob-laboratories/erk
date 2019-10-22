@@ -235,7 +235,11 @@ class Window(QMainWindow):
 		self.channelChatDisplay.setObjectName("channelChatDisplay")
 		self.channelChatDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelChatDisplay.anchorClicked.connect(self.linkClicked)
-		self.channelChatDisplay.setStyleSheet(self.gui.styles["base"])
+		# self.channelChatDisplay.setStyleSheet(self.gui.styles["base"])
+
+		# css =  "QTextEdit { background-image: url(" + CONSOLE_BACKGROUND + "); background-attachment: fixed; background-repeat: no-repeat; background-position: right; }"
+		css =  "QTextEdit { background-image: url(" + CONSOLE_BACKGROUND + "); background-attachment: fixed; background-repeat: no-repeat; background-position: top right; "+self.gui.styles["base"]+" }"
+		self.channelChatDisplay.setStyleSheet(css)
 
 		self.userTextInput = SpellTextEdit(self)
 		self.userTextInput.setObjectName("userTextInput")
