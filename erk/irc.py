@@ -35,6 +35,7 @@ import sys
 import random
 import string
 from collections import defaultdict
+import time
 
 from erk.common import *
 
@@ -173,6 +174,14 @@ class IRC_Connection(irc.IRCClient):
 
 		self.is_away = False
 
+		self.uptime = 0
+
+	def uptime_beat(self):
+
+		self.uptime = self.uptime + 1
+		
+		self.gui.irc_uptime(self,self.uptime)
+
 
 	def connectionMade(self):
 
@@ -181,11 +190,18 @@ class IRC_Connection(irc.IRCClient):
 
 		self.gui.irc_connect(self)
 
+		self.uptimeTimer = UptimeHeartbeat()
+		self.uptimeTimer.beat.connect(self.uptime_beat)
+		self.uptimeTimer.start()
+
 		irc.IRCClient.connectionMade(self)
 
 	def connectionLost(self, reason):
 
 		self.gui.irc_disconnect(self,reason)
+
+		self.uptimeTimer.stop()
+		self.uptime = 0
 
 		irc.IRCClient.connectionLost(self, reason)
 
@@ -676,3 +692,20 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
+
+class UptimeHeartbeat(QThread):
+
+	beat = pyqtSignal()
+
+	def __init__(self,parent=None):
+		super(UptimeHeartbeat, self).__init__(parent)
+		self.threadactive = True
+
+	def run(self):
+		while self.threadactive:
+			time.sleep(1)
+			self.beat.emit()
+
+	def stop(self):
+		self.threadactive = False
+		self.wait()

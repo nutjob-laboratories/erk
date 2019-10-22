@@ -189,6 +189,18 @@ class Window(QMainWindow):
 
 		#self.rebuildServerInfoMenu()
 
+	def uptime_display(self,text):
+		# self.uptime = QLabel('<b>00:00:00</b>&nbsp;')
+		self.uptime.setText('<b>'+text+'</b>')
+
+	def hide_uptime(self):
+		self.menubar.setVisible(False)
+		self.uptime.setVisible(False)
+
+	def show_uptime(self):
+		self.menubar.setVisible(True)
+		self.uptime.setVisible(True)
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -265,6 +277,19 @@ class Window(QMainWindow):
 		self.menubar = self.menuBar()
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
+
+		if self.gui.display_uptime_seconds:
+			self.uptime = QLabel('<b>00:00:00</b>',self)
+		else:
+			self.uptime = QLabel('<b>00:00</b>',self)
+
+		self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
+
+		self.uptime.setStyleSheet('padding: 2px;')
+
+		if not self.gui.display_uptime_console:
+			self.menubar.setVisible(False)
+			self.uptime.setVisible(False)
 
 		# Load logs if necessary
 		cid = self.client.server+":"+str(self.client.port)

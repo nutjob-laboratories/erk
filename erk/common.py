@@ -243,6 +243,7 @@ WHOIS_ICON = ":/whois.png"
 KICKBAN_ICON = ":/kickban.png"
 SERVER_SETTINGS_ICON = ":/ssettings.png"
 DISPLAY_ICON = ":/display.png"
+UPTIME_ICON = ":/uptime.png"
 
 # =====================
 # | WINDOW MANAGEMENT |
@@ -334,6 +335,12 @@ def NetworkDialog():
 # =====================
 # | SUPPORT FUNCTIONS |
 # =====================
+
+def convertSeconds(seconds):
+	h = seconds//(60*60)
+	m = (seconds-h*60*60)//60
+	s = seconds-(h*60*60)-(m*60)
+	return [h, m, s]
 
 def load_asciimoji_autocomplete():
 	ASCIIMOJI_AUTOCOMPLETE = []

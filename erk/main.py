@@ -68,6 +68,26 @@ class Erk(QMainWindow):
 	# | IRC EVENTS BEGIN |
 	# |==================|
 
+	def irc_uptime(self,obj,uptime):
+
+		t = convertSeconds(uptime)
+		hours = t[0]
+		if len(str(hours))==1: hours = f"0{hours}"
+		minutes = t[1]
+		if len(str(minutes))==1: minutes = f"0{minutes}"
+		seconds = t[2]
+		if len(str(seconds))==1: seconds = f"0{seconds}"
+		if self.display_uptime_seconds:
+			display = f"{hours}:{minutes}:{seconds}"
+		else:
+			display = f"{hours}:{minutes}"
+
+		for c in self.connections:
+			if c.id==obj.id:
+				c.console.uptime_display(display)
+				for channel in c.windows:
+					c.windows[channel].uptime_display(display)
+
 	def irc_is_away(self,obj,message):
 		dmsg = "You have been marked as being away"
 		self.serverLog(obj,dmsg)
@@ -1264,6 +1284,10 @@ class Erk(QMainWindow):
 		self.hide_private_chat						= self.settings[SETTING_HIDE_PRIVATE_CHAT]
 		self.save_server_history					= self.settings[SETTING_SAVE_HISTORY]
 		self.filter_profanity						= self.settings[SETTING_PROFANITY_FILTER]
+		self.display_uptime_console					= self.settings[SETTING_DISPLAY_UPTIME_CONSOLE]
+		self.display_uptime_chat					= self.settings[SETTING_DISPLAY_UPTIME_CHAT]
+
+		self.display_uptime_seconds					= self.settings[SETTING_UPTIME_SECONDS]
 
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
@@ -1405,6 +1429,23 @@ class Erk(QMainWindow):
 		self.actPlainUserLists.setChecked(self.plain_user_lists)
 		self.actPlainUserLists.triggered.connect(self.menuPlainUserLists)
 		windowSubMenu.addAction(self.actPlainUserLists)
+
+		uptimeSubMenu = settingsMenu.addMenu(QIcon(UPTIME_ICON),"Uptime")
+
+		self.actConsoleUptime = QAction("Display uptime on console windows",self,checkable=True)
+		self.actConsoleUptime.setChecked(self.display_uptime_console)
+		self.actConsoleUptime.triggered.connect(self.menuConsoleUptime)
+		uptimeSubMenu.addAction(self.actConsoleUptime)
+
+		self.actChatUptime = QAction("Display uptime on chat windows",self,checkable=True)
+		self.actChatUptime.setChecked(self.display_uptime_chat)
+		self.actChatUptime.triggered.connect(self.menuChatUptime)
+		uptimeSubMenu.addAction(self.actChatUptime)
+
+		self.actSecondsUptime = QAction("Display seconds in uptime",self,checkable=True)
+		self.actSecondsUptime.setChecked(self.display_uptime_seconds)
+		self.actSecondsUptime.triggered.connect(self.menuSecondsUptime)
+		uptimeSubMenu.addAction(self.actSecondsUptime)
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
@@ -1615,6 +1656,102 @@ class Erk(QMainWindow):
 	def menuEditUser(self):
 		x = EditUserDialog.Dialog()
 		e = x.get_user_information()
+
+	def menuSecondsUptime(self):
+		if self.display_uptime_seconds:			
+			self.display_uptime_seconds = False
+			for c in self.connections:
+				t = convertSeconds(c.connection.uptime)
+				hours = t[0]
+				if len(str(hours))==1: hours = f"0{hours}"
+				minutes = t[1]
+				if len(str(minutes))==1: minutes = f"0{minutes}"
+				seconds = t[2]
+				if len(str(seconds))==1: seconds = f"0{seconds}"
+				display = f"{hours}:{minutes}"
+
+				try:
+					if self.display_uptime_console:
+						c.console.uptime_display(display)
+						c.console.hide_uptime()
+						c.console.show_uptime()
+				except:
+					pass
+				for channel in c.windows:
+					try:
+						if self.display_uptime_chat:
+							c.windows[channel].uptime_display(display)
+							c.windows[channel].hide_uptime()
+							c.windows[channel].show_uptime()
+					except:
+						pass
+		else:
+			self.display_uptime_seconds = True
+			for c in self.connections:
+				t = convertSeconds(c.connection.uptime)
+				hours = t[0]
+				if len(str(hours))==1: hours = f"0{hours}"
+				minutes = t[1]
+				if len(str(minutes))==1: minutes = f"0{minutes}"
+				seconds = t[2]
+				if len(str(seconds))==1: seconds = f"0{seconds}"
+				display = f"{hours}:{minutes}:{seconds}"
+
+				try:
+					if self.display_uptime_console:
+						c.console.uptime_display(display)
+						c.console.hide_uptime()
+						c.console.show_uptime()
+				except:
+					pass
+				for channel in c.windows:
+					try:
+						if self.display_uptime_chat:
+							c.windows[channel].uptime_display(display)
+							c.windows[channel].hide_uptime()
+							c.windows[channel].show_uptime()
+					except:
+						pass
+		self.settings[SETTING_UPTIME_SECONDS] = self.display_uptime_seconds
+		save_settings(self.settings,self.settings_file)
+
+	def menuChatUptime(self):
+		if self.display_uptime_chat:
+			self.display_uptime_chat = False
+			for c in self.connections:
+				for channel in c.windows:
+					try:
+						c.windows[channel].hide_uptime()
+					except:
+						pass
+		else:
+			self.display_uptime_chat = True
+			for c in self.connections:
+				for channel in c.windows:
+					try:
+						c.windows[channel].show_uptime()
+					except:
+						pass
+		self.settings[SETTING_DISPLAY_UPTIME_CHAT] = self.display_uptime_chat
+		save_settings(self.settings,self.settings_file)
+
+	def menuConsoleUptime(self):
+		if self.display_uptime_console:
+			self.display_uptime_console = False
+			for c in self.connections:
+				try:
+					c.console.hide_uptime()
+				except:
+					pass
+		else:
+			self.display_uptime_console = True
+			for c in self.connections:
+				try:
+					c.console.show_uptime()
+				except:
+					pass
+		self.settings[SETTING_DISPLAY_UPTIME_CONSOLE] = self.display_uptime_console
+		save_settings(self.settings,self.settings_file)
 
 	def menuAutoEmoji(self):
 		if self.autocomplete_emoji:

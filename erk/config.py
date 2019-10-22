@@ -97,6 +97,9 @@ SETTING_HIDE_PRIVATE_CHAT			= "hide_private_chat_on_close"
 SETTING_SAVE_HISTORY				= "save_server_history"
 SETTING_ASCIIMOJI_AUTOCOMPLETE		= "autocomplete_asciimojis"
 SETTING_EMOJI_AUTOCOMPLETE			= "autocomplete_emojis"
+SETTING_DISPLAY_UPTIME_CONSOLE		= "display_uptime_on_console"
+SETTING_DISPLAY_UPTIME_CHAT			= "display_uptime_on_chat_windows"
+SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
 
@@ -240,6 +243,9 @@ def patch_config_file(data):
 	if not SETTING_SAVE_HISTORY in data: data[SETTING_SAVE_HISTORY] = True
 	if not SETTING_ASCIIMOJI_AUTOCOMPLETE in data: data[SETTING_ASCIIMOJI_AUTOCOMPLETE] = True
 	if not SETTING_EMOJI_AUTOCOMPLETE in data: data[SETTING_EMOJI_AUTOCOMPLETE] = True
+	if not SETTING_DISPLAY_UPTIME_CONSOLE in data: data[SETTING_DISPLAY_UPTIME_CONSOLE] = True
+	if not SETTING_DISPLAY_UPTIME_CHAT in data: data[SETTING_DISPLAY_UPTIME_CHAT] = False
+	if not SETTING_UPTIME_SECONDS in data: data[SETTING_UPTIME_SECONDS] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -283,6 +289,9 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_SAVE_HISTORY: True,
 			SETTING_ASCIIMOJI_AUTOCOMPLETE: True,
 			SETTING_EMOJI_AUTOCOMPLETE: True,
+			SETTING_DISPLAY_UPTIME_CONSOLE: True,
+			SETTING_DISPLAY_UPTIME_CHAT: False,
+			SETTING_UPTIME_SECONDS: True,
 		}
 		save_settings(si)
 		return si

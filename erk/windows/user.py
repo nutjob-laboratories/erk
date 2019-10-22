@@ -102,6 +102,16 @@ class Window(QMainWindow):
 		else:
 			self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
 
+	def uptime_display(self,text):
+		# self.uptime = QLabel('<b>00:00:00</b>&nbsp;')
+		self.uptime.setText('<b>'+text+'</b>')
+
+	def hide_uptime(self):
+		self.uptime.setVisible(False)
+
+	def show_uptime(self):
+		self.uptime.setVisible(True)
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -172,6 +182,17 @@ class Window(QMainWindow):
 		self.menubar = self.menuBar()
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
+
+		if self.gui.display_uptime_seconds:
+			self.uptime = QLabel('<b>00:00:00</b>',self)
+		else:
+			self.uptime = QLabel('<b>00:00</b>',self)
+		
+		self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
+
+		self.uptime.setStyleSheet('padding: 2px;')
+
+		if not self.gui.display_uptime_chat: self.uptime.setVisible(False)
 
 		# serverMenu = self.menubar.addMenu("Server")
 		# serverMenu.setFont(menuBoldText)

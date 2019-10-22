@@ -32,6 +32,12 @@ Version 0.500
 	* Added a watermark to the console background (to distinguish it from a chat window)
 	* Added "/away" and "/back" commands
 	* Chat window status bars are now turned on by default
+	* Added an uptime display to all windows
+	* Added options to hide/show uptime displays
+	* Added an option to hide/show seconds in uptime display
+	* Moved uptime settings to their own submenu in the "Settings" menu
+	* Changed the "Timestamp" icon to a clock
+	* Changed the "Uptime" icon to a stopwatch
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window
