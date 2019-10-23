@@ -744,7 +744,7 @@ class Erk(QMainWindow):
 				if c.id==obj.id:
 					for w in c.windows:
 						if c.windows[w].is_channel:
-							autojoin.append(c.windows[w].name)
+							autojoin.append( [c.windows[w].name,c.windows[w].key] )
 						c.windows[w].close()
 					continue
 				clean.append(c)

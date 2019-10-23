@@ -4,7 +4,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.500</b></a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.023**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.024**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -43,6 +43,10 @@
 * Automatic channel and private message logging
 * Optional server connection history
 * A built-in list of over 80 IRC servers to connect to
+* Many command-line options to control **Erk**'s start up
+	* Edit default user information from the command-line
+	* Set a server to connect to on startup
+	* Connect with an [IRC URL](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
 
 
 # Requirements

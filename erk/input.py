@@ -110,9 +110,10 @@ def handle_chat_input(obj,text,is_user=False):
 		return
 
 	if not colored_text:
-		msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
-		obj.gui.writeToChannel(obj.client,obj.name,msg)
-		return
+		if color_command:
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+			obj.gui.writeToChannel(obj.client,obj.name,msg)
+			return
 
 	if colored_text:
 		# Inject emojis

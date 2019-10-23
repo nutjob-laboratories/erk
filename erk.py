@@ -33,6 +33,8 @@ import sys
 import os
 import argparse
 import time
+import urllib.parse
+import posixpath
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -65,16 +67,16 @@ https://github.com/nutjob-laboratories/erk''',
 
 user_info = get_user()
 
-proggroup = parser.add_argument_group('Optional arguments')
+proggroup = parser.add_argument_group('Connect to IRC on startup')
 
 proggroup.add_argument("server", type=str,help="Server to connect to", metavar="SERVER", nargs='?')
 proggroup.add_argument("port", type=int,help="Server port to connect to (6667)", default=6667, nargs='?', metavar="PORT")
-
-netgroup = parser.add_argument_group('Server options')
-
-netgroup.add_argument( "--autojoin", help=f"Autojoin channels", action="store_true")
-netgroup.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store_true")
-netgroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
+proggroup.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
+proggroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
+proggroup.add_argument( "--autojoin", help=f"Autojoin channels on connection", action="store_true")
+proggroup.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store_true")
+proggroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
+proggroup.add_argument("-U","--url", type=str,help="Use an IRC URL for server information", metavar="URL", default='')
 
 usergroup = parser.add_argument_group('User options')
 
@@ -172,12 +174,57 @@ if __name__ == '__main__':
 		else:
 			GUI.show()
 
+	if args.url!='':
+		u = urllib.parse.urlparse(args.url)
+		if u.scheme=='irc':
+			if u.password:
+				args.password = u.password
+			if u.hostname:
+				args.server = u.hostname
+			if u.port:
+				args.port = u.port
+			if u.path!='':
+				p = urllib.parse.unquote(u.path)
+				p = posixpath.normpath(p)
+				l = posixpath.split(p)
+				if len(l)>0:
+					if l[0]=='/':
+						if l[1]!='':
+							c = str(l[1])
+							if ',' in c:
+								channel = c.split(',')
+								if len(channel)==2:
+									if channel[0][:1]!='#': channel[0] = '#'+channel[0]
+									GUI.autojoins[args.server].append(channel)
+							else:
+								if c[1:]!='#': c = '#'+c
+								GUI.autojoins[args.server].append([c,''])
+
 	if args.server:
 		server = args.server
 		port = args.port
 
 		if args.autojoin:
-			GUI.autojoins[server] = loadChannels()
+			for c in loadChannels():
+				GUI.autojoins[server].append(c) 
+
+		if args.channel:
+			if server in GUI.autojoins:
+				for c in args.channel:
+					p = c.split(':')
+					if len(p)==2:
+						GUI.autojoins[server].append(p)
+					else:
+						GUI.autojoins[server].append([c,''])
+			else:
+				GUI.autojoins[server] = []
+				for c in args.channel:
+					p = c.split(':')
+					if len(p)==2:
+						GUI.autojoins[server].append(p)
+					else:
+						GUI.autojoins[server].append([c,''])
+
 
 		if args.ssl:
 			if args.reconnect:
@@ -195,7 +242,7 @@ if __name__ == '__main__':
 			server=server,
 			port=port,
 			alternate=new_user['alternate'],
-			password='',
+			password=args.password,
 			username=new_user['username'],
 			realname=new_user['realname'],
 			ssl=args.ssl,

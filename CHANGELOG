@@ -53,6 +53,10 @@ Version 0.500
 	* Added IRC color code rendering for incoming chat
 	* Added an option to turn off (and on) IRC color code rendering
 	* Added the /color command to chat windows
+	* Fixed a bug in autojoining channels on disconnection
+	* Added -c option to commandline (to join channels on connection)
+	* Added -p option to commandline (to set/use a server connect password)
+	* IRC URLs (eg irc://erk@password:localhost:6667/channel) can now be passed to Erk as a commandline option
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window
