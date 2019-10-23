@@ -43,6 +43,7 @@ from erk.spelledit import *
 
 import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
+import erk.dialogs.channel_key as ChannelKeyDialog
 
 class Window(QMainWindow):
 
@@ -112,6 +113,7 @@ class Window(QMainWindow):
 	def writeUserlist(self,users):
 
 		self.users = []
+		self.operator = False
 
 		self.channelUserDisplay.clear()
 
@@ -134,6 +136,7 @@ class Window(QMainWindow):
 			if self.gui.plain_user_lists:
 				if '@' in nickname:
 					ops.append(nickname)
+					if nickname==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname)
 				else:
@@ -141,6 +144,7 @@ class Window(QMainWindow):
 			else:
 				if '@' in nickname:
 					ops.append(nickname.replace('@',''))
+					if nickname.replace('@','')==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname.replace('+',''))
 				else:
@@ -173,6 +177,12 @@ class Window(QMainWindow):
 			self.channelUserDisplay.addItem(ui)
 
 		self.channelUserDisplay.update()
+
+		
+		if self.operator:
+			self.buildOperatorMenus()
+		else:
+			self.buildUserMenus()
 
 	def _handleDoubleClick(self, item):
 		#color = item.background()
@@ -207,6 +217,7 @@ class Window(QMainWindow):
 			else:
 				self.modeson = self.modeson + l
 		self.rebuildModesMenu()
+		if self.operator: self.rebuildAdminMenu()
 
 	def removeModes(self,modes):
 		for l in modes.split():
@@ -217,10 +228,12 @@ class Window(QMainWindow):
 			else:
 				self.modesoff = self.modesoff + l
 		self.rebuildModesMenu()
+		if self.operator: self.rebuildAdminMenu()
 
 	def setKey(self,key):
 		self.key = key
 		self.rebuildModesMenu()
+		if self.operator: self.rebuildAdminMenu()
 
 	def update_nick(self,newnick):
 		if self.is_away:
@@ -237,6 +250,27 @@ class Window(QMainWindow):
 
 	def show_uptime(self):
 		self.uptime.setVisible(True)
+
+	def buildUserMenus(self):
+		self.menubar.clear()
+
+		self.actModes = self.menubar.addMenu("Modes")
+		self.rebuildModesMenu()
+
+		self.actBans = self.menubar.addMenu("Bans")
+		self.rebuildBanMenu()
+
+	def buildOperatorMenus(self):
+		self.menubar.clear()
+
+		self.actModes = self.menubar.addMenu("Modes")
+		self.rebuildModesMenu()
+
+		self.actBans = self.menubar.addMenu("Bans")
+		self.rebuildBanMenu()
+
+		self.actAdmin = self.menubar.addMenu("Operator")
+		self.rebuildAdminMenu()
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -260,6 +294,8 @@ class Window(QMainWindow):
 		self.key = ''
 
 		self.is_away = False
+
+		self.operator = False
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW))
@@ -332,18 +368,23 @@ class Window(QMainWindow):
 			self.uptime = QLabel('<b>00:00:00</b>',self)
 		else:
 			self.uptime = QLabel('<b>00:00</b>',self)
-		
+
 		self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
 
 		self.uptime.setStyleSheet('padding: 2px;')
 
 		if not self.gui.display_uptime_chat: self.uptime.setVisible(False)
 
-		self.actModes = self.menubar.addMenu("Modes")
-		self.rebuildModesMenu()
+		# self.actModes = self.menubar.addMenu("Modes")
+		# self.rebuildModesMenu()
 
-		self.actBans = self.menubar.addMenu("Bans")
-		self.rebuildBanMenu()
+		# self.actBans = self.menubar.addMenu("Bans")
+		# self.rebuildBanMenu()
+
+		# self.actAdmin = self.menubar.addMenu("Administrate")
+		# self.rebuildAdminMenu()
+
+		self.buildUserMenus()
 
 		interface = QWidget()
 		interface.setLayout(finalLayout)
@@ -425,6 +466,99 @@ class Window(QMainWindow):
 			else:
 				msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["system"],message,timestamp )
 			self.writeText(msg)
+
+	def doAdminAdd(self,mode):
+		if mode=="k":
+			x = ChannelKeyDialog.Dialog()
+			key = x.get_channel_information()
+
+			if not key: return
+			self.client.sendLine(f"MODE {self.name} +k {key}")
+			return
+		self.client.mode(self.name,True,mode,None,None)
+
+	def doAdminRemove(self,mode):
+		if mode=="k":
+			self.client.sendLine(f"MODE {self.name} -k {self.key}")
+			return
+		self.client.mode(self.name,False,mode,None,None)
+
+	def rebuildAdminMenu(self):
+		self.actAdmin.clear()
+		mset = list(dict.fromkeys(self.modeson))
+
+		if 'k' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Remove channel key",self)
+			mMode.triggered.connect(lambda state,l="k": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(LOCKED_CHANNEL),f"Set channel key",self)
+			mMode.triggered.connect(lambda state,l="k": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 'c' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Allow IRC colors",self)
+			mMode.triggered.connect(lambda state,l="c": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(BAN_ICON),f"Forbid IRC colors",self)
+			mMode.triggered.connect(lambda state,l="c": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 'C' in mset:
+			mMode = QAction(QIcon(CHAT_ICON),f"Allow CTCP",self)
+			mMode.triggered.connect(lambda state,l="C": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(BAN_ICON),f"Forbid CTCP",self)
+			mMode.triggered.connect(lambda state,l="C": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 'm' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Turn off moderation",self)
+			mMode.triggered.connect(lambda state,l="m": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(MODERATED_ICON),f"Turn on moderation",self)
+			mMode.triggered.connect(lambda state,l="m": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 'n' in mset:
+			mMode = QAction(QIcon(CHAT_ICON),f"Allow external messages",self)
+			mMode.triggered.connect(lambda state,l="n": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(BAN_ICON),f"Forbid external messages",self)
+			mMode.triggered.connect(lambda state,l="n": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 'p' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel public",self)
+			mMode.triggered.connect(lambda state,l="p": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel private",self)
+			mMode.triggered.connect(lambda state,l="p": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 's' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel not secret",self)
+			mMode.triggered.connect(lambda state,l="s": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel secret",self)
+			mMode.triggered.connect(lambda state,l="s": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
+		if 't' in mset:
+			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Allow anyone to change topic",self)
+			mMode.triggered.connect(lambda state,l="t": self.doAdminRemove(l) )
+			self.actAdmin.addAction(mMode)
+		else:
+			mMode = QAction(QIcon(USER_ICON),f"Allow only operators to change topic",self)
+			mMode.triggered.connect(lambda state,l="t": self.doAdminAdd(l) )
+			self.actAdmin.addAction(mMode)
+
 
 	def rebuildModesMenu(self):
 		self.actModes.clear()

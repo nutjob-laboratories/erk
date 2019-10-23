@@ -534,7 +534,7 @@ class Erk(QMainWindow):
 				self.writeToChannel(obj,channel,dmsg)
 				self.writeToChannelLog(obj,channel,'',msg)
 			else:
-				msg = f"{user} set -{''.join(reportadd)} in {channel}"
+				msg = f"{user} set -{''.join(reportremove)} in {channel}"
 				dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
 				self.writeToChannel(obj,channel,dmsg)
 				self.writeToChannelLog(obj,channel,'',msg)
@@ -1295,14 +1295,8 @@ class Erk(QMainWindow):
 		self.display_uptime_chat					= self.settings[SETTING_DISPLAY_UPTIME_CHAT]
 		self.display_uptime_seconds					= self.settings[SETTING_UPTIME_SECONDS]
 		self.keep_alive								= self.settings[SETTING_KEEP_ALIVE]
-
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
-
-		# Settings not changeable via gui
-		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
-		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
-		
 
 		self.autocomplete_asciimoji = self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE]
 		self.ASCIIMOJI_AUTOCOMPLETE = []
@@ -1315,6 +1309,10 @@ class Erk(QMainWindow):
 
 		if self.autocomplete_emoji:
 			self.EMOJI_AUTOCOMPLETE = load_emoji_autocomplete()
+
+		# Settings not changeable via gui
+		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
+		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
 
 		f = QFont()
 		f.fromString(self.font_string)
