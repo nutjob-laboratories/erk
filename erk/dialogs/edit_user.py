@@ -55,6 +55,25 @@ class Dialog(QDialog):
 			"realname": self.realname.text(),
 			"alternate": self.alternative.text(),
 		}
+
+		nickset = False
+		if len(self.nick.text())==0:
+			user["nickname"] = self.user_info["nickname"]
+		else:
+			nickset = True
+
+		if len(self.username.text())==0:
+			user["username"] = self.user_info["username"]
+
+		if len(self.realname.text())==0:
+			user["realname"] = self.user_info["realname"]
+
+		if len(self.alternative.text())==0:
+			if nickset:
+				user["alternate"] = user["nickname"]+"_"
+			else:
+				user["alternate"] = self.user_info["alternate"]
+
 		save_user(user)
 
 		return True
@@ -67,14 +86,15 @@ class Dialog(QDialog):
 		self.setWindowTitle(f"Edit user information")
 		self.setWindowIcon(QIcon(USER_ICON))
 
-		user_info = get_user()
+		self.user_info = get_user()
 
 		# USER INFO BEGIN
 
 		nickLayout = QHBoxLayout()
 		nickLayout.addStretch()
 		self.nickLabel = QLabel("Nickname  ")
-		self.nick = QLineEdit(user_info["nickname"])
+		# self.nick = QLineEdit(self.user_info["nickname"])
+		self.nick = QLineEdit()
 		nickLayout.addWidget(self.nickLabel)
 		#nickLayout.addStretch()
 		nickLayout.addWidget(self.nick)
@@ -89,7 +109,8 @@ class Dialog(QDialog):
 		alternateLayout = QHBoxLayout()
 		alternateLayout.addStretch()
 		self.altLabel = QLabel("Alternate ")
-		self.alternative = QLineEdit(user_info["alternate"])
+		# self.alternative = QLineEdit(self.user_info["alternate"])
+		self.alternative = QLineEdit()
 		alternateLayout.addWidget(self.altLabel)
 		#alternateLayout.addStretch()
 		alternateLayout.addWidget(self.alternative)
@@ -102,7 +123,8 @@ class Dialog(QDialog):
 		userLayout = QHBoxLayout()
 		userLayout.addStretch()
 		self.userLabel = QLabel("Username  ")
-		self.username = QLineEdit(user_info["username"])
+		# self.username = QLineEdit(self.user_info["username"])
+		self.username = QLineEdit()
 		userLayout.addWidget(self.userLabel)
 		#userLayout.addStretch()
 		userLayout.addWidget(self.username)
@@ -115,7 +137,8 @@ class Dialog(QDialog):
 		realLayout = QHBoxLayout()
 		realLayout.addStretch()
 		self.realLabel = QLabel("Real Name ")
-		self.realname = QLineEdit(user_info["realname"])
+		# self.realname = QLineEdit(self.user_info["realname"])
+		self.realname = QLineEdit()
 		realLayout.addWidget(self.realLabel)
 		#realLayout.addStretch()
 		realLayout.addWidget(self.realname)
@@ -124,6 +147,29 @@ class Dialog(QDialog):
 		self.realLabel.setFont(f)
 
 		self.realname.setMaximumWidth( self.calculate_text_entry_size(self.realname,20)  )
+
+		if self.user_info["nickname"]==DEFAULT_NICKNAME:
+			self.nick.setPlaceholderText(self.user_info["nickname"])
+		else:
+			self.nick.setText(self.user_info["nickname"])
+
+		if self.user_info["username"]==DEFAULT_USERNAME:
+			self.username.setPlaceholderText(self.user_info["username"])
+		else:
+			self.username.setText(self.user_info["username"])
+
+		if self.user_info["realname"]==DEFAULT_IRCNAME:
+			self.realname.setPlaceholderText(self.user_info["realname"])
+		else:
+			self.realname.setText(self.user_info["realname"])
+
+		if self.user_info["alternate"]==DEFAULT_ALTERNATIVE:
+			if self.user_info["nickname"]!=DEFAULT_NICKNAME:
+				self.alternative.setText(self.user_info["nickname"]+"_")
+			else:
+				self.alternative.setPlaceholderText(self.user_info["alternate"])
+		else:
+			self.alternative.setText(self.user_info["alternate"])
 
 		nurLayout = QVBoxLayout()
 		nurLayout.addLayout(nickLayout)

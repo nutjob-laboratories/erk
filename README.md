@@ -4,12 +4,21 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.500</b></a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.017**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.018**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
 # Features
 
+<p align="center">
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot.png"></a><br>
+	<i>Click image to enlarge</i>
+</p>
+
+* **Erk** does chat, and _only_ chat.
+	* **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
+	* **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
+	* Just plain ol' fashioned IRC
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))

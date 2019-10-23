@@ -100,8 +100,6 @@ class IRC_Connection(irc.IRCClient):
 
 	heartbeatInterval = 120
 
-
-
 	def irc_RPL_AWAY(self,prefix,params):
 		user = params[1]
 		msg = params[2]

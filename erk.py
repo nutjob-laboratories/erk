@@ -46,7 +46,6 @@ from twisted.internet import reactor
 
 from erk import *
 from erk.common import *
-from erk.config import *
 
 parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
@@ -68,6 +67,8 @@ parser.add_argument( "-l", "--licence", help=f"Display software license", action
 parser.add_argument( "--ontop", help=f"Display window on top of all other windows", action="store_true")
 parser.add_argument( "--fullscreen", help=f"Fill screen with application window", action="store_true")
 parser.add_argument( "--maximize", help=f"Display window maximized", action="store_true")
+
+parser.add_argument("--beat", type=int,help=f"\"Keep alive\" heartbeat interval ({str(DEFAULT_KEEPALIVE_INTERVAL)})", metavar="SECONDS")
 
 parser.add_argument("--config", type=str,help="Configuration file",default=SETTINGS_FILE, metavar="FILE")
 parser.add_argument("--style", type=str,help="Text style file",default=TEXT_SETTINGS_FILE, metavar="FILE")
@@ -95,6 +96,9 @@ if __name__ == '__main__':
 		GUI.setWindowFlags(GUI.windowFlags() | Qt.WindowStaysOnTopHint)
 		GUI.window_on_top = True
 		GUI.actOnTop.setChecked(True)
+
+	if args.beat:
+		GUI.keep_alive_interval = args.beat
 
 	if args.fullscreen:
 		GUI.window_fullscreen = True

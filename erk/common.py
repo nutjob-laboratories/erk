@@ -34,15 +34,6 @@ import os
 
 from erk.config import *
 
-mvf=open(MINOR_VERSION_FILE, "r")
-MINOR_VERSION = mvf.read()
-mvf.close()
-
-if len(MINOR_VERSION)==1:
-	MINOR_VERSION = "00"+MINOR_VERSION
-elif len(MINOR_VERSION)==2:
-	MINOR_VERSION = "0"+MINOR_VERSION
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -53,31 +44,6 @@ try:
 	import ssl
 except ImportError:
 	SSL_AVAILABLE = False
-
-APPLICATION_NAME = "Ərk"
-APPLICATION_MAJOR_VERSION = "0.500"
-APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
-OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
-PROGRAM_FILENAME = "erk.py"
-NORMAL_APPLICATION_NAME = "Erk"
-
-GPL_NOTIFICATION = """Ərk IRC Client
-Copyright (C) 2019  Dan Hetrick
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>."""
-
-DEFAULT_WINDOW_TITLE = APPLICATION_NAME
 
 MENU_ICON_SIZE = 22
 
@@ -244,6 +210,7 @@ KICKBAN_ICON = ":/kickban.png"
 SERVER_SETTINGS_ICON = ":/ssettings.png"
 DISPLAY_ICON = ":/display.png"
 UPTIME_ICON = ":/uptime.png"
+RESIZE_ICON = ":/resize.png"
 
 # =====================
 # | WINDOW MANAGEMENT |
@@ -319,6 +286,7 @@ import erk.dialogs.connect as Connect
 def ConnectDialog(obj):
 	x = Connect.Dialog(SSL_AVAILABLE,obj)
 	info = x.get_connect_information(SSL_AVAILABLE,obj)
+	del x
 
 	if not info: return None
 	return info
@@ -328,6 +296,7 @@ import erk.dialogs.network as Network
 def NetworkDialog():
 	x = Network.Dialog(SSL_AVAILABLE)
 	info = x.get_connect_information(SSL_AVAILABLE)
+	del x
 
 	if not info: return None
 	return info

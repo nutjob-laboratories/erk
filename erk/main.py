@@ -52,6 +52,7 @@ from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 import erk.dialogs.edit_user as EditUserDialog
 import erk.dialogs.about as AboutDialog
 import erk.dialogs.ignore as IgnoreDialog
+import erk.dialogs.window_size as WindowSizeDialog
 
 class Connection:
 	def __init__(self,obj,ident):
@@ -778,6 +779,10 @@ class Erk(QMainWindow):
 
 		self.buildConnectionsMenu()
 
+		if self.keep_alive:
+			obj.heartbeatInterval = self.keep_alive_interval
+			obj.startHeartbeat()
+
 	def irc_client_joined(self,obj,channel):
 
 		self.serverLog(obj,"Joined "+channel)
@@ -1251,6 +1256,8 @@ class Erk(QMainWindow):
 
 		self.locked = []
 
+		self.keep_alive_interval = DEFAULT_KEEPALIVE_INTERVAL
+
 		self.ignore = get_ignore()
 
 		self.autojoins = defaultdict(list)
@@ -1286,14 +1293,16 @@ class Erk(QMainWindow):
 		self.filter_profanity						= self.settings[SETTING_PROFANITY_FILTER]
 		self.display_uptime_console					= self.settings[SETTING_DISPLAY_UPTIME_CONSOLE]
 		self.display_uptime_chat					= self.settings[SETTING_DISPLAY_UPTIME_CHAT]
-
 		self.display_uptime_seconds					= self.settings[SETTING_UPTIME_SECONDS]
+		self.keep_alive								= self.settings[SETTING_KEEP_ALIVE]
+
+		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
+		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
-		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
-		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
+		
 
 		self.autocomplete_asciimoji = self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE]
 		self.ASCIIMOJI_AUTOCOMPLETE = []
@@ -1380,25 +1389,29 @@ class Erk(QMainWindow):
 
 		settingsMenu.setFont(menuBoldText)
 
+		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
+
 		self.actFont = QAction(QIcon(FONT_ICON),"Font",self)
 		self.actFont.triggered.connect(self.menuFont)
-		settingsMenu.addAction(self.actFont)
+		displaySubMenu.addAction(self.actFont)
 
 		pf = self.font_string.split(',')
 		mf = pf[0]
 		ms = pf[1]
 		self.actFont.setText(f"Font ({mf}, {ms}pt)")
 
-		settingsMenu.addSeparator()
+		self.actSetSize = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
+		self.actSetSize.triggered.connect(self.menuWindowSize)
+		displaySubMenu.addAction(self.actSetSize)
 
-		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
+		displaySubMenu.addSeparator()
 
-		self.actOnTop = QAction("Always On Top",self,checkable=True)
+		self.actOnTop = QAction("Always on top",self,checkable=True)
 		self.actOnTop.setChecked(self.window_on_top)
 		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
 		displaySubMenu.addAction(self.actOnTop)
 
-		self.actFullscreen = QAction("Full Screen",self,checkable=True)
+		self.actFullscreen = QAction("Full screen",self,checkable=True)
 		self.actFullscreen.setChecked(self.window_fullscreen)
 		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
 		displaySubMenu.addAction(self.actFullscreen)
@@ -1653,9 +1666,24 @@ class Erk(QMainWindow):
 		x = AboutDialog.Dialog(self)
 		x.show()
 
+	def menuWindowSize(self):
+		x = WindowSizeDialog.Dialog(self)
+		e = x.get_window_information(self)
+
+		if not e: return 
+
+		self.default_window_width = e[0]
+		self.default_window_height = e[1]
+
+		self.settings[SETTING_WINDOW_WIDTH] = self.default_window_width
+		save_settings(self.settings,self.settings_file)
+		self.settings[SETTING_WINDOW_HEIGHT] = self.default_window_height
+		save_settings(self.settings,self.settings_file)
+
 	def menuEditUser(self):
 		x = EditUserDialog.Dialog()
 		e = x.get_user_information()
+		del x
 
 	def menuSecondsUptime(self):
 		if self.display_uptime_seconds:			
@@ -2093,6 +2121,24 @@ class Erk(QMainWindow):
 		self.settings[SETTING_OPEN_PRIVATE_WINDOWS] = self.open_private_chat_windows
 		save_settings(self.settings,self.settings_file)
 
+	def menuKeepAlive(self):
+		if self.keep_alive:
+			self.keep_alive = False
+			for c in self.connections:
+				try:
+					c.connection.stopHeartbeat()
+				except:
+					pass
+		else:
+			self.keep_alive = True
+			for c in self.connections:
+				try:
+					c.connection.startHeartbeat()
+				except:
+					pass
+		self.settings[SETTING_KEEP_ALIVE] = self.keep_alive
+		save_settings(self.settings,self.settings_file)
+
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
@@ -2166,6 +2212,11 @@ class Erk(QMainWindow):
 		self.actSaveHistory.setChecked(self.save_server_history)
 		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
 		self.connectionsMenu.addAction(self.actSaveHistory)
+
+		self.actKeepAlive = QAction("Keep connections alive",self,checkable=True)
+		self.actKeepAlive.setChecked(self.keep_alive)
+		self.actKeepAlive.triggered.connect(self.menuKeepAlive)
+		self.connectionsMenu.addAction(self.actKeepAlive)
 
 	# |=============|
 	# | QT CODE END |

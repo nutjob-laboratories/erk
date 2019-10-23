@@ -38,11 +38,6 @@ import re
 import string
 import random
 
-DEFAULT_NICKNAME = "erk_user"
-DEFAULT_ALTERNATIVE = "3rk_us3r"
-DEFAULT_USERNAME = "erk_user"
-DEFAULT_IRCNAME = "Erk IRC Client"
-
 # Directories
 INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -68,6 +63,45 @@ AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
+
+mvf=open(MINOR_VERSION_FILE, "r")
+MINOR_VERSION = mvf.read()
+mvf.close()
+
+if len(MINOR_VERSION)==1:
+	MINOR_VERSION = "00"+MINOR_VERSION
+elif len(MINOR_VERSION)==2:
+	MINOR_VERSION = "0"+MINOR_VERSION
+
+APPLICATION_NAME = "Ərk"
+APPLICATION_MAJOR_VERSION = "0.500"
+APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
+OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
+PROGRAM_FILENAME = "erk.py"
+NORMAL_APPLICATION_NAME = "Erk"
+
+GPL_NOTIFICATION = """Ərk IRC Client
+Copyright (C) 2019  Dan Hetrick
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>."""
+
+DEFAULT_WINDOW_TITLE = APPLICATION_NAME
+
+DEFAULT_NICKNAME = "erk"+str(random.randint(100,1000000))
+DEFAULT_ALTERNATIVE = DEFAULT_NICKNAME+"_"
+DEFAULT_USERNAME = "erk"
+DEFAULT_IRCNAME = APPLICATION_NAME+" IRC Client v"+APPLICATION_MAJOR_VERSION
 
 SETTING_OPEN_PRIVATE_WINDOWS		= "open_windows_for_private_messages"
 SETTING_CHAT_STATUS_BARS			= "display_chat_window_status_bars"
@@ -100,8 +134,11 @@ SETTING_EMOJI_AUTOCOMPLETE			= "autocomplete_emojis"
 SETTING_DISPLAY_UPTIME_CONSOLE		= "display_uptime_on_console"
 SETTING_DISPLAY_UPTIME_CHAT			= "display_uptime_on_chat_windows"
 SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
+SETTING_KEEP_ALIVE					= "keep_connection_alive"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
+
+DEFAULT_KEEPALIVE_INTERVAL = 120
 
 # Create any necessary directories if they don't exist
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
@@ -246,6 +283,7 @@ def patch_config_file(data):
 	if not SETTING_DISPLAY_UPTIME_CONSOLE in data: data[SETTING_DISPLAY_UPTIME_CONSOLE] = True
 	if not SETTING_DISPLAY_UPTIME_CHAT in data: data[SETTING_DISPLAY_UPTIME_CHAT] = False
 	if not SETTING_UPTIME_SECONDS in data: data[SETTING_UPTIME_SECONDS] = True
+	if not SETTING_KEEP_ALIVE in data: data[SETTING_KEEP_ALIVE] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -292,6 +330,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_DISPLAY_UPTIME_CONSOLE: True,
 			SETTING_DISPLAY_UPTIME_CHAT: False,
 			SETTING_UPTIME_SECONDS: True,
+			SETTING_KEEP_ALIVE: True,
 		}
 		save_settings(si)
 		return si
