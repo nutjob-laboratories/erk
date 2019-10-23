@@ -52,8 +52,6 @@ class SpellTextEdit(QPlainTextEdit):
 
 		self.parent = args[0]
 
-		# Default dictionary based on the current locale.
-		#self.dict = enchant.Dict("en_US")
 		self.dict = SpellChecker(language=self.parent.gui.spellCheckLanguage,distance=1)
 
 		self.highlighter = Highlighter(self.document())
@@ -62,8 +60,6 @@ class SpellTextEdit(QPlainTextEdit):
 		self.highlighter.setParent(self.parent)
 
 	def keyPressEvent(self,event):
-
-		#print(self.parent.parent.displayTimestamp)
 
 		if event.key() == Qt.Key_Return:
 			self.returnPressed.emit()
@@ -97,55 +93,6 @@ class SpellTextEdit(QPlainTextEdit):
 						cursor.insertText(rep)
 						cursor.endEditBlock()
 						return
-
-			if self.parent.gui.autocomplete_nicks:
-
-				# Auto-complete nicks/channels
-				cursor.select(QTextCursor.WordUnderCursor)
-				self.setTextCursor(cursor)
-				if self.textCursor().hasSelection():
-					text = self.textCursor().selectedText()
-
-				# Nicks
-				chan_nicks = self.parent.getUserNicks()
-				channels = self.parent.gui.getChannelList(self.parent.client)
-				for nick in chan_nicks:
-					if fnmatch.fnmatch(nick,f"{text}*"):
-						# If the nick matches a channel name, skip it for now
-						mchan = False
-						for chan in channels:
-							if fnmatch.fnmatch(chan,f"#{text}*"):
-								mchan = True
-						if mchan: continue
-						cursor.beginEditBlock()
-						cursor.insertText(f"{nick} ")
-						cursor.endEditBlock()
-						return
-
-				# Channels
-				oldpos = cursor.position()
-				cursor.select(QTextCursor.WordUnderCursor)
-				newpos = cursor.selectionStart() - 1
-				cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-				cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-				self.setTextCursor(cursor)
-				text = cursor.selectedText()
-
-				if len(text)>0:
-					for chan in channels:
-						if fnmatch.fnmatch(chan,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(f"{chan} ")
-							cursor.endEditBlock()
-							return
-					# Now that channels have been autocompleted, autocomplete nicks
-					text = text[1:]
-					for nick in chan_nicks:
-						if fnmatch.fnmatch(nick,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(f" {nick} ")
-							cursor.endEditBlock()
-							return
 
 			if self.parent.gui.use_asciimojis:
 				if self.parent.gui.autocomplete_asciimoji:
@@ -198,6 +145,55 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.endEditBlock()
 							return
 
+			if self.parent.gui.autocomplete_nicks:
+
+				# Auto-complete nicks/channels
+				cursor.select(QTextCursor.WordUnderCursor)
+				self.setTextCursor(cursor)
+				if self.textCursor().hasSelection():
+					text = self.textCursor().selectedText()
+
+				# Nicks
+				chan_nicks = self.parent.getUserNicks()
+				channels = self.parent.gui.getChannelList(self.parent.client)
+				for nick in chan_nicks:
+					if fnmatch.fnmatch(nick,f"{text}*"):
+						# If the nick matches a channel name, skip it for now
+						mchan = False
+						for chan in channels:
+							if fnmatch.fnmatch(chan,f"#{text}*"):
+								mchan = True
+						if mchan: continue
+						cursor.beginEditBlock()
+						cursor.insertText(f"{nick} ")
+						cursor.endEditBlock()
+						return
+
+				# Channels
+				oldpos = cursor.position()
+				cursor.select(QTextCursor.WordUnderCursor)
+				newpos = cursor.selectionStart() - 1
+				cursor.setPosition(newpos,QTextCursor.MoveAnchor)
+				cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
+				self.setTextCursor(cursor)
+				text = cursor.selectedText()
+
+				if len(text)>0:
+					for chan in channels:
+						if fnmatch.fnmatch(chan,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(f"{chan} ")
+							cursor.endEditBlock()
+							return
+					# Now that channels have been autocompleted, autocomplete nicks
+					text = text[1:]
+					for nick in chan_nicks:
+						if fnmatch.fnmatch(nick,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(f" {nick} ")
+							cursor.endEditBlock()
+							return
+
 
 			cursor.movePosition(QTextCursor.End)
 			self.setTextCursor(cursor)
@@ -225,9 +221,6 @@ class SpellTextEdit(QPlainTextEdit):
 		QPlainTextEdit.mousePressEvent(self, event)
 
 	def contextMenuEvent(self, event):
-
-		# if not self.parent.parent.spellCheck:
-		# 	return super().contextMenuEvent(event)
 
 		if not self.parent.gui.spellCheck:
 			return super().contextMenuEvent(event)
@@ -290,8 +283,6 @@ class Highlighter(QSyntaxHighlighter):
 		if not self.dict:
 			return
 
-		# if not self.parent.parent.spellCheck:
-		# 	return
 		if not self.parent.gui.spellCheck:
 			return
 
