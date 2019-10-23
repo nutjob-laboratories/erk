@@ -67,7 +67,7 @@ user_info = get_user()
 
 proggroup = parser.add_argument_group('Optional arguments')
 
-proggroup.add_argument("server", type=str,help="Server to connect to", metavar="SERVER")
+proggroup.add_argument("server", type=str,help="Server to connect to", metavar="SERVER", nargs='?')
 proggroup.add_argument("port", type=int,help="Server port to connect to (6667)", default=6667, nargs='?', metavar="PORT")
 
 netgroup = parser.add_argument_group('Server options')
