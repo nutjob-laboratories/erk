@@ -47,6 +47,13 @@
 	* Edit default user information from the command-line
 	* Set a server to connect to on startup
 	* Connect with an [IRC URL](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
+		* To connect to a server: `irc://hostname:port`
+		* To connect to a channel on a server: `irc://hostname:port/channel`
+			* Prefixing the channel name with a `#` is optional
+		* To connect to a channel that requires a key: `irc://hostname:port/channel,key`
+		* To connect to a server that requires a password: `irc://erk@password:hostname:port`
+			* The standard requires a username (witch is `erk` in the above example). Any username can be used.
+		* To connect with an IRC URL with SSL/TLS, add the command-line option `--ssl`.
 
 
 # Requirements
