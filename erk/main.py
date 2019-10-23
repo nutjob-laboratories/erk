@@ -1298,6 +1298,8 @@ class Erk(QMainWindow):
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 
+		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
+
 		self.autocomplete_asciimoji = self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE]
 		self.ASCIIMOJI_AUTOCOMPLETE = []
 
@@ -1520,6 +1522,11 @@ class Erk(QMainWindow):
 		self.actProfanity.setChecked(self.filter_profanity)
 		self.actProfanity.triggered.connect(self.menuProfanity)
 		chatSubMenu.addAction(self.actProfanity)
+
+		self.actColor = QAction("Display IRC color codes",self,checkable=True)
+		self.actColor.setChecked(self.display_irc_colors)
+		self.actColor.triggered.connect(self.menuColor)
+		chatSubMenu.addAction(self.actColor)
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
@@ -1807,6 +1814,20 @@ class Erk(QMainWindow):
 		else:
 			self.strip_html_from_chat = True
 		self.settings[SETTING_STRIP_HTML] = self.strip_html_from_chat
+		save_settings(self.settings,self.settings_file)
+
+	def menuColor(self):
+		if self.display_irc_colors:
+			self.display_irc_colors = False
+		else:
+			self.display_irc_colors = True
+
+		for c in self.connections:
+			c.console.rerenderText()
+			for channel in c.windows:
+				c.windows[channel].rerenderText()
+
+		self.settings[SETTING_DISPLAY_IRC_COLOR] = self.display_irc_colors
 		save_settings(self.settings,self.settings_file)
 
 	def menuConvertUrl(self):

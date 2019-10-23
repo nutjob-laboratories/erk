@@ -211,6 +211,9 @@ SERVER_SETTINGS_ICON = ":/ssettings.png"
 DISPLAY_ICON = ":/display.png"
 UPTIME_ICON = ":/uptime.png"
 RESIZE_ICON = ":/resize.png"
+P_ICON = ":/p.png"
+S_ICON = ":/s.png"
+T_ICON = ":/t.png"
 
 # =====================
 # | WINDOW MANAGEMENT |

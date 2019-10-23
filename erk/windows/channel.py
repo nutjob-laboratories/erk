@@ -537,7 +537,7 @@ class Window(QMainWindow):
 			mMode.triggered.connect(lambda state,l="p": self.doAdminRemove(l) )
 			self.actAdmin.addAction(mMode)
 		else:
-			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel private",self)
+			mMode = QAction(QIcon(P_ICON),f"Make channel private",self)
 			mMode.triggered.connect(lambda state,l="p": self.doAdminAdd(l) )
 			self.actAdmin.addAction(mMode)
 
@@ -546,7 +546,7 @@ class Window(QMainWindow):
 			mMode.triggered.connect(lambda state,l="s": self.doAdminRemove(l) )
 			self.actAdmin.addAction(mMode)
 		else:
-			mMode = QAction(QIcon(CHANNEL_WINDOW),f"Make channel secret",self)
+			mMode = QAction(QIcon(S_ICON),f"Make channel secret",self)
 			mMode.triggered.connect(lambda state,l="s": self.doAdminAdd(l) )
 			self.actAdmin.addAction(mMode)
 
@@ -555,7 +555,7 @@ class Window(QMainWindow):
 			mMode.triggered.connect(lambda state,l="t": self.doAdminRemove(l) )
 			self.actAdmin.addAction(mMode)
 		else:
-			mMode = QAction(QIcon(USER_ICON),f"Allow only operators to change topic",self)
+			mMode = QAction(QIcon(T_ICON),f"Allow only operators to change topic",self)
 			mMode.triggered.connect(lambda state,l="t": self.doAdminAdd(l) )
 			self.actAdmin.addAction(mMode)
 
@@ -604,21 +604,21 @@ class Window(QMainWindow):
 
 			if l == "p":
 				if "p" in mset: continue
-				mMode = QAction(QIcon(CHANNEL_WINDOW),"Channel is private",self)
+				mMode = QAction(QIcon(P_ICON),"Channel is private",self)
 				self.actModes.addAction(mMode)
 				mset = mset + "p"
 				continue
 
 			if l == "s":
 				if "s" in mset: continue
-				mMode = QAction(QIcon(CHANNEL_WINDOW),"Channel is secret",self)
+				mMode = QAction(QIcon(S_ICON),"Channel is secret",self)
 				self.actModes.addAction(mMode)
 				mset = mset + "s"
 				continue
 
 			if l == "t":
 				if "t" in mset: continue
-				mMode = QAction(QIcon(USER_ICON),"Only ops can change topic",self)
+				mMode = QAction(QIcon(T_ICON),"Only ops can change topic",self)
 				self.actModes.addAction(mMode)
 				mset = mset + "t"
 				continue

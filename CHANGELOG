@@ -49,6 +49,9 @@ Version 0.500
 	* Added a bunch of commandline options (including connecting to IRC on client start)
 	* Fixed a bug where removed modes would not be reported
 	* Added an "Operator" menu to channel windows with common chanop functionality
+	* Added new menu icons for p,s, and t channel modes
+	* Added IRC color code rendering for incoming chat
+	* Added an option to turn off (and on) IRC color code rendering
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window
