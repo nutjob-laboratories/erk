@@ -109,6 +109,7 @@ INPUT_COMMANDS = {
 	"/quit": "/quit ",
 	"/away": "/away ",
 	"/back": "/back",
+	"/color": "/color ",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",

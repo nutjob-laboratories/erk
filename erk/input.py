@@ -43,6 +43,19 @@ def unescape_single_quotes(tlist):
 		u.append(e.replace("\\'","'"))
 	return u
 
+def is_int(data):
+	try:
+		x = int(data)
+	except:
+		return False
+	return True
+
+def is_valid_color(data):
+	if int(data)>=0:
+		if int(data)<=15:
+			return True
+	return False
+
 # New commands should be added to INPUT_COMMANDS in erk.common
 # This enables their use with autocomplete
 
@@ -54,6 +67,69 @@ def handle_chat_input(obj,text,is_user=False):
 	etext = escape_single_quotes(text)
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
+
+	colored_text = False
+	error = []
+	color_command = False
+	color_command_tokens = len(tokens)
+
+	if len(tokens)>=3:
+		if tokens[0].lower()=="/color":
+			color_command = True
+			tokens.pop(0)	# remove command
+			fore = tokens.pop(0)
+			back = tokens.pop(0)
+			if is_int(fore):
+				if is_valid_color(fore):
+					if color_command_tokens>3:
+						# background?
+						if is_int(back):
+							if is_valid_color(back):
+								colored_text = True
+								text = chr(3)+fore+","+back+' '+' '.join(tokens)+chr(3)
+							else:
+								colored_text = True
+								text = chr(3)+fore+back+' '+' '.join(tokens)+chr(3)
+						else:
+							colored_text = True
+							text = chr(3)+fore+back+' '+' '.join(tokens)+chr(3)
+					else:
+						colored_text = True
+						text = chr(3)+fore+back+chr(3)
+				else:
+					error.append("\""+fore+"\" is not a valid color")
+			else:
+				error.append("\""+fore+"\" is not a number")
+
+	if len(error)>0:
+		for e in error:
+			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],e)
+			obj.gui.writeToChannel(obj.client,obj.name,msg)
+		msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+		obj.gui.writeToChannel(obj.client,obj.name,msg)
+		return
+
+	if not colored_text:
+		msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+		obj.gui.writeToChannel(obj.client,obj.name,msg)
+		return
+
+	if colored_text:
+		# Inject emojis
+		if obj.gui.use_emojis:
+			text = emoji.emojize(text,use_aliases=True)
+
+		# Inject ASCIImojis
+		if obj.gui.use_asciimojis:
+			text = inject_asciiemojis(text)
+
+		obj.client.msg(obj.name,text)
+
+		msg = render_message(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["self"],obj.client.nickname,obj.gui.styles["message"],text )
+		obj.gui.writeToChannel(obj.client,obj.name,msg)
+		obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_SELF+obj.client.nickname,text)
+		return
+
 
 	if len(tokens)>=2:
 		if tokens[0].lower()=="/away":
