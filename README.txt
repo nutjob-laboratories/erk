@@ -12,7 +12,8 @@
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot.png"></a><br>
-	<div style="font-size: 50em;"><i>Click image to enlarge</i></div><br>
+	<b>Erk connected to freenode, EFNet, QuakeNet, and a local server</b><br>
+	<i>Click image to enlarge</i><br>
 </p>
 
 * **Erk** does chat, and _only_ chat.
