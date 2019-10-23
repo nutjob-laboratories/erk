@@ -39,6 +39,7 @@
 	* Type the first few letters of a command, nickname, or channel, and hit the tab key
 	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * Optional profanity filter
+* Support for IRC color codes (and the option to turn them off)
 * Automatic channel and private message logging
 * Optional server connection history
 * A built-in list of over 80 IRC servers to connect to
