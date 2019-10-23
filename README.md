@@ -12,7 +12,7 @@
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/screenshot.png"></a><br>
-	<i>Click image to enlarge</i>
+	<small><i>Click image to enlarge</i></small><br>
 </p>
 
 * **Erk** does chat, and _only_ chat.
