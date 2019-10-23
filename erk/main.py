@@ -1447,55 +1447,6 @@ class Erk(QMainWindow):
 		self.actSecondsUptime.triggered.connect(self.menuSecondsUptime)
 		uptimeSubMenu.addAction(self.actSecondsUptime)
 
-		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
-
-		self.actAutoCmds = QAction("Autocomplete commands",self,checkable=True)
-		self.actAutoCmds.setChecked(self.autocomplete_commands)
-		self.actAutoCmds.triggered.connect(self.menuAutoCmds)
-		autoSubMenu.addAction(self.actAutoCmds)
-
-		self.actAutoNicks = QAction("Autocomplete nicks/channels",self,checkable=True)
-		self.actAutoNicks.setChecked(self.autocomplete_nicks)
-		self.actAutoNicks.triggered.connect(self.menuAutoNicks)
-		autoSubMenu.addAction(self.actAutoNicks)
-
-		self.actAutoAsciimoji = QAction("Autocomplete ASCIImojis",self,checkable=True)
-		self.actAutoAsciimoji.setChecked(self.autocomplete_asciimoji)
-		self.actAutoAsciimoji.triggered.connect(self.menuAutoAsciimoji)
-		autoSubMenu.addAction(self.actAutoAsciimoji)
-
-		self.actAutoEmoji = QAction("Autocomplete Emojis",self,checkable=True)
-		self.actAutoEmoji.setChecked(self.autocomplete_emoji)
-		self.actAutoEmoji.triggered.connect(self.menuAutoEmoji)
-		autoSubMenu.addAction(self.actAutoEmoji)
-
-		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
-
-		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
-		self.actEmoji.setChecked(self.use_emojis)
-		self.actEmoji.triggered.connect(self.menuEmoji)
-		chatSubMenu.addAction(self.actEmoji)
-
-		self.actAsciimoji = QAction("Enable ASCIImoji shortcodes",self,checkable=True)
-		self.actAsciimoji.setChecked(self.use_asciimojis)
-		self.actAsciimoji.triggered.connect(self.menuAsciimoji)
-		chatSubMenu.addAction(self.actAsciimoji)
-
-		self.actChatUrls = QAction("Link URLs in chat",self,checkable=True)
-		self.actChatUrls.setChecked(self.convert_links_in_chat)
-		self.actChatUrls.triggered.connect(self.menuConvertUrl)
-		chatSubMenu.addAction(self.actChatUrls)
-
-		self.actStripHtml = QAction("Strip HTML from messages",self,checkable=True)
-		self.actStripHtml.setChecked(self.strip_html_from_chat)
-		self.actStripHtml.triggered.connect(self.menuStripHtml)
-		chatSubMenu.addAction(self.actStripHtml)
-
-		self.actProfanity = QAction("Censor profanity",self,checkable=True)
-		self.actProfanity.setChecked(self.filter_profanity)
-		self.actProfanity.triggered.connect(self.menuProfanity)
-		chatSubMenu.addAction(self.actProfanity)
-
 		timestampSubMenu = settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
 
 		self.actToggleTimestamp = QAction("Display timestamps",self,checkable=True)
@@ -1531,6 +1482,55 @@ class Erk(QMainWindow):
 		logSubMenu.addAction(self.actPrivateLogs)
 
 		if not self.save_logs_on_quit: self.actPrivateLogs.setEnabled(False)
+
+		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
+
+		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
+		self.actEmoji.setChecked(self.use_emojis)
+		self.actEmoji.triggered.connect(self.menuEmoji)
+		chatSubMenu.addAction(self.actEmoji)
+
+		self.actAsciimoji = QAction("Enable ASCIImoji shortcodes",self,checkable=True)
+		self.actAsciimoji.setChecked(self.use_asciimojis)
+		self.actAsciimoji.triggered.connect(self.menuAsciimoji)
+		chatSubMenu.addAction(self.actAsciimoji)
+
+		self.actChatUrls = QAction("Link URLs in chat",self,checkable=True)
+		self.actChatUrls.setChecked(self.convert_links_in_chat)
+		self.actChatUrls.triggered.connect(self.menuConvertUrl)
+		chatSubMenu.addAction(self.actChatUrls)
+
+		self.actStripHtml = QAction("Strip HTML from messages",self,checkable=True)
+		self.actStripHtml.setChecked(self.strip_html_from_chat)
+		self.actStripHtml.triggered.connect(self.menuStripHtml)
+		chatSubMenu.addAction(self.actStripHtml)
+
+		self.actProfanity = QAction("Censor profanity",self,checkable=True)
+		self.actProfanity.setChecked(self.filter_profanity)
+		self.actProfanity.triggered.connect(self.menuProfanity)
+		chatSubMenu.addAction(self.actProfanity)
+
+		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
+
+		self.actAutoCmds = QAction("Autocomplete commands",self,checkable=True)
+		self.actAutoCmds.setChecked(self.autocomplete_commands)
+		self.actAutoCmds.triggered.connect(self.menuAutoCmds)
+		autoSubMenu.addAction(self.actAutoCmds)
+
+		self.actAutoNicks = QAction("Autocomplete nicks/channels",self,checkable=True)
+		self.actAutoNicks.setChecked(self.autocomplete_nicks)
+		self.actAutoNicks.triggered.connect(self.menuAutoNicks)
+		autoSubMenu.addAction(self.actAutoNicks)
+
+		self.actAutoAsciimoji = QAction("Autocomplete ASCIImojis",self,checkable=True)
+		self.actAutoAsciimoji.setChecked(self.autocomplete_asciimoji)
+		self.actAutoAsciimoji.triggered.connect(self.menuAutoAsciimoji)
+		autoSubMenu.addAction(self.actAutoAsciimoji)
+
+		self.actAutoEmoji = QAction("Autocomplete Emojis",self,checkable=True)
+		self.actAutoEmoji.setChecked(self.autocomplete_emoji)
+		self.actAutoEmoji.triggered.connect(self.menuAutoEmoji)
+		autoSubMenu.addAction(self.actAutoEmoji)
 
 		self.spellMenu = settingsMenu.addMenu(QIcon(SPELL_ICON),"Spell check")
 

@@ -4,9 +4,9 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.500</b></a><br>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.015**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.500.016**.
 
-**Erk** is functional for use. Most basic features are complete, but bugs are still being found and fixed, and features are still being added.
+**Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
 # Features
 
@@ -16,9 +16,6 @@
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
 	* Right click on misspelled words for suggested spellings/words
-* Command/nick/channel auto-completion
-	* Type the first few letters of a command, nickname, or channel, and hit the tab key
-	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
 	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)
@@ -26,6 +23,9 @@
 		* <p><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png"></p>
 		* wraithnix: I can't believe the bus is late `:rage:`
 		* wraithnix: (tableflip)
+* Command/nick/channel auto-completion
+	* Type the first few letters of a command, nickname, or channel, and hit the tab key
+	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * Optional profanity filter
 * Automatic channel and private message logging
 * Optional server connection history
@@ -44,7 +44,7 @@ To connect to IRC servers via SSL, two additional libraries are needed:
     pip install pyOpenSSL
     pip install service_identity
 
-**Erk** is being developed with Python 3.7.
+**Erk** is being developed with Python 3.7 on Windows 10.
 
 # Frequently asked questions
 
