@@ -161,6 +161,20 @@ IRC_13 = "#FFC0CB"
 IRC_14 = "#808080"
 IRC_15 = "#D3D3D3"
 
+TIMESTAMP_STYLE_NAME	= "timestamp"
+USERNAME_STYLE_NAME		= "username"
+MESSAGE_STYLE_NAME		= "message"
+SYSTEM_STYLE_NAME		= "system"
+SELF_STYLE_NAME			= "self"
+ACTION_STYLE_NAME		= "action"
+NOTICE_STYLE_NAME		= "notice"
+RESUME_STYLE_NAME		= "resume"
+HYPERLINK_STYLE_NAME	= "hyperlink"
+BASE_STYLE_NAME			= "base"
+ERROR_STYLE_NAME		= "error"
+WHOIS_STYLE_NAME		= "whois"
+WHOIS_TEXT_STYLE_NAME	= "whois-text"
+
 # Create any necessary directories if they don't exist
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
@@ -541,7 +555,7 @@ def render_system(gui,timestamp_style,message_style,message,timestamp=None):
 	if gui.filter_profanity: message = filterProfanityFromText(message)
 
 	if gui.strip_html_from_chat: message = remove_html_markup(message)
-	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles["hyperlink"])
+	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles[HYPERLINK_STYLE_NAME])
 
 	if gui.display_timestamp:
 		if timestamp==None:
@@ -577,7 +591,7 @@ def render_message(gui,timestamp_style,ident_style,ident,message_style,message,t
 	if gui.filter_profanity: message = filterProfanityFromText(message)
 
 	if gui.strip_html_from_chat: message = remove_html_markup(message)
-	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles["hyperlink"])
+	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles[HYPERLINK_STYLE_NAME])
 
 	if gui.display_irc_colors:
 		# render colors
@@ -625,19 +639,19 @@ def render_message(gui,timestamp_style,ident_style,ident,message_style,message,t
 
 def patch_text_settings(data):
 	s = len(data)
-	if not "notice" in data: data["notice"] = NOTICE_STYLE
-	if not "username" in data: data["username"] = USERNAME_STYLE
-	if not "message" in data: data["message"] = MESSAGE_STYLE
-	if not "system" in data: data["system"] = SYSTEM_STYLE
-	if not "self" in data: data["self"] = SELF_STYLE
-	if not "action" in data: data["action"] = ACTION_STYLE
-	if not "timestamp" in data: data["timestamp"] = TIMESTAMP_STYLE
-	if not "resume" in data: data["resume"] = RESUME_STYLE
-	if not "hyperlink" in data: data["hyperlink"] = HYPERLINK_STYLE
-	if not "base" in data: data["base"] = BASE_STYLE
-	if not "error" in data: data["error"] = ERROR_STYLE
-	if not "whois" in data: data["whois"] = WHOIS_STYLE
-	if not "whois-text" in data: data["whois-text"] = WHOIS_TEXT_STYLE
+	if not NOTICE_STYLE_NAME in data: data[NOTICE_STYLE_NAME] = NOTICE_STYLE
+	if not USERNAME_STYLE_NAME in data: data[USERNAME_STYLE_NAME] = USERNAME_STYLE
+	if not MESSAGE_STYLE_NAME in data: data[MESSAGE_STYLE_NAME] = MESSAGE_STYLE
+	if not SYSTEM_STYLE_NAME in data: data[SYSTEM_STYLE_NAME] = SYSTEM_STYLE
+	if not SELF_STYLE_NAME in data: data[SELF_STYLE_NAME] = SELF_STYLE
+	if not ACTION_STYLE_NAME in data: data[ACTION_STYLE_NAME] = ACTION_STYLE
+	if not TIMESTAMP_STYLE_NAME in data: data[TIMESTAMP_STYLE_NAME] = TIMESTAMP_STYLE
+	if not RESUME_STYLE_NAME in data: data[RESUME_STYLE_NAME] = RESUME_STYLE
+	if not HYPERLINK_STYLE_NAME in data: data[HYPERLINK_STYLE_NAME] = HYPERLINK_STYLE
+	if not BASE_STYLE_NAME in data: data[BASE_STYLE_NAME] = BASE_STYLE
+	if not ERROR_STYLE_NAME in data: data[ERROR_STYLE_NAME] = ERROR_STYLE
+	if not WHOIS_STYLE_NAME in data: data[WHOIS_STYLE_NAME] = WHOIS_STYLE
+	if not WHOIS_TEXT_STYLE_NAME in data: data[WHOIS_TEXT_STYLE_NAME] = WHOIS_TEXT_STYLE
 	if len(data)>s:
 		return [True,data]
 	else:
@@ -654,19 +668,19 @@ def get_text_settings(filename=TEXT_SETTINGS_FILE):
 			return data
 	else:
 		si = {
-			"timestamp": TIMESTAMP_STYLE,
-			"username": USERNAME_STYLE,
-			"message": MESSAGE_STYLE,
-			"system": SYSTEM_STYLE,
-			"self": SELF_STYLE,
-			"action": ACTION_STYLE,
-			"notice": NOTICE_STYLE,
-			"resume": RESUME_STYLE,
-			"hyperlink": HYPERLINK_STYLE,
-			"base": BASE_STYLE,
-			"error": ERROR_STYLE,
-			"whois": WHOIS_STYLE,
-			"whois-text": WHOIS_TEXT_STYLE,
+			TIMESTAMP_STYLE_NAME: TIMESTAMP_STYLE,
+			USERNAME_STYLE_NAME: USERNAME_STYLE,
+			MESSAGE_STYLE_NAME: MESSAGE_STYLE,
+			SYSTEM_STYLE_NAME: SYSTEM_STYLE,
+			SELF_STYLE_NAME: SELF_STYLE,
+			ACTION_STYLE_NAME: ACTION_STYLE,
+			NOTICE_STYLE_NAME: NOTICE_STYLE,
+			RESUME_STYLE_NAME: RESUME_STYLE,
+			HYPERLINK_STYLE_NAME: HYPERLINK_STYLE,
+			BASE_STYLE_NAME: BASE_STYLE,
+			ERROR_STYLE_NAME: ERROR_STYLE,
+			WHOIS_STYLE_NAME: WHOIS_STYLE,
+			WHOIS_TEXT_STYLE_NAME: WHOIS_TEXT_STYLE,
 		}
 		with open(filename, "w") as write_data:
 			json.dump(si, write_data, indent=4, sort_keys=True)

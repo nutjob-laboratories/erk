@@ -99,7 +99,7 @@ class Erk(QMainWindow):
 					c.windows[channel].is_away = True
 					c.windows[channel].update_nick(obj.nickname)
 
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 		try:
 			w = self.MDI.activeSubWindow()
 			win = w.window
@@ -118,7 +118,7 @@ class Erk(QMainWindow):
 					c.windows[channel].is_away = False
 					c.windows[channel].update_nick(obj.nickname)
 
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 		try:
 			w = self.MDI.activeSubWindow()
 			win = w.window
@@ -131,7 +131,7 @@ class Erk(QMainWindow):
 		dmsg = user+" is away: "+message
 		self.serverLog(obj,dmsg)
 
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 		try:
 			w = self.MDI.activeSubWindow()
 			win = w.window
@@ -148,7 +148,7 @@ class Erk(QMainWindow):
 			dmsg = user+" invited you to "+channel
 			self.serverLog(obj,dmsg)
 
-			rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+			rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 			try:
 				w = self.MDI.activeSubWindow()
 				win = w.window
@@ -162,7 +162,7 @@ class Erk(QMainWindow):
 				user = p[0]
 
 			dmsg = user+" invited "+target+" to the channel"
-			rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+			rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 			self.writeToChannel(obj,channel,rmsg)
 			self.writeToChannelLog(obj,channel,'',dmsg)
 
@@ -171,7 +171,7 @@ class Erk(QMainWindow):
 		dmsg = "Invitation to "+channel+" sent to "+target
 		self.serverLog(obj,dmsg)
 
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 		try:
 			w = self.MDI.activeSubWindow()
 			win = w.window
@@ -181,7 +181,7 @@ class Erk(QMainWindow):
 			pass
 
 	def irc_you_are_oper(self,obj):
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],"You are an IRC operator" )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"You are an IRC operator" )
 		self.serverLog(obj,"You are an IRC operator")
 
 		try:
@@ -209,12 +209,12 @@ class Erk(QMainWindow):
 			suffix = ""
 
 		wd = [
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],"("+whoisdata.username+"@"+whoisdata.host+"): "+whoisdata.realname ),
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],whoisdata.channels ),
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],"Connected to "+whoisdata.server ),
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],whoisdata.privs ),
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],"Idle "+whoisdata.idle+" second"+suffix),
-			render_message(self, self.styles["timestamp"],self.styles["whois"],whoisdata.nickname,self.styles["whois-text"],"Signed on "+pretty ),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],"("+whoisdata.username+"@"+whoisdata.host+"): "+whoisdata.realname ),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],whoisdata.channels ),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],"Connected to "+whoisdata.server ),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],whoisdata.privs ),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],"Idle "+whoisdata.idle+" second"+suffix),
+			render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[WHOIS_STYLE_NAME],whoisdata.nickname,self.styles[WHOIS_TEXT_STYLE_NAME],"Signed on "+pretty ),
 		]
 
 		try:
@@ -236,7 +236,7 @@ class Erk(QMainWindow):
 		else:
 			dmsg = kicker+" kicked "+target+" from "+channel
 
-		rmsg = render_system(self, self.styles["timestamp"],self.styles["system"],dmsg )
+		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
 		self.writeToChannel(obj,channel,rmsg)
 		self.writeToChannelLog(obj,channel,'',dmsg)
 
@@ -335,18 +335,18 @@ class Erk(QMainWindow):
 					c.windows[channel].refreshUserlist()
 
 					if qmsg!='':
-						msg = render_system(self, self.styles["timestamp"],self.styles["system"],user+" has quit IRC ("+qmsg+")" )
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC ("+qmsg+")" )
 						self.writeToChannel(obj,channel, msg )
 						self.writeToChannelLog(obj,channel,'',user+" has quit IRC ("+qmsg+")")
 					else:
-						msg = render_system(self, self.styles["timestamp"],self.styles["system"],user+" has quit IRC" )
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC" )
 						self.writeToChannel(obj,channel, msg )
 						self.writeToChannelLog(obj,channel,'',user+" has quit IRC")
 
 
 	def irc_error(self,obj,msg):
 
-		emsg = render_system(self, self.styles["timestamp"],self.styles["error"],msg )
+		emsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[ERROR_STYLE_NAME],msg )
 		self.writeToConsole(obj,emsg)
 
 		try:
@@ -397,7 +397,7 @@ class Erk(QMainWindow):
 					self.setChannelKey(obj,channel,'')
 					self.unsetChannelMode(obj,channel,"k")
 				if len(msg)>0:
-					dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+					dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 					self.writeToChannel(obj,channel,dmsg)
 					self.writeToChannelLog(obj,channel,'',msg)
 				continue
@@ -418,7 +418,7 @@ class Erk(QMainWindow):
 					else:
 						msg = ''
 				if len(msg)>0:
-					dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+					dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 					self.writeToChannel(obj,channel,dmsg)
 					self.writeToChannelLog(obj,channel,'',msg)
 					get_names = True
@@ -440,7 +440,7 @@ class Erk(QMainWindow):
 					else:
 						msg = ''
 				if len(msg)>0:
-					dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+					dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 					self.writeToChannel(obj,channel,dmsg)
 					self.writeToChannelLog(obj,channel,'',msg)
 					get_names = True
@@ -450,13 +450,13 @@ class Erk(QMainWindow):
 				if mset:
 					for u in args:
 						msg = f"{user} banned {u} from {channel}"
-						dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+						dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 						self.writeToChannel(obj,channel,dmsg)
 						self.writeToChannelLog(obj,channel,'',msg)
 				else:
 					for u in args:
 						msg = f"{user} unbanned {u} from {channel}"
-						dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+						dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 						self.writeToChannel(obj,channel,dmsg)
 						self.writeToChannelLog(obj,channel,'',msg)
 				continue
@@ -532,12 +532,12 @@ class Erk(QMainWindow):
 		if len(reportadd)>0 or len(reportremove)>0:
 			if mset:
 				msg = f"{user} set +{''.join(reportadd)} in {channel}"
-				dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+				dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 				self.writeToChannel(obj,channel,dmsg)
 				self.writeToChannelLog(obj,channel,'',msg)
 			else:
 				msg = f"{user} set -{''.join(reportremove)} in {channel}"
-				dmsg = render_system(self, self.styles["timestamp"],self.styles["system"],msg )
+				dmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],msg )
 				self.writeToChannel(obj,channel,dmsg)
 				self.writeToChannelLog(obj,channel,'',msg)
 
@@ -553,7 +553,7 @@ class Erk(QMainWindow):
 						if chan==channel:
 							c.windows[chan].updateTopic(topic)
 							if topic!='':
-								msg = render_system(self, self.styles["timestamp"],self.styles["system"],user+" set the topic to \""+topic+"\"" )
+								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" set the topic to \""+topic+"\"" )
 								self.writeToChannel(obj,chan,msg)
 								self.writeToChannelLog(obj,chan,'',user+" set the topic to \""+topic+"\"")
 								# Make sure the app title is updated if necessary
@@ -571,7 +571,7 @@ class Erk(QMainWindow):
 
 	def irc_registered(self,obj):
 		c = self.fetchConnection(obj)
-		msg = render_system(self, self.styles["timestamp"],self.styles["system"],"Registered with "+obj.server+":"+str(obj.port) )
+		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Registered with "+obj.server+":"+str(obj.port) )
 		self.writeToConsole(obj,msg)
 		self.writeToConsoleLog(obj,'',msg)
 
@@ -594,7 +594,7 @@ class Erk(QMainWindow):
 
 	def irc_motd(self,obj,motd):
 		c = self.fetchConnection(obj)
-		msg = render_system(self, self.styles["timestamp"],self.styles["system"],"<br>".join(motd) )
+		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"<br>".join(motd) )
 		self.writeToConsole(obj,msg)
 		self.writeToConsoleLog(obj,'',"<br>".join(motd))
 
@@ -630,13 +630,13 @@ class Erk(QMainWindow):
 		if self.is_ignored(obj,user): return
 
 		if target.lower()=='auth':
-			msg = render_system(self, self.styles["timestamp"],self.styles["system"],text )
+			msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],text )
 			self.writeToConsole(obj,msg)
 			self.writeToConsoleLog(obj,'',text)
 			return
 
 		if obj.hostname==None:
-			msg = render_message(self, self.styles["timestamp"],self.styles["notice"],user,self.styles["message"],text )
+			msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 			self.writeToConsole(obj,msg)
 			self.writeToConsoleLog(obj,'&'+user,text)
 			return
@@ -650,17 +650,17 @@ class Erk(QMainWindow):
 					win = UserWindow(user,self.MDI,obj,self)
 					c.windows[user] = win
 					self.buildWindowMenu()
-				msg = render_message(self, self.styles["timestamp"],self.styles["notice"],user,self.styles["message"],text )
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 				self.writeToChannel(obj,user,msg)
 				self.writeToChannelLog(obj,user,'&'+user,text)
 				return
 			else:
-				msg = render_message(self, self.styles["timestamp"],self.styles["notice"],user,self.styles["message"],text )
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 				self.writeToConsole(obj,msg)
 				self.writeToConsoleLog(obj,'&'+user,text)
 				return
 
-		msg = render_message(self, self.styles["timestamp"],self.styles["notice"],user+"/"+target,self.styles["message"],text )
+		msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user+"/"+target,self.styles[MESSAGE_STYLE_NAME],text )
 		self.writeToChannel(obj,target,msg)
 		self.writeToChannelLog(obj,target,'&'+user+"/"+target,text)
 
@@ -681,17 +681,17 @@ class Erk(QMainWindow):
 					win = UserWindow(user,self.MDI,obj,self)
 					c.windows[user] = win
 					self.buildWindowMenu()
-				msg = render_system(self, self.styles["timestamp"],self.styles["action"],user+" "+text )
+				msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[ACTION_STYLE_NAME],user+" "+text )
 				self.writeToChannel(obj,user,msg)
 				self.writeToChannelLog(obj,user,'+'+user,text)
 				return
 			else:
-				msg = render_system(self, self.styles["timestamp"],self.styles["action"],user+" "+text )
+				msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[ACTION_STYLE_NAME],user+" "+text )
 				self.writeToConsole(obj,msg)
 				self.writeToConsoleLog(obj,'+'+user,text)
 				return
 
-		msg = render_system(self, self.styles["timestamp"],self.styles["action"],user+" "+text )
+		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[ACTION_STYLE_NAME],user+" "+text )
 		self.writeToChannel(obj,target,msg)
 		self.writeToChannelLog(obj,target,'+'+user,text)
 
@@ -713,19 +713,19 @@ class Erk(QMainWindow):
 					c.windows[user] = win
 					self.buildWindowMenu()
 				# Display the message and return
-				msg = render_message(self, self.styles["timestamp"],self.styles["username"],user,self.styles["message"],text )
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[USERNAME_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 				self.writeToChannel(obj,user,msg)
 				self.writeToChannelLog(obj,user,user,text)
 				# self.writeToChannel(obj,user,user+": "+text)
 				return
 			else:
-				msg = render_message(self, self.styles["timestamp"],self.styles["username"],user,self.styles["message"],text )
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[USERNAME_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 				self.writeToConsole(obj,msg)
 				self.writeToConsoleLog(obj,user,text)
 				#self.writeToConsole(obj,user+": "+text)
 				return
 
-		msg = render_message(self, self.styles["timestamp"],self.styles["username"],user,self.styles["message"],text )
+		msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[USERNAME_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
 		self.writeToChannel(obj,target,msg)
 		self.writeToChannelLog(obj,target,user,text)
 		#self.writeToChannel(obj,target,user+": "+text)
@@ -772,7 +772,7 @@ class Erk(QMainWindow):
 		c.console = ccon
 		self.connections.append(c)
 
-		msg = render_system(self, self.styles["timestamp"],self.styles["system"],"Connected to "+obj.server+":"+str(obj.port) )
+		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Connected to "+obj.server+":"+str(obj.port) )
 		ccon.writeText(msg)
 		ccon.add_to_log('',"Connected to "+obj.server+":"+str(obj.port))
 		# ccon.writeText("Connected!")
@@ -794,7 +794,7 @@ class Erk(QMainWindow):
 			chan = ChannelWindow(channel,self.MDI,obj,self)
 			c.windows[channel] = chan
 			# chan.writeText("Joined "+channel)
-			msg = render_system(self, self.styles["timestamp"],self.styles["system"],"Joined "+channel )
+			msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Joined "+channel )
 			chan.writeText(msg)
 			chan.add_to_log('',"Joined "+channel)
 			self.buildWindowMenu()
@@ -843,7 +843,7 @@ class Erk(QMainWindow):
 					c.windows[channel].refreshUserlist()
 					# self.writeToChannel(obj,channel, nick+" has joined "+channel )
 
-					msg = render_system(self, self.styles["timestamp"],self.styles["system"],nick+" has joined "+channel )
+					msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has joined "+channel )
 					self.writeToChannel(obj,channel, msg )
 					self.writeToChannelLog(obj,channel,'',nick+" has joined "+channel)
 
@@ -874,7 +874,7 @@ class Erk(QMainWindow):
 					c.windows[channel].refreshUserlist()
 					#self.writeToChannel(obj,channel, nick+" has left "+channel )
 
-					msg = render_system(self, self.styles["timestamp"],self.styles["system"],nick+" has left "+channel )
+					msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has left "+channel )
 					self.writeToChannel(obj,channel, msg )
 					self.writeToChannelLog(obj,channel,'',nick+" has left "+channel)
 
@@ -924,11 +924,11 @@ class Erk(QMainWindow):
 						c.windows[channel].refreshUserlist()
 
 						if obj.nickname==oldnick:
-							msg = render_system(self, self.styles["timestamp"],self.styles["system"], "You are now known as "+newnick )
+							msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], "You are now known as "+newnick )
 							self.writeToChannel(obj,channel, msg )
 							self.writeToChannelLog(obj,channel,'',"You are now known as "+newnick)
 						else:
-							msg = render_system(self, self.styles["timestamp"],self.styles["system"], oldnick+" is now known as "+newnick )
+							msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], oldnick+" is now known as "+newnick )
 							self.writeToChannel(obj,channel, msg )
 							self.writeToChannelLog(obj,channel,'',oldnick+" is now known as "+newnick)
 
@@ -940,7 +940,7 @@ class Erk(QMainWindow):
 						del c.windows[oldnick]
 				self.buildWindowMenu()
 
-				msg = render_system(self, self.styles["timestamp"],self.styles["system"], oldnick+" is now known as "+newnick )
+				msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], oldnick+" is now known as "+newnick )
 				self.writeToChannel(obj,newnick, msg )
 				self.writeToChannelLog(obj,newnick,'',oldnick+" is now known as "+newnick)
 
@@ -953,7 +953,7 @@ class Erk(QMainWindow):
 	# |============================|
 
 	def serverLog(self,obj,text):
-		msg = render_system(self, self.styles["timestamp"],self.styles["system"],text )
+		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],text )
 		self.writeToConsole(obj,msg)
 		self.writeToConsoleLog(obj,'',msg)
 
@@ -974,14 +974,14 @@ class Erk(QMainWindow):
 				c.windows[target] = win
 			# Display the message and return
 			if notice:
-				ustyle = self.styles["notice"]
-				mstyle = self.styles["system"]
+				ustyle = self.styles[NOTICE_STYLE_NAME]
+				mstyle = self.styles[SYSTEM_STYLE_NAME]
 				glyph = GLYPH_NOTICE
 			else:
-				ustyle = self.styles["self"]
-				mstyle = self.styles["message"]
+				ustyle = self.styles[SELF_STYLE_NAME]
+				mstyle = self.styles[MESSAGE_STYLE_NAME]
 				glyph = GLYPH_SELF
-			msg = render_message(self, self.styles["timestamp"],ustyle,obj.nickname,mstyle,text )
+			msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],ustyle,obj.nickname,mstyle,text )
 			self.writeToChannel(obj,target,msg)
 			self.writeToChannelLog(obj,target,glyph+obj.nickname,text)
 			return
@@ -990,14 +990,14 @@ class Erk(QMainWindow):
 	def writeChannelMessage(self,obj,target,text,notice=False):
 		if self.userWindowExists(obj,target):
 			if notice:
-				ustyle = self.styles["notice"]
-				mstyle = self.styles["system"]
+				ustyle = self.styles[NOTICE_STYLE_NAME]
+				mstyle = self.styles[SYSTEM_STYLE_NAME]
 				glyph = GLYPH_NOTICE
 			else:
-				ustyle = self.styles["self"]
-				mstyle = self.styles["message"]
+				ustyle = self.styles[SELF_STYLE_NAME]
+				mstyle = self.styles[MESSAGE_STYLE_NAME]
 				glyph = GLYPH_SELF
-			msg = render_message(self, self.styles["timestamp"],ustyle,obj.nickname,mstyle,text )
+			msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],ustyle,obj.nickname,mstyle,text )
 			self.writeToChannel(obj,target,msg)
 			self.writeToChannelLog(obj,target,glyph+obj.nickname,text)
 

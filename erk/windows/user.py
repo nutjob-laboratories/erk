@@ -135,12 +135,12 @@ class Window(QMainWindow):
 		self.channelChatDisplay.setObjectName("channelChatDisplay")
 		self.channelChatDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelChatDisplay.anchorClicked.connect(self.linkClicked)
-		self.channelChatDisplay.setStyleSheet(self.gui.styles["base"])
+		self.channelChatDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
 		self.userTextInput = SpellTextEdit(self)
 		self.userTextInput.setObjectName("userTextInput")
 		self.userTextInput.returnPressed.connect(self.handleUserInput)
-		self.userTextInput.setStyleSheet(self.gui.styles["base"])
+		self.userTextInput.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
 		# Text input widget should only be one line
 		fm = self.userTextInput.fontMetrics()
@@ -224,31 +224,31 @@ class Window(QMainWindow):
 				if len(user)>0:
 					if GLYPH_ACTION in user:
 						user = user.replace(GLYPH_ACTION,'')
-						msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["action"],user+" "+message,timestamp )
+						msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ACTION_STYLE_NAME],user+" "+message,timestamp )
 					elif GLYPH_NOTICE in user:
 						user = user.replace(GLYPH_NOTICE,'')
-						msg = render_message(self.gui, self.gui.styles["timestamp"],self.gui.styles["notice"],user,self.gui.styles["message"],message,timestamp )
+						msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
 					elif GLYPH_RESUME in user:
 						user = user.replace(GLYPH_RESUME,'')
-						msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["resume"],message,timestamp )
+						msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],message,timestamp )
 					elif GLYPH_ERROR in user:
 						user = user.replace(GLYPH_ERROR,'')
-						msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["error"],message,timestamp )
+						msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ERROR_STYLE_NAME],message,timestamp )
 					else:
 						if GLYPH_SELF in user:
 							user = user.replace(GLYPH_SELF,'')
-							ustyle = self.gui.styles["self"]
+							ustyle = self.gui.styles[SELF_STYLE_NAME]
 						else:
-							ustyle = self.gui.styles["username"]
-						msg = render_message(self.gui, self.gui.styles["timestamp"],ustyle,user,self.gui.styles["message"],message,timestamp )
+							ustyle = self.gui.styles[USERNAME_STYLE_NAME]
+						msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],ustyle,user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
 				else:
-					msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["system"],message,timestamp )
+					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[SYSTEM_STYLE_NAME],message,timestamp )
 				self.writeText(msg)
 
 			if len(self.log)>0:
 				t = datetime.timestamp(datetime.now())
 				pretty = datetime.fromtimestamp(t).strftime('%B %d, %Y at %H:%M:%S')
-				msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["resume"],"Resumed on "+pretty )
+				msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],"Resumed on "+pretty )
 				self.writeText(msg)
 				self.add_to_log(GLYPH_RESUME,"Resumed on "+pretty )
 
@@ -263,25 +263,25 @@ class Window(QMainWindow):
 			if len(user)>0:
 				if GLYPH_ACTION in user:
 					user = user.replace(GLYPH_ACTION,'')
-					msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["action"],user+" "+message,timestamp )
+					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ACTION_STYLE_NAME],user+" "+message,timestamp )
 				elif GLYPH_NOTICE in user:
 					user = user.replace(GLYPH_NOTICE,'')
-					msg = render_message(self.gui, self.gui.styles["timestamp"],self.gui.styles["notice"],user,self.gui.styles["message"],message,timestamp )
+					msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
 				elif GLYPH_RESUME in user:
 					user = user.replace(GLYPH_RESUME,'')
-					msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["resume"],message,timestamp )
+					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],message,timestamp )
 				elif GLYPH_ERROR in user:
 					user = user.replace(GLYPH_ERROR,'')
-					msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["error"],message,timestamp )
+					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ERROR_STYLE_NAME],message,timestamp )
 				else:
 					if GLYPH_SELF in user:
 						user = user.replace(GLYPH_SELF,'')
-						ustyle = self.gui.styles["self"]
+						ustyle = self.gui.styles[SELF_STYLE_NAME]
 					else:
-						ustyle = self.gui.styles["username"]
-					msg = render_message(self.gui, self.gui.styles["timestamp"],ustyle,user,self.gui.styles["message"],message,timestamp )
+						ustyle = self.gui.styles[USERNAME_STYLE_NAME]
+					msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],ustyle,user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
 			else:
-				msg = render_system(self.gui, self.gui.styles["timestamp"],self.gui.styles["system"],message,timestamp )
+				msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[SYSTEM_STYLE_NAME],message,timestamp )
 			self.writeText(msg)
 
 	def menuWhois(self):

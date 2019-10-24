@@ -103,15 +103,15 @@ def handle_chat_input(obj,text,is_user=False):
 
 	if len(error)>0:
 		for e in error:
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],e)
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],e)
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
-		msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+		msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
 		obj.gui.writeToChannel(obj.client,obj.name,msg)
 		return
 
 	if not colored_text:
 		if color_command:
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -126,7 +126,7 @@ def handle_chat_input(obj,text,is_user=False):
 
 		obj.client.msg(obj.name,text)
 
-		msg = render_message(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["self"],obj.client.nickname,obj.gui.styles["message"],text )
+		msg = render_message(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SELF_STYLE_NAME],obj.client.nickname,obj.gui.styles[MESSAGE_STYLE_NAME],text )
 		obj.gui.writeToChannel(obj.client,obj.name,msg)
 		obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_SELF+obj.client.nickname,text)
 		return
@@ -178,14 +178,14 @@ def handle_chat_input(obj,text,is_user=False):
 						obj.client.sendLine(f"INVITE {u} {channel}")
 					return
 				else:
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+channel+"\" is not a valid channel name" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"\""+channel+"\" is not a valid channel name" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite CHANNEL USER [USER ...]" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"invite: /invite CHANNEL USER [USER ...]" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
 					return
 		if len(tokens)<3:
 			if tokens[0].lower()=="/invite":
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite CHANNEL USER [USER ...]" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /invite CHANNEL USER [USER ...]" )
 				obj.gui.writeToChannel(obj.client,obj.name,msg)
 				return
 	else:
@@ -208,9 +208,9 @@ def handle_chat_input(obj,text,is_user=False):
 				tokens.pop(0)	# remove command
 				target = tokens.pop(0)
 				if target[:1]=='#':
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid user name" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"\""+target+"\" is not a valid user name" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite [CHANNEL] USER [USER ...]" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"invite: /invite [CHANNEL] USER [USER ...]" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
 					return
 				else:
@@ -218,7 +218,7 @@ def handle_chat_input(obj,text,is_user=False):
 					return
 		if len(tokens)==1:
 			if tokens[0].lower()=="/invite":
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite [CHANNEL] USER [USER ...]" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /invite [CHANNEL] USER [USER ...]" )
 				obj.gui.writeToChannel(obj.client,obj.name,msg)
 				return
 
@@ -232,7 +232,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)!=3:
 		if tokens[0].lower()=="/oper":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /oper USERNAME PASSWORD" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /oper USERNAME PASSWORD" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -246,14 +246,14 @@ def handle_chat_input(obj,text,is_user=False):
 					obj.client.topic(target,topic)
 					return
 				else:
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid channel name" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"\""+target+"\" is not a valid channel name" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
-					msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /topic CHANNEL NEW_TOPIC" )
 					obj.gui.writeToChannel(obj.client,obj.name,msg)
 					return
 		if len(tokens)<=2:
 			if tokens[0].lower()=="/topic":
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /topic CHANNEL NEW_TOPIC" )
 				obj.gui.writeToChannel(obj.client,obj.name,msg)
 				return
 	else:
@@ -270,7 +270,7 @@ def handle_chat_input(obj,text,is_user=False):
 					return
 		if len(tokens)==1:
 			if tokens[0].lower()=="/topic":
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic [CHANNEL] NEW_TOPIC" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /topic [CHANNEL] NEW_TOPIC" )
 				obj.gui.writeToChannel(obj.client,obj.name,msg)
 				return
 
@@ -282,7 +282,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/whois":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /whois NICKNAME" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /whois NICKNAME" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -294,7 +294,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/nick":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /nick NICKNAME" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /nick NICKNAME" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -316,7 +316,7 @@ def handle_chat_input(obj,text,is_user=False):
 	if len(tokens)==1:
 		if tokens[0].lower()=="/part":
 			if is_user:
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /part CHANNEL [MESSAGE]" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /part CHANNEL [MESSAGE]" )
 				obj.gui.writeToChannel(obj.client,obj.name,msg)
 				return
 			obj.client.part(obj.name)
@@ -339,7 +339,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/join":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /join CHANNEL [KEY]" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /join CHANNEL [KEY]" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -364,7 +364,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/notice":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /notice TARGET MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /notice TARGET MESSAGE" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -389,7 +389,7 @@ def handle_chat_input(obj,text,is_user=False):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/msg":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /msg TARGET MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /msg TARGET MESSAGE" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -400,13 +400,13 @@ def handle_chat_input(obj,text,is_user=False):
 			if obj.gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 			if obj.gui.use_asciimojis: msg = inject_asciiemojis(msg)
 			obj.client.describe(obj.name,msg)
-			pmsg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["action"],obj.client.nickname+" "+msg )
+			pmsg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ACTION_STYLE_NAME],obj.client.nickname+" "+msg )
 			obj.gui.writeToChannel(obj.client,obj.name,pmsg)
 			obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_ACTION+obj.client.nickname,msg)
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/me":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /me MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /me MESSAGE" )
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
@@ -420,7 +420,7 @@ def handle_chat_input(obj,text,is_user=False):
 
 	obj.client.msg(obj.name,text)
 
-	msg = render_message(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["self"],obj.client.nickname,obj.gui.styles["message"],text )
+	msg = render_message(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SELF_STYLE_NAME],obj.client.nickname,obj.gui.styles[MESSAGE_STYLE_NAME],text )
 	obj.gui.writeToChannel(obj.client,obj.name,msg)
 	obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_SELF+obj.client.nickname,text)
 
@@ -455,7 +455,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/raw":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /raw COMMAND ..." )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /raw COMMAND ..." )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -488,14 +488,14 @@ def handle_console_input(obj,text):
 					obj.client.sendLine(f"INVITE {u} {channel}")
 				return
 			else:
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+channel+"\" is not a valid channel name" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"\""+channel+"\" is not a valid channel name" )
 				obj.gui.writeToConsole(obj.client,msg)
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"invite: /invite CHANNEL USER [USER ...]" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"invite: /invite CHANNEL USER [USER ...]" )
 				obj.gui.writeToConsole(obj.client,msg)
 				return
 	if len(tokens)<3:
 		if tokens[0].lower()=="/invite":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /invite CHANNEL USER [USER ...]" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /invite CHANNEL USER [USER ...]" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -508,7 +508,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)!=3:
 		if tokens[0].lower()=="/oper":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /oper USERNAME PASSWORD" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /oper USERNAME PASSWORD" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -521,14 +521,14 @@ def handle_console_input(obj,text):
 				obj.client.topic(target,topic)
 				return
 			else:
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["error"],"\""+target+"\" is not a valid channel name" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"\""+target+"\" is not a valid channel name" )
 				obj.gui.writeToConsole(obj.client,msg)
-				msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /topic CHANNEL NEW_TOPIC" )
 				obj.gui.writeToConsole(obj.client,msg)
 				return
 	if len(tokens)<=2:
 		if tokens[0].lower()=="/topic":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /topic CHANNEL NEW_TOPIC" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /topic CHANNEL NEW_TOPIC" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -540,7 +540,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/whois":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /whois NICKNAME" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /whois NICKNAME" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -552,7 +552,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/nick":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /nick NICKNAME" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /nick NICKNAME" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -573,7 +573,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/part":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /part CHANNEL [MESSAGE]" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /part CHANNEL [MESSAGE]" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -592,7 +592,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/join":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /join CHANNEL [KEY]" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /join CHANNEL [KEY]" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -617,7 +617,7 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/notice":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /notice TARGET MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /notice TARGET MESSAGE" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
@@ -642,11 +642,11 @@ def handle_console_input(obj,text):
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/msg":
-			msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Usage: /msg TARGET MESSAGE" )
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /msg TARGET MESSAGE" )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 
 	# No valid command detected
-	msg = render_system(obj.gui, obj.gui.styles["timestamp"],obj.gui.styles["system"],"Unrecognized command: \""+text+"\"" )
+	msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Unrecognized command: \""+text+"\"" )
 	obj.gui.writeToConsole(obj.client,msg)
 	return
