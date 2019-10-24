@@ -32,9 +32,7 @@
 	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)
 	* Example chat:
-		* <p><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png"></p>
-		* wraithnix: I can't believe the bus is late `:rage:`
-		* wraithnix: (tableflip)
+		* <table border="0"> <tbody><tr><td style="text-align: left;"><img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png"></td></tr><tr><td><table border="0"> <tbody><tr><td style="text-align: left; background-color: white;">wraithnix: I can't believe the bus is late `:rage:`</td></tr><tr><td style="text-align: left; background-color: white;">wraithnix: (tableflip)</td></tr></tbody></table></td></tr></tbody></table>
 * Command/nick/channel auto-completion
 	* Type the first few letters of a command, nickname, or channel, and hit the tab key
 	* Auto-complete works for emoji and ASCIImoji shortcodes, too
