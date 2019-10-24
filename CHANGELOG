@@ -59,6 +59,9 @@ Version 0.500
 	* IRC URLs (eg irc://erk@password:localhost:6667/channel) can now be passed to Erk as a commandline option
 	* Added "old school" commandline option (turns off most settings)
 	* Added an option to turn off (and on) user ignoring
+	* Fixed a bug in the /color command (sometimes colors would not be applied to strings)
+	* Fixed a bug in IRC color rendering (some background colors would never be rendered)
+	* Added a check to see if a string has IRC color codes before attempting to render the IRC color codes in the string
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

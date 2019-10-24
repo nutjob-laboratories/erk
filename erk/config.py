@@ -594,8 +594,9 @@ def render_message(gui,timestamp_style,ident_style,ident,message_style,message,t
 	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles[HYPERLINK_STYLE_NAME])
 
 	if gui.display_irc_colors:
-		# render colors
-		message = convert_irc_color_to_html(message)
+		if string_has_irc_formatting_codes(message):
+			# render colors
+			message = convert_irc_color_to_html(message)
 	else:
 		# strip colors
 		message = strip_color(message)
@@ -711,68 +712,10 @@ def inject_www_links(txt,style):
 		txt = txt.replace(u,link)
 	return txt
 
-def irc_color_full(fore,back,text):
-
-	html_tag = "font"
-
-	if fore==0: fore=IRC_00
-	if fore==1: fore=IRC_01
-	if fore==2: fore=IRC_02
-	if fore==3: fore=IRC_03
-	if fore==4: fore=IRC_04
-	if fore==5: fore=IRC_05
-	if fore==6: fore=IRC_06
-	if fore==7: fore=IRC_07
-	if fore==8: fore=IRC_08
-	if fore==9: fore=IRC_09
-	if fore==10: fore=IRC_10
-	if fore==11: fore=IRC_11
-	if fore==12: fore=IRC_12
-	if fore==13: fore=IRC_13
-	if fore==14: fore=IRC_14
-	if fore==15: fore=IRC_15
-
-	if back==0: back=IRC_00
-	if back==1: back=IRC_01
-	if back==2: back=IRC_02
-	if back==3: back=IRC_03
-	if back==4: back=IRC_04
-	if back==5: back=IRC_05
-	if back==6: back=IRC_06
-	if back==7: back=IRC_07
-	if back==8: back=IRC_08
-	if back==9: back=IRC_09
-	if back==10: back=IRC_10
-	if back==11: back=IRC_11
-	if back==12: back=IRC_12
-	if back==13: back=IRC_13
-	if back==14: back=IRC_14
-	if back==15: back=IRC_15
-
-	return f"<{html_tag} style=\"color: {fore}; background-color: {back}\">" + text + f"</{html_tag}>"
-
-def irc_color(fore,text):
-
-	html_tag = "font"
-
-	if fore==0: fore=IRC_00
-	if fore==1: fore=IRC_01
-	if fore==2: fore=IRC_02
-	if fore==3: fore=IRC_03
-	if fore==4: fore=IRC_04
-	if fore==5: fore=IRC_05
-	if fore==6: fore=IRC_06
-	if fore==7: fore=IRC_07
-	if fore==8: fore=IRC_08
-	if fore==9: fore=IRC_09
-	if fore==10: fore=IRC_10
-	if fore==11: fore=IRC_11
-	if fore==12: fore=IRC_12
-	if fore==13: fore=IRC_13
-	if fore==14: fore=IRC_14
-	if fore==15: fore=IRC_15
-
-	return f"<{html_tag} style=\"color: {fore};\">" + text + f"</{html_tag}>"
+def string_has_irc_formatting_codes(data):
+	for code in ["\x03","\x02","\x1D","\x1F","\x0F"]:
+		if code in data: return True
+	return False
 
 def convert_irc_color_to_html(text):
 
@@ -828,7 +771,7 @@ def convert_irc_color_to_html(text):
 
 	text = fout
 
-	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
+	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
 	for c in combos:
 		fore = c[0]
 		back = c[1]
@@ -871,7 +814,7 @@ def convert_irc_color_to_html(text):
 		r = f"<{html_tag} style=\"color: {foreground}; background-color: {background}\">"
 		text = text.replace(t,r)
 
-	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
+	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
 	for c in combos:
 		fore = c[0]
 		back = c[1]
@@ -944,25 +887,6 @@ def convert_irc_color_to_html(text):
 	text = text.replace("\x039",f"<{html_tag} style=\"color: {IRC_09};\">")
 
 	text = text.replace("\x03",f"</{html_tag}>")
-
-	# # close font tags
-	# if f"<{html_tag} style=" in text:
-	# 	if not f"</{html_tag}>" in text: text = text + f"</{html_tag}>"
-
-	# out = []
-	# indiv = False
-	# for w in text.split(' '):
-
-	# 	if indiv:
-	# 		if w==f"<{html_tag}":
-	# 			out.append(f"</{html_tag}>")
-
-	# 	if w==f"<{html_tag}": indiv = True
-	# 	if w==f"</{html_tag}>": indiv = False
-
-	# 	out.append(w)
-
-	# text = ' '.join(out)
 
 	# close font tags
 	if f"<{html_tag} style=" in text:

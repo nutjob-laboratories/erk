@@ -86,13 +86,13 @@ def handle_chat_input(obj,text,is_user=False):
 						if is_int(back):
 							if is_valid_color(back):
 								colored_text = True
-								text = chr(3)+fore+","+back+' '+' '.join(tokens)+chr(3)
+								text = chr(3)+fore+","+back+' '.join(tokens)+chr(3)
 							else:
 								colored_text = True
-								text = chr(3)+fore+back+' '+' '.join(tokens)+chr(3)
+								text = chr(3)+fore+back+' '.join(tokens)+chr(3)
 						else:
 							colored_text = True
-							text = chr(3)+fore+back+' '+' '.join(tokens)+chr(3)
+							text = chr(3)+fore+back+' '.join(tokens)+chr(3)
 					else:
 						colored_text = True
 						text = chr(3)+fore+back+chr(3)
@@ -130,6 +130,12 @@ def handle_chat_input(obj,text,is_user=False):
 		obj.gui.writeToChannel(obj.client,obj.name,msg)
 		obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_SELF+obj.client.nickname,text)
 		return
+
+	if len(tokens)==1:
+		if tokens[0].lower()=="/color":
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /color FOREGROUND [BACKGROUND] MESSAGE" )
+			obj.gui.writeToChannel(obj.client,obj.name,msg)
+			return
 
 
 	if len(tokens)>=2:
