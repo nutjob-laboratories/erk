@@ -35,8 +35,8 @@
 
 | <img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/emoji_and_asciimoji.png"> |
 |------------------------------------------------------------------------------------------------------------|
-| wraithnix: I can't believe the bus is late : rage :\                                                       |
-| wraithnix: (tableflip)                                                                                     |
+| `wraithnix: I can't believe the bus is late : rage :`<br>                                                  |
+| `wraithnix: (tableflip)`                                                                                   |
 
 * Command/nick/channel auto-completion
 	* Type the first few letters of a command, nickname, or channel, and hit the tab key
