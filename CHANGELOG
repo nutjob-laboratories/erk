@@ -57,6 +57,8 @@ Version 0.500
 	* Added -c option to commandline (to join channels on connection)
 	* Added -p option to commandline (to set/use a server connect password)
 	* IRC URLs (eg irc://erk@password:localhost:6667/channel) can now be passed to Erk as a commandline option
+	* Added "old school" commandline option (turns off most settings)
+	* Added an option to turn off (and on) user ignoring
 
 Version 0.413
 	* Clicking on the chat toolbar "name" widget will do nothing if the window is the active window

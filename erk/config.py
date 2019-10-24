@@ -138,6 +138,8 @@ SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
 SETTING_KEEP_ALIVE					= "keep_connection_alive"
 SETTING_DISPLAY_IRC_COLOR			= "display_irc_colors_in_chat"
 
+SETTING_ENABLE_IGNORE				= "enable_user_ignore"
+
 UNKNOWN_IRC_NETWORK = "Unknown"
 
 DEFAULT_KEEPALIVE_INTERVAL = 120
@@ -304,6 +306,7 @@ def patch_config_file(data):
 	if not SETTING_UPTIME_SECONDS in data: data[SETTING_UPTIME_SECONDS] = True
 	if not SETTING_KEEP_ALIVE in data: data[SETTING_KEEP_ALIVE] = True
 	if not SETTING_DISPLAY_IRC_COLOR in data: data[SETTING_DISPLAY_IRC_COLOR] = True
+	if not SETTING_ENABLE_IGNORE in data: data[SETTING_ENABLE_IGNORE] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -352,6 +355,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_UPTIME_SECONDS: True,
 			SETTING_KEEP_ALIVE: True,
 			SETTING_DISPLAY_IRC_COLOR: True,
+			SETTING_ENABLE_IGNORE: True,
 		}
 		save_settings(si)
 		return si

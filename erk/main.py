@@ -141,6 +141,8 @@ class Erk(QMainWindow):
 			pass
 
 	def irc_invited(self,obj,user,target,channel):
+		if self.is_ignored(obj,user): return
+
 		if target==obj.nickname:
 			# the client was invited
 			dmsg = user+" invited you to "+channel
@@ -1219,10 +1221,12 @@ class Erk(QMainWindow):
 		self.buildWindowMenu()
 
 	def ignore_user(self,obj,user):
+		if not self.allow_ignore: return
 		self.ignore.append(user)
 		save_ignore(self.ignore)
 
 	def unignore_user(self,obj,user):
+		if not self.allow_ignore: return
 		clean = []
 		for e in self.ignore:
 			if fnmatch.fnmatch(user,e): continue
@@ -1232,6 +1236,7 @@ class Erk(QMainWindow):
 		save_ignore(self.ignore)
 
 	def is_ignored(self,obj,user):
+		if not self.allow_ignore: return False
 		for e in self.ignore:
 			if fnmatch.fnmatch(user,e): return True
 			if e.lower()==user.lower(): return True
@@ -1297,8 +1302,10 @@ class Erk(QMainWindow):
 		self.keep_alive								= self.settings[SETTING_KEEP_ALIVE]
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
-
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
+
+		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
+		if not self.allow_ignore: self.actIgnore.setVisible(False)
 
 		self.autocomplete_asciimoji = self.settings[SETTING_ASCIIMOJI_AUTOCOMPLETE]
 		self.ASCIIMOJI_AUTOCOMPLETE = []
@@ -1315,6 +1322,7 @@ class Erk(QMainWindow):
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
+
 
 		f = QFont()
 		f.fromString(self.font_string)
@@ -1527,6 +1535,11 @@ class Erk(QMainWindow):
 		self.actColor.setChecked(self.display_irc_colors)
 		self.actColor.triggered.connect(self.menuColor)
 		chatSubMenu.addAction(self.actColor)
+
+		self.actToggleIgnore = QAction("Ignore selected users",self,checkable=True)
+		self.actToggleIgnore.setChecked(self.allow_ignore)
+		self.actToggleIgnore.triggered.connect(self.menuToggleIgnore)
+		chatSubMenu.addAction(self.actToggleIgnore)
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
@@ -1784,6 +1797,17 @@ class Erk(QMainWindow):
 				except:
 					pass
 		self.settings[SETTING_DISPLAY_UPTIME_CONSOLE] = self.display_uptime_console
+		save_settings(self.settings,self.settings_file)
+
+	def menuToggleIgnore(self):
+		if self.allow_ignore:
+			self.allow_ignore = False
+			self.actIgnore.setVisible(False)
+		else:
+			self.allow_ignore = True
+			self.actIgnore.setVisible(True)
+
+		self.settings[SETTING_ENABLE_IGNORE] = self.allow_ignore
 		save_settings(self.settings,self.settings_file)
 
 	def menuAutoEmoji(self):
@@ -2241,3 +2265,112 @@ class Erk(QMainWindow):
 	# | QT CODE END |
 	# |=============|
 
+	def oldschoolMode(self):
+
+		self.display_status_bar_on_chat_windows = False
+		self.plain_user_lists = True
+		self.display_timestamp = True
+		self.use_24_hour_timestamp = True
+		self.load_logs_on_start = False
+		self.save_logs_on_quit = False
+		self.spellCheck = False
+		self.use_asciimojis	= False
+		self.use_emojis = False
+		self.autocomplete_commands = False
+		self.autocomplete_nicks = False
+		self.convert_links_in_chat = False
+		self.strip_html_from_chat = True
+		self.log_private_chat = False
+		self.hide_private_chat = False
+		self.save_server_history = False
+		self.filter_profanity = False
+		self.display_uptime_console	= False
+		self.display_uptime_chat = False
+		self.display_uptime_seconds = False
+		self.display_irc_colors	= False
+		self.autocomplete_asciimoji = False
+		self.autocomplete_emoji = False
+		self.set_window_title_to_active = False
+
+
+		self.actHidePrivate.setEnabled(False)
+		self.actHidePrivate.setChecked(False)
+
+		self.actStatusBars.setEnabled(False)
+		self.actStatusBars.setChecked(False)
+
+		self.actWindowTitle.setEnabled(False)
+		self.actWindowTitle.setChecked(False)
+
+		self.actPlainUserLists.setEnabled(False)
+		self.actPlainUserLists.setChecked(True)
+
+		self.actConsoleUptime.setEnabled(False)
+		self.actConsoleUptime.setChecked(False)
+
+		self.actChatUptime.setEnabled(False)
+		self.actChatUptime.setChecked(False)
+
+		self.actSecondsUptime.setEnabled(False)
+		self.actSecondsUptime.setChecked(False)
+
+		self.actToggleTimestamp.setEnabled(False)
+		self.actToggleTimestamp.setChecked(True)
+
+		self.actToggle24Clock.setEnabled(False)
+		self.actToggle24Clock.setChecked(True)
+
+		self.actToggleSecondsTimestamp.setEnabled(False)
+		self.actToggleSecondsTimestamp.setChecked(False)
+
+		self.actSaveLogs.setEnabled(False)
+		self.actSaveLogs.setChecked(False)
+
+		self.actLoadLogs.setEnabled(False)
+		self.actLoadLogs.setChecked(False)
+
+		self.actPrivateLogs.setEnabled(False)
+		self.actPrivateLogs.setChecked(False)
+
+		self.actEmoji.setEnabled(False)
+		self.actEmoji.setChecked(False)
+
+		self.actAsciimoji.setEnabled(False)
+		self.actAsciimoji.setChecked(False)
+
+		self.actChatUrls.setEnabled(False)
+		self.actChatUrls.setChecked(False)
+
+		self.actStripHtml.setEnabled(False)
+		self.actStripHtml.setChecked(True)
+
+		self.actProfanity.setEnabled(False)
+		self.actProfanity.setChecked(False)
+
+		self.actColor.setEnabled(False)
+		self.actColor.setChecked(False)
+
+		self.actAutoCmds.setEnabled(False)
+		self.actAutoCmds.setChecked(False)
+
+		self.actAutoNicks.setEnabled(False)
+		self.actAutoNicks.setChecked(False)
+
+		self.actAutoAsciimoji.setEnabled(False)
+		self.actAutoAsciimoji.setChecked(False)
+
+		self.actAutoEmoji.setEnabled(False)
+		self.actAutoEmoji.setChecked(False)
+
+		self.optSpellCheck.setEnabled(False)
+		self.optSpellCheck.setChecked(False)
+
+		self.scEnglish.setEnabled(False)
+		self.scFrench.setEnabled(False)
+		self.scSpanish.setEnabled(False)
+		self.scGerman.setEnabled(False)
+
+	def noIgnore(self):
+		self.allow_ignore = False
+		self.actIgnore.setVisible(False)
+		self.actToggleIgnore.setEnabled(False)

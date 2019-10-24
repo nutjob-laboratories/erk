@@ -98,10 +98,15 @@ configgroup.add_argument("--style", type=str,help="Load text style file",default
 optgroup = parser.add_argument_group('Options')
 
 optgroup.add_argument("-h", "--help", help=f"Displays help", action="help")
-optgroup.add_argument( "--ontop", help=f"Display window on top of all other windows", action="store_true")
-optgroup.add_argument( "--fullscreen", help=f"Fill screen with application window", action="store_true")
+optgroup.add_argument( "--top", help=f"Display window on top of all other windows", action="store_true")
+optgroup.add_argument( "--full", help=f"Fill screen with application window", action="store_true")
 optgroup.add_argument( "--maximize", help=f"Display window maximized", action="store_true")
-optgroup.add_argument("--beat", type=int,help=f"Set \"keep alive\" heartbeat interval ({str(DEFAULT_KEEPALIVE_INTERVAL)})", metavar="SECONDS")
+optgroup.add_argument( "--beat", type=int,help=f"Set \"keep alive\" heartbeat interval ({str(DEFAULT_KEEPALIVE_INTERVAL)})", metavar="SECONDS")
+optgroup.add_argument( "--oldschool", help=f"Run in \"old school\" mode", action="store_true")
+
+disablegroup = parser.add_argument_group('Disable features')
+
+disablegroup.add_argument( "--noignore", help=f"Disable user ignoring", action="store_true")
 
 args = parser.parse_args()
 
@@ -156,7 +161,7 @@ if __name__ == '__main__':
 
 	GUI = Erk(app,args.config,args.style)
 
-	if args.ontop:
+	if args.top:
 		GUI.setWindowFlags(GUI.windowFlags() | Qt.WindowStaysOnTopHint)
 		GUI.window_on_top = True
 		GUI.actOnTop.setChecked(True)
@@ -164,7 +169,7 @@ if __name__ == '__main__':
 	if args.beat:
 		GUI.keep_alive_interval = args.beat
 
-	if args.fullscreen:
+	if args.full:
 		GUI.window_fullscreen = True
 		GUI.actFullscreen.setChecked(True)
 		GUI.showFullScreen()
@@ -173,6 +178,12 @@ if __name__ == '__main__':
 			GUI.showMaximized()
 		else:
 			GUI.show()
+
+	if args.oldschool:
+		GUI.oldschoolMode()
+
+	if args.noignore:
+		GUI.noIgnore()
 
 	if args.url!='':
 		u = urllib.parse.urlparse(args.url)

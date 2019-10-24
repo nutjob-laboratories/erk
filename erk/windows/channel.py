@@ -854,10 +854,11 @@ class Window(QMainWindow):
 				actBan = opMenu.addAction(QIcon(BAN_ICON),'Ban')
 				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),'Kick/Ban')
 
-			if is_ignored:
-				actUnignore = menu.addAction(QIcon(UNIGNORE_ICON),'Unignore')
-			else:
-				actIgnore = menu.addAction(QIcon(IGNORE_ICON),'Ignore')
+			if self.gui.allow_ignore:
+				if is_ignored:
+					actUnignore = menu.addAction(QIcon(UNIGNORE_ICON),'Unignore')
+				else:
+					actIgnore = menu.addAction(QIcon(IGNORE_ICON),'Ignore')
 
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),'WHOIS')
 
@@ -880,18 +881,19 @@ class Window(QMainWindow):
 				self.client.sendLine(f"WHOIS {user_nick}")
 				return True
 
-			if is_ignored:
-				if action == actUnignore:
-					if user_hostmask:
-						self.gui.unignore_user(self.client,ignoremask)
-					else:
-						self.gui.unignore_user(self.client,ignoremask)
-			else:
-				if action == actIgnore:
-					if user_hostmask:
-						self.gui.ignore_user(self.client,ignoremask)
-					else:
-						self.gui.ignore_user(self.client,ignoremask)
+			if self.gui.allow_ignore:
+				if is_ignored:
+					if action == actUnignore:
+						if user_hostmask:
+							self.gui.unignore_user(self.client,ignoremask)
+						else:
+							self.gui.unignore_user(self.client,ignoremask)
+				else:
+					if action == actIgnore:
+						if user_hostmask:
+							self.gui.ignore_user(self.client,ignoremask)
+						else:
+							self.gui.ignore_user(self.client,ignoremask)
 
 			if action == actUserlist:
 				ulist = "\n".join(self.users)
