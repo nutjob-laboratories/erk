@@ -1,0 +1,72 @@
+/*
+        text.css
+
+        Colors and formatting for Erk text
+*/
+action {
+    font-style: italic;
+    font-weight: bold;
+    color: green;
+}
+
+all {
+    background-color: white;
+    color: black;
+}
+
+error {
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+}
+
+hyperlink {
+    text-decoration: underline;
+    font-weight: bold;
+    color: blue;
+}
+
+message {
+    
+}
+
+notice {
+    font-weight: bold;
+    color: purple;
+}
+
+resume {
+    font-weight: bold;
+    font-style: italic;
+    color: #707070;
+}
+
+self {
+    font-weight: bold;
+    color: red;
+}
+
+system {
+    font-style: italic;
+    font-weight: bold;
+    color: orange;
+}
+
+timestamp {
+    font-weight: bold;
+}
+
+username {
+    font-weight: bold;
+    color: blue;
+}
+
+whois {
+    font-style: italic;
+    font-weight: bold;
+    color: blue;
+}
+
+whois_results {
+    font-weight: bold;
+}

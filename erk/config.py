@@ -38,6 +38,7 @@ import re
 import string
 import random
 from itertools import combinations
+from collections import defaultdict
 
 # Directories
 INSTALL_DIRECTORY = sys.path[0]
@@ -46,13 +47,15 @@ DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 
-USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
-LAST_SERVER_INFORMATION_FILE = os.path.join(SETTINGS_DIRECTORY, "lastserver.json")
-SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "erk.json")
-TEXT_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "style.json")
-CHANNELS_FILE = os.path.join(SETTINGS_DIRECTORY, "channels.json")
-IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignore.json")
-HISTORY_FILE = os.path.join(SETTINGS_DIRECTORY, "history.json")
+SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
+TEXT_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
+
+USER_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
+USER_FILE = os.path.join(USER_DIRECTORY, "user.json")
+LAST_SERVER_INFORMATION_FILE = os.path.join(USER_DIRECTORY, "lastserver.json")
+CHANNELS_FILE = os.path.join(USER_DIRECTORY, "channels.json")
+IGNORE_FILE = os.path.join(USER_DIRECTORY, "ignore.json")
+HISTORY_FILE = os.path.join(USER_DIRECTORY, "history.json")
 
 MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
 
@@ -65,6 +68,11 @@ ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.tx
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
+# Create any necessary directories if they don't exist
+if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
+if not os.path.isdir(USER_DIRECTORY): os.mkdir(USER_DIRECTORY)
+if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
+
 mvf=open(MINOR_VERSION_FILE, "r")
 MINOR_VERSION = mvf.read()
 mvf.close()
@@ -75,7 +83,7 @@ elif len(MINOR_VERSION)==2:
 	MINOR_VERSION = "0"+MINOR_VERSION
 
 APPLICATION_NAME = "Ərk"
-APPLICATION_MAJOR_VERSION = "0.500"
+APPLICATION_MAJOR_VERSION = "0.501"
 APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
@@ -170,14 +178,10 @@ ACTION_STYLE_NAME		= "action"
 NOTICE_STYLE_NAME		= "notice"
 RESUME_STYLE_NAME		= "resume"
 HYPERLINK_STYLE_NAME	= "hyperlink"
-BASE_STYLE_NAME			= "base"
+BASE_STYLE_NAME			= "all"
 ERROR_STYLE_NAME		= "error"
 WHOIS_STYLE_NAME		= "whois"
-WHOIS_TEXT_STYLE_NAME	= "whois-text"
-
-# Create any necessary directories if they don't exist
-if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
-if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
+WHOIS_TEXT_STYLE_NAME	= "whois_results"
 
 # Read in the ascii emoji list
 ASCIIEMOJIS = {}
@@ -660,13 +664,17 @@ def patch_text_settings(data):
 
 def get_text_settings(filename=TEXT_SETTINGS_FILE):
 	if os.path.isfile(filename):
-		with open(filename, "r") as read_settings:
-			data = json.load(read_settings)
-			patched,data = patch_text_settings(data)
-			if patched:
-				with open(filename, "w") as write_data:
-					json.dump(data, write_data, indent=4, sort_keys=True)
-			return data
+		# with open(filename, "r") as read_settings:
+		# 	data = json.load(read_settings)
+		# 	patched,data = patch_text_settings(data)
+		# 	if patched:
+		# 		with open(filename, "w") as write_data:
+		# 			json.dump(data, write_data, indent=4, sort_keys=True)
+		# 	return data
+		data = read_style_file(filename)
+		patched,data = patch_text_settings(data)
+		if patched: write_style_file(data,filename)
+		return data
 	else:
 		si = {
 			TIMESTAMP_STYLE_NAME: TIMESTAMP_STYLE,
@@ -966,3 +974,77 @@ def strip_color(text):
 	text = text.replace("\x0F","")
 
 	return text
+
+def write_style_file(style,filename):
+	output = ''
+
+	for key in style:
+		output = output + key + "{\n"
+		for s in style[key].split(';'):
+			s = s.strip()
+			if len(s)==0: continue
+			output = output + "\t" + s + ";\n"
+		output = output + "}\n\n"
+
+	f=open(filename, "w")
+	f.write(output)
+	f.close()
+
+def read_style_file(filename):
+
+	# Read in the file
+	f=open(filename, "r")
+	text = f.read()
+	f.close()
+
+	# Strip comments
+	text = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,text)
+
+	# Tokenize the file
+	buff = ''
+	name = ''
+	tokens = []
+	inblock = False
+	for char in text:
+		if char=='{':
+			if inblock:
+				raise SyntaxError("Nested styles are forbidden")
+			inblock = True
+			name = buff.strip()
+			buff = ''
+			continue
+
+		if char=='}':
+			inblock = False
+			section = [ name,buff.strip() ]
+			tokens.append(section)
+			buff = ''
+			continue
+
+		buff = buff + char
+
+	# Check for an unclosed brace
+	if inblock:
+		raise SyntaxError("Unclosed brace")
+
+	# Build output dict of lists
+	style = defaultdict(list)
+	for section in tokens:
+		name = section[0]
+		entry = []
+		for l in section[1].split(";"):
+			l = l.strip()
+			if len(l)>0:
+				entry.append(l)
+
+		if name in style:
+			raise SyntaxError("Styles can only be defined once")
+		else:
+			if len(entry)!=0:
+				comp = "; ".join(entry) + ";"
+				style[name] = comp
+			else:
+				style[name] = ''
+
+	# Return the dict
+	return style

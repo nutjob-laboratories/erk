@@ -36,3 +36,8 @@ logs/freenode-#themaxx.json
 logs/MYNet-#.json
 logs/MYNet-#('themaxx'.json
 logs/MYNet-#quirc.json
+settings/settings.json
+settings/user/channels.json
+settings/user/history.json
+settings/user/lastserver.json
+settings/user/user.json

@@ -1,3 +1,9 @@
+Version 0.501
+	* Moved user config files to their own directory in "settings/", "user"
+	* Settings filename changed from "erk.json" to "settings.json"
+	* The text style settings file now uses a css-like language instead of JSON
+	* The text style settings filename was changed from "style.json" to "text.css"
+
 Version 0.500
 	* Completely re-written
 	* Added the /whois command to console, channel, and user chat windows
