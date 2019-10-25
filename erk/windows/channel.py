@@ -255,21 +255,26 @@ class Window(QMainWindow):
 		self.menubar.clear()
 
 		self.actModes = self.menubar.addMenu("Modes")
+		self.actModes.setStyle(self.gui.menu_style)
 		self.rebuildModesMenu()
 
 		self.actBans = self.menubar.addMenu("Bans")
+		self.actBans.setStyle(self.gui.menu_style)
 		self.rebuildBanMenu()
 
 	def buildOperatorMenus(self):
 		self.menubar.clear()
 
 		self.actModes = self.menubar.addMenu("Modes")
+		self.actModes.setStyle(self.gui.menu_style)
 		self.rebuildModesMenu()
 
 		self.actBans = self.menubar.addMenu("Bans")
+		self.actBans.setStyle(self.gui.menu_style)
 		self.rebuildBanMenu()
 
 		self.actAdmin = self.menubar.addMenu("Operator")
+		self.actAdmin.setStyle(self.gui.menu_style)
 		self.rebuildAdminMenu()
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
@@ -769,6 +774,7 @@ class Window(QMainWindow):
 			# Menu for clicking on own nickname
 			if user_nick == self.client.nickname:
 				menu = QMenu(self)
+				menu.setStyle(self.gui.menu_style)
 
 				if user_is_op: actDeop = menu.addAction(QIcon(MINUS_ICON),'Take op status')
 				if user_is_voiced: actDevoice = menu.addAction(QIcon(MINUS_ICON),'Take voiced status')
@@ -815,6 +821,7 @@ class Window(QMainWindow):
 
 			# Menu for everyone else
 			menu = QMenu(self)
+			menu.setStyle(self.gui.menu_style)
 
 			if user_hostmask:
 				hostmaskLabel = QLabel(f"&nbsp;<i><b>{user_hostmask}</b></i>&nbsp;")

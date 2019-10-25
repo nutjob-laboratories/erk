@@ -45,14 +45,22 @@ try:
 except ImportError:
 	SSL_AVAILABLE = False
 
-MENU_ICON_SIZE = 22
+MENU_ICON_SIZE = 25
+MENU_ICON_SMALL_SIZE = 20
 
 class ErkStyle(QProxyStyle):
-	# pass
 	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
 
 		if QStyle_PixelMetric == QStyle.PM_SmallIconSize:
 			return MENU_ICON_SIZE
+		else:
+			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
+
+class ErkSmallStyle(QProxyStyle):
+	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
+
+		if QStyle_PixelMetric == QStyle.PM_SmallIconSize:
+			return MENU_ICON_SMALL_SIZE
 		else:
 			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
 

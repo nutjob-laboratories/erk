@@ -1323,6 +1323,8 @@ class Erk(QMainWindow):
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
 
+		# Custom style for various menus
+		self.menu_style = ErkSmallStyle('Windows')
 
 		f = QFont()
 		f.fromString(self.font_string)

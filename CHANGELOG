@@ -3,6 +3,8 @@ Version 0.501
 	* Settings filename changed from "erk.json" to "settings.json"
 	* The text style settings file now uses a css-like language instead of JSON
 	* The text style settings filename was changed from "style.json" to "text.css"
+	* Increased the size of main menu icons
+	* Decreased the size of menu and context menu icons in channel windows
 
 Version 0.500
 	* Completely re-written
