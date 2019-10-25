@@ -58,7 +58,6 @@ IGNORE_FILE = os.path.join(USER_DIRECTORY, "ignore.json")
 HISTORY_FILE = os.path.join(USER_DIRECTORY, "history.json")
 
 MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
-
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
@@ -664,13 +663,6 @@ def patch_text_settings(data):
 
 def get_text_settings(filename=TEXT_SETTINGS_FILE):
 	if os.path.isfile(filename):
-		# with open(filename, "r") as read_settings:
-		# 	data = json.load(read_settings)
-		# 	patched,data = patch_text_settings(data)
-		# 	if patched:
-		# 		with open(filename, "w") as write_data:
-		# 			json.dump(data, write_data, indent=4, sort_keys=True)
-		# 	return data
 		data = read_style_file(filename)
 		patched,data = patch_text_settings(data)
 		if patched: write_style_file(data,filename)
@@ -921,7 +913,7 @@ def strip_color(text):
 
 	html_tag = "font"
 
-	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
+	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
 	for c in combos:
 		fore = c[0]
 		back = c[1]
@@ -929,7 +921,7 @@ def strip_color(text):
 		t = f"\x03{fore},{back}"
 		text = text.replace(t,'')
 
-	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
+	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
 	for c in combos:
 		fore = c[0]
 		back = c[1]
