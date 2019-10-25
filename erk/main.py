@@ -1361,6 +1361,9 @@ class Erk(QMainWindow):
 		self.actNetwork = fancyMenuAction(self,FANCY_NETWORK_ICON,"Servers","Select server from a list",self.menuNetwork)
 		self.ircMenu.addAction(self.actNetwork)
 
+		self.actEditUserInfo = fancyMenuAction(self,FANCY_USER_ICON,"User","Edit default user information",self.menuEditUser)
+		self.ircMenu.addAction(self.actEditUserInfo)
+
 		self.ircMenu.addSeparator()
 
 		self.actRestart = QAction(QIcon(RESTART_ICON),"Restart",self)
@@ -1379,25 +1382,17 @@ class Erk(QMainWindow):
 
 		self.buildConnectionsMenu()
 
-		# Edit Menu
-
-		editMenu = self.menubar.addMenu("Edit")
-
-		editMenu.setFont(menuBoldText)
-
-		self.actEditUser = QAction(QIcon(USER_ICON),"User Information",self)
-		self.actEditUser.triggered.connect(self.menuEditUser)
-		editMenu.addAction(self.actEditUser)
-
-		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
-		self.actIgnore.triggered.connect(self.menuIgnore)
-		editMenu.addAction(self.actIgnore)
-
 		# Settings Menu
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
 		settingsMenu.setFont(menuBoldText)
+
+		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
+		self.actIgnore.triggered.connect(self.menuIgnore)
+		settingsMenu.addAction(self.actIgnore)
+
+		settingsMenu.addSeparator()
 
 		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
 

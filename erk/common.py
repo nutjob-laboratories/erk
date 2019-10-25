@@ -46,7 +46,7 @@ except ImportError:
 	SSL_AVAILABLE = False
 
 MENU_ICON_SIZE = 25
-MENU_ICON_SMALL_SIZE = 20
+MENU_ICON_SMALL_SIZE = 18
 
 class ErkStyle(QProxyStyle):
 	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
@@ -179,6 +179,7 @@ SAVED_SERVER_ICON = ":/gui-saved.png"
 
 FANCY_CONNECT_ICON = ":/gui-fancy_server.png"
 FANCY_NETWORK_ICON = ":/gui-fancy_network.png"
+FANCY_USER_ICON = ":/gui-fancy_user.png"
 
 CONSOLE_BACKGROUND = ":/gui-console_background.png"
 

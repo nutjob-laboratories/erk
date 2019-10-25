@@ -5,6 +5,9 @@ Version 0.501
 	* The text style settings filename was changed from "style.json" to "text.css"
 	* Increased the size of main menu icons
 	* Decreased the size of menu and context menu icons in channel windows
+	* Moved "edit user info" entry to the "Erk" menu
+	* Moved "edit ignored users" to the "Settings" menu
+	* Removed the "Edit" menu
 
 Version 0.500
 	* Completely re-written
