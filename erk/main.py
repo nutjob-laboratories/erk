@@ -2252,6 +2252,8 @@ class Erk(QMainWindow):
 			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
 			self.connectionsMenu.addAction(noConnectionsAction)
 
+			self.connectionsMenu.addSeparator()
+
 		#self.connectionsMenu.addSeparator()
 
 		self.actSaveHistory = QAction("Save server history",self,checkable=True)
