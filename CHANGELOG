@@ -8,6 +8,12 @@ Version 0.501
 	* Moved "edit user info" entry to the "Erk" menu
 	* Moved "edit ignored users" to the "Settings" menu
 	* Removed the "Edit" menu
+	* Fixed a bug in receiving channel modes (modes with arguments wouldn't be processed correctly)
+	* Changed icon for locked channels
+	* Locked channel windows now use the locked channel icon
+	* Locked channels in the "Window" menu now use the new icon
+	* Added additional information to the "Connections" menu (server network, user nick and modes)
+	* Added an option to display (or hide) additional information in the "Connections" menu
 
 Version 0.500
 	* Completely re-written

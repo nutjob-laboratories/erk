@@ -235,6 +235,12 @@ class Window(QMainWindow):
 		self.rebuildModesMenu()
 		if self.operator: self.rebuildAdminMenu()
 
+		if self.key=='':
+			self.subwindow.setWindowIcon(QIcon(CHANNEL_WINDOW))
+		else:
+			self.subwindow.setWindowIcon(QIcon(LOCKED_CHANNEL))
+		self.gui.buildWindowMenu()
+
 	def update_nick(self,newnick):
 		if self.is_away:
 			self.status_nick.setText("&nbsp;<b><small>"+newnick+" (away)</small></b>")

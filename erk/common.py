@@ -183,6 +183,8 @@ FANCY_USER_ICON = ":/gui-fancy_user.png"
 
 CONSOLE_BACKGROUND = ":/gui-console_background.png"
 
+FANCY_NETWORK_LINK_ICON = ":/gui-fancy_network_link.png"
+
 # ---------
 # | ICONS |
 # ---------
@@ -575,6 +577,7 @@ def get_network_url(net):
 	return None
 
 FANCY_MENU_ICON_SIZE = str(MENU_ICON_SIZE)
+
 
 def fancyMenuAction(self,icon,title,description,func):
 

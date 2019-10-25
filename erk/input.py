@@ -335,7 +335,6 @@ def handle_chat_input(obj,text,is_user=False):
 			target = tokens.pop(0)
 			key = ' '.join(tokens)
 			obj.client.join(target,key)
-			obj.gui.locked.append( [target,key]  )
 			return
 	if len(tokens)==2:
 		if tokens[0].lower()=="/join":

@@ -405,7 +405,7 @@ class Window(QMainWindow):
 	def restoreMe(self):
 		self.gui.restoreConsole(self.client)
 
-	def buildConnectionMenu(self,mdimenu):
+	def buildConnectionMenu(self,mdimenu,connection):
 
 		supports = self.supports # list
 		maxchannels = self.maxchannels
@@ -435,6 +435,40 @@ class Window(QMainWindow):
 		servName = QAction(QIcon(HOST_ICON),server_host,self)
 		mdimenu.addAction(servName)
 
+		if self.gui.display_extended_conn_info:
+
+			html = f'''
+<table style="width: 100%" border="0"><tbody><tr>
+<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{FANCY_NETWORK_LINK_ICON}" width="18" height="18">&nbsp;</td>
+<td style="text-align: left; vertical-align: middle;"><small>!NETWORK!</small></td>
+</tr><tr>
+<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{USER_ICON}" width="18" height="18">&nbsp;</td>
+<td style="text-align: left; vertical-align: middle;"><small>!NICKNAME! !MODES!</small></td>
+</tr></tbody></table>
+			'''
+
+			INDENT = "&nbsp;"*3
+			html = html.replace('!INDENT!',INDENT)
+
+			if self.network_url:
+				link = f'''<a href="{self.network_url}">{self.network} Network</a>'''
+			else:
+				link = f'''{self.network} Network</a>'''
+
+			html = html.replace('!NETWORK!',link)
+
+			html = html.replace('!NICKNAME!',self.client.nickname)
+			if connection.modes!='':
+				html = html.replace('!MODES!',"<i>+"+connection.modes+"</i>")
+			else:
+				html = html.replace('!MODES!',"")
+
+			infoLabel = QLabel( html )
+			if self.network_url: infoLabel.setOpenExternalLinks(True)
+			infoAction = QWidgetAction(self)
+			infoAction.setDefaultWidget(infoLabel)
+			mdimenu.addAction(infoAction)
+
 		servmenu = QMenu()
 		servName.setMenu(servmenu)
 
@@ -444,11 +478,6 @@ class Window(QMainWindow):
 
 		infomenu = servmenu.addMenu("Server Settings")
 		infomenu.setIcon(QIcon(SERVER_SETTINGS_ICON))
-
-		if self.network_url:
-			servNetLink = QAction(QIcon(LINK_ICON),self.network+" Website",self)
-			servNetLink.triggered.connect(self.menuServNetLink)
-			servmenu.addAction(servNetLink)
 
 		servmenu.addSeparator()
 

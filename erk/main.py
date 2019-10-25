@@ -62,6 +62,7 @@ class Connection:
 		self.console = None
 		self.network = 'Unknown'
 		self.hostname = 'Unknown'
+		self.modes = ''
 
 class Erk(QMainWindow):
 
@@ -362,6 +363,22 @@ class Erk(QMainWindow):
 		if len(modes)<1: return
 
 		args = list(args)
+
+		if channel==obj.nickname:
+			for c in self.connections:
+				if c.id==obj.id:
+					if mset:
+						for m in modes:
+							c.modes = c.modes + m
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Mode +"+modes+" set on "+channel )
+					else:
+						for m in modes:
+							c.modes = c.modes.replace(m,'')
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Mode -"+modes+" set on "+channel )
+			self.writeToConsole(obj,msg)
+			self.writeToConsoleLog(obj,'',msg)
+			self.buildConnectionsMenu()
+			return
 
 		cleaned = []
 		for a in args:
@@ -798,31 +815,6 @@ class Erk(QMainWindow):
 			chan.writeText(msg)
 			chan.add_to_log('',"Joined "+channel)
 			self.buildWindowMenu()
-
-		# See if the user used a key to join
-		if len(self.locked)>0:
-			# The last key the user used is the correct one
-			ki = 0
-			k_loc = None
-			for e in self.locked:
-				if e[0]==channel:
-					k_loc = ki
-				ki = ki + 1
-
-			if not k_loc: return
-
-			chankey = self.locked[k_loc][1]
-
-			# Remove failed keys from memory
-			clean = []
-			for e in self.locked:
-				if e[0]==channel: continue
-				clean.append(e)
-			self.locked = clean
-
-			# Send the mode and key to the channel window for display
-			self.setChannelKey(obj,channel,chankey)
-			self.setChannelMode(obj,channel,"k")
 	
 	def irc_userlist(self,obj,channel,users):
 		self.writeChannelUserlist(obj,channel,users)
@@ -1259,8 +1251,6 @@ class Erk(QMainWindow):
 
 		self.disconnected = []
 
-		self.locked = []
-
 		self.keep_alive_interval = DEFAULT_KEEPALIVE_INTERVAL
 
 		self.ignore = get_ignore()
@@ -1303,6 +1293,8 @@ class Erk(QMainWindow):
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
+
+		self.display_extended_conn_info				= self.settings[SETTING_SHOW_CONNECTION_INFO]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
@@ -1934,7 +1926,10 @@ class Erk(QMainWindow):
 
 			for win in c.windows:
 				if c.windows[win].is_channel:
-					cwin = QAction(QIcon(CHANNEL_WINDOW),c.windows[win].name,self)
+					if c.windows[win].key=='':
+						cwin = QAction(QIcon(CHANNEL_WINDOW),c.windows[win].name,self)
+					else:
+						cwin = QAction(QIcon(LOCKED_CHANNEL),c.windows[win].name,self)
 				else:
 					cwin = QAction(QIcon(USER_WINDOW),c.windows[win].name,self)
 				cwin.triggered.connect(lambda state,f=c.windows[win],y=c.windows[win].subwindow: self.restoreWindow(f,y))
@@ -2179,6 +2174,15 @@ class Erk(QMainWindow):
 		self.settings[SETTING_KEEP_ALIVE] = self.keep_alive
 		save_settings(self.settings,self.settings_file)
 
+	def menuConnectionInfo(self):
+		if self.display_extended_conn_info:
+			self.display_extended_conn_info = False
+		else:
+			self.display_extended_conn_info = True
+		self.buildConnectionsMenu()
+		self.settings[SETTING_SHOW_CONNECTION_INFO] = self.display_extended_conn_info
+		save_settings(self.settings,self.settings_file)
+
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
@@ -2232,13 +2236,15 @@ class Erk(QMainWindow):
 		self.connectionsMenu.clear()
 		scount = 0
 		for c in self.connections:
-			# c.console.buildConnectionMenu(self.connectionsMenu)
+			# c.console.buildConnectionMenu(self.connectionsMenu,c)
 			# scount = scount + 1
 			try:
-				c.console.buildConnectionMenu(self.connectionsMenu)
+				c.console.buildConnectionMenu(self.connectionsMenu,c)
 				scount = scount + 1
 			except:
 				pass
+
+			self.connectionsMenu.addSeparator()
 
 		if scount==0:
 			noConnectionsLabel = QLabel(f"&nbsp;<i>Not connected to any servers.</i>&nbsp;")
@@ -2246,7 +2252,7 @@ class Erk(QMainWindow):
 			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
 			self.connectionsMenu.addAction(noConnectionsAction)
 
-		self.connectionsMenu.addSeparator()
+		#self.connectionsMenu.addSeparator()
 
 		self.actSaveHistory = QAction("Save server history",self,checkable=True)
 		self.actSaveHistory.setChecked(self.save_server_history)
@@ -2257,6 +2263,11 @@ class Erk(QMainWindow):
 		self.actKeepAlive.setChecked(self.keep_alive)
 		self.actKeepAlive.triggered.connect(self.menuKeepAlive)
 		self.connectionsMenu.addAction(self.actKeepAlive)
+
+		self.actConnectionInfo = QAction("Show information in menu",self,checkable=True)
+		self.actConnectionInfo.setChecked(self.display_extended_conn_info)
+		self.actConnectionInfo.triggered.connect(self.menuConnectionInfo)
+		self.connectionsMenu.addAction(self.actConnectionInfo)
 
 	# |=============|
 	# | QT CODE END |

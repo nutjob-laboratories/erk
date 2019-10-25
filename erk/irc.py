@@ -463,6 +463,12 @@ class IRC_Connection(irc.IRCClient):
 			if len(m)>0:
 				if m[0] == "+":
 					m = m[1:]
+
+					if m=="k":
+						params.pop(0)
+						chankey = params.pop(0)
+						self.gui.irc_mode(self,self.hostname,channel,True,m,[chankey])
+						continue
 					# mode added
 					self.gui.irc_mode(self,self.hostname,channel,True,m,[])
 				else:
