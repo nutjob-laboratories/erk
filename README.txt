@@ -73,6 +73,18 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Erk** is being developed with Python 3.7 on Windows 10.
 
+# Install
+
+First, make sure that all the requirements are installed. Next, [download **Erk**](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip). Extract the zipfile to a directory of your choice using your favorite archive/zip program. Open a command prompt, navigate to the directory you extracted **Erk** to, and type:
+
+	python erk.py
+
+Hit enter, and **Erk** will start up! Click "Connect" on the _Ərk_ menu to enter a server hostname/IP and port to connect to a specific IRC server, or click "Servers" to select a server from the built-in server list.
+
+**Erk** does not need to be "installed" to any specific directory to run; it will run from any directory it is extracted to.
+
+To make things easier, Windows users can create a shortcut to **Erk** so all you have to do is double click to start chatting. There are many tutorials on how to do this online; a good place to start is [right here](https://therenegadecoder.com/code/how-to-make-a-python-script-shortcut-with-arguments/).
+
 # Frequently asked questions
 
 ## What does "erk" mean?
