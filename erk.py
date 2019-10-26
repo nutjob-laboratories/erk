@@ -94,6 +94,8 @@ configgroup = parser.add_argument_group('Configuration options')
 
 configgroup.add_argument("--config", type=str,help="Load configuration file",default=SETTINGS_FILE, metavar="FILE")
 configgroup.add_argument("--style", type=str,help="Load text style file",default=TEXT_SETTINGS_FILE, metavar="FILE")
+configgroup.add_argument( "--forget", help=f"Delete connection history", action="store_true")
+configgroup.add_argument( "--default", help=f"Reset configuration to default", action="store_true")
 
 optgroup = parser.add_argument_group('Options')
 
@@ -103,6 +105,7 @@ optgroup.add_argument( "--full", help=f"Fill screen with application window", ac
 optgroup.add_argument( "--maximize", help=f"Display window maximized", action="store_true")
 optgroup.add_argument( "--beat", type=int,help=f"Set \"keep alive\" heartbeat interval ({str(DEFAULT_KEEPALIVE_INTERVAL)})", metavar="SECONDS")
 optgroup.add_argument( "--oldschool", help=f"Run in \"old school\" mode", action="store_true")
+optgroup.add_argument( "--dump", help=f"Print all network traffic to the console", action="store_true")
 
 disablegroup = parser.add_argument_group('Disable features')
 
@@ -152,6 +155,27 @@ if args.version:
 	print(APPLICATION_VERSION,end='')
 	sys.exit(0)
 
+exit_on_delete = False
+
+if args.forget:
+	print("Deleting history...",end='')
+	os.remove(HISTORY_FILE)
+	os.remove(VISITED_FILE)
+	print("done.",end='')
+	exit_on_delete = True
+
+if args.default:
+	print("Deleting configuration files...",end='')
+	os.remove(USER_FILE)
+	os.remove(LAST_SERVER_INFORMATION_FILE)
+	os.remove(CHANNELS_FILE)
+	os.remove(IGNORE_FILE)
+	os.remove(SETTINGS_FILE)
+	print("done.",end='')
+	exit_on_delete = True
+
+if exit_on_delete: sys.exit(0)
+
 if __name__ == '__main__':
 	app = QApplication([])
 	# app.setStyle("Windows")
@@ -160,6 +184,8 @@ if __name__ == '__main__':
 	app.setStyle(custom_style)
 
 	GUI = Erk(app,args.config,args.style)
+
+	if args.dump: GUI.view_all_traffic = True
 
 	if args.top:
 		GUI.setWindowFlags(GUI.windowFlags() | Qt.WindowStaysOnTopHint)

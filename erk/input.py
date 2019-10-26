@@ -173,19 +173,11 @@ def handle_chat_input(obj,text,is_user=False):
 		if tokens[0].lower()=="/quit":
 			tokens.pop(0)	# remove command
 			msg = ' '.join(tokens)
-			obj.gui.disconnecting = True
-			if obj.client.reconnect:
-				cid = obj.client.server+":"+str(obj.client.port)
-				obj.gui.disconnected.append(cid)
-			obj.client.quit(msg)
+			obj.gui.disconnectFromIRC(obj.client,msg)
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/quit":
-			obj.gui.disconnecting = True
-			if obj.client.reconnect:
-				cid = obj.client.server+":"+str(obj.client.port)
-				obj.gui.disconnected.append(cid)
-			obj.client.quit()
+			obj.gui.disconnectFromIRC(obj.client)
 			return
 
 	if is_user:
@@ -499,19 +491,11 @@ def handle_console_input(obj,text):
 		if tokens[0].lower()=="/quit":
 			tokens.pop(0)	# remove command
 			msg = ' '.join(tokens)
-			obj.gui.disconnecting = True
-			if obj.client.reconnect:
-				cid = obj.client.server+":"+str(obj.client.port)
-				obj.gui.disconnected.append(cid)
-			obj.client.quit(msg)
+			obj.gui.disconnectFromIRC(obj.client,msg)
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/quit":
-			obj.gui.disconnecting = True
-			if obj.client.reconnect:
-				cid = obj.client.server+":"+str(obj.client.port)
-				obj.gui.disconnected.append(cid)
-			obj.client.quit()
+			obj.gui.disconnectFromIRC(obj.client)
 			return
 
 	if len(tokens)>=3:

@@ -532,6 +532,13 @@ class IRC_Connection(irc.IRCClient):
 
 		self.gui.irc_end_list(self,server)
 
+	def sendLine(self,line):
+		
+		self.gui.irc_output(self,line)
+
+		return irc.IRCClient.sendLine(self, line)
+
+
 	def lineReceived(self, line):
 
 		# Decode the incoming text line
@@ -549,6 +556,7 @@ class IRC_Connection(irc.IRCClient):
 		line = line2.encode('utf-8')
 
 		#print(line)
+		self.gui.irc_input(self,line2)
 
 		d = line2.split(" ")
 		if len(d) >= 2:

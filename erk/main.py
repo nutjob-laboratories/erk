@@ -71,7 +71,23 @@ class Erk(QMainWindow):
 	# | IRC EVENTS BEGIN |
 	# |==================|
 
-	# self.gui.irc_list(self,server,channel,usercount,topic)
+	def irc_output(self,obj,line):
+		if self.view_all_traffic:
+			if obj.hostname:
+				sid = obj.hostname
+			else:
+				sid = obj.server+":"+str(obj.port)
+
+			print("->"+sid+"\t"+line)
+
+	def irc_input(self,obj,line):
+		if self.view_all_traffic:
+			if obj.hostname:
+				sid = obj.hostname
+			else:
+				sid = obj.server+":"+str(obj.port)
+
+			print("<-"+sid+"\t"+line)
 
 	def irc_list(self,obj,server,channel,usercount,topic):
 		# def add_channel(self,channel):
@@ -1224,12 +1240,15 @@ class Erk(QMainWindow):
 		except:
 			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 
-	def disconnectFromIRC(self,obj):
+	def disconnectFromIRC(self,obj,msg=None):
 		self.disconnecting = True
 		if obj.reconnect:
 			cid = obj.server+":"+str(obj.port)
 			self.disconnected.append(cid)
-		obj.quit()
+		if msg:
+			obj.qui(msg)
+		else:
+			obj.quit()
 
 		c = self.fetchConnection(obj)
 		# Save log
@@ -1299,6 +1318,8 @@ class Erk(QMainWindow):
 		self.disconnected = []
 
 		self.keep_alive_interval = DEFAULT_KEEPALIVE_INTERVAL
+
+		self.view_all_traffic = False
 
 		self.ignore = get_ignore()
 

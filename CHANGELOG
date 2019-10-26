@@ -24,6 +24,10 @@ Version 0.501
 	* Added a search option to the channel list dialog
 	* Servers from the built-in list are now marked if the client has connected to them before
 	* Visited servers now display when they were last connected to in the "Servers" dialog
+	* Added commandline flag --forget to delete server history
+	* Added commandline flag --default to reset all configs to default (by deleting the files)
+	* Added commandline flag --dump to print all network traffic to the console
+	* Fixed a bug in the /quit command (now uses the same process as the GUI, and works)
 
 Version 0.500
 	* Completely re-written
