@@ -20,6 +20,8 @@ Version 0.501
 	* Added the /list command to channel and console windows
 	* Changed the name of the "/raw" command to "/send"
 	* Added a menu to the console window with functions from the connections menu
+	* Added filter options to the channel list dialog
+	* Added a search option to the channel list dialog
 
 Version 0.500
 	* Completely re-written

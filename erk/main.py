@@ -76,19 +76,11 @@ class Erk(QMainWindow):
 	def irc_list(self,obj,server,channel,usercount,topic):
 		# def add_channel(self,channel):
 		topic = topic.strip()
-		if int(usercount)==1:
-			suffix = ""
-		else:
-			suffix = "s"
-		if topic != '':
-			entry = channel + " (" + str(usercount) + " user" + suffix + ") - " + topic
-		else:
-			entry = channel + " (" + str(usercount) + " user" + suffix + ")"
 
 		for c in self.connections:
 			if c.id==obj.id:
 				if c.channel_list:
-					c.channel_list.add_channel(entry)
+					c.channel_list.add_channel(channel,usercount,topic)
 
 	def irc_start_list(self,obj,server):
 		# self.x = ListWindow("SERVER",self.MDI,None,self)
