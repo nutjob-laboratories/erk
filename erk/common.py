@@ -183,7 +183,8 @@ FANCY_USER_ICON = ":/gui-fancy_user.png"
 
 CONSOLE_BACKGROUND = ":/gui-console_background.png"
 
-FANCY_NETWORK_LINK_ICON = ":/gui-fancy_network_link.png"
+IRC_NETWORK_MENU_ICON = ":/gui-network_menu.png"
+USER_MENU_ICON = ":/gui-user_menu.png"
 
 # ---------
 # | ICONS |

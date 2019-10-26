@@ -674,27 +674,31 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
+		self.kwargs["gui"].remove_connection(cid)
 		if cid in self.kwargs["gui"].disconnected:
 			try:
 				self.kwargs["gui"].disconnected.remove(cid)
 			except:
 				pass
 			return
+		self.kwargs["gui"].remove_connection(cid)
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 	def clientConnectionFailed(self, connector, reason):
+
 		if self.kwargs["gui"].quitting:
 			return
 
 		cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
+		self.kwargs["gui"].remove_connection(cid)
 		if cid in self.kwargs["gui"].disconnected:
 			try:
 				self.kwargs["gui"].disconnected.remove(cid)
 			except:
 				pass
 			return
-
+		
 		protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
 class UptimeHeartbeat(QThread):

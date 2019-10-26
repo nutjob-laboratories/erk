@@ -1077,6 +1077,14 @@ class Erk(QMainWindow):
 			if c.id==obj.id:
 				c.console.close()
 
+	def remove_connection(self,cid):
+		clean = []
+		for c in self.connections:
+			ccid = c.connection.server + str(c.connection.server.port)
+			if ccid == cid: continue
+			clean.append(c)
+		self.connections = clean
+
 	def restoreWindow(self,win,subwin):
 		# Unminimize window if the window is minimized
 		win.setWindowState(win.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
@@ -2256,6 +2264,11 @@ class Erk(QMainWindow):
 
 		#self.connectionsMenu.addSeparator()
 
+		self.actConnectionInfo = QAction("Show server details",self,checkable=True)
+		self.actConnectionInfo.setChecked(self.display_extended_conn_info)
+		self.actConnectionInfo.triggered.connect(self.menuConnectionInfo)
+		self.connectionsMenu.addAction(self.actConnectionInfo)
+
 		self.actSaveHistory = QAction("Save server history",self,checkable=True)
 		self.actSaveHistory.setChecked(self.save_server_history)
 		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
@@ -2265,11 +2278,6 @@ class Erk(QMainWindow):
 		self.actKeepAlive.setChecked(self.keep_alive)
 		self.actKeepAlive.triggered.connect(self.menuKeepAlive)
 		self.connectionsMenu.addAction(self.actKeepAlive)
-
-		self.actConnectionInfo = QAction("Show information in menu",self,checkable=True)
-		self.actConnectionInfo.setChecked(self.display_extended_conn_info)
-		self.actConnectionInfo.triggered.connect(self.menuConnectionInfo)
-		self.connectionsMenu.addAction(self.actConnectionInfo)
 
 	# |=============|
 	# | QT CODE END |

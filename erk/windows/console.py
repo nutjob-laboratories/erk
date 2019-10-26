@@ -431,24 +431,21 @@ class Window(QMainWindow):
 			else:
 				server_host = self.name
 
-
-		servName = QAction(QIcon(HOST_ICON),server_host,self)
-		mdimenu.addAction(servName)
-
 		if self.gui.display_extended_conn_info:
 
 			html = f'''
 <table style="width: 100%" border="0"><tbody><tr>
-<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{FANCY_NETWORK_LINK_ICON}" width="18" height="18">&nbsp;</td>
-<td style="text-align: left; vertical-align: middle;"><small>!NETWORK!</small></td>
+<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{IRC_NETWORK_MENU_ICON}" width="25" height="25">&nbsp;</td>
+<td style="text-align: left; vertical-align: middle;"><small><b>!NETWORK!</b></small></td>
 </tr><tr>
-<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{USER_ICON}" width="18" height="18">&nbsp;</td>
+<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{USER_MENU_ICON}" width="25" height="25">&nbsp;</td>
 <td style="text-align: left; vertical-align: middle;"><small>!NICKNAME! !MODES!</small></td>
 </tr></tbody></table>
 			'''
 
-			INDENT = "&nbsp;"*3
-			html = html.replace('!INDENT!',INDENT)
+			# INDENT = "<small>&nbsp;</small>"*1
+			# html = html.replace('!INDENT!',INDENT)
+			html = html.replace('!INDENT!',"")
 
 			if self.network_url:
 				link = f'''<a href="{self.network_url}">{self.network} Network</a>'''
@@ -457,7 +454,7 @@ class Window(QMainWindow):
 
 			html = html.replace('!NETWORK!',link)
 
-			html = html.replace('!NICKNAME!',self.client.nickname)
+			html = html.replace('!NICKNAME!',"<b>"+self.client.nickname+"</b>")
 			if connection.modes!='':
 				html = html.replace('!MODES!',"<i>+"+connection.modes+"</i>")
 			else:
@@ -468,6 +465,9 @@ class Window(QMainWindow):
 			infoAction = QWidgetAction(self)
 			infoAction.setDefaultWidget(infoLabel)
 			mdimenu.addAction(infoAction)
+
+		servName = QAction(QIcon(HOST_ICON),server_host,self)
+		mdimenu.addAction(servName)
 
 		servmenu = QMenu()
 		servName.setMenu(servmenu)

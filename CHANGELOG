@@ -14,6 +14,7 @@ Version 0.501
 	* Locked channels in the "Window" menu now use the new icon
 	* Added additional information to the "Connections" menu (server network, user nick and modes)
 	* Added an option to display (or hide) additional information in the "Connections" menu
+	* Changed to "connected to previously" icon in the "Servers" dialog to make it stand out more
 
 Version 0.500
 	* Completely re-written
