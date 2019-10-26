@@ -15,6 +15,11 @@ Version 0.501
 	* Added additional information to the "Connections" menu (server network, user nick and modes)
 	* Added an option to display (or hide) additional information in the "Connections" menu
 	* Changed to "connected to previously" icon in the "Servers" dialog to make it stand out more
+	* Added a new "channel list" dialog for displaying channel server lists
+	* Added a channel list command to the server connection menu
+	* Added the /list command to channel and console windows
+	* Changed the name of the "/raw" command to "/send"
+	* Added a menu to the console window with functions from the connections menu
 
 Version 0.500
 	* Completely re-written

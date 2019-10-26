@@ -63,12 +63,49 @@ class Connection:
 		self.network = 'Unknown'
 		self.hostname = 'Unknown'
 		self.modes = ''
+		self.channel_list = None
 
 class Erk(QMainWindow):
 
 	# |==================|
 	# | IRC EVENTS BEGIN |
 	# |==================|
+
+	# self.gui.irc_list(self,server,channel,usercount,topic)
+
+	def irc_list(self,obj,server,channel,usercount,topic):
+		# def add_channel(self,channel):
+		topic = topic.strip()
+		if int(usercount)==1:
+			suffix = ""
+		else:
+			suffix = "s"
+		if topic != '':
+			entry = channel + " (" + str(usercount) + " user" + suffix + ") - " + topic
+		else:
+			entry = channel + " (" + str(usercount) + " user" + suffix + ")"
+
+		for c in self.connections:
+			if c.id==obj.id:
+				if c.channel_list:
+					c.channel_list.add_channel(entry)
+
+	def irc_start_list(self,obj,server):
+		# self.x = ListWindow("SERVER",self.MDI,None,self)
+		for c in self.connections:
+			if c.id==obj.id:
+				if c.channel_list==None:
+					c.channel_list = ListWindow(server,self.MDI,obj,self)
+				else:
+					c.channel_list.clear()
+					self.restoreWindow(c.channel_list,c.channel_list.subwindow)
+				#c.channel_list.disable_refresh()
+
+	def irc_end_list(self,obj,server):
+		for c in self.connections:
+			if c.id==obj.id:
+				#c.channel_list.enable_refresh()
+				pass
 
 	def irc_uptime(self,obj,uptime):
 
@@ -756,6 +793,7 @@ class Erk(QMainWindow):
 					cid = c.console.client.server+":"+str(c.console.client.port)
 					saveLog(cid,None,c.console.newlog)
 			c.console.close()
+			c.channel_list.close()
 			
 			clean = []
 			autojoin = []
@@ -1175,7 +1213,9 @@ class Erk(QMainWindow):
 
 			c.connection.quit()
 			c.console.close()
+			c.channel_list.close()
 			del c.console
+			del c.channel_list
 			for w in c.windows:
 				c.windows[w].close()
 
@@ -1203,6 +1243,7 @@ class Erk(QMainWindow):
 				cid = c.console.client.server+":"+str(c.console.client.port)
 				saveLog(cid,None,c.console.newlog)
 		c.console.close()
+		c.channel_list.close()
 		
 		clean = []
 		wins = []

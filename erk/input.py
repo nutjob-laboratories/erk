@@ -137,6 +137,21 @@ def handle_chat_input(obj,text,is_user=False):
 			obj.gui.writeToChannel(obj.client,obj.name,msg)
 			return
 
+	if len(tokens)==1:
+		if tokens[0].lower()=="/list":
+			obj.client.sendLine(f"LIST")
+			return
+
+	if len(tokens)>1:
+		if tokens[0].lower()=="/list":
+			tokens.pop(0)	# remove command
+			for c in tokens:
+				if c[:1]!='#':
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],f"\"{c}\" is not a valid channel name")
+					obj.gui.writeToChannel(obj.client,obj.name,msg)
+					return
+			obj.client.sendLine(f"LIST "+",".join(tokens))
+			return
 
 	if len(tokens)>=2:
 		if tokens[0].lower()=="/away":
@@ -436,6 +451,22 @@ def handle_console_input(obj,text):
 	tokens = shlex.split(etext)
 	tokens = unescape_single_quotes(tokens)
 
+	if len(tokens)==1:
+		if tokens[0].lower()=="/list":
+			obj.client.sendLine(f"LIST")
+			return
+
+	if len(tokens)>1:
+		if tokens[0].lower()=="/list":
+			tokens.pop(0)	# remove command
+			for c in tokens:
+				if c[:1]!='#':
+					msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],f"\"{c}\" is not a valid channel name")
+					obj.gui.writeToConsole(obj.client,msg)
+					return
+			obj.client.sendLine(f"LIST "+",".join(tokens))
+			return
+
 	if len(tokens)>=2:
 		if tokens[0].lower()=="/away":
 			tokens.pop(0)	# remove command
@@ -453,14 +484,14 @@ def handle_console_input(obj,text):
 			return
 
 	if len(tokens)>=2:
-		if tokens[0].lower()=="/raw":
+		if tokens[0].lower()=="/send":
 			tokens.pop(0)	# remove command
 			msg = ' '.join(tokens)
 			obj.client.sendLine(msg)
 			return
 	if len(tokens)==1:
-		if tokens[0].lower()=="/raw":
-			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /raw COMMAND ..." )
+		if tokens[0].lower()=="/send":
+			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /send COMMAND ..." )
 			obj.gui.writeToConsole(obj.client,msg)
 			return
 

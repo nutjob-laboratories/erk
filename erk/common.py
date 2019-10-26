@@ -118,6 +118,7 @@ INPUT_COMMANDS = {
 	"/away": "/away ",
 	"/back": "/back",
 	"/color": "/color ",
+	"/list": "/list",
 }
 CONSOLE_COMMANDS = {
 	"/msg": "/msg ",
@@ -130,9 +131,10 @@ CONSOLE_COMMANDS = {
 	"/oper": "/oper ",
 	"/invite": "/invite ",
 	"/quit": "/quit ",
-	"/raw": "/raw ",
+	"/send": "/send ",
 	"/away": "/away ",
 	"/back": "/back",
+	"/list": "/list",
 }
 
 GLYPH_SELF = '@'
@@ -235,11 +237,26 @@ T_ICON = ":/t.png"
 import erk.windows.channel as Channel
 import erk.windows.user as User
 import erk.windows.console as Console
+import erk.windows.list as ChannelList
 
 WINDOW_WIDGET_MARGIN = 2
 
 DEFAULT_WINDOW_WIDTH = 500
 DEFAULT_WINDOW_HEIGHT = 275
+
+def ListWindow(host,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ChannelList.Window(host,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
 
 def ChannelWindow(channel,MDI,client,parent=None):
 

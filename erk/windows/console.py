@@ -278,6 +278,27 @@ class Window(QMainWindow):
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
 
+		servermenu = self.menubar.addMenu("Server")
+		servermenu.setStyle(self.gui.menu_style)
+
+		conListChannels = QAction(QIcon(LIST_ICON),"List channels",self)
+		conListChannels.triggered.connect(self.menuListChannels)
+		servermenu.addAction(conListChannels)
+
+		conChangeNick = QAction(QIcon(USER_ICON),"Change nickname",self)
+		conChangeNick.triggered.connect(self.menuNick)
+		servermenu.addAction(conChangeNick)
+
+		conJoinChannel = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		conJoinChannel.triggered.connect(self.menuJoin)
+		servermenu.addAction(conJoinChannel)
+
+		servermenu.addSeparator()
+
+		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		conDisconnect.triggered.connect(self.menuDisconnect)
+		servermenu.addAction(conDisconnect)
+
 		if self.gui.display_uptime_seconds:
 			self.uptime = QLabel('<b>00:00:00</b>',self)
 		else:
@@ -404,6 +425,9 @@ class Window(QMainWindow):
 
 	def restoreMe(self):
 		self.gui.restoreConsole(self.client)
+
+	def menuListChannels(self):
+		self.client.sendLine(f"LIST")
 
 	def buildConnectionMenu(self,mdimenu,connection):
 
@@ -570,7 +594,11 @@ class Window(QMainWindow):
 
 		servmenu.addSeparator()
 
-		conChangeNick = QAction(QIcon(USER_ICON),"Change Nickname",self)
+		conListChannels = QAction(QIcon(LIST_ICON),"List channels",self)
+		conListChannels.triggered.connect(self.menuListChannels)
+		servmenu.addAction(conListChannels)
+
+		conChangeNick = QAction(QIcon(USER_ICON),"Change nickname",self)
 		conChangeNick.triggered.connect(self.menuNick)
 		servmenu.addAction(conChangeNick)
 

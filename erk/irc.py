@@ -518,17 +518,19 @@ class IRC_Connection(irc.IRCClient):
 		usercount = params[2]
 		topic = params[3]
 
-		
+		self.gui.irc_list(self,server,channel,usercount,topic)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
+
+		self.gui.irc_start_list(self,server)
 
 		
 
 	def irc_RPL_LISTEND(self,prefix,params):
 		server = prefix
 
-		
+		self.gui.irc_end_list(self,server)
 
 	def lineReceived(self, line):
 
