@@ -1205,9 +1205,12 @@ class Erk(QMainWindow):
 
 			c.connection.quit()
 			c.console.close()
-			c.channel_list.close()
+			try:
+				c.channel_list.close()
+				del c.channel_list
+			except:
+				pass
 			del c.console
-			del c.channel_list
 			for w in c.windows:
 				c.windows[w].close()
 
@@ -1235,7 +1238,10 @@ class Erk(QMainWindow):
 				cid = c.console.client.server+":"+str(c.console.client.port)
 				saveLog(cid,None,c.console.newlog)
 		c.console.close()
-		c.channel_list.close()
+		try:
+			c.channel_list.close()
+		except:
+			pass
 		
 		clean = []
 		wins = []

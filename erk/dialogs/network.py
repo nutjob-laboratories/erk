@@ -29,6 +29,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import datetime
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -95,6 +97,11 @@ class Dialog(QDialog):
 		# Save channels
 		saveChannels(self.autojoins)
 
+		# Save record of stored server visit
+		if not self.StoredServer in self.saved_entries:
+			t = datetime.timestamp(datetime.now())
+			add_to_visited(host,t)
+
 		if self.AUTOJOIN_CHANNELS:
 			channels = self.autojoins
 		else:
@@ -107,10 +114,19 @@ class Dialog(QDialog):
 	def setServer(self):
 		self.StoredServer = self.servers.currentIndex()
 
+		timestamp = None
+		for e in self.visited:
+			if self.StoredData[self.StoredServer][0]==e[0]:
+				timestamp = e[1]
+
 		if self.StoredServer in self.saved_entries:
 			self.entryType.setText("<small><i>Saved Server</i></small>")
 		else:
-			self.entryType.setText("")
+			if timestamp:
+				pretty = datetime.fromtimestamp(timestamp).strftime('%B %d, %Y at %H:%M:%S')
+				self.entryType.setText("Last visited "+pretty)
+			else:
+				self.entryType.setText("")
 
 		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 		if "ssl" in self.StoredData[self.StoredServer][3]:
@@ -205,6 +221,7 @@ class Dialog(QDialog):
 
 		servlist = get_network_list()
 		historylist = get_history_list()
+		self.visited = get_visited()
 
 		servlist = historylist + servlist
 		self.saved_entries = []
@@ -221,6 +238,10 @@ class Dialog(QDialog):
 				ENTRY_ICON = SAVED_SERVER_ICON
 				self.saved_entries.append(counter)
 
+			for e in self.visited:
+				if entry[0]==e[0]:
+					ENTRY_ICON = SAVED_SERVER_ICON
+
 			if "ssl" in entry[3]:
 				if not self.can_do_ssl: continue
 
@@ -229,10 +250,19 @@ class Dialog(QDialog):
 
 		self.StoredServer = self.servers.currentIndex()
 
+		timestamp = None
+		for e in self.visited:
+			if self.StoredData[self.StoredServer][0]==e[0]:
+				timestamp = e[1]
+
 		if self.StoredServer in self.saved_entries:
 			self.entryType.setText("<small><i>Saved Server</i></small>")
 		else:
-			self.entryType.setText("")
+			if timestamp:
+				pretty = datetime.fromtimestamp(timestamp).strftime('%B %d, %Y at %H:%M:%S')
+				self.entryType.setText("Last visited "+pretty)
+			else:
+				self.entryType.setText("")
 
 		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 		if "ssl" in self.StoredData[self.StoredServer][3]:

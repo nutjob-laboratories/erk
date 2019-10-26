@@ -56,6 +56,7 @@ LAST_SERVER_INFORMATION_FILE = os.path.join(USER_DIRECTORY, "lastserver.json")
 CHANNELS_FILE = os.path.join(USER_DIRECTORY, "channels.json")
 IGNORE_FILE = os.path.join(USER_DIRECTORY, "ignore.json")
 HISTORY_FILE = os.path.join(USER_DIRECTORY, "history.json")
+VISITED_FILE = os.path.join(USER_DIRECTORY, "visited.json")
 
 MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
@@ -395,6 +396,30 @@ def get_network_list(filename=NETWORK_FILE):
 			servlist.append(p)
 			line = fp.readline()
 	return servlist
+
+def get_visited(filename=VISITED_FILE):
+	if os.path.isfile(filename):
+		with open(filename, "r") as read_history:
+			data = json.load(read_history)
+			return data
+	else:
+		return []
+
+def add_to_visited(server,timestamp,filename=VISITED_FILE):
+	l = get_visited(filename)
+	found = False
+	for s in l:
+		if s[0]==server: 
+			s[1] = timestamp
+			found = True
+	if found:
+		with open(filename, "w") as write_data:
+			json.dump(l, write_data, indent=4, sort_keys=True)
+		return
+	l.append( [server,timestamp] )
+	with open(filename, "w") as write_data:
+		json.dump(l, write_data, indent=4, sort_keys=True)
+
 
 def get_history_list(filename=HISTORY_FILE):
 	history_list = []

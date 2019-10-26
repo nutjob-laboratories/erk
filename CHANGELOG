@@ -22,6 +22,8 @@ Version 0.501
 	* Added a menu to the console window with functions from the connections menu
 	* Added filter options to the channel list dialog
 	* Added a search option to the channel list dialog
+	* Servers from the built-in list are now marked if the client has connected to them before
+	* Visited servers now display when they were last connected to in the "Servers" dialog
 
 Version 0.500
 	* Completely re-written
