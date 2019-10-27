@@ -793,39 +793,45 @@ class Erk(QMainWindow):
 		#self.writeToChannel(obj,target,user+": "+text)
 
 	def irc_disconnect(self,obj,reason):
-		try:
-			c = self.fetchConnection(obj)
-			# Save log
-			if self.save_logs_on_quit:
-				if len(c.console.newlog)>0:
-					cid = c.console.client.server+":"+str(c.console.client.port)
-					saveLog(cid,None,c.console.newlog)
-			c.console.close()
-			c.channel_list.close()
+		if not self.disconnecting:
+			if not self.quitting:
+				try:
+					self.lostIRCConnection(obj)
+				except:
+					pass
+		# try:
+		# 	c = self.fetchConnection(obj)
+		# 	# Save log
+		# 	if self.save_logs_on_quit:
+		# 		if len(c.console.newlog)>0:
+		# 			cid = c.console.client.server+":"+str(c.console.client.port)
+		# 			saveLog(cid,None,c.console.newlog)
+		# 	c.console.close()
+		# 	c.channel_list.close()
 			
-			clean = []
-			autojoin = []
-			for c in self.connections:
-				if c.id==obj.id:
-					for w in c.windows:
-						if c.windows[w].is_channel:
-							autojoin.append( [c.windows[w].name,c.windows[w].key] )
-						c.windows[w].close()
-					continue
-				clean.append(c)
-			self.connections = clean
+		# 	clean = []
+		# 	autojoin = []
+		# 	for c in self.connections:
+		# 		if c.id==obj.id:
+		# 			for w in c.windows:
+		# 				if c.windows[w].is_channel:
+		# 					autojoin.append( [c.windows[w].name,c.windows[w].key] )
+		# 				c.windows[w].close()
+		# 			continue
+		# 		clean.append(c)
+		# 	self.connections = clean
 
-			# Save all open channel windows so that
-			# we rejoin them on reconnect
-			self.autojoins[obj.server] = autojoin
+		# 	# Save all open channel windows so that
+		# 	# we rejoin them on reconnect
+		# 	self.autojoins[obj.server] = autojoin
 
-			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
-			self.buildWindowMenu()
+		# 	self.setWindowTitle(DEFAULT_WINDOW_TITLE)
+		# 	self.buildWindowMenu()
 			
-		except:
-			pass
+		# except:
+		# 	pass
 
-		self.buildConnectionsMenu()		
+		#self.buildConnectionsMenu()		
 
 	def irc_connect(self,obj):
 		
@@ -1240,6 +1246,48 @@ class Erk(QMainWindow):
 		except:
 			self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 
+	def lostIRCConnection(self,obj):
+
+		c = self.fetchConnection(obj)
+		# Save log
+		if self.save_logs_on_quit:
+			if len(c.console.newlog)>0:
+				cid = c.console.client.server+":"+str(c.console.client.port)
+				saveLog(cid,None,c.console.newlog)
+		c.console.close()
+		try:
+			c.channel_list.close()
+		except:
+			pass
+		
+		clean = []
+		wins = []
+		aj = []
+		for c in self.connections:
+			if c.id==obj.id:
+				for w in c.windows:
+					if c.windows[w].is_channel:
+						if c.windows[w].key!='':
+							e = [c.windows[w].name,c.windows[w].key]
+						else:
+							e = [c.windows[w].name,'']
+						aj.append(e)
+					wins.append(c.windows[w])
+				continue
+			clean.append(c)
+		self.connections = clean
+
+		self.autojoins[obj.server] = aj
+
+		for w in wins:
+			w.close()
+
+		del wins
+
+		self.setWindowTitle(DEFAULT_WINDOW_TITLE)
+		self.buildWindowMenu()
+		self.buildConnectionsMenu()
+
 	def disconnectFromIRC(self,obj,msg=None):
 		self.disconnecting = True
 		if obj.reconnect:
@@ -1277,6 +1325,7 @@ class Erk(QMainWindow):
 
 		self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 		self.buildWindowMenu()
+		self.buildConnectionsMenu()
 
 	def ignore_user(self,obj,user):
 		if not self.allow_ignore: return
