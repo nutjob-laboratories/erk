@@ -37,6 +37,11 @@ Version 0.501
 	* Added a "network dump" tab to the console window (shows all IRC input and output as it happens)
 	* Fixed a bug in disconnecting (connections weren't being removed from memory properly)
 	* Increased the default initial window size to 500x300
+	* Moved the toggle /send on/off option to individual console windows
+	* Moved the toggle connection console on/off to inidividual console windows
+	* /send is now off by default
+	* Connection console is now visible by default
+	* Removed "Miscellaneous" settings submenu
 
 Version 0.500
 	* Completely re-written

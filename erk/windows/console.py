@@ -224,12 +224,34 @@ class Window(QMainWindow):
 		self.io_hidden = True
 		self.tabs.setTabEnabled(1,False)
 		self.tabs.setStyleSheet('QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} QTabBar::tab::enabled {width: 0; height: 0; margin: 0; padding: 0; border: none;}')
+		self.IOtab.setIcon(QIcon(PLUS_ICON))
+		self.IOtab.setText("Show connection tab")
+		self.IOtab2.setIcon(QIcon(PLUS_ICON))
+		self.IOtab2.setText("Show connection tab")
 
 	def showIOTab(self):
 		self.ircLineDisplay.clear()
 		self.io_hidden = False
 		self.tabs.setTabEnabled(1,True)
 		self.tabs.setStyleSheet('')
+		self.IOtab.setIcon(QIcon(MINUS_ICON))
+		self.IOtab.setText("Hide connection tab")
+		self.IOtab2.setIcon(QIcon(MINUS_ICON))
+		self.IOtab2.setText("Hide connection tab")
+
+	def menuIOtab(self):
+		if self.io_hidden:
+			self.io_hidden = False
+			self.showIOTab()
+		else:
+			self.io_hidden = True
+			self.hideIOTab()
+
+	def menuToggleSend(self):
+		if self.enable_send:
+			self.enable_send = False
+		else:
+			self.enable_send = True
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -253,6 +275,8 @@ class Window(QMainWindow):
 		self.maximum_dump_lines = 300
 
 		self.io_hidden = False
+
+		self.enable_send = False
 
 		# BEGIN IRC SERVER INFO
 
@@ -308,7 +332,7 @@ class Window(QMainWindow):
 		interface.setLayout(finalLayout)
 
 		self.tabs = QTabWidget()
-		self.tabs.addTab(interface,"Server Console")
+		self.tabs.addTab(interface,"Console")
 
 		fontbold = self.tabs.font()
 		fontbold.setBold(True)
@@ -334,7 +358,7 @@ class Window(QMainWindow):
 		interface = QWidget()
 		interface.setLayout(dumpLayout)
 
-		self.tabs.addTab(interface,"Line Traffic")
+		self.tabs.addTab(interface,"Connection")
 		#self.tabs.addTab(self.ircLineDisplay,"DUMP")
 
 		self.setCentralWidget(self.tabs)
@@ -370,6 +394,17 @@ class Window(QMainWindow):
 		conDisconnect.triggered.connect(self.menuDisconnect)
 		servermenu.addAction(conDisconnect)
 
+		optionmenu = self.menubar.addMenu("Options")
+
+		self.IOtab = QAction(QIcon(MINUS_ICON),"Hide connection tab",self)
+		self.IOtab.triggered.connect(self.menuIOtab)
+		optionmenu.addAction(self.IOtab)
+
+		optSend = QAction("Enable /send command",self,checkable=True)
+		optSend.setChecked(self.enable_send)
+		optSend.triggered.connect(self.menuToggleSend)
+		optionmenu.addAction(optSend)
+
 		self.menubar2 = QMenuBar()
 		self.menubar2.setFont(fontnormal)
 		self.tabs.widget(1).layout().setMenuBar(self.menubar2)
@@ -394,6 +429,19 @@ class Window(QMainWindow):
 		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		conDisconnect.triggered.connect(self.menuDisconnect)
 		servermenu.addAction(conDisconnect)
+
+		optionmenu = self.menubar2.addMenu("Options")
+
+		self.IOtab2 = QAction(QIcon(MINUS_ICON),"Hide connection tab",self)
+		self.IOtab2.triggered.connect(self.menuIOtab)
+		optionmenu.addAction(self.IOtab2)
+
+		optSend = QAction("Enable /send command",self,checkable=True)
+		optSend.setChecked(self.enable_send)
+		optSend.triggered.connect(self.menuToggleSend)
+		optionmenu.addAction(optSend)
+
+		#self.hideIOTab()
 
 		if self.gui.display_uptime_seconds:
 			self.uptime = QLabel('<b>00:00:00</b>',self)

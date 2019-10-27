@@ -229,7 +229,6 @@ RESIZE_ICON = ":/resize.png"
 P_ICON = ":/p.png"
 S_ICON = ":/s.png"
 T_ICON = ":/t.png"
-MISC_ICON = ":/misc.png"
 
 # =====================
 # | WINDOW MANAGEMENT |
