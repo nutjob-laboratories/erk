@@ -477,12 +477,20 @@ def handle_console_input(obj,text):
 
 	if len(tokens)>=2:
 		if tokens[0].lower()=="/send":
+			if not obj.gui.enable_send_cmd:
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"The \"send\" command is not enabled")
+				obj.gui.writeToConsole(obj.client,msg)
+				return
 			tokens.pop(0)	# remove command
 			msg = ' '.join(tokens)
 			obj.client.sendLine(msg)
 			return
 	if len(tokens)==1:
 		if tokens[0].lower()=="/send":
+			if not obj.gui.enable_send_cmd:
+				msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[ERROR_STYLE_NAME],"The \"send\" command is not enabled")
+				obj.gui.writeToConsole(obj.client,msg)
+				return
 			msg = render_system(obj.gui, obj.gui.styles[TIMESTAMP_STYLE_NAME],obj.gui.styles[SYSTEM_STYLE_NAME],"Usage: /send COMMAND ..." )
 			obj.gui.writeToConsole(obj.client,msg)
 			return

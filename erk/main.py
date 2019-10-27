@@ -798,40 +798,7 @@ class Erk(QMainWindow):
 				try:
 					self.lostIRCConnection(obj)
 				except:
-					pass
-		# try:
-		# 	c = self.fetchConnection(obj)
-		# 	# Save log
-		# 	if self.save_logs_on_quit:
-		# 		if len(c.console.newlog)>0:
-		# 			cid = c.console.client.server+":"+str(c.console.client.port)
-		# 			saveLog(cid,None,c.console.newlog)
-		# 	c.console.close()
-		# 	c.channel_list.close()
-			
-		# 	clean = []
-		# 	autojoin = []
-		# 	for c in self.connections:
-		# 		if c.id==obj.id:
-		# 			for w in c.windows:
-		# 				if c.windows[w].is_channel:
-		# 					autojoin.append( [c.windows[w].name,c.windows[w].key] )
-		# 				c.windows[w].close()
-		# 			continue
-		# 		clean.append(c)
-		# 	self.connections = clean
-
-		# 	# Save all open channel windows so that
-		# 	# we rejoin them on reconnect
-		# 	self.autojoins[obj.server] = autojoin
-
-		# 	self.setWindowTitle(DEFAULT_WINDOW_TITLE)
-		# 	self.buildWindowMenu()
-			
-		# except:
-		# 	pass
-
-		#self.buildConnectionsMenu()		
+					pass	
 
 	def irc_connect(self,obj):
 		
@@ -1266,18 +1233,19 @@ class Erk(QMainWindow):
 		for c in self.connections:
 			if c.id==obj.id:
 				for w in c.windows:
-					if c.windows[w].is_channel:
-						if c.windows[w].key!='':
-							e = [c.windows[w].name,c.windows[w].key]
-						else:
-							e = [c.windows[w].name,'']
-						aj.append(e)
+					if self.rejoin_channels:
+						if c.windows[w].is_channel:
+							if c.windows[w].key!='':
+								e = [c.windows[w].name,c.windows[w].key]
+							else:
+								e = [c.windows[w].name,'']
+							aj.append(e)
 					wins.append(c.windows[w])
 				continue
 			clean.append(c)
 		self.connections = clean
 
-		self.autojoins[obj.server] = aj
+		if self.rejoin_channels: self.autojoins[obj.server] = aj
 
 		for w in wins:
 			w.close()
@@ -1410,8 +1378,10 @@ class Erk(QMainWindow):
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
-
 		self.display_extended_conn_info				= self.settings[SETTING_SHOW_CONNECTION_INFO]
+		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
+
+		self.enable_send_cmd						= self.settings[SETTING_SEND_COMMAND]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
@@ -1637,7 +1607,7 @@ class Erk(QMainWindow):
 		self.actProfanity.triggered.connect(self.menuProfanity)
 		chatSubMenu.addAction(self.actProfanity)
 
-		self.actColor = QAction("Display IRC color codes",self,checkable=True)
+		self.actColor = QAction("Display IRC colors",self,checkable=True)
 		self.actColor.setChecked(self.display_irc_colors)
 		self.actColor.triggered.connect(self.menuColor)
 		chatSubMenu.addAction(self.actColor)
@@ -1708,6 +1678,18 @@ class Erk(QMainWindow):
 			self.scFrench.setEnabled(False)
 			self.scSpanish.setEnabled(False)
 			self.scGerman.setEnabled(False)
+
+		miscSubMenu = settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
+
+		self.actRejoin = QAction("Rejoin channels on disconnection",self,checkable=True)
+		self.actRejoin.setChecked(self.rejoin_channels)
+		self.actRejoin.triggered.connect(self.menuRejoin)
+		miscSubMenu.addAction(self.actRejoin)
+
+		self.actConsoleSend = QAction("Enable /send command in server console windows",self,checkable=True)
+		self.actConsoleSend.setChecked(self.enable_send_cmd)
+		self.actConsoleSend.triggered.connect(self.menuConsoleSend)
+		miscSubMenu.addAction(self.actConsoleSend)
 
 		# Windows Menu
 
@@ -1789,6 +1771,22 @@ class Erk(QMainWindow):
 	def menuAbout(self):
 		x = AboutDialog.Dialog(self)
 		x.show()
+
+	def menuConsoleSend(self):
+		if self.enable_send_cmd:
+			self.enable_send_cmd = False
+		else:
+			self.enable_send_cmd = True
+		self.settings[SETTING_SEND_COMMAND] = self.enable_send_cmd
+		save_settings(self.settings,self.settings_file)
+
+	def menuRejoin(self):
+		if self.rejoin_channels:
+			self.rejoin_channels = False
+		else:
+			self.rejoin_channels = True
+		self.settings[SETTING_REJOIN_CHANNELS] = self.rejoin_channels
+		save_settings(self.settings,self.settings_file)
 
 	def menuWindowSize(self):
 		x = WindowSizeDialog.Dialog(self)
