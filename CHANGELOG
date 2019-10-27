@@ -42,6 +42,9 @@ Version 0.501
 	* /send is now off by default
 	* Connection console is now visible by default
 	* Removed "Miscellaneous" settings submenu
+	* Removed icons from the connection console display
+	* Turned on word wrap in the connection console display
+	* Added '->' for input and '<-' for output in the connection console display
 
 Version 0.500
 	* Completely re-written

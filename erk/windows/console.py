@@ -204,15 +204,21 @@ class Window(QMainWindow):
 	def writeLine(self,line,is_input=True):
 		if self.io_hidden: return
 		ui = QListWidgetItem()
+
+		f = ui.font()
+		f.setBold(False)
 		
 		if not is_input:
 			ui.setBackground(QColor("#E7E7E7"))
-			ui.setIcon(QIcon(ERK_ICON))
+			prefix = '<- '
 		else:
 			ui.setBackground(QColor("#FFFFFF"))
-			ui.setIcon(QIcon(CONSOLE_WINDOW))
+			ui.setFont(f)
+			prefix = '-> '
 
-		ui.setText(line)
+		ui.setTextAlignment(Qt.AlignLeft | Qt.AlignTop)
+
+		ui.setText(prefix+line)
 		self.ircLineDisplay.addItem(ui)
 
 		self.ircLineDisplay.scrollToBottom()
@@ -345,7 +351,8 @@ class Window(QMainWindow):
 		self.ircLineDisplay.setObjectName("ircLineDisplay")
 		self.ircLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
-		self.ircLineDisplay.setIconSize(QSize(15, 15)) 
+		self.ircLineDisplay.setIconSize(QSize(15, 15))
+		self.ircLineDisplay.setWordWrap(True)
 
 		ufont = self.ircLineDisplay.font()
 		ufont.setBold(True)
