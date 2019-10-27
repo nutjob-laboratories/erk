@@ -33,6 +33,10 @@ Version 0.501
 	* Added an option to turn on (and off) rejoining channels on disconnection
 	* Added an option to turn on (and off) the /send command in server console windows
 	* Changed "Display IRC color codes" setting to "Display IRC colors"
+	* Added a tab bar to console windows; the normal server console is the first tab
+	* Added a "network dump" tab to the console window (shows all IRC input and output as it happens)
+	* Fixed a bug in disconnecting (connections weren't being removed from memory properly)
+	* Increased the default initial window size to 500x300
 
 Version 0.500
 	* Completely re-written

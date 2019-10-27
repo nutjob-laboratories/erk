@@ -150,6 +150,8 @@ SETTING_SHOW_CONNECTION_INFO		= "display_extended_connection_information"
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
 SETTING_SEND_COMMAND				= "console_send_command_enabled"
 
+SETTING_ENABLE_IO_TAB				= "enable_network_io_tab_on_console_windows"
+
 UNKNOWN_IRC_NETWORK = "Unknown"
 
 DEFAULT_KEEPALIVE_INTERVAL = 120
@@ -310,7 +312,7 @@ def patch_config_file(data):
 	if not SETTING_MAX_NICK_LENGTH in data: data[SETTING_MAX_NICK_LENGTH] = 16
 	if not SETTING_SET_WINDOW_TITLE_TO_ACTIVE in data: data[SETTING_SET_WINDOW_TITLE_TO_ACTIVE] = True
 	if not SETTING_WINDOW_WIDTH in data: data[SETTING_WINDOW_WIDTH] = 500
-	if not SETTING_WINDOW_HEIGHT in data: data[SETTING_WINDOW_HEIGHT] = 275
+	if not SETTING_WINDOW_HEIGHT in data: data[SETTING_WINDOW_HEIGHT] = 300
 	if not SETTING_AUTOCOMPLETE_CMDS in data: data[SETTING_AUTOCOMPLETE_CMDS] = True
 	if not SETTING_AUTOCOMPLETE_NICKS in data: data[SETTING_AUTOCOMPLETE_NICKS] = True
 	if not SETTING_HYPERLINKS in data: data[SETTING_HYPERLINKS] = True
@@ -330,6 +332,7 @@ def patch_config_file(data):
 	if not SETTING_SHOW_CONNECTION_INFO in data: data[SETTING_SHOW_CONNECTION_INFO] = False
 	if not SETTING_REJOIN_CHANNELS in data: data[SETTING_REJOIN_CHANNELS] = True
 	if not SETTING_SEND_COMMAND in data: data[SETTING_SEND_COMMAND] = False
+	if not SETTING_ENABLE_IO_TAB in data: data[SETTING_ENABLE_IO_TAB] = False
 
 	if len(data)>s:
 		return [True,data]
@@ -362,7 +365,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_MAX_NICK_LENGTH: 16,
 			SETTING_SET_WINDOW_TITLE_TO_ACTIVE: True,
 			SETTING_WINDOW_WIDTH: 500,
-			SETTING_WINDOW_HEIGHT: 275,
+			SETTING_WINDOW_HEIGHT: 300,
 			SETTING_AUTOCOMPLETE_CMDS: True,
 			SETTING_AUTOCOMPLETE_NICKS: True,
 			SETTING_HYPERLINKS: True,
@@ -382,6 +385,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_SHOW_CONNECTION_INFO: False,
 			SETTING_REJOIN_CHANNELS: True,
 			SETTING_SEND_COMMAND: False,
+			SETTING_ENABLE_IO_TAB: False,
 		}
 		save_settings(si)
 		return si

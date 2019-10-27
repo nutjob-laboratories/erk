@@ -72,6 +72,12 @@ class Erk(QMainWindow):
 	# |==================|
 
 	def irc_output(self,obj,line):
+
+		for c in self.connections:
+			if c.id==obj.id:
+				if c.console:
+					c.console.writeLine(line,False)
+
 		if self.view_all_traffic:
 			if obj.hostname:
 				sid = obj.hostname
@@ -81,6 +87,12 @@ class Erk(QMainWindow):
 			print("->"+sid+"\t"+line)
 
 	def irc_input(self,obj,line):
+
+		for c in self.connections:
+			if c.id==obj.id:
+				if c.console:
+					c.console.writeLine(line,True)
+
 		if self.view_all_traffic:
 			if obj.hostname:
 				sid = obj.hostname
@@ -808,6 +820,9 @@ class Erk(QMainWindow):
 		c.console = ccon
 		self.connections.append(c)
 
+		if not self.enable_io_tab:
+			c.console.hideIOTab()
+
 		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Connected to "+obj.server+":"+str(obj.port) )
 		ccon.writeText(msg)
 		ccon.add_to_log('',"Connected to "+obj.server+":"+str(obj.port))
@@ -1099,7 +1114,7 @@ class Erk(QMainWindow):
 	def remove_connection(self,cid):
 		clean = []
 		for c in self.connections:
-			ccid = c.connection.server + str(c.connection.server.port)
+			ccid = c.connection.server + ":" + str(c.connection.port)
 			if ccid == cid: continue
 			clean.append(c)
 		self.connections = clean
@@ -1380,8 +1395,9 @@ class Erk(QMainWindow):
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
 		self.display_extended_conn_info				= self.settings[SETTING_SHOW_CONNECTION_INFO]
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
-
 		self.enable_send_cmd						= self.settings[SETTING_SEND_COMMAND]
+
+		self.enable_io_tab = self.settings[SETTING_ENABLE_IO_TAB]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
@@ -1501,6 +1517,11 @@ class Erk(QMainWindow):
 		displaySubMenu.addAction(self.actFullscreen)
 
 		windowSubMenu = settingsMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
+
+		self.actConsoleIO = QAction("Enable line viewer tab on console windows",self,checkable=True)
+		self.actConsoleIO.setChecked(self.enable_io_tab)
+		self.actConsoleIO.triggered.connect(self.menuConsoleIO)
+		windowSubMenu.addAction(self.actConsoleIO)
 
 		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
 		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
@@ -1686,7 +1707,7 @@ class Erk(QMainWindow):
 		self.actRejoin.triggered.connect(self.menuRejoin)
 		miscSubMenu.addAction(self.actRejoin)
 
-		self.actConsoleSend = QAction("Enable /send command in server console windows",self,checkable=True)
+		self.actConsoleSend = QAction("Enable /send command in console windows",self,checkable=True)
 		self.actConsoleSend.setChecked(self.enable_send_cmd)
 		self.actConsoleSend.triggered.connect(self.menuConsoleSend)
 		miscSubMenu.addAction(self.actConsoleSend)
@@ -1806,6 +1827,24 @@ class Erk(QMainWindow):
 		x = EditUserDialog.Dialog()
 		e = x.get_user_information()
 		del x
+
+	def menuConsoleIO(self):
+		if self.enable_io_tab:
+			self.enable_io_tab = False
+			for c in self.connections:
+				try:
+					c.console.hideIOTab()
+				except:
+					pass
+		else:
+			self.enable_io_tab = True
+			for c in self.connections:
+				try:
+					c.console.showIOTab()
+				except:
+					pass
+		self.settings[SETTING_ENABLE_IO_TAB] = self.enable_io_tab
+		save_settings(self.settings,self.settings_file)
 
 	def menuSecondsUptime(self):
 		if self.display_uptime_seconds:			

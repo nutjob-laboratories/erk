@@ -243,7 +243,7 @@ import erk.windows.list as ChannelList
 WINDOW_WIDGET_MARGIN = 2
 
 DEFAULT_WINDOW_WIDTH = 500
-DEFAULT_WINDOW_HEIGHT = 275
+DEFAULT_WINDOW_HEIGHT = 300
 
 def ListWindow(host,MDI,client,parent=None):
 

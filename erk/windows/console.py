@@ -201,6 +201,36 @@ class Window(QMainWindow):
 		self.menubar.setVisible(True)
 		self.uptime.setVisible(True)
 
+	def writeLine(self,line,is_input=True):
+		if self.io_hidden: return
+		ui = QListWidgetItem()
+		
+		if not is_input:
+			ui.setBackground(QColor("#E7E7E7"))
+			ui.setIcon(QIcon(ERK_ICON))
+		else:
+			ui.setBackground(QColor("#FFFFFF"))
+			ui.setIcon(QIcon(CONSOLE_WINDOW))
+
+		ui.setText(line)
+		self.ircLineDisplay.addItem(ui)
+
+		self.ircLineDisplay.scrollToBottom()
+
+		if self.ircLineDisplay.count()>self.maximum_dump_lines:
+			self.ircLineDisplay.takeItem(0)
+
+	def hideIOTab(self):
+		self.io_hidden = True
+		self.tabs.setTabEnabled(1,False)
+		self.tabs.setStyleSheet('QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} QTabBar::tab::enabled {width: 0; height: 0; margin: 0; padding: 0; border: none;}')
+
+	def showIOTab(self):
+		self.ircLineDisplay.clear()
+		self.io_hidden = False
+		self.tabs.setTabEnabled(1,True)
+		self.tabs.setStyleSheet('')
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -219,6 +249,10 @@ class Window(QMainWindow):
 		self.network = "Unknown"
 
 		self.hostname = None
+
+		self.maximum_dump_lines = 300
+
+		self.io_hidden = False
 
 		# BEGIN IRC SERVER INFO
 
@@ -272,13 +306,75 @@ class Window(QMainWindow):
 
 		interface = QWidget()
 		interface.setLayout(finalLayout)
-		self.setCentralWidget(interface)
 
-		self.menubar = self.menuBar()
-		menuBoldText = self.menubar.font()
-		menuBoldText.setBold(True)
+		self.tabs = QTabWidget()
+		self.tabs.addTab(interface,"Server Console")
+
+		fontbold = self.tabs.font()
+		fontbold.setBold(True)
+		self.tabs.setFont(fontbold)
+
+		fontnormal = self.tabs.font()
+		fontnormal.setBold(False)
+
+		self.ircLineDisplay = QListWidget(self)
+		self.ircLineDisplay.setObjectName("ircLineDisplay")
+		self.ircLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
+
+		self.ircLineDisplay.setIconSize(QSize(15, 15)) 
+
+		ufont = self.ircLineDisplay.font()
+		ufont.setBold(True)
+		self.ircLineDisplay.setFont(ufont)
+
+		dumpLayout = QVBoxLayout()
+		dumpLayout.setContentsMargins(window_margin,window_margin,window_margin,window_margin)
+		dumpLayout.addWidget(self.ircLineDisplay)
+
+		interface = QWidget()
+		interface.setLayout(dumpLayout)
+
+		self.tabs.addTab(interface,"Line Traffic")
+		#self.tabs.addTab(self.ircLineDisplay,"DUMP")
+
+		self.setCentralWidget(self.tabs)
+
+		# self.setCentralWidget(interface)
+
+		# self.menubar = self.menuBar()
+		# menuBoldText = self.menubar.font()
+		# menuBoldText.setBold(True)
+
+		self.menubar = QMenuBar()
+		self.menubar.setFont(fontnormal)
+		self.tabs.widget(0).layout().setMenuBar(self.menubar)
 
 		servermenu = self.menubar.addMenu("Server")
+		servermenu.setStyle(self.gui.menu_style)
+
+		conListChannels = QAction(QIcon(LIST_ICON),"List channels",self)
+		conListChannels.triggered.connect(self.menuListChannels)
+		servermenu.addAction(conListChannels)
+
+		conChangeNick = QAction(QIcon(USER_ICON),"Change nickname",self)
+		conChangeNick.triggered.connect(self.menuNick)
+		servermenu.addAction(conChangeNick)
+
+		conJoinChannel = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		conJoinChannel.triggered.connect(self.menuJoin)
+		servermenu.addAction(conJoinChannel)
+
+		servermenu.addSeparator()
+
+		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		conDisconnect.triggered.connect(self.menuDisconnect)
+		servermenu.addAction(conDisconnect)
+
+		self.menubar2 = QMenuBar()
+		self.menubar2.setFont(fontnormal)
+		self.tabs.widget(1).layout().setMenuBar(self.menubar2)
+
+		servermenu = self.menubar2.addMenu("Server")
 		servermenu.setStyle(self.gui.menu_style)
 
 		conListChannels = QAction(QIcon(LIST_ICON),"List channels",self)
@@ -304,7 +400,8 @@ class Window(QMainWindow):
 		else:
 			self.uptime = QLabel('<b>00:00</b>',self)
 
-		self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
+		#self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
+		self.tabs.setCornerWidget(self.uptime,Qt.TopRightCorner)
 
 		self.uptime.setStyleSheet('padding: 2px;')
 
