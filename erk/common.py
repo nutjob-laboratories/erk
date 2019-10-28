@@ -244,6 +244,27 @@ HORIZONTAL_RULE = f'''
 	</tbody>
 </table>'''
 
+TEXT_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HR_LINE_IMAGE}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small>!TEXT!</small></center></td>
+			<td style="background-image: url({HR_LINE_IMAGE}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+def textSeparator(self,text):
+
+	tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
 # =====================
 # | WINDOW MANAGEMENT |
 # =====================

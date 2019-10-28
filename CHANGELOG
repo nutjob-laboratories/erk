@@ -51,6 +51,8 @@ Version 0.501
 	* Changed the name of the "whois_result" text style to "whois_body"
 	* Resuming chat is now marked with a horizontal line
 	* Added a server MOTD viewer dialog
+	* Added text-separators to the "Windows" menu
+	* Made the "Settings" menu a little nicer looking
 
 Version 0.500
 	* Completely re-written

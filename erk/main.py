@@ -1484,11 +1484,14 @@ class Erk(QMainWindow):
 
 		settingsMenu.setFont(menuBoldText)
 
+		sep = textSeparator(self,"<i>Configuration</i>")
+		settingsMenu.addAction(sep)
+
 		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
 		self.actIgnore.triggered.connect(self.menuIgnore)
 		settingsMenu.addAction(self.actIgnore)
 
-		settingsMenu.addSeparator()
+		#settingsMenu.addSeparator()
 
 		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
 
@@ -1517,6 +1520,9 @@ class Erk(QMainWindow):
 		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
 		displaySubMenu.addAction(self.actFullscreen)
 
+		sep = textSeparator(self,"<i>Preferences</i>")
+		settingsMenu.addAction(sep)
+
 		windowSubMenu = settingsMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
 
 		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
@@ -1529,15 +1535,15 @@ class Erk(QMainWindow):
 		self.actHidePrivate.triggered.connect(self.menuToggleHideChat)
 		windowSubMenu.addAction(self.actHidePrivate)
 
-		self.actStatusBars = QAction("Display status bars on chat windows",self,checkable=True)
-		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
-		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
-		windowSubMenu.addAction(self.actStatusBars)
-
 		self.actWindowTitle = QAction("Use window title of the active window",self,checkable=True)
 		self.actWindowTitle.setChecked(self.set_window_title_to_active)
 		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
 		windowSubMenu.addAction(self.actWindowTitle)
+
+		self.actStatusBars = QAction("Status bars on chat windows",self,checkable=True)
+		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
+		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
+		windowSubMenu.addAction(self.actStatusBars)
 
 		self.actPlainUserLists = QAction("Plain user lists",self,checkable=True)
 		self.actPlainUserLists.setChecked(self.plain_user_lists)
@@ -1577,25 +1583,6 @@ class Erk(QMainWindow):
 		self.actToggleSecondsTimestamp.setChecked(self.use_seconds_in_timestamp)
 		self.actToggleSecondsTimestamp.triggered.connect(self.menuToggleSecondsTimestamp)
 		timestampSubMenu.addAction(self.actToggleSecondsTimestamp)
-
-		logSubMenu = settingsMenu.addMenu(QIcon(LOG_ICON),"Logs")
-
-		self.actSaveLogs = QAction("Automatically save logs",self,checkable=True)
-		self.actSaveLogs.setChecked(self.save_logs_on_quit)
-		self.actSaveLogs.triggered.connect(self.menuToggleSaveLogs)
-		logSubMenu.addAction(self.actSaveLogs)
-
-		self.actLoadLogs = QAction("Automatically load logs",self,checkable=True)
-		self.actLoadLogs.setChecked(self.load_logs_on_start)
-		self.actLoadLogs.triggered.connect(self.menuToggleLoadLogs)
-		logSubMenu.addAction(self.actLoadLogs)
-
-		self.actPrivateLogs = QAction("Save private chat logs",self,checkable=True)
-		self.actPrivateLogs.setChecked(self.log_private_chat)
-		self.actPrivateLogs.triggered.connect(self.menuTogglePrivateLogs)
-		logSubMenu.addAction(self.actPrivateLogs)
-
-		if not self.save_logs_on_quit: self.actPrivateLogs.setEnabled(False)
 
 		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
 
@@ -1695,6 +1682,25 @@ class Erk(QMainWindow):
 			self.scFrench.setEnabled(False)
 			self.scSpanish.setEnabled(False)
 			self.scGerman.setEnabled(False)
+
+		logSubMenu = settingsMenu.addMenu(QIcon(LOG_ICON),"Logs")
+
+		self.actSaveLogs = QAction("Automatically save logs",self,checkable=True)
+		self.actSaveLogs.setChecked(self.save_logs_on_quit)
+		self.actSaveLogs.triggered.connect(self.menuToggleSaveLogs)
+		logSubMenu.addAction(self.actSaveLogs)
+
+		self.actLoadLogs = QAction("Automatically load logs",self,checkable=True)
+		self.actLoadLogs.setChecked(self.load_logs_on_start)
+		self.actLoadLogs.triggered.connect(self.menuToggleLoadLogs)
+		logSubMenu.addAction(self.actLoadLogs)
+
+		self.actPrivateLogs = QAction("Save private chat logs",self,checkable=True)
+		self.actPrivateLogs.setChecked(self.log_private_chat)
+		self.actPrivateLogs.triggered.connect(self.menuTogglePrivateLogs)
+		logSubMenu.addAction(self.actPrivateLogs)
+
+		if not self.save_logs_on_quit: self.actPrivateLogs.setEnabled(False)
 
 		# Windows Menu
 
@@ -2029,12 +2035,8 @@ class Erk(QMainWindow):
 			else:
 				ctitle = c.connection.server+":"+str(c.connection.port)
 
-			namenetworkLabel = QLabel("&nbsp;<small><i><b>"+ctitle+"</b></i></small>")
-			namenetworkAction = QWidgetAction(self)
-			namenetworkAction.setDefaultWidget(namenetworkLabel)
-			self.windowMenu.addAction(namenetworkAction)
-
-			namenetworkLabel.setAlignment(Qt.AlignHCenter)
+			sep = textSeparator(self,"<i>"+ctitle+"</i>")
+			self.windowMenu.addAction(sep)
 
 			for win in c.windows:
 				if c.windows[win].is_channel:
@@ -2047,7 +2049,7 @@ class Erk(QMainWindow):
 				cwin.triggered.connect(lambda state,f=c.windows[win],y=c.windows[win].subwindow: self.restoreWindow(f,y))
 				self.windowMenu.addAction(cwin)
 
-			self.windowMenu.addSeparator()
+			#self.windowMenu.addSeparator()
 
 	def menuAutoNicks(self):
 		if self.autocomplete_nicks:
@@ -2368,7 +2370,7 @@ class Erk(QMainWindow):
 			self.connectionsMenu.addSeparator()
 
 		if scount==0:
-			noConnectionsLabel = QLabel(f"&nbsp;<i>Not connected to any servers.</i>&nbsp;")
+			noConnectionsLabel = QLabel(f"<center><i>Not connected to any servers.</i></center>")
 			noConnectionsAction = QWidgetAction(self)
 			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
 			self.connectionsMenu.addAction(noConnectionsAction)
