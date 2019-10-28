@@ -188,6 +188,8 @@ CONSOLE_BACKGROUND = ":/gui-console_background.png"
 IRC_NETWORK_MENU_ICON = ":/gui-network_menu.png"
 USER_MENU_ICON = ":/gui-user_menu.png"
 
+HR_LINE_IMAGE = ":/gui-horizontal_rule.png"
+
 # ---------
 # | ICONS |
 # ---------
@@ -229,6 +231,18 @@ RESIZE_ICON = ":/resize.png"
 P_ICON = ":/p.png"
 S_ICON = ":/s.png"
 T_ICON = ":/t.png"
+INFO_ICON = ":/info.png"
+TEXT_ICON = ":/text.png"
+
+HORIZONTAL_RULE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HR_LINE_IMAGE}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
 
 # =====================
 # | WINDOW MANAGEMENT |
@@ -238,11 +252,26 @@ import erk.windows.channel as Channel
 import erk.windows.user as User
 import erk.windows.console as Console
 import erk.windows.list as ChannelList
+import erk.windows.text as ViewText
 
 WINDOW_WIDGET_MARGIN = 2
 
 DEFAULT_WINDOW_WIDTH = 500
 DEFAULT_WINDOW_HEIGHT = 300
+
+def TextWindow(host,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewText.Window(host,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
 
 def ListWindow(host,MDI,client,parent=None):
 

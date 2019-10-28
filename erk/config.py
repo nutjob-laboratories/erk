@@ -182,7 +182,8 @@ HYPERLINK_STYLE_NAME	= "hyperlink"
 BASE_STYLE_NAME			= "all"
 ERROR_STYLE_NAME		= "error"
 WHOIS_STYLE_NAME		= "whois"
-WHOIS_TEXT_STYLE_NAME	= "whois_results"
+WHOIS_TEXT_STYLE_NAME	= "whois_body"
+NOTICE_TEXT_STYLE_NAME	= "notice_body"
 
 # Read in the ascii emoji list
 ASCIIEMOJIS = {}
@@ -542,6 +543,7 @@ def get_last_server():
 
 # Text display
 
+NOTICE_TEXT_STYLE = "font-style: italic; color: purple;"
 TIMESTAMP_STYLE = "font-weight: bold;"
 USERNAME_STYLE = "font-weight: bold; color: blue;"
 MESSAGE_STYLE = ""
@@ -686,6 +688,7 @@ def patch_text_settings(data):
 	if not ERROR_STYLE_NAME in data: data[ERROR_STYLE_NAME] = ERROR_STYLE
 	if not WHOIS_STYLE_NAME in data: data[WHOIS_STYLE_NAME] = WHOIS_STYLE
 	if not WHOIS_TEXT_STYLE_NAME in data: data[WHOIS_TEXT_STYLE_NAME] = WHOIS_TEXT_STYLE
+	if not NOTICE_TEXT_STYLE_NAME in data: data[NOTICE_TEXT_STYLE_NAME] = NOTICE_TEXT_STYLE
 	if len(data)>s:
 		return [True,data]
 	else:
@@ -712,6 +715,7 @@ def get_text_settings(filename=TEXT_SETTINGS_FILE):
 			ERROR_STYLE_NAME: ERROR_STYLE,
 			WHOIS_STYLE_NAME: WHOIS_STYLE,
 			WHOIS_TEXT_STYLE_NAME: WHOIS_TEXT_STYLE,
+			NOTICE_TEXT_STYLE_NAME: NOTICE_TEXT_STYLE,
 		}
 		with open(filename, "w") as write_data:
 			json.dump(si, write_data, indent=4, sort_keys=True)

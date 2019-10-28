@@ -227,7 +227,7 @@ class Window(QMainWindow):
 						msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ACTION_STYLE_NAME],user+" "+message,timestamp )
 					elif GLYPH_NOTICE in user:
 						user = user.replace(GLYPH_NOTICE,'')
-						msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
+						msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[NOTICE_TEXT_STYLE_NAME],message,timestamp )
 					elif GLYPH_RESUME in user:
 						user = user.replace(GLYPH_RESUME,'')
 						msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],message,timestamp )
@@ -246,11 +246,20 @@ class Window(QMainWindow):
 				self.writeText(msg)
 
 			if len(self.log)>0:
+				# t = datetime.timestamp(datetime.now())
+				# pretty = datetime.fromtimestamp(t).strftime('%B %d, %Y at %H:%M:%S')
+				# msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],"Resumed on "+pretty )
+				# self.writeText(msg)
+				# self.add_to_log(GLYPH_RESUME,"Resumed on "+pretty )
+
 				t = datetime.timestamp(datetime.now())
 				pretty = datetime.fromtimestamp(t).strftime('%B %d, %Y at %H:%M:%S')
-				msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],"Resumed on "+pretty )
-				self.writeText(msg)
-				self.add_to_log(GLYPH_RESUME,"Resumed on "+pretty )
+
+				f = self.font()
+				ptsize = f.pointSize() - 2
+
+				self.channelChatDisplay.insertHtml(HORIZONTAL_RULE)
+				self.add_to_log(GLYPH_RESUME, f"Resumed on {pretty.upper()}" )
 
 	def rerenderText(self):
 		self.channelChatDisplay.clear()
@@ -266,7 +275,7 @@ class Window(QMainWindow):
 					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[ACTION_STYLE_NAME],user+" "+message,timestamp )
 				elif GLYPH_NOTICE in user:
 					user = user.replace(GLYPH_NOTICE,'')
-					msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[MESSAGE_STYLE_NAME],message,timestamp )
+					msg = render_message(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[NOTICE_STYLE_NAME],user,self.gui.styles[NOTICE_TEXT_STYLE_NAME],message,timestamp )
 				elif GLYPH_RESUME in user:
 					user = user.replace(GLYPH_RESUME,'')
 					msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],message,timestamp )

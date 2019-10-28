@@ -45,6 +45,12 @@ Version 0.501
 	* Removed icons from the connection console display
 	* Turned on word wrap in the connection console display
 	* Added '->' for input and '<-' for output in the connection console display
+	* Added timestamps to the connection console display
+	* Fixed a bug where receiving notices would open user windows
+	* Added a new text style: "notice_body" (notices will now be italic purple)
+	* Changed the name of the "whois_result" text style to "whois_body"
+	* Resuming chat is now marked with a horizontal line
+	* Added a server MOTD viewer dialog
 
 Version 0.500
 	* Completely re-written

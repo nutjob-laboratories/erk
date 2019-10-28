@@ -64,6 +64,7 @@ class Connection:
 		self.hostname = 'Unknown'
 		self.modes = ''
 		self.channel_list = None
+		self.motd = None
 
 class Erk(QMainWindow):
 
@@ -672,6 +673,8 @@ class Erk(QMainWindow):
 		self.writeToConsole(obj,msg)
 		self.writeToConsoleLog(obj,'',"<br>".join(motd))
 
+		c.motd = motd
+
 	def irc_network_and_hostname(self,obj,network,hostname):
 		c = self.fetchConnection(obj)
 		c.network = network
@@ -710,31 +713,35 @@ class Erk(QMainWindow):
 			return
 
 		if obj.hostname==None:
-			msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
+			msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[NOTICE_TEXT_STYLE_NAME],text )
 			self.writeToConsole(obj,msg)
 			self.writeToConsoleLog(obj,'&'+user,text)
 			return
 
 		# Catch ctcp-action message
 		if target==obj.nickname:
-			if self.open_private_chat_windows:
-				# Check to see if user window exists
-				if not self.userWindowExists(obj,user):
-					c = self.fetchConnection(obj)
-					win = UserWindow(user,self.MDI,obj,self)
-					c.windows[user] = win
-					self.buildWindowMenu()
-				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
+
+			# Check to see if user window exists
+			if self.userWindowExists(obj,user):
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[NOTICE_TEXT_STYLE_NAME],text )
 				self.writeToChannel(obj,user,msg)
 				self.writeToChannelLog(obj,user,'&'+user,text)
 				return
 			else:
-				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
+				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user,self.styles[NOTICE_TEXT_STYLE_NAME],text )
+				try:
+					w = self.MDI.activeSubWindow()
+					win = w.window
+					if not win.is_console:
+						win.writeText(rmsg)
+				except:
+					pass
+
 				self.writeToConsole(obj,msg)
 				self.writeToConsoleLog(obj,'&'+user,text)
 				return
 
-		msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user+"/"+target,self.styles[MESSAGE_STYLE_NAME],text )
+		msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[NOTICE_STYLE_NAME],user+"/"+target,self.styles[NOTICE_TEXT_STYLE_NAME],text )
 		self.writeToChannel(obj,target,msg)
 		self.writeToChannelLog(obj,target,'&'+user+"/"+target,text)
 
@@ -2335,6 +2342,14 @@ class Erk(QMainWindow):
 
 	def triggerRebuildConnections(self):
 		self.buildConnectionsMenu()
+
+	def view_motd(self,obj):
+
+		for c in self.connections:
+			if c.id==obj.id:
+				x = TextWindow("MOTD for "+obj.server+":"+str(obj.port),self.MDI,obj,self)
+				for l in c.motd:
+					x.write(l)
 
 	def buildConnectionsMenu(self):
 		# self.connectionsMenu
