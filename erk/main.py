@@ -2347,9 +2347,10 @@ class Erk(QMainWindow):
 
 		for c in self.connections:
 			if c.id==obj.id:
-				x = TextWindow("MOTD for "+obj.server+":"+str(obj.port),self.MDI,obj,self)
-				for l in c.motd:
-					x.write(l)
+				if c.motd:
+					x = TextWindow("MOTD for "+obj.server+":"+str(obj.port),self.MDI,obj,self)
+					for l in c.motd:
+						x.write(l)
 
 	def buildConnectionsMenu(self):
 		# self.connectionsMenu
