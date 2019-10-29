@@ -47,6 +47,13 @@ import erk.dialogs.channel_key as ChannelKeyDialog
 
 class Window(QMainWindow):
 
+	def update_hostmask(self,nick,hostmask):
+		if hostmask=='':
+			del self.hostmasks[nick]
+		else:
+			self.hostmasks[nick] = hostmask
+		self.refreshUserlist()
+
 	def add_to_log(self,user,msg):
 		t = datetime.timestamp(datetime.now())
 		e = [t,user,msg]
@@ -116,6 +123,22 @@ class Window(QMainWindow):
 		self.operator = False
 
 		self.channelUserDisplay.clear()
+
+		# Inject hostmasks
+		newusers = []
+		for u in users:
+			p = u.split('!')
+			if len(p)==2:
+				newusers.append(u)
+				continue
+			stripu = u.replace('@','')
+			stripu = stripu.replace('+','')
+			if stripu in self.hostmasks:
+				e = u + '!' + self.hostmasks[stripu]
+				newusers.append(e)
+				continue
+			newusers.append(u)
+		users = newusers
 
 		# Sort the user list
 		ops = []
@@ -313,6 +336,8 @@ class Window(QMainWindow):
 		self.is_away = False
 
 		self.operator = False
+
+		self.hostmasks = {}
 
 		self.channel_settings = get_channel_options(self.client.network,self.name)
 
@@ -937,29 +962,45 @@ class Window(QMainWindow):
 			menu = QMenu(self)
 			menu.setStyle(self.gui.menu_style)
 
-			if user_hostmask:
-				hostmaskLabel = QLabel(f"&nbsp;<i><b>{user_hostmask}</b></i>&nbsp;")
-				hostmaskAction = QWidgetAction(self)
-				hostmaskAction.setDefaultWidget(hostmaskLabel)
-				menu.addAction(hostmaskAction)
+			banner = textSeparator(self,"<b>"+user_nick+"</b>")
+			menu.addAction(banner)
 
 			if user_is_op:
-				statusLabel = QLabel(f"&nbsp;<i>Channel operator</i>&nbsp;")
+				statusLabel = QLabel(f"<center><small><i>Channel operator</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 			elif user_is_voiced:
-				statusLabel = QLabel(f"&nbsp;<i>Voiced user</i>&nbsp;")
+				statusLabel = QLabel(f"<center><small><i>Voiced user</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 			else:
-				statusLabel = QLabel(f"&nbsp;<i>Normal user</i>&nbsp;")
+				statusLabel = QLabel(f"<center><small><i>Normal user</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 
-			menu.addSeparator()
+			if user_hostmask:
+				max_length = self.gui.max_username_length + 12
+				if len(user_hostmask)>max_length:
+					if len(user_hostmask)>=max_length+3:
+						offset = max_length-3
+					elif len(user_hostmask)==max_length+2:
+						offset = max_length-2
+					elif len(user_hostmask)==max_length+1:
+						offset = max_length-1
+					else:
+						offset = max_length
+					display_hostmask = user_hostmask[0:offset]+"..."
+				else:
+					display_hostmask = user_hostmask
+				hostmaskLabel = QLabel(f"<center><small><b>{display_hostmask}</b></small></center>")
+				hostmaskAction = QWidgetAction(self)
+				hostmaskAction.setDefaultWidget(hostmaskLabel)
+				menu.addAction(hostmaskAction)
+
+			#menu.addSeparator()
 
 			if client_is_op:
 				opMenu = menu.addMenu(QIcon(USER_OPERATOR),"Operator Actions")

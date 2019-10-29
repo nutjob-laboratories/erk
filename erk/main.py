@@ -219,6 +219,7 @@ class Erk(QMainWindow):
 			p = user.split('!')
 			if len(p)==2:
 				user = p[0]
+				self.update_user_hostmask(obj,p[0],p[1])
 
 			dmsg = user+" invited "+target+" to the channel"
 			rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
@@ -260,6 +261,8 @@ class Erk(QMainWindow):
 
 	def irc_whois(self,obj,whoisdata):
 
+		self.update_user_hostmask(obj,whoisdata.nickname,whoisdata.username+"@"+whoisdata.host)
+
 		pretty = datetime.fromtimestamp(int(whoisdata.signon)).strftime('%B %d, %Y at %H:%M:%S')
 
 		if int(whoisdata.idle)>1:
@@ -289,6 +292,7 @@ class Erk(QMainWindow):
 		p = kicker.split("!")
 		if len(p)==2:
 			kicker=p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 
 		if len(message)>0:
 			dmsg = kicker+" kicked "+target+" from "+channel+" ("+message+")"
@@ -351,6 +355,7 @@ class Erk(QMainWindow):
 		p = kicker.split('!')
 		if len(p)==2:
 			kicker = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 
 		for c in self.connections:
 			if c.id==obj.id:
@@ -371,6 +376,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
+			self.update_user_hostmask(obj,p[0],'')
 
 		if qmsg!='':
 			self.serverLog(obj,user+" has quit IRC ("+qmsg+")")
@@ -456,6 +462,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 
 		reportadd = []
 		reportremove = []
@@ -629,7 +636,9 @@ class Erk(QMainWindow):
 
 	def irc_topic(self,obj,user,channel,topic):
 		p = user.split('!')
-		if len(p)==2: user = p[0]
+		if len(p)==2:
+			user = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 		for c in self.connections:
 			if c.id==obj.id:
 				for chan in c.windows:
@@ -712,6 +721,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
@@ -759,6 +769,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
@@ -790,6 +801,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
@@ -871,6 +883,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			nick = p[0]
+			self.update_user_hostmask(obj,p[0],p[1])
 		else:
 			nick = user
 
@@ -892,6 +905,7 @@ class Erk(QMainWindow):
 		p = user.split('!')
 		if len(p)==2:
 			nick = p[0]
+			self.update_user_hostmask(obj,p[0],'')
 		else:
 			nick = user
 
@@ -994,6 +1008,24 @@ class Erk(QMainWindow):
 	# |============================|
 	# | GUI HELPER FUNCTIONS BEGIN |
 	# |============================|
+
+	def update_user_hostmask(self,obj,tnick,hostmask):
+		for c in self.connections:
+			if c.id==obj.id:
+				for channel in c.windows:
+					for u in c.windows[channel].users:
+						p = u.split('!')
+						if len(p)==2:
+							nick = p[0]
+						else:
+							nick = u
+
+						nick = nick.replace('@','')
+						nick = nick.replace('+','')
+
+						if nick==tnick:
+							c.windows[channel].update_hostmask(tnick,hostmask)
+							break
 
 	def serverLog(self,obj,text):
 		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],text )

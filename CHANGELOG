@@ -55,6 +55,8 @@ Version 0.501
 	* Made the "Settings" menu a little nicer looking
 	* Fixed a bug in handing QUIT messages (wouldn't always be handled properly)
 	* Added options to channel windows that allow the user to filter/block certain types of messages
+	* The client now grabs hostmasks from wherever it can (if UHNAMES is not working)
+	* Userlist context menus look a little better
 
 Version 0.500
 	* Completely re-written
