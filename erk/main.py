@@ -652,6 +652,14 @@ class Erk(QMainWindow):
 									self.writeToChannelLog(obj,chan,'',user+" set the topic to \""+topic+"\"")
 								# Make sure the app title is updated if necessary
 								self.updateActiveChild(self.MDI.activeSubWindow())
+							else:
+								if user!=obj.hostname:
+									if not c.windows[chan].ignore_topic_messages:
+										msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" set the topic to nothing" )
+										self.writeToChannel(obj,chan,msg)
+										self.writeToChannelLog(obj,chan,'',user+" set the topic to nothing")
+									# Make sure the app title is updated if necessary
+									self.updateActiveChild(self.MDI.activeSubWindow())
 
 	def irc_banlist(self,obj,channel,banlist):
 		for c in self.connections:

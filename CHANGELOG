@@ -57,6 +57,8 @@ Version 0.501
 	* Added options to channel windows that allow the user to filter/block certain types of messages
 	* The client now grabs hostmasks from wherever it can (if UHNAMES is not working)
 	* Userlist context menus look a little better
+	* Added an option to channel windows to set the channel topic (if channel modes allow)
+	* Added a notification for users setting the channel topic to nothing
 
 Version 0.500
 	* Completely re-written

@@ -44,6 +44,7 @@ from erk.spelledit import *
 import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 import erk.dialogs.channel_key as ChannelKeyDialog
+import erk.dialogs.topic as TopicDialog
 
 class Window(QMainWindow):
 
@@ -241,6 +242,7 @@ class Window(QMainWindow):
 				self.modeson = self.modeson + l
 		self.rebuildModesMenu()
 		if self.operator: self.rebuildAdminMenu()
+		self.rebuildOptionsMenu()
 
 	def removeModes(self,modes):
 		for l in modes.split():
@@ -252,6 +254,7 @@ class Window(QMainWindow):
 				self.modesoff = self.modesoff + l
 		self.rebuildModesMenu()
 		if self.operator: self.rebuildAdminMenu()
+		self.rebuildOptionsMenu()
 
 	def setKey(self,key):
 		self.key = key
@@ -531,12 +534,14 @@ class Window(QMainWindow):
 			self.client.sendLine(f"MODE {self.name} +k {key}")
 			return
 		self.client.mode(self.name,True,mode,None,None)
+		self.rebuildOptionsMenu()
 
 	def doAdminRemove(self,mode):
 		if mode=="k":
 			self.client.sendLine(f"MODE {self.name} -k {self.key}")
 			return
 		self.client.mode(self.name,False,mode,None,None)
+		self.rebuildOptionsMenu()
 
 	def rebuildAdminMenu(self):
 		self.actAdmin.clear()
@@ -739,6 +744,17 @@ class Window(QMainWindow):
 	def rebuildOptionsMenu(self):
 		self.actOptions.clear()
 
+		if not "t" in self.modeson:
+			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			self.actTopic.triggered.connect(self.menuTopic)
+			self.actOptions.addAction(self.actTopic)
+		elif self.operator:
+			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			self.actTopic.triggered.connect(self.menuTopic)
+			self.actOptions.addAction(self.actTopic)
+
+		self.actOptions.addSeparator()
+
 		self.menuFilter = self.actOptions.addMenu(QIcon(DO_NOT_DISPLAY_ICON),"Don't display...")
 
 		self.ignoreKick = QAction("kick messages",self,checkable=True)
@@ -771,8 +787,7 @@ class Window(QMainWindow):
 		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
 		self.menuFilter.addAction(self.ignoreNick)
 
-
-
+		
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()
@@ -821,6 +836,15 @@ class Window(QMainWindow):
 		if not nick: return
 
 		self.client.setNick(nick)
+
+	def menuTopic(self):
+		x = TopicDialog.Dialog(self.topic)
+		topic = x.get_topic_information(self.topic)
+
+		if not topic:
+			if topic!='': return
+
+		self.client.topic(self.name,topic)
 
 	def eventFilter(self, source, event):
 
