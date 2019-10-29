@@ -53,6 +53,8 @@ Version 0.501
 	* Added a server MOTD viewer dialog
 	* Added text-separators to the "Windows" menu
 	* Made the "Settings" menu a little nicer looking
+	* Fixed a bug in handing QUIT messages (wouldn't always be handled properly)
+	* Added options to channel windows that allow the user to filter/block certain types of messages
 
 Version 0.500
 	* Completely re-written

@@ -295,16 +295,13 @@ class Erk(QMainWindow):
 		else:
 			dmsg = kicker+" kicked "+target+" from "+channel
 
-		rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
-		self.writeToChannel(obj,channel,rmsg)
-		self.writeToChannelLog(obj,channel,'',dmsg)
-
 		self.serverLog(obj,dmsg)
 
 		for c in self.connections:
 			if c.id==obj.id:
 				if channel in c.windows:
 					clean = []
+					dont_display_kick = c.windows[channel].ignore_kick_messages
 					for u in c.windows[channel].users:
 						p = u.split('!')
 						if len(p)==2:
@@ -317,6 +314,11 @@ class Erk(QMainWindow):
 						clean.append(u)
 					c.windows[channel].users = clean
 					c.windows[channel].refreshUserlist()
+
+		if not dont_display_kick:
+			rmsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],dmsg )
+			self.writeToChannel(obj,channel,rmsg)
+			self.writeToChannelLog(obj,channel,'',dmsg)
 
 	def irc_parting(self,obj,channel):
 		self.is_parting.append(channel)
@@ -379,7 +381,9 @@ class Erk(QMainWindow):
 			if c.id==obj.id:
 				for channel in c.windows:
 					if not c.windows[channel].is_channel: continue
+					dont_display_quit = c.windows[channel].ignore_quit_messages
 					clean = []
+					found = False
 					for u in c.windows[channel].users:
 						p = u.split('!')
 						if len(p)==2:
@@ -388,19 +392,24 @@ class Erk(QMainWindow):
 							tnick = u
 						tnick = tnick.replace('@','')
 						tnick = tnick.replace('!','')
-						if tnick==user: continue
+						if tnick==user:
+							found = True
+							continue
 						clean.append(u)
-					c.windows[channel].users = clean
-					c.windows[channel].refreshUserlist()
 
-					if qmsg!='':
-						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC ("+qmsg+")" )
-						self.writeToChannel(obj,channel, msg )
-						self.writeToChannelLog(obj,channel,'',user+" has quit IRC ("+qmsg+")")
-					else:
-						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC" )
-						self.writeToChannel(obj,channel, msg )
-						self.writeToChannelLog(obj,channel,'',user+" has quit IRC")
+					if found:
+						c.windows[channel].users = clean
+						c.windows[channel].refreshUserlist()
+
+						if not dont_display_quit:
+							if qmsg!='':
+								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC ("+qmsg+")" )
+								self.writeToChannel(obj,channel, msg )
+								self.writeToChannelLog(obj,channel,'',user+" has quit IRC ("+qmsg+")")
+							else:
+								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" has quit IRC" )
+								self.writeToChannel(obj,channel, msg )
+								self.writeToChannelLog(obj,channel,'',user+" has quit IRC")
 
 
 	def irc_error(self,obj,msg):
@@ -628,9 +637,10 @@ class Erk(QMainWindow):
 						if chan==channel:
 							c.windows[chan].updateTopic(topic)
 							if topic!='':
-								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" set the topic to \""+topic+"\"" )
-								self.writeToChannel(obj,chan,msg)
-								self.writeToChannelLog(obj,chan,'',user+" set the topic to \""+topic+"\"")
+								if not c.windows[chan].ignore_topic_messages:
+									msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],user+" set the topic to \""+topic+"\"" )
+									self.writeToChannel(obj,chan,msg)
+									self.writeToChannelLog(obj,chan,'',user+" set the topic to \""+topic+"\"")
 								# Make sure the app title is updated if necessary
 								self.updateActiveChild(self.MDI.activeSubWindow())
 
@@ -873,9 +883,10 @@ class Erk(QMainWindow):
 					c.windows[channel].refreshUserlist()
 					# self.writeToChannel(obj,channel, nick+" has joined "+channel )
 
-					msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has joined "+channel )
-					self.writeToChannel(obj,channel, msg )
-					self.writeToChannelLog(obj,channel,'',nick+" has joined "+channel)
+					if not c.windows[channel].ignore_join_messages:
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has joined "+channel )
+						self.writeToChannel(obj,channel, msg )
+						self.writeToChannelLog(obj,channel,'',nick+" has joined "+channel)
 
 	def irc_part(self,obj,user,channel):
 		p = user.split('!')
@@ -904,9 +915,10 @@ class Erk(QMainWindow):
 					c.windows[channel].refreshUserlist()
 					#self.writeToChannel(obj,channel, nick+" has left "+channel )
 
-					msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has left "+channel )
-					self.writeToChannel(obj,channel, msg )
-					self.writeToChannelLog(obj,channel,'',nick+" has left "+channel)
+					if not c.windows[channel].ignore_part_messages:
+						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has left "+channel )
+						self.writeToChannel(obj,channel, msg )
+						self.writeToChannelLog(obj,channel,'',nick+" has left "+channel)
 
 
 	def irc_nick_changed(self,obj,oldnick,newnick):
@@ -953,14 +965,15 @@ class Erk(QMainWindow):
 						c.windows[channel].users = clean
 						c.windows[channel].refreshUserlist()
 
-						if obj.nickname==oldnick:
-							msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], "You are now known as "+newnick )
-							self.writeToChannel(obj,channel, msg )
-							self.writeToChannelLog(obj,channel,'',"You are now known as "+newnick)
-						else:
-							msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], oldnick+" is now known as "+newnick )
-							self.writeToChannel(obj,channel, msg )
-							self.writeToChannelLog(obj,channel,'',oldnick+" is now known as "+newnick)
+						if not c.windows[channel].ignore_nick_messages:
+							if obj.nickname==oldnick:
+								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], "You are now known as "+newnick )
+								self.writeToChannel(obj,channel, msg )
+								self.writeToChannelLog(obj,channel,'',"You are now known as "+newnick)
+							else:
+								msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME], oldnick+" is now known as "+newnick )
+								self.writeToChannel(obj,channel, msg )
+								self.writeToChannelLog(obj,channel,'',oldnick+" is now known as "+newnick)
 
 		if renamed_user_window:
 			if newwin:

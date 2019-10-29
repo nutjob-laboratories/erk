@@ -268,6 +268,9 @@ class Window(QMainWindow):
 		self.actBans.setStyle(self.gui.menu_style)
 		self.rebuildBanMenu()
 
+		self.actOptions = self.menubar.addMenu("Options")
+		self.rebuildOptionsMenu()
+
 	def buildOperatorMenus(self):
 		self.menubar.clear()
 
@@ -279,7 +282,10 @@ class Window(QMainWindow):
 		self.actBans.setStyle(self.gui.menu_style)
 		self.rebuildBanMenu()
 
-		self.actAdmin = self.menubar.addMenu("Operator")
+		self.actOptions = self.menubar.addMenu("Options")
+		self.rebuildOptionsMenu()
+
+		self.actAdmin = self.menubar.addMenu("Administrate")
 		self.actAdmin.setStyle(self.gui.menu_style)
 		self.rebuildAdminMenu()
 
@@ -307,6 +313,15 @@ class Window(QMainWindow):
 		self.is_away = False
 
 		self.operator = False
+
+		self.channel_settings = get_channel_options(self.client.network,self.name)
+
+		self.ignore_join_messages = self.channel_settings["ignore_join"]
+		self.ignore_part_messages = self.channel_settings["ignore_part"]
+		self.ignore_nick_messages = self.channel_settings["ignore_nick"]
+		self.ignore_topic_messages = self.channel_settings["ignore_topic"]
+		self.ignore_quit_messages = self.channel_settings["ignore_quit"]
+		self.ignore_kick_messages = self.channel_settings["ignore_kick"]
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW))
@@ -644,6 +659,95 @@ class Window(QMainWindow):
 			f.setItalic(True)
 			mMode.setFont(f)
 			self.actModes.addAction(mMode)
+
+	def toggleIgnoreOption(self,opt):
+
+		if opt=="kick":
+			if self.ignore_kick_messages:
+				self.ignore_kick_messages = False
+			else:
+				self.ignore_kick_messages = True
+			self.channel_settings["ignore_kick"] = self.ignore_kick_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+		if opt=="quit":
+			if self.ignore_quit_messages:
+				self.ignore_quit_messages = False
+			else:
+				self.ignore_quit_messages = True
+			self.channel_settings["ignore_quit"] = self.ignore_quit_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+		if opt=="topic":
+			if self.ignore_topic_messages:
+				self.ignore_topic_messages = False
+			else:
+				self.ignore_topic_messages = True
+			self.channel_settings["ignore_topic"] = self.ignore_topic_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+		if opt=="nick":
+			if self.ignore_nick_messages:
+				self.ignore_nick_messages = False
+			else:
+				self.ignore_nick_messages = True
+			self.channel_settings["ignore_nick"] = self.ignore_nick_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+		if opt=="join":
+			if self.ignore_join_messages:
+				self.ignore_join_messages = False
+			else:
+				self.ignore_join_messages = True
+			self.channel_settings["ignore_join"] = self.ignore_join_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+		if opt=="part":
+			if self.ignore_part_messages:
+				self.ignore_part_messages = False
+			else:
+				self.ignore_part_messages = True
+			self.channel_settings["ignore_part"] = self.ignore_part_messages
+			save_channel_options(self.client.network,self.name,self.channel_settings)
+
+
+	def rebuildOptionsMenu(self):
+		self.actOptions.clear()
+
+		self.menuFilter = self.actOptions.addMenu(QIcon(DO_NOT_DISPLAY_ICON),"Don't display...")
+
+		self.ignoreKick = QAction("kick messages",self,checkable=True)
+		self.ignoreKick.setChecked(self.ignore_kick_messages)
+		self.ignoreKick.triggered.connect(lambda state,l="kick": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignoreKick)
+
+		self.ignoreQuit = QAction("quit messages",self,checkable=True)
+		self.ignoreQuit.setChecked(self.ignore_quit_messages)
+		self.ignoreQuit.triggered.connect(lambda state,l="quit": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignoreQuit)
+
+		self.ignoreTopic = QAction("topic messages",self,checkable=True)
+		self.ignoreTopic.setChecked(self.ignore_topic_messages)
+		self.ignoreTopic.triggered.connect(lambda state,l="topic": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignoreTopic)
+
+		self.ignoreJoin = QAction("join messages",self,checkable=True)
+		self.ignoreJoin.setChecked(self.ignore_join_messages)
+		self.ignoreJoin.triggered.connect(lambda state,l="join": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignoreJoin)
+
+		self.ignorePart = QAction("part messages",self,checkable=True)
+		self.ignorePart.setChecked(self.ignore_part_messages)
+		self.ignorePart.triggered.connect(lambda state,l="part": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignorePart)
+
+		self.ignoreNick = QAction("nick messages",self,checkable=True)
+		self.ignoreNick.setChecked(self.ignore_nick_messages)
+		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
+		self.menuFilter.addAction(self.ignoreNick)
+
+
+
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()

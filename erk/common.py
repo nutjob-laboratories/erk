@@ -233,6 +233,7 @@ S_ICON = ":/s.png"
 T_ICON = ":/t.png"
 INFO_ICON = ":/info.png"
 TEXT_ICON = ":/text.png"
+DO_NOT_DISPLAY_ICON = ":/no_display.png"
 
 HORIZONTAL_RULE = f'''
 <table width="100%" border="0">

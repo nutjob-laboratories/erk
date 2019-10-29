@@ -513,6 +513,36 @@ def save_user(user,filename=USER_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(user, write_data, indent=4, sort_keys=True)
 
+
+def encode_channel_options_filename(network,channel):
+	channel = channel.replace('#','')
+	return os.path.join(USER_DIRECTORY, network+"-"+channel+"-options.json")
+
+def get_channel_options(network,channel):
+	chanfile = encode_channel_options_filename(network,channel)
+	if os.path.isfile(chanfile):
+		with open(chanfile, "r") as read_user:
+			data = json.load(read_user)
+			return data
+	else:
+		si = {
+			"ignore_part": False,
+			"ignore_join": False,
+			"ignore_nick": False,
+			"ignore_topic": False,
+			"ignore_quit": False,
+			"ignore_kick": False,
+		}
+		return si
+
+def save_channel_options(network,channel,data):
+	chanfile = encode_channel_options_filename(network,channel)
+	with open(chanfile, "w") as write_data:
+		json.dump(data, write_data, indent=4, sort_keys=True)
+
+
+
+
 def save_last_server(host,port,password,ssl,reconnect=False,autojoin=False):
 	sinfo = {
 			"host": host,
