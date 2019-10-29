@@ -726,6 +726,7 @@ class Erk(QMainWindow):
 			update_history_network(obj.server,obj.port,network)
 
 	def irc_notice(self,obj,user,target,text):
+		if not self.window_is_active: self.IS_FLASHING = True
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -774,6 +775,7 @@ class Erk(QMainWindow):
 		self.writeToChannelLog(obj,target,'&'+user+"/"+target,text)
 
 	def irc_action(self,obj,user,target,text):
+		if not self.window_is_active: self.IS_FLASHING = True
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -806,6 +808,7 @@ class Erk(QMainWindow):
 		self.writeToChannelLog(obj,target,'+'+user,text)
 
 	def irc_privmsg(self,obj,user,target,text):
+		if not self.window_is_active: self.IS_FLASHING = True
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -1253,6 +1256,9 @@ class Erk(QMainWindow):
 
 	def closeEvent(self, event):
 
+		self.clock.stop()
+		self.tray.hide()
+
 		self.quitting = True
 
 		# Close all windows (so that logs are saved)
@@ -1389,6 +1395,33 @@ class Erk(QMainWindow):
 			if e.lower()==user.lower(): return True
 		return False
 
+	def eventFilter(self, obj, event):
+		if event.type() == QEvent.WindowActivate:
+			self.window_is_active = True
+			self.IS_FLASHING = False
+		elif event.type()== QEvent.WindowDeactivate:
+			self.window_is_active = False
+		elif event.type()== QEvent.FocusIn:
+			self.window_is_active = True
+			self.IS_FLASHING = False
+		elif event.type()== QEvent.FocusOut:
+			self.window_is_active = False
+
+		return QMainWindow.eventFilter(self,obj,event)
+
+	def clock_tick(self):
+		if self.systray_notification:
+			if self.IS_FLASHING:
+				if self.FLASH_STATE==0:
+					self.FLASH_STATE = 1
+					self.tray.setIcon(self.flash_icon)
+				else:
+					self.FLASH_STATE = 0
+					self.tray.setIcon(self.tray_icon)
+			else:
+				self.FLASH_STATE = 0
+				self.tray.setIcon(self.tray_icon)
+
 	def __init__(self,app,settings_file=SETTINGS_FILE,text_settings_file=TEXT_SETTINGS_FILE,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -1396,6 +1429,10 @@ class Erk(QMainWindow):
 		self.parent = parent
 		self.settings_file = settings_file
 		self.text_settings_file = text_settings_file
+
+		self.installEventFilter(self)
+
+		self.window_is_active = True
 
 		self.quitting = False
 		self.disconnecting = False
@@ -1417,6 +1454,13 @@ class Erk(QMainWindow):
 		self.styles = get_text_settings(self.text_settings_file)
 
 		self.settings = get_settings(self.settings_file)
+
+		self.tray_icon = QIcon(ERK_ICON)
+		self.flash_icon = QIcon(FLASH_ICON)
+
+		self.clock = Clock()
+		self.clock.beat.connect(self.clock_tick)
+		self.clock.start()
 
 		# Settings changable via the gui
 		self.open_private_chat_windows				= self.settings[SETTING_OPEN_PRIVATE_WINDOWS]
@@ -1452,6 +1496,7 @@ class Erk(QMainWindow):
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
 		self.display_extended_conn_info				= self.settings[SETTING_SHOW_CONNECTION_INFO]
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
+		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
@@ -1471,6 +1516,15 @@ class Erk(QMainWindow):
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
+
+		self.tray = QSystemTrayIcon(self)
+		self.tray.setIcon(self.tray_icon)
+
+		if self.systray_notification:
+			self.tray.show()
+
+		self.IS_FLASHING = False
+		self.FLASH_STATE = 0
 
 		# Custom style for various menus
 		self.menu_style = ErkSmallStyle('Windows')
@@ -1638,6 +1692,11 @@ class Erk(QMainWindow):
 		timestampSubMenu.addAction(self.actToggleSecondsTimestamp)
 
 		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
+
+		self.actTray = QAction("System tray message notification",self,checkable=True)
+		self.actTray.setChecked(self.systray_notification)
+		self.actTray.triggered.connect(self.menuTray)
+		chatSubMenu.addAction(self.actTray)
 
 		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
 		self.actEmoji.setChecked(self.use_emojis)
@@ -1835,6 +1894,16 @@ class Erk(QMainWindow):
 	def menuAbout(self):
 		x = AboutDialog.Dialog(self)
 		x.show()
+
+	def menuTray(self):
+		if self.systray_notification:
+			self.systray_notification = False
+			self.tray.hide()
+		else:
+			self.systray_notification = True
+			self.tray.show()
+		self.settings[SETTING_SYSTRAY_NOTIFICATION] = self.systray_notification
+		save_settings(self.settings,self.settings_file)
 
 	def menuRejoin(self):
 		if self.rejoin_channels:
@@ -2565,3 +2634,20 @@ class Erk(QMainWindow):
 		self.allow_ignore = False
 		self.actIgnore.setVisible(False)
 		self.actToggleIgnore.setEnabled(False)
+
+class Clock(QThread):
+
+	beat = pyqtSignal()
+
+	def __init__(self,parent=None):
+		super(Clock, self).__init__(parent)
+		self.threadactive = True
+
+	def run(self):
+		while self.threadactive:
+			time.sleep(0.5)
+			self.beat.emit()
+
+	def stop(self):
+		self.threadactive = False
+		self.wait()

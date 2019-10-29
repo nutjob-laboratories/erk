@@ -59,6 +59,7 @@ Version 0.501
 	* Userlist context menus look a little better
 	* Added an option to channel windows to set the channel topic (if channel modes allow)
 	* Added a notification for users setting the channel topic to nothing
+	* Added system tray icon for optional unread message notification
 
 Version 0.500
 	* Completely re-written

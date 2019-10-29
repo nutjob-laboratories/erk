@@ -149,6 +149,8 @@ SETTING_ENABLE_IGNORE				= "enable_user_ignore"
 SETTING_SHOW_CONNECTION_INFO		= "display_extended_connection_information"
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
 
+SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
+
 UNKNOWN_IRC_NETWORK = "Unknown"
 
 DEFAULT_KEEPALIVE_INTERVAL = 120
@@ -329,6 +331,7 @@ def patch_config_file(data):
 	if not SETTING_ENABLE_IGNORE in data: data[SETTING_ENABLE_IGNORE] = True
 	if not SETTING_SHOW_CONNECTION_INFO in data: data[SETTING_SHOW_CONNECTION_INFO] = False
 	if not SETTING_REJOIN_CHANNELS in data: data[SETTING_REJOIN_CHANNELS] = True
+	if not SETTING_SYSTRAY_NOTIFICATION in data: data[SETTING_SYSTRAY_NOTIFICATION] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -380,6 +383,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_ENABLE_IGNORE: True,
 			SETTING_SHOW_CONNECTION_INFO: False,
 			SETTING_REJOIN_CHANNELS: True,
+			SETTING_SYSTRAY_NOTIFICATION: True,
 		}
 		save_settings(si)
 		return si
