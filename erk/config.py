@@ -749,8 +749,7 @@ def get_text_settings(filename=TEXT_SETTINGS_FILE):
 			WHOIS_TEXT_STYLE_NAME: WHOIS_TEXT_STYLE,
 			NOTICE_TEXT_STYLE_NAME: NOTICE_TEXT_STYLE,
 		}
-		with open(filename, "w") as write_data:
-			json.dump(si, write_data, indent=4, sort_keys=True)
+		write_style_file(si,filename)
 		return si
 
 def remove_html_markup(s):
@@ -1034,10 +1033,10 @@ def strip_color(text):
 	return text
 
 def write_style_file(style,filename):
-	output = ''
+	output = "/*\n\tThis file uses a sub-set of CSS used by Qt called \"QSS\"\n\thttps://doc.qt.io/qt-5/stylesheet-syntax.html\n*/\n\n"
 
 	for key in style:
-		output = output + key + "{\n"
+		output = output + key + " {\n"
 		for s in style[key].split(';'):
 			s = s.strip()
 			if len(s)==0: continue

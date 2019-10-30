@@ -74,6 +74,8 @@ Version 0.501
 	* Fixed a bug where user modes were not displayed properly in the "Connections" menu
 	* Got rid of the "Settings->Windows" menu (entries were moved to the "Settings->Display" anmd "Settings->Chat" menus)
 	* Fixed a bug where a server's MOTD window would not be closed on disconnection
+	* Fixed a bug where the text formatting config file would not be generated correctly
+	* Added a link to Qt's QSS website in a comment in the text formatting config file
 
 Version 0.500
 	* Completely re-written

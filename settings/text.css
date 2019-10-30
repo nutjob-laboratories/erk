@@ -1,75 +1,76 @@
-action{
-	font-style: italic;
+/*
+	This file uses a sub-set of CSS used by Qt called "QSS"
+	https://doc.qt.io/qt-5/stylesheet-syntax.html
+*/
+
+timestamp {
 	font-weight: bold;
-	color: green;
 }
 
-all{
-	background-color: white;
-	color: black;
-}
-
-error{
-	font-style: italic;
-	font-weight: bold;
-	color: red;
-}
-
-hyperlink{
-	text-decoration: underline;
+username {
 	font-weight: bold;
 	color: blue;
 }
 
-message{
+message {
 }
 
-notice{
-	font-weight: bold;
-	color: purple;
-}
-
-resume{
-	font-weight: bold;
-	font-style: italic;
-	color: #707070;
-}
-
-self{
-	font-weight: bold;
-	color: red;
-}
-
-system{
+system {
 	font-style: italic;
 	font-weight: bold;
 	color: orange;
 }
 
-timestamp{
+self {
 	font-weight: bold;
+	color: red;
 }
 
-username{
+action {
+	font-style: italic;
+	font-weight: bold;
+	color: green;
+}
+
+notice {
+	font-weight: bold;
+	color: purple;
+}
+
+resume {
+	font-weight: bold;
+	font-style: italic;
+	color: #707070;
+}
+
+hyperlink {
+	text-decoration: underline;
 	font-weight: bold;
 	color: blue;
 }
 
-whois{
+all {
+	background-color: white;
+	color: black;
+}
+
+error {
+	font-style: italic;
+	font-weight: bold;
+	color: red;
+}
+
+whois {
 	font-style: italic;
 	font-weight: bold;
 	color: blue;
 }
 
-whois_results{
+whois_body {
 	font-weight: bold;
 }
 
-whois_body{
-	font-weight: bold;
-}
-
-notice_body{
+notice_body {
 	font-style: italic;
 	color: purple;
 }
