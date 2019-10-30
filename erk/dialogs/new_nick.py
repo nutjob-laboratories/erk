@@ -39,8 +39,8 @@ from erk.common import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_nick_information(parent=None):
-		dialog = Dialog(parent)
+	def get_nick_information(nick,parent=None):
+		dialog = Dialog(nick,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -54,10 +54,11 @@ class Dialog(QDialog):
 
 		return retval
 
-	def __init__(self,parent=None):
+	def __init__(self,nick,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.nick = nick
 
 		self.setWindowTitle(f"Change nickname")
 		self.setWindowIcon(QIcon(USER_ICON))
@@ -68,6 +69,8 @@ class Dialog(QDialog):
 		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
+
+		self.name.setPlaceholderText(self.nick)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)

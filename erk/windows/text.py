@@ -43,9 +43,21 @@ class Window(QMainWindow):
 		event.accept()
 
 	def write(self,line):
-		ui = QListWidgetItem()
-		ui.setText(line)
-		self.textLineDisplay.addItem(ui)
+		# ui = QListWidgetItem()
+		# ui.setText(line)
+
+		# if self.linecolor == 0:
+		# 	self.linecolor = 1
+		# 	ui.setBackground(QColor("#FFFFFF"))
+		# else:
+		# 	self.linecolor = 0
+		# 	ui.setBackground(QColor("#E7E7E7"))
+
+
+		# self.textLineDisplay.addItem(ui)
+
+		self.textDisplay.append(line)
+		self.textDisplay.moveCursor(QTextCursor.Start)
 
 	def __init__(self,name,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -57,18 +69,19 @@ class Window(QMainWindow):
 
 		self.server = name
 
-		# self.grey = QColor("#E7E7E7")
-		# self.write = QColor("#FFFFFF")
-
-		#print(self.grey)
+		self.linecolor = 0
 
 		self.setWindowTitle(" "+self.name)
-		self.setWindowIcon(QIcon(TEXT_ICON))
+		self.setWindowIcon(QIcon(TEXT_WINDOW))
 
-		self.textLineDisplay = QListWidget(self)
-		self.textLineDisplay.setObjectName("textLineDisplay")
-		self.textLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
+		# self.textLineDisplay = QListWidget(self)
+		# self.textLineDisplay.setObjectName("textLineDisplay")
+		# self.textLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
-		self.setCentralWidget(self.textLineDisplay)
+		self.textDisplay = QTextBrowser(self)
+		self.textDisplay.setObjectName("textDisplay")
+		self.textDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
+
+		self.setCentralWidget(self.textDisplay)
 
 		

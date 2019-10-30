@@ -159,6 +159,7 @@ USER_WINDOW = ":/gui-user.png"
 CHANNEL_WINDOW = ":/gui-channel.png"
 CONSOLE_WINDOW = ":/gui-console.png"
 LOCKED_CHANNEL = ":/gui-locked.png"
+TEXT_WINDOW = ":/gui-text.png"
 
 USER_OPERATOR = ":/gui-chanoperator.png"
 USER_VOICED = ":/gui-chanvoiced.png"
@@ -185,22 +186,21 @@ FANCY_USER_ICON = ":/gui-fancy_user.png"
 
 CONSOLE_BACKGROUND = ":/gui-console_background.png"
 
-IRC_NETWORK_MENU_ICON = ":/gui-network_menu.png"
-USER_MENU_ICON = ":/gui-user_menu.png"
-
 HR_LINE_IMAGE = ":/gui-horizontal_rule.png"
+
+ERK_ICON = ":/gui-erk.png"
+FLASH_ICON = ":/gui-flash.png"
+CASCADE_ICON = ":/gui-cascade.png"
+TILE_ICON = ":/gui-tile.png"
 
 # ---------
 # | ICONS |
 # ---------
 
-ERK_ICON = ":/erk.png"
 SERVER_ICON = ":/server.png"
 NETWORK_ICON = ":/network.png"
 EXIT_ICON = ":/exit.png"
 RESTART_ICON = ":/restart.png"
-CASCADE_ICON = ":/cascade.png"
-TILE_ICON = ":/tile.png"
 FONT_ICON = ":/font.png"
 CHAT_ICON = ":/chat.png"
 LOG_ICON = ":/log.png"
@@ -231,11 +231,10 @@ RESIZE_ICON = ":/resize.png"
 P_ICON = ":/p.png"
 S_ICON = ":/s.png"
 T_ICON = ":/t.png"
-INFO_ICON = ":/info.png"
-TEXT_ICON = ":/text.png"
 DO_NOT_DISPLAY_ICON = ":/no_display.png"
 TOPIC_ICON = ":/topic.png"
-FLASH_ICON = ":/flash.png"
+PART_ICON = ":/part.png"
+MOTD_ICON = ":/motd.png"
 
 HORIZONTAL_RULE = f'''
 <table width="100%" border="0">
@@ -263,6 +262,14 @@ TEXT_SEPARATOR = f'''
 def textSeparator(self,text):
 
 	tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
+def centerText(self,text):
+
+	tsLabel = QLabel( "<center><small>"+text+"</small></center>" )
 	tsAction = QWidgetAction(self)
 	tsAction.setDefaultWidget(tsLabel)
 

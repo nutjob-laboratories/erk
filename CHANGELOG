@@ -60,6 +60,17 @@ Version 0.501
 	* Added an option to channel windows to set the channel topic (if channel modes allow)
 	* Added a notification for users setting the channel topic to nothing
 	* Added system tray icon for optional unread message notification
+	* Fixed bug in rejoining channels on disconnection
+	* Added a "leave channel" item in the channel options menu
+	* Fixed a bug where the two console window menus didn't have the same size icons
+	* Changed the "disconnect" icon to be more visible
+	* Moved four icons (Erk, Cascade, Tile, and Flash) into the /resources/gui folder
+	* Changed the icon for the text display window
+	* Current nickname is now displayed in the "change nick" dialog
+	* Streamlined the "Connections" menu
+	* Removed the small "Connections" menu icons from the app
+	* Removed "show extended connection details" option (as it is no longer needed)
+	* Changed the MOTD icon
 
 Version 0.500
 	* Completely re-written

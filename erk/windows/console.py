@@ -297,7 +297,6 @@ class Window(QMainWindow):
 		self.kicklen = 0
 		self.awaylen = 0
 		self.maxtargets = 0
-		#self.network = ""
 		self.casemapping = ""
 		self.cmds = []
 		self.prefix = []
@@ -315,9 +314,7 @@ class Window(QMainWindow):
 		self.channelChatDisplay.setObjectName("channelChatDisplay")
 		self.channelChatDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelChatDisplay.anchorClicked.connect(self.linkClicked)
-		# self.channelChatDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
-		# css =  "QTextEdit { background-image: url(" + CONSOLE_BACKGROUND + "); background-attachment: fixed; background-repeat: no-repeat; background-position: right; }"
 		css =  "QTextEdit { background-image: url(" + CONSOLE_BACKGROUND + "); background-attachment: fixed; background-repeat: no-repeat; background-position: top right; "+self.gui.styles[BASE_STYLE_NAME]+" }"
 		self.channelChatDisplay.setStyleSheet(css)
 
@@ -370,15 +367,8 @@ class Window(QMainWindow):
 		interface.setLayout(dumpLayout)
 
 		self.tabs.addTab(interface,"Connection")
-		#self.tabs.addTab(self.ircLineDisplay,"DUMP")
 
 		self.setCentralWidget(self.tabs)
-
-		# self.setCentralWidget(interface)
-
-		# self.menubar = self.menuBar()
-		# menuBoldText = self.menubar.font()
-		# menuBoldText.setBold(True)
 
 		self.menubar = QMenuBar()
 		self.menubar.setFont(fontnormal)
@@ -406,6 +396,7 @@ class Window(QMainWindow):
 		servermenu.addAction(conDisconnect)
 
 		optionmenu = self.menubar.addMenu("Options")
+		optionmenu.setStyle(self.gui.menu_style)
 
 		self.IOtab = QAction(QIcon(MINUS_ICON),"Hide connection tab",self)
 		self.IOtab.triggered.connect(self.menuIOtab)
@@ -442,6 +433,7 @@ class Window(QMainWindow):
 		servermenu.addAction(conDisconnect)
 
 		optionmenu = self.menubar2.addMenu("Options")
+		optionmenu.setStyle(self.gui.menu_style)
 
 		self.IOtab2 = QAction(QIcon(MINUS_ICON),"Hide connection tab",self)
 		self.IOtab2.triggered.connect(self.menuIOtab)
@@ -452,14 +444,11 @@ class Window(QMainWindow):
 		optSend.triggered.connect(self.menuToggleSend)
 		optionmenu.addAction(optSend)
 
-		#self.hideIOTab()
-
 		if self.gui.display_uptime_seconds:
 			self.uptime = QLabel('<b>00:00:00</b>',self)
 		else:
 			self.uptime = QLabel('<b>00:00</b>',self)
 
-		#self.menubar.setCornerWidget(self.uptime,Qt.TopRightCorner)
 		self.tabs.setCornerWidget(self.uptime,Qt.TopRightCorner)
 
 		self.uptime.setStyleSheet('padding: 2px;')
@@ -578,8 +567,8 @@ class Window(QMainWindow):
 			self.client.join(channel)
 
 	def menuNick(self):
-		x = NicknameDialog.Dialog()
-		nick = x.get_nick_information()
+		x = NicknameDialog.Dialog(self.client.nickname)
+		nick = x.get_nick_information(self.client.nickname)
 
 		if not nick: return
 
@@ -596,6 +585,11 @@ class Window(QMainWindow):
 
 	def showMOTD(self):
 		self.gui.view_motd(self.client)
+
+	def open_link_in_browser(self,url):
+		u = QUrl()
+		u.setUrl(url)
+		QDesktopServices.openUrl(u)
 
 	def buildConnectionMenu(self,mdimenu,connection):
 
@@ -623,40 +617,6 @@ class Window(QMainWindow):
 			else:
 				server_host = self.name
 
-		if self.gui.display_extended_conn_info:
-
-			html = f'''
-<table style="width: 100%" border="0"><tbody><tr>
-<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{IRC_NETWORK_MENU_ICON}" width="25" height="25">&nbsp;</td>
-<td style="text-align: left; vertical-align: middle;"><small><b>!NETWORK!</b></small></td>
-</tr><tr>
-<td style="text-align: center; vertical-align: middle;">!INDENT!<img src="{USER_MENU_ICON}" width="25" height="25">&nbsp;</td>
-<td style="text-align: left; vertical-align: middle;"><small>!NICKNAME! !MODES!</small></td>
-</tr></tbody></table>
-			'''
-
-			# INDENT = "<small>&nbsp;</small>"*1
-			# html = html.replace('!INDENT!',INDENT)
-			html = html.replace('!INDENT!',"")
-
-			if self.network_url:
-				link = f'''<a href="{self.network_url}">{self.network} Network</a>'''
-			else:
-				link = f'''{self.network} Network</a>'''
-
-			html = html.replace('!NETWORK!',link)
-
-			html = html.replace('!NICKNAME!',"<b>"+self.client.nickname+"</b>")
-			if connection.modes!='':
-				html = html.replace('!MODES!',"<i>+"+connection.modes+"</i>")
-			else:
-				html = html.replace('!MODES!',"")
-
-			infoLabel = QLabel( html )
-			if self.network_url: infoLabel.setOpenExternalLinks(True)
-			infoAction = QWidgetAction(self)
-			infoAction.setDefaultWidget(infoLabel)
-			mdimenu.addAction(infoAction)
 
 		servName = QAction(QIcon(HOST_ICON),server_host,self)
 		mdimenu.addAction(servName)
@@ -664,16 +624,26 @@ class Window(QMainWindow):
 		servmenu = QMenu()
 		servName.setMenu(servmenu)
 
-		motdMenu = QAction(QIcon(INFO_ICON),"MOTD",self)
+		if self.network_url:
+			netname = textSeparator(self, f'''<b><a href="{self.network_url}">{self.network} Network</a></b>''')
+			servmenu.addAction(netname)
+		else:
+			netname = textSeparator(self, f'''<b>{self.network} Network</b>''')
+			servmenu.addAction(netname)
+
+		snick = centerText(self,"<i>"+self.client.nickname+" +"+connection.modes+"</i>")
+		servmenu.addAction(snick)
+
+		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Server console",self)
+		consoleC.triggered.connect(self.restoreMe)
+		servmenu.addAction(consoleC)
+
+		motdMenu = QAction(QIcon(MOTD_ICON),"Message of the day",self)
 		motdMenu.triggered.connect(self.showMOTD)
 		servmenu.addAction(motdMenu)
 
 		infomenu = servmenu.addMenu("Server Settings")
 		infomenu.setIcon(QIcon(SERVER_SETTINGS_ICON))
-
-		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Console",self)
-		consoleC.triggered.connect(self.restoreMe)
-		servmenu.addAction(consoleC)
 
 		servmenu.addSeparator()
 

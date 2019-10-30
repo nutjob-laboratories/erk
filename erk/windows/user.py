@@ -314,8 +314,8 @@ class Window(QMainWindow):
 			self.client.join(channel)
 
 	def menuNick(self):
-		x = NicknameDialog.Dialog()
-		nick = x.get_nick_information()
+		x = NicknameDialog.Dialog(self.client.nickname)
+		nick = x.get_nick_information(self.client.nickname)
 
 		if not nick: return
 

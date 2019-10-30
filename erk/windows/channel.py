@@ -81,7 +81,6 @@ class Window(QMainWindow):
 		user_input = self.userTextInput.text()
 		self.userTextInput.setText('')
 
-		#print(user_input)
 		erk.input.handle_chat_input(self,user_input)
 
 	def writeText(self,text):
@@ -209,8 +208,6 @@ class Window(QMainWindow):
 			self.buildUserMenus()
 
 	def _handleDoubleClick(self, item):
-		#color = item.background()
-		#item.setBackground(self._red if color == self._green else self._green)
 		item.setSelected(False)
 		self.gui.double_click_user(self.client,item.text())
 
@@ -274,7 +271,6 @@ class Window(QMainWindow):
 			self.status_nick.setText("&nbsp;<b><small>"+newnick+"</small></b>")
 
 	def uptime_display(self,text):
-		# self.uptime = QLabel('<b>00:00:00</b>&nbsp;')
 		self.uptime.setText('<b>'+text+'</b>')
 
 	def hide_uptime(self):
@@ -394,7 +390,6 @@ class Window(QMainWindow):
 		finalLayout.addWidget(self.horizontalSplitter)
 		finalLayout.addWidget(self.userTextInput)
 
-		
 		# Status bar
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
@@ -428,15 +423,6 @@ class Window(QMainWindow):
 		self.uptime.setStyleSheet('padding: 2px;')
 
 		if not self.gui.display_uptime_chat: self.uptime.setVisible(False)
-
-		# self.actModes = self.menubar.addMenu("Modes")
-		# self.rebuildModesMenu()
-
-		# self.actBans = self.menubar.addMenu("Bans")
-		# self.rebuildBanMenu()
-
-		# self.actAdmin = self.menubar.addMenu("Administrate")
-		# self.rebuildAdminMenu()
 
 		self.buildUserMenus()
 
@@ -753,6 +739,10 @@ class Window(QMainWindow):
 			self.actTopic.triggered.connect(self.menuTopic)
 			self.actOptions.addAction(self.actTopic)
 
+		self.actPart = QAction(QIcon(PART_ICON),"Leave channel",self)
+		self.actPart.triggered.connect(self.close)
+		self.actOptions.addAction(self.actPart)
+
 		self.actOptions.addSeparator()
 
 		self.menuFilter = self.actOptions.addMenu(QIcon(DO_NOT_DISPLAY_ICON),"Don't display...")
@@ -786,8 +776,6 @@ class Window(QMainWindow):
 		self.ignoreNick.setChecked(self.ignore_nick_messages)
 		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
 		self.menuFilter.addAction(self.ignoreNick)
-
-		
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()
@@ -830,8 +818,8 @@ class Window(QMainWindow):
 			self.client.join(channel)
 
 	def menuNick(self):
-		x = NicknameDialog.Dialog()
-		nick = x.get_nick_information()
+		x = NicknameDialog.Dialog(self.client.nickname)
+		nick = x.get_nick_information(self.client.nickname)
 
 		if not nick: return
 

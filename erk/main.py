@@ -688,9 +688,7 @@ class Erk(QMainWindow):
 					else:
 						obj.join(channel[0])
 
-		# Don't delete autojoin info in memory so that channels
-		# can be autojoined on reconnection
-		#if obj.server in self.autojoins: del self.autojoins[obj.server]
+		if obj.server in self.autojoins: del self.autojoins[obj.server]
 
 		self.buildConnectionsMenu()
 
@@ -1304,31 +1302,35 @@ class Erk(QMainWindow):
 			c.channel_list.close()
 		except:
 			pass
-		
-		clean = []
-		wins = []
+
+		# Autojoins
 		aj = []
 		for c in self.connections:
 			if c.id==obj.id:
 				for w in c.windows:
-					if self.rejoin_channels:
-						if c.windows[w].is_channel:
-							if c.windows[w].key!='':
-								e = [c.windows[w].name,c.windows[w].key]
-							else:
-								e = [c.windows[w].name,'']
-							aj.append(e)
+					if c.windows[w].is_channel:
+						if c.windows[w].key!='':
+							e = [c.windows[w].name,c.windows[w].key]
+						else:
+							e = [c.windows[w].name,'']
+						aj.append(e)
+		if self.rejoin_channels: self.autojoins[obj.server] = aj
+		
+		clean = []
+		wins = []
+		for c in self.connections:
+			if c.id==obj.id:
+				for w in c.windows:
 					wins.append(c.windows[w])
 				continue
 			clean.append(c)
-		self.connections = clean
-
-		if self.rejoin_channels: self.autojoins[obj.server] = aj
 
 		for w in wins:
 			w.close()
 
 		del wins
+
+		self.connections = clean
 
 		self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 		self.buildWindowMenu()
@@ -1494,7 +1496,6 @@ class Erk(QMainWindow):
 		self.default_window_width					= self.settings[SETTING_WINDOW_WIDTH]
 		self.default_window_height					= self.settings[SETTING_WINDOW_HEIGHT]
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
-		self.display_extended_conn_info				= self.settings[SETTING_SHOW_CONNECTION_INFO]
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
 		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
 
@@ -2410,15 +2411,6 @@ class Erk(QMainWindow):
 		self.settings[SETTING_KEEP_ALIVE] = self.keep_alive
 		save_settings(self.settings,self.settings_file)
 
-	def menuConnectionInfo(self):
-		if self.display_extended_conn_info:
-			self.display_extended_conn_info = False
-		else:
-			self.display_extended_conn_info = True
-		self.buildConnectionsMenu()
-		self.settings[SETTING_SHOW_CONNECTION_INFO] = self.display_extended_conn_info
-		save_settings(self.settings,self.settings_file)
-
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
@@ -2472,7 +2464,7 @@ class Erk(QMainWindow):
 		for c in self.connections:
 			if c.id==obj.id:
 				if c.motd:
-					x = TextWindow("MOTD for "+obj.server+":"+str(obj.port),self.MDI,obj,self)
+					x = TextWindow("MOTD ("+obj.server+":"+str(obj.port)+")",self.MDI,obj,self)
 					for l in c.motd:
 						x.write(l)
 
@@ -2489,7 +2481,7 @@ class Erk(QMainWindow):
 			except:
 				pass
 
-			self.connectionsMenu.addSeparator()
+			#self.connectionsMenu.addSeparator()
 
 		if scount==0:
 			noConnectionsLabel = QLabel(f"<center><i>Not connected to any servers.</i></center>")
@@ -2499,12 +2491,7 @@ class Erk(QMainWindow):
 
 			self.connectionsMenu.addSeparator()
 
-		#self.connectionsMenu.addSeparator()
-
-		self.actConnectionInfo = QAction("Show server details",self,checkable=True)
-		self.actConnectionInfo.setChecked(self.display_extended_conn_info)
-		self.actConnectionInfo.triggered.connect(self.menuConnectionInfo)
-		self.connectionsMenu.addAction(self.actConnectionInfo)
+		self.connectionsMenu.addSeparator()
 
 		self.actSaveHistory = QAction("Save server history",self,checkable=True)
 		self.actSaveHistory.setChecked(self.save_server_history)

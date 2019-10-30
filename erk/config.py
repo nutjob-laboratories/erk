@@ -146,7 +146,7 @@ SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
 SETTING_KEEP_ALIVE					= "keep_connection_alive"
 SETTING_DISPLAY_IRC_COLOR			= "display_irc_colors_in_chat"
 SETTING_ENABLE_IGNORE				= "enable_user_ignore"
-SETTING_SHOW_CONNECTION_INFO		= "display_extended_connection_information"
+
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
 
 SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
@@ -329,7 +329,6 @@ def patch_config_file(data):
 	if not SETTING_KEEP_ALIVE in data: data[SETTING_KEEP_ALIVE] = True
 	if not SETTING_DISPLAY_IRC_COLOR in data: data[SETTING_DISPLAY_IRC_COLOR] = True
 	if not SETTING_ENABLE_IGNORE in data: data[SETTING_ENABLE_IGNORE] = True
-	if not SETTING_SHOW_CONNECTION_INFO in data: data[SETTING_SHOW_CONNECTION_INFO] = False
 	if not SETTING_REJOIN_CHANNELS in data: data[SETTING_REJOIN_CHANNELS] = True
 	if not SETTING_SYSTRAY_NOTIFICATION in data: data[SETTING_SYSTRAY_NOTIFICATION] = True
 
@@ -381,7 +380,6 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_KEEP_ALIVE: True,
 			SETTING_DISPLAY_IRC_COLOR: True,
 			SETTING_ENABLE_IGNORE: True,
-			SETTING_SHOW_CONNECTION_INFO: False,
 			SETTING_REJOIN_CHANNELS: True,
 			SETTING_SYSTRAY_NOTIFICATION: True,
 		}
