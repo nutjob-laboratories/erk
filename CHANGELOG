@@ -72,6 +72,8 @@ Version 0.501
 	* Removed "show extended connection details" option (as it is no longer needed)
 	* Changed the MOTD icon
 	* Fixed a bug where user modes were not displayed properly in the "Connections" menu
+	* Got rid of the "Settings->Windows" menu (entries were moved to the "Settings->Display" anmd "Settings->Chat" menus)
+	* Fixed a bug where a server's MOTD window would not be closed on disconnection
 
 Version 0.500
 	* Completely re-written

@@ -65,6 +65,7 @@ class Connection:
 		self.modes = ''
 		self.channel_list = None
 		self.motd = None
+		self.motd_window = None
 
 class Erk(QMainWindow):
 
@@ -1320,6 +1321,10 @@ class Erk(QMainWindow):
 		wins = []
 		for c in self.connections:
 			if c.id==obj.id:
+				try:
+					c.motd_window.close()
+				except:
+					pass
 				for w in c.windows:
 					wins.append(c.windows[w])
 				continue
@@ -1362,6 +1367,10 @@ class Erk(QMainWindow):
 		wins = []
 		for c in self.connections:
 			if c.id==obj.id:
+				try:
+					c.motd_window.close()
+				except:
+					pass
 				for w in c.windows:
 					wins.append(c.windows[w])
 				continue
@@ -1618,6 +1627,33 @@ class Erk(QMainWindow):
 
 		displaySubMenu.addSeparator()
 
+		self.actTray = QAction("System tray message notification",self,checkable=True)
+		self.actTray.setChecked(self.systray_notification)
+		self.actTray.triggered.connect(self.menuTray)
+		displaySubMenu.addAction(self.actTray)
+
+		self.actStatusBars = QAction("Status bars on chat windows",self,checkable=True)
+		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
+		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
+		displaySubMenu.addAction(self.actStatusBars)
+
+		self.actPlainUserLists = QAction("Plain user lists",self,checkable=True)
+		self.actPlainUserLists.setChecked(self.plain_user_lists)
+		self.actPlainUserLists.triggered.connect(self.menuPlainUserLists)
+		displaySubMenu.addAction(self.actPlainUserLists)
+
+		self.actHidePrivate = QAction("Hide user chat windows on close",self,checkable=True)
+		self.actHidePrivate.setChecked(self.hide_private_chat)
+		self.actHidePrivate.triggered.connect(self.menuToggleHideChat)
+		displaySubMenu.addAction(self.actHidePrivate)
+
+		self.actWindowTitle = QAction("Use application title of the active window",self,checkable=True)
+		self.actWindowTitle.setChecked(self.set_window_title_to_active)
+		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
+		displaySubMenu.addAction(self.actWindowTitle)
+
+		displaySubMenu.addSeparator()
+
 		self.actOnTop = QAction("Always on top",self,checkable=True)
 		self.actOnTop.setChecked(self.window_on_top)
 		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
@@ -1630,33 +1666,6 @@ class Erk(QMainWindow):
 
 		sep = textSeparator(self,"<i>Preferences</i>")
 		settingsMenu.addAction(sep)
-
-		windowSubMenu = settingsMenu.addMenu(QIcon(WINDOW_ICON),"Windows")
-
-		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
-		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
-		self.actOpenPrivateWindows.triggered.connect(self.menuPrivateWindows)
-		windowSubMenu.addAction(self.actOpenPrivateWindows)
-
-		self.actHidePrivate = QAction("Hide user chat windows on close",self,checkable=True)
-		self.actHidePrivate.setChecked(self.hide_private_chat)
-		self.actHidePrivate.triggered.connect(self.menuToggleHideChat)
-		windowSubMenu.addAction(self.actHidePrivate)
-
-		self.actWindowTitle = QAction("Use window title of the active window",self,checkable=True)
-		self.actWindowTitle.setChecked(self.set_window_title_to_active)
-		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
-		windowSubMenu.addAction(self.actWindowTitle)
-
-		self.actStatusBars = QAction("Status bars on chat windows",self,checkable=True)
-		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
-		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
-		windowSubMenu.addAction(self.actStatusBars)
-
-		self.actPlainUserLists = QAction("Plain user lists",self,checkable=True)
-		self.actPlainUserLists.setChecked(self.plain_user_lists)
-		self.actPlainUserLists.triggered.connect(self.menuPlainUserLists)
-		windowSubMenu.addAction(self.actPlainUserLists)
 
 		uptimeSubMenu = settingsMenu.addMenu(QIcon(UPTIME_ICON),"Uptime")
 
@@ -1694,11 +1703,6 @@ class Erk(QMainWindow):
 
 		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
 
-		self.actTray = QAction("System tray message notification",self,checkable=True)
-		self.actTray.setChecked(self.systray_notification)
-		self.actTray.triggered.connect(self.menuTray)
-		chatSubMenu.addAction(self.actTray)
-
 		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
 		self.actEmoji.setChecked(self.use_emojis)
 		self.actEmoji.triggered.connect(self.menuEmoji)
@@ -1733,6 +1737,11 @@ class Erk(QMainWindow):
 		self.actToggleIgnore.setChecked(self.allow_ignore)
 		self.actToggleIgnore.triggered.connect(self.menuToggleIgnore)
 		chatSubMenu.addAction(self.actToggleIgnore)
+
+		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
+		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
+		self.actOpenPrivateWindows.triggered.connect(self.menuPrivateWindows)
+		chatSubMenu.addAction(self.actOpenPrivateWindows)
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
@@ -2464,9 +2473,9 @@ class Erk(QMainWindow):
 		for c in self.connections:
 			if c.id==obj.id:
 				if c.motd:
-					x = TextWindow("MOTD ("+obj.server+":"+str(obj.port)+")",self.MDI,obj,self)
+					c.motd_window = TextWindow("MOTD ("+obj.server+":"+str(obj.port)+")",self.MDI,obj,self)
 					for l in c.motd:
-						x.write(l)
+						c.motd_window.write(l)
 
 	def buildConnectionsMenu(self):
 		# self.connectionsMenu

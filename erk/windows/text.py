@@ -40,6 +40,7 @@ class Window(QMainWindow):
 
 	def closeEvent(self, event):
 		self.subwindow.close()
+		self.close()
 		event.accept()
 
 	def write(self,line):
