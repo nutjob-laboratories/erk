@@ -71,6 +71,7 @@ Version 0.501
 	* Removed the small "Connections" menu icons from the app
 	* Removed "show extended connection details" option (as it is no longer needed)
 	* Changed the MOTD icon
+	* Fixed a bug where user modes were not displayed properly in the "Connections" menu
 
 Version 0.500
 	* Completely re-written

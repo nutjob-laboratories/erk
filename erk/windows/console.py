@@ -631,8 +631,12 @@ class Window(QMainWindow):
 			netname = textSeparator(self, f'''<b>{self.network} Network</b>''')
 			servmenu.addAction(netname)
 
-		snick = centerText(self,"<i>"+self.client.nickname+" +"+connection.modes+"</i>")
-		servmenu.addAction(snick)
+		if len(connection.modes)>0:
+			snick = centerText(self,"<i>"+self.client.nickname+" +"+connection.modes+"</i>")
+			servmenu.addAction(snick)
+		else:
+			snick = centerText(self,"<i>"+self.client.nickname+"</i>")
+			servmenu.addAction(snick)
 
 		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Server console",self)
 		consoleC.triggered.connect(self.restoreMe)
