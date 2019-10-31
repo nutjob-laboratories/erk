@@ -77,6 +77,14 @@ Version 0.501
 	* Fixed a bug where the text formatting config file would not be generated correctly
 	* Added a link to Qt's QSS website in a comment in the text formatting config file
 	* If the server doesn't provide hostmasks in channel user lists, hostmasks are now requested from the server in the background
+	* Fixed a crashing bug (hostmask updating would try to search the user list of private chat windows)
+	* Private chat windows now have the user's hostmask in the title bar, if known
+	* Added a "Private Chat" menu to private chat windows
+	* Added a whois command to private chat window menu
+	* Added a "close chat" option to private chat windows (the window is restroyed whether "hide private window" is in effect or not)
+	* Added a "Invite" dialog (for inviting users to channels)
+	* Added an "Invite" icon
+	* Added an "invite user" option to user window "Private Chat" menu
 
 Version 0.500
 	* Completely re-written

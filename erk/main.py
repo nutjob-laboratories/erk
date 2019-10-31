@@ -960,8 +960,9 @@ class Erk(QMainWindow):
 					if not c.windows[channel].is_channel:
 						if channel==oldnick:
 							newwin = c.windows[channel]
-							newwin.name = newnick
-							newwin.setWindowTitle(" "+newnick)
+							# newwin.name = newnick
+							# newwin.setWindowTitle(" "+newnick)
+							newwin.rename(newnick)
 							renamed_user_window = True
 							continue
 						continue
@@ -1019,23 +1020,45 @@ class Erk(QMainWindow):
 	# | GUI HELPER FUNCTIONS BEGIN |
 	# |============================|
 
+	def get_user_hostmask(self,obj,tnick):
+		for c in self.connections:
+			if c.id==obj.id:
+				for channel in c.windows:
+					if c.windows[channel].is_channel:
+						for u in c.windows[channel].users:
+							p = u.split('!')
+							if len(p)==2:
+								nick = p[0]
+								hostmask = p[1]
+							else:
+								nick = u
+								hostmask = None
+
+							nick = nick.replace('@','')
+							nick = nick.replace('+','')
+
+							if nick==tnick:
+								return hostmask
+		return None
+
 	def update_user_hostmask(self,obj,tnick,hostmask):
 		for c in self.connections:
 			if c.id==obj.id:
 				for channel in c.windows:
-					for u in c.windows[channel].users:
-						p = u.split('!')
-						if len(p)==2:
-							nick = p[0]
-						else:
-							nick = u
+					if c.windows[channel].is_channel:
+						for u in c.windows[channel].users:
+							p = u.split('!')
+							if len(p)==2:
+								nick = p[0]
+							else:
+								nick = u
 
-						nick = nick.replace('@','')
-						nick = nick.replace('+','')
+							nick = nick.replace('@','')
+							nick = nick.replace('+','')
 
-						if nick==tnick:
-							c.windows[channel].update_hostmask(tnick,hostmask)
-							break
+							if nick==tnick:
+								c.windows[channel].update_hostmask(tnick,hostmask)
+								break
 
 	def serverLog(self,obj,text):
 		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],text )

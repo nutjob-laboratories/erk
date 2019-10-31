@@ -30,6 +30,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from datetime import datetime
+import time
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -43,6 +44,8 @@ import erk.input
 import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 
+import erk.dialogs.invite as InviteDialog
+
 class Window(QMainWindow):
 
 	def getUserNicks(self):
@@ -53,6 +56,20 @@ class Window(QMainWindow):
 		e = [t,user,msg]
 		self.log.append(e)
 		self.newlog.append(e)
+
+	def menuClose(self):
+		self.gui.irc_close_user_chat(self.client,self.name)
+
+		# Save log
+		if self.gui.log_private_chat:
+			if self.gui.save_logs_on_quit:
+				if len(self.newlog)>0:
+					saveLog(self.client.network,self.name,self.newlog)
+
+		self.gui.buildWindowMenu()
+
+		self.subwindow.close()
+		self.close()
 
 	def closeEvent(self, event):
 
@@ -112,6 +129,13 @@ class Window(QMainWindow):
 	def show_uptime(self):
 		self.uptime.setVisible(True)
 
+	def rename(self,nick):
+		self.name = nick
+		if self.hostmask:
+			self.setWindowTitle(" "+self.name+" ("+self.hostmask+")")
+		else:
+			self.setWindowTitle(" "+self.name)
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -128,7 +152,14 @@ class Window(QMainWindow):
 
 		self.is_away = False
 
-		self.setWindowTitle(" "+self.name)
+		# def get_user_hostmask(self,obj,tnick):
+		self.hostmask = self.gui.get_user_hostmask(self.client,self.name)
+
+		if self.hostmask:
+			self.setWindowTitle(" "+self.name+" ("+self.hostmask+")")
+		else:
+			self.setWindowTitle(" "+self.name)
+
 		self.setWindowIcon(QIcon(USER_WINDOW))
 
 		self.channelChatDisplay = QTextBrowser(self)
@@ -182,6 +213,7 @@ class Window(QMainWindow):
 		self.menubar = self.menuBar()
 		menuBoldText = self.menubar.font()
 		menuBoldText.setBold(True)
+		self.menubar.setStyle(self.gui.menu_style)
 
 		if self.gui.display_uptime_seconds:
 			self.uptime = QLabel('<b>00:00:00</b>',self)
@@ -193,6 +225,25 @@ class Window(QMainWindow):
 		self.uptime.setStyleSheet('padding: 2px;')
 
 		if not self.gui.display_uptime_chat: self.uptime.setVisible(False)
+
+		optionsMenu = self.menubar.addMenu("Private Chat")
+		optionsMenu.setFont(menuBoldText)
+		optionsMenu.setStyle(self.gui.menu_style)
+
+
+		uinvite = QAction(QIcon(INVITE_ICON),"Invite to channel",self)
+		uinvite.triggered.connect(self.menuInvite)
+		optionsMenu.addAction(uinvite)
+
+		self.actWhois = QAction(QIcon(WHOIS_ICON),"WHOIS",self)
+		self.actWhois.triggered.connect(self.menuWhois)
+		optionsMenu.addAction(self.actWhois)
+
+		optionsMenu.addSeparator()
+
+		closechat = QAction(QIcon(PART_ICON),"Close chat",self)
+		closechat.triggered.connect(self.menuClose)
+		optionsMenu.addAction(closechat)
 
 		# serverMenu = self.menubar.addMenu("Server")
 		# serverMenu.setFont(menuBoldText)
@@ -320,3 +371,11 @@ class Window(QMainWindow):
 		if not nick: return
 
 		self.client.setNick(nick)
+
+	def menuInvite(self):
+		x = InviteDialog.Dialog(self)
+		nick = x.get_invite_information(self)
+
+		if not nick: return
+
+		self.client.invite(self.name,nick)
