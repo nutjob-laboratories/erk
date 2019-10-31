@@ -1073,6 +1073,15 @@ class Erk(QMainWindow):
 				channels.append(c.windows[w].name)
 		return channels
 
+	def getChannelListExcept(self,obj,name):
+		channels = []
+		c = self.fetchConnection(obj)
+		for w in c.windows:
+			if c.windows[w].is_channel:
+				if c.windows[w].name==name: continue
+				channels.append(c.windows[w].name)
+		return channels
+
 	def writePrivateMessage(self,obj,target,text,notice=False):
 		if self.open_private_chat_windows:
 			# Check to see if user window exists

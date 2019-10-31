@@ -39,8 +39,8 @@ from erk.common import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_invite_information(parent=None):
-		dialog = Dialog(parent)
+	def get_invite_information(parent=None,chanlist=None,target=None):
+		dialog = Dialog(parent,chanlist,target)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -55,7 +55,7 @@ class Dialog(QDialog):
 	def setChannel(self):
 		self.invite_channel = self.channels.itemText(self.channels.currentIndex())
 
-	def __init__(self,parent=None):
+	def __init__(self,parent=None,chanlist=None,target=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
@@ -66,7 +66,16 @@ class Dialog(QDialog):
 		self.channels = QComboBox(self)
 		self.channels.activated.connect(self.setChannel)
 
-		clist = self.parent.gui.getChannelList(self.parent.client)
+		if target:
+			self.target = target
+		else:
+			self.target = self.parent.name
+
+		if chanlist:
+			clist = chanlist
+		else:
+			clist = self.parent.gui.getChannelList(self.parent.client)
+
 		if len(clist)>0:
 			for c in clist:
 				self.channels.addItem(c)
@@ -78,7 +87,7 @@ class Dialog(QDialog):
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 
-		desc = QLabel("Invite <b><i>"+self.parent.name+"</b></i> to...")
+		desc = QLabel("Invite <b><i>"+self.target+"</b></i> to...")
 		desc.setAlignment(Qt.AlignCenter)
 
 		finalLayout = QVBoxLayout()

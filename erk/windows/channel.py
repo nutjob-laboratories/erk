@@ -45,6 +45,7 @@ import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 import erk.dialogs.channel_key as ChannelKeyDialog
 import erk.dialogs.topic as TopicDialog
+import erk.dialogs.invite as InviteDialog
 
 class Window(QMainWindow):
 
@@ -974,6 +975,12 @@ class Window(QMainWindow):
 			menu = QMenu(self)
 			menu.setStyle(self.gui.menu_style)
 
+			chanlist = self.gui.getChannelListExcept(self.client,self.name)
+			if len(chanlist)>0:
+				can_invite_to_channel = True
+			else:
+				can_invite_to_channel = False
+
 			banner = textSeparator(self,"<b>"+user_nick+"</b>")
 			menu.addAction(banner)
 
@@ -1036,9 +1043,12 @@ class Window(QMainWindow):
 
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),'WHOIS')
 
+			actOpenWindow = menu.addAction(QIcon(WINDOW_ICON),'Open chat window')
+
 			menu.addSeparator()
 
-			actOpenWindow = menu.addAction(QIcon(WINDOW_ICON),'Open chat window')
+			if can_invite_to_channel:
+				actInvite = menu.addAction(QIcon(INVITE_ICON),'Send channel invitation')
 			actPrivate = menu.addAction(QIcon(CHAT_ICON),'Send private message')
 			actNotice = menu.addAction(QIcon(CHAT_ICON),'Send notice')
 
@@ -1050,6 +1060,16 @@ class Window(QMainWindow):
 			actUserlist = clipMenu.addAction(QIcon(LIST_ICON),'User list')
 
 			action = menu.exec_(self.channelUserDisplay.mapToGlobal(event.pos()))
+
+			if can_invite_to_channel:
+				if action == actInvite:
+					x = InviteDialog.Dialog(self,chanlist,user_nick)
+					ichan = x.get_invite_information(self,chanlist,user_nick)
+
+					if not ichan: return True
+
+					self.client.invite(user_nick,ichan)
+					return True
 
 			if action == actWhois:
 				self.client.sendLine(f"WHOIS {user_nick}")
@@ -1068,6 +1088,7 @@ class Window(QMainWindow):
 							self.gui.ignore_user(self.client,ignoremask)
 						else:
 							self.gui.ignore_user(self.client,ignoremask)
+				return True
 
 			if action == actUserlist:
 				ulist = "\n".join(self.users)

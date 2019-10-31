@@ -85,6 +85,7 @@ Version 0.501
 	* Added a "Invite" dialog (for inviting users to channels)
 	* Added an "Invite" icon
 	* Added an "invite user" option to user window "Private Chat" menu
+	* Added a "Send channel invite" option to the channel window userlist context menu
 
 Version 0.500
 	* Completely re-written

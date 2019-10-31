@@ -43,7 +43,6 @@ import erk.input
 
 import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
-
 import erk.dialogs.invite as InviteDialog
 
 class Window(QMainWindow):
@@ -374,8 +373,8 @@ class Window(QMainWindow):
 
 	def menuInvite(self):
 		x = InviteDialog.Dialog(self)
-		nick = x.get_invite_information(self)
+		ichan = x.get_invite_information(self)
 
-		if not nick: return
+		if not ichan: return
 
-		self.client.invite(self.name,nick)
+		self.client.invite(self.name,ichan)
