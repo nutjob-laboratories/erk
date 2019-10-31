@@ -86,6 +86,7 @@ Version 0.501
 	* Added an "Invite" icon
 	* Added an "invite user" option to user window "Private Chat" menu
 	* Added a "Send channel invite" option to the channel window userlist context menu
+	* Changed icons for part, host, server, and network
 
 Version 0.500
 	* Completely re-written

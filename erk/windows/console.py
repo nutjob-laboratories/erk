@@ -618,7 +618,7 @@ class Window(QMainWindow):
 				server_host = self.name
 
 
-		servName = QAction(QIcon(HOST_ICON),server_host,self)
+		servName = QAction(QIcon(SERVER_ICON),server_host,self)
 		mdimenu.addAction(servName)
 
 		servmenu = QMenu()
