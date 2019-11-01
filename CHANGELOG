@@ -88,6 +88,7 @@ Version 0.501
 	* Added a "Send channel invite" option to the channel window userlist context menu
 	* Changed icons for part, host, server, and network
 	* Changed all window icons to be more visible, informative, and, well, *nicer looking*
+	* Away messages will no longer be displayed in channel windows
 
 Version 0.500
 	* Completely re-written

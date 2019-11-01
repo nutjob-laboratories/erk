@@ -196,6 +196,7 @@ class Erk(QMainWindow):
 			w = self.MDI.activeSubWindow()
 			win = w.window
 			if win.is_console: return
+			if win.is_channel: return
 			win.writeText(rmsg)
 		except:
 			pass

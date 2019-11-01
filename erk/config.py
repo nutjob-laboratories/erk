@@ -146,9 +146,7 @@ SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
 SETTING_KEEP_ALIVE					= "keep_connection_alive"
 SETTING_DISPLAY_IRC_COLOR			= "display_irc_colors_in_chat"
 SETTING_ENABLE_IGNORE				= "enable_user_ignore"
-
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
-
 SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
