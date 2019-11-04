@@ -32,7 +32,7 @@ shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tm
 shutil.copytree("./spellchecker", "./dist/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./emoji", "./dist/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
-shutil.copytree("./pdfjs", "./dist/pdfjs",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+
 
 shutil.copy("./erk.py", "./dist/erk.py")
 

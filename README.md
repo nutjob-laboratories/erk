@@ -5,7 +5,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf"><b>Erk Plugin Development Guide</b></a>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.510.001**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.510.002**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -45,6 +45,7 @@
 	* Auto-complete works for emoji and ASCIImoji shortcodes, too
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
+* A crude in-app browser for quickly checking links (optional)
 * Automatic channel and private message logging
 * Individual channel display options
 * Optional built-in web browser for quickly visiting/viewing posted URLs
@@ -64,10 +65,9 @@
 
 
 # Requirements
-**Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
+**Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
 
     pip install pyqt5
-    pip install PyQtWebEngine
     pip install Twisted
     pip install qt5reactor
 
@@ -75,6 +75,10 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
     pip install pyOpenSSL
     pip install service_identity
+
+To use the in-app web browser (for quickly checking links), [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/), is required.
+
+	pip install PyQtWebEngine
 
 **Erk** is being developed with Python 3.7 on Windows 10.
 

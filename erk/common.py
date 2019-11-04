@@ -39,6 +39,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+WEB_AVAILABLE = True
+try:
+	from PyQt5.QtWebEngineWidgets import *
+except:
+	WEB_AVAILABLE = False
+
 SSL_AVAILABLE = True
 try:
 	import ssl
@@ -311,8 +317,8 @@ import erk.windows.user as User
 import erk.windows.console as Console
 import erk.windows.list as ChannelList
 import erk.windows.text as ViewText
-import erk.windows.pdf as ViewPDF
-import erk.windows.web as ViewWeb
+
+if WEB_AVAILABLE: import erk.windows.web as ViewWeb
 
 WINDOW_WIDGET_MARGIN = 2
 
@@ -320,7 +326,7 @@ DEFAULT_WINDOW_WIDTH = 500
 DEFAULT_WINDOW_HEIGHT = 300
 
 def WebWindow(url,MDI,parent=None):
-
+	if WEB_AVAILABLE:
 		newSubwindow = QMdiSubWindow()
 		newWindow = ViewWeb.Window(url,newSubwindow,parent)
 		newSubwindow.setWidget(newWindow)
@@ -332,22 +338,8 @@ def WebWindow(url,MDI,parent=None):
 		newSubwindow.show()
 
 		return newWindow
-
-
-
-def PDFWindow(filename,title,MDI,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = ViewPDF.Window(filename,title,newSubwindow,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
+	else:
+		return None
 
 def TextWindow(host,MDI,client,parent=None):
 

@@ -13,6 +13,8 @@ Version 0.510
 	* The plugin frame work has been added
 	* Added a PDF viewer
 	* Added Mozilla's pdf.js for PDF viewing, and added pdf.js to the about credits
+	* Removed pdf.js, as it's huge (11mb unzipped)
+	* Added PyQtWebEngine as an optional requirement (if it's not installed, the in-app browser can't be used)
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

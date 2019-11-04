@@ -45,10 +45,10 @@ import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 import erk.dialogs.invite as InviteDialog
 
-import erk.windows.web as ViewWeb
+if WEB_AVAILABLE: import erk.windows.web as ViewWeb
 
 def WebWindow(url,MDI,parent=None):
-
+	if WEB_AVAILABLE:
 		newSubwindow = QMdiSubWindow()
 		newWindow = ViewWeb.Window(url,newSubwindow,parent)
 		newSubwindow.setWidget(newWindow)
@@ -60,6 +60,8 @@ def WebWindow(url,MDI,parent=None):
 		newSubwindow.show()
 
 		return newWindow
+	else:
+		return None
 
 class Window(QMainWindow):
 

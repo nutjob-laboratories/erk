@@ -2111,8 +2111,8 @@ class Erk(QMainWindow):
 		self.actAbout.triggered.connect(self.menuAbout)
 		self.helpMenu.addAction(self.actAbout)
 
-		helpLink = QAction(QIcon(PDF_ICON),"Plugin documentation",self)
-		helpLink.triggered.connect(lambda state,u=PLUGIN_PDF,m=self.MDI,p=self: PDFWindow(u,"Plugin Documentation",m,p))
+		helpLink = QAction(QIcon(PDF_ICON),"Download plugin documentation",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
 		helpLink = QAction(QIcon(ERK_ICON),"Source code repository",self)

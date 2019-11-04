@@ -47,10 +47,10 @@ import erk.dialogs.channel_key as ChannelKeyDialog
 import erk.dialogs.topic as TopicDialog
 import erk.dialogs.invite as InviteDialog
 
-import erk.windows.web as ViewWeb
+if WEB_AVAILABLE: import erk.windows.web as ViewWeb
 
 def WebWindow(url,MDI,parent=None):
-
+	if WEB_AVAILABLE:
 		newSubwindow = QMdiSubWindow()
 		newWindow = ViewWeb.Window(url,newSubwindow,parent)
 		newSubwindow.setWidget(newWindow)
@@ -62,6 +62,8 @@ def WebWindow(url,MDI,parent=None):
 		newSubwindow.show()
 
 		return newWindow
+	else:
+		return None
 
 class Window(QMainWindow):
 
@@ -380,6 +382,8 @@ class Window(QMainWindow):
 		self.ignore_quit_messages = self.channel_settings["ignore_quit"]
 		self.ignore_kick_messages = self.channel_settings["ignore_kick"]
 		self.open_links_in_erk = self.channel_settings["open_links_in_erk"]
+
+		if not WEB_AVAILABLE: self.open_links_in_erk = False
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW))
@@ -819,10 +823,11 @@ class Window(QMainWindow):
 		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
 		self.menuFilter.addAction(self.ignoreNick)
 
-		self.openLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
-		self.openLinks.setChecked(self.open_links_in_erk)
-		self.openLinks.triggered.connect(self.toggleOpenLinks)
-		self.actOptions.addAction(self.openLinks)
+		if WEB_AVAILABLE:
+			self.openLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
+			self.openLinks.setChecked(self.open_links_in_erk)
+			self.openLinks.triggered.connect(self.toggleOpenLinks)
+			self.actOptions.addAction(self.openLinks)
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()
