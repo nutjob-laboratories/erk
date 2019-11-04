@@ -33,6 +33,7 @@ import time
 from collections import defaultdict
 import fnmatch
 from datetime import datetime
+import os
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -53,6 +54,10 @@ import erk.dialogs.edit_user as EditUserDialog
 import erk.dialogs.about as AboutDialog
 import erk.dialogs.ignore as IgnoreDialog
 import erk.dialogs.window_size as WindowSizeDialog
+
+import erk.dialogs.plugins as PluginsDialog
+
+from erk.plugins import *
 
 class Connection:
 	def __init__(self,obj,ident):
@@ -75,6 +80,12 @@ class Erk(QMainWindow):
 
 	def irc_output(self,obj,line):
 
+		data = {
+			"line": line
+		}
+		eobj = EVENT(Event.LINE_OUT,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		for c in self.connections:
 			if c.id==obj.id:
 				if c.console:
@@ -89,6 +100,12 @@ class Erk(QMainWindow):
 			print("->"+sid+"\t"+line)
 
 	def irc_input(self,obj,line):
+
+		data = {
+			"line": line
+		}
+		eobj = EVENT(Event.LINE_IN,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 		for c in self.connections:
 			if c.id==obj.id:
@@ -204,6 +221,14 @@ class Erk(QMainWindow):
 	def irc_invited(self,obj,user,target,channel):
 		if self.is_ignored(obj,user): return
 
+		data = {
+			"user": user,
+			"target": target,
+			"channel": channel
+		}
+		eobj = EVENT(Event.INVITE,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		if target==obj.nickname:
 			# the client was invited
 			dmsg = user+" invited you to "+channel
@@ -292,9 +317,19 @@ class Erk(QMainWindow):
 
 	def irc_kick(self,obj,target,channel,kicker,message):
 		p = kicker.split("!")
+		pkicker = kicker
 		if len(p)==2:
 			kicker=p[0]
 			self.update_user_hostmask(obj,p[0],p[1])
+
+		data = {
+			"kicker": pkicker,
+			"target": target,
+			"channel": channel,
+			"message:": message
+		}
+		eobj = EVENT(Event.KICK,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 		if len(message)>0:
 			dmsg = kicker+" kicked "+target+" from "+channel+" ("+message+")"
@@ -354,10 +389,20 @@ class Erk(QMainWindow):
 
 	def irc_kicked(self,obj,channel,kicker,message):
 		self.is_parting.append(channel)
+		pkicker = kicker
 		p = kicker.split('!')
 		if len(p)==2:
 			kicker = p[0]
 			self.update_user_hostmask(obj,p[0],p[1])
+
+		data = {
+			"kicker": pkicker,
+			"target": obj.nickname,
+			"channel": channel,
+			"message:": message
+		}
+		eobj = EVENT(Event.KICK,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 		for c in self.connections:
 			if c.id==obj.id:
@@ -376,9 +421,17 @@ class Erk(QMainWindow):
 
 	def irc_quit(self,obj,user,qmsg):
 		p = user.split('!')
+		puser = user
 		if len(p)==2:
 			user = p[0]
 			self.update_user_hostmask(obj,p[0],'')
+
+		data = {
+			"user": puser,
+			"message:": message
+		}
+		eobj = EVENT(Event.QUIT,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 		if qmsg!='':
 			self.serverLog(obj,user+" has quit IRC ("+qmsg+")")
@@ -422,6 +475,12 @@ class Erk(QMainWindow):
 
 	def irc_error(self,obj,msg):
 
+		data = {
+			"message:": msg
+		}
+		eobj = EVENT(Event.ERROR,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		emsg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[ERROR_STYLE_NAME],msg )
 		self.writeToConsole(obj,emsg)
 
@@ -438,6 +497,16 @@ class Erk(QMainWindow):
 		if len(modes)<1: return
 
 		args = list(args)
+
+		data = {
+			"user": user,
+			"target": channel,
+			"set": mset,
+			"modes": modes,
+			"arguments": args
+		}
+		eobj = EVENT(Event.MODE,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 		if channel==obj.nickname:
 			for c in self.connections:
@@ -637,6 +706,15 @@ class Erk(QMainWindow):
 		if get_names: obj.sendLine(f"NAMES {channel}")
 
 	def irc_topic(self,obj,user,channel,topic):
+
+		data = {
+			"user": user,
+			"channel": channel,
+			"topic": topic
+		}
+		eobj = EVENT(Event.TOPIC,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -694,6 +772,12 @@ class Erk(QMainWindow):
 
 		self.buildConnectionsMenu()
 
+		data = {
+			"nickname": obj.nickname
+		}
+		eobj = EVENT(Event.REGISTERED,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 	def irc_motd(self,obj,motd):
 		c = self.fetchConnection(obj)
 		msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"<br>".join(motd) )
@@ -701,6 +785,12 @@ class Erk(QMainWindow):
 		self.writeToConsoleLog(obj,'',"<br>".join(motd))
 
 		c.motd = motd
+
+		data = {
+			"motd": motd
+		}
+		eobj = EVENT(Event.MOTD,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
 
 	def irc_network_and_hostname(self,obj,network,hostname):
 		c = self.fetchConnection(obj)
@@ -727,6 +817,7 @@ class Erk(QMainWindow):
 
 	def irc_notice(self,obj,user,target,text):
 		if not self.window_is_active: self.IS_FLASHING = True
+		pluguser = user
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -734,6 +825,9 @@ class Erk(QMainWindow):
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
+
+		mobj = PRIVMSG(Message.NOTICE,target,pluguser,text)
+		self.execute_plugins(PLUGIN_MESSAGE_METHOD, mobj, obj )
 
 		if target.lower()=='auth':
 			msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],text )
@@ -776,6 +870,7 @@ class Erk(QMainWindow):
 
 	def irc_action(self,obj,user,target,text):
 		if not self.window_is_active: self.IS_FLASHING = True
+		pluguser = user
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -783,6 +878,9 @@ class Erk(QMainWindow):
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
+
+		mobj = PRIVMSG(Message.ACTION,target,pluguser,text)
+		self.execute_plugins(PLUGIN_MESSAGE_METHOD, mobj, obj )
 
 		# Catch ctcp-action message
 		if target==obj.nickname:
@@ -809,6 +907,7 @@ class Erk(QMainWindow):
 
 	def irc_privmsg(self,obj,user,target,text):
 		if not self.window_is_active: self.IS_FLASHING = True
+		pluguser = user
 		p = user.split('!')
 		if len(p)==2:
 			user = p[0]
@@ -816,6 +915,12 @@ class Erk(QMainWindow):
 			if self.is_ignored(obj,p[1]): return
 
 		if self.is_ignored(obj,user): return
+
+		if target==obj.nickname:
+			mobj = PRIVMSG(Message.PRIVATE,target,pluguser,text)
+		else:
+			mobj = PRIVMSG(Message.PUBLIC,target,pluguser,text)
+		self.execute_plugins(PLUGIN_MESSAGE_METHOD, mobj, obj )
 
 		# Catch private message
 		if target==obj.nickname:
@@ -845,6 +950,13 @@ class Erk(QMainWindow):
 		#self.writeToChannel(obj,target,user+": "+text)
 
 	def irc_disconnect(self,obj,reason):
+
+		data = {
+			"reason": reason.getErrorMessage()
+		}
+		eobj = EVENT(Event.DISCONNECT,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		if not self.disconnecting:
 			if not self.quitting:
 				try:
@@ -873,6 +985,13 @@ class Erk(QMainWindow):
 			obj.heartbeatInterval = self.keep_alive_interval
 			obj.startHeartbeat()
 
+		data = {
+			"server": obj.server,
+			"port": obj.port
+		}
+		eobj = EVENT(Event.CONNECT,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 	def irc_client_joined(self,obj,channel):
 
 		self.serverLog(obj,"Joined "+channel)
@@ -891,6 +1010,14 @@ class Erk(QMainWindow):
 		self.writeChannelUserlist(obj,channel,users)
 
 	def irc_join(self,obj,user,channel):
+
+		data = {
+			"user": user,
+			"channel": channel
+		}
+		eobj = EVENT(Event.JOIN,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		p = user.split('!')
 		if len(p)==2:
 			nick = p[0]
@@ -913,6 +1040,14 @@ class Erk(QMainWindow):
 						self.writeToChannelLog(obj,channel,'',nick+" has joined "+channel)
 
 	def irc_part(self,obj,user,channel):
+
+		data = {
+			"user": user,
+			"channel": channel
+		}
+		eobj = EVENT(Event.PART,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		p = user.split('!')
 		if len(p)==2:
 			nick = p[0]
@@ -947,6 +1082,14 @@ class Erk(QMainWindow):
 
 
 	def irc_nick_changed(self,obj,oldnick,newnick):
+
+		data = {
+			"old": oldnick,
+			"new": newnick
+		}
+		eobj = EVENT(Event.NICK,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
+
 		if obj.nickname==oldnick:
 			self.serverLog(obj,"You are now known as "+newnick)
 		else:
@@ -1288,7 +1431,11 @@ class Erk(QMainWindow):
 
 	def closeEvent(self, event):
 
+		# Trigger load event
+		self.execute_plugins(PLUGIN_UNLOAD_METHOD, None )
+
 		self.clock.stop()
+		self.ticker.stop()
 		self.tray.hide()
 
 		self.quitting = True
@@ -1466,6 +1613,60 @@ class Erk(QMainWindow):
 				self.FLASH_STATE = 0
 				self.tray.setIcon(self.tray_icon)
 
+	def tick_tick(self):
+		self.ticker_uptime = self.ticker_uptime + 1
+		data = {
+			"uptime": self.ticker_uptime
+		}
+		eobj = EVENT(Event.TICK,data)
+		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj )
+
+	def force_execute_plugin(self,plugname,func,args,client=None):
+		retvalue = None
+		for plugin in self.packages.plugins:
+
+			# Don't execute disabled plugins
+			if (plugin._package+"."+plugin._class) != plugname: continue
+
+			if client:
+				SET_IRC_OBJECT(client)
+
+			if args:
+				if hasattr(plugin, f"{func}"):
+					method = getattr(plugin,f"{func}")
+					result = method(args)
+					if result: retvalue = True
+			else:
+				if hasattr(plugin, f"{func}"):
+					method = getattr(plugin,f"{func}")
+					result = method()
+					if result: retvalue = True
+
+		return retvalue
+
+	def execute_plugins(self,func,args,client=None):
+		retvalue = None
+		for plugin in self.packages.plugins:
+
+			# Don't execute disabled plugins
+			if (plugin._package+"."+plugin._class) in self.disabled: continue
+
+			if client:
+				SET_IRC_OBJECT(client)
+
+			if args:
+				if hasattr(plugin, f"{func}"):
+					method = getattr(plugin,f"{func}")
+					result = method(args)
+					if result: retvalue = True
+			else:
+				if hasattr(plugin, f"{func}"):
+					method = getattr(plugin,f"{func}")
+					result = method()
+					if result: retvalue = True
+
+		return retvalue
+
 	def __init__(self,app,settings_file=SETTINGS_FILE,text_settings_file=TEXT_SETTINGS_FILE,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -1506,6 +1707,14 @@ class Erk(QMainWindow):
 		self.clock.beat.connect(self.clock_tick)
 		self.clock.start()
 
+		self.ticker = Clock(1.0)
+		self.ticker.beat.connect(self.tick_tick)
+		self.ticker.start()
+
+		self.ticker_uptime = 0
+
+		self.disabled = get_disabled()
+
 		# Settings changable via the gui
 		self.open_private_chat_windows				= self.settings[SETTING_OPEN_PRIVATE_WINDOWS]
 		self.display_status_bar_on_chat_windows		= self.settings[SETTING_CHAT_STATUS_BARS]
@@ -1541,6 +1750,8 @@ class Erk(QMainWindow):
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
 		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
 
+		self.show_disabled_plugins					= self.settings[SETTING_SHOW_DISABLED_PLUGINS]
+
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
 
@@ -1559,6 +1770,16 @@ class Erk(QMainWindow):
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
+
+		# PLUGINS BEGIN
+
+		self.packages = PluginCollection('plugins')
+		SET_GUI_OBJECT(self)
+
+		# Trigger load event
+		self.execute_plugins(PLUGIN_LOAD_METHOD, None )
+
+		# PLUGINS END
 
 		self.tray = QSystemTrayIcon(self)
 		self.tray.setIcon(self.tray_icon)
@@ -1607,8 +1828,13 @@ class Erk(QMainWindow):
 		self.actNetwork = fancyMenuAction(self,FANCY_NETWORK_ICON,"Servers","Select server from a list",self.menuNetwork)
 		self.ircMenu.addAction(self.actNetwork)
 
+		self.ircMenu.addSeparator()
+
 		self.actEditUserInfo = fancyMenuAction(self,FANCY_USER_ICON,"User","Edit default user information",self.menuEditUser)
 		self.ircMenu.addAction(self.actEditUserInfo)
+
+		self.actInstallPlugin = fancyMenuAction(self,PLUGIN_ICON,"Plugins","Manage & install plugins",self.menuPlugins)
+		self.ircMenu.addAction(self.actInstallPlugin)
 
 		self.ircMenu.addSeparator()
 
@@ -1684,6 +1910,11 @@ class Erk(QMainWindow):
 		self.actWindowTitle.setChecked(self.set_window_title_to_active)
 		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
 		displaySubMenu.addAction(self.actWindowTitle)
+
+		self.actShowDisabled = QAction("Show disabled plugins in \"Plugins\" menu",self,checkable=True)
+		self.actShowDisabled.setChecked(self.show_disabled_plugins)
+		self.actShowDisabled.triggered.connect(self.menuShowDisabled)
+		displaySubMenu.addAction(self.actShowDisabled)
 
 		displaySubMenu.addSeparator()
 
@@ -1857,6 +2088,15 @@ class Erk(QMainWindow):
 
 		if not self.save_logs_on_quit: self.actPrivateLogs.setEnabled(False)
 
+		# Plugins Menu
+
+		# self.pluginMenu = self.menubar.addMenu("Plugins")
+		# self.pluginMenu.setFont(menuBoldText)
+		# self.pluginMenu.setVisible(False)
+
+		self.pluginMenu = self.menubar.addMenu("Plugins")
+		self.buildPluginMenu()
+
 		# Windows Menu
 
 		self.windowMenu = self.menubar.addMenu("Windows")
@@ -1871,6 +2111,10 @@ class Erk(QMainWindow):
 		self.actAbout.triggered.connect(self.menuAbout)
 		self.helpMenu.addAction(self.actAbout)
 
+		helpLink = QAction(QIcon(PDF_ICON),"Plugin documentation",self)
+		helpLink.triggered.connect(lambda state,u=PLUGIN_PDF,m=self.MDI,p=self: PDFWindow(u,"Plugin Documentation",m,p))
+		self.helpMenu.addAction(helpLink)
+
 		helpLink = QAction(QIcon(ERK_ICON),"Source code repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
@@ -1883,6 +2127,7 @@ class Erk(QMainWindow):
 
 		helpLink = QAction(QIcon(LINK_ICON),"Emoji shortcode list",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
+		#helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/",m=self.MDI,p=self: WebWindow(u,m,p) )
 		self.helpMenu.addAction(helpLink)
 
 		helpLink = QAction(QIcon(LINK_ICON),"ASCIImoji shortcode list",self)
@@ -1925,6 +2170,97 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/barrust/pyspellchecker": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
+	def buildPluginMenu(self):
+
+		self.pluginMenu.clear()
+		
+		displayed_plugins = 0
+
+		if len(self.packages.plugins)>0:
+
+			self.disabled = get_disabled()
+
+			packs = {}
+			for p in self.packages.plugins:
+				if not self.show_disabled_plugins:
+					if (p._package+"."+p._class) in self.disabled: continue
+				if p._package in packs:
+					packs[p._package].append(p)
+				else:
+					packs[p._package] = []
+					packs[p._package].append(p)
+
+			for p in packs:
+
+				displayed_plugins = displayed_plugins + 1
+
+				netname = textSeparator(self, f"<b>{p}</b>")
+				self.pluginMenu.addAction(netname)
+
+				for c in packs[p]:
+
+					icon = c._icon
+					if os.path.isfile(icon): 
+						pass
+					else:
+						icon = PLUGIN_ICON
+
+					if (c._package+"."+c._class) in self.disabled: icon = DISABLED_PLUGIN_ICON
+
+					details = c.author
+					details2 = None
+
+					if c.website:
+						details2 = f'''<a href="{c.website}">Link</a>'''
+
+					if c.source:
+						if details2:
+							details2 = details2 + "&nbsp;&nbsp;" + f'''<a href="{c.source}">Source</a>'''
+						else:
+							details2 = f'''<a href="{c.source}">Source code</a>'''
+
+					if details2:
+						pluginentry = fancyMenuLabel_2line(self,icon,c.name+" "+c.version,details,details2)
+					else:
+						pluginentry = fancyMenuLabel(self,icon,c.name+" "+c.version,details)
+
+					if (c._package+"."+c._class) in self.disabled: pluginentry.setEnabled(False)
+
+					self.pluginMenu.addAction(pluginentry)
+
+			if displayed_plugins==0:
+				# no plugins displayed (they are all disabled)
+				entry = centerNormalText(self,"<i>&nbsp;&nbsp;No plugins are loaded&nbsp;&nbsp;</i>")
+				self.pluginMenu.addAction(entry)
+			else:
+				# show reload plugins command
+				self.pluginMenu.addSeparator()
+
+				helpLink = QAction(QIcon(RELOAD_ICON),"Reload plugins",self)
+				helpLink.triggered.connect(self.pluginReload)
+				f = helpLink.font()
+				f.setBold(True)
+				helpLink.setFont(f)
+				self.pluginMenu.addAction(helpLink)
+
+	def pluginReload(self):
+
+		loaded = []
+		for p in self.packages.plugins:
+			loaded.append(p._package+"."+p._class)
+
+		self.packages.reload_plugins(True)
+
+		for p in self.packages.plugins:
+			if p._package+"."+p._class in loaded: continue
+			self.force_execute_plugin(p._package+"."+p._class,PLUGIN_LOAD_METHOD, None )
+
+		self.buildPluginMenu()
+
+	def menuPlugins(self):
+		y = PluginsDialog.Dialog(self)
+		y.show()
+
 	def menuIgnore(self):
 		y = IgnoreDialog.Dialog(self)
 		y.show()
@@ -1937,6 +2273,15 @@ class Erk(QMainWindow):
 	def menuAbout(self):
 		x = AboutDialog.Dialog(self)
 		x.show()
+
+	def menuShowDisabled(self):
+		if self.show_disabled_plugins:
+			self.show_disabled_plugins = False
+		else:
+			self.show_disabled_plugins = True
+		self.buildPluginMenu()
+		self.settings[SETTING_SHOW_DISABLED_PLUGINS] = self.show_disabled_plugins
+		save_settings(self.settings,self.settings_file)
 
 	def menuTray(self):
 		if self.systray_notification:
@@ -2668,13 +3013,14 @@ class Clock(QThread):
 
 	beat = pyqtSignal()
 
-	def __init__(self,parent=None):
+	def __init__(self,resolution=0.5,parent=None):
 		super(Clock, self).__init__(parent)
 		self.threadactive = True
+		self.resolution = resolution
 
 	def run(self):
 		while self.threadactive:
-			time.sleep(0.5)
+			time.sleep(self.resolution)
 			self.beat.emit()
 
 	def stop(self):

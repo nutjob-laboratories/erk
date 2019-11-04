@@ -132,6 +132,11 @@ class Dialog(QDialog):
 		asciimoji_credit.setFont(boldfont)
 		asciimoji_credit.setOpenExternalLinks(True)
 
+		pdfjs_credit = QLabel(f"<a href=\"https://github.com/mozilla/pdf.js\">pdf.js</a> by <a href=\"https://www.mozilla.org/en-US/\">Mozilla</a>")
+		pdfjs_credit.setAlignment(Qt.AlignCenter)
+		pdfjs_credit.setFont(boldfont)
+		pdfjs_credit.setOpenExternalLinks(True)
+
 		gnu_credit = QLabel(f"<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a>")
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setFont(boldfont)
@@ -145,6 +150,7 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(asciimoji_credit)
+		creditsLayout.addWidget(pdfjs_credit)
 		creditsLayout.addWidget(gnu_credit)
 		
 		creditsBox.setLayout(creditsLayout)

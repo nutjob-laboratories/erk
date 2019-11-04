@@ -20,7 +20,10 @@ from erk.common import *
 
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
+os.mkdir("./dist/settings/user")
 os.mkdir("./dist/logs")
+os.mkdir("./dist/plugins")
+os.mkdir("./dist/documentation")
 
 os.system("compile_resources.bat")
 
@@ -29,9 +32,14 @@ shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tm
 shutil.copytree("./spellchecker", "./dist/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./emoji", "./dist/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
+shutil.copytree("./pdfjs", "./dist/pdfjs",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+
 shutil.copy("./erk.py", "./dist/erk.py")
 
 shutil.copy("./LICENSE", "./dist/LICENSE")
+
+shutil.copy("./documentation/Erk-Plugin-Guide.odt", "./dist/documentation/Erk-Plugin-Guide.odt")
+shutil.copy("./documentation/Erk-Plugin-Guide.pdf", "./dist/documentation/Erk-Plugin-Guide.pdf")
 
 os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('dist', 'erk_dist.zip'); }\" ")
 

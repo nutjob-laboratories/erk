@@ -45,6 +45,12 @@ try:
 except ImportError:
 	SSL_AVAILABLE = False
 
+PLUGIN_MESSAGE_METHOD = 'handle_message'
+PLUGIN_INPUT_METHOD = 'handle_input'
+PLUGIN_EVENT_METHOD = 'handle_event'
+PLUGIN_LOAD_METHOD = 'load'
+PLUGIN_UNLOAD_METHOD = 'unload'
+
 MENU_ICON_SIZE = 25
 MENU_ICON_SMALL_SIZE = 18
 
@@ -193,6 +199,18 @@ FLASH_ICON = ":/gui-flash.png"
 CASCADE_ICON = ":/gui-cascade.png"
 TILE_ICON = ":/gui-tile.png"
 
+PLUGIN_ICON = ":/gui-plugin.png"
+DISABLED_PLUGIN_ICON = ":/gui-disabled_plugin.png"
+RELOAD_ICON = ":/gui-reload.png"
+
+PDF_ICON = ":/gui-pdf.png"
+
+WEB_ICON = ":/gui-web.png"
+
+BACK_ICON = ":/gui-back.png"
+FORWARD_ICON = ":/gui-forward.png"
+STOP_ICON = ":/gui-stop.png"
+
 # ---------
 # | ICONS |
 # ---------
@@ -276,6 +294,14 @@ def centerText(self,text):
 
 	return tsAction
 
+def centerNormalText(self,text):
+
+	tsLabel = QLabel( "<center>"+text+"</center>" )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
 # =====================
 # | WINDOW MANAGEMENT |
 # =====================
@@ -285,11 +311,43 @@ import erk.windows.user as User
 import erk.windows.console as Console
 import erk.windows.list as ChannelList
 import erk.windows.text as ViewText
+import erk.windows.pdf as ViewPDF
+import erk.windows.web as ViewWeb
 
 WINDOW_WIDGET_MARGIN = 2
 
 DEFAULT_WINDOW_WIDTH = 500
 DEFAULT_WINDOW_HEIGHT = 300
+
+def WebWindow(url,MDI,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewWeb.Window(url,newSubwindow,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+
+
+def PDFWindow(filename,title,MDI,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewPDF.Window(filename,title,newSubwindow,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
 
 def TextWindow(host,MDI,client,parent=None):
 
@@ -681,6 +739,71 @@ def menuHtml(icon,text,description):
 				</tr>
 				<tr>
 				  <td style="font-style: italic; font-weight: normal;"><small>{description}</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def fancyMenuLabel(self,icon,title,description):
+
+	fancyLabel = QLabel( menuLabelHtml(icon,title,description) )
+	fancyAction = QWidgetAction(self)
+	fancyAction.setDefaultWidget(fancyLabel)
+
+	return fancyAction
+
+def menuLabelHtml(icon,text,description):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{FANCY_MENU_ICON_SIZE}" height="{FANCY_MENU_ICON_SIZE}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}&nbsp;</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def fancyMenuLabel_2line(self,icon,title,description,description2):
+
+	fancyLabel = QLabel( menuLabelHtml_2line(icon,title,description,description2) )
+	fancyAction = QWidgetAction(self)
+	fancyAction.setDefaultWidget(fancyLabel)
+
+	return fancyAction
+
+def menuLabelHtml_2line(icon,text,description,description2):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{FANCY_MENU_ICON_SIZE}" height="{FANCY_MENU_ICON_SIZE}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}&nbsp;</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}</small></td>
+				</tr>
+				<tr>
+				  <td style="font-style: normal; font-weight: bold;"><small>{description2}</small></td>
 				</tr>
 			  </tbody>
 			</table>

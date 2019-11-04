@@ -29,5 +29,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .main import Erk
-from .common import *
+#from .main import Erk
+#from .common import *
+
+from .plugins import Plugin,Message,Event,ERK,IRC,HEAP

@@ -44,21 +44,15 @@ class Window(QMainWindow):
 		event.accept()
 
 	def write(self,line):
-		# ui = QListWidgetItem()
-		# ui.setText(line)
-
-		# if self.linecolor == 0:
-		# 	self.linecolor = 1
-		# 	ui.setBackground(QColor("#FFFFFF"))
-		# else:
-		# 	self.linecolor = 0
-		# 	ui.setBackground(QColor("#E7E7E7"))
-
-
-		# self.textLineDisplay.addItem(ui)
 
 		self.textDisplay.append(line)
 		self.textDisplay.moveCursor(QTextCursor.Start)
+
+	def clear(self):
+		self.textDisplay.clear()
+
+	def contents(self):
+		return self.textDisplay.toPlainText()
 
 	def __init__(self,name,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -74,10 +68,6 @@ class Window(QMainWindow):
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(TEXT_WINDOW))
-
-		# self.textLineDisplay = QListWidget(self)
-		# self.textLineDisplay.setObjectName("textLineDisplay")
-		# self.textLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 
 		self.textDisplay = QTextBrowser(self)
 		self.textDisplay.setObjectName("textDisplay")

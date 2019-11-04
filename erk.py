@@ -38,6 +38,7 @@ import posixpath
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5 import QtWebEngineWidgets
 
 app = QApplication(sys.argv)
 
@@ -46,7 +47,8 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk import *
+#from erk import *
+from erk.main import Erk
 from erk.common import *
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 

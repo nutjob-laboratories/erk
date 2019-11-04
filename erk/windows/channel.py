@@ -47,6 +47,22 @@ import erk.dialogs.channel_key as ChannelKeyDialog
 import erk.dialogs.topic as TopicDialog
 import erk.dialogs.invite as InviteDialog
 
+import erk.windows.web as ViewWeb
+
+def WebWindow(url,MDI,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewWeb.Window(url,newSubwindow,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
 class Window(QMainWindow):
 
 	def update_hostmask(self,nick,hostmask):
@@ -122,6 +138,7 @@ class Window(QMainWindow):
 
 		self.users = []
 		self.operator = False
+		self.voiced = False
 
 		self.channelUserDisplay.clear()
 
@@ -163,6 +180,7 @@ class Window(QMainWindow):
 					if nickname==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname)
+					if nickname==self.client.nickname: self.voiced = True
 				else:
 					normal.append(nickname)
 			else:
@@ -171,6 +189,7 @@ class Window(QMainWindow):
 					if nickname.replace('@','')==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname.replace('+',''))
+					if nickname.replace('+','')==self.client.nickname: self.voiced = True
 				else:
 					normal.append(nickname)
 
@@ -221,7 +240,10 @@ class Window(QMainWindow):
 
 	def linkClicked(self,url):
 		if url.host():
-			QDesktopServices.openUrl(url)
+			if self.open_links_in_erk:
+				WebWindow(url.toString(),self.gui.MDI,self.gui)
+			else:
+				QDesktopServices.openUrl(url)
 			self.channelChatDisplay.setSource(QUrl())
 			self.channelChatDisplay.moveCursor(QTextCursor.End)
 		else:
@@ -285,32 +307,41 @@ class Window(QMainWindow):
 
 		self.actModes = self.menubar.addMenu("Modes")
 		self.actModes.setStyle(self.gui.menu_style)
+		self.actModes.setFont(self.ufont)
 		self.rebuildModesMenu()
 
 		self.actBans = self.menubar.addMenu("Bans")
 		self.actBans.setStyle(self.gui.menu_style)
+		self.actBans.setFont(self.ufont)
 		self.rebuildBanMenu()
 
 		self.actOptions = self.menubar.addMenu("Options")
+		self.actOptions.setFont(self.ufont)
 		self.rebuildOptionsMenu()
 
 	def buildOperatorMenus(self):
 		self.menubar.clear()
 
+		self.actAdmin = self.menubar.addMenu("Operator")
+		self.actAdmin.setStyle(self.gui.menu_style)
+		self.actAdmin.setFont(self.ufont)
+		self.rebuildAdminMenu()
+
 		self.actModes = self.menubar.addMenu("Modes")
 		self.actModes.setStyle(self.gui.menu_style)
+		self.actModes.setFont(self.ufont)
 		self.rebuildModesMenu()
 
 		self.actBans = self.menubar.addMenu("Bans")
 		self.actBans.setStyle(self.gui.menu_style)
+		self.actBans.setFont(self.ufont)
 		self.rebuildBanMenu()
 
 		self.actOptions = self.menubar.addMenu("Options")
+		self.actOptions.setFont(self.ufont)
 		self.rebuildOptionsMenu()
 
-		self.actAdmin = self.menubar.addMenu("Administrate")
-		self.actAdmin.setStyle(self.gui.menu_style)
-		self.rebuildAdminMenu()
+
 
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
@@ -336,6 +367,7 @@ class Window(QMainWindow):
 		self.is_away = False
 
 		self.operator = False
+		self.voiced = False
 
 		self.hostmasks = {}
 
@@ -347,6 +379,7 @@ class Window(QMainWindow):
 		self.ignore_topic_messages = self.channel_settings["ignore_topic"]
 		self.ignore_quit_messages = self.channel_settings["ignore_quit"]
 		self.ignore_kick_messages = self.channel_settings["ignore_kick"]
+		self.open_links_in_erk = self.channel_settings["open_links_in_erk"]
 
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW))
@@ -365,9 +398,9 @@ class Window(QMainWindow):
 
 		self.channelUserDisplay.itemDoubleClicked.connect(self._handleDoubleClick)
 
-		ufont = self.channelUserDisplay.font()
-		ufont.setBold(True)
-		self.channelUserDisplay.setFont(ufont)
+		self.ufont = self.channelUserDisplay.font()
+		self.ufont.setBold(True)
+		self.channelUserDisplay.setFont(self.ufont)
 
 		self.userTextInput = SpellTextEdit(self)
 		self.userTextInput.setObjectName("userTextInput")
@@ -677,6 +710,14 @@ class Window(QMainWindow):
 			mMode.setFont(f)
 			self.actModes.addAction(mMode)
 
+	def toggleOpenLinks(self):
+		if self.open_links_in_erk:
+			self.open_links_in_erk = False
+		else:
+			self.open_links_in_erk = True
+		self.channel_settings["open_links_in_erk"] = self.open_links_in_erk
+		save_channel_options(self.client.network,self.name,self.channel_settings)
+
 	def toggleIgnoreOption(self,opt):
 
 		if opt=="kick":
@@ -777,6 +818,11 @@ class Window(QMainWindow):
 		self.ignoreNick.setChecked(self.ignore_nick_messages)
 		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
 		self.menuFilter.addAction(self.ignoreNick)
+
+		self.openLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
+		self.openLinks.setChecked(self.open_links_in_erk)
+		self.openLinks.triggered.connect(self.toggleOpenLinks)
+		self.actOptions.addAction(self.openLinks)
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()

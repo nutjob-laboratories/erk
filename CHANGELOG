@@ -1,3 +1,19 @@
+Version 0.510
+	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
+	* Added a PDF viewer as an MDI subwindow
+	* Added the ability to load/view the plugin documentation in the GUI
+	* Added a crude in-application web viewer/browser
+	* Added a channel option to open links in the in-application browser
+	* Added a private chat option to open links in the in-application browser
+	* Plugin documentation has been added
+	* The "Plugin" menu has been added, showing enabled (and possibly disabled) plugins
+	* An option to show (or hide) disabled plugins has been added
+	* A "Manage Plugins" entry has been added to the main menu
+	* A "Manage Plugins" dialog has been added, for dis/enabling and installing plugins
+	* The plugin frame work has been added
+	* Added a PDF viewer
+	* Added Mozilla's pdf.js for PDF viewing, and added pdf.js to the about credits
+
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"
 	* Settings filename changed from "erk.json" to "settings.json"

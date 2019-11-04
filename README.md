@@ -1,10 +1,11 @@
 
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/erk_keyboard_logo.png"><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.501</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.510</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf"><b>Erk Plugin Development Guide</b></a>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.501.030**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.510.001**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -22,6 +23,7 @@
 	* **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
 	* **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
 	* Just plain ol' fashioned IRC
+* Powerful plugin framework ([Plugin Development Guide](https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf))
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
@@ -44,6 +46,8 @@
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
 * Automatic channel and private message logging
+* Individual channel display options
+* Optional built-in web browser for quickly visiting/viewing posted URLs
 * Optional server connection history
 * A built-in list of over 80 IRC servers to connect to
 * Many command-line options to control **Erk**'s start up
@@ -60,9 +64,10 @@
 
 
 # Requirements
-**Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
+**Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
 
     pip install pyqt5
+    pip install PyQtWebEngine
     pip install Twisted
     pip install qt5reactor
 
@@ -86,6 +91,10 @@ Hit enter, and **Erk** will start up! Click "Connect" on the _Ərk_ menu to ente
 To make things easier, Windows users can create a shortcut to **Erk** so all you have to do is double click to start chatting. There are many tutorials on how to do this online; a good place to start is [right here](https://therenegadecoder.com/code/how-to-make-a-python-script-shortcut-with-arguments/).
 
 # Frequently asked questions
+
+## What plugins does **Erk** come with?
+
+None! However, everything you need to start writing your own plugins comes with **Erk**. Plugins are written in Python, and can do nearly everything a user can do with **Erk**: join and part channels, send messages, etc. To get started writing your own plugins, check out the [Erk Plugin Development Guide](https://github.com/nutjob-laboratories/erk/raw/master/documentation/Erk-Plugin-Guide.pdf).
 
 ## What does "erk" mean?
 

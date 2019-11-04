@@ -39,6 +39,8 @@ import string
 import random
 from itertools import combinations
 from collections import defaultdict
+import pathlib
+from zipfile import ZipFile
 
 # Directories
 INSTALL_DIRECTORY = sys.path[0]
@@ -46,6 +48,7 @@ ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
+PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
 TEXT_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
@@ -58,6 +61,8 @@ IGNORE_FILE = os.path.join(USER_DIRECTORY, "ignore.json")
 HISTORY_FILE = os.path.join(USER_DIRECTORY, "history.json")
 VISITED_FILE = os.path.join(USER_DIRECTORY, "visited.json")
 
+DISABLED_FILE = os.path.join(USER_DIRECTORY, "disabled.json")
+
 MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
@@ -68,10 +73,22 @@ ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.tx
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
+PDF_JS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "pdfjs")
+PDF_JS_WEB_DIRECTORY = os.path.join(PDF_JS_DIRECTORY, "web")
+PDF_JS_VIEWER = os.path.join(PDF_JS_WEB_DIRECTORY, "viewer.html")
+
+PDF_JS_VIEWER = pathlib.Path(PDF_JS_VIEWER).as_uri()
+
+DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
+PLUGIN_PDF = os.path.join(DOCUMENTATION_DIRECTORY, "Erk-Plugin-Guide.pdf")
+
+#PLUGIN_PDF = pathlib.Path(PLUGIN_PDF).as_uri()
+
 # Create any necessary directories if they don't exist
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 if not os.path.isdir(USER_DIRECTORY): os.mkdir(USER_DIRECTORY)
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
+if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 
 mvf=open(MINOR_VERSION_FILE, "r")
 MINOR_VERSION = mvf.read()
@@ -83,7 +100,7 @@ elif len(MINOR_VERSION)==2:
 	MINOR_VERSION = "0"+MINOR_VERSION
 
 APPLICATION_NAME = "Ərk"
-APPLICATION_MAJOR_VERSION = "0.501"
+APPLICATION_MAJOR_VERSION = "0.510"
 APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
 OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
@@ -148,6 +165,8 @@ SETTING_DISPLAY_IRC_COLOR			= "display_irc_colors_in_chat"
 SETTING_ENABLE_IGNORE				= "enable_user_ignore"
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
 SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
+
+SETTING_SHOW_DISABLED_PLUGINS		= "show_disabled_plugins_in_menu"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
 
@@ -221,6 +240,23 @@ def filterProfanityFromText(text,punc=True):
 			word = censorWord(word,punc)
 		clean.append(word)
 	return ' '.join(clean)
+
+def install_plugin_from_zip(filename):
+	# PLUGIN_DIRECTORY
+	with ZipFile(filename,"r") as zip:
+		zip.extractall(path=PLUGIN_DIRECTORY)
+
+def get_disabled():
+	if os.path.isfile(DISABLED_FILE):
+		with open(DISABLED_FILE, "r") as read_disabled:
+			data = json.load(read_disabled)
+			return data
+	else:
+		return []
+
+def save_disabled(data):
+	with open(DISABLED_FILE, "w") as write_data:
+		json.dump(data, write_data, indent=4, sort_keys=True)
 
 def get_ignore():
 	if os.path.isfile(IGNORE_FILE):
@@ -329,6 +365,7 @@ def patch_config_file(data):
 	if not SETTING_ENABLE_IGNORE in data: data[SETTING_ENABLE_IGNORE] = True
 	if not SETTING_REJOIN_CHANNELS in data: data[SETTING_REJOIN_CHANNELS] = True
 	if not SETTING_SYSTRAY_NOTIFICATION in data: data[SETTING_SYSTRAY_NOTIFICATION] = True
+	if not SETTING_SHOW_DISABLED_PLUGINS in data: data[SETTING_SHOW_DISABLED_PLUGINS] = False
 
 	if len(data)>s:
 		return [True,data]
@@ -380,6 +417,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_ENABLE_IGNORE: True,
 			SETTING_REJOIN_CHANNELS: True,
 			SETTING_SYSTRAY_NOTIFICATION: True,
+			SETTING_SHOW_DISABLED_PLUGINS: False,
 		}
 		save_settings(si)
 		return si
@@ -532,6 +570,7 @@ def get_channel_options(network,channel):
 			"ignore_topic": False,
 			"ignore_quit": False,
 			"ignore_kick": False,
+			"open_links_in_erk": False,
 		}
 		return si
 
@@ -690,10 +729,9 @@ def render_message(gui,timestamp_style,ident_style,ident,message_style,message,t
 	if idl>0:
 		ident = ('&nbsp;'*idl)+ident
 
-	
 	msg = msg.replace("!ID_STYLE!",ident_style)
 	msg = msg.replace("!ID!",ident)
-	
+
 	if message_style=="":
 		msg = msg.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
 	else:

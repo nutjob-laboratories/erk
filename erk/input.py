@@ -34,6 +34,8 @@ import shlex
 from erk.common import *
 import emoji
 
+from erk.plugins.types import *
+
 def escape_single_quotes(text):
 	return text.replace("'","\\'")
 
@@ -61,6 +63,12 @@ def is_valid_color(data):
 
 def handle_chat_input(obj,text,is_user=False):
 	#print(text)
+
+	# class INPUT(object):
+	# def __init__(self,text,window):
+	arg = INPUT(text,obj.name,False)
+	if obj.gui.execute_plugins(PLUGIN_INPUT_METHOD, arg, obj.client ):
+		return
 
 	if not len(text)>0: return
 
@@ -437,6 +445,10 @@ def handle_chat_input(obj,text,is_user=False):
 	obj.gui.writeToChannelLog(obj.client,obj.name,GLYPH_SELF+obj.client.nickname,text)
 
 def handle_console_input(obj,text):
+
+	arg = INPUT(text,obj.name,True)
+	if obj.gui.execute_plugins(PLUGIN_INPUT_METHOD, arg, obj.client ):
+		return
 	
 	# Handle any commands here
 	etext = escape_single_quotes(text)

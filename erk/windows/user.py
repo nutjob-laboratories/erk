@@ -45,6 +45,22 @@ import erk.dialogs.add_channel as AddChannelDialog
 import erk.dialogs.new_nick as NicknameDialog
 import erk.dialogs.invite as InviteDialog
 
+import erk.windows.web as ViewWeb
+
+def WebWindow(url,MDI,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewWeb.Window(url,newSubwindow,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
 class Window(QMainWindow):
 
 	def getUserNicks(self):
@@ -103,7 +119,14 @@ class Window(QMainWindow):
 
 	def linkClicked(self,url):
 		if url.host():
-			QDesktopServices.openUrl(url)
+			# QDesktopServices.openUrl(url)
+			# self.channelChatDisplay.setSource(QUrl())
+			# self.channelChatDisplay.moveCursor(QTextCursor.End)
+
+			if self.open_links_in_erk:
+				WebWindow(url.toString(),self.gui.MDI,self.gui)
+			else:
+				QDesktopServices.openUrl(url)
 			self.channelChatDisplay.setSource(QUrl())
 			self.channelChatDisplay.moveCursor(QTextCursor.End)
 		else:
@@ -150,6 +173,8 @@ class Window(QMainWindow):
 		self.is_console = False
 
 		self.is_away = False
+
+		self.open_links_in_erk = False
 
 		# def get_user_hostmask(self,obj,tnick):
 		self.hostmask = self.gui.get_user_hostmask(self.client,self.name)
@@ -237,6 +262,13 @@ class Window(QMainWindow):
 		self.actWhois = QAction(QIcon(WHOIS_ICON),"WHOIS",self)
 		self.actWhois.triggered.connect(self.menuWhois)
 		optionsMenu.addAction(self.actWhois)
+
+		optionsMenu.addSeparator()
+
+		self.actOpenLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
+		self.actOpenLinks.setChecked(self.open_links_in_erk)
+		self.actOpenLinks.triggered.connect(self.menuOpenLinks)
+		optionsMenu.addAction(self.actOpenLinks)
 
 		optionsMenu.addSeparator()
 
@@ -342,6 +374,12 @@ class Window(QMainWindow):
 			else:
 				msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[SYSTEM_STYLE_NAME],message,timestamp )
 			self.writeText(msg)
+
+	def menuOpenLinks(self):
+		if self.open_links_in_erk:
+			self.open_links_in_erk = False
+		else:
+			self.open_links_in_erk = True
 
 	def menuWhois(self):
 		self.client.sendLine(f"WHOIS {self.name}")
