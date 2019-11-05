@@ -38,7 +38,10 @@ import posixpath
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5 import QtWebEngineWidgets
+try:
+	from PyQt5 import QtWebEngineWidgets
+except:
+	pass
 
 app = QApplication(sys.argv)
 
