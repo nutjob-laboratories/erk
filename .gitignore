@@ -10,3 +10,8 @@ settings/user/history.json
 settings/user/lastserver.json
 settings/user/user.json
 settings/user/visited.json
+logs/EnterTheGame-#themaxx.json
+logs/EntropyNet-#themaxx.json
+logs/irc.enterthegame.com-6667.json
+logs/irc.entropynet.net-6667.json
+settings/user/ignore.json

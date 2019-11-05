@@ -223,12 +223,30 @@ class Dialog(QDialog):
 		historylist = get_history_list()
 		self.visited = get_visited()
 
-		servlist = historylist + servlist
+		# servlist = historylist + servlist
 		self.saved_entries = []
+
+		no_visits = []
+		visited_before = []
+		for entry in servlist:
+			found = False
+			for e in self.visited:
+				if entry[0]==e[0]:
+					found = True
+					visited_before.append(entry)
+			if not found:
+				no_visits.append(entry)
+		#servlist = no_visits
+
+		servlist = historylist + visited_before + ["0"] + no_visits
 
 		counter = -1
 		for entry in servlist:
 			counter = counter + 1
+			if len(entry)==1:
+				self.servers.insertSeparator(counter+1)
+				self.StoredData.append(entry)
+				continue
 			if len(entry) > 5: continue
 			if len(entry) < 4: continue
 

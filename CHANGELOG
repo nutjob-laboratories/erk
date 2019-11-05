@@ -18,6 +18,12 @@ Version 0.510
 	* Fixed a bug in text windows
 	* Fixed a bug where the plugin menu wouldn't render if there were no plugins
 	* Plugins menu now displays if no plugins are loaded
+	* Previously visited servers will *always* show at the top of the "Servers" dialog server list
+	* Made the "Text Window" icon more visible
+	* Changed server icons
+	* Changed the "host" icon
+	* Changed console window watermark
+	* Changed the font icon
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"
