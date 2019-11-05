@@ -1435,7 +1435,6 @@ class Erk(QMainWindow):
 		self.execute_plugins(PLUGIN_UNLOAD_METHOD, None )
 
 		self.clock.stop()
-		self.ticker.stop()
 		self.tray.hide()
 
 		self.quitting = True
@@ -1613,14 +1612,6 @@ class Erk(QMainWindow):
 				self.FLASH_STATE = 0
 				self.tray.setIcon(self.tray_icon)
 
-	def tick_tick(self):
-		self.ticker_uptime = self.ticker_uptime + 1
-		data = {
-			"uptime": self.ticker_uptime
-		}
-		eobj = EVENT(Event.TICK,data)
-		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj )
-
 	def force_execute_plugin(self,plugname,func,args,client=None):
 		retvalue = None
 		for plugin in self.packages.plugins:
@@ -1706,12 +1697,6 @@ class Erk(QMainWindow):
 		self.clock = Clock()
 		self.clock.beat.connect(self.clock_tick)
 		self.clock.start()
-
-		self.ticker = Clock(1.0)
-		self.ticker.beat.connect(self.tick_tick)
-		self.ticker.start()
-
-		self.ticker_uptime = 0
 
 		self.disabled = get_disabled()
 

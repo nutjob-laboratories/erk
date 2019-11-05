@@ -53,7 +53,6 @@ class Event(IntEnum):
 	INVITE = 13
 	QUIT = 14
 	ERROR = 15
-	TICK = 16
 
 
 	
