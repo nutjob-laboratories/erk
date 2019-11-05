@@ -47,6 +47,7 @@ class Window(QMainWindow):
 
 		self.textDisplay.append(line)
 		self.textDisplay.moveCursor(QTextCursor.Start)
+		self.show()
 
 	def clear(self):
 		self.textDisplay.clear()
