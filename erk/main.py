@@ -2228,20 +2228,23 @@ class Erk(QMainWindow):
 
 					self.pluginMenu.addAction(pluginentry)
 
-			if displayed_plugins==0:
-				# no plugins displayed (they are all disabled)
-				entry = centerNormalText(self,"<i>&nbsp;&nbsp;No plugins are loaded&nbsp;&nbsp;</i>")
-				self.pluginMenu.addAction(entry)
-			else:
-				# show reload plugins command
-				self.pluginMenu.addSeparator()
+		if displayed_plugins==0:
+			# no plugins displayed (they are all disabled)
+			#entry = centerNormalText(self,"<i>&nbsp;&nbsp;No plugins are loaded&nbsp;&nbsp;</i>")
+			#self.pluginMenu.addAction(entry)
 
-				helpLink = QAction(QIcon(RELOAD_ICON),"Reload plugins",self)
-				helpLink.triggered.connect(self.pluginReload)
-				f = helpLink.font()
-				f.setBold(True)
-				helpLink.setFont(f)
-				self.pluginMenu.addAction(helpLink)
+			pluginentry = fancyMenuLabel_0line(self,NO_PLUGINS_ICON,"No plugins loaded")
+			self.pluginMenu.addAction(pluginentry)
+
+		# show reload plugins command
+		self.pluginMenu.addSeparator()
+
+		menuReload = QAction(QIcon(RELOAD_ICON),"Reload plugins",self)
+		menuReload.triggered.connect(self.pluginReload)
+		f = menuReload.font()
+		f.setBold(True)
+		menuReload.setFont(f)
+		self.pluginMenu.addAction(menuReload)
 
 	def pluginReload(self):
 

@@ -208,6 +208,7 @@ TILE_ICON = ":/gui-tile.png"
 PLUGIN_ICON = ":/gui-plugin.png"
 DISABLED_PLUGIN_ICON = ":/gui-disabled_plugin.png"
 RELOAD_ICON = ":/gui-reload.png"
+NO_PLUGINS_ICON = ":/gui-no_plugins.png"
 
 PDF_ICON = ":/gui-pdf.png"
 
@@ -796,6 +797,34 @@ def menuLabelHtml_2line(icon,text,description,description2):
 				</tr>
 				<tr>
 				  <td style="font-style: normal; font-weight: bold;"><small>{description2}</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def fancyMenuLabel_0line(self,icon,title):
+
+	fancyLabel = QLabel( menuLabelHtml_0line(icon,title) )
+	fancyAction = QWidgetAction(self)
+	fancyAction.setDefaultWidget(fancyLabel)
+
+	return fancyAction
+
+def menuLabelHtml_0line(icon,text):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{FANCY_MENU_ICON_SIZE}" height="{FANCY_MENU_ICON_SIZE}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}&nbsp;</big></td>
 				</tr>
 			  </tbody>
 			</table>

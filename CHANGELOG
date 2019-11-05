@@ -15,6 +15,9 @@ Version 0.510
 	* Added Mozilla's pdf.js for PDF viewing, and added pdf.js to the about credits
 	* Removed pdf.js, as it's huge (11mb unzipped)
 	* Added PyQtWebEngine as an optional requirement (if it's not installed, the in-app browser can't be used)
+	* Fixed a bug in text windows
+	* Fixed a bug where the plugin menu wouldn't render if there were no plugins
+	* Plugins menu now displays if no plugins are loaded
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"
