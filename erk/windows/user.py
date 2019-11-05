@@ -126,7 +126,11 @@ class Window(QMainWindow):
 			# self.channelChatDisplay.moveCursor(QTextCursor.End)
 
 			if self.open_links_in_erk:
-				WebWindow(url.toString(),self.gui.MDI,self.gui)
+				#WebWindow(url.toString(),self.gui.MDI,self.gui)
+				if self.gui.browser_window:
+					self.gui.browser_window.navigate(url.toString())
+				else:
+					self.gui.browser_window = WebWindow(url.toString(),self.gui.MDI,self.gui)
 			else:
 				QDesktopServices.openUrl(url)
 			self.channelChatDisplay.setSource(QUrl())
@@ -256,6 +260,12 @@ class Window(QMainWindow):
 		optionsMenu.setFont(menuBoldText)
 		optionsMenu.setStyle(self.gui.menu_style)
 
+		if WEB_AVAILABLE:
+			self.actOpenLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
+			self.actOpenLinks.setChecked(self.open_links_in_erk)
+			self.actOpenLinks.triggered.connect(self.menuOpenLinks)
+			optionsMenu.addAction(self.actOpenLinks)
+
 
 		uinvite = QAction(QIcon(INVITE_ICON),"Invite to channel",self)
 		uinvite.triggered.connect(self.menuInvite)
@@ -267,31 +277,9 @@ class Window(QMainWindow):
 
 		optionsMenu.addSeparator()
 
-		self.actOpenLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
-		self.actOpenLinks.setChecked(self.open_links_in_erk)
-		self.actOpenLinks.triggered.connect(self.menuOpenLinks)
-		optionsMenu.addAction(self.actOpenLinks)
-
-		optionsMenu.addSeparator()
-
 		closechat = QAction(QIcon(PART_ICON),"Close chat",self)
 		closechat.triggered.connect(self.menuClose)
 		optionsMenu.addAction(closechat)
-
-		# serverMenu = self.menubar.addMenu("Server")
-		# serverMenu.setFont(menuBoldText)
-
-		# self.actNick = QAction(QIcon(USER_ICON),"Nickname",self)
-		# self.actNick.triggered.connect(self.menuNick)
-		# serverMenu.addAction(self.actNick)
-
-		# self.actJoin = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
-		# self.actJoin.triggered.connect(self.menuJoin)
-		# serverMenu.addAction(self.actJoin)
-
-		# self.actWhois = QAction(QIcon(WHOIS_ICON),"WHOIS",self)
-		# self.actWhois.triggered.connect(self.menuWhois)
-		# serverMenu.addAction(self.actWhois)
 
 		# Load logs if necessary
 		if self.gui.load_logs_on_start:
@@ -330,11 +318,6 @@ class Window(QMainWindow):
 				self.writeText(msg)
 
 			if len(self.log)>0:
-				# t = datetime.timestamp(datetime.now())
-				# pretty = datetime.fromtimestamp(t).strftime('%B %d, %Y at %H:%M:%S')
-				# msg = render_system(self.gui, self.gui.styles[TIMESTAMP_STYLE_NAME],self.gui.styles[RESUME_STYLE_NAME],"Resumed on "+pretty )
-				# self.writeText(msg)
-				# self.add_to_log(GLYPH_RESUME,"Resumed on "+pretty )
 
 				t = datetime.timestamp(datetime.now())
 				pretty = datetime.fromtimestamp(t).strftime('%B %d, %Y at %H:%M:%S')

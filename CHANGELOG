@@ -24,6 +24,8 @@ Version 0.510
 	* Changed the "host" icon
 	* Changed console window watermark
 	* Changed the font icon
+	* Channel and user windows will now only use *one* shared browser window
+	* Re-arranged channel and user chat options menus
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

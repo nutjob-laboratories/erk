@@ -16,3 +16,5 @@ logs/irc.enterthegame.com-6667.json
 logs/irc.entropynet.net-6667.json
 settings/user/ignore.json
 *.odt#
+settings/user/EFnet-themaxx-options.json
+settings/user/MYNet-themaxx-options.json

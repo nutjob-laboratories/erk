@@ -42,22 +42,33 @@ from erk.common import *
 class Window(QMainWindow):
 
 	def closeEvent(self, event):
+		self.gui.browser_window = None
+		self.gui.buildWindowMenu()
 		self.subwindow.close()
 		self.close()
 		event.accept()
 
 	def webTitleChanged(self,title):
 		self.setWindowTitle(" "+title)
+		self.title = title
+		self.gui.buildWindowMenu()
 
 	def webIconChanged(self,icon):
 		self.setWindowIcon(icon)
 
 	def enteredUrl(self):
-		url = self.url_entry.text()
-		self.web.load(QtCore.QUrl.fromUserInput(f"{url}"))
+		self.url = self.url_entry.text()
+		self.web.load(QtCore.QUrl.fromUserInput(f"{self.url}"))
+		self.gui.buildWindowMenu()
 
 	def webUrlChanged(self,url):
 		self.url_entry.setText(url.toString())
+		self.url = url.toString()
+		self.gui.buildWindowMenu()
+
+	def navigate(self,url):
+		self.web.load(QtCore.QUrl.fromUserInput(f"{url}"))
+		self.url = url
 
 	def __init__(self,url,subwindow,parent=None):
 		super(Window, self).__init__()
@@ -65,6 +76,7 @@ class Window(QMainWindow):
 		self.subwindow = subwindow
 		self.gui = parent
 		self.url = url
+		self.title = url
 
 		self.setWindowTitle(" "+url)
 
@@ -111,7 +123,6 @@ class Window(QMainWindow):
 
 		self.setCentralWidget(window)
 
-		# self.load(QtCore.QUrl.fromUserInput(f"{self.url}"))
 		self.web.load(QtCore.QUrl.fromUserInput(f"{self.url}"))
 
 		self.web.titleChanged.connect(self.webTitleChanged)
@@ -119,4 +130,6 @@ class Window(QMainWindow):
 		self.web.urlChanged.connect(self.webUrlChanged)
 
 		self.setWindowIcon(QIcon(WEB_ICON))
+
+		self.gui.buildWindowMenu()
 		

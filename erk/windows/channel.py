@@ -243,7 +243,10 @@ class Window(QMainWindow):
 	def linkClicked(self,url):
 		if url.host():
 			if self.open_links_in_erk:
-				WebWindow(url.toString(),self.gui.MDI,self.gui)
+				if self.gui.browser_window:
+					self.gui.browser_window.navigate(url.toString())
+				else:
+					self.gui.browser_window = WebWindow(url.toString(),self.gui.MDI,self.gui)
 			else:
 				QDesktopServices.openUrl(url)
 			self.channelChatDisplay.setSource(QUrl())
@@ -776,20 +779,11 @@ class Window(QMainWindow):
 	def rebuildOptionsMenu(self):
 		self.actOptions.clear()
 
-		if not "t" in self.modeson:
-			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
-			self.actTopic.triggered.connect(self.menuTopic)
-			self.actOptions.addAction(self.actTopic)
-		elif self.operator:
-			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
-			self.actTopic.triggered.connect(self.menuTopic)
-			self.actOptions.addAction(self.actTopic)
-
-		self.actPart = QAction(QIcon(PART_ICON),"Leave channel",self)
-		self.actPart.triggered.connect(self.close)
-		self.actOptions.addAction(self.actPart)
-
-		self.actOptions.addSeparator()
+		if WEB_AVAILABLE:
+			self.openLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
+			self.openLinks.setChecked(self.open_links_in_erk)
+			self.openLinks.triggered.connect(self.toggleOpenLinks)
+			self.actOptions.addAction(self.openLinks)
 
 		self.menuFilter = self.actOptions.addMenu(QIcon(DO_NOT_DISPLAY_ICON),"Don't display...")
 
@@ -823,11 +817,20 @@ class Window(QMainWindow):
 		self.ignoreNick.triggered.connect(lambda state,l="nick": self.toggleIgnoreOption(l) )
 		self.menuFilter.addAction(self.ignoreNick)
 
-		if WEB_AVAILABLE:
-			self.openLinks = QAction("Open links in "+APPLICATION_NAME,self,checkable=True)
-			self.openLinks.setChecked(self.open_links_in_erk)
-			self.openLinks.triggered.connect(self.toggleOpenLinks)
-			self.actOptions.addAction(self.openLinks)
+		self.actOptions.addSeparator()
+
+		if not "t" in self.modeson:
+			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			self.actTopic.triggered.connect(self.menuTopic)
+			self.actOptions.addAction(self.actTopic)
+		elif self.operator:
+			self.actTopic = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			self.actTopic.triggered.connect(self.menuTopic)
+			self.actOptions.addAction(self.actTopic)
+
+		self.actPart = QAction(QIcon(PART_ICON),"Leave channel",self)
+		self.actPart.triggered.connect(self.close)
+		self.actOptions.addAction(self.actPart)
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()

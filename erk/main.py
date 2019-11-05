@@ -1715,6 +1715,8 @@ class Erk(QMainWindow):
 
 		self.disabled = get_disabled()
 
+		self.browser_window = None
+
 		# Settings changable via the gui
 		self.open_private_chat_windows				= self.settings[SETTING_OPEN_PRIVATE_WINDOWS]
 		self.display_status_bar_on_chat_windows		= self.settings[SETTING_CHAT_STATUS_BARS]
@@ -1749,7 +1751,6 @@ class Erk(QMainWindow):
 		self.display_irc_colors						= self.settings[SETTING_DISPLAY_IRC_COLOR]
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
 		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
-
 		self.show_disabled_plugins					= self.settings[SETTING_SHOW_DISABLED_PLUGINS]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
@@ -2537,9 +2538,17 @@ class Erk(QMainWindow):
 		actTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
 		self.windowMenu.addAction(actTile)
 
-		if len(self.connections)<1: return
-
 		self.windowMenu.addSeparator()
+
+		if self.browser_window:
+			window_title = self.browser_window.title
+			if len(window_title)>20:
+				window_title = window_title[:17] + '...'
+			cwin = QAction(QIcon(WEB_ICON),window_title,self)
+			cwin.triggered.connect(lambda state,f=self.browser_window,y=self.browser_window.subwindow: self.restoreWindow(f,y))
+			self.windowMenu.addAction(cwin)
+
+		if len(self.connections)<1: return
 
 		for c in self.connections:
 			# c.console
