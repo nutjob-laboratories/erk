@@ -15,3 +15,4 @@ logs/EntropyNet-#themaxx.json
 logs/irc.enterthegame.com-6667.json
 logs/irc.entropynet.net-6667.json
 settings/user/ignore.json
+*.odt#
