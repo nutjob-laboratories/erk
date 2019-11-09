@@ -402,6 +402,7 @@ class Window(QMainWindow):
 		self.channelUserDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelUserDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 		self.channelUserDisplay.installEventFilter(self)
+		self.channelUserDisplay.setIconSize(QSize(18,18))
 
 		self.channelUserDisplay.itemDoubleClicked.connect(self._handleDoubleClick)
 

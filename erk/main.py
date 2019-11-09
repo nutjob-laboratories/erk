@@ -1030,9 +1030,9 @@ class Erk(QMainWindow):
 		for c in self.connections:
 			if c.id==obj.id:
 				if channel in c.windows:
-					c.windows[channel].users.append(user)
-					c.windows[channel].refreshUserlist()
-					# self.writeToChannel(obj,channel, nick+" has joined "+channel )
+					#c.windows[channel].users.append(user)
+					#c.windows[channel].refreshUserlist()
+					c.connection.sendLine("NAMES "+channel)
 
 					if not c.windows[channel].ignore_join_messages:
 						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has joined "+channel )
@@ -1060,20 +1060,20 @@ class Erk(QMainWindow):
 		for c in self.connections:
 			if c.id==obj.id:
 				if channel in c.windows:
-					clean = []
-					for u in c.windows[channel].users:
-						p = u.split('!')
-						if len(p)==2:
-							tnick = p[0]
-						else:
-							tnick = u
-						tnick = tnick.replace('@','')
-						tnick = tnick.replace('!','')
-						if tnick==user: continue
-						clean.append(u)
-					c.windows[channel].users = clean
-					c.windows[channel].refreshUserlist()
-					#self.writeToChannel(obj,channel, nick+" has left "+channel )
+					# clean = []
+					# for u in c.windows[channel].users:
+					# 	p = u.split('!')
+					# 	if len(p)==2:
+					# 		tnick = p[0]
+					# 	else:
+					# 		tnick = u
+					# 	tnick = tnick.replace('@','')
+					# 	tnick = tnick.replace('!','')
+					# 	if tnick==user: continue
+					# 	clean.append(u)
+					# c.windows[channel].users = clean
+					# c.windows[channel].refreshUserlist()
+					c.connection.sendLine("NAMES "+channel)
 
 					if not c.windows[channel].ignore_part_messages:
 						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],nick+" has left "+channel )
@@ -1436,6 +1436,10 @@ class Erk(QMainWindow):
 
 		self.clock.stop()
 		self.tray.hide()
+
+		del self.clock
+
+		event.accept()
 
 		self.quitting = True
 

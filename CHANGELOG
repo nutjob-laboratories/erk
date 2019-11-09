@@ -27,6 +27,8 @@ Version 0.510
 	* Channel and user windows will now only use *one* shared browser window
 	* Re-arranged channel and user chat options menus
 	* Removed the "TICK" plugin event
+	* Receiving "JOIN" and "PART" commands will now request a new user list from the server
+	* Icons in the userlist were shrunk down to 18x18
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"
