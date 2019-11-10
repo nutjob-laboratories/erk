@@ -55,6 +55,8 @@ class Window(QMainWindow):
 					self.channelChatDisplay.moveCursor(QTextCursor.End)
 			elif event.oldState() == Qt.WindowNoState:
 				self.channelChatDisplay.moveCursor(QTextCursor.End)
+				self.is_visible = True
+				self.gui.buildWindowMenu()
 			elif self.windowState() == Qt.WindowMaximized:
 				if self.subwindow.isMinimized():
 					self.channelChatDisplay.moveCursor(QTextCursor.End)
@@ -95,6 +97,8 @@ class Window(QMainWindow):
 			# Don't close the console, just hide it
 			self.gui.triggerRebuildConnections()
 			self.subwindow.hide()
+			self.is_visible = False
+			self.gui.buildWindowMenu()
 			event.ignore()
 
 	def handleUserInput(self):
@@ -305,6 +309,8 @@ class Window(QMainWindow):
 		self.io_hidden = False
 
 		self.enable_send = False
+
+		self.is_visible = True
 
 		# BEGIN IRC SERVER INFO
 

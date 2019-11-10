@@ -2687,7 +2687,7 @@ class Erk(QMainWindow):
 		actTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
 		self.windowMenu.addAction(actTile)
 
-		self.windowMenu.addSeparator()
+		#self.windowMenu.addSeparator()
 
 		if self.browser_window:
 			window_title = self.browser_window.title
@@ -2708,6 +2708,11 @@ class Erk(QMainWindow):
 
 			sep = textSeparator(self,"<i>"+ctitle+"</i>")
 			self.windowMenu.addAction(sep)
+
+			if c.console.is_visible==False:
+				cwin = QAction(QIcon(CONSOLE_WINDOW),c.console.client.hostname,self)
+				cwin.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
+				self.windowMenu.addAction(cwin)
 
 			for win in c.windows:
 				if c.windows[win].is_channel:
