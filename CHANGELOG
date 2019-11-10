@@ -34,6 +34,9 @@ Version 0.510
 	* Added an option to enable or disable user hostmask retrieval
 	* Added a toolbar to the MDI widget, and moved the menus to the new toolbar
 	* Removed the icon from the console window
+	* Added "Emoji" submenu to "Settings" menu
+	* Added "Miscellaneous" submenu to "Settings" menu
+	* Cleaned up and rearranged the "Settings" menu
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

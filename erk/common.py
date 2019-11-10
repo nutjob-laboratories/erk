@@ -239,8 +239,6 @@ BACK_ICON = ":/gui-back.png"
 FORWARD_ICON = ":/gui-forward.png"
 STOP_ICON = ":/gui-stop.png"
 
-MENU_ICON = ":/gui-menu.png"
-
 # ---------
 # | ICONS |
 # ---------
@@ -284,6 +282,8 @@ TOPIC_ICON = ":/topic.png"
 PART_ICON = ":/part.png"
 MOTD_ICON = ":/motd.png"
 INVITE_ICON = ":/invite.png"
+EMOJI_ICON = ":/emoji.png"
+MISC_ICON = ":/miscellaneous.png"
 
 HORIZONTAL_RULE = f'''
 <table width="100%" border="0">

@@ -1987,14 +1987,17 @@ class Erk(QMainWindow):
 
 		settingsMenu.setFont(menuBoldText)
 
-		sep = textSeparator(self,"<i>Configuration</i>")
-		settingsMenu.addAction(sep)
+		# sep = textSeparator(self,"<i>Configuration</i>")
+		# settingsMenu.addAction(sep)
 
 		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
 		self.actIgnore.triggered.connect(self.menuIgnore)
 		settingsMenu.addAction(self.actIgnore)
 
 		#settingsMenu.addSeparator()
+
+		sep = textSeparator(self,"<i>Preferences</i>")
+		settingsMenu.addAction(sep)
 
 		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
 
@@ -2038,11 +2041,6 @@ class Erk(QMainWindow):
 		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
 		displaySubMenu.addAction(self.actWindowTitle)
 
-		self.actShowDisabled = QAction("Show disabled plugins in \"Plugins\" menu",self,checkable=True)
-		self.actShowDisabled.setChecked(self.show_disabled_plugins)
-		self.actShowDisabled.triggered.connect(self.menuShowDisabled)
-		displaySubMenu.addAction(self.actShowDisabled)
-
 		displaySubMenu.addSeparator()
 
 		self.actOnTop = QAction("Always on top",self,checkable=True)
@@ -2054,9 +2052,6 @@ class Erk(QMainWindow):
 		self.actFullscreen.setChecked(self.window_fullscreen)
 		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
 		displaySubMenu.addAction(self.actFullscreen)
-
-		sep = textSeparator(self,"<i>Preferences</i>")
-		settingsMenu.addAction(sep)
 
 		uptimeSubMenu = settingsMenu.addMenu(QIcon(UPTIME_ICON),"Uptime")
 
@@ -2092,17 +2087,7 @@ class Erk(QMainWindow):
 		self.actToggleSecondsTimestamp.triggered.connect(self.menuToggleSecondsTimestamp)
 		timestampSubMenu.addAction(self.actToggleSecondsTimestamp)
 
-		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Chat")
-
-		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
-		self.actEmoji.setChecked(self.use_emojis)
-		self.actEmoji.triggered.connect(self.menuEmoji)
-		chatSubMenu.addAction(self.actEmoji)
-
-		self.actAsciimoji = QAction("Enable ASCIImoji shortcodes",self,checkable=True)
-		self.actAsciimoji.setChecked(self.use_asciimojis)
-		self.actAsciimoji.triggered.connect(self.menuAsciimoji)
-		chatSubMenu.addAction(self.actAsciimoji)
+		chatSubMenu = settingsMenu.addMenu(QIcon(CHAT_ICON),"Messages")
 
 		self.actChatUrls = QAction("Link URLs in chat",self,checkable=True)
 		self.actChatUrls.setChecked(self.convert_links_in_chat)
@@ -2124,22 +2109,17 @@ class Erk(QMainWindow):
 		self.actColor.triggered.connect(self.menuColor)
 		chatSubMenu.addAction(self.actColor)
 
-		self.actToggleIgnore = QAction("Ignore selected users",self,checkable=True)
-		self.actToggleIgnore.setChecked(self.allow_ignore)
-		self.actToggleIgnore.triggered.connect(self.menuToggleIgnore)
-		chatSubMenu.addAction(self.actToggleIgnore)
+		emojiSubMenu = settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
 
-		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
-		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
-		self.actOpenPrivateWindows.triggered.connect(self.menuPrivateWindows)
-		chatSubMenu.addAction(self.actOpenPrivateWindows)
+		self.actEmoji = QAction("Enable emoji shortcodes",self,checkable=True)
+		self.actEmoji.setChecked(self.use_emojis)
+		self.actEmoji.triggered.connect(self.menuEmoji)
+		emojiSubMenu.addAction(self.actEmoji)
 
-
-		self.actGetHostmasks = QAction("Retrieve user hostmasks on join",self,checkable=True)
-		self.actGetHostmasks.setChecked(self.get_hostmasks_on_join)
-		self.actGetHostmasks.triggered.connect(self.menuGetHostmask)
-		chatSubMenu.addAction(self.actGetHostmasks)
-
+		self.actAsciimoji = QAction("Enable ASCIImoji shortcodes",self,checkable=True)
+		self.actAsciimoji.setChecked(self.use_asciimojis)
+		self.actAsciimoji.triggered.connect(self.menuAsciimoji)
+		emojiSubMenu.addAction(self.actAsciimoji)
 
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
@@ -2222,6 +2202,28 @@ class Erk(QMainWindow):
 		logSubMenu.addAction(self.actPrivateLogs)
 
 		if not self.save_logs_on_quit: self.actPrivateLogs.setEnabled(False)
+
+		miscSubMenu = settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
+
+		self.actToggleIgnore = QAction("Ignore selected users",self,checkable=True)
+		self.actToggleIgnore.setChecked(self.allow_ignore)
+		self.actToggleIgnore.triggered.connect(self.menuToggleIgnore)
+		miscSubMenu.addAction(self.actToggleIgnore)
+
+		self.actOpenPrivateWindows = QAction("Open windows for private messages",self,checkable=True)
+		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
+		self.actOpenPrivateWindows.triggered.connect(self.menuPrivateWindows)
+		miscSubMenu.addAction(self.actOpenPrivateWindows)
+
+		self.actGetHostmasks = QAction("Retrieve user hostmasks on channel join",self,checkable=True)
+		self.actGetHostmasks.setChecked(self.get_hostmasks_on_join)
+		self.actGetHostmasks.triggered.connect(self.menuGetHostmask)
+		miscSubMenu.addAction(self.actGetHostmasks)
+
+		self.actShowDisabled = QAction("Show disabled plugins in \"Plugins\" menu",self,checkable=True)
+		self.actShowDisabled.setChecked(self.show_disabled_plugins)
+		self.actShowDisabled.triggered.connect(self.menuShowDisabled)
+		miscSubMenu.addAction(self.actShowDisabled)
 
 		# Plugins Menu
 
