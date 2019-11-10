@@ -1947,18 +1947,15 @@ class Erk(QMainWindow):
 
 		self.ircMenu.setFont(menuBoldText)
 
-		self.actConnect = fancyMenuAction(self,FANCY_CONNECT_ICON,"Connect","Connect to an IRC server",self.menuConnect)
+		self.actConnect = fancyMenuAction(self,FANCY_CONNECT_ICON,"Connect","Connect to an IRC server&nbsp;",self.menuConnect)
 		self.ircMenu.addAction(self.actConnect)
 
-		self.actNetwork = fancyMenuAction(self,FANCY_NETWORK_ICON,"Servers","Select server from a list",self.menuNetwork)
+		self.actNetwork = fancyMenuAction(self,FANCY_NETWORK_ICON,"Servers","Select server from a list&nbsp;",self.menuNetwork)
 		self.ircMenu.addAction(self.actNetwork)
 
 		self.ircMenu.addSeparator()
 
-		self.actEditUserInfo = fancyMenuAction(self,FANCY_USER_ICON,"User","Edit default user information",self.menuEditUser)
-		self.ircMenu.addAction(self.actEditUserInfo)
-
-		self.actInstallPlugin = fancyMenuAction(self,PLUGIN_ICON,"Plugins","Manage & install plugins",self.menuPlugins)
+		self.actInstallPlugin = fancyMenuAction(self,PLUGIN_ICON,"Plugins","Manage & install plugins&nbsp;",self.menuPlugins)
 		self.ircMenu.addAction(self.actInstallPlugin)
 
 		self.ircMenu.addSeparator()
@@ -1989,6 +1986,10 @@ class Erk(QMainWindow):
 
 		# sep = textSeparator(self,"<i>Configuration</i>")
 		# settingsMenu.addAction(sep)
+
+		self.actDefaultUser = QAction(QIcon(USER_ICON),"User information",self)
+		self.actDefaultUser.triggered.connect(self.menuIgnore)
+		settingsMenu.addAction(self.actDefaultUser)
 
 		self.actIgnore = QAction(QIcon(IGNORE_ICON),"Ignored Users",self)
 		self.actIgnore.triggered.connect(self.menuIgnore)

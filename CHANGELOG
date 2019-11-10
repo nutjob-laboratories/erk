@@ -37,6 +37,7 @@ Version 0.510
 	* Added "Emoji" submenu to "Settings" menu
 	* Added "Miscellaneous" submenu to "Settings" menu
 	* Cleaned up and rearranged the "Settings" menu
+	* Moved default user editing from the main menu to the settings menu
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

@@ -215,7 +215,6 @@ SAVED_SERVER_ICON = ":/gui-saved.png"
 
 FANCY_CONNECT_ICON = ":/gui-fancy_server.png"
 FANCY_NETWORK_ICON = ":/gui-fancy_network.png"
-FANCY_USER_ICON = ":/gui-fancy_user.png"
 
 CONSOLE_BACKGROUND = ":/gui-console_background.png"
 
