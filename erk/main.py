@@ -801,7 +801,7 @@ class Erk(QMainWindow):
 		self.serverLog(obj,"Server is a part of the  "+network+" network")
 		self.serverLog(obj,"Server's hostname is  "+hostname)
 
-		c.console.setWindowTitle(" "+hostname+" ("+network+")")
+		c.console.setWindowTitle(hostname+" ("+network+")")
 
 		c.console.network = network
 		nurl = get_network_url(network)
@@ -1805,12 +1805,145 @@ class Erk(QMainWindow):
 		self.MDI.setBackground(backgroundBrush)
 
 		self.menubar = self.menuBar()
-		menuBoldText = self.menubar.font()
+
+		menuBoldText = self.MDI.font()
 		menuBoldText.setBold(True)
+
+		# BEGIN TOOLBAR
+
+		toolbar_button_style = '''
+			QPushButton {
+				border: 0px;
+				color: black;
+			}
+			QPushButton::menu-indicator{width:0px;}
+			QPushButton::open{
+				background-color: #a9a9a9;
+				color: white;
+			}
+		'''
+
+		toolbar_button_style_hover = '''
+			QPushButton {
+				border: 0px;
+				background-color: #a9a9a9;
+				color: black;
+			}
+			QPushButton::menu-indicator{width:0px;}
+			QPushButton::open{
+				background-color: #a9a9a9;
+				color: white;
+			}
+		'''
+
+		toolbar_menu_spacer = ''
+
+		self.ircMenu = QMenu(APPLICATION_NAME)
+		self.connectionsMenu = QMenu("Connections")
+		settingsMenu = QMenu("Settings")
+		self.pluginMenu = QMenu("Plugins")
+		self.windowMenu = QMenu("Windows")
+		self.helpMenu = QMenu("Help")
+
+		self.toolbar = QToolBar(self)
+		self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+		self.toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
+
+		self.toolbar.setStyleSheet('''
+			QToolBar { spacing: 5px; }
+		''')
+
+		tfont = self.toolbar.font()
+		tfont.setBold(False)
+
+		bfont = self.toolbar.font()
+		bfont.setBold(True)
+
+		fm = QFontMetrics(bfont)
+		fheight = fm.height()
+		
+		self.toolbar.setFixedHeight(fheight+8)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Ərk "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(self.ircMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(bfont)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Connections "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(self.connectionsMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(tfont)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Settings "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(settingsMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(tfont)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Plugins "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(self.pluginMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(tfont)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Windows "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(self.windowMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(tfont)
+
+		toolMenuButton = MenuButton(
+			toolbar_button_style,
+			toolbar_button_style_hover,
+			" Help "
+			)
+
+		toolMenuButton.setStyleSheet(toolbar_button_style)
+		toolMenuButton.setMenu(self.helpMenu)
+		self.toolbar.addWidget(toolMenuButton)
+
+		toolMenuButton.setFont(tfont)
+
+		self.toolbar.addWidget(QLabel(' '))
+
+		# END TOOLBAR
 
 		# IRC Menu
 
-		self.ircMenu = self.menubar.addMenu(APPLICATION_NAME)
+		# self.ircMenu = self.menubar.addMenu(APPLICATION_NAME)
+		#self.ircMenu = QMenu(APPLICATION_NAME)
 
 		self.ircMenu.setFont(menuBoldText)
 
@@ -1842,13 +1975,15 @@ class Erk(QMainWindow):
 
 		# CONNECTIONS MENU
 
-		self.connectionsMenu = self.menubar.addMenu("Connections")
+		# self.connectionsMenu = self.menubar.addMenu("Connections")
+		# self.connectionsMenu = QMenu("Connections")
 
 		self.buildConnectionsMenu()
 
 		# Settings Menu
 
-		settingsMenu = self.menubar.addMenu("Settings")
+		# settingsMenu = self.menubar.addMenu("Settings")
+		# settingsMenu = QMenu("Settings")
 
 		settingsMenu.setFont(menuBoldText)
 
@@ -2094,17 +2229,20 @@ class Erk(QMainWindow):
 		# self.pluginMenu.setFont(menuBoldText)
 		# self.pluginMenu.setVisible(False)
 
-		self.pluginMenu = self.menubar.addMenu("Plugins")
+		# self.pluginMenu = self.menubar.addMenu("Plugins")
+		# self.pluginMenu = QMenu("Plugins")
 		self.buildPluginMenu()
 
 		# Windows Menu
 
-		self.windowMenu = self.menubar.addMenu("Windows")
+		# self.windowMenu = self.menubar.addMenu("Windows")
+		# self.windowMenu = QMenu("Windows")
 		self.windowMenu.setFont(menuBoldText)
 
 		self.buildWindowMenu()
 
-		self.helpMenu = self.menubar.addMenu("Help")
+		# self.helpMenu = self.menubar.addMenu("Help")
+		# self.helpMenu = QMenu("Help")
 		self.helpMenu.setFont(menuBoldText)
 
 		self.actAbout = QAction(QIcon(ABOUT_ICON),"About "+APPLICATION_NAME,self)
@@ -2169,6 +2307,7 @@ class Erk(QMainWindow):
 		helpLink = QAction(QIcon(PYTHON_SMALL_ICON),"pyspellchecker",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/barrust/pyspellchecker": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
+
 
 	def buildPluginMenu(self):
 
@@ -2836,7 +2975,8 @@ class Erk(QMainWindow):
 			self.app.setFont(font)
 			self.setFont(font)
 			self.MDI.setFont(font)
-			self.menubar.setFont(font)
+			#self.menubar.setFont(font)
+			self.toolbar.setFont(font)
 			for c in self.connections:
 				c.console.setFont(font)
 				for channel in c.windows:

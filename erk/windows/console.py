@@ -325,8 +325,10 @@ class Window(QMainWindow):
 
 		# END IRC SERVER INFO
 
-		self.setWindowTitle(" "+self.name)
-		self.setWindowIcon(QIcon(CONSOLE_WINDOW))
+		self.setWindowTitle(self.name)
+		
+		# self.setWindowIcon(QIcon(CONSOLE_WINDOW))
+		self.setWindowIcon(QIcon(USER_NORMAL))
 
 		self.channelChatDisplay = QTextBrowser(self)
 		self.channelChatDisplay.setObjectName("channelChatDisplay")

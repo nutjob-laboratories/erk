@@ -82,6 +82,27 @@ class QHLine(QFrame):
 		self.setFrameShape(QFrame.HLine)
 		self.setFrameShadow(QFrame.Sunken)
 
+# HOVER BUTTON BEGIN
+
+class MenuButton(QPushButton):
+
+	def __init__(self,normal_style,hover_style,parent=None):
+		QLabel.__init__(self, parent)
+		self.installEventFilter(self)
+
+		self.normal_style = normal_style
+		self.hover_style = hover_style
+
+	def eventFilter(self, object, event):
+		if event.type() == QEvent.Enter:
+			self.setStyleSheet(self.hover_style)
+			return True
+		elif event.type() == QEvent.Leave:
+			self.setStyleSheet(self.normal_style)
+		return False
+
+# HOVER BUTTON END
+
 
 class MenuLabel(QLabel):
 	clicked=pyqtSignal()
@@ -217,6 +238,8 @@ WEB_ICON = ":/gui-web.png"
 BACK_ICON = ":/gui-back.png"
 FORWARD_ICON = ":/gui-forward.png"
 STOP_ICON = ":/gui-stop.png"
+
+MENU_ICON = ":/gui-menu.png"
 
 # ---------
 # | ICONS |
