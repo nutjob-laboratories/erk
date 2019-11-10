@@ -184,10 +184,11 @@ class IRC_Connection(irc.IRCClient):
 		
 		self.gui.irc_uptime(self,self.uptime)
 
-		if len(self.do_whois)>0:
-			nick = self.do_whois.pop(0)
-			self.request_whois.append(nick)
-			self.sendLine("WHOIS "+nick)
+		if self.gui.get_hostmasks_on_join:
+			if len(self.do_whois)>0:
+				nick = self.do_whois.pop(0)
+				self.request_whois.append(nick)
+				self.sendLine("WHOIS "+nick)
 
 
 	def connectionMade(self):
@@ -267,7 +268,8 @@ class IRC_Connection(irc.IRCClient):
 		if len(p)==2:
 			if p[0] == self.nickname: return
 		else:
-			self.do_whois.append(user)
+			if self.gui.get_hostmasks_on_join:
+				self.do_whois.append(user)
 
 		self.gui.irc_join(self,user,channel)
 
@@ -285,7 +287,7 @@ class IRC_Connection(irc.IRCClient):
 		#d = systemTextDisplay(f"Nickname \"{oldnick}\" in use, changing nick to \"{newnick}\"",self.gui.maxnicklen,SYSTEM_COLOR)
 		self.setNick(newnick)
 
-		self.oldnick = oldnick
+		self.oldnick = newnick
 
 	def userRenamed(self, oldname, newname):
 
@@ -331,12 +333,13 @@ class IRC_Connection(irc.IRCClient):
 		nicklist = params[3].split(' ')
 
 		if channel in self.joined_channels:
-			for u in nicklist:
-				p = u.split('!')
-				if len(p)!=2:
-					u = u.replace('@','')
-					u = u.replace('+','')
-					self.do_whois.append(u)
+			if self.gui.get_hostmasks_on_join:
+				for u in nicklist:
+					p = u.split('!')
+					if len(p)!=2:
+						u = u.replace('@','')
+						u = u.replace('+','')
+						self.do_whois.append(u)
 
 		if channel in self.userlists:
 			# Add to user list

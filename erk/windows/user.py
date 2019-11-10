@@ -65,6 +65,24 @@ def WebWindow(url,MDI,parent=None):
 
 class Window(QMainWindow):
 
+	def changeEvent(self,event):
+
+		if event.type() == QEvent.WindowStateChange:
+			if event.oldState() and Qt.WindowMinimized:
+				if self.subwindow.isMinimized():
+					self.channelChatDisplay.moveCursor(QTextCursor.End)
+				if self.subwindow.isMaximized():
+					self.channelChatDisplay.moveCursor(QTextCursor.End)
+			elif event.oldState() == Qt.WindowNoState:
+				self.channelChatDisplay.moveCursor(QTextCursor.End)
+			elif self.windowState() == Qt.WindowMaximized:
+				if self.subwindow.isMinimized():
+					self.channelChatDisplay.moveCursor(QTextCursor.End)
+				if self.subwindow.isMaximized():
+					self.channelChatDisplay.moveCursor(QTextCursor.End)
+		
+		return QMainWindow.changeEvent(self, event)
+
 	def getUserNicks(self):
 		return [self.name]
 

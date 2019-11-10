@@ -29,6 +29,9 @@ Version 0.510
 	* Removed the "TICK" plugin event
 	* Receiving "JOIN" and "PART" commands will now request a new user list from the server
 	* Icons in the userlist were shrunk down to 18x18
+	* Fixed a bug where bad nicknames would be used repeatedly until disconnection
+	* Text display is now scrolled to the bottom when subwindow state changes
+	* Added an option to enable or disable user hostmask retrieval
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

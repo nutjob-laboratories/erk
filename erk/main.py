@@ -1742,6 +1742,8 @@ class Erk(QMainWindow):
 		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
 		self.show_disabled_plugins					= self.settings[SETTING_SHOW_DISABLED_PLUGINS]
 
+		self.get_hostmasks_on_join					= self.settings[SETTING_GET_HOSTMASKS]
+
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
 		if not self.allow_ignore: self.actIgnore.setVisible(False)
 
@@ -1996,6 +1998,14 @@ class Erk(QMainWindow):
 		self.actOpenPrivateWindows.setChecked(self.open_private_chat_windows)
 		self.actOpenPrivateWindows.triggered.connect(self.menuPrivateWindows)
 		chatSubMenu.addAction(self.actOpenPrivateWindows)
+
+
+		self.actGetHostmasks = QAction("Retrieve user hostmasks on join",self,checkable=True)
+		self.actGetHostmasks.setChecked(self.get_hostmasks_on_join)
+		self.actGetHostmasks.triggered.connect(self.menuGetHostmask)
+		chatSubMenu.addAction(self.actGetHostmasks)
+
+
 
 		autoSubMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
@@ -2266,6 +2276,14 @@ class Erk(QMainWindow):
 	def menuAbout(self):
 		x = AboutDialog.Dialog(self)
 		x.show()
+
+	def menuGetHostmask(self):
+		if self.get_hostmasks_on_join:
+			self.get_hostmasks_on_join = False
+		else:
+			self.get_hostmasks_on_join = True
+		self.settings[SETTING_GET_HOSTMASKS] = self.get_hostmasks_on_join
+		save_settings(self.settings,self.settings_file)
 
 	def menuShowDisabled(self):
 		if self.show_disabled_plugins:
