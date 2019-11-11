@@ -420,9 +420,36 @@ class Window(QMainWindow):
 		self.channelUserDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelUserDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
 		self.channelUserDisplay.installEventFilter(self)
-		self.channelUserDisplay.setIconSize(QSize(18,18))
+
+		# Make sure that user status icons are just a little
+		# bigger than the user entry text
+		fm = QFontMetrics(self.channelChatDisplay.font())
+		fheight = fm.height() + 2
+		self.channelUserDisplay.setIconSize(QSize(fheight,fheight))
 
 		self.channelUserDisplay.itemDoubleClicked.connect(self._handleDoubleClick)
+		
+		# User item background will darken slightly when hovered over
+		BASE_COLOR = self.channelUserDisplay.palette().color(QPalette.Base).name()
+		DARKER_COLOR = color_variant(BASE_COLOR,-15)
+
+		user_display_qss='''
+			QListView::item::selected {
+				border: 0px;
+				background: !BASE!;
+			}
+			QListView::item:hover {
+				background: !DARKER!;
+			}
+			QListView {
+				show-decoration-selected: 0;
+			}
+		'''
+		user_display_qss = user_display_qss.replace('!DARKER!',DARKER_COLOR)
+		user_display_qss = user_display_qss.replace('!BASE!',BASE_COLOR)
+		user_display_qss = user_display_qss + self.gui.styles[BASE_STYLE_NAME]
+
+		self.channelUserDisplay.setStyleSheet(user_display_qss)
 
 		self.ufont = self.channelUserDisplay.font()
 		self.ufont.setBold(True)

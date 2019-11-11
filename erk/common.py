@@ -332,145 +332,20 @@ def centerNormalText(self,text):
 	return tsAction
 
 # =====================
-# | WINDOW MANAGEMENT |
-# =====================
-
-import erk.windows.channel as Channel
-import erk.windows.user as User
-import erk.windows.console as Console
-import erk.windows.list as ChannelList
-import erk.windows.text as ViewText
-
-if WEB_AVAILABLE: import erk.windows.web as ViewWeb
-
-WINDOW_WIDGET_MARGIN = 2
-
-DEFAULT_WINDOW_WIDTH = 500
-DEFAULT_WINDOW_HEIGHT = 300
-
-def WebWindow(url,MDI,parent=None):
-	if WEB_AVAILABLE:
-		newSubwindow = QMdiSubWindow()
-		newWindow = ViewWeb.Window(url,newSubwindow,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-	else:
-		return None
-
-def TextWindow(host,MDI,client,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = ViewText.Window(host,newSubwindow,client,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-
-def ListWindow(host,MDI,client,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = ChannelList.Window(host,newSubwindow,client,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-
-def ChannelWindow(channel,MDI,client,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = Channel.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		#newSubwindow.resize(DEFAULT_WINDOW_WIDTH,DEFAULT_WINDOW_HEIGHT)
-		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-
-def UserWindow(channel,MDI,client,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = User.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-
-def ConsoleWindow(channel,MDI,client,parent=None):
-
-		newSubwindow = QMdiSubWindow()
-		newWindow = Console.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
-		newSubwindow.setWidget(newWindow)
-		newSubwindow.window = newWindow
-		MDI.addSubWindow(newSubwindow)
-
-		#newSubwindow.resize(DEFAULT_WINDOW_WIDTH,DEFAULT_WINDOW_HEIGHT)
-		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
-
-		newSubwindow.show()
-
-		return newWindow
-
-# =====================
-# | DIALOG MANAGEMENT |
-# =====================
-
-def ErrorDialog(message,title="Error",icon=ERK_ICON):
-	msg = QMessageBox()
-	msg.setWindowIcon(QIcon(icon))
-	msg.setIcon(QMessageBox.Critical)
-	msg.setText(message)
-	msg.setWindowTitle(title)
-	msg.exec_()
-
-import erk.dialogs.connect as Connect
-
-def ConnectDialog(obj):
-	x = Connect.Dialog(SSL_AVAILABLE,obj)
-	info = x.get_connect_information(SSL_AVAILABLE,obj)
-	del x
-
-	if not info: return None
-	return info
-
-import erk.dialogs.network as Network
-
-def NetworkDialog():
-	x = Network.Dialog(SSL_AVAILABLE)
-	info = x.get_connect_information(SSL_AVAILABLE)
-	del x
-
-	if not info: return None
-	return info
-
-# =====================
 # | SUPPORT FUNCTIONS |
 # =====================
+
+# Written by Chase Seibert: https://chase-seibert.github.io/blog/2011/07/29/python-calculate-lighterdarker-rgb-colors.html
+# use negative offset to darken, positive offset to brighten
+def color_variant(hex_color, brightness_offset=1):
+	""" takes a color like #87c95f and produces a lighter or darker variant """
+	if len(hex_color) != 7:
+		raise Exception("Passed %s into color_variant(), needs to be in #87c95f format." % hex_color)
+	rgb_hex = [hex_color[x:x+2] for x in [1, 3, 5]]
+	new_rgb_int = [int(hex_value, 16) + brightness_offset for hex_value in rgb_hex]
+	new_rgb_int = [min([255, max([0, i])]) for i in new_rgb_int] # make sure new values are between 0 and 255
+	# hex() produces "0x88", we want just "88"
+	return "#" + "".join([hex(i)[2:] for i in new_rgb_int])
 
 def convertSeconds(seconds):
 	h = seconds//(60*60)
@@ -855,3 +730,141 @@ def menuLabelHtml_0line(icon,text):
 	  </tbody>
 	</table>
 	'''
+
+
+# =====================
+# | WINDOW MANAGEMENT |
+# =====================
+
+import erk.windows.channel as Channel
+import erk.windows.user as User
+import erk.windows.console as Console
+import erk.windows.list as ChannelList
+import erk.windows.text as ViewText
+
+if WEB_AVAILABLE: import erk.windows.web as ViewWeb
+
+WINDOW_WIDGET_MARGIN = 2
+
+DEFAULT_WINDOW_WIDTH = 500
+DEFAULT_WINDOW_HEIGHT = 300
+
+def WebWindow(url,MDI,parent=None):
+	if WEB_AVAILABLE:
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewWeb.Window(url,newSubwindow,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+	else:
+		return None
+
+def TextWindow(host,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ViewText.Window(host,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+def ListWindow(host,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = ChannelList.Window(host,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize((parent.default_window_width*0.75),parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+def ChannelWindow(channel,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = Channel.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		#newSubwindow.resize(DEFAULT_WINDOW_WIDTH,DEFAULT_WINDOW_HEIGHT)
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+def UserWindow(channel,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = User.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+def ConsoleWindow(channel,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		newWindow = Console.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		#newSubwindow.resize(DEFAULT_WINDOW_WIDTH,DEFAULT_WINDOW_HEIGHT)
+		newSubwindow.resize(parent.default_window_width,parent.default_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
+
+# =====================
+# | DIALOG MANAGEMENT |
+# =====================
+
+def ErrorDialog(message,title="Error",icon=ERK_ICON):
+	msg = QMessageBox()
+	msg.setWindowIcon(QIcon(icon))
+	msg.setIcon(QMessageBox.Critical)
+	msg.setText(message)
+	msg.setWindowTitle(title)
+	msg.exec_()
+
+import erk.dialogs.connect as Connect
+
+def ConnectDialog(obj):
+	x = Connect.Dialog(SSL_AVAILABLE,obj)
+	info = x.get_connect_information(SSL_AVAILABLE,obj)
+	del x
+
+	if not info: return None
+	return info
+
+import erk.dialogs.network as Network
+
+def NetworkDialog():
+	x = Network.Dialog(SSL_AVAILABLE)
+	info = x.get_connect_information(SSL_AVAILABLE)
+	del x
+
+	if not info: return None
+	return info
