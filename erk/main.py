@@ -81,9 +81,11 @@ class Erk(QMainWindow):
 				for c in self.connections:
 					c.console.channelChatDisplay.zoomIn()
 					c.console.channelChatDisplay.zoomOut()
+					c.console.channelChatDisplay.moveCursor(QTextCursor.End)
 					for win in c.windows:
 						c.windows[win].channelChatDisplay.zoomIn()
 						c.windows[win].channelChatDisplay.zoomOut()
+						c.windows[win].channelChatDisplay.moveCursor(QTextCursor.End)
 			elif event.oldState() == Qt.WindowNoState:
 				pass
 			elif self.windowState() == Qt.WindowMaximized:
