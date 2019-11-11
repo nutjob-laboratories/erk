@@ -74,6 +74,23 @@ class Connection:
 
 class Erk(QMainWindow):
 
+	def changeEvent(self,event):
+
+		if event.type() == QEvent.WindowStateChange:
+			if event.oldState() and Qt.WindowMinimized:
+				for c in self.connections:
+					c.console.channelChatDisplay.zoomIn()
+					c.console.channelChatDisplay.zoomOut()
+					for win in c.windows:
+						c.windows[win].channelChatDisplay.zoomIn()
+						c.windows[win].channelChatDisplay.zoomOut()
+			elif event.oldState() == Qt.WindowNoState:
+				pass
+			elif self.windowState() == Qt.WindowMaximized:
+				pass
+		
+		return QMainWindow.changeEvent(self, event)
+
 	# |==================|
 	# | IRC EVENTS BEGIN |
 	# |==================|

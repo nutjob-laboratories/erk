@@ -39,7 +39,8 @@ Version 0.510
 	* Cleaned up and rearranged the "Settings" menu
 	* Moved default user editing from the main menu to the settings menu
 	* Added console windows to "Windows" menu
-	* Console windows will only be shows in "Windows" menu if the console is hiddedn
+	* Console windows will only be shows in "Windows" menu if the console is hidden
+	* Fixed a bug where sometimes channel and user chat windows would render text larger than it should be
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"
