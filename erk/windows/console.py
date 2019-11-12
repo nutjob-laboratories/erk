@@ -783,3 +783,167 @@ class Window(QMainWindow):
 		servmenu.addAction(conDisconnect)
 
 		#mdimenu.addSeparator()
+
+	# FOR TREE WIDGET MENU
+	def buildServerMenu(self,connection):
+
+		supports = self.supports # list
+		maxchannels = self.maxchannels
+		maxnicklen = self.maxnicklen
+		channellen = self.channellen
+		topiclen = self.topiclen
+		kicklen = self.kicklen
+		awaylen = self.awaylen
+		maxtargets = self.maxtargets
+		modes = self.modes
+		chanmodes = self.chanmodes #list
+		prefix = self.prefix # list
+		cmds = self.cmds # list
+		casemapping = self.casemapping
+		maxmodes = self.maxmodes
+
+		if self.hostname:
+			server_host = self.hostname
+		else:
+			p = self.name.split(":")
+			if len(p)==2:
+				server_host = p[0]
+			else:
+				server_host = self.name
+
+
+		servmenu = QMenu()
+
+		if self.network_url:
+			netname = textSeparator(self, f'''<b><a href="{self.network_url}">{self.network} Network</a></b>''')
+			servmenu.addAction(netname)
+		else:
+			netname = textSeparator(self, f'''<b>{self.network} Network</b>''')
+			servmenu.addAction(netname)
+
+		if len(connection.modes)>0:
+			snick = centerText(self,"<i>"+self.client.nickname+" +"+connection.modes+"</i>")
+			servmenu.addAction(snick)
+		else:
+			snick = centerText(self,"<i>"+self.client.nickname+"</i>")
+			servmenu.addAction(snick)
+
+		consoleC = QAction(QIcon(CONSOLE_WINDOW),"Server console",self)
+		consoleC.triggered.connect(self.restoreMe)
+		servmenu.addAction(consoleC)
+
+		motdMenu = QAction(QIcon(MOTD_ICON),"Message of the day",self)
+		motdMenu.triggered.connect(self.showMOTD)
+		servmenu.addAction(motdMenu)
+
+		infomenu = servmenu.addMenu("Server Settings")
+		infomenu.setIcon(QIcon(SERVER_SETTINGS_ICON))
+
+		servmenu.addSeparator()
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channels:</b> {maxchannels}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum nick length:</b> {maxnicklen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum channel length:</b> {channellen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum topic length:</b> {topiclen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum kick length:</b> {kicklen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum away length:</b> {awaylen}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum message targets:</b> {maxtargets}&nbsp;&nbsp;",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		el = QLabel(f"&nbsp;&nbsp;<b>Maximum modes per user:</b> {modes}",self)
+		e = QWidgetAction(self)
+		e.setDefaultWidget(el)
+		infomenu.addAction(e)
+
+		infomenu.addSeparator()
+
+		maxmodesmenu = QMenu("Maximum modes",self)
+		for c in maxmodes:
+			e = QAction(F"{c[0]}: {c[1]}", self) 
+			maxmodesmenu.addAction(e)
+		infomenu.addMenu(maxmodesmenu)
+
+		cmdmenu = QMenu("Commands",self)
+		for c in cmds:
+			e = QAction(F"{c}", self) 
+			cmdmenu.addAction(e)
+		infomenu.addMenu(cmdmenu)
+
+		supportsmenu = QMenu("Supports",self)
+		for c in supports:
+			e = QAction(F"{c}", self) 
+			supportsmenu.addAction(e)
+		infomenu.addMenu(supportsmenu)
+
+		chanmodemenu = QMenu("Channel modes",self)
+		ct = 0
+		for c in chanmodes:
+			if ct==0:
+				ctype = "A"
+			elif ct==1:
+				ctype = "B"
+			elif ct==2:
+				ctype = "C"
+			elif ct==3:
+				ctype = "D"
+			e = QAction(F"{ctype}: {c}", self) 
+			chanmodemenu.addAction(e)
+			ct = ct + 1
+		infomenu.addMenu(chanmodemenu)
+
+		prefixmenu = QMenu("Prefixes",self)
+		for c in prefix:
+			m = c[0]
+			s = c[1]
+			if s=="&": s="&&"
+			e = QAction(F"{m}: {s}", self)
+			if m=="o": e.setIcon(QIcon(USER_OPERATOR))
+			if m=="v": e.setIcon(QIcon(USER_VOICED))
+			prefixmenu.addAction(e)
+		infomenu.addMenu(prefixmenu)
+
+		servmenu.addSeparator()
+
+		conListChannels = QAction(QIcon(LIST_ICON),"List channels",self)
+		conListChannels.triggered.connect(self.menuListChannels)
+		servmenu.addAction(conListChannels)
+
+		conChangeNick = QAction(QIcon(USER_ICON),"Change nickname",self)
+		conChangeNick.triggered.connect(self.menuNick)
+		servmenu.addAction(conChangeNick)
+
+		conJoinChannel = QAction(QIcon(CHANNEL_WINDOW),"Join channel",self)
+		conJoinChannel.triggered.connect(self.menuJoin)
+		servmenu.addAction(conJoinChannel)
+
+		conDisconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		conDisconnect.triggered.connect(self.menuDisconnect)
+		servmenu.addAction(conDisconnect)
+
+		return servmenu

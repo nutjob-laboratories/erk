@@ -303,7 +303,8 @@ class Erk(QMainWindow):
 			if c.id==obj.id:
 				c.console.server_options(optiondata)
 
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
+		self.buildWindowMenu()
 
 	def irc_whois(self,obj,whoisdata):
 
@@ -540,7 +541,8 @@ class Erk(QMainWindow):
 						msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Mode -"+modes+" set on "+channel )
 			self.writeToConsole(obj,msg)
 			self.writeToConsoleLog(obj,'',msg)
-			self.buildConnectionsMenu()
+			#self.buildConnectionsMenu()
+			self.buildWindowMenu()
 			return
 
 		cleaned = []
@@ -789,7 +791,8 @@ class Erk(QMainWindow):
 
 		if obj.server in self.autojoins: del self.autojoins[obj.server]
 
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
+		self.buildWindowMenu()
 
 		data = {
 			"nickname": obj.nickname
@@ -829,7 +832,7 @@ class Erk(QMainWindow):
 
 		self.buildWindowMenu()
 
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
 
 		if self.save_server_history:
 			update_history_network(obj.server,obj.port,network)
@@ -998,7 +1001,7 @@ class Erk(QMainWindow):
 
 		self.buildWindowMenu()
 
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
 
 		if self.keep_alive:
 			obj.heartbeatInterval = self.keep_alive_interval
@@ -1541,7 +1544,7 @@ class Erk(QMainWindow):
 
 		self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 		self.buildWindowMenu()
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
 
 	def disconnectFromIRC(self,obj,msg=None):
 		self.disconnecting = True
@@ -1584,7 +1587,7 @@ class Erk(QMainWindow):
 
 		self.setWindowTitle(DEFAULT_WINDOW_TITLE)
 		self.buildWindowMenu()
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
 
 	def ignore_user(self,obj,user):
 		if not self.allow_ignore: return
@@ -1725,6 +1728,8 @@ class Erk(QMainWindow):
 
 		self.browser_window = None
 
+		self.connection_dock_visible = True
+
 		# Settings changable via the gui
 		self.open_private_chat_windows				= self.settings[SETTING_OPEN_PRIVATE_WINDOWS]
 		self.display_status_bar_on_chat_windows		= self.settings[SETTING_CHAT_STATUS_BARS]
@@ -1823,6 +1828,8 @@ class Erk(QMainWindow):
 		backgroundBrush = QBrush(pix)
 		self.MDI.setBackground(backgroundBrush)
 
+		self.buildConnectionDisplay()
+
 		self.menubar = self.menuBar()
 
 		menuBoldText = self.MDI.font()
@@ -1859,6 +1866,7 @@ class Erk(QMainWindow):
 
 		self.ircMenu = QMenu(APPLICATION_NAME)
 		self.connectionsMenu = QMenu("Connections")
+		self.displayMenu = QMenu("Display")
 		settingsMenu = QMenu("Settings")
 		self.pluginMenu = QMenu("Plugins")
 		self.windowMenu = QMenu("Windows")
@@ -1898,11 +1906,11 @@ class Erk(QMainWindow):
 		toolMenuButton = MenuButton(
 			toolbar_button_style,
 			toolbar_button_style_hover,
-			" Connections "
+			" Display "
 			)
 
 		toolMenuButton.setStyleSheet(toolbar_button_style)
-		toolMenuButton.setMenu(self.connectionsMenu)
+		toolMenuButton.setMenu(self.displayMenu)
 		self.toolbar.addWidget(toolMenuButton)
 
 		toolMenuButton.setFont(tfont)
@@ -1994,7 +2002,69 @@ class Erk(QMainWindow):
 		# self.connectionsMenu = self.menubar.addMenu("Connections")
 		# self.connectionsMenu = QMenu("Connections")
 
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
+
+		# Display Menu
+
+		#self.displayMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
+
+		self.actFont = QAction(QIcon(FONT_ICON),"Font",self)
+		self.actFont.triggered.connect(self.menuFont)
+		self.displayMenu.addAction(self.actFont)
+
+		pf = self.font_string.split(',')
+		mf = pf[0]
+		ms = pf[1]
+		self.actFont.setText(f"Font ({mf}, {ms}pt)")
+
+		self.actSetSize = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
+		self.actSetSize.triggered.connect(self.menuWindowSize)
+		self.displayMenu.addAction(self.actSetSize)
+
+		self.displayMenu.addSeparator()
+
+		# self.connection_dock_visible
+		self.actViewConn = QAction("Connection/window display",self,checkable=True)
+		self.actViewConn.setChecked(self.connection_dock_visible)
+		self.actViewConn.triggered.connect(self.menuViewConn)
+		self.displayMenu.addAction(self.actViewConn)
+
+		self.actWindowTitle = QAction("Set title to active window",self,checkable=True)
+		self.actWindowTitle.setChecked(self.set_window_title_to_active)
+		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
+		self.displayMenu.addAction(self.actWindowTitle)
+
+		self.actTray = QAction("Systray notification",self,checkable=True)
+		self.actTray.setChecked(self.systray_notification)
+		self.actTray.triggered.connect(self.menuTray)
+		self.displayMenu.addAction(self.actTray)
+
+		self.actStatusBars = QAction("Status bars on chat windows",self,checkable=True)
+		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
+		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
+		self.displayMenu.addAction(self.actStatusBars)
+
+		self.actPlainUserLists = QAction("Plain user lists",self,checkable=True)
+		self.actPlainUserLists.setChecked(self.plain_user_lists)
+		self.actPlainUserLists.triggered.connect(self.menuPlainUserLists)
+		self.displayMenu.addAction(self.actPlainUserLists)
+
+		self.actShowDisabled = QAction("Show disabled plugins",self,checkable=True)
+		self.actShowDisabled.setChecked(self.show_disabled_plugins)
+		self.actShowDisabled.triggered.connect(self.menuShowDisabled)
+		self.displayMenu.addAction(self.actShowDisabled)
+
+		self.displayMenu.addSeparator()
+
+		self.actOnTop = QAction("Always on top",self,checkable=True)
+		self.actOnTop.setChecked(self.window_on_top)
+		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
+		self.displayMenu.addAction(self.actOnTop)
+
+		self.actFullscreen = QAction("Full screen",self,checkable=True)
+		self.actFullscreen.setChecked(self.window_fullscreen)
+		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
+		self.displayMenu.addAction(self.actFullscreen)
 
 		# Settings Menu
 
@@ -2018,60 +2088,6 @@ class Erk(QMainWindow):
 
 		sep = textSeparator(self,"<i>Preferences</i>")
 		settingsMenu.addAction(sep)
-
-		displaySubMenu = settingsMenu.addMenu(QIcon(DISPLAY_ICON),"Display")
-
-		self.actFont = QAction(QIcon(FONT_ICON),"Font",self)
-		self.actFont.triggered.connect(self.menuFont)
-		displaySubMenu.addAction(self.actFont)
-
-		pf = self.font_string.split(',')
-		mf = pf[0]
-		ms = pf[1]
-		self.actFont.setText(f"Font ({mf}, {ms}pt)")
-
-		self.actSetSize = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
-		self.actSetSize.triggered.connect(self.menuWindowSize)
-		displaySubMenu.addAction(self.actSetSize)
-
-		displaySubMenu.addSeparator()
-
-		self.actTray = QAction("System tray message notification",self,checkable=True)
-		self.actTray.setChecked(self.systray_notification)
-		self.actTray.triggered.connect(self.menuTray)
-		displaySubMenu.addAction(self.actTray)
-
-		self.actStatusBars = QAction("Status bars on chat windows",self,checkable=True)
-		self.actStatusBars.setChecked(self.display_status_bar_on_chat_windows)
-		self.actStatusBars.triggered.connect(self.menuChatStatusBars)
-		displaySubMenu.addAction(self.actStatusBars)
-
-		self.actPlainUserLists = QAction("Plain user lists",self,checkable=True)
-		self.actPlainUserLists.setChecked(self.plain_user_lists)
-		self.actPlainUserLists.triggered.connect(self.menuPlainUserLists)
-		displaySubMenu.addAction(self.actPlainUserLists)
-
-		self.actHidePrivate = QAction("Hide user chat windows on close",self,checkable=True)
-		self.actHidePrivate.setChecked(self.hide_private_chat)
-		self.actHidePrivate.triggered.connect(self.menuToggleHideChat)
-		displaySubMenu.addAction(self.actHidePrivate)
-
-		self.actWindowTitle = QAction("Use application title of the active window",self,checkable=True)
-		self.actWindowTitle.setChecked(self.set_window_title_to_active)
-		self.actWindowTitle.triggered.connect(self.menuWindowTitle)
-		displaySubMenu.addAction(self.actWindowTitle)
-
-		displaySubMenu.addSeparator()
-
-		self.actOnTop = QAction("Always on top",self,checkable=True)
-		self.actOnTop.setChecked(self.window_on_top)
-		self.actOnTop.triggered.connect(self.menuToggleWindowOnTop)
-		displaySubMenu.addAction(self.actOnTop)
-
-		self.actFullscreen = QAction("Full screen",self,checkable=True)
-		self.actFullscreen.setChecked(self.window_fullscreen)
-		self.actFullscreen.triggered.connect(self.menuToggleFullscreen)
-		displaySubMenu.addAction(self.actFullscreen)
 
 		uptimeSubMenu = settingsMenu.addMenu(QIcon(UPTIME_ICON),"Uptime")
 
@@ -2240,10 +2256,25 @@ class Erk(QMainWindow):
 		self.actGetHostmasks.triggered.connect(self.menuGetHostmask)
 		miscSubMenu.addAction(self.actGetHostmasks)
 
-		self.actShowDisabled = QAction("Show disabled plugins in \"Plugins\" menu",self,checkable=True)
-		self.actShowDisabled.setChecked(self.show_disabled_plugins)
-		self.actShowDisabled.triggered.connect(self.menuShowDisabled)
-		miscSubMenu.addAction(self.actShowDisabled)
+		self.actSaveHistory = QAction("Save server history",self,checkable=True)
+		self.actSaveHistory.setChecked(self.save_server_history)
+		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
+		miscSubMenu.addAction(self.actSaveHistory)
+
+		self.actKeepAlive = QAction("Keep connections alive",self,checkable=True)
+		self.actKeepAlive.setChecked(self.keep_alive)
+		self.actKeepAlive.triggered.connect(self.menuKeepAlive)
+		miscSubMenu.addAction(self.actKeepAlive)
+
+		self.actRejoin = QAction("Rejoin channels on disconnection",self,checkable=True)
+		self.actRejoin.setChecked(self.rejoin_channels)
+		self.actRejoin.triggered.connect(self.menuRejoin)
+		miscSubMenu.addAction(self.actRejoin)
+
+		self.actHidePrivate = QAction("Hide user chat windows on close",self,checkable=True)
+		self.actHidePrivate.setChecked(self.hide_private_chat)
+		self.actHidePrivate.triggered.connect(self.menuToggleHideChat)
+		miscSubMenu.addAction(self.actHidePrivate)
 
 		# Plugins Menu
 
@@ -2329,6 +2360,14 @@ class Erk(QMainWindow):
 		helpLink = QAction(QIcon(PYTHON_SMALL_ICON),"pyspellchecker",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/barrust/pyspellchecker": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
+
+	def menuViewConn(self):
+		if self.connection_dock_visible:
+			self.connection_dock_visible = False
+			self.connDock.hide()
+		else:
+			self.connection_dock_visible = True
+			self.connDock.show()
 
 
 	def buildPluginMenu(self):
@@ -2696,6 +2735,8 @@ class Erk(QMainWindow):
 		
 	def buildWindowMenu(self):
 
+		self.rebuildConnectionDisplay()
+
 		self.windowMenu.clear()
 
 		actCascade = QAction(QIcon(CASCADE_ICON),"Cascade Windows",self)
@@ -3030,7 +3071,8 @@ class Erk(QMainWindow):
 			self.connectToIRCServer(info)
 
 	def triggerRebuildConnections(self):
-		self.buildConnectionsMenu()
+		#self.buildConnectionsMenu()
+		self.buildWindowMenu()
 
 	def view_motd(self,obj):
 
@@ -3041,45 +3083,45 @@ class Erk(QMainWindow):
 					for l in c.motd:
 						c.motd_window.write(l)
 
-	def buildConnectionsMenu(self):
-		# self.connectionsMenu
-		self.connectionsMenu.clear()
-		scount = 0
-		for c in self.connections:
-			# c.console.buildConnectionMenu(self.connectionsMenu,c)
-			# scount = scount + 1
-			try:
-				c.console.buildConnectionMenu(self.connectionsMenu,c)
-				scount = scount + 1
-			except:
-				pass
+	# def buildConnectionsMenu(self):
+	# 	# self.connectionsMenu
+	# 	self.connectionsMenu.clear()
+	# 	scount = 0
+	# 	for c in self.connections:
+	# 		# c.console.buildConnectionMenu(self.connectionsMenu,c)
+	# 		# scount = scount + 1
+	# 		try:
+	# 			c.console.buildConnectionMenu(self.connectionsMenu,c)
+	# 			scount = scount + 1
+	# 		except:
+	# 			pass
 
-			#self.connectionsMenu.addSeparator()
+	# 		#self.connectionsMenu.addSeparator()
 
-		if scount==0:
-			noConnectionsLabel = QLabel(f"<center><i>Not connected to any servers.</i></center>")
-			noConnectionsAction = QWidgetAction(self)
-			noConnectionsAction.setDefaultWidget(noConnectionsLabel)
-			self.connectionsMenu.addAction(noConnectionsAction)
+	# 	if scount==0:
+	# 		noConnectionsLabel = QLabel(f"<center><i>Not connected to any servers.</i></center>")
+	# 		noConnectionsAction = QWidgetAction(self)
+	# 		noConnectionsAction.setDefaultWidget(noConnectionsLabel)
+	# 		self.connectionsMenu.addAction(noConnectionsAction)
 
-			self.connectionsMenu.addSeparator()
+	# 		self.connectionsMenu.addSeparator()
 
-		self.connectionsMenu.addSeparator()
+	# 	self.connectionsMenu.addSeparator()
 
-		self.actSaveHistory = QAction("Save server history",self,checkable=True)
-		self.actSaveHistory.setChecked(self.save_server_history)
-		self.actSaveHistory.triggered.connect(self.menuToggleHistory)
-		self.connectionsMenu.addAction(self.actSaveHistory)
+		# self.actSaveHistory = QAction("Save server history",self,checkable=True)
+		# self.actSaveHistory.setChecked(self.save_server_history)
+		# self.actSaveHistory.triggered.connect(self.menuToggleHistory)
+		# self.connectionsMenu.addAction(self.actSaveHistory)
 
-		self.actKeepAlive = QAction("Keep connections alive",self,checkable=True)
-		self.actKeepAlive.setChecked(self.keep_alive)
-		self.actKeepAlive.triggered.connect(self.menuKeepAlive)
-		self.connectionsMenu.addAction(self.actKeepAlive)
+		# self.actKeepAlive = QAction("Keep connections alive",self,checkable=True)
+		# self.actKeepAlive.setChecked(self.keep_alive)
+		# self.actKeepAlive.triggered.connect(self.menuKeepAlive)
+		# self.connectionsMenu.addAction(self.actKeepAlive)
 
-		self.actRejoin = QAction("Rejoin channels on disconnection",self,checkable=True)
-		self.actRejoin.setChecked(self.rejoin_channels)
-		self.actRejoin.triggered.connect(self.menuRejoin)
-		self.connectionsMenu.addAction(self.actRejoin)
+		# self.actRejoin = QAction("Rejoin channels on disconnection",self,checkable=True)
+		# self.actRejoin.setChecked(self.rejoin_channels)
+		# self.actRejoin.triggered.connect(self.menuRejoin)
+		# self.connectionsMenu.addAction(self.actRejoin)
 
 	# |=============|
 	# | QT CODE END |
@@ -3194,6 +3236,187 @@ class Erk(QMainWindow):
 		self.allow_ignore = False
 		self.actIgnore.setVisible(False)
 		self.actToggleIgnore.setEnabled(False)
+
+	# CONNECTION DOCK
+
+	def rebuildConnectionDisplay(self):
+
+		self.clearQTreeWidget(self.connectionTree)
+
+		root = self.connectionTree.invisibleRootItem()
+
+		self.treeList = []
+		servs = []
+
+		for c in self.connections:
+			ctitle = c.network
+
+			place = 0
+			for s in servs:
+				if s==ctitle:
+					place = place + 1
+			servs.append(ctitle)
+
+			parent = QTreeWidgetItem(root)
+			if place==0:
+				parent.setText(0,ctitle)
+				entry = [ ctitle, c ]
+				self.treeList.append(entry)
+			else:
+				parent.setText(0,ctitle+" ["+str(place)+"]")
+				entry = [ ctitle+" ["+str(place)+"]", c ]
+				self.treeList.append(entry)
+			parent.setIcon(0,QIcon(IRC_NETWORK_ICON))
+
+			f = parent.font(0)
+			f.setBold(True)
+			parent.setFont(0,f)
+
+			for win in c.windows:
+				child = QTreeWidgetItem(parent)
+				if '#' in c.windows[win].name:
+					if c.windows[win].key=='':
+						icon = CHANNEL_WINDOW
+					else:
+						icon = LOCKED_CHANNEL
+				else:
+					icon = USER_WINDOW
+				child.setText(0,c.windows[win].name)
+				child.setIcon(0,QIcon(icon))
+
+		#self.connectionTree.expandAll()
+
+	def clearQTreeWidget(self,tree):
+		iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
+		while iterator.value():
+			iterator.value().takeChildren()
+			iterator +=1
+		i = tree.topLevelItemCount()
+		while i > -1:
+			tree.takeTopLevelItem(i)
+			i -= 1
+
+	def treeClicked(self,item,column):
+		self.connectionTree.clearSelection()
+
+		parent = item.parent()
+		if parent:
+			# clicked item represents a window
+			server = parent.text(0)
+			name = item.text(0)
+
+			for e in self.treeList:
+				if server==e[0]:
+					c = e[1]
+					for win in c.windows:
+						if c.windows[win].name == name:
+							self.restoreWindow(c.windows[win],c.windows[win].subwindow)
+							return
+		else:
+			return
+
+	def openTreeMenu(self,position):
+		index = self.connectionTree.indexAt(position)
+
+		if not index.isValid(): return
+
+		item = self.connectionTree.itemAt(position)
+		name = item.text(0)
+
+		if item.parent():
+			window = True
+		else:
+			window = False
+
+		menu = QMenu(self)
+		if window:
+			return
+		else:
+			for e in self.treeList:
+				if name==e[0]:
+					menu = e[1].console.buildServerMenu(e[1])
+					break
+
+		menu.exec_(QCursor.pos())
+
+	def buildConnectionDisplay(self):
+
+		fm = QFontMetrics(self.app.font())
+		fheight = fm.height() + 2
+		fwidth = fm.width('X') * 20
+
+		class LogWidget(QTreeWidget):
+
+			def __init__(self,parent=None):
+				self.started = True
+				super(LogWidget, self).__init__(parent)
+
+			def sizeHint(self):
+				if self.started:
+					self.started = False
+					return QSize(fwidth, self.height())
+				return QSize(self.width(), self.height())
+
+		self.connectionTree = LogWidget()
+		self.connectionTree.headerItem().setText(0,"1")
+		self.connectionTree.header().setVisible(False)
+
+		self.connectionTree.setSelectionMode(QAbstractItemView.NoSelection)
+		
+		self.connectionTree.setIconSize(QSize(fheight,fheight))
+
+		self.connectionTree.itemDoubleClicked.connect(self.treeClicked)
+
+		self.connectionTree.setFocusPolicy(Qt.NoFocus)
+
+		self.connectionTree.setContextMenuPolicy(Qt.CustomContextMenu)
+		self.connectionTree.customContextMenuRequested.connect(self.openTreeMenu)
+
+
+		self.connectionTree.setStyleSheet(self.styles[BASE_STYLE_NAME])
+
+
+		BASE_COLOR = self.connectionTree.palette().color(QPalette.Base).name()
+		DARKER_COLOR = color_variant(BASE_COLOR,-15)
+
+		user_display_qss='''
+			QTreeWidget::item::selected {
+				border: 0px;
+				background: !BASE!;
+			}
+			QTreeWidget::item:hover {
+				border: 0px;
+				background: !DARKER!;
+			}
+			QTreeWidget::item {
+				border: 0px;
+			}
+			QTreeWidget::item::active {
+				border: 0px;
+				background: !DARKER!;
+			}
+			QTreeWidget::item::!active {
+				border: 0px;
+			}
+			QTreeWidget {
+				show-decoration-selected: 0;
+			}
+		'''
+		user_display_qss = user_display_qss.replace('!DARKER!',DARKER_COLOR)
+		user_display_qss = user_display_qss.replace('!BASE!',BASE_COLOR)
+		user_display_qss = user_display_qss + self.styles[BASE_STYLE_NAME]
+
+		self.connectionTree.setStyleSheet(user_display_qss)
+
+		self.connDock = QDockWidget(self)
+		self.connDock.setWidget(self.connectionTree)
+		self.connDock.setFloating(False)
+
+		self.connDock.setFeatures( QDockWidget.NoDockWidgetFeatures )
+
+		self.connDock.setTitleBarWidget(QWidget())
+
+		self.addDockWidget(Qt.LeftDockWidgetArea,self.connDock)
 
 class Clock(QThread):
 
