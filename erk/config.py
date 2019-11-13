@@ -166,8 +166,8 @@ SETTING_ENABLE_IGNORE				= "enable_user_ignore"
 SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
 SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
 SETTING_SHOW_DISABLED_PLUGINS		= "show_disabled_plugins_in_menu"
-
-SETTING_GET_HOSTMASKS = "get_user_hostmasks_on_channel_join"
+SETTING_GET_HOSTMASKS 				= "get_user_hostmasks_on_channel_join"
+SETTING_UNREAD_MESSAGE_COLOR		= "unread_message_notification_color"
 
 UNKNOWN_IRC_NETWORK = "Unknown"
 
@@ -368,6 +368,7 @@ def patch_config_file(data):
 	if not SETTING_SYSTRAY_NOTIFICATION in data: data[SETTING_SYSTRAY_NOTIFICATION] = True
 	if not SETTING_SHOW_DISABLED_PLUGINS in data: data[SETTING_SHOW_DISABLED_PLUGINS] = False
 	if not SETTING_GET_HOSTMASKS in data: data[SETTING_GET_HOSTMASKS] = True
+	if not SETTING_UNREAD_MESSAGE_COLOR in data: data[SETTING_UNREAD_MESSAGE_COLOR] = "#FF0000"
 
 	if len(data)>s:
 		return [True,data]
@@ -421,6 +422,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_SYSTRAY_NOTIFICATION: True,
 			SETTING_SHOW_DISABLED_PLUGINS: False,
 			SETTING_GET_HOSTMASKS: True,
+			SETTING_UNREAD_MESSAGE_COLOR: "#FF0000",
 		}
 		save_settings(si)
 		return si

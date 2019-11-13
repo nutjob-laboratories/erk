@@ -448,7 +448,7 @@ class Erk(QMainWindow):
 
 		data = {
 			"user": puser,
-			"message:": message
+			"message:": qmsg
 		}
 		eobj = EVENT(Event.QUIT,data)
 		self.execute_plugins(PLUGIN_EVENT_METHOD, eobj, obj )
@@ -952,6 +952,7 @@ class Erk(QMainWindow):
 					c = self.fetchConnection(obj)
 					win = UserWindow(user,self.MDI,obj,self)
 					c.windows[user] = win
+					self.MDI.setActiveSubWindow(win.subwindow)
 					self.buildWindowMenu()
 				# Display the message and return
 				msg = render_message(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[USERNAME_STYLE_NAME],user,self.styles[MESSAGE_STYLE_NAME],text )
@@ -1026,6 +1027,9 @@ class Erk(QMainWindow):
 			msg = render_system(self, self.styles[TIMESTAMP_STYLE_NAME],self.styles[SYSTEM_STYLE_NAME],"Joined "+channel )
 			chan.writeText(msg)
 			chan.add_to_log('',"Joined "+channel)
+			
+			self.MDI.setActiveSubWindow(chan.subwindow)
+
 			self.buildWindowMenu()
 	
 	def irc_userlist(self,obj,channel,users):
@@ -1322,6 +1326,28 @@ class Erk(QMainWindow):
 				if channel in c.windows:
 					c.windows[channel].writeText(text)
 
+					# [ subWindow.window.client, subWindow.window.name ]
+					if len(self.active_chat)>0:
+						if self.active_chat[0].id==obj.id:
+							if self.active_chat[1]==channel:
+								# we are writing to the active window
+								return
+
+					#print("WROTE TO INACTIVE WINDOW: "+obj.id+"->"+channel)
+					treeEnt = self.get_tree_entry_for_channel(obj,channel)
+					parent = treeEnt.parent()
+					if parent: parent.setExpanded(True)
+					color = QBrush(QColor(self.unread_message_color))
+					treeEnt.setForeground(0,color)
+
+					for w in self.unseen_messages:
+						if w[0].id==obj.id:
+							if w[1]==channel:
+								return
+
+					entry = [obj,channel]
+					self.unseen_messages.append(entry)
+
 	def writeToChannelLog(self,obj,channel,user,text):
 		for c in self.connections:
 			if c.id==obj.id:
@@ -1488,6 +1514,39 @@ class Erk(QMainWindow):
 		self.app.quit()
 
 	def updateActiveChild(self,subWindow):
+		try:
+			if subWindow.window.is_channel or subWindow.window.is_user:
+				# treeEnt = self.get_tree_entry_for_channel(obj,channel)
+				old_window=False
+				if len(self.active_chat)>0:
+					if self.active_chat[0].id==subWindow.window.client.id:
+						if self.active_chat[1]==subWindow.window.name:
+							# same as last window
+							old_window=True
+				if not old_window:
+					treeEnt = self.get_tree_entry_for_channel(subWindow.window.client,subWindow.window.name)
+					parent = treeEnt.parent()
+					parent.setExpanded(True)
+					color = parent.foreground(0)
+					treeEnt.setForeground(0,color)
+
+					clean = []
+					for w in self.unseen_messages:
+						if w[0].id == subWindow.window.client.id:
+							if w[1]==subWindow.window.name:
+								continue
+						clean.append(w)
+					self.unseen_messages = clean
+
+				self.active_chat = [ subWindow.window.client, subWindow.window.name ]
+			elif subWindow.window.is_console:
+				t = self.get_tree_entry_for_server(subWindow.window.client)
+				t.setExpanded(True)
+			else:
+				self.active_chat = []
+		except:
+			self.active_chat = []
+
 		if not self.set_window_title_to_active: return
 		try:
 			w = subWindow.windowTitle()
@@ -1730,6 +1789,11 @@ class Erk(QMainWindow):
 
 		self.connection_dock_visible = True
 
+		self.tree_to_channel_map = []
+		self.active_chat = ''
+		self.unseen_messages = []
+		self.tree_to_server_map = []
+
 		# Settings changable via the gui
 		self.open_private_chat_windows				= self.settings[SETTING_OPEN_PRIVATE_WINDOWS]
 		self.display_status_bar_on_chat_windows		= self.settings[SETTING_CHAT_STATUS_BARS]
@@ -1765,7 +1829,6 @@ class Erk(QMainWindow):
 		self.rejoin_channels						= self.settings[SETTING_REJOIN_CHANNELS]
 		self.systray_notification					= self.settings[SETTING_SYSTRAY_NOTIFICATION]
 		self.show_disabled_plugins					= self.settings[SETTING_SHOW_DISABLED_PLUGINS]
-
 		self.get_hostmasks_on_join					= self.settings[SETTING_GET_HOSTMASKS]
 
 		self.allow_ignore							= self.settings[SETTING_ENABLE_IGNORE]
@@ -1786,6 +1849,7 @@ class Erk(QMainWindow):
 		# Settings not changeable via gui
 		self.max_username_length					= self.settings[SETTING_MAX_NICK_LENGTH]
 		self.max_displayed_log						= self.settings[SETTING_LOADED_LOG_LENGTH]
+		self.unread_message_color 					= self.settings[SETTING_UNREAD_MESSAGE_COLOR]
 
 		# PLUGINS BEGIN
 
@@ -2361,6 +2425,16 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/barrust/pyspellchecker": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
+	def dockExpandAll(self):
+		self.connectionTree.expandAll()
+
+	def dockCollapseAll(self):
+		self.connectionTree.collapseAll()
+
+	def dockDisconnect(self):
+		for c in self.connections:
+			self.disconnectFromIRC(c.connection)
+		
 	def menuViewConn(self):
 		if self.connection_dock_visible:
 			self.connection_dock_visible = False
@@ -2769,10 +2843,13 @@ class Erk(QMainWindow):
 			sep = textSeparator(self,"<i>"+ctitle+"</i>")
 			self.windowMenu.addAction(sep)
 
-			if c.console.is_visible==False:
-				cwin = QAction(QIcon(CONSOLE_WINDOW),c.console.client.hostname,self)
-				cwin.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
-				self.windowMenu.addAction(cwin)
+			try:
+				if c.console.is_visible==False:
+					cwin = QAction(QIcon(CONSOLE_WINDOW),c.console.client.hostname,self)
+					cwin.triggered.connect(lambda state,f=c.console,y=c.console.subwindow: self.restoreWindow(f,y))
+					self.windowMenu.addAction(cwin)
+			except:
+				pass
 
 			for win in c.windows:
 				if c.windows[win].is_channel:
@@ -3245,6 +3322,8 @@ class Erk(QMainWindow):
 
 		root = self.connectionTree.invisibleRootItem()
 
+		self.tree_to_channel_map = []
+		self.tree_to_server_map = []
 		self.treeList = []
 		servs = []
 
@@ -3268,6 +3347,9 @@ class Erk(QMainWindow):
 				self.treeList.append(entry)
 			parent.setIcon(0,QIcon(IRC_NETWORK_ICON))
 
+			entry = [ c.connection, parent ]
+			self.tree_to_server_map.append(entry)
+
 			f = parent.font(0)
 			f.setBold(True)
 			parent.setFont(0,f)
@@ -3284,7 +3366,33 @@ class Erk(QMainWindow):
 				child.setText(0,c.windows[win].name)
 				child.setIcon(0,QIcon(icon))
 
+				entry = [ c.connection, c.windows[win].name, child ]
+				self.tree_to_channel_map.append(entry)
+
 		#self.connectionTree.expandAll()
+
+		for e in self.unseen_messages:
+			t = self.get_tree_entry_for_channel(e[0],e[1])
+			if t:
+				p = t.parent()
+				if p: p.setExpanded(True)
+				color = QBrush(QColor(self.unread_message_color))
+				t.setForeground(0,color)
+
+	def get_tree_entry_for_server(self,connection):
+
+		for e in self.tree_to_server_map:
+			if e[0].id == connection.id:
+				return e[1]
+		return None
+
+	def get_tree_entry_for_channel(self,connection,channel):
+
+		for e in self.tree_to_channel_map:
+			if e[0].id == connection.id:
+				if e[1]==channel:
+					return e[2]
+		return None
 
 	def clearQTreeWidget(self,tree):
 		iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
@@ -3343,7 +3451,7 @@ class Erk(QMainWindow):
 
 		fm = QFontMetrics(self.app.font())
 		fheight = fm.height() + 2
-		fwidth = fm.width('X') * 20
+		fwidth = fm.width('X') * 25
 
 		class LogWidget(QTreeWidget):
 
@@ -3360,6 +3468,7 @@ class Erk(QMainWindow):
 		self.connectionTree = LogWidget()
 		self.connectionTree.headerItem().setText(0,"1")
 		self.connectionTree.header().setVisible(False)
+		#self.connectionTree.setItemsExpandable(False)
 
 		self.connectionTree.setSelectionMode(QAbstractItemView.NoSelection)
 		
@@ -3408,8 +3517,56 @@ class Erk(QMainWindow):
 
 		self.connectionTree.setStyleSheet(user_display_qss)
 
+
+		
+
+		# self.expandButton = QPushButton("Expand")
+		# self.expandButton.clicked.connect(self.dockExpandAll)
+
+		BUTTON_ICON_SIZE = 12
+		BUTTON_SIZE = 25
+
+		self.expandButton = QPushButton(QIcon(DOCK_EXPAND_ICON),"")
+		self.expandButton.clicked.connect(self.dockExpandAll)
+		#self.expandButton.setFlat(True)
+		self.expandButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
+		self.expandButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
+		self.expandButton.setToolTip("Expand all")
+
+		self.collapseButton = QPushButton(QIcon(DOCK_COLLAPSE_ICON),"")
+		self.collapseButton.clicked.connect(self.dockCollapseAll)
+		#self.collapseButton.setFlat(True)
+		self.collapseButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
+		self.collapseButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
+		self.collapseButton.setToolTip("Collapse all")
+
+		self.discoButton = QPushButton(QIcon(DOCK_DISCONNECT_ICON),"")
+		self.discoButton.clicked.connect(self.dockDisconnect)
+		#self.discoButton.setFlat(True)
+		self.discoButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
+		self.discoButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
+		self.discoButton.setToolTip("Disconnect all")
+
+		expandCollapseLayout = QHBoxLayout()
+		expandCollapseLayout.addWidget(self.expandButton)
+		expandCollapseLayout.addWidget(self.collapseButton)
+		expandCollapseLayout.addWidget(self.discoButton)
+		expandCollapseLayout.addStretch()
+
+		finalLayout = QVBoxLayout()
+		finalLayout.addWidget(self.connectionTree)
+		finalLayout.addLayout(expandCollapseLayout)
+
+		final = QWidget()
+		final.setLayout(finalLayout)
+
+
 		self.connDock = QDockWidget(self)
-		self.connDock.setWidget(self.connectionTree)
+
+		#self.connDock.setWidget(self.connectionTree)
+		self.connDock.setWidget(final)
+
+
 		self.connDock.setFloating(False)
 
 		self.connDock.setFeatures( QDockWidget.NoDockWidgetFeatures )

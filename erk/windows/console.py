@@ -298,6 +298,7 @@ class Window(QMainWindow):
 
 		self.is_channel = False
 		self.is_console = True
+		self.is_user = False
 
 		self.network_url = None
 		self.network = "Unknown"

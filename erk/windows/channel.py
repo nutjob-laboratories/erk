@@ -376,6 +376,7 @@ class Window(QMainWindow):
 
 		self.is_channel = True
 		self.is_console = False
+		self.is_user = False
 
 		self.users = []
 		self.topic = ''

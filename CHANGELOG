@@ -46,6 +46,8 @@ Version 0.510
 	* Added a new connection/window display, ala HexChat
 	* Removed the "Connections" menu, as all that info is now displayed on the connection/window display
 	* Moved "Display" settings to their own menu
+	* Added "unread message" notification to the connection/window display
+	* Connection/window display expands/collapses as needed
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

@@ -195,6 +195,7 @@ class Window(QMainWindow):
 
 		self.is_channel = False
 		self.is_console = False
+		self.is_user = True
 
 		self.is_away = False
 
