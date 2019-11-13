@@ -48,6 +48,7 @@ Version 0.510
 	* Moved "Display" settings to their own menu
 	* Added "unread message" notification to the connection/window display
 	* Connection/window display expands/collapses as needed
+	* Added a background image to the connection/window display
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

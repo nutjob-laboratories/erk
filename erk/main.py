@@ -3509,63 +3509,60 @@ class Erk(QMainWindow):
 			}
 			QTreeWidget {
 				show-decoration-selected: 0;
+				background-image: url(!IMAGE!);
+				background-position: bottom left;
+				background-repeat: no-repeat;
 			}
 		'''
 		user_display_qss = user_display_qss.replace('!DARKER!',DARKER_COLOR)
 		user_display_qss = user_display_qss.replace('!BASE!',BASE_COLOR)
+
+		user_display_qss = user_display_qss.replace('!IMAGE!',CONNECTION_DISPLAY_IMAGE)
+
 		user_display_qss = user_display_qss + self.styles[BASE_STYLE_NAME]
 
 		self.connectionTree.setStyleSheet(user_display_qss)
 
 
-		
+		sf = self.app.font()
+		sf.setPointSize(sf.pointSize()-2)
 
-		# self.expandButton = QPushButton("Expand")
-		# self.expandButton.clicked.connect(self.dockExpandAll)
+		fm = QFontMetrics(sf)
+		fheight = fm.height()
 
-		BUTTON_ICON_SIZE = 12
-		BUTTON_SIZE = 25
-
-		self.expandButton = QPushButton(QIcon(DOCK_EXPAND_ICON),"")
+		self.expandButton = QPushButton("Expand")
 		self.expandButton.clicked.connect(self.dockExpandAll)
-		#self.expandButton.setFlat(True)
-		self.expandButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
-		self.expandButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
-		self.expandButton.setToolTip("Expand all")
+		self.expandButton.setFixedHeight(fheight+5)
+		self.expandButton.setToolTip("Expand all nodes")
 
-		self.collapseButton = QPushButton(QIcon(DOCK_COLLAPSE_ICON),"")
+		self.collapseButton = QPushButton("Collapse")
 		self.collapseButton.clicked.connect(self.dockCollapseAll)
-		#self.collapseButton.setFlat(True)
-		self.collapseButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
-		self.collapseButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
-		self.collapseButton.setToolTip("Collapse all")
+		self.collapseButton.setToolTip("Collapse all nodes")
+		self.collapseButton.setFixedHeight(fheight+5)
 
-		self.discoButton = QPushButton(QIcon(DOCK_DISCONNECT_ICON),"")
-		self.discoButton.clicked.connect(self.dockDisconnect)
-		#self.discoButton.setFlat(True)
-		self.discoButton.setIconSize(QSize(BUTTON_ICON_SIZE,BUTTON_ICON_SIZE))
-		self.discoButton.setFixedSize(BUTTON_SIZE,BUTTON_SIZE)
-		self.discoButton.setToolTip("Disconnect all")
+		self.expandButton.setFont(sf)
+		self.collapseButton.setFont(sf)
+
+		self.expandButton.setStyleSheet('padding: 0px; border-width: 0px;')
+		self.collapseButton.setStyleSheet('padding: 0px; border-width: 0px;')
 
 		expandCollapseLayout = QHBoxLayout()
+		expandCollapseLayout.setSpacing(0)
+		expandCollapseLayout.setContentsMargins(0,0,0,0)
 		expandCollapseLayout.addWidget(self.expandButton)
 		expandCollapseLayout.addWidget(self.collapseButton)
-		expandCollapseLayout.addWidget(self.discoButton)
-		expandCollapseLayout.addStretch()
 
 		finalLayout = QVBoxLayout()
+		finalLayout.setSpacing(0)
+		finalLayout.setContentsMargins(0,0,0,0)
 		finalLayout.addWidget(self.connectionTree)
 		finalLayout.addLayout(expandCollapseLayout)
 
 		final = QWidget()
 		final.setLayout(finalLayout)
 
-
 		self.connDock = QDockWidget(self)
-
-		#self.connDock.setWidget(self.connectionTree)
 		self.connDock.setWidget(final)
-
 
 		self.connDock.setFloating(False)
 

@@ -238,9 +238,7 @@ BACK_ICON = ":/gui-back.png"
 FORWARD_ICON = ":/gui-forward.png"
 STOP_ICON = ":/gui-stop.png"
 
-DOCK_EXPAND_ICON = ":/gui-expand.png"
-DOCK_COLLAPSE_ICON = ":/gui-collapse.png"
-DOCK_DISCONNECT_ICON = ":/gui-disconnect.png"
+CONNECTION_DISPLAY_IMAGE = ":/gui-connection_background.png"
 
 # ---------
 # | ICONS |
