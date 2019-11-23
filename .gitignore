@@ -2,3 +2,5 @@
 *.pyc
 settings/user.json
 settings/settings.json
+logs/MYNet-#nostril.json
+logs/MYNet-#themaxx.json

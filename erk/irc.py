@@ -190,11 +190,12 @@ class IRC_Connection(irc.IRCClient):
 		
 		# self.gui.irc_uptime(self,self.uptime)
 
-		# if self.gui.get_hostmasks_on_join:
-		# 	if len(self.do_whois)>0:
-		# 		nick = self.do_whois.pop(0)
-		# 		self.request_whois.append(nick)
-		# 		self.sendLine("WHOIS "+nick)
+		if self.gui.get_hostmasks_on_join:
+			if len(self.do_whois)>0:
+				nick = self.do_whois.pop(0)
+				if len(nick.strip())>0:
+					self.request_whois.append(nick)
+					self.sendLine("WHOIS "+nick)
 
 
 	def connectionMade(self):
@@ -303,9 +304,9 @@ class IRC_Connection(irc.IRCClient):
 		p = user.split('!')
 		if len(p)==2:
 			if p[0] == self.nickname: return
-		# else:
-		# 	if self.gui.get_hostmasks_on_join:
-		# 		self.do_whois.append(user)
+		else:
+			if self.gui.get_hostmasks_on_join:
+				self.do_whois.append(user)
 
 		# self.gui.irc_join(self,user,channel)
 		erk.events.join(self.gui,self,user,channel)
@@ -381,14 +382,15 @@ class IRC_Connection(irc.IRCClient):
 		channel = params[2].lower()
 		nicklist = params[3].split(' ')
 
-		# if channel in self.joined_channels:
-		# 	if self.gui.get_hostmasks_on_join:
-		# 		for u in nicklist:
-		# 			p = u.split('!')
-		# 			if len(p)!=2:
-		# 				u = u.replace('@','')
-		# 				u = u.replace('+','')
-		# 				self.do_whois.append(u)
+		if channel in self.joined_channels:
+			if self.gui.get_hostmasks_on_join:
+				for u in nicklist:
+					p = u.split('!')
+					if len(p)!=2:
+						u = u.replace('@','')
+						u = u.replace('+','')
+						if not erk.events.channel_has_hostmask(self.gui,self,channel,u):
+							self.do_whois.append(u)
 
 		if channel in self.userlists:
 			# Add to user list
@@ -450,9 +452,10 @@ class IRC_Connection(irc.IRCClient):
 		host = params[3]
 		realname = params[5]
 
-		# if nick in self.request_whois:
-		# 	self.gui.update_user_hostmask(self,nick,username+"@"+host)
-		# 	return
+		if nick in self.request_whois:
+			#self.gui.update_user_hostmask(self,nick,username+"@"+host)
+			erk.events.set_channel_hostmask(self.gui,self,nick,username+"@"+host)
+			return
 
 		if nick in self.whois:
 			self.whois[nick].username = username
@@ -642,6 +645,7 @@ class IRC_Connection(irc.IRCClient):
 	def sendLine(self,line):
 		
 		# self.gui.irc_output(self,line)
+		#print(line)
 
 		return irc.IRCClient.sendLine(self, line)
 

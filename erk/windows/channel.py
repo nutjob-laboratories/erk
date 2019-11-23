@@ -15,6 +15,8 @@ from erk.format import *
 import erk.events
 import erk.input
 
+from erk.widgets import *
+
 from erk.dialogs import NewNickDialog
 
 class Window(QMainWindow):
@@ -194,6 +196,12 @@ class Window(QMainWindow):
 	def refreshUserlist(self):
 		self.writeUserlist(self.users)
 
+	def part(self,nickname):
+		del self.hostmasks[nickname]
+
+	def join(self,nickname,hostmask):
+		self.hostmasks[nickname] = hostmask
+
 	def writeUserlist(self,users):
 
 		self.users = []
@@ -220,6 +228,7 @@ class Window(QMainWindow):
 			if len(p)==2:
 				nickname = p[0]
 				hostmask = p[1]
+				self.hostmasks[nickname] = hostmask
 			else:
 				nickname = u
 				hostmask = None
@@ -402,6 +411,8 @@ class Window(QMainWindow):
 		self.modesoff = ''
 		self.key = ''
 
+		self.hostmasks = {}
+
 		if self.gui.save_channels:
 			found = False
 			for e in self.client.kwargs["autojoin"]:
@@ -419,6 +430,7 @@ class Window(QMainWindow):
 		self.channelUserDisplay = QListWidget(self)
 		self.channelUserDisplay.setObjectName("channelUserDisplay")
 		self.channelUserDisplay.setFocusPolicy(Qt.NoFocus)
+		self.channelUserDisplay.installEventFilter(self)
 
 		# Make sure that user status icons are just a little
 		# bigger than the user entry text
@@ -526,3 +538,196 @@ class Window(QMainWindow):
 				if self.gui.mark_end_of_loaded_logs: self.writeLog(HR_MESSAGE,'','')
 				self.rerenderText()
 
+	def eventFilter(self, source, event):
+
+		# User List Menu
+		if (event.type() == QtCore.QEvent.ContextMenu and source is self.channelUserDisplay):
+
+			item = source.itemAt(event.pos())
+			if item is None: return True
+
+			user = item.text()
+
+			user_nick = ''
+			user_hostmask = None
+			user_is_op = False
+			user_is_voiced = False
+
+			for u in self.users:
+				p = u.split('!')
+				if len(p)==2:
+					nick = p[0]
+					hostmask = p[1]
+				else:
+					nick = u
+					hostmask = None
+
+				if '@' in nick:
+					is_op = True
+					nick = nick.replace('@','')
+				else:
+					is_op = False
+				if '+' in nick:
+					is_voiced = True
+					nick = nick.replace('+','')
+				else:
+					is_voiced = False
+				if nick==user:
+					user_nick = nick
+					if hostmask:
+						user_hostmask = hostmask
+					else:
+						if nick in self.hostmasks:
+							user_hostmask = self.hostmasks[nick]
+					user_is_op = is_op
+					user_is_voiced = is_voiced
+					break
+
+			# Menu for everyone else
+			menu = QMenu(self)
+			menu.setStyle(SmallerIconsMenuStyle("Windows"))
+
+			banner = textSeparator(self,"<b>"+user_nick+"</b>")
+			menu.addAction(banner)
+
+			if user_hostmask:
+				max_length = 32
+				if len(user_hostmask)>max_length:
+					if len(user_hostmask)>=max_length+3:
+						offset = max_length-3
+					elif len(user_hostmask)==max_length+2:
+						offset = max_length-2
+					elif len(user_hostmask)==max_length+1:
+						offset = max_length-1
+					else:
+						offset = max_length
+					display_hostmask = user_hostmask[0:offset]+"..."
+				else:
+					display_hostmask = user_hostmask
+				tsLabel = QLabel( "<center><small>"+display_hostmask+"</small></center>" )
+				tsAction = QWidgetAction(self)
+				tsAction.setDefaultWidget(tsLabel)
+				menu.addAction(tsAction)
+
+			if user_is_op:
+				statusLabel = QLabel(f"<center><small><i>Channel operator</i></small></center>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			elif user_is_voiced:
+				statusLabel = QLabel(f"<center><small><i>Voiced user</i></small></center>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			else:
+				statusLabel = QLabel(f"<center><small><i>Normal user</i></small></center>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+
+
+			if self.operator:
+				opMenu = menu.addMenu(QIcon(USERLIST_OPERATOR_ICON),"Operator Actions")
+
+				if user_is_op: actDeop = opMenu.addAction(QIcon(MINUS_ICON),'Take op status')
+				if not user_is_op: actOp = opMenu.addAction(QIcon(PLUS_ICON),'Give op status')
+
+				if not user_is_op:
+					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),'Take voiced status')
+					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),'Give voiced status')
+
+				actKick = opMenu.addAction(QIcon(KICK_ICON),'Kick')
+				actBan = opMenu.addAction(QIcon(BAN_ICON),'Ban')
+				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),'Kick/Ban')
+
+				menu.addSeparator()
+
+			actOpenWindow = menu.addAction(QIcon(USER_WINDOW_ICON),'Open chat window')
+			actPrivate = menu.addAction(QIcon(MESSAGE_ICON),'Send private message')
+
+			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
+			actCopyNick = clipMenu.addAction(QIcon(USER_WINDOW_ICON),'Nickname')
+			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),'Hostmask')
+			actUserlist = clipMenu.addAction(QIcon(USERLIST_ICON),'User list')
+			actTopic = clipMenu.addAction(QIcon(TOPIC_ICON),'Channel topic')
+
+			action = menu.exec_(self.channelUserDisplay.mapToGlobal(event.pos()))
+
+			if action == actPrivate:
+				self.userTextInput.setText("/msg "+user_nick+" ")
+				self.userTextInput.setFocus()
+				self.userTextInput.moveCursor(QTextCursor.End)
+				return True
+
+			if action == actOpenWindow:
+				erk.events.user_double_click(self.gui,self.client,user_nick)
+				return True
+
+			if action == actTopic:
+				cb = QApplication.clipboard()
+				cb.clear(mode=cb.Clipboard)
+				cb.setText(f"{self.topic}", mode=cb.Clipboard)
+				return True
+
+			if action == actUserlist:
+				ulist = "\n".join(self.users)
+				cb = QApplication.clipboard()
+				cb.clear(mode=cb.Clipboard)
+				cb.setText(f"{ulist}", mode=cb.Clipboard)
+				return True
+
+			if action == actCopyNick:
+				cb = QApplication.clipboard()
+				cb.clear(mode=cb.Clipboard)
+				cb.setText(f"{user_nick}", mode=cb.Clipboard)
+				return True
+
+			if user_hostmask:
+				if action == actHostmask:
+					cb = QApplication.clipboard()
+					cb.clear(mode=cb.Clipboard)
+					cb.setText(f"{user_hostmask}", mode=cb.Clipboard)
+					return True
+
+			if self.operator:
+
+				if action == actKick:
+					self.client.kick(self.name,user_nick)
+					return True
+
+				if action == actBan:
+					self.client.mode(self.name,True,"b",None,None,banmask)
+					return True
+
+				if action == actKickBan:
+					self.client.mode(self.name,True,"b",None,None,banmask)
+					self.client.kick(self.name,user_nick)
+					return True
+
+				if user_is_op:
+					if action == actDeop:
+						self.client.mode(self.name,False,"o",None,user_nick)
+						return True
+
+				if not user_is_op:
+					if user_is_voiced:
+						if action == actDevoice:
+							self.client.mode(self.name,False,"v",None,user_nick)
+							return True
+
+				if not user_is_op:
+					if action == actOp:
+						self.client.mode(self.name,True,"o",None,user_nick)
+						return True
+
+				if not user_is_op:
+					if not user_is_voiced:
+						if action == actVoice:
+							self.client.mode(self.name,True,"v",None,user_nick)
+							return True
+
+			return True
+
+
+
+		return super(Window, self).eventFilter(source, event)

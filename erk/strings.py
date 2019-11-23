@@ -233,3 +233,6 @@ NOTIFICATION_MENU_LOST = "Notify on lost connections"
 
 LOGGING_MENU_SAVE_ALL_LOGS = "Save all logs"
 LOGGING_MENU_LOAD_ALL_LOGS = "Load and display all logs"
+
+NETWORK_SETTINGS_MENU_NAME = "Network"
+GET_HOSTMASKS_MENU_NAME = "Retrieve hostmasks on join"

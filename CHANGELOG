@@ -1,5 +1,8 @@
 Version 0.600
 	* Complete re-write
+	* Removed the "Connections" menu, and placed its contents in the main menu
+	* Added an option to fetch user hostmasks, if necessary
+	* Added userlist context menu
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

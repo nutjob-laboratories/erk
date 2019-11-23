@@ -16,6 +16,20 @@ SERVER_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def set_channel_hostmask(gui,client,nickname,hostmask):
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			if nickname in window.nicks:
+				window.join(nickname,hostmask)
+
+def channel_has_hostmask(gui,client,channel,nickname):
+	
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			if window.name == channel:
+				if nickname in window.hostmasks: return True
+	return False
+
 def channelTurnOnNickClick():
 	for w in CHANNEL_WINDOWS:
 		w.onNickClick()
@@ -742,6 +756,7 @@ def part(gui,client,user,channel):
 				client.sendLine("NAMES "+window.name)
 				message = nickname+" has left "+channel
 				window.writeLog(SYSTEM_MESSAGE,'',message)
+				window.part(nickname)
 
 	for window in SERVER_WINDOWS:
 		if window.client.id==client.id:

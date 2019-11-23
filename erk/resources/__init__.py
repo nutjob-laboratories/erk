@@ -75,3 +75,15 @@ LINK_ICON = ":/menu-link.png"
 LOG_ICON = ":/menu-logs.png"
 LOG_LENGTH_ICON = ":/menu-loglength.png"
 
+KICK_ICON = ":/menu-kick.png"
+BAN_ICON = ":/menu-ban.png"
+KICKBAN_ICON = ":/menu-kickban.png"
+
+PLUS_ICON = ":/menu-plus.png"
+MINUS_ICON = ":/menu-minus.png"
+
+CLIPBOARD_ICON = ":/menu-clipboard.png"
+
+TOPIC_ICON = ":/menu-topic.png"
+
+NETWORKING_ICON = ":/menu-networking.png"

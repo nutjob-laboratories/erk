@@ -489,18 +489,16 @@ class Erk(QMainWindow):
 		self.save_history					= self.settings[SETTING_SAVE_HISTORY]
 		self.notify_fail					= self.settings[SETTING_NOTIFY_FAIL]
 		self.notify_lost					= self.settings[SETTING_NOTIFY_LOST]
+		self.save_logs						= self.settings[SETTING_SAVE_CHANNEL_LOGS]
+		self.load_logs						= self.settings[SETTING_LOAD_CHANNEL_LOGS]
+		self.save_server_logs				= self.settings[SETTING_SAVE_SERVER_LOGS]
+		self.load_server_logs				= self.settings[SETTING_LOAD_SERVER_LOGS]
+		self.save_private_logs				= self.settings[SETTING_SAVE_PRIVATE_LOGS]
+		self.load_private_logs				= self.settings[SETTING_LOAD_PRIVATE_LOGS]
+		self.load_log_max					= self.settings[SETTING_LOAD_LOG_MAX_SIZE]
+		self.mark_end_of_loaded_logs		= self.settings[SETTING_MARK_END_OF_LOADED_LOGS]
 
-		self.save_logs = self.settings[SETTING_SAVE_CHANNEL_LOGS]
-		self.load_logs = self.settings[SETTING_LOAD_CHANNEL_LOGS]
-
-		self.save_server_logs = self.settings[SETTING_SAVE_SERVER_LOGS]
-		self.load_server_logs = self.settings[SETTING_LOAD_SERVER_LOGS]
-
-		self.save_private_logs = self.settings[SETTING_SAVE_PRIVATE_LOGS]
-		self.load_private_logs = self.settings[SETTING_LOAD_PRIVATE_LOGS]
-
-		self.load_log_max = self.settings[SETTING_LOAD_LOG_MAX_SIZE]
-		self.mark_end_of_loaded_logs = self.settings[SETTING_MARK_END_OF_LOADED_LOGS]
+		self.get_hostmasks_on_join = self.settings[SETTING_FETCH_HOSTMASKS]
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -594,6 +592,51 @@ class Erk(QMainWindow):
 
 		ircMenu_Network = fancyMenu(self,FANCY_NETWORK,NETWORK_MENU_NAME,NETWORK_MENU_DESCRIPTION,self.ircMenu_Network_Action)
 		self.ircMenu.addAction(ircMenu_Network)
+
+		self.ircMenu.addSeparator()
+
+		CONNECTIONS = erk.events.getConnections()
+		if len(CONNECTIONS)>0:
+
+			channels,privates,consoles = erk.events.getWindows()
+
+			for c in CONNECTIONS:
+
+				if c.hostname:
+					title = c.hostname
+				else:
+					title = c.server+":"+str(c.port)
+
+				connectionEntry_Submenu = self.ircMenu.addMenu(QIcon(SERVER_ICON),title)
+
+				entry = textSeparator(self,"<b>"+c.network+"</b>")
+				connectionEntry_Submenu.addAction(entry)
+
+				entryLabel = QLabel( f"<center><small><b><i>{c.nickname}</i></b></small></center>" )
+				entryAction = QWidgetAction(self)
+				entryAction.setDefaultWidget(entryLabel)
+				connectionEntry_Submenu.addAction(entryAction)
+
+				entry = QAction(QIcon(USER_WINDOW_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
+				entry.triggered.connect(lambda state,id=c.id,cmd='nick': self.connectionEntryClick(id,cmd))
+				connectionEntry_Submenu.addAction(entry)
+
+				entry = QAction(QIcon(CHANNEL_WINDOW_ICON),CONNECTIONS_MENU_JOIN_CHANNEL,self)
+				entry.triggered.connect(lambda state,id=c.id,cmd='join': self.connectionEntryClick(id,cmd))
+				connectionEntry_Submenu.addAction(entry)
+
+				entry = QAction(QIcon(EXIT_ICON),CONNECTIONS_MENU_DISCONNECT,self)
+				entry.triggered.connect(lambda state,id=c.id,cmd='disconnect': self.connectionEntryClick(id,cmd))
+				connectionEntry_Submenu.addAction(entry)
+
+			self.ircMenu.addSeparator()
+
+		self.menuOnTop = QAction(QIcon(UNCHECKED_ICON),MENU_ALWAYS_ON_TOP,self)
+		self.menuOnTop.triggered.connect(self.menuOnTopAction)
+		self.ircMenu.addAction(self.menuOnTop)
+
+		if self.top:
+			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
 
 		self.ircMenu.addSeparator()
 
@@ -737,15 +780,33 @@ class Erk(QMainWindow):
 
 		self.displayMenu.addSeparator()
 
-		self.menuOnTop = QAction(QIcon(UNCHECKED_ICON),MENU_ALWAYS_ON_TOP,self)
-		self.menuOnTop.triggered.connect(self.menuOnTopAction)
-		self.displayMenu.addAction(self.menuOnTop)
+		menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
+		menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
+		self.displayMenu.addAction(menuCascade)
 
-		if self.top:
-			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
+		menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
+		menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
+		self.displayMenu.addAction(menuTile)
 
 		# Settings menu
 		add_toolbar_menu(self.toolbar,SETTINGS_MENU_NAME,self.settingsMenu)
+
+		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+
+		self.settingsMenu_Hostmasks = QAction(GET_HOSTMASKS_MENU_NAME,self,checkable=True)
+		self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
+		self.settingsMenu_Hostmasks.triggered.connect(lambda state,s="hostmasks": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_Hostmasks)
+
+		settingsMenu_FailNotify_Marker = QAction(NOTIFICATION_MENU_FAILED,self,checkable=True)
+		settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
+		settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailNotify_Marker)
+
+		settingsMenu_FailLost_Marker = QAction(NOTIFICATION_MENU_LOST,self,checkable=True)
+		settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
+		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
 
 		settingsMenu_Logs_Submenu = self.settingsMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
 
@@ -824,16 +885,6 @@ class Erk(QMainWindow):
 		settingsMenu_Unseen_Marker.setChecked(self.mark_unread_messages)
 		settingsMenu_Unseen_Marker.triggered.connect(lambda state,s="unseen": self.settingsMenu_Setting(s))
 		settingsMenu_Notify_Submenu.addAction(settingsMenu_Unseen_Marker)
-
-		settingsMenu_FailNotify_Marker = QAction(NOTIFICATION_MENU_FAILED,self,checkable=True)
-		settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
-		settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
-		settingsMenu_Notify_Submenu.addAction(settingsMenu_FailNotify_Marker)
-
-		settingsMenu_FailLost_Marker = QAction(NOTIFICATION_MENU_LOST,self,checkable=True)
-		settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
-		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
-		settingsMenu_Notify_Submenu.addAction(settingsMenu_FailLost_Marker)
 
 		settingsMenu_Emoji_Submenu = self.settingsMenu.addMenu(QIcon(EMOJI_ICON),EMOJI_MENU_NAME)
 
@@ -922,55 +973,6 @@ class Erk(QMainWindow):
 		self.settingsMenu.addAction(self.menuSaveHistory)
 
 		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
-
-		# Connections menu
-		self.connectionsMenu.clear()
-		CONNECTIONS = erk.events.getConnections()
-		if len(CONNECTIONS)>0:
-			add_toolbar_menu(self.toolbar,CONNECTIONS_MENU_NAME,self.connectionsMenu)
-
-			channels,privates,consoles = erk.events.getWindows()
-
-			for c in CONNECTIONS:
-
-				if c.hostname:
-					title = c.hostname
-				else:
-					title = c.server+":"+str(c.port)
-
-				connectionEntry_Submenu = self.connectionsMenu.addMenu(QIcon(SERVER_ICON),title)
-
-				entry = textSeparator(self,"<b>"+c.network+"</b>")
-				connectionEntry_Submenu.addAction(entry)
-
-				entryLabel = QLabel( f"<center><small><b><i>{c.nickname}</i></b></small></center>" )
-				entryAction = QWidgetAction(self)
-				entryAction.setDefaultWidget(entryLabel)
-				connectionEntry_Submenu.addAction(entryAction)
-
-				entry = QAction(QIcon(USER_WINDOW_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
-				entry.triggered.connect(lambda state,id=c.id,cmd='nick': self.connectionEntryClick(id,cmd))
-				connectionEntry_Submenu.addAction(entry)
-
-				entry = QAction(QIcon(CHANNEL_WINDOW_ICON),CONNECTIONS_MENU_JOIN_CHANNEL,self)
-				entry.triggered.connect(lambda state,id=c.id,cmd='join': self.connectionEntryClick(id,cmd))
-				connectionEntry_Submenu.addAction(entry)
-
-				entry = QAction(QIcon(EXIT_ICON),CONNECTIONS_MENU_DISCONNECT,self)
-				entry.triggered.connect(lambda state,id=c.id,cmd='disconnect': self.connectionEntryClick(id,cmd))
-				connectionEntry_Submenu.addAction(entry)
-				
-			if len(channels)>0 or len(privates)>0:
-
-				self.connectionsMenu.addSeparator()
-
-				menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
-				menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
-				self.connectionsMenu.addAction(menuCascade)
-
-				menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
-				menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
-				self.connectionsMenu.addAction(menuTile)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)
@@ -1220,6 +1222,13 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="hostmasks":
+			if self.get_hostmasks_on_join:
+				self.get_hostmasks_on_join = False
+			else:
+				self.get_hostmasks_on_join = True
+			self.settings[SETTING_FETCH_HOSTMASKS] = get_hostmasks_on_join
 
 		if setting=="all_load_on":
 			if self.load_server_logs and self.load_logs and self.load_private_logs:

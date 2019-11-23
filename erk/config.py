@@ -198,6 +198,7 @@ SETTING_SAVE_PRIVATE_LOGS = "save_private_message_logs"
 SETTING_LOAD_PRIVATE_LOGS = "load_private_message_logs"
 SETTING_LOAD_LOG_MAX_SIZE = "maximum_lines_displayed_from_saved_logs"
 SETTING_MARK_END_OF_LOADED_LOGS = "mark_end_of_loaded_logs"
+SETTING_FETCH_HOSTMASKS = "retrieve_hostmasks_on_join_if_needed"
 
 def patch_config_file(data):
 	s = len(data)
@@ -247,6 +248,7 @@ def patch_config_file(data):
 	if not SETTING_LOAD_PRIVATE_LOGS in data: data[SETTING_LOAD_PRIVATE_LOGS] = False
 	if not SETTING_LOAD_LOG_MAX_SIZE in data: data[SETTING_LOAD_LOG_MAX_SIZE] = 500
 	if not SETTING_MARK_END_OF_LOADED_LOGS in data: data[SETTING_MARK_END_OF_LOADED_LOGS] = True
+	if not SETTING_FETCH_HOSTMASKS in data: data[SETTING_FETCH_HOSTMASKS] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -308,6 +310,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_LOAD_PRIVATE_LOGS: False,
 			SETTING_LOAD_LOG_MAX_SIZE: 500,
 			SETTING_MARK_END_OF_LOADED_LOGS: True,
+			SETTING_FETCH_HOSTMASKS: True,
 		}
 		save_settings(si)
 		return si
