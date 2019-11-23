@@ -17,6 +17,9 @@
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
+* An extensive set of configuration options
+	* Almost every part of the interface can be customized
+	* Most behaviors can be customized
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
 	* Right click on misspelled words for suggested spellings/words
