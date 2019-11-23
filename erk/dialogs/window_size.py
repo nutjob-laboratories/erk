@@ -34,7 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.common import *
+from erk.resources import *
+from erk.strings import *
 
 class Dialog(QDialog):
 
@@ -59,28 +60,24 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle(f"Initial window size")
+		self.setWindowTitle(WINDOW_SIZE_DIALOG_TITLE)
 		self.setWindowIcon(QIcon(RESIZE_ICON))
 
-		f = self.font()
-		f.setBold(True)
-		self.setFont(f)
-
 		widthLayout = QHBoxLayout()
-		self.widthLabel = QLabel("Width")
+		self.widthLabel = QLabel(WINDOW_SIZE_WIDTH_NAME)
 		self.width = QSpinBox()
 		self.width.setRange(100,2000)
-		self.width.setValue(self.parent.default_window_width)
+		self.width.setValue(self.parent.initial_window_width)
 		widthLayout.addWidget(self.widthLabel)
 		#widthLayout.addStretch()
 		widthLayout.addWidget(self.width)
 		widthLayout.addWidget(QLabel("pixels"))
 
 		heightLayout = QHBoxLayout()
-		self.heightLabel = QLabel("Height")
+		self.heightLabel = QLabel(WINDOW_SIZE_HEIGHT_NAME)
 		self.height = QSpinBox()
 		self.height.setRange(100,2000)
-		self.height.setValue(self.parent.default_window_height)
+		self.height.setValue(self.parent.initial_window_height)
 		heightLayout.addWidget(self.heightLabel)
 		#heightLayout.addStretch()
 		heightLayout.addWidget(self.height)

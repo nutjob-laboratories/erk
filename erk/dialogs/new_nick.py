@@ -34,7 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.common import *
+from erk.resources import *
+from erk.strings import *
 
 class Dialog(QDialog):
 
@@ -50,9 +51,20 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
+		if self.save_as_default:
+			user_info = get_user()
+			user_info["nickname"] = self.name.text()
+			save_user(user_info)
+
 		retval = self.name.text()
 
 		return retval
+
+	def clickSave(self,state):
+		if state == Qt.Checked:
+			self.save_as_default = True
+		else:
+			self.save_as_default = False
 
 	def __init__(self,nick,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -60,15 +72,20 @@ class Dialog(QDialog):
 		self.parent = parent
 		self.nick = nick
 
-		self.setWindowTitle(f"Change nickname")
-		self.setWindowIcon(QIcon(USER_ICON))
+		self.save_as_default = False
+
+		self.setWindowTitle(NICK_DIALOG_TITLE)
+		self.setWindowIcon(QIcon(USER_WINDOW_ICON))
 
 		nameLayout = QHBoxLayout()
-		self.nameLabel = QLabel("Nickname")
+		self.nameLabel = QLabel(NICK_DIALOG_LABEL)
 		self.name = QLineEdit()
 		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
+
+		self.savenick = QCheckBox(NICK_DIALOG_SAVE,self)
+		self.savenick.stateChanged.connect(self.clickSave)
 
 		self.name.setPlaceholderText(self.nick)
 
@@ -80,6 +97,7 @@ class Dialog(QDialog):
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)
+		finalLayout.addWidget(self.savenick)
 		finalLayout.addStretch()
 		finalLayout.addWidget(buttons)
 

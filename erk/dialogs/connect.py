@@ -34,23 +34,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from erk.config import *
+from erk.resources import *
 from erk.common import *
+from erk.strings import *
 
-import erk.dialogs.add_channel as AddChannelDialog
-
-class ConnectInfo:
-
-	def __init__(self,server,port,password,ssl,nick,alter,username,realname,reconnect,autojoin):
-		self.server = server
-		self.port = int(port)
-		self.password = password
-		self.ssl = ssl
-		self.nickname = nick
-		self.alternate = alter
-		self.username = username
-		self.realname = realname
-		self.reconnect = reconnect
-		self.autojoin = autojoin
+from erk.dialogs import AddChannelDialog
 
 class Dialog(QDialog):
 
@@ -81,23 +70,76 @@ class Dialog(QDialog):
 			"username": self.username.text(),
 			"realname": self.realname.text(),
 			"alternate": self.alternative.text(),
+			"last_server": self.host.text(),
+			"last_port": self.port.text(),
+			"last_password": self.password.text(),
+			"channels": self.autojoins,
+			"ssl": self.DIALOG_CONNECT_VIA_SSL,
+			"reconnect": self.RECONNECT,
+			"autojoin": self.AUTOJOIN_CHANNELS,
+			"visited": self.user_info["visited"],
+			"history": self.user_info["history"],
 		}
-		save_user(user)
 
-		# Save channels
-		saveChannels(self.autojoins)
+		if self.parent.save_history:
+
+			if not is_in_network_list(self.host.text(),self.port.text()):
+
+				if self.DIALOG_CONNECT_VIA_SSL:
+					dossl = "ssl"
+				else:
+					dossl = "normal"
+
+				# Check to make sure it's not already in history
+				found = False
+				for e in self.user_info["history"]:
+					if e[0]==self.host.text():
+						if e[1]==self.port.text():
+							# It's already in history
+							# Update any settings as necessary
+							found = True
+							# Update password
+							if len(e)==5:
+								if e[4]!='':
+									if self.password.text()!='':
+										e[4] = self.password.text()
+							else:
+								if self.password.text()!='':
+									e.append(self.password.text())
+							# Update SSL
+							if self.DIALOG_CONNECT_VIA_SSL:
+								if e[3]=="normal":
+									e[3]="ssl"
+							else:
+								if e[3]=="ssl":
+									e[3]="normal"
+
+				if not found:
+					hpass = self.password.text()
+					if hpass=='':
+						entry = [
+							self.host.text(),
+							self.port.text(),
+							"Unknown",
+							dossl
+						]
+					else:
+						entry = [
+							self.host.text(),
+							self.port.text(),
+							"Unknown",
+							dossl,
+							hpass
+						]
+
+					self.user_info["history"].append(entry)
+
+		save_user(user)
 
 		if self.AUTOJOIN_CHANNELS:
 			channels = self.autojoins
 		else:
 			channels = []
-
-		# Save server info
-		save_last_server(self.host.text(),self.port.text(),self.password.text(),self.DIALOG_CONNECT_VIA_SSL,self.RECONNECT,self.AUTOJOIN_CHANNELS)
-
-		# Save history
-		if self.parent.save_server_history:
-			add_history(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,UNKNOWN_IRC_NETWORK)
 
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
 
@@ -133,80 +175,85 @@ class Dialog(QDialog):
 		self.RECONNECT = False
 		self.AUTOJOIN_CHANNELS = False
 
-		self.setWindowTitle(f"Connect to IRC")
+		self.setWindowTitle(CONNECT_DIALOG_TITLE)
 		self.setWindowIcon(QIcon(SERVER_ICON))
 
 		self.user_info = get_user()
-		last_server = get_last_server()
-		channels = loadChannels()
 
 		self.tabs = QTabWidget()
 		self.server_tab = QWidget()
 		self.user_tab = QWidget()
 		self.channels_tab = QWidget()
 
-		self.tabs.addTab(self.server_tab,"Server")
-		self.tabs.addTab(self.user_tab,"User")
-		self.tabs.addTab(self.channels_tab,"Channels")
-
-		f = self.tabs.font()
-		f.setBold(True)
-		self.tabs.setFont(f)
+		self.tabs.addTab(self.server_tab,CONNECT_AND_NETWORK_DIALOG_SERVER_TAB_NAME)
+		self.tabs.addTab(self.user_tab,CONNECT_AND_NETWORK_DIALOG_USER_TAB_NAME)
+		self.tabs.addTab(self.channels_tab,CONNECT_AND_NETWORK_DIALOG_CHANNEL_TAB_NAME)
 
 		# SERVER INFO BEGIN
 
+		serverlabel = HOST_LABEL
+		if len(serverlabel)<LABEL_LENGTH: serverlabel = serverlabel + (' '*(LABEL_LENGTH-len(serverlabel)))
+
+		sportlabel = PORT_LABEL
+		if len(sportlabel)<LABEL_LENGTH: sportlabel = sportlabel + (' '*(LABEL_LENGTH-len(sportlabel)))
+
+		passwordlabel = PASSWORD_LABEL
+		if len(passwordlabel)<LABEL_LENGTH: passwordlabel = passwordlabel + (' '*(LABEL_LENGTH-len(passwordlabel)))
+
 		hostLayout = QHBoxLayout()
 		hostLayout.addStretch()
-		self.hostLabel = QLabel("Host     ")
-		self.host = QLineEdit(last_server["host"])
+		self.hostLabel = QLabel(serverlabel)
+		self.host = QLineEdit(self.user_info["last_server"])
 		hostLayout.addWidget(self.hostLabel)
 		hostLayout.addWidget(self.host)
 		hostLayout.addStretch()
 
 		portLayout = QHBoxLayout()
 		portLayout.addStretch()
-		self.portLabel = QLabel("Port     ")
-		self.port = QLineEdit(last_server["port"])
+		self.portLabel = QLabel(sportlabel)
+		self.port = QLineEdit(self.user_info["last_port"])
 		portLayout.addWidget(self.portLabel)
 		portLayout.addWidget(self.port)
 		portLayout.addStretch()
 
 		passLayout = QHBoxLayout()
 		passLayout.addStretch()
-		self.passLabel = QLabel("Password ")
-		self.password = QLineEdit(last_server["password"])
+		self.passLabel = QLabel(passwordlabel)
+		self.password = QLineEdit(self.user_info["last_password"])
 		self.password.setEchoMode(QLineEdit.Password)
 		passLayout.addWidget(self.passLabel)
 		passLayout.addWidget(self.password)
 		passLayout.addStretch()
 
-		self.ssl = QCheckBox("Connect via SSL",self)
+		self.ssl = QCheckBox(CONNECT_DIALOG_SSL_NAME,self)
 		self.ssl.stateChanged.connect(self.clickSSL)
 
-		self.reconnect = QCheckBox("Reconnect on disconnection",self)
+		self.reconnect = QCheckBox(CONNECT_AND_NETWORK_DIALOG_RECONNECT_NAME,self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
-		if last_server["ssl"]:
+		if self.user_info["ssl"]:
 			self.ssl.toggle()
 
-		if last_server["reconnect"]:
+		if self.user_info["reconnect"]:
 			self.reconnect.toggle()
 
 		if not self.can_do_ssl:
 			self.DIALOG_CONNECT_VIA_SSL = False
 			self.ssl.setEnabled(False)
 
+		sslLayout = QHBoxLayout()
+		sslLayout.addStretch()
+		sslLayout.addWidget(self.ssl)
+		sslLayout.addStretch()
+
 		servLayout = QVBoxLayout()
 		servLayout.addStretch()
 		servLayout.addLayout(hostLayout)
 		servLayout.addLayout(portLayout)
 		servLayout.addLayout(passLayout)
-		servLayout.addWidget(self.ssl)
-		# servLayout.addWidget(self.reconnect)
 		servLayout.addStretch()
-
-		#servBox = QGroupBox("IRC Server")
-		#servBox.setLayout(servLayout)
+		servLayout.addLayout(sslLayout)
+		servLayout.addStretch()
 
 		self.server_tab.setLayout(servLayout)
 
@@ -214,13 +261,23 @@ class Dialog(QDialog):
 
 		# USER INFO BEGIN
 
+		nicklabel = NICK_LABEL
+		if len(nicklabel)<LABEL_LENGTH: nicklabel = nicklabel + (' '*(LABEL_LENGTH-len(nicklabel)))
+
+		alternatelabel = ALTERNATE_LABEL
+		if len(alternatelabel)<LABEL_LENGTH: alternatelabel = alternatelabel + (' '*(LABEL_LENGTH-len(alternatelabel)))
+
+		usernamelabel = USERNAME_LABEL
+		if len(usernamelabel)<LABEL_LENGTH: usernamelabel = usernamelabel + (' '*(LABEL_LENGTH-len(usernamelabel)))
+
+		realnamelabel = REALNAME_LABEL
+		if len(realnamelabel)<LABEL_LENGTH: realnamelabel = realnamelabel + (' '*(LABEL_LENGTH-len(realnamelabel)))
+
 		nickLayout = QHBoxLayout()
 		nickLayout.addStretch()
-		self.nickLabel = QLabel("Nickname  ")
+		self.nickLabel = QLabel(nicklabel)
 		self.nick = QLineEdit(self.user_info["nickname"])
-		#self.nick = QLineEdit()
 		nickLayout.addWidget(self.nickLabel)
-		#nickLayout.addStretch()
 		nickLayout.addWidget(self.nick)
 		nickLayout.addStretch()
 
@@ -228,11 +285,9 @@ class Dialog(QDialog):
 
 		alternateLayout = QHBoxLayout()
 		alternateLayout.addStretch()
-		self.altLabel = QLabel("Alternate ")
+		self.altLabel = QLabel(alternatelabel)
 		self.alternative = QLineEdit(self.user_info["alternate"])
-		#self.alternative = QLineEdit()
 		alternateLayout.addWidget(self.altLabel)
-		#alternateLayout.addStretch()
 		alternateLayout.addWidget(self.alternative)
 		alternateLayout.addStretch()
 
@@ -240,11 +295,9 @@ class Dialog(QDialog):
 
 		userLayout = QHBoxLayout()
 		userLayout.addStretch()
-		self.userLabel = QLabel("Username  ")
+		self.userLabel = QLabel(usernamelabel)
 		self.username = QLineEdit(self.user_info["username"])
-		#self.username = QLineEdit()
 		userLayout.addWidget(self.userLabel)
-		#userLayout.addStretch()
 		userLayout.addWidget(self.username)
 		userLayout.addStretch()
 
@@ -252,11 +305,9 @@ class Dialog(QDialog):
 
 		realLayout = QHBoxLayout()
 		realLayout.addStretch()
-		self.realLabel = QLabel("Real Name ")
+		self.realLabel = QLabel(realnamelabel)
 		self.realname = QLineEdit(self.user_info["realname"])
-		#self.realname = QLineEdit()
 		realLayout.addWidget(self.realLabel)
-		#realLayout.addStretch()
 		realLayout.addWidget(self.realname)
 		realLayout.addStretch()
 
@@ -268,23 +319,18 @@ class Dialog(QDialog):
 		nurLayout.addLayout(userLayout)
 		nurLayout.addLayout(realLayout)
 
-		#nickBox = QGroupBox("User Information")
-		#nickBox.setLayout(nurLayout)
-
 		self.user_tab.setLayout(nurLayout)
 
 		# CHANNELS TAB
 
-		self.do_autojoin = QCheckBox("Automatically join channels",self)
+		self.do_autojoin = QCheckBox(CONNECT_AND_NETWORK_DIALOG_AUTOJOIN_NAME,self)
 		self.do_autojoin.stateChanged.connect(self.clickChannels)
 
-		if last_server["autojoin"]:
+		if self.user_info["autojoin"]:
 			self.do_autojoin.toggle()
 
 		self.autoChannels = QListWidget(self)
 		self.autoChannels.setMaximumHeight(100)
-
-		#self.autoChannels.setMaximumWidth( self.calculate_text_entry_size(self.realname,20)  )
 
 		self.addChannelButton = QPushButton("+")
 		self.addChannelButton.clicked.connect(self.buttonAdd)
@@ -293,28 +339,26 @@ class Dialog(QDialog):
 		self.removeChannelButton.clicked.connect(self.buttonRemove)
 
 		buttonLayout = QHBoxLayout()
-		#buttonLayout.addStretch()
 		buttonLayout.addWidget(self.addChannelButton)
 		buttonLayout.addWidget(self.removeChannelButton)
 
 		autoJoinLayout = QVBoxLayout()
-		# autoJoinLayout.addWidget(self.do_autojoin)
 		autoJoinLayout.addWidget(self.autoChannels)
 		autoJoinLayout.addLayout(buttonLayout)
 
 		self.channels_tab.setLayout(autoJoinLayout)
 
-		for c in channels:
+		for c in self.user_info["channels"]:
 			channel = c[0]
 			key = c[1]
 			if key == "":
 				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(CHANNEL_WINDOW))
+				item.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 				self.autoChannels.addItem(item)
 
 			else:
 				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(LOCKED_CHANNEL))
+				item.setIcon(QIcon(LOCKED_CHANNEL_ICON))
 				self.autoChannels.addItem(item)
 
 			e = [channel,key]
@@ -325,8 +369,6 @@ class Dialog(QDialog):
 		# USER INFO END
 
 		vLayout = QVBoxLayout()
-		#vLayout.addWidget(nickBox)
-		#vLayout.addWidget(servBox)
 		vLayout.addWidget(self.tabs)
 
 		vLayout.addWidget(self.reconnect)
@@ -362,22 +404,20 @@ class Dialog(QDialog):
 			self.close()
 			return
 
-		#print(channel,key)
 		if key == "":
 			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(CHANNEL_WINDOW))
+			item.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 			self.autoChannels.addItem(item)
 
 		else:
 			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(LOCKED_CHANNEL))
+			item.setIcon(QIcon(LOCKED_CHANNEL_ICON))
 			self.autoChannels.addItem(item)
 
 		e = [channel,key]
 		self.autojoins.append(e)
 
 	def buttonRemove(self):
-		#self.removeSel()
 		try:
 			channel = self.autoChannels.currentItem().text()
 			i = self.autoChannels.currentRow()

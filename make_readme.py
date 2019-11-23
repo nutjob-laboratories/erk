@@ -2,7 +2,7 @@
 import os
 import sys
 
-from erk.common import *
+from erk.strings import *
 
 # Build readme
 

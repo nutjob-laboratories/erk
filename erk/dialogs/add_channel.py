@@ -34,7 +34,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.common import *
+from erk.config import *
+from erk.resources import *
+from erk.strings import *
 
 class Dialog(QDialog):
 
@@ -59,18 +61,18 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle(f"Join channel")
-		self.setWindowIcon(QIcon(CHANNEL_WINDOW))
+		self.setWindowTitle(ADD_CHANNEL_DIALOG_TITLE)
+		self.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
 
 		nameLayout = QHBoxLayout()
-		self.nameLabel = QLabel("Channel")
+		self.nameLabel = QLabel(ADD_CHANNEL_DIALOG_CHANNEL_NAME)
 		self.name = QLineEdit()
 		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
 		keyLayout = QHBoxLayout()
-		self.keyLabel = QLabel("Key")
+		self.keyLabel = QLabel(ADD_CHANNEL_DIALOG_CHANNEL_KEY)
 		self.key = QLineEdit()
 		self.key.setEchoMode(QLineEdit.Password)
 		keyLayout.addWidget(self.keyLabel)

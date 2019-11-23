@@ -36,23 +36,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from erk.config import *
+from erk.resources import *
 from erk.common import *
+from erk.widgets import *
+from erk.strings import *
 
-import erk.dialogs.add_channel as AddChannelDialog
-
-class ConnectInfo:
-
-	def __init__(self,server,port,password,ssl,nick,alter,username,realname,reconnect,autojoin):
-		self.server = server
-		self.port = int(port)
-		self.password = password
-		self.ssl = ssl
-		self.nickname = nick
-		self.alternate = alter
-		self.username = username
-		self.realname = realname
-		self.reconnect = reconnect
-		self.autojoin = autojoin
+from erk.dialogs import AddChannelDialog
 
 class Dialog(QDialog):
 
@@ -74,13 +64,18 @@ class Dialog(QDialog):
 		host = h[0]
 		port = int(h[1])
 
+		if self.parent.save_history:
+			if is_in_network_list(host,str(port)):
+				self.user_info["visited"].append(host+":"+str(port))
+				self.user_info["visited"] = list(dict.fromkeys(self.user_info["visited"]))
+
 		if len(h)==5:
 			if h[4]=='':
-				password = None
+				password = ''
 			else:
 				password = h[4]
 		else:
-			password = None
+			password = ''
 
 		# Save user info
 		user = {
@@ -88,19 +83,19 @@ class Dialog(QDialog):
 			"username": self.username.text(),
 			"realname": self.realname.text(),
 			"alternate": self.alternative.text(),
+			"last_server": host,
+			"last_port": str(port),
+			"last_password": password,
+			"channels": self.autojoins,
+			"ssl": use_ssl,
+			"reconnect": self.RECONNECT,
+			"autojoin": self.AUTOJOIN_CHANNELS,
+			"visited": self.user_info["visited"],
+			"history": self.user_info["history"],
 		}
 		save_user(user)
 
-		# Save server info
-		save_last_server(host,str(port),"",use_ssl,self.RECONNECT,self.AUTOJOIN_CHANNELS)
-
-		# Save channels
-		saveChannels(self.autojoins)
-
-		# Save record of stored server visit
-		if not self.StoredServer in self.saved_entries:
-			t = datetime.timestamp(datetime.now())
-			add_to_visited(host,t)
+		if password=='': password=None
 
 		if self.AUTOJOIN_CHANNELS:
 			channels = self.autojoins
@@ -114,25 +109,13 @@ class Dialog(QDialog):
 	def setServer(self):
 		self.StoredServer = self.servers.currentIndex()
 
-		timestamp = None
-		for e in self.visited:
-			if self.StoredData[self.StoredServer][0]==e[0]:
-				timestamp = e[1]
-
-		if self.StoredServer in self.saved_entries:
-			self.entryType.setText("<small><i>Saved Server</i></small>")
-		else:
-			if timestamp:
-				pretty = datetime.fromtimestamp(timestamp).strftime('%B %d, %Y at %H:%M:%S')
-				self.entryType.setText("Last visited "+pretty)
-			else:
-				self.entryType.setText("")
-
 		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			d = NETWORK_DIALOG_CONNECTION_VIA_SSL_TEXT.format(self.StoredData[self.StoredServer][1])
+			self.connType.setText("<small>"+d+"</small>")
 		else:
-			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			d = NETWORK_DIALOG_CONNECTION_VIA_TCP_TEXT.format(self.StoredData[self.StoredServer][1])
+			self.connType.setText("<small>"+d+"</small>")
 
 	def clickReconnect(self,state):
 		if state == Qt.Checked:
@@ -167,31 +150,25 @@ class Dialog(QDialog):
 
 		self.autojoins = []
 
-		user_info = get_user()
-		channels = loadChannels()
-		last_server = get_last_server()
+		self.user_info = get_user()
 
-		self.setWindowTitle("Connect to IRC")
-		self.setWindowIcon(QIcon(NETWORK_ICON))
+		self.setWindowTitle(NETWORK_DIALOG_TITLE)
+		self.setWindowIcon(QIcon(FANCY_NETWORK))
 
 		self.tabs = QTabWidget()
 		self.server_tab = QWidget()
 		self.user_tab = QWidget()
 		self.channels_tab = QWidget()
 
-		self.tabs.addTab(self.server_tab,"Servers")
-		self.tabs.addTab(self.user_tab,"User")
-		self.tabs.addTab(self.channels_tab,"Channels")
-
-		f = self.tabs.font()
-		f.setBold(True)
-		self.tabs.setFont(f)
+		self.tabs.addTab(self.server_tab,CONNECT_AND_NETWORK_DIALOG_SERVER_TAB_NAME)
+		self.tabs.addTab(self.user_tab,CONNECT_AND_NETWORK_DIALOG_USER_TAB_NAME)
+		self.tabs.addTab(self.channels_tab,CONNECT_AND_NETWORK_DIALOG_CHANNEL_TAB_NAME)
 
 		# Server information
 		self.entryType = QLabel("")
 		self.connType = QLabel("")
 		self.netType = QLabel("")
-		self.description = QLabel("<big>Select a server</big>")
+		self.description = QLabel("<big>"+NETWORK_DIALOG_SELECT_TITLE+"</big>")
 		self.description.setAlignment(Qt.AlignCenter)
 
 		f = self.connType.font()
@@ -217,88 +194,73 @@ class Dialog(QDialog):
 		self.servers = QComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
-		self.servers.setFrame(False)
-
 		servlist = get_network_list()
-		historylist = get_history_list()
-		self.visited = get_visited()
 
-		# servlist = historylist + servlist
-		self.saved_entries = []
+		visitedlist = self.user_info["visited"].copy()
 
-		no_visits = []
-		visited_before = []
+		visited = []
+		not_visited = []
 		for entry in servlist:
-			found = False
-			for e in self.visited:
-				if entry[0]==e[0]:
-					found = True
-					visited_before.append(entry)
-			if not found:
-				no_visits.append(entry)
-		#servlist = no_visits
-
-		servlist = historylist + visited_before + ["0"] + no_visits
-
-		counter = -1
-		for entry in servlist:
-			counter = counter + 1
-			if len(entry)==1:
-				self.servers.insertSeparator(counter+1)
-				self.StoredData.append(entry)
-				continue
 			if len(entry) > 5: continue
-			if len(entry) < 4: continue
 
-			if len(entry)==4:
-				ENTRY_ICON = IRC_NETWORK_ICON
+			if "ssl" in entry[3]:
+				if not self.can_do_ssl: continue
+
+			s = entry[0]+":"+entry[1]
+			if s in visitedlist:
+				visited.append(entry)
 			else:
-				ENTRY_ICON = SAVED_SERVER_ICON
-				self.saved_entries.append(counter)
+				not_visited.append(entry)
 
-			for e in self.visited:
-				if entry[0]==e[0]:
-					ENTRY_ICON = SAVED_SERVER_ICON
+		for e in self.user_info["history"]:
+			visitedlist.append(e[0]+":"+e[1])
+
+		servlist = visited + not_visited
+
+		servlist = self.user_info["history"] + servlist
+
+		for entry in servlist:
+
+			if len(entry) > 5: continue
 
 			if "ssl" in entry[3]:
 				if not self.can_do_ssl: continue
 
 			self.StoredData.append(entry)
-			self.servers.addItem(QIcon(ENTRY_ICON),entry[2] + " - " + entry[0])
+
+			s = entry[0]+":"+entry[1]
+			if s in visitedlist:
+				icon = VISITED_ICON
+			else:
+				icon = BOOKMARK_ICON
+
+			self.servers.addItem(QIcon(icon),entry[2] + " - " + entry[0])
 
 		self.StoredServer = self.servers.currentIndex()
 
-		timestamp = None
-		for e in self.visited:
-			if self.StoredData[self.StoredServer][0]==e[0]:
-				timestamp = e[1]
-
-		if self.StoredServer in self.saved_entries:
-			self.entryType.setText("<small><i>Saved Server</i></small>")
-		else:
-			if timestamp:
-				pretty = datetime.fromtimestamp(timestamp).strftime('%B %d, %Y at %H:%M:%S')
-				self.entryType.setText("Last visited "+pretty)
-			else:
-				self.entryType.setText("")
-
 		self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			d = NETWORK_DIALOG_CONNECTION_VIA_SSL_TEXT.format(self.StoredData[self.StoredServer][1])
+			self.connType.setText("<small>"+d+"</small>")
 		else:
-			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			d = NETWORK_DIALOG_CONNECTION_VIA_TCP_TEXT.format(self.StoredData[self.StoredServer][1])
+			self.connType.setText("<small>"+d+"</small>")
 
-		self.reconnect = QCheckBox("Reconnect on disconnection",self)
+		self.reconnect = QCheckBox(CONNECT_AND_NETWORK_DIALOG_RECONNECT_NAME,self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
-		if last_server["reconnect"]:
+		if self.user_info["reconnect"]:
 			self.reconnect.toggle()
 
 		fstoreLayout = QVBoxLayout()
+		#fstoreLayout.addStretch()
+		fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addWidget(self.description)
+		fstoreLayout.addStretch()
 		fstoreLayout.addWidget(self.servers)
 		fstoreLayout.addStretch()
-		fstoreLayout.addWidget(QHLine())
+		#fstoreLayout.addWidget(QHLine())
+		fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
@@ -309,10 +271,22 @@ class Dialog(QDialog):
 
 		# USER INFO BEGIN
 
+		nicklabel = NICK_LABEL
+		if len(nicklabel)<LABEL_LENGTH: nicklabel = nicklabel + (' '*(LABEL_LENGTH-len(nicklabel)))
+
+		alternatelabel = ALTERNATE_LABEL
+		if len(alternatelabel)<LABEL_LENGTH: alternatelabel = alternatelabel + (' '*(LABEL_LENGTH-len(alternatelabel)))
+
+		usernamelabel = USERNAME_LABEL
+		if len(usernamelabel)<LABEL_LENGTH: usernamelabel = usernamelabel + (' '*(LABEL_LENGTH-len(usernamelabel)))
+
+		realnamelabel = REALNAME_LABEL
+		if len(realnamelabel)<LABEL_LENGTH: realnamelabel = realnamelabel + (' '*(LABEL_LENGTH-len(realnamelabel)))
+
 		nickLayout = QHBoxLayout()
 		nickLayout.addStretch()
-		self.nickLabel = QLabel("Nickname  ")
-		self.nick = QLineEdit(user_info["nickname"])
+		self.nickLabel = QLabel(nicklabel)
+		self.nick = QLineEdit(self.user_info["nickname"])
 		nickLayout.addWidget(self.nickLabel)
 		nickLayout.addWidget(self.nick)
 		nickLayout.addStretch()
@@ -322,8 +296,8 @@ class Dialog(QDialog):
 
 		alternateLayout = QHBoxLayout()
 		alternateLayout.addStretch()
-		self.altLabel = QLabel("Alternate ")
-		self.alternative = QLineEdit(user_info["alternate"])
+		self.altLabel = QLabel(alternatelabel)
+		self.alternative = QLineEdit(self.user_info["alternate"])
 		alternateLayout.addWidget(self.altLabel)
 		alternateLayout.addWidget(self.alternative)
 		alternateLayout.addStretch()
@@ -332,8 +306,8 @@ class Dialog(QDialog):
 
 		userLayout = QHBoxLayout()
 		userLayout.addStretch()
-		self.userLabel = QLabel("Username  ")
-		self.username = QLineEdit(user_info["username"])
+		self.userLabel = QLabel(usernamelabel)
+		self.username = QLineEdit(self.user_info["username"])
 		userLayout.addWidget(self.userLabel)
 		userLayout.addWidget(self.username)
 		userLayout.addStretch()
@@ -342,8 +316,8 @@ class Dialog(QDialog):
 
 		realLayout = QHBoxLayout()
 		realLayout.addStretch()
-		self.realLabel = QLabel("Real Name ")
-		self.realname = QLineEdit(user_info["realname"])
+		self.realLabel = QLabel(realnamelabel)
+		self.realname = QLineEdit(self.user_info["realname"])
 		realLayout.addWidget(self.realLabel)
 		realLayout.addWidget(self.realname)
 		realLayout.addStretch()
@@ -362,10 +336,10 @@ class Dialog(QDialog):
 
 		# CHANNELS TAB
 
-		self.do_autojoin = QCheckBox("Automatically join channels",self)
+		self.do_autojoin = QCheckBox(CONNECT_AND_NETWORK_DIALOG_AUTOJOIN_NAME,self)
 		self.do_autojoin.stateChanged.connect(self.clickChannels)
 
-		if last_server["autojoin"]:
+		if self.user_info["autojoin"]:
 			self.do_autojoin.toggle()
 
 		self.autoChannels = QListWidget(self)
@@ -387,17 +361,17 @@ class Dialog(QDialog):
 
 		self.channels_tab.setLayout(autoJoinLayout)
 
-		for c in channels:
+		for c in self.user_info["channels"]:
 			channel = c[0]
 			key = c[1]
 			if key == "":
 				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(CHANNEL_WINDOW))
+				item.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 				self.autoChannels.addItem(item)
 
 			else:
 				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(LOCKED_CHANNEL))
+				item.setIcon(QIcon(LOCKED_CHANNEL_ICON))
 				self.autoChannels.addItem(item)
 
 			e = [channel,key]
@@ -440,12 +414,12 @@ class Dialog(QDialog):
 
 		if key == "":
 			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(CHANNEL_WINDOW))
+			item.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 			self.autoChannels.addItem(item)
 
 		else:
 			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(LOCKED_CHANNEL))
+			item.setIcon(QIcon(LOCKED_CHANNEL_ICON))
 			self.autoChannels.addItem(item)
 
 		e = [channel,key]

@@ -38,6 +38,11 @@ from collections import defaultdict
 import time
 
 from erk.common import *
+from erk.strings import *
+from erk.config import *
+import erk.events
+
+from PyQt5.QtCore import *
 
 from twisted.internet import reactor, protocol
 
@@ -73,18 +78,6 @@ def generateID(tlength=16):
 	letters = string.ascii_letters
 	return ''.join(random.choice(letters) for i in range(tlength))
 
-class WhoisData:
-	def __init__(self):
-		self.nickname = 'Unknown'
-		self.username = 'Unknown'
-		self.realname = 'Unknown'
-		self.host = 'Unknown'
-		self.signon = '0'
-		self.idle = '0'
-		self.server = 'Unknown'
-		self.channels = 'Unknown'
-		self.privs = 'is a normal user'
-
 # =====================================
 # | TWISTED IRC CONNECTION MANAGEMENT |
 # =====================================
@@ -104,7 +97,7 @@ class IRC_Connection(irc.IRCClient):
 		user = params[1]
 		msg = params[2]
 
-		self.gui.irc_user_away(self,user,msg)
+		# self.gui.irc_user_away(self,user,msg)
 
 
 	def irc_RPL_UNAWAY(self,prefix,params):
@@ -112,7 +105,7 @@ class IRC_Connection(irc.IRCClient):
 
 		self.is_away = False
 
-		self.gui.irc_not_away(self,msg)
+		# self.gui.irc_not_away(self,msg)
 
 	def irc_RPL_NOWAWAY(self,prefix,params):
 
@@ -120,7 +113,7 @@ class IRC_Connection(irc.IRCClient):
 
 		self.is_away = True
 
-		self.gui.irc_is_away(self,msg)
+		# self.gui.irc_is_away(self,msg)
 
 
 	def irc_RPL_BANLIST(self,prefix,params):
@@ -141,7 +134,7 @@ class IRC_Connection(irc.IRCClient):
 			banlist = self.banlists[channel]
 			self.banlists[channel] = []
 
-		self.gui.irc_banlist(self,channel,banlist)
+		# self.gui.irc_banlist(self,channel,banlist)
 
 
 	def isupport(self,options):
@@ -152,11 +145,21 @@ class IRC_Connection(irc.IRCClient):
 			if len(p)==2:
 				if p[0].lower()=='network':
 					self.network = p[1]
-					self.gui.irc_network_and_hostname(self,p[1],self.hostname)
+					# self.gui.irc_network_and_hostname(self,p[1],self.hostname)
+					erk.events.received_network_and_hostname(self.gui,self,p[1],self.hostname)
 
-		self.gui.irc_options(self,options)
+					# update_user_history_network(host,port,network,filename=USER_FILE):
+					if self.gui.save_history:
+						update_user_history_network(self.server,self.port,p[1])
+
+
+
+		# self.gui.irc_options(self,options)
+		erk.events.server_options(self.gui,self,options)
 
 	def __init__(self,**kwargs):
+
+		self.kwargs = kwargs
 
 		config(self,**kwargs)
 
@@ -181,14 +184,17 @@ class IRC_Connection(irc.IRCClient):
 	def uptime_beat(self):
 
 		self.uptime = self.uptime + 1
-		
-		self.gui.irc_uptime(self,self.uptime)
 
-		if self.gui.get_hostmasks_on_join:
-			if len(self.do_whois)>0:
-				nick = self.do_whois.pop(0)
-				self.request_whois.append(nick)
-				self.sendLine("WHOIS "+nick)
+		#self.gui.uptime(self,self.uptime)
+		erk.events.uptime(self.gui,self,self.uptime)
+		
+		# self.gui.irc_uptime(self,self.uptime)
+
+		# if self.gui.get_hostmasks_on_join:
+		# 	if len(self.do_whois)>0:
+		# 		nick = self.do_whois.pop(0)
+		# 		self.request_whois.append(nick)
+		# 		self.sendLine("WHOIS "+nick)
 
 
 	def connectionMade(self):
@@ -196,26 +202,45 @@ class IRC_Connection(irc.IRCClient):
 		# PROTOCTL UHNAMES
 		self.sendLine("PROTOCTL UHNAMES")
 
-		self.gui.irc_connect(self)
+		# self.gui.irc_connect(self)
 
 		self.uptimeTimer = UptimeHeartbeat()
 		self.uptimeTimer.beat.connect(self.uptime_beat)
 		self.uptimeTimer.start()
 
+		erk.events.connection(self.gui,self)
+
 		irc.IRCClient.connectionMade(self)
 
 	def connectionLost(self, reason):
 
-		self.gui.irc_disconnect(self,reason)
+		# self.gui.irc_disconnect(self,reason)
+
+		if self.gui.save_channels:
+			u = get_user()
+			u["channels"] = self.kwargs["autojoin"]
+			save_user(u)
 
 		self.uptimeTimer.stop()
 		self.uptime = 0
+
+		erk.events.disconnection(self.gui,self)
 
 		irc.IRCClient.connectionLost(self, reason)
 
 	def signedOn(self):
 
-		self.gui.irc_registered(self)
+		erk.events.registered(self.gui,self)
+
+		# self.gui.irc_registered(self)
+		if len(self.autojoin)>0:
+			for channel in self.autojoin:
+				chan = channel[0]
+				key = channel[1]
+				if len(key)>0:
+					self.sendLine(f"JOIN {chan} {key}")
+				else:
+					self.sendLine(f"JOIN {chan}")
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -223,14 +248,21 @@ class IRC_Connection(irc.IRCClient):
 
 		self.joined_channels.append(channel)
 
-		self.gui.irc_client_joined(self,channel)
+		erk.events.erk_joined_channel(self.gui,self,channel)
+
+		# self.gui.irc_client_joined(self,channel)
 
 
 	def privmsg(self, user, target, msg):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
 
-		self.gui.irc_privmsg(self,user,target,msg)
+		# self.gui.irc_privmsg(self,user,target,msg)
+
+		if target==self.nickname:
+			erk.events.private_message(self.gui,self,user,msg)
+		else:
+			erk.events.public_message(self.gui,self,target,user,msg)
 
 	def noticed(self, user, channel, msg):
 		tok = user.split('!')
@@ -241,24 +273,28 @@ class IRC_Connection(irc.IRCClient):
 			pnick = user
 			phostmask = user
 
-		self.gui.irc_notice(self,user,channel,msg)
+		# self.gui.irc_notice(self,user,channel,msg)
+		erk.events.notice_message(self.gui,self,channel,user,msg)
 
 		
 
 	def receivedMOTD(self, motd):
-		self.gui.irc_motd(self,motd)
+		# self.gui.irc_motd(self,motd)
+		erk.events.motd(self.gui,self,motd)
 
 	def modeChanged(self, user, channel, mset, modes, args):
 		if "b" in modes: self.sendLine(f"MODE {channel} +b")
 
-		self.gui.irc_mode(self,user,channel,mset,modes,args)
+		# self.gui.irc_mode(self,user,channel,mset,modes,args)
+		erk.events.mode(self.gui,self,channel,user,mset,modes,args)
 		
 		
 	def nickChanged(self,nick):
-		self.gui.irc_nick_changed(self,self.nickname,nick)
+		# self.gui.irc_nick_changed(self,self.nickname,nick)
 		self.nickname = nick
-		#self.gui.irc_nick(self,nick)
-		self.gui.buildConnectionsMenu()
+		## self.gui.irc_nick(self,nick)
+		# self.gui.buildConnectionsMenu()
+		erk.events.erk_changed_nick(self.gui,self,nick)
 
 	def userJoined(self, user, channel):
 		if user.split('!')[0] == self.nickname:
@@ -267,48 +303,60 @@ class IRC_Connection(irc.IRCClient):
 		p = user.split('!')
 		if len(p)==2:
 			if p[0] == self.nickname: return
-		else:
-			if self.gui.get_hostmasks_on_join:
-				self.do_whois.append(user)
+		# else:
+		# 	if self.gui.get_hostmasks_on_join:
+		# 		self.do_whois.append(user)
 
-		self.gui.irc_join(self,user,channel)
+		# self.gui.irc_join(self,user,channel)
+		erk.events.join(self.gui,self,user,channel)
 
 
 	def userLeft(self, user, channel):
 
-		self.gui.irc_part(self,user,channel)
+		# self.gui.irc_part(self,user,channel)
+		erk.events.part(self.gui,self,user,channel)
 
 	def irc_ERR_NICKNAMEINUSE(self, prefix, params):
-		oldnick = self.nickname
+
+		oldnick = params[1]
+
+		#oldnick = self.nickname
 		if oldnick != self.alternate:
 			newnick = self.alternate
 		else:
-			newnick = self.nickname + "_"
-		#d = systemTextDisplay(f"Nickname \"{oldnick}\" in use, changing nick to \"{newnick}\"",self.gui.maxnicklen,SYSTEM_COLOR)
+			newnick = oldnick + "_"
+
 		self.setNick(newnick)
 
-		self.oldnick = newnick
+		#self.oldnick = newnick
+
+		erk.events.erk_changed_nick(self.gui,self,newnick)
 
 	def userRenamed(self, oldname, newname):
 
-		self.gui.irc_nick_changed(self,oldname,newname)
+		# self.gui.irc_nick_changed(self,oldname,newname)
+		erk.events.nick(self.gui,self,oldname,newname)
 					
 	def topicUpdated(self, user, channel, newTopic):
 		
-		self.gui.irc_topic(self,user,channel,newTopic)
+		# self.gui.irc_topic(self,user,channel,newTopic)
+		erk.events.topic(self.gui,self,user,channel,newTopic)
 
 	def action(self, user, channel, data):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
 		
-		self.gui.irc_action(self,user,channel,data)
+		# self.gui.irc_action(self,user,channel,data)
+		erk.events.action_message(self.gui,self,channel,user,data)
 		
 
 	def userKicked(self, kickee, channel, kicker, message):
-		self.gui.irc_kick(self,kickee,channel,kicker,message)
+		# self.gui.irc_kick(self,kickee,channel,kicker,message)
+		pass
 
 	def kickedFrom(self, channel, kicker, message):
-		self.gui.irc_kicked(self,channel,kicker,message)
+		# self.gui.irc_kicked(self,channel,kicker,message)
+		pass
 
 	def irc_QUIT(self,prefix,params):
 		x = prefix.split('!')
@@ -325,21 +373,22 @@ class IRC_Connection(irc.IRCClient):
 		else:
 			msg = ""
 
-		self.gui.irc_quit(self,prefix,msg)
+		# self.gui.irc_quit(self,prefix,msg)
+		erk.events.quit(self.gui,self,nick,msg)
 
 
 	def irc_RPL_NAMREPLY(self, prefix, params):
 		channel = params[2].lower()
 		nicklist = params[3].split(' ')
 
-		if channel in self.joined_channels:
-			if self.gui.get_hostmasks_on_join:
-				for u in nicklist:
-					p = u.split('!')
-					if len(p)!=2:
-						u = u.replace('@','')
-						u = u.replace('+','')
-						self.do_whois.append(u)
+		# if channel in self.joined_channels:
+		# 	if self.gui.get_hostmasks_on_join:
+		# 		for u in nicklist:
+		# 			p = u.split('!')
+		# 			if len(p)!=2:
+		# 				u = u.replace('@','')
+		# 				u = u.replace('+','')
+		# 				self.do_whois.append(u)
 
 		if channel in self.userlists:
 			# Add to user list
@@ -361,7 +410,8 @@ class IRC_Connection(irc.IRCClient):
 			pass
 
 		if channel in self.userlists:
-			self.gui.irc_userlist(self,channel,self.userlists[channel])
+			#self.gui.irc_userlist(self,channel,self.userlists[channel])
+			erk.events.userlist(self.gui,self,channel,self.userlists[channel])
 			del self.userlists[channel]
 
 	def irc_RPL_TOPIC(self, prefix, params):
@@ -373,7 +423,8 @@ class IRC_Connection(irc.IRCClient):
 
 		channel = params[1]
 
-		self.gui.irc_topic(self,self.hostname,channel,TOPIC)
+		# self.gui.irc_topic(self,self.hostname,channel,TOPIC)
+		erk.events.topic(self.gui,self,'',channel,TOPIC)
 
 		
 
@@ -399,9 +450,9 @@ class IRC_Connection(irc.IRCClient):
 		host = params[3]
 		realname = params[5]
 
-		if nick in self.request_whois:
-			self.gui.update_user_hostmask(self,nick,username+"@"+host)
-			return
+		# if nick in self.request_whois:
+		# 	self.gui.update_user_hostmask(self,nick,username+"@"+host)
+		# 	return
 
 		if nick in self.whois:
 			self.whois[nick].username = username
@@ -472,7 +523,7 @@ class IRC_Connection(irc.IRCClient):
 			return
 
 		if nick in self.whois:
-			self.gui.irc_whois(self,self.whois[nick])
+			#self.gui.irc_whois(self,self.whois[nick])
 			del self.whois[nick]
 
 		
@@ -519,19 +570,23 @@ class IRC_Connection(irc.IRCClient):
 					if m=="k":
 						params.pop(0)
 						chankey = params.pop(0)
-						self.gui.irc_mode(self,self.hostname,channel,True,m,[chankey])
+						# self.gui.irc_mode(self,self.hostname,channel,True,m,[chankey])
+						erk.events.mode(self.gui,self,channel,self.hostname,True,m,[chankey])
 						continue
 					# mode added
-					self.gui.irc_mode(self,self.hostname,channel,True,m,[])
+					# self.gui.irc_mode(self,self.hostname,channel,True,m,[])
+					erk.events.mode(self.gui,self,channel,self.hostname,True,m,[])
 				else:
 					m = m[1:]
 					# mode removed
-					self.gui.irc_mode(self,self.hostname,channel,False,m,[])
+					# self.gui.irc_mode(self,self.hostname,channel,False,m,[])
+					erk.events.mode(self.gui,self,channel,self.hostname,False,m,[])
 		
 		
 
 	def irc_RPL_YOUREOPER(self, prefix, params):
-		self.gui.irc_you_are_oper(self)
+		# self.gui.irc_you_are_oper(self)
+		pass
 
 	def irc_RPL_TIME(self, prefix, params):
 		t = params[2]
@@ -550,7 +605,7 @@ class IRC_Connection(irc.IRCClient):
 		target = params[0]
 		channel = params[1]
 
-		self.gui.irc_invited(self,prefix,target,channel)
+		# self.gui.irc_invited(self,prefix,target,channel)
 
 		
 
@@ -559,7 +614,7 @@ class IRC_Connection(irc.IRCClient):
 		user = params[1]
 		channel = params[2]
 
-		self.gui.irc_inviting(self,user,channel)
+		# self.gui.irc_inviting(self,user,channel)
 
 		
 
@@ -570,23 +625,23 @@ class IRC_Connection(irc.IRCClient):
 		usercount = params[2]
 		topic = params[3]
 
-		self.gui.irc_list(self,server,channel,usercount,topic)
+		# self.gui.irc_list(self,server,channel,usercount,topic)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
 
-		self.gui.irc_start_list(self,server)
+		# self.gui.irc_start_list(self,server)
 
 		
 
 	def irc_RPL_LISTEND(self,prefix,params):
 		server = prefix
 
-		self.gui.irc_end_list(self,server)
+		# self.gui.irc_end_list(self,server)
 
 	def sendLine(self,line):
 		
-		self.gui.irc_output(self,line)
+		# self.gui.irc_output(self,line)
 
 		return irc.IRCClient.sendLine(self, line)
 
@@ -608,70 +663,72 @@ class IRC_Connection(irc.IRCClient):
 		line = line2.encode('utf-8')
 
 		#print(line)
-		self.gui.irc_input(self,line2)
+		# self.gui.irc_input(self,line2)
 
 		d = line2.split(" ")
 		if len(d) >= 2:
 			if d[1].isalpha(): return irc.IRCClient.lineReceived(self, line)
 
 		if "Cannot join channel (+k)" in line2:
-			self.gui.irc_error(self,f"Cannot join channel (wrong or missing password)")
+			erk.events.received_error(self.gui,self,f"Cannot join channel (wrong or missing password)")
 			pass
 		if "Cannot join channel (+l)" in line2:
-			self.gui.irc_error(self,f"Cannot join channel (channel is full)")
+			erk.events.received_error(self.gui,self,f"Cannot join channel (channel is full)")
 			pass
 		if "Cannot join channel (+b)" in line2:
-			self.gui.irc_error(self,f"Cannot join channel (banned)")
+			erk.events.received_error(self.gui,self,f"Cannot join channel (banned)")
 			pass
 		if "Cannot join channel (+i)" in line2:
-			self.gui.irc_error(self,f"Cannot join channel (channel is invite only)")
+			erk.events.received_error(self.gui,self,f"Cannot join channel (channel is invite only)")
 			pass
 		if "not an IRC operator" in line2:
-			self.gui.irc_error(self,"Permission denied (you're not an IRC operator")
+			erk.events.received_error(self.gui,self,"Permission denied (you're not an IRC operator")
 			pass
 		if "not channel operator" in line2:
-			self.gui.irc_error(self,"Permission denied (you're not channel operator)")
+			erk.events.received_error(self.gui,self,"Permission denied (you're not channel operator)")
 			pass
 		if "is already on channel" in line2:
-			self.gui.irc_error(self,"Invite failed (user is already in channel)")
+			erk.events.received_error(self.gui,self,"Invite failed (user is already in channel)")
 			pass
 		if "not on that channel" in line2:
-			self.gui.irc_error(self,"Permission denied (you're not in channel)")
+			erk.events.received_error(self.gui,self,"Permission denied (you're not in channel)")
 			pass
 		if "aren't on that channel" in line2:
-			self.gui.irc_error(self,"Permission denied (target user is not in channel)")
+			erk.events.received_error(self.gui,self,"Permission denied (target user is not in channel)")
 			pass
 		if "have not registered" in line2:
-			self.gui.irc_error(self,"You're not registered")
+			erk.events.received_error(self.gui,self,"You're not registered")
 			pass
 		if "may not reregister" in line2:
-			self.gui.irc_error(self,"You can't reregister")
+			erk.events.received_error(self.gui,self,"You can't reregister")
 			pass
 		if "enough parameters" in line2:
-			self.gui.irc_error(self,"Error: not enough parameters supplied to command")
+			erk.events.received_error(self.gui,self,"Error: not enough parameters supplied to command")
 			pass
 		if "isn't among the privileged" in line2:
-			self.gui.irc_error(self,"Registration refused (server isn't setup to allow connections from your host)")
+			erk.events.received_error(self.gui,self,"Registration refused (server isn't setup to allow connections from your host)")
 			pass
 		if "Password incorrect" in line2:
-			self.gui.irc_error(self,"Permission denied (incorrect password)")
+			erk.events.received_error(self.gui,self,"Permission denied (incorrect password)")
 			pass
 		if "banned from this server" in line2:
-			self.gui.irc_error(self,"You are banned from this server")
+			erk.events.received_error(self.gui,self,"You are banned from this server")
 			pass
 		if "kill a server" in line2:
-			self.gui.irc_error(self,"Permission denied (you can't kill a server)")
+			erk.events.received_error(self.gui,self,"Permission denied (you can't kill a server)")
 			pass
 		if "O-lines for your host" in line2:
-			self.gui.irc_error(self,"Error: no O-lines for your host")
+			erk.events.received_error(self.gui,self,"Error: no O-lines for your host")
 			pass
 		if "Unknown MODE flag" in line2:
-			self.gui.irc_error(self,"Error: unknown MODE flag")
+			erk.events.received_error(self.gui,self,"Error: unknown MODE flag")
 			pass
 		if "change mode for other users" in line2:
-			self.gui.irc_error(self,"Permission denied (can't change mode for other users)")
+			erk.events.received_error(self.gui,self,"Permission denied (can't change mode for other users)")
 			pass
+
 		return irc.IRCClient.lineReceived(self, line)
+
 
 def config(obj,**kwargs):
 
@@ -707,6 +764,9 @@ def config(obj,**kwargs):
 		if key=="reconnect":
 			obj.reconnect = value
 
+		if key=="autojoin":
+			obj.autojoin = value
+
 class IRC_Connection_Factory(protocol.ClientFactory):
 	def __init__(self,**kwargs):
 		self.kwargs = kwargs
@@ -717,10 +777,10 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		return bot
 
 	def clientConnectionLost(self, connector, reason):
-		pass
+		self.kwargs["gui"].connectionLost(self.kwargs["server"],self.kwargs["port"])
 
 	def clientConnectionFailed(self, connector, reason):
-		pass
+		self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 	def __init__(self,**kwargs):
@@ -732,36 +792,54 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		return bot
 
 	def clientConnectionLost(self, connector, reason):
-		if self.kwargs["gui"].quitting:
-			return
+		# if self.kwargs["gui"].quitting:
+		# 	return
 
-		cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
-		self.kwargs["gui"].remove_connection(cid)
-		if cid in self.kwargs["gui"].disconnected:
+		# cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
+		# self.kwargs["gui"].remove_connection(cid)
+		# if cid in self.kwargs["gui"].disconnected:
+		# 	try:
+		# 		self.kwargs["gui"].disconnected.remove(cid)
+		# 	except:
+		# 		pass
+		# 	return
+		# self.kwargs["gui"].remove_connection(cid)
+
+		cid = self.kwargs["server"]+str(self.kwargs["port"])
+		if cid in self.kwargs["gui"].disconnecting:
 			try:
-				self.kwargs["gui"].disconnected.remove(cid)
+				self.kwargs["gui"].disconnecting.remove(cid)
 			except:
 				pass
 			return
-		self.kwargs["gui"].remove_connection(cid)
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 	def clientConnectionFailed(self, connector, reason):
 
-		if self.kwargs["gui"].quitting:
-			return
+		# if self.kwargs["gui"].quitting:
+		# 	return
 
-		cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
-		self.kwargs["gui"].remove_connection(cid)
-		if cid in self.kwargs["gui"].disconnected:
+		# cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
+		# self.kwargs["gui"].remove_connection(cid)
+		# if cid in self.kwargs["gui"].disconnected:
+		# 	try:
+		# 		self.kwargs["gui"].disconnected.remove(cid)
+		# 	except:
+		# 		pass
+		# 	return
+
+		cid = self.kwargs["server"]+str(self.kwargs["port"])
+		if cid in self.kwargs["gui"].disconnecting:
 			try:
-				self.kwargs["gui"].disconnected.remove(cid)
+				self.kwargs["gui"].disconnecting.remove(cid)
 			except:
 				pass
 			return
+
+		self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
 		
-		protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
+		#protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
 class UptimeHeartbeat(QThread):
 

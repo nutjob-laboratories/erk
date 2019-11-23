@@ -1,40 +1,11 @@
-#
-#  Erk IRC Client
-#  Copyright (C) 2019  Daniel Hetrick
-#               _   _       _                         
-#              | | (_)     | |                        
-#   _ __  _   _| |_ _  ___ | |__                      
-#  | '_ \| | | | __| |/ _ \| '_ \                     
-#  | | | | |_| | |_| | (_) | |_) |                    
-#  |_| |_|\__,_|\__| |\___/|_.__/ _                   
-#  | |     | |    _/ |           | |                  
-#  | | __ _| |__ |__/_  _ __ __ _| |_ ___  _ __ _   _ 
-#  | |/ _` | '_ \ / _ \| '__/ _` | __/ _ \| '__| | | |
-#  | | (_| | |_) | (_) | | | (_| | || (_) | |  | |_| |
-#  |_|\__,_|_.__/ \___/|_|  \__,_|\__\___/|_|   \__, |
-#                                                __/ |
-#                                               |___/ 
-#  https://github.com/nutjob-laboratories
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.common import *
+from erk.resources import *
+from erk.strings import *
 
 class Dialog(QDialog):
 
@@ -46,123 +17,75 @@ class Dialog(QDialog):
 		self.setWindowTitle("About "+APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ABOUT_ICON))
 
-		boldfont = self.font()
-		boldfont.setBold(True)
-		boldfont.setPointSize(10)
-
-		boldsmaller = self.font()
-		boldsmaller.setBold(True)
-		boldsmaller.setPointSize(8)
-
 		logo = QLabel()
-		pixmap = QPixmap(LOGO_IMAGE)
+		pixmap = QPixmap(LOGO)
 		logo.setPixmap(pixmap)
 		logo.setAlignment(Qt.AlignCenter)
 
-		qt_image = QLabel()
-		pixmap = QPixmap(QT_ICON)
-		qt_image.setPixmap(pixmap)
-		qt_image.setAlignment(Qt.AlignCenter)
+		line1 = QLabel("<big><b>"+APPLICATION_NAME+"</b></big>")
+		line1.setAlignment(Qt.AlignCenter)
+		line2 = QLabel("<b>Open Source IRC Client</b>")
+		line2.setAlignment(Qt.AlignCenter)
+		line3 = QLabel("<small>Version "+APPLICATION_VERSION+"</small>")
+		line3.setAlignment(Qt.AlignCenter)
+		line4 = QLabel(f"<a href=\"{OFFICIAL_REPOSITORY}\"><small>Source Code Repository</small></a>")
+		line4.setAlignment(Qt.AlignCenter)
+		line4.setOpenExternalLinks(True)
 
-		python_image = QLabel()
-		pixmap = QPixmap(PYTHON_ICON)
-		python_image.setPixmap(pixmap)
-		python_image.setAlignment(Qt.AlignCenter)
+		descriptionLayout = QVBoxLayout()
+		descriptionLayout.addWidget(line1)
+		descriptionLayout.addWidget(line2)
+		descriptionLayout.addWidget(line3)
+		descriptionLayout.addWidget(line4)
 
-		twisted_image = QLabel()
-		pixmap = QPixmap(TWISTED_ICON)
-		twisted_image.setPixmap(pixmap)
-		twisted_image.setAlignment(Qt.AlignCenter)
+		titleLayout = QHBoxLayout()
+		titleLayout.addWidget(logo)
+		titleLayout.addLayout(descriptionLayout)
 
-		icons8_image = QLabel()
-		pixmap = QPixmap(ICONS8_ICON)
-		icons8_image.setPixmap(pixmap)
-		icons8_image.setAlignment(Qt.AlignCenter)
 
-		pyBox = QVBoxLayout()
-		pyBox.addWidget(python_image)
-		pyLink = QLabel("<a href=\"https://www.python.org/\">Python</a>")
-		pyLink.setAlignment(Qt.AlignCenter)
-		pyBox.addWidget(pyLink)
-		pyLink.setFont(boldsmaller)
-		pyLink.setOpenExternalLinks(True)
+		tech_credit = QLabel(f"<small>Written with </small><a href=\"https://python.org\"><small>Python</small></a><small>, </small><a href=\"https://www.qt.io/\"><small>Qt</small></a><small>, and </small><a href=\"https://twistedmatrix.com/\"><small>Twisted</small></a>")
+		tech_credit.setAlignment(Qt.AlignCenter)
+		tech_credit.setOpenExternalLinks(True)
 
-		qtBox = QVBoxLayout()
-		qtBox.addWidget(qt_image)
-		qtLink = QLabel("<a href=\"https://www.qt.io/\">Qt</a>")
-		qtLink.setAlignment(Qt.AlignCenter)
-		qtBox.addWidget(qtLink)
-		qtLink.setFont(boldsmaller)
-		qtLink.setOpenExternalLinks(True)
 
-		twistBox = QVBoxLayout()
-		twistBox.addWidget(twisted_image)
-		twistLink = QLabel("<a href=\"https://twistedmatrix.com\">Twisted</a>")
-		twistLink.setAlignment(Qt.AlignCenter)
-		twistBox.addWidget(twistLink)
-		twistLink.setFont(boldsmaller)
-		twistLink.setOpenExternalLinks(True)
+		icons_credit = QLabel(f"<small>Icons by </small><a href=\"https://icons8.com/\"><small>Icons8</small></a><small> and </small><a href=\"https://material.io/resources/icons/\"><small>Google</small></a>")
+		icons_credit.setAlignment(Qt.AlignCenter)
+		icons_credit.setOpenExternalLinks(True)
 
-		icons8Box = QVBoxLayout()
-		icons8Box.addWidget(icons8_image)
-		icons8Link = QLabel("<a href=\"https://icons8.com/\">Icons8</a>")
-		icons8Link.setAlignment(Qt.AlignCenter)
-		icons8Box.addWidget(icons8Link)
-		icons8Link.setFont(boldsmaller)
-		icons8Link.setOpenExternalLinks(True)
 
-		technology = QHBoxLayout()
-		technology.addLayout(pyBox)
-		technology.addLayout(twistBox)
-		technology.addLayout(qtBox)
-		technology.addLayout(icons8Box)
-
-		spellcheck_credit = QLabel(f"<a href=\"https://github.com/barrust/pyspellchecker\">pyspellchecker</a> by <a href=\"mailto:barrust@gmail.com\">Tyler Barrus</a>")
+		spellcheck_credit = QLabel(f"<a href=\"https://github.com/barrust/pyspellchecker\"><small>pyspellchecker</small></a><small> by </small><a href=\"mailto:barrust@gmail.com\"><small>Tyler Barrus</small></a>")
 		spellcheck_credit.setAlignment(Qt.AlignCenter)
-		spellcheck_credit.setFont(boldfont)
 		spellcheck_credit.setOpenExternalLinks(True)
 
-		emoji_credit = QLabel(f"<a href=\"https://github.com/carpedm20/emoji\">emoji</a> by <a href=\"http://carpedm20.github.io/about/\">Taehoon Kim</a> and <a href=\"http://twitter.com/geowurster/\">Kevin Wurster</a>")
+		emoji_credit = QLabel(f"<a href=\"https://github.com/carpedm20/emoji\"><small>emoji</small></a><small> by </small><a href=\"http://carpedm20.github.io/about/\"><small>Taehoon Kim</small></a><small> and </small><a href=\"http://twitter.com/geowurster/\"><small>Kevin Wurster</small></a>")
 		emoji_credit.setAlignment(Qt.AlignCenter)
-		emoji_credit.setFont(boldfont)
 		emoji_credit.setOpenExternalLinks(True)
 
-		asciimoji_credit = QLabel(f"<a href=\"https://github.com/hpcodecraft/ASCIImoji\">ASCIImoji</a> by <a href=\"mailto:thesquidpeople@gmail.com\">Volker Wieban</a>")
+		asciimoji_credit = QLabel(f"<a href=\"https://github.com/hpcodecraft/ASCIImoji\"><small>ASCIImoji</small></a><small> by </small><a href=\"mailto:thesquidpeople@gmail.com\"><small>Volker Wieban</small></a>")
 		asciimoji_credit.setAlignment(Qt.AlignCenter)
-		asciimoji_credit.setFont(boldfont)
 		asciimoji_credit.setOpenExternalLinks(True)
 
 		gnu_credit = QLabel(f"<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a>")
 		gnu_credit.setAlignment(Qt.AlignCenter)
-		gnu_credit.setFont(boldfont)
 		gnu_credit.setOpenExternalLinks(True)
 
 		creditsBox = QGroupBox()
 		creditsBox.setAlignment(Qt.AlignHCenter)
 
 		creditsLayout = QVBoxLayout()
-		creditsLayout.addLayout(technology)
+		creditsLayout.addWidget(icons_credit)
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(asciimoji_credit)
-		creditsLayout.addWidget(gnu_credit)
 		
+
 		creditsBox.setLayout(creditsLayout)
 
-		author_credit = QLabel(f"<small>© Dan Hetrick 2019</small><br><a href=\"{OFFICIAL_REPOSITORY}\"><small>Official Erk Repository</small></a>")
-		author_credit.setAlignment(Qt.AlignCenter)
-		author_credit.setFont(boldfont)
-		author_credit.setOpenExternalLinks(True)
-
-		version = QLabel(f"<big>Version {APPLICATION_VERSION}</big>")
-		version.setAlignment(Qt.AlignCenter)
-		version.setFont(boldfont)
-
 		finalLayout = QVBoxLayout()
-		finalLayout.addWidget(logo)
+		finalLayout.addLayout(titleLayout)
+		finalLayout.addWidget(tech_credit)
 		finalLayout.addWidget(creditsBox)
-		finalLayout.addWidget(version)
-		finalLayout.addWidget(author_credit)
+		finalLayout.addWidget(gnu_credit)
 
 		self.setWindowFlags(self.windowFlags()
                     ^ QtCore.Qt.WindowContextHelpButtonHint)

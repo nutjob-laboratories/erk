@@ -1,25 +1,4 @@
 
 *.pyc
-logs/EFnet-#themaxx.json
-logs/efnet.port80.se-6667.json
-logs/localhost-6667.json
-logs/MYNet-#themaxx.json
+settings/user.json
 settings/settings.json
-settings/user/channels.json
-settings/user/history.json
-settings/user/lastserver.json
-settings/user/user.json
-settings/user/visited.json
-logs/EnterTheGame-#themaxx.json
-logs/EntropyNet-#themaxx.json
-logs/irc.enterthegame.com-6667.json
-logs/irc.entropynet.net-6667.json
-settings/user/ignore.json
-*.odt#
-settings/user/EFnet-themaxx-options.json
-settings/user/MYNet-themaxx-options.json
-logs/2600net-#themaxx.json
-logs/irc.2600.net-6667.json
-logs/irc.choopa.net-6667.json
-logs/irc.underworld.no-6667.json
-logs/MYNet-#cheese.json

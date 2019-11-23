@@ -17,8 +17,8 @@ message {
 
 system {
 	font-style: italic;
-	font-weight: bold;
 	color: orange;
+	font-weight: bold;
 }
 
 self {
@@ -35,12 +35,6 @@ action {
 notice {
 	font-weight: bold;
 	color: purple;
-}
-
-resume {
-	font-weight: bold;
-	font-style: italic;
-	color: #707070;
 }
 
 hyperlink {
@@ -60,18 +54,8 @@ error {
 	color: red;
 }
 
-whois {
-	font-style: italic;
+motd {
 	font-weight: bold;
 	color: blue;
-}
-
-whois_body {
-	font-weight: bold;
-}
-
-notice_body {
-	font-style: italic;
-	color: purple;
 }
 

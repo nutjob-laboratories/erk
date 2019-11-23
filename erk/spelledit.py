@@ -70,6 +70,8 @@ class SpellTextEdit(QPlainTextEdit):
 		elif event.key() == Qt.Key_Tab:
 			cursor = self.textCursor()
 
+			if self.toPlainText().strip()=='': return
+
 			if self.parent.gui.autocomplete_commands:
 
 				# Auto-complete commands
@@ -78,24 +80,45 @@ class SpellTextEdit(QPlainTextEdit):
 				if self.textCursor().hasSelection():
 					text = self.textCursor().selectedText()
 
-				if self.parent.is_console:
-					COMMAND_LIST = CONSOLE_COMMANDS
-				else:
-					COMMAND_LIST = INPUT_COMMANDS
+					if self.parent.is_console:
+						COMMAND_LIST = CONSOLE_COMMANDS
+					else:
+						COMMAND_LIST = INPUT_COMMANDS
 
-				for c in COMMAND_LIST:
-					cmd = c
-					rep = COMMAND_LIST[c]
+					for c in COMMAND_LIST:
+						cmd = c
+						rep = COMMAND_LIST[c]
 
-					#if text in cmd:
-					if fnmatch.fnmatch(cmd,f"{text}*"):
-						cursor.beginEditBlock()
-						cursor.insertText(rep)
-						cursor.endEditBlock()
-						return
+						#if text in cmd:
+						if fnmatch.fnmatch(cmd,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(rep)
+							cursor.endEditBlock()
+							return
+
+			if self.parent.gui.autocomplete_nicks:
+
+				# Auto-complete nicks/channels
+				cursor.select(QTextCursor.WordUnderCursor)
+				self.setTextCursor(cursor)
+				if self.textCursor().hasSelection():
+					text = self.textCursor().selectedText()
+
+					# Nicks
+					chan_nicks = self.parent.nicks
+					for nick in chan_nicks:
+						# Skip client's nickname
+						if nick==self.parent.client.nickname:
+							continue
+						if fnmatch.fnmatch(nick,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(f"{nick}")
+							cursor.endEditBlock()
+							return
 
 			if self.parent.gui.use_asciimojis:
-				if self.parent.gui.autocomplete_asciimoji:
+
+				if self.parent.gui.autocomplete_asciimojis:
 
 					# Autocomplete ASCIImojis
 					cursor.select(QTextCursor.WordUnderCursor)
@@ -108,15 +131,16 @@ class SpellTextEdit(QPlainTextEdit):
 					if self.textCursor().hasSelection():
 						text = self.textCursor().selectedText()
 
-					for c in self.parent.gui.ASCIIMOJI_AUTOCOMPLETE:
-						if fnmatch.fnmatch(c,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(c)
-							cursor.endEditBlock()
-							return
+						for c in self.parent.gui.ASCIIMOJI_AUTOCOMPLETE:
+							if fnmatch.fnmatch(c,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(c)
+								cursor.endEditBlock()
+								return
 
 			if self.parent.gui.use_emojis:
-				if self.parent.gui.autocomplete_emoji:
+
+				if self.parent.gui.autocomplete_emojis:
 
 					# Autocomplete emojis
 					cursor.select(QTextCursor.WordUnderCursor)
@@ -129,71 +153,21 @@ class SpellTextEdit(QPlainTextEdit):
 					if self.textCursor().hasSelection():
 						text = self.textCursor().selectedText()
 
-					for c in self.parent.gui.EMOJI_AUTOCOMPLETE:
+						for c in self.parent.gui.EMOJI_AUTOCOMPLETE:
 
-						# Case sensitive
-						if fnmatch.fnmatchcase(c,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(c)
-							cursor.endEditBlock()
-							return
+							# Case sensitive
+							if fnmatch.fnmatchcase(c,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(c)
+								cursor.endEditBlock()
+								return
 
-						# Case insensitive
-						if fnmatch.fnmatch(c,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(c)
-							cursor.endEditBlock()
-							return
-
-			if self.parent.gui.autocomplete_nicks:
-
-				# Auto-complete nicks/channels
-				cursor.select(QTextCursor.WordUnderCursor)
-				self.setTextCursor(cursor)
-				if self.textCursor().hasSelection():
-					text = self.textCursor().selectedText()
-
-				# Nicks
-				chan_nicks = self.parent.getUserNicks()
-				channels = self.parent.gui.getChannelList(self.parent.client)
-				for nick in chan_nicks:
-					if fnmatch.fnmatch(nick,f"{text}*"):
-						# If the nick matches a channel name, skip it for now
-						mchan = False
-						for chan in channels:
-							if fnmatch.fnmatch(chan,f"#{text}*"):
-								mchan = True
-						if mchan: continue
-						cursor.beginEditBlock()
-						cursor.insertText(f"{nick} ")
-						cursor.endEditBlock()
-						return
-
-				# Channels
-				oldpos = cursor.position()
-				cursor.select(QTextCursor.WordUnderCursor)
-				newpos = cursor.selectionStart() - 1
-				cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-				cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-				self.setTextCursor(cursor)
-				text = cursor.selectedText()
-
-				if len(text)>0:
-					for chan in channels:
-						if fnmatch.fnmatch(chan,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(f"{chan} ")
-							cursor.endEditBlock()
-							return
-					# Now that channels have been autocompleted, autocomplete nicks
-					text = text[1:]
-					for nick in chan_nicks:
-						if fnmatch.fnmatch(nick,f"{text}*"):
-							cursor.beginEditBlock()
-							cursor.insertText(f" {nick} ")
-							cursor.endEditBlock()
-							return
-
+							# Case insensitive
+							if fnmatch.fnmatch(c,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(c)
+								cursor.endEditBlock()
+								return
 
 			cursor.movePosition(QTextCursor.End)
 			self.setTextCursor(cursor)
@@ -222,7 +196,7 @@ class SpellTextEdit(QPlainTextEdit):
 
 	def contextMenuEvent(self, event):
 
-		if not self.parent.gui.spellCheck:
+		if not self.parent.gui.spellcheck:
 			return super().contextMenuEvent(event)
 
 		popup_menu = self.createStandardContextMenu()
@@ -283,7 +257,7 @@ class Highlighter(QSyntaxHighlighter):
 		if not self.dict:
 			return
 
-		if not self.parent.gui.spellCheck:
+		if not self.parent.gui.spellcheck:
 			return
 
 		format = QTextCharFormat()

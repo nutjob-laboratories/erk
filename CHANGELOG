@@ -1,3 +1,6 @@
+Version 0.600
+	* Complete re-write
+
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
 	* Added a PDF viewer as an MDI subwindow
@@ -49,6 +52,7 @@ Version 0.510
 	* Added "unread message" notification to the connection/window display
 	* Connection/window display expands/collapses as needed
 	* Added a background image to the connection/window display
+	* Moved IRC event code to a different file
 
 Version 0.501
 	* Moved user config files to their own directory in "settings/", "user"

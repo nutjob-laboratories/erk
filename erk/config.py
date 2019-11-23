@@ -1,94 +1,39 @@
-#
-#  Erk IRC Client
-#  Copyright (C) 2019  Daniel Hetrick
-#               _   _       _                         
-#              | | (_)     | |                        
-#   _ __  _   _| |_ _  ___ | |__                      
-#  | '_ \| | | | __| |/ _ \| '_ \                     
-#  | | | | |_| | |_| | (_) | |_) |                    
-#  |_| |_|\__,_|\__| |\___/|_.__/ _                   
-#  | |     | |    _/ |           | |                  
-#  | | __ _| |__ |__/_  _ __ __ _| |_ ___  _ __ _   _ 
-#  | |/ _` | '_ \ / _ \| '__/ _` | __/ _ \| '__| | | |
-#  | | (_| | |_) | (_) | | | (_| | || (_) | |  | |_| |
-#  |_|\__,_|_.__/ \___/|_|  \__,_|\__\___/|_|   \__, |
-#                                                __/ |
-#                                               |___/ 
-#  https://github.com/nutjob-laboratories
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys
 import os
 import json
-from datetime import datetime
-import shutil
 import re
+from collections import defaultdict
 import string
 import random
-from itertools import combinations
-from collections import defaultdict
-import pathlib
-from zipfile import ZipFile
+
+from erk.common import *
 
 # Directories
 INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
+
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
+if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
+
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
-PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
+if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
+USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
+TEXT_FORMAT_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
-TEXT_SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
 
-USER_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "user")
-USER_FILE = os.path.join(USER_DIRECTORY, "user.json")
-LAST_SERVER_INFORMATION_FILE = os.path.join(USER_DIRECTORY, "lastserver.json")
-CHANNELS_FILE = os.path.join(USER_DIRECTORY, "channels.json")
-IGNORE_FILE = os.path.join(USER_DIRECTORY, "ignore.json")
-HISTORY_FILE = os.path.join(USER_DIRECTORY, "history.json")
-VISITED_FILE = os.path.join(USER_DIRECTORY, "visited.json")
-
-DISABLED_FILE = os.path.join(USER_DIRECTORY, "disabled.json")
-
-MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
-NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
+MINOR_VERSION_FILE = os.path.join(DATA_DIRECTORY, "minor.txt")
+NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
+DEFAULT_TEXT_FORMAT_FILE = os.path.join(DATA_DIRECTORY, "text.css")
 
 AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
-
-PDF_JS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "pdfjs")
-PDF_JS_WEB_DIRECTORY = os.path.join(PDF_JS_DIRECTORY, "web")
-PDF_JS_VIEWER = os.path.join(PDF_JS_WEB_DIRECTORY, "viewer.html")
-
-PDF_JS_VIEWER = pathlib.Path(PDF_JS_VIEWER).as_uri()
-
-DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
-PLUGIN_PDF = os.path.join(DOCUMENTATION_DIRECTORY, "Erk-Plugin-Guide.pdf")
-
-#PLUGIN_PDF = pathlib.Path(PLUGIN_PDF).as_uri()
-
-# Create any necessary directories if they don't exist
-if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
-if not os.path.isdir(USER_DIRECTORY): os.mkdir(USER_DIRECTORY)
-if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
-if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 
 mvf=open(MINOR_VERSION_FILE, "r")
 MINOR_VERSION = mvf.read()
@@ -98,112 +43,6 @@ if len(MINOR_VERSION)==1:
 	MINOR_VERSION = "00"+MINOR_VERSION
 elif len(MINOR_VERSION)==2:
 	MINOR_VERSION = "0"+MINOR_VERSION
-
-APPLICATION_NAME = "Ərk"
-APPLICATION_MAJOR_VERSION = "0.510"
-APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
-OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
-PROGRAM_FILENAME = "erk.py"
-NORMAL_APPLICATION_NAME = "Erk"
-
-GPL_NOTIFICATION = """Ərk IRC Client
-Copyright (C) 2019  Dan Hetrick
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>."""
-
-DEFAULT_WINDOW_TITLE = APPLICATION_NAME
-
-DEFAULT_NICKNAME = "erk"+str(random.randint(100,1000000))
-DEFAULT_ALTERNATIVE = DEFAULT_NICKNAME+"_"
-DEFAULT_USERNAME = "erk"
-DEFAULT_IRCNAME = APPLICATION_NAME+" IRC Client v"+APPLICATION_MAJOR_VERSION
-
-SETTING_OPEN_PRIVATE_WINDOWS		= "open_windows_for_private_messages"
-SETTING_CHAT_STATUS_BARS			= "display_chat_window_status_bars"
-SETTING_PLAIN_USER_LISTS			= "plain_user_lists"
-SETTING_APPLICATION_FONT			= "font"
-SETTING_DISPLAY_TIMESTAMPS			= 'display_chat_timestamps'
-SETTING_24HOUR_TIMESTAMPS			= 'use_24_hour_clock_timestamps'
-SETTING_DISPLAY_TIMESTAMP_SECONDS	= 'display_seconds_in_timestamps'
-SETTING_SAVE_LOGS_ON_EXIT			= 'automatically_save_logs'
-SETTING_LOAD_LOGS_ON_START			= 'automatically_load_logs'
-SETTING_SPELL_CHECK					= "spell_check"
-SETTING_SPELL_CHECK_LANGUAGE		= "spell_check_language"
-SETTING_EMOJI						= "enable_emojis"
-SETTING_ASCIIMOJI					= "enable_asciimoji"
-SETTING_LOADED_LOG_LENGTH			= "maximum_displayed_log_length"
-SETTING_MAX_NICK_LENGTH				= "maximum_nickname_displayed_length"
-SETTING_SET_WINDOW_TITLE_TO_ACTIVE	= "set_application_title_to_active_window_title"
-SETTING_WINDOW_WIDTH				= "default_window_width"
-SETTING_WINDOW_HEIGHT				= "default_window_height"
-SETTING_AUTOCOMPLETE_CMDS			= "autocomplete_commands"
-SETTING_AUTOCOMPLETE_NICKS			= "autocomplete_nicknames_and_channels"
-SETTING_HYPERLINKS					= "link_urls_in_chat"
-SETTING_STRIP_HTML					= "strip_html_from_chat"
-SETTING_PROFANITY_FILTER			= "do_not_display_profanity"
-SETTING_LOG_PRIVATE_CHAT			= "save_private_chat_logs"
-SETTING_HIDE_PRIVATE_CHAT			= "hide_private_chat_on_close"
-SETTING_SAVE_HISTORY				= "save_server_history"
-SETTING_ASCIIMOJI_AUTOCOMPLETE		= "autocomplete_asciimojis"
-SETTING_EMOJI_AUTOCOMPLETE			= "autocomplete_emojis"
-SETTING_DISPLAY_UPTIME_CONSOLE		= "display_uptime_on_console"
-SETTING_DISPLAY_UPTIME_CHAT			= "display_uptime_on_chat_windows"
-SETTING_UPTIME_SECONDS				= "diplay_seconds_in_uptime"
-SETTING_KEEP_ALIVE					= "keep_connection_alive"
-SETTING_DISPLAY_IRC_COLOR			= "display_irc_colors_in_chat"
-SETTING_ENABLE_IGNORE				= "enable_user_ignore"
-SETTING_REJOIN_CHANNELS				= "rejoin_channels_on_disconnection"
-SETTING_SYSTRAY_NOTIFICATION		= "notify_unread_messages_with_systray"
-SETTING_SHOW_DISABLED_PLUGINS		= "show_disabled_plugins_in_menu"
-SETTING_GET_HOSTMASKS 				= "get_user_hostmasks_on_channel_join"
-SETTING_UNREAD_MESSAGE_COLOR		= "unread_message_notification_color"
-
-UNKNOWN_IRC_NETWORK = "Unknown"
-
-DEFAULT_KEEPALIVE_INTERVAL = 120
-
-IRC_00 = "#FFFFFF"
-IRC_01 = "#000000"
-IRC_02 = "#0000FF"
-IRC_03 = "#008000"
-IRC_04 = "#FF0000"
-IRC_05 = "#A52A2A"
-IRC_06 = "#800080"
-IRC_07 = "#FFA500"
-IRC_08 = "#FFFF00"
-IRC_09 = "#90EE90"
-IRC_10 = "#008080"
-IRC_11 = "#00FFFF"
-IRC_12 = "#ADD8E6"
-IRC_13 = "#FFC0CB"
-IRC_14 = "#808080"
-IRC_15 = "#D3D3D3"
-
-TIMESTAMP_STYLE_NAME	= "timestamp"
-USERNAME_STYLE_NAME		= "username"
-MESSAGE_STYLE_NAME		= "message"
-SYSTEM_STYLE_NAME		= "system"
-SELF_STYLE_NAME			= "self"
-ACTION_STYLE_NAME		= "action"
-NOTICE_STYLE_NAME		= "notice"
-RESUME_STYLE_NAME		= "resume"
-HYPERLINK_STYLE_NAME	= "hyperlink"
-BASE_STYLE_NAME			= "all"
-ERROR_STYLE_NAME		= "error"
-WHOIS_STYLE_NAME		= "whois"
-WHOIS_TEXT_STYLE_NAME	= "whois_body"
-NOTICE_TEXT_STYLE_NAME	= "notice_body"
 
 # Read in the ascii emoji list
 ASCIIEMOJIS = {}
@@ -242,52 +81,37 @@ def filterProfanityFromText(text,punc=True):
 		clean.append(word)
 	return ' '.join(clean)
 
-def install_plugin_from_zip(filename):
-	# PLUGIN_DIRECTORY
-	with ZipFile(filename,"r") as zip:
-		zip.extractall(path=PLUGIN_DIRECTORY)
-
-def get_disabled():
-	if os.path.isfile(DISABLED_FILE):
-		with open(DISABLED_FILE, "r") as read_disabled:
-			data = json.load(read_disabled)
-			return data
-	else:
-		return []
-
-def save_disabled(data):
-	with open(DISABLED_FILE, "w") as write_data:
-		json.dump(data, write_data, indent=4, sort_keys=True)
-
-def get_ignore():
-	if os.path.isfile(IGNORE_FILE):
-		with open(IGNORE_FILE, "r") as read_ignore:
-			data = json.load(read_ignore)
-			return data
-	else:
-		return []
-
-def save_ignore(data):
-	with open(IGNORE_FILE, "w") as write_data:
-		json.dump(data, write_data, indent=4, sort_keys=True)
-
 def inject_asciiemojis(data):
 	for key in ASCIIEMOJIS:
 		for word in ASCIIEMOJIS[key]["words"]:
 			data = data.replace("("+word+")",ASCIIEMOJIS[key]["ascii"])
 	return data
 
-def loadChannels(filename=CHANNELS_FILE):
-	if os.path.isfile(filename):
-		with open(filename, "r") as channel_data:
-			data = json.load(channel_data)
-			return data
-	else:
-		return []
+def load_asciimoji_autocomplete():
+	ASCIIMOJI_AUTOCOMPLETE = []
+	with open(ASCIIMOJI_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			ASCIIMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	return ASCIIMOJI_AUTOCOMPLETE
 
-def saveChannels(autojoins,filename=CHANNELS_FILE):
-	with open(filename, "w") as writelog:
-		json.dump(autojoins, writelog, indent=4, sort_keys=True)
+def load_emoji_autocomplete():
+	EMOJI_AUTOCOMPLETE = []
+	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			EMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	with open(EMOJI_AUTOCOMPLETE_FILE) as fp:
+		line = fp.readline()
+		while line:
+			e = line.strip()
+			EMOJI_AUTOCOMPLETE.append(e)
+			line = fp.readline()
+	return EMOJI_AUTOCOMPLETE
 
 def trimLog(ilog,maxsize):
 	count = 0
@@ -328,47 +152,101 @@ def loadLog(serverid,name):
 	else:
 		return []
 
+SETTING_FONT = "font"
+SETTING_MAX_NICK_SIZE = "maximum_display_nickname_size"
+SETTING_STRIP_HTML = "strip_html_from_messages"
+SETTING_IRC_COLOR = "display_irc_color_codes"
+SETTING_LINKS = "automatically_turn_urls_into_hyperlinks"
+SETTING_TIMESTAMPS = "display_timestamps"
+SETTING_TIMESTAMP_SECONDS = "display_seconds_in_timestamps"
+SETTING_TIMESTAMP_24HOUR_CLOCK = "display_timestamps_with_24hour_clocks"
+SETTING_INITIAL_WINDOW_WIDTH = "initial_subwindow_width"
+SETTING_INITIAL_WINDOW_HEIGHT = "initial_subwindow_height"
+SETTING_FILTER_PROFANITY = "filter_profanity_from_messages"
+SETTING_INJECT_EMOJIS = "use_emoji_shortcodes_in_outgoing_messages"
+SETTING_INJECT_ASCIIMOJIS = "use_asciimoji_shortcodes_in_outgoing_messages"
+SETTING_AUTOCOMPLETE_NICKS = "autocomplete_nicknames"
+SETTING_AUTOCOMPLETE_EMOJIS = "autocomplete_emojis"
+SETTING_AUTOCOMPLETE_ASCIIMOJIS = "autocomplete_asciimojis"
+SETTING_AUTOCOMPLETE_COMMANDS = "autocomplete_commands"
+SETTING_PLAIN_USER_LISTS = "channels_use_plain_user_lists"
+SETTING_CONNECTION_DISPLAY_LOCATION = "connection_display_location"
+SETTING_CONNECTION_DISPLAY_VISIBLE = "connection_display_is_visible"
+SETTING_SPELLCHECK = "enable_spell_check"
+SETTING_SPELLCHECK_LANGUAGE = "spell_check_language"
+SETTING_MARK_UNSEEN_CHAT_IN_WINDOWS = "mark_unread_messages_in_chat_windows"
+SETTING_UNSEEN_MESSAGE_DISPLAY_COLOR = "unread_message_color_in_connection_display"
+SETTING_APPLICATION_TITLE_FROM_ACTIVE = "set_window_title_from_active_window"
+SETTING_CREATE_PRIVATE_WINDOWS = "automatically_create_incoming_private_message_windows"
+SETTING_FLASH_TASKBAR_PRIVATE = "flash_taskbar_on_unread_private_message"
+SETTING_EXPAND_SERVER_ON_CONNECT = "connection_display_expand_node_on_connect"
+SETTING_CLICKABLE_USERNAMES = "click_chat_usernames_for_private_window"
+SETTING_DOUBLECLICK_USERNAMES = "double_click_nickname_in_userlist_for_private_window"
+SETTING_DISPLAY_UPTIME_IN_CONNECTION_DISPLAY = "display_uptime_in_connection_display"
+SETTING_SAVE_JOINED_CHANNELS = "save_joined_channels_to_autojoin"
+SETTING_ALWAYS_ON_TOP = "application_window_always_on_top"
+SETTING_DISPLAY_NICK_ON_CHANNEL_WINDOWS = "display_current_nickname_on_channel_windows"
+SETTING_CLICK_NICK_FOR_NICKCHANGE = "click_channel_nickname_display_to_change_nick"
+SETTING_SAVE_HISTORY = "save_connection_history"
+SETTING_NOTIFY_FAIL = "notify_user_of_failed_connections"
+SETTING_NOTIFY_LOST = "notify_user_of_lost_connections"
+SETTING_SAVE_CHANNEL_LOGS = "save_channel_logs"
+SETTING_LOAD_CHANNEL_LOGS = "load_channel_logs"
+SETTING_SAVE_SERVER_LOGS = "save_console_logs"
+SETTING_LOAD_SERVER_LOGS = "load_console_logs"
+SETTING_SAVE_PRIVATE_LOGS = "save_private_message_logs"
+SETTING_LOAD_PRIVATE_LOGS = "load_private_message_logs"
+SETTING_LOAD_LOG_MAX_SIZE = "maximum_lines_displayed_from_saved_logs"
+SETTING_MARK_END_OF_LOADED_LOGS = "mark_end_of_loaded_logs"
+
 def patch_config_file(data):
 	s = len(data)
-	if not SETTING_OPEN_PRIVATE_WINDOWS in data: data[SETTING_OPEN_PRIVATE_WINDOWS] = True
-	if not SETTING_CHAT_STATUS_BARS in data: data[SETTING_CHAT_STATUS_BARS] = True
-	if not SETTING_PLAIN_USER_LISTS in data: data[SETTING_PLAIN_USER_LISTS] = False
-	if not SETTING_APPLICATION_FONT in data: data[SETTING_APPLICATION_FONT] = "Consolas,10,-1,5,50,0,0,0,0,0,Regular"
-	if not SETTING_DISPLAY_TIMESTAMPS in data: data[SETTING_DISPLAY_TIMESTAMPS] = True
-	if not SETTING_24HOUR_TIMESTAMPS in data: data[SETTING_24HOUR_TIMESTAMPS] = True
-	if not SETTING_DISPLAY_TIMESTAMP_SECONDS in data: data[SETTING_DISPLAY_TIMESTAMP_SECONDS] = False
-	if not SETTING_SAVE_LOGS_ON_EXIT in data: data[SETTING_SAVE_LOGS_ON_EXIT] = True
-	if not SETTING_LOAD_LOGS_ON_START in data: data[SETTING_LOAD_LOGS_ON_START] = True
-	if not SETTING_SPELL_CHECK in data: data[SETTING_SPELL_CHECK] = True
-	if not SETTING_SPELL_CHECK_LANGUAGE in data: data[SETTING_SPELL_CHECK_LANGUAGE] = "en"
-	if not SETTING_EMOJI in data: data[SETTING_EMOJI] = True
-	if not SETTING_ASCIIMOJI in data: data[SETTING_ASCIIMOJI] = True
-	if not SETTING_LOADED_LOG_LENGTH in data: data[SETTING_LOADED_LOG_LENGTH] = 300
-	if not SETTING_MAX_NICK_LENGTH in data: data[SETTING_MAX_NICK_LENGTH] = 16
-	if not SETTING_SET_WINDOW_TITLE_TO_ACTIVE in data: data[SETTING_SET_WINDOW_TITLE_TO_ACTIVE] = True
-	if not SETTING_WINDOW_WIDTH in data: data[SETTING_WINDOW_WIDTH] = 500
-	if not SETTING_WINDOW_HEIGHT in data: data[SETTING_WINDOW_HEIGHT] = 300
-	if not SETTING_AUTOCOMPLETE_CMDS in data: data[SETTING_AUTOCOMPLETE_CMDS] = True
+	if not SETTING_FONT in data: data[SETTING_FONT] = ""
+	if not SETTING_MAX_NICK_SIZE in data: data[SETTING_MAX_NICK_SIZE] = 16
+	if not SETTING_STRIP_HTML in data: data[SETTING_STRIP_HTML] = True
+	if not SETTING_IRC_COLOR in data: data[SETTING_IRC_COLOR] = True
+	if not SETTING_LINKS in data: data[SETTING_LINKS] = True
+	if not SETTING_TIMESTAMPS in data: data[SETTING_TIMESTAMPS] = True
+	if not SETTING_TIMESTAMP_SECONDS in data: data[SETTING_TIMESTAMP_SECONDS] = False
+	if not SETTING_TIMESTAMP_24HOUR_CLOCK in data: data[SETTING_TIMESTAMP_24HOUR_CLOCK] = True
+	if not SETTING_INITIAL_WINDOW_WIDTH in data: data[SETTING_INITIAL_WINDOW_WIDTH] = 500
+	if not SETTING_INITIAL_WINDOW_HEIGHT in data: data[SETTING_INITIAL_WINDOW_HEIGHT] = 300
+	if not SETTING_FILTER_PROFANITY in data: data[SETTING_FILTER_PROFANITY] = False
+	if not SETTING_INJECT_EMOJIS in data: data[SETTING_INJECT_EMOJIS] = True
+	if not SETTING_INJECT_ASCIIMOJIS in data: data[SETTING_INJECT_ASCIIMOJIS] = True
 	if not SETTING_AUTOCOMPLETE_NICKS in data: data[SETTING_AUTOCOMPLETE_NICKS] = True
-	if not SETTING_HYPERLINKS in data: data[SETTING_HYPERLINKS] = True
-	if not SETTING_STRIP_HTML in data: data[SETTING_STRIP_HTML] = False
-	if not SETTING_PROFANITY_FILTER in data: data[SETTING_PROFANITY_FILTER] = False
-	if not SETTING_LOG_PRIVATE_CHAT in data: data[SETTING_LOG_PRIVATE_CHAT] = False
-	if not SETTING_HIDE_PRIVATE_CHAT in data: data[SETTING_HIDE_PRIVATE_CHAT] = True
+	if not SETTING_AUTOCOMPLETE_EMOJIS in data: data[SETTING_AUTOCOMPLETE_EMOJIS] = True
+	if not SETTING_AUTOCOMPLETE_ASCIIMOJIS in data: data[SETTING_AUTOCOMPLETE_ASCIIMOJIS] = True
+	if not SETTING_AUTOCOMPLETE_COMMANDS in data: data[SETTING_AUTOCOMPLETE_COMMANDS] = True
+	if not SETTING_PLAIN_USER_LISTS in data: data[SETTING_PLAIN_USER_LISTS] = False
+	if not SETTING_CONNECTION_DISPLAY_LOCATION in data: data[SETTING_CONNECTION_DISPLAY_LOCATION] = "left"
+	if not SETTING_CONNECTION_DISPLAY_VISIBLE in data: data[SETTING_CONNECTION_DISPLAY_VISIBLE] = True
+	if not SETTING_SPELLCHECK in data: data[SETTING_SPELLCHECK] = True
+	if not SETTING_SPELLCHECK_LANGUAGE in data: data[SETTING_SPELLCHECK_LANGUAGE] = "en"
+	if not SETTING_MARK_UNSEEN_CHAT_IN_WINDOWS in data: data[SETTING_MARK_UNSEEN_CHAT_IN_WINDOWS] = True
+	if not SETTING_UNSEEN_MESSAGE_DISPLAY_COLOR in data: data[SETTING_UNSEEN_MESSAGE_DISPLAY_COLOR] = "#FF0000"
+	if not SETTING_APPLICATION_TITLE_FROM_ACTIVE in data: data[SETTING_APPLICATION_TITLE_FROM_ACTIVE] = True
+	if not SETTING_CREATE_PRIVATE_WINDOWS in data: data[SETTING_CREATE_PRIVATE_WINDOWS] = True
+	if not SETTING_FLASH_TASKBAR_PRIVATE in data: data[SETTING_FLASH_TASKBAR_PRIVATE] = True
+	if not SETTING_EXPAND_SERVER_ON_CONNECT in data: data[SETTING_EXPAND_SERVER_ON_CONNECT] = True
+	if not SETTING_CLICKABLE_USERNAMES in data: data[SETTING_CLICKABLE_USERNAMES] = True
+	if not SETTING_DOUBLECLICK_USERNAMES in data: data[SETTING_DOUBLECLICK_USERNAMES] = True
+	if not SETTING_DISPLAY_UPTIME_IN_CONNECTION_DISPLAY in data: data[SETTING_DISPLAY_UPTIME_IN_CONNECTION_DISPLAY] = False
+	if not SETTING_SAVE_JOINED_CHANNELS in data: data[SETTING_SAVE_JOINED_CHANNELS] = False
+	if not SETTING_ALWAYS_ON_TOP in data: data[SETTING_ALWAYS_ON_TOP] = False
+	if not SETTING_DISPLAY_NICK_ON_CHANNEL_WINDOWS in data: data[SETTING_DISPLAY_NICK_ON_CHANNEL_WINDOWS] = True
+	if not SETTING_CLICK_NICK_FOR_NICKCHANGE in data: data[SETTING_CLICK_NICK_FOR_NICKCHANGE] = True
 	if not SETTING_SAVE_HISTORY in data: data[SETTING_SAVE_HISTORY] = True
-	if not SETTING_ASCIIMOJI_AUTOCOMPLETE in data: data[SETTING_ASCIIMOJI_AUTOCOMPLETE] = True
-	if not SETTING_EMOJI_AUTOCOMPLETE in data: data[SETTING_EMOJI_AUTOCOMPLETE] = True
-	if not SETTING_DISPLAY_UPTIME_CONSOLE in data: data[SETTING_DISPLAY_UPTIME_CONSOLE] = True
-	if not SETTING_DISPLAY_UPTIME_CHAT in data: data[SETTING_DISPLAY_UPTIME_CHAT] = False
-	if not SETTING_UPTIME_SECONDS in data: data[SETTING_UPTIME_SECONDS] = True
-	if not SETTING_KEEP_ALIVE in data: data[SETTING_KEEP_ALIVE] = True
-	if not SETTING_DISPLAY_IRC_COLOR in data: data[SETTING_DISPLAY_IRC_COLOR] = True
-	if not SETTING_ENABLE_IGNORE in data: data[SETTING_ENABLE_IGNORE] = True
-	if not SETTING_REJOIN_CHANNELS in data: data[SETTING_REJOIN_CHANNELS] = True
-	if not SETTING_SYSTRAY_NOTIFICATION in data: data[SETTING_SYSTRAY_NOTIFICATION] = True
-	if not SETTING_SHOW_DISABLED_PLUGINS in data: data[SETTING_SHOW_DISABLED_PLUGINS] = False
-	if not SETTING_GET_HOSTMASKS in data: data[SETTING_GET_HOSTMASKS] = True
-	if not SETTING_UNREAD_MESSAGE_COLOR in data: data[SETTING_UNREAD_MESSAGE_COLOR] = "#FF0000"
+	if not SETTING_NOTIFY_FAIL in data: data[SETTING_NOTIFY_FAIL] = True
+	if not SETTING_NOTIFY_LOST in data: data[SETTING_NOTIFY_LOST] = True
+	if not SETTING_SAVE_CHANNEL_LOGS in data: data[SETTING_SAVE_CHANNEL_LOGS] = False
+	if not SETTING_LOAD_CHANNEL_LOGS in data: data[SETTING_LOAD_CHANNEL_LOGS] = False
+	if not SETTING_SAVE_SERVER_LOGS in data: data[SETTING_SAVE_SERVER_LOGS] = False
+	if not SETTING_LOAD_SERVER_LOGS in data: data[SETTING_LOAD_SERVER_LOGS] = False
+	if not SETTING_SAVE_PRIVATE_LOGS in data: data[SETTING_SAVE_PRIVATE_LOGS] = False
+	if not SETTING_LOAD_PRIVATE_LOGS in data: data[SETTING_LOAD_PRIVATE_LOGS] = False
+	if not SETTING_LOAD_LOG_MAX_SIZE in data: data[SETTING_LOAD_LOG_MAX_SIZE] = 500
+	if not SETTING_MARK_END_OF_LOADED_LOGS in data: data[SETTING_MARK_END_OF_LOADED_LOGS] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -384,45 +262,52 @@ def get_settings(filename=SETTINGS_FILE):
 			return data
 	else:
 		si = {
-			SETTING_OPEN_PRIVATE_WINDOWS: True,
-			SETTING_CHAT_STATUS_BARS: True,
-			SETTING_PLAIN_USER_LISTS: False,
-			SETTING_APPLICATION_FONT: "Consolas,10,-1,5,50,0,0,0,0,0,Regular",
-			SETTING_DISPLAY_TIMESTAMPS: True,
-			SETTING_24HOUR_TIMESTAMPS: True,
-			SETTING_DISPLAY_TIMESTAMP_SECONDS: False,
-			SETTING_SAVE_LOGS_ON_EXIT: True,
-			SETTING_LOAD_LOGS_ON_START: True,
-			SETTING_SPELL_CHECK: True,
-			SETTING_SPELL_CHECK_LANGUAGE: "en",
-			SETTING_EMOJI: True,
-			SETTING_ASCIIMOJI: True,
-			SETTING_LOADED_LOG_LENGTH: 300,
-			SETTING_MAX_NICK_LENGTH: 16,
-			SETTING_SET_WINDOW_TITLE_TO_ACTIVE: True,
-			SETTING_WINDOW_WIDTH: 500,
-			SETTING_WINDOW_HEIGHT: 300,
-			SETTING_AUTOCOMPLETE_CMDS: True,
+			SETTING_FONT: "",
+			SETTING_MAX_NICK_SIZE: 16,
+			SETTING_STRIP_HTML: True,
+			SETTING_IRC_COLOR: True,
+			SETTING_LINKS: True,
+			SETTING_TIMESTAMPS: True,
+			SETTING_TIMESTAMP_SECONDS: False,
+			SETTING_TIMESTAMP_24HOUR_CLOCK: True,
+			SETTING_INITIAL_WINDOW_WIDTH: 500,
+			SETTING_INITIAL_WINDOW_HEIGHT: 300,
+			SETTING_FILTER_PROFANITY: False,
+			SETTING_INJECT_EMOJIS: True,
+			SETTING_INJECT_ASCIIMOJIS: True,
 			SETTING_AUTOCOMPLETE_NICKS: True,
-			SETTING_HYPERLINKS: True,
-			SETTING_STRIP_HTML: False,
-			SETTING_PROFANITY_FILTER: False,
-			SETTING_LOG_PRIVATE_CHAT: False,
-			SETTING_HIDE_PRIVATE_CHAT: True,
+			SETTING_AUTOCOMPLETE_EMOJIS: True,
+			SETTING_AUTOCOMPLETE_ASCIIMOJIS: True,
+			SETTING_AUTOCOMPLETE_COMMANDS: True,
+			SETTING_PLAIN_USER_LISTS: False,
+			SETTING_CONNECTION_DISPLAY_LOCATION: "left",
+			SETTING_CONNECTION_DISPLAY_VISIBLE: True,
+			SETTING_SPELLCHECK: True,
+			SETTING_SPELLCHECK_LANGUAGE: "en",
+			SETTING_MARK_UNSEEN_CHAT_IN_WINDOWS: True,
+			SETTING_UNSEEN_MESSAGE_DISPLAY_COLOR: "#FF0000",
+			SETTING_APPLICATION_TITLE_FROM_ACTIVE: True,
+			SETTING_CREATE_PRIVATE_WINDOWS: True,
+			SETTING_FLASH_TASKBAR_PRIVATE: True,
+			SETTING_EXPAND_SERVER_ON_CONNECT: True,
+			SETTING_CLICKABLE_USERNAMES: True,
+			SETTING_DOUBLECLICK_USERNAMES: True,
+			SETTING_DISPLAY_UPTIME_IN_CONNECTION_DISPLAY: False,
+			SETTING_SAVE_JOINED_CHANNELS: False,
+			SETTING_ALWAYS_ON_TOP: False,
+			SETTING_DISPLAY_NICK_ON_CHANNEL_WINDOWS: True,
+			SETTING_CLICK_NICK_FOR_NICKCHANGE: True,
 			SETTING_SAVE_HISTORY: True,
-			SETTING_ASCIIMOJI_AUTOCOMPLETE: True,
-			SETTING_EMOJI_AUTOCOMPLETE: True,
-			SETTING_DISPLAY_UPTIME_CONSOLE: True,
-			SETTING_DISPLAY_UPTIME_CHAT: False,
-			SETTING_UPTIME_SECONDS: True,
-			SETTING_KEEP_ALIVE: True,
-			SETTING_DISPLAY_IRC_COLOR: True,
-			SETTING_ENABLE_IGNORE: True,
-			SETTING_REJOIN_CHANNELS: True,
-			SETTING_SYSTRAY_NOTIFICATION: True,
-			SETTING_SHOW_DISABLED_PLUGINS: False,
-			SETTING_GET_HOSTMASKS: True,
-			SETTING_UNREAD_MESSAGE_COLOR: "#FF0000",
+			SETTING_NOTIFY_LOST: True,
+			SETTING_NOTIFY_FAIL: True,
+			SETTING_SAVE_CHANNEL_LOGS: False,
+			SETTING_LOAD_CHANNEL_LOGS: False,
+			SETTING_SAVE_SERVER_LOGS: False,
+			SETTING_LOAD_SERVER_LOGS: False,
+			SETTING_SAVE_PRIVATE_LOGS: False,
+			SETTING_LOAD_PRIVATE_LOGS: False,
+			SETTING_LOAD_LOG_MAX_SIZE: 500,
+			SETTING_MARK_END_OF_LOADED_LOGS: True,
 		}
 		save_settings(si)
 		return si
@@ -430,6 +315,12 @@ def get_settings(filename=SETTINGS_FILE):
 def save_settings(settings,filename=SETTINGS_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(settings, write_data, indent=4, sort_keys=True)
+
+def is_in_network_list(host,port,filename=NETWORK_FILE):
+	for e in get_network_list(filename):
+		if e[0]==host:
+			if e[1]==str(port): return True
+	return False
 
 def get_network_list(filename=NETWORK_FILE):
 	servlist = []
@@ -443,100 +334,20 @@ def get_network_list(filename=NETWORK_FILE):
 			line = fp.readline()
 	return servlist
 
-def get_visited(filename=VISITED_FILE):
-	if os.path.isfile(filename):
-		with open(filename, "r") as read_history:
-			data = json.load(read_history)
-			return data
-	else:
-		return []
-
-def add_to_visited(server,timestamp,filename=VISITED_FILE):
-	l = get_visited(filename)
-	found = False
-	for s in l:
-		if s[0]==server: 
-			s[1] = timestamp
-			found = True
-	if found:
-		with open(filename, "w") as write_data:
-			json.dump(l, write_data, indent=4, sort_keys=True)
-		return
-	l.append( [server,timestamp] )
-	with open(filename, "w") as write_data:
-		json.dump(l, write_data, indent=4, sort_keys=True)
-
-
-def get_history_list(filename=HISTORY_FILE):
-	history_list = []
-	h = get_history()
-	for entry in h:
-		if entry["ssl"]:
-			s = 'ssl'
-		else:
-			s = 'normal'
-		e = [ entry["server"],entry["port"],entry["network"],s,entry["password"] ]
-		history_list.append(e)
-	return history_list
-
-def get_history(filename=HISTORY_FILE):
-	if os.path.isfile(filename):
-		with open(filename, "r") as read_history:
-			data = json.load(read_history)
-			return data
-	else:
-		return []
-
-def update_history_network(server,port,network,filename=HISTORY_FILE):
-	h = get_history()
-	new_history = []
-	found = False
-	for entry in h:
-		if entry["server"].lower()==server.lower():
-			if entry["port"]==port:
-				if entry["network"] == UNKNOWN_IRC_NETWORK:
-					found = True
-					entry["network"] = network
-		new_history.append(entry)
-	if found:
-		with open(filename, "w") as write_data:
-			json.dump(new_history, write_data, indent=4, sort_keys=True)
-			return
-
-def add_history(server,port,password,ssl,network,filename=HISTORY_FILE):
-	# Make sure this isn't an entry in the network list
-	for p in get_network_list():
-		if len(p)>5: continue
-		if len(p)<4: continue
-		if p[0]==server:
-			if p[1]==str(port):
-				return
-	if not password: password = ''
-	h = get_history()
-	new_history = []
-	found = False
-	for entry in h:
-		if entry["server"].lower()==server.lower():
-			if entry["port"]==port:
-				found = True
-				entry["password"] = password
-				entry["ssl"] = ssl
-		new_history.append(entry)
-	if found:
-		with open(filename, "w") as write_data:
-			json.dump(new_history, write_data, indent=4, sort_keys=True)
-			return
-	entry = {
-		"server": server,
-		"port": port,
-		"password": password,
-		"ssl": ssl,
-		"network": network,
-	}
-	new_history.insert(0,entry)
-	with open(filename, "w") as write_data:
-		json.dump(new_history, write_data, indent=4, sort_keys=True)
-
+def update_user_history_network(host,port,network,filename=USER_FILE):
+	u = get_user(filename)
+	history = u["history"]
+	edited = []
+	for entry in history:
+		if entry[0]==host:
+			if entry[1]==str(port):
+				if entry[2]=="Unknown":
+					entry[2] = network
+				else:
+					return
+		edited.append(entry)
+	u["history"] = edited
+	save_user(u,filename)
 
 def get_user(filename=USER_FILE):
 	if os.path.isfile(filename):
@@ -549,6 +360,15 @@ def get_user(filename=USER_FILE):
 			"username": DEFAULT_USERNAME,
 			"realname": DEFAULT_IRCNAME,
 			"alternate": DEFAULT_ALTERNATIVE,
+			"last_server": '',
+			"last_port": "6667",
+			"last_password": '',
+			"channels": [],
+			"ssl": False,
+			"reconnect": False,
+			"autojoin": False,
+			"visited": [],
+			"history": [],
 		}
 		return si
 
@@ -557,220 +377,34 @@ def save_user(user,filename=USER_FILE):
 		json.dump(user, write_data, indent=4, sort_keys=True)
 
 
-def encode_channel_options_filename(network,channel):
-	channel = channel.replace('#','')
-	return os.path.join(USER_DIRECTORY, network+"-"+channel+"-options.json")
+USERNAME_STYLE_NAME		= "username"
+MESSAGE_STYLE_NAME		= "message"
+SYSTEM_STYLE_NAME		= "system"
+SELF_STYLE_NAME			= "self"
+ACTION_STYLE_NAME		= "action"
+NOTICE_STYLE_NAME		= "notice"
+HYPERLINK_STYLE_NAME	= "hyperlink"
+BASE_STYLE_NAME			= "all"
+ERROR_STYLE_NAME		= "error"
+TIMESTAMP_STYLE_NAME	= "timestamp"
+MOTD_STYLE_NAME			= "motd"
 
-def get_channel_options(network,channel):
-	chanfile = encode_channel_options_filename(network,channel)
-	if os.path.isfile(chanfile):
-		with open(chanfile, "r") as read_user:
-			data = json.load(read_user)
-			return data
-	else:
-		si = {
-			"ignore_part": False,
-			"ignore_join": False,
-			"ignore_nick": False,
-			"ignore_topic": False,
-			"ignore_quit": False,
-			"ignore_kick": False,
-			"open_links_in_erk": False,
-		}
-		return si
-
-def save_channel_options(network,channel,data):
-	chanfile = encode_channel_options_filename(network,channel)
-	with open(chanfile, "w") as write_data:
-		json.dump(data, write_data, indent=4, sort_keys=True)
-
-
-
-
-def save_last_server(host,port,password,ssl,reconnect=False,autojoin=False):
-	sinfo = {
-			"host": host,
-			"port": port,
-			"password": password,
-			"ssl": ssl,
-			"reconnect": reconnect,
-			"autojoin": autojoin
-		}
-	with open(LAST_SERVER_INFORMATION_FILE, "w") as write_data:
-		json.dump(sinfo, write_data, indent=4, sort_keys=True)
-
-def get_last_server():
-	if os.path.isfile(LAST_SERVER_INFORMATION_FILE):
-		with open(LAST_SERVER_INFORMATION_FILE, "r") as read_server:
-			data = json.load(read_server)
-			return data
-	else:
-		si = {
-			"host": '',
-			"port": '',
-			"password": '',
-			"ssl": False,
-			"reconnect": False,
-			"autojoin": False
-		}
-		return si
-
-# Text display
-
-NOTICE_TEXT_STYLE = "font-style: italic; color: purple;"
-TIMESTAMP_STYLE = "font-weight: bold;"
 USERNAME_STYLE = "font-weight: bold; color: blue;"
 MESSAGE_STYLE = ""
 SYSTEM_STYLE = "font-style: italic; font-weight: bold; color: orange;"
 SELF_STYLE = "font-weight: bold; color: red;"
 ACTION_STYLE = "font-style: italic; font-weight: bold; color: green;"
 NOTICE_STYLE = "font-weight: bold; color: purple;"
-RESUME_STYLE = "font-weight: bold; font-style: italic; color: #707070;"
 HYPERLINK_STYLE = "text-decoration: underline; font-weight: bold; color: blue;"
 BASE_STYLE = 'background-color: white; color: black;'
 ERROR_STYLE = "font-style: italic; font-weight: bold; color: red;"
-WHOIS_STYLE = "font-style: italic; font-weight: bold; color: blue;"
-WHOIS_TEXT_STYLE = "font-weight: bold;"
+TIMESTAMP_STYLE = "font-weight: bold;"
+MOTD_STYLE = "font-weight: bold; color: blue;"
 
-TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;"><div style="!TIMESTAMP_STYLE!">[!TIME!]</div></td><td style="font-size:small;">&nbsp;</td>"""
-
-MESSAGE_TEMPLATE = f"""
-<table style="width: 100%;" border="0">
-	<tbody>
-	<tr>!TIMESTAMP!
-		<td style="text-align: right; vertical-align: top;"><div style="!ID_STYLE!">!ID!</div></td>
-		<td style="text-align: left; vertical-align: top;">&nbsp;</td>
-		!INSERT_MESSAGE_TEMPLATE!
-	</tr>
-	</tbody>
-</table>
-"""
-
-SYSTEM_TEMPLATE = f"""
-<table style="width: 100%;" border="0">
-	<tbody>
-	<tr>!TIMESTAMP!
-		!INSERT_MESSAGE_TEMPLATE!
-	</tr>
-	</tbody>
-</table>
-"""
-
-MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><div style="!MESSAGE_STYLE!">!MESSAGE!</div></td>"""
-MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
-
-def render_system(gui,timestamp_style,message_style,message,timestamp=None):
-
-	if gui.filter_profanity: message = filterProfanityFromText(message)
-
-	if gui.strip_html_from_chat: message = remove_html_markup(message)
-	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles[HYPERLINK_STYLE_NAME])
-
-	if gui.display_timestamp:
-		if timestamp==None:
-			t = datetime.timestamp(datetime.now())
-		else:
-			t = timestamp
-		if gui.use_seconds_in_timestamp:
-			secs = ':%S'
-		else:
-			secs = ''
-		if gui.use_24_hour_timestamp:
-			pretty = datetime.fromtimestamp(t).strftime('%H:%M' + secs)
-		else:
-			pretty = datetime.fromtimestamp(t).strftime('%I:%M' + secs)
-
-		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",timestamp_style)
-		ts = ts.replace("!TIME!",pretty)
-		msg = SYSTEM_TEMPLATE.replace("!TIMESTAMP!",ts)
-	else:
-		msg = SYSTEM_TEMPLATE.replace("!TIMESTAMP!",'')
-
-	if message_style=="":
-		msg = msg.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
-	else:
-		msg = msg.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_STYLE_TEMPLATE)
-		msg = msg.replace("!MESSAGE_STYLE!",message_style)
-
-	msg = msg.replace("!MESSAGE!",message)
-	return msg
-
-def render_message(gui,timestamp_style,ident_style,ident,message_style,message,timestamp=None):
-
-	if gui.filter_profanity: message = filterProfanityFromText(message)
-
-	if gui.strip_html_from_chat: message = remove_html_markup(message)
-	if gui.convert_links_in_chat: message = inject_www_links(message,gui.styles[HYPERLINK_STYLE_NAME])
-
-	if gui.display_irc_colors:
-		if string_has_irc_formatting_codes(message):
-			# render colors
-			message = convert_irc_color_to_html(message)
-	else:
-		# strip colors
-		message = strip_color(message)
-
-	if gui.display_timestamp:
-		if timestamp==None:
-			t = datetime.timestamp(datetime.now())
-		else:
-			t = timestamp
-		if gui.use_seconds_in_timestamp:
-			secs = ':%S'
-		else:
-			secs = ''
-		if gui.use_24_hour_timestamp:
-			pretty = datetime.fromtimestamp(t).strftime('%H:%M' + secs)
-		else:
-			pretty = datetime.fromtimestamp(t).strftime('%I:%M' + secs)
-
-		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",timestamp_style)
-		ts = ts.replace("!TIME!",pretty)
-		msg = MESSAGE_TEMPLATE.replace("!TIMESTAMP!",ts)
-	else:
-		msg = MESSAGE_TEMPLATE.replace("!TIMESTAMP!",'')
-
-	idl = gui.max_username_length - len(ident)
-	if idl>0:
-		ident = ('&nbsp;'*idl)+ident
-
-	msg = msg.replace("!ID_STYLE!",ident_style)
-	msg = msg.replace("!ID!",ident)
-
-	if message_style=="":
-		msg = msg.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
-	else:
-		msg = msg.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_STYLE_TEMPLATE)
-		msg = msg.replace("!MESSAGE_STYLE!",message_style)
-
-	msg = msg.replace("!MESSAGE!",message)
-	return msg
-
-def patch_text_settings(data):
-	s = len(data)
-	if not NOTICE_STYLE_NAME in data: data[NOTICE_STYLE_NAME] = NOTICE_STYLE
-	if not USERNAME_STYLE_NAME in data: data[USERNAME_STYLE_NAME] = USERNAME_STYLE
-	if not MESSAGE_STYLE_NAME in data: data[MESSAGE_STYLE_NAME] = MESSAGE_STYLE
-	if not SYSTEM_STYLE_NAME in data: data[SYSTEM_STYLE_NAME] = SYSTEM_STYLE
-	if not SELF_STYLE_NAME in data: data[SELF_STYLE_NAME] = SELF_STYLE
-	if not ACTION_STYLE_NAME in data: data[ACTION_STYLE_NAME] = ACTION_STYLE
-	if not TIMESTAMP_STYLE_NAME in data: data[TIMESTAMP_STYLE_NAME] = TIMESTAMP_STYLE
-	if not RESUME_STYLE_NAME in data: data[RESUME_STYLE_NAME] = RESUME_STYLE
-	if not HYPERLINK_STYLE_NAME in data: data[HYPERLINK_STYLE_NAME] = HYPERLINK_STYLE
-	if not BASE_STYLE_NAME in data: data[BASE_STYLE_NAME] = BASE_STYLE
-	if not ERROR_STYLE_NAME in data: data[ERROR_STYLE_NAME] = ERROR_STYLE
-	if not WHOIS_STYLE_NAME in data: data[WHOIS_STYLE_NAME] = WHOIS_STYLE
-	if not WHOIS_TEXT_STYLE_NAME in data: data[WHOIS_TEXT_STYLE_NAME] = WHOIS_TEXT_STYLE
-	if not NOTICE_TEXT_STYLE_NAME in data: data[NOTICE_TEXT_STYLE_NAME] = NOTICE_TEXT_STYLE
-	if len(data)>s:
-		return [True,data]
-	else:
-		return [False,data]
-
-def get_text_settings(filename=TEXT_SETTINGS_FILE):
+def get_text_format_settings(filename=TEXT_FORMAT_FILE):
 	if os.path.isfile(filename):
 		data = read_style_file(filename)
-		patched,data = patch_text_settings(data)
+		patched,data = patch_text_format_settings(data)
 		if patched: write_style_file(data,filename)
 		return data
 	else:
@@ -782,298 +416,33 @@ def get_text_settings(filename=TEXT_SETTINGS_FILE):
 			SELF_STYLE_NAME: SELF_STYLE,
 			ACTION_STYLE_NAME: ACTION_STYLE,
 			NOTICE_STYLE_NAME: NOTICE_STYLE,
-			RESUME_STYLE_NAME: RESUME_STYLE,
 			HYPERLINK_STYLE_NAME: HYPERLINK_STYLE,
 			BASE_STYLE_NAME: BASE_STYLE,
 			ERROR_STYLE_NAME: ERROR_STYLE,
-			WHOIS_STYLE_NAME: WHOIS_STYLE,
-			WHOIS_TEXT_STYLE_NAME: WHOIS_TEXT_STYLE,
-			NOTICE_TEXT_STYLE_NAME: NOTICE_TEXT_STYLE,
+			MOTD_STYLE_NAME: MOTD_STYLE,
 		}
 		write_style_file(si,filename)
 		return si
 
-def remove_html_markup(s):
-	tag = False
-	quote = False
-	out = ""
+def patch_text_format_settings(data):
+	s = len(data)
+	if not NOTICE_STYLE_NAME in data: data[NOTICE_STYLE_NAME] = NOTICE_STYLE
+	if not USERNAME_STYLE_NAME in data: data[USERNAME_STYLE_NAME] = USERNAME_STYLE
+	if not MESSAGE_STYLE_NAME in data: data[MESSAGE_STYLE_NAME] = MESSAGE_STYLE
+	if not SYSTEM_STYLE_NAME in data: data[SYSTEM_STYLE_NAME] = SYSTEM_STYLE
+	if not SELF_STYLE_NAME in data: data[SELF_STYLE_NAME] = SELF_STYLE
+	if not ACTION_STYLE_NAME in data: data[ACTION_STYLE_NAME] = ACTION_STYLE
+	if not TIMESTAMP_STYLE_NAME in data: data[TIMESTAMP_STYLE_NAME] = TIMESTAMP_STYLE
+	if not HYPERLINK_STYLE_NAME in data: data[HYPERLINK_STYLE_NAME] = HYPERLINK_STYLE
+	if not BASE_STYLE_NAME in data: data[BASE_STYLE_NAME] = BASE_STYLE
+	if not ERROR_STYLE_NAME in data: data[ERROR_STYLE_NAME] = ERROR_STYLE
+	if not MOTD_STYLE_NAME in data: data[MOTD_STYLE_NAME] = MOTD_STYLE
+	if len(data)>s:
+		return [True,data]
+	else:
+		return [False,data]
 
-	for c in s:
-			if c == '<' and not quote:
-				tag = True
-			elif c == '>' and not quote:
-				tag = False
-			elif (c == '"' or c == "'") and tag:
-				quote = not quote
-			elif not tag:
-				out = out + c
-
-	return out
-
-def inject_www_links(txt,style):
-	urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', txt)
-	for u in urls:
-		u = re.sub('<[^<]+?>', '', u)
-		link = f"<a href=\"{u}\"><span style=\"{style}\">{u}</span></a>"
-		txt = txt.replace(u,link)
-	return txt
-
-def string_has_irc_formatting_codes(data):
-	for code in ["\x03","\x02","\x1D","\x1F","\x0F"]:
-		if code in data: return True
-	return False
-
-def convert_irc_color_to_html(text):
-
-	html_tag = "font"
-
-	# other format tags
-	fout = ''
-	inbold = False
-	initalic = False
-	inunderline = False
-	incolor = False
-	for l in text:
-		if l=="\x02":
-			inbold = True
-			fout = fout + "<b>"
-			continue
-		if l=="\x1D":
-			initalic = True
-			fout = fout + "<i>"
-			continue
-		if l=="\x1F":
-			inunderline = True
-			fout = fout + "<u>"
-			continue
-		if l=="\x03":
-			incolor = True
-			fout = fout + l
-			continue
-
-		if l=="\x0F":
-			if incolor:
-				incolor = False
-				fout = fout + f"</{html_tag}>"
-				continue
-			if inbold:
-				fout = fout + "</b>"
-				inbold = False
-				continue
-			if initalic:
-				fout = fout + "</i>"
-				initalic = False
-				continue
-			if inunderline:
-				fout = fout + "</u>"
-				inunderline = False
-				continue
-
-		fout = fout + l
-
-	if inbold: fout = fout + "</b>"
-	if initalic: fout = fout + "</i>"
-	if inunderline: fout = fout + "</u>"
-
-	text = fout
-
-	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
-	for c in combos:
-		fore = c[0]
-		back = c[1]
-
-		if int(fore)==0: foreground = str(IRC_00)
-		if int(fore)==1: foreground = str(IRC_01)
-		if int(fore)==2: foreground = str(IRC_02)
-		if int(fore)==3: foreground = str(IRC_03)
-		if int(fore)==4: foreground = str(IRC_04)
-		if int(fore)==5: foreground = str(IRC_05)
-		if int(fore)==6: foreground = str(IRC_06)
-		if int(fore)==7: foreground = str(IRC_07)
-		if int(fore)==8: foreground = str(IRC_08)
-		if int(fore)==9: foreground = str(IRC_09)
-		if int(fore)==10: foreground = str(IRC_10)
-		if int(fore)==11: foreground = str(IRC_11)
-		if int(fore)==12: foreground = str(IRC_12)
-		if int(fore)==13: foreground = str(IRC_13)
-		if int(fore)==14: foreground = str(IRC_14)
-		if int(fore)==15: foreground = str(IRC_15)
-
-		if int(back)==0: background = str(IRC_00)
-		if int(back)==1: background = str(IRC_01)
-		if int(back)==2: background = str(IRC_02)
-		if int(back)==3: background = str(IRC_03)
-		if int(back)==4: background = str(IRC_04)
-		if int(back)==5: background = str(IRC_05)
-		if int(back)==6: background = str(IRC_06)
-		if int(back)==7: background = str(IRC_07)
-		if int(back)==8: background = str(IRC_08)
-		if int(back)==9: background = str(IRC_09)
-		if int(back)==10: background = str(IRC_10)
-		if int(back)==11: background = str(IRC_11)
-		if int(back)==12: background = str(IRC_12)
-		if int(back)==13: background = str(IRC_13)
-		if int(back)==14: background = str(IRC_14)
-		if int(back)==15: background = str(IRC_15)
-
-		t = f"\x03{fore},{back}"
-		r = f"<{html_tag} style=\"color: {foreground}; background-color: {background}\">"
-		text = text.replace(t,r)
-
-	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
-	for c in combos:
-		fore = c[0]
-		back = c[1]
-
-		if int(fore)==0: foreground = str(IRC_00)
-		if int(fore)==1: foreground = str(IRC_01)
-		if int(fore)==2: foreground = str(IRC_02)
-		if int(fore)==3: foreground = str(IRC_03)
-		if int(fore)==4: foreground = str(IRC_04)
-		if int(fore)==5: foreground = str(IRC_05)
-		if int(fore)==6: foreground = str(IRC_06)
-		if int(fore)==7: foreground = str(IRC_07)
-		if int(fore)==8: foreground = str(IRC_08)
-		if int(fore)==9: foreground = str(IRC_09)
-		if int(fore)==10: foreground = str(IRC_10)
-		if int(fore)==11: foreground = str(IRC_11)
-		if int(fore)==12: foreground = str(IRC_12)
-		if int(fore)==13: foreground = str(IRC_13)
-		if int(fore)==14: foreground = str(IRC_14)
-		if int(fore)==15: foreground = str(IRC_15)
-
-		if int(back)==0: background = str(IRC_00)
-		if int(back)==1: background = str(IRC_01)
-		if int(back)==2: background = str(IRC_02)
-		if int(back)==3: background = str(IRC_03)
-		if int(back)==4: background = str(IRC_04)
-		if int(back)==5: background = str(IRC_05)
-		if int(back)==6: background = str(IRC_06)
-		if int(back)==7: background = str(IRC_07)
-		if int(back)==8: background = str(IRC_08)
-		if int(back)==9: background = str(IRC_09)
-		if int(back)==10: background = str(IRC_10)
-		if int(back)==11: background = str(IRC_11)
-		if int(back)==12: background = str(IRC_12)
-		if int(back)==13: background = str(IRC_13)
-		if int(back)==14: background = str(IRC_14)
-		if int(back)==15: background = str(IRC_15)
-
-		t = f"\x03{fore},{back}"
-		r = f"<{html_tag} style=\"color: {foreground}; background-color: {background}\">"
-		text = text.replace(t,r)
-
-	text = text.replace("\x0310",f"<{html_tag} style=\"color: {IRC_10};\">")
-	text = text.replace("\x0311",f"<{html_tag} style=\"color: {IRC_11};\">")
-	text = text.replace("\x0312",f"<{html_tag} style=\"color: {IRC_12};\">")
-	text = text.replace("\x0313",f"<{html_tag} style=\"color: {IRC_13};\">")
-	text = text.replace("\x0314",f"<{html_tag} style=\"color: {IRC_14};\">")
-	text = text.replace("\x0315",f"<{html_tag} style=\"color: {IRC_15};\">")
-
-	text = text.replace("\x0300",f"<{html_tag} style=\"color: {IRC_00};\">")
-	text = text.replace("\x0301",f"<{html_tag} style=\"color: {IRC_01};\">")
-	text = text.replace("\x0302",f"<{html_tag} style=\"color: {IRC_02};\">")
-	text = text.replace("\x0303",f"<{html_tag} style=\"color: {IRC_03};\">")
-	text = text.replace("\x0304",f"<{html_tag} style=\"color: {IRC_04};\">")
-	text = text.replace("\x0305",f"<{html_tag} style=\"color: {IRC_05};\">")
-	text = text.replace("\x0306",f"<{html_tag} style=\"color: {IRC_06};\">")
-	text = text.replace("\x0307",f"<{html_tag} style=\"color: {IRC_07};\">")
-	text = text.replace("\x0308",f"<{html_tag} style=\"color: {IRC_08};\">")
-	text = text.replace("\x0309",f"<{html_tag} style=\"color: {IRC_09};\">")
-
-	text = text.replace("\x030",f"<{html_tag} style=\"color: {IRC_00};\">")
-	text = text.replace("\x031",f"<{html_tag} style=\"color: {IRC_01};\">")
-	text = text.replace("\x032",f"<{html_tag} style=\"color: {IRC_02};\">")
-	text = text.replace("\x033",f"<{html_tag} style=\"color: {IRC_03};\">")
-	text = text.replace("\x034",f"<{html_tag} style=\"color: {IRC_04};\">")
-	text = text.replace("\x035",f"<{html_tag} style=\"color: {IRC_05};\">")
-	text = text.replace("\x036",f"<{html_tag} style=\"color: {IRC_06};\">")
-	text = text.replace("\x037",f"<{html_tag} style=\"color: {IRC_07};\">")
-	text = text.replace("\x038",f"<{html_tag} style=\"color: {IRC_08};\">")
-	text = text.replace("\x039",f"<{html_tag} style=\"color: {IRC_09};\">")
-
-	text = text.replace("\x03",f"</{html_tag}>")
-
-	# close font tags
-	if f"<{html_tag} style=" in text:
-		if not f"</{html_tag}>" in text: text = text + f"</{html_tag}>"
-
-	out = []
-	indiv = False
-	for w in text.split(' '):
-
-		if indiv:
-			if w==f"<{html_tag}":
-				out.append(f"</{html_tag}>")
-
-		if w==f"<{html_tag}": indiv = True
-		if w==f"</{html_tag}>": indiv = False
-
-		out.append(w)
-
-	text = ' '.join(out)
-
-	return text
-
-def strip_color(text):
-
-	html_tag = "font"
-
-	combos = list(combinations(["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],2))
-	for c in combos:
-		fore = c[0]
-		back = c[1]
-
-		t = f"\x03{fore},{back}"
-		text = text.replace(t,'')
-
-	combos = list(combinations(["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"],2))
-	for c in combos:
-		fore = c[0]
-		back = c[1]
-
-		t = f"\x03{fore},{back}"
-		text = text.replace(t,'')
-
-	text = text.replace("\x0310","")
-	text = text.replace("\x0311","")
-	text = text.replace("\x0312","")
-	text = text.replace("\x0313","")
-	text = text.replace("\x0314","")
-	text = text.replace("\x0315","")
-
-	text = text.replace("\x0300","")
-	text = text.replace("\x0301","")
-	text = text.replace("\x0302","")
-	text = text.replace("\x0303","")
-	text = text.replace("\x0304","")
-	text = text.replace("\x0305","")
-	text = text.replace("\x0306","")
-	text = text.replace("\x0307","")
-	text = text.replace("\x0308","")
-	text = text.replace("\x0309","")
-
-	text = text.replace("\x030","")
-	text = text.replace("\x031","")
-	text = text.replace("\x032","")
-	text = text.replace("\x033","")
-	text = text.replace("\x034","")
-	text = text.replace("\x035","")
-	text = text.replace("\x036","")
-	text = text.replace("\x037","")
-	text = text.replace("\x038","")
-	text = text.replace("\x039","")
-
-	text = text.replace("\x03","")
-
-	text = text.replace("\x02","")
-	text = text.replace("\x1D","")
-	text = text.replace("\x1F","")
-	text = text.replace("\x0F","")
-
-	return text
-
-def write_style_file(style,filename):
+def write_style_file(style,filename=TEXT_FORMAT_FILE):
 	output = "/*\n\tThis file uses a sub-set of CSS used by Qt called \"QSS\"\n\thttps://doc.qt.io/qt-5/stylesheet-syntax.html\n*/\n\n"
 
 	for key in style:
@@ -1088,7 +457,7 @@ def write_style_file(style,filename):
 	f.write(output)
 	f.close()
 
-def read_style_file(filename):
+def read_style_file(filename=TEXT_FORMAT_FILE):
 
 	# Read in the file
 	f=open(filename, "r")

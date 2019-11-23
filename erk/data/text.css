@@ -1,0 +1,61 @@
+/*
+	This file uses a sub-set of CSS used by Qt called "QSS"
+	https://doc.qt.io/qt-5/stylesheet-syntax.html
+*/
+
+timestamp {
+	font-weight: bold;
+}
+
+username {
+	font-weight: bold;
+	color: blue;
+}
+
+message {
+}
+
+system {
+	font-style: italic;
+	font-weight: bold;
+	color: orange;
+}
+
+self {
+	font-weight: bold;
+	color: red;
+}
+
+action {
+	font-style: italic;
+	font-weight: bold;
+	color: green;
+}
+
+notice {
+	font-weight: bold;
+	color: purple;
+}
+
+hyperlink {
+	text-decoration: underline;
+	font-weight: bold;
+	color: blue;
+}
+
+all {
+	background-color: white;
+	color: black;
+}
+
+error {
+	font-style: italic;
+	font-weight: bold;
+	color: red;
+}
+
+motd {
+	font-weight: bold;
+	color: blue;
+}
+
