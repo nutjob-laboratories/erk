@@ -32,7 +32,6 @@
 * Optional server connection history
 * A built-in list of over 80 IRC servers to connect to
 * Many command-line options to control **Erk**'s start up
-	* Edit default user information from the command-line
 	* Set a server to connect to on startup
 	* Connect with an [IRC URL](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
 		* To connect to a server: `irc://hostname:port`
