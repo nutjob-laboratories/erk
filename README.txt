@@ -1,6 +1,6 @@
 
 <p align="center">
-	<img src="https://github.com/nutjob-laboratories/erk/raw/master/downloads/images/logo_200x200.png"><br>
+	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk !_VERSION_!</b></a>
 </p>
 
