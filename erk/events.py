@@ -133,6 +133,8 @@ def rerenderAllText():
 		w.rerenderText()
 	for w in PRIVATE_WINDOWS:
 		w.rerenderText()
+	for w in IO_WINDOWS:
+		w.rerender()
 
 def rerenderAllText_New_Font(gui):
 	gui.app.setFont(gui.font)

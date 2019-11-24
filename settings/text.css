@@ -17,8 +17,8 @@ message {
 
 system {
 	font-style: italic;
-	color: orange;
 	font-weight: bold;
+	color: orange;
 }
 
 self {

@@ -7,6 +7,7 @@ Version 0.600
 	* The client can now send (and display) special characters associated with HTML (like < and >)
 	* Added a network traffic display
 	* Added an option to show network traffic from connection on
+	* Fixed net traffic display to follow text format style changes
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

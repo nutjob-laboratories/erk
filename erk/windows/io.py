@@ -34,6 +34,26 @@ class Window(QMainWindow):
 		self.hide()
 		event.ignore()
 
+	def reapplyStyles(self):
+
+		self.ircLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
+
+		BASE_COLOR = self.ircLineDisplay.palette().color(QPalette.Base).name()
+
+		text_color = get_style_attribute(self.gui.styles[BASE_STYLE_NAME],"color")
+		if not text_color: text_color = "#000000"
+		user_display_qss='''
+			QListView::item {
+				color: !TEXT_COLOR!;
+				background-color: !BASE_COLOR!;
+			}
+		'''
+		user_display_qss = user_display_qss.replace('!TEXT_COLOR!',text_color)
+		user_display_qss = user_display_qss.replace('!BASE_COLOR!',BASE_COLOR)
+		user_display_qss = user_display_qss + self.gui.styles[BASE_STYLE_NAME]
+
+		self.ircLineDisplay.setStyleSheet(user_display_qss)
+
 	def __init__(self,name,window_margin,subwindow,client,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -59,6 +79,22 @@ class Window(QMainWindow):
 		self.ircLineDisplay = QListWidget(self)
 		self.ircLineDisplay.setObjectName("ircLineDisplay")
 		self.ircLineDisplay.setStyleSheet(self.gui.styles[BASE_STYLE_NAME])
+
+		BASE_COLOR = self.ircLineDisplay.palette().color(QPalette.Base).name()
+
+		text_color = get_style_attribute(self.gui.styles[BASE_STYLE_NAME],"color")
+		if not text_color: text_color = "#000000"
+		user_display_qss='''
+			QListView::item {
+				color: !TEXT_COLOR!;
+				background-color: !BASE_COLOR!;
+			}
+		'''
+		user_display_qss = user_display_qss.replace('!TEXT_COLOR!',text_color)
+		user_display_qss = user_display_qss.replace('!BASE_COLOR!',BASE_COLOR)
+		user_display_qss = user_display_qss + self.gui.styles[BASE_STYLE_NAME]
+
+		self.ircLineDisplay.setStyleSheet(user_display_qss)
 
 		#self.ircLineDisplay.setIconSize(QSize(15, 15))
 		self.ircLineDisplay.setWordWrap(True)
@@ -121,6 +157,7 @@ class Window(QMainWindow):
 		self.ircLineDisplay.clear()
 
 	def rerender(self):
+		self.reapplyStyles()
 		self.ircLineDisplay.clear()
 
 		for e in self.log:
@@ -137,15 +174,11 @@ class Window(QMainWindow):
 			f.setBold(False)
 			
 			if not is_input:
-				ui.setBackground(QColor("#E7E7E7"))
 				ui.setIcon(QIcon(OUTPUT_ICON))
 			else:
-				ui.setBackground(QColor("#FFFFFF"))
 				ui.setFont(f)
 				ui.setIcon(QIcon(INPUT_ICON))
-				#prefix = pretty +' -> '
 
-			# ui.setTextAlignment(Qt.AlignLeft | Qt.AlignTop)
 			ui.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
 			if self.show_timestamp:
@@ -157,8 +190,6 @@ class Window(QMainWindow):
 			self.ircLineDisplay.addItem(ui)
 
 		self.ircLineDisplay.scrollToBottom()
-
-
 
 	def writeLine(self,line,is_input=True):
 
@@ -177,15 +208,11 @@ class Window(QMainWindow):
 		f.setBold(False)
 		
 		if not is_input:
-			ui.setBackground(QColor("#E7E7E7"))
 			ui.setIcon(QIcon(OUTPUT_ICON))
 		else:
-			ui.setBackground(QColor("#FFFFFF"))
 			ui.setFont(f)
 			ui.setIcon(QIcon(INPUT_ICON))
-			#prefix = pretty +' -> '
 
-		# ui.setTextAlignment(Qt.AlignLeft | Qt.AlignTop)
 		ui.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
 		if self.show_timestamp:
@@ -193,7 +220,6 @@ class Window(QMainWindow):
 			ui.setText("["+pretty+"] "+line)
 		else:
 			ui.setText(line)
-
 		
 		self.ircLineDisplay.addItem(ui)
 
