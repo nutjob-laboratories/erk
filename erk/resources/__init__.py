@@ -91,3 +91,5 @@ NETWORKING_ICON = ":/menu-networking.png"
 INPUT_ICON = ":/gui-input.png"
 OUTPUT_ICON = ":/gui-output.png"
 IO_ICON = ":/gui-io.png"
+
+CLEAR_ICON = ":/menu-clear.png"

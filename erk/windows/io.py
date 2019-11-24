@@ -44,6 +44,12 @@ class Window(QMainWindow):
 
 		self.do_actual_close = False
 
+		self.log = []
+
+		self.show_timestamp = True
+		self.show_input = True
+		self.show_output = True
+
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(IO_ICON))
 
@@ -66,17 +72,101 @@ class Window(QMainWindow):
 
 		self.menubar = self.menuBar()
 
-		ioClear = QAction("Clear",self)
+		options = self.menubar.addMenu("Options")
+
+		entry = QAction("Show timestamps",self,checkable=True)
+		entry.setChecked(self.show_timestamp)
+		entry.triggered.connect(lambda state,s="timestamp": self.change_setting(s))
+		options.addAction(entry)
+
+		entry = QAction("Show input",self,checkable=True)
+		entry.setChecked(self.show_input)
+		entry.triggered.connect(lambda state,s="input": self.change_setting(s))
+		options.addAction(entry)
+
+		entry = QAction("Show output",self,checkable=True)
+		entry.setChecked(self.show_output)
+		entry.triggered.connect(lambda state,s="output": self.change_setting(s))
+		options.addAction(entry)
+
+		options.addSeparator()
+
+		ioClear = QAction(QIcon(CLEAR_ICON),"Clear",self)
 		ioClear.triggered.connect(self.doClear)
-		self.menubar.addAction(ioClear)
+		options.addAction(ioClear)
+
+	def change_setting(self,s):
+		if s=="output":
+			if self.show_output:
+				self.show_output = False
+			else:
+				self.show_output = True
+		if s=="input":
+			if self.show_input:
+				self.show_input = False
+			else:
+				self.show_input = True
+		if s=="timestamp":
+			if self.show_timestamp:
+				self.show_timestamp = False
+			else:
+				self.show_timestamp = True
+
+		self.rerender()
 
 	def doClear(self):
 		self.ircLineDisplay.clear()
 
+	def rerender(self):
+		self.ircLineDisplay.clear()
+
+		for e in self.log:
+			timestamp = e[0]
+			line = e[1]
+			is_input = e[2]
+
+			if not self.show_input and is_input: continue
+			if not self.show_output and not is_input: continue
+
+			ui = QListWidgetItem()
+
+			f = ui.font()
+			f.setBold(False)
+			
+			if not is_input:
+				ui.setBackground(QColor("#E7E7E7"))
+				ui.setIcon(QIcon(OUTPUT_ICON))
+			else:
+				ui.setBackground(QColor("#FFFFFF"))
+				ui.setFont(f)
+				ui.setIcon(QIcon(INPUT_ICON))
+				#prefix = pretty +' -> '
+
+			# ui.setTextAlignment(Qt.AlignLeft | Qt.AlignTop)
+			ui.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+			if self.show_timestamp:
+				pretty = datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+				ui.setText("["+pretty+"] "+line)
+			else:
+				ui.setText(line)
+
+			self.ircLineDisplay.addItem(ui)
+
+		self.ircLineDisplay.scrollToBottom()
+
+
+
 	def writeLine(self,line,is_input=True):
 
 		t = datetime.timestamp(datetime.now())
-		pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
+		
+
+		entry = [t,line,is_input]
+		self.log.append(entry)
+
+		if not self.show_input and is_input: return
+		if not self.show_output and not is_input: return
 
 		ui = QListWidgetItem()
 
@@ -95,11 +185,18 @@ class Window(QMainWindow):
 		# ui.setTextAlignment(Qt.AlignLeft | Qt.AlignTop)
 		ui.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-		ui.setText("["+pretty+"] "+line)
+		if self.show_timestamp:
+			pretty = datetime.fromtimestamp(t).strftime('%H:%M:%S')
+			ui.setText("["+pretty+"] "+line)
+		else:
+			ui.setText(line)
+
+		
 		self.ircLineDisplay.addItem(ui)
 
 		self.ircLineDisplay.scrollToBottom()
 
 		if self.ircLineDisplay.count()>self.gui.max_lines_in_io_display:
 			self.ircLineDisplay.takeItem(0)
+			self.log.pop(0)
 
