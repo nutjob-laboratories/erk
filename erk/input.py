@@ -1,5 +1,5 @@
 
-
+import html
 
 import emoji
 
@@ -82,6 +82,7 @@ def channel_window_input(gui,client,window,text):
 			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
 			client.msg(target,msg)
+			msg = html.escape(msg)
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
@@ -106,6 +107,7 @@ def channel_window_input(gui,client,window,text):
 			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
 			client.describe(window.name,msg)
+			msg = html.escape(msg)
 			erk.events.outgoing_action_message(gui,client,window.name,msg)
 			return
 		if tokens[0].lower()==ME_COMMAND and len(tokens)<2:
@@ -116,6 +118,8 @@ def channel_window_input(gui,client,window,text):
 	if gui.use_asciimojis: text = inject_asciiemojis(text)
 
 	client.msg(window.name,text)
+
+	text = html.escape(text)
 
 	erk.events.outgoing_message(gui,client,window.name,text)
 
@@ -157,6 +161,7 @@ def private_window_input(gui,client,window,text):
 						msg = ' '.join(tokens)
 						if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 						if gui.use_asciimojis: msg = inject_asciiemojis(msg)
+						msg = html.escape(msg)
 						erk.events.erk_close_channel(gui,client,channel,msg)
 						return
 					else:
@@ -189,6 +194,7 @@ def private_window_input(gui,client,window,text):
 			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
 			client.msg(target,msg)
+			msg = html.escape(msg)
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
@@ -223,6 +229,8 @@ def private_window_input(gui,client,window,text):
 	if gui.use_asciimojis: text = inject_asciiemojis(text)
 
 	client.msg(window.name,text)
+
+	text = html.escape(text)
 
 	erk.events.outgoing_message(gui,client,window.name,text)
 
@@ -307,6 +315,7 @@ def server_window_input(gui,client,window,text):
 			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
 			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
 			client.msg(target,msg)
+			msg = html.escape(msg)
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:

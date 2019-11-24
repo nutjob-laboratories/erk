@@ -97,7 +97,7 @@ IRC_15 = "#D3D3D3"
 
 def render_message(styles,mtype,user,message,timestamp=None,max_nick_size=20,no_html=True,irc_color=True,links=True,show_timestamp=True,timestamp_seconds=False,timestamp_24=True,filter_profanity=False,click_usernames=True):
 
-	message = html.escape(message)
+	# message = html.escape(message)
 
 	if no_html: message = remove_html_markup(message)
 	if links: message = inject_www_links(message,styles[HYPERLINK_STYLE_NAME])
@@ -109,7 +109,7 @@ def render_message(styles,mtype,user,message,timestamp=None,max_nick_size=20,no_
 
 	if filter_profanity: message = filterProfanityFromText(message)
 
-	message = fr"{message}"
+	#message = fr"{message}"
 
 	if mtype==SYSTEM_MESSAGE:
 
