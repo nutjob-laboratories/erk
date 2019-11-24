@@ -500,8 +500,9 @@ class Erk(QMainWindow):
 		self.load_log_max					= self.settings[SETTING_LOAD_LOG_MAX_SIZE]
 		self.mark_end_of_loaded_logs		= self.settings[SETTING_MARK_END_OF_LOADED_LOGS]
 		self.get_hostmasks_on_join			= self.settings[SETTING_FETCH_HOSTMASKS]
+		self.max_lines_in_io_display		= self.settings[SETTING_MAX_LINES_IN_IO]
 
-		self.max_lines_in_io_display = self.settings[SETTING_MAX_LINES_IN_IO]
+		self.show_net_traffic_from_connection = self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION]
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -807,6 +808,11 @@ class Erk(QMainWindow):
 		add_toolbar_menu(self.toolbar,SETTINGS_MENU_NAME,self.settingsMenu)
 
 		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+
+		self.settingsMenu_TrafficCon = QAction("Show network traffic from connection",self,checkable=True)
+		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
+		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
 
 		self.settingsMenu_Hostmasks = QAction(GET_HOSTMASKS_MENU_NAME,self,checkable=True)
 		self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
@@ -1251,6 +1257,13 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="traffic_connection":
+			if self.show_net_traffic_from_connection:
+				self.show_net_traffic_from_connection = False
+			else:
+				self.show_net_traffic_from_connection = True
+			self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION] = self.show_net_traffic_from_connection
 
 		if setting=="io_length":
 			lsize = IOsizeDialog(self)

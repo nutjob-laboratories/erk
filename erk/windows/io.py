@@ -50,7 +50,10 @@ class Window(QMainWindow):
 		self.show_input = True
 		self.show_output = True
 
-		self.setWindowTitle(" "+self.name)
+		if not self.name:
+			pass
+		else:
+			self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(IO_ICON))
 
 		self.ircLineDisplay = QListWidget(self)

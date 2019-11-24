@@ -362,6 +362,10 @@ def received_network_and_hostname(gui,client,network,hostname):
 		if w.client.id==client.id:
 			w.setWindowTitle(" "+hostname+" ("+network+")")
 
+	for w in IO_WINDOWS:
+		if w.client.id==client.id:
+			w.setWindowTitle(" "+hostname)
+
 	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
 
 def connection(gui,client):
@@ -371,6 +375,11 @@ def connection(gui,client):
 		name = client.hostname
 	else:
 		name = client.server+":"+str(client.port)
+
+	if gui.show_net_traffic_from_connection:
+		w = IOWindow(name,gui.MDI,client,gui)
+		w.subwindow.close()
+		IO_WINDOWS.append(w)
 
 	server_console_window = ServerWindow(name,gui.MDI,client,gui)
 	SERVER_WINDOWS.append(server_console_window)
