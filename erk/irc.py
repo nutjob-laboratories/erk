@@ -181,6 +181,8 @@ class IRC_Connection(irc.IRCClient):
 		self.do_whois = []
 		self.request_whois = []
 
+		self.registered = False
+
 	def uptime_beat(self):
 
 		self.uptime = self.uptime + 1
@@ -232,6 +234,8 @@ class IRC_Connection(irc.IRCClient):
 	def signedOn(self):
 
 		erk.events.registered(self.gui,self)
+
+		self.registered = True
 
 		# self.gui.irc_registered(self)
 		if len(self.autojoin)>0:

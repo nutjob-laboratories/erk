@@ -104,6 +104,8 @@ class Erk(QMainWindow):
 
 		if after==0: self.stop_working()
 
+		
+
 	def connectionFailed(self,server,port):
 
 		clean = []
@@ -1063,14 +1065,11 @@ class Erk(QMainWindow):
 
 	def connectionEntryClick(self,cid,cmd):
 
+		for c in  erk.events.getConnections():
+			if c.id==cid:
+				if not c.registered: return
+
 		if cmd=="io":
-			#erk.events.CreateIOWindow
-
-			#self.restoreWindow(item.erk_window,item.erk_window.subwindow)
-			#self.updateActiveChild(item.erk_window.subwindow)
-
-
-
 			for c in  erk.events.getConnections():
 				if c.id==cid:
 					iowin = erk.events.hasIOWindow(c)
