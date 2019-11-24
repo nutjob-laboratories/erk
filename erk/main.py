@@ -562,15 +562,13 @@ class Erk(QMainWindow):
 		self.ircMenu = QMenu()
 		self.displayMenu = QMenu()
 		self.settingsMenu = QMenu()
-		self.connectionsMenu = QMenu()
 		self.helpMenu = QMenu()
 
-		toolMenuStyle = SmallerIconsMenuStyle('Windows')
-		self.ircMenu.setStyle(toolMenuStyle)
-		self.displayMenu.setStyle(toolMenuStyle)
-		self.settingsMenu.setStyle(toolMenuStyle)
-		self.connectionsMenu.setStyle(toolMenuStyle)
-		self.helpMenu.setStyle(toolMenuStyle)
+		self.toolMenuStyle = SmallerIconsMenuStyle('Windows')
+		self.ircMenu.setStyle(self.toolMenuStyle)
+		self.displayMenu.setStyle(self.toolMenuStyle)
+		self.settingsMenu.setStyle(self.toolMenuStyle)
+		self.helpMenu.setStyle(self.toolMenuStyle)
 
 		self.buildToolbar()
 
@@ -585,7 +583,6 @@ class Erk(QMainWindow):
 		self.ircMenu.clear()
 		self.displayMenu.clear()
 		self.settingsMenu.clear()
-		self.connectionsMenu.clear()
 		self.helpMenu.clear()
 
 		# Main menu
@@ -612,6 +609,7 @@ class Erk(QMainWindow):
 					title = c.server+":"+str(c.port)
 
 				connectionEntry_Submenu = self.ircMenu.addMenu(QIcon(SERVER_ICON),title)
+				connectionEntry_Submenu.setStyle(self.toolMenuStyle)
 
 				entry = textSeparator(self,"<b>"+c.network+"</b>")
 				connectionEntry_Submenu.addAction(entry)
