@@ -12,10 +12,34 @@ CHANNEL_WINDOWS = []
 PRIVATE_WINDOWS = []
 SERVER_WINDOWS = []
 IO_WINDOWS = []
+MOTD_WINDOWS = []
 
 # |---------------------------------------------------------|
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
+
+def closeMOTDWindow(client):
+	global MOTD_WINDOWS
+	clean = []
+	for w in MOTD_WINDOWS:
+		if w.client.id==client.id: continue
+		clean.append(w)
+	MOTD_WINDOWS = clean
+
+def hasMOTDWindow(client):
+	for w in MOTD_WINDOWS:
+		if w.client.id==client.id: return w
+	return None
+
+def CreateMOTDWindow(gui,client):
+
+	for w in MOTD_WINDOWS:
+		if w.client.id==client.id: return
+
+	w = TextWindow(client.hostname+" MOTD",gui.MDI,client,gui)
+	MOTD_WINDOWS.append(w)
+
+	w.write(w.client.flat_motd)
 
 def hasIOWindow(client):
 	for w in IO_WINDOWS:

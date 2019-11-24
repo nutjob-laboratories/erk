@@ -621,8 +621,12 @@ class Erk(QMainWindow):
 				entryAction.setDefaultWidget(entryLabel)
 				connectionEntry_Submenu.addAction(entryAction)
 
-				entry = QAction(QIcon(IO_ICON),"View network traffic",self)
+				entry = QAction(QIcon(IO_ICON),NET_TRAFFIC_MENU_NAME,self)
 				entry.triggered.connect(lambda state,id=c.id,cmd='io': self.connectionEntryClick(id,cmd))
+				connectionEntry_Submenu.addAction(entry)
+
+				entry = QAction(QIcon(TEXT_WINDOW_ICON),MOTD_VIEW_MENU_NAME,self)
+				entry.triggered.connect(lambda state,id=c.id,cmd='motd': self.connectionEntryClick(id,cmd))
 				connectionEntry_Submenu.addAction(entry)
 
 				connectionEntry_Submenu.addSeparator()
@@ -781,7 +785,7 @@ class Erk(QMainWindow):
 
 		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
 
-		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),"Set maximum line count in network traffic display",self)
+		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
 		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
 		displayMenu_Misc_Submenu.addAction(self.settingsMenu_IOLength)
 
@@ -1074,6 +1078,16 @@ class Erk(QMainWindow):
 		for c in  erk.events.getConnections():
 			if c.id==cid:
 				if not c.registered: return
+
+		if cmd=="motd":
+			for c in  erk.events.getConnections():
+				if c.id==cid:
+					iowin = erk.events.hasMOTDWindow(c)
+					if iowin:
+						self.restoreWindow(iowin,iowin.subwindow)
+						self.updateActiveChild(iowin.subwindow)
+					else:
+						erk.events.CreateMOTDWindow(self,c)
 
 		if cmd=="io":
 			for c in  erk.events.getConnections():

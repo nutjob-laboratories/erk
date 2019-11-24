@@ -8,6 +8,24 @@ from .channel import Window as Channel
 from .private import Window as Private
 from .server import Window as Server
 from .io import Window as InputOutput
+from .text import Window as TextDisplay
+
+def TextWindow(channel,MDI,client,parent=None):
+
+		newSubwindow = QMdiSubWindow()
+		# newWindow = Channel.Window(channel,WINDOW_WIDGET_MARGIN,newSubwindow,client,parent)
+		newWindow = TextDisplay(channel,1,newSubwindow,client,parent)
+		newSubwindow.setWidget(newWindow)
+		newSubwindow.window = newWindow
+		MDI.addSubWindow(newSubwindow)
+
+		#newSubwindow.resize(DEFAULT_WINDOW_WIDTH,DEFAULT_WINDOW_HEIGHT)
+		#newSubwindow.resize(600,450)
+		newSubwindow.resize(parent.initial_window_width,parent.initial_window_height)
+
+		newSubwindow.show()
+
+		return newWindow
 
 def IOWindow(channel,MDI,client,parent=None):
 

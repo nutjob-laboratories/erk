@@ -40,6 +40,7 @@ import time
 from erk.common import *
 from erk.strings import *
 from erk.config import *
+from erk.format import *
 import erk.events
 
 from PyQt5.QtCore import *
@@ -183,6 +184,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.registered = False
 
+		self.flat_motd = ''
+
 	def uptime_beat(self):
 
 		self.uptime = self.uptime + 1
@@ -286,6 +289,9 @@ class IRC_Connection(irc.IRCClient):
 	def receivedMOTD(self, motd):
 		# self.gui.irc_motd(self,motd)
 		erk.events.motd(self.gui,self,motd)
+
+		self.flat_motd = "\n".join(motd)
+		self.flat_motd = convert_irc_color_to_html(self.flat_motd)
 
 	def modeChanged(self, user, channel, mset, modes, args):
 		if "b" in modes: self.sendLine(f"MODE {channel} +b")

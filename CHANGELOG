@@ -8,6 +8,7 @@ Version 0.600
 	* Added a network traffic display
 	* Added an option to show network traffic from connection on
 	* Fixed net traffic display to follow text format style changes
+	* Added a MOTD display
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

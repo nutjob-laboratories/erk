@@ -236,3 +236,7 @@ LOGGING_MENU_LOAD_ALL_LOGS = "Load and display all logs"
 
 NETWORK_SETTINGS_MENU_NAME = "Network"
 GET_HOSTMASKS_MENU_NAME = "Retrieve hostmasks on join"
+
+TRAFFIC_MAX_LINE_MENU_NAME = "Set maximum line count in network traffic display"
+NET_TRAFFIC_MENU_NAME = "View network traffic"
+MOTD_VIEW_MENU_NAME = "View MOTD"

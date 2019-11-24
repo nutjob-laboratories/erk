@@ -93,3 +93,5 @@ OUTPUT_ICON = ":/gui-output.png"
 IO_ICON = ":/gui-io.png"
 
 CLEAR_ICON = ":/menu-clear.png"
+
+TEXT_WINDOW_ICON = ":/gui-text.png"
