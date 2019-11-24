@@ -87,3 +87,7 @@ CLIPBOARD_ICON = ":/menu-clipboard.png"
 TOPIC_ICON = ":/menu-topic.png"
 
 NETWORKING_ICON = ":/menu-networking.png"
+
+INPUT_ICON = ":/gui-input.png"
+OUTPUT_ICON = ":/gui-output.png"
+IO_ICON = ":/gui-io.png"

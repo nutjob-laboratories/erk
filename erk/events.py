@@ -11,10 +11,42 @@ CONNECTIONS = []
 CHANNEL_WINDOWS = []
 PRIVATE_WINDOWS = []
 SERVER_WINDOWS = []
+IO_WINDOWS = []
 
 # |---------------------------------------------------------|
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
+
+def hasIOWindow(client):
+	for w in IO_WINDOWS:
+		if w.client.id==client.id: return w
+	return None
+
+def writeServerInput(gui,client,data):
+	for w in IO_WINDOWS:
+		if w.client.id==client.id:
+			w.writeLine(data,True)
+
+def writeServerOutput(gui,client,data):
+	for w in IO_WINDOWS:
+		if w.client.id==client.id:
+			w.writeLine(data,False)
+
+def CreateIOWindow(gui,client):
+
+	for w in IO_WINDOWS:
+		if w.client.id==client.id: return
+
+	w = IOWindow(client.hostname,gui.MDI,client,gui)
+	IO_WINDOWS.append(w)
+
+def erk_close_io(gui,client):
+	global IO_WINDOWS
+	clean = []
+	for c in IO_WINDOWS:
+		if c.client.id==client.id: continue
+		clean.append(c)
+	IO_WINDOWS = clean
 
 def set_channel_hostmask(gui,client,nickname,hostmask):
 	for window in CHANNEL_WINDOWS:
@@ -355,6 +387,7 @@ def disconnection(gui,client):
 	global CHANNEL_WINDOWS
 	global PRIVATE_WINDOWS
 	global SERVER_WINDOWS
+	global IO_WINDOWS
 
 	gui.client_disconnected(client)
 
@@ -388,6 +421,15 @@ def disconnection(gui,client):
 			continue
 		clean.append(c)
 	SERVER_WINDOWS = clean
+
+	clean = []
+	for c in IO_WINDOWS:
+		if c.client.id==client.id:
+			c.do_actual_close = True
+			c.close()
+			continue
+		clean.append(c)
+	IO_WINDOWS = clean
 
 	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
 

@@ -200,6 +200,8 @@ SETTING_LOAD_LOG_MAX_SIZE = "maximum_lines_displayed_from_saved_logs"
 SETTING_MARK_END_OF_LOADED_LOGS = "mark_end_of_loaded_logs"
 SETTING_FETCH_HOSTMASKS = "retrieve_hostmasks_on_join_if_needed"
 
+SETTING_MAX_LINES_IN_IO = "maximum_number_of_lines_displayed_in_io_window"
+
 def patch_config_file(data):
 	s = len(data)
 	if not SETTING_FONT in data: data[SETTING_FONT] = ""
@@ -249,6 +251,7 @@ def patch_config_file(data):
 	if not SETTING_LOAD_LOG_MAX_SIZE in data: data[SETTING_LOAD_LOG_MAX_SIZE] = 500
 	if not SETTING_MARK_END_OF_LOADED_LOGS in data: data[SETTING_MARK_END_OF_LOADED_LOGS] = True
 	if not SETTING_FETCH_HOSTMASKS in data: data[SETTING_FETCH_HOSTMASKS] = True
+	if not SETTING_MAX_LINES_IN_IO in data: data[SETTING_MAX_LINES_IN_IO] = 500
 
 	if len(data)>s:
 		return [True,data]
@@ -311,6 +314,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_LOAD_LOG_MAX_SIZE: 500,
 			SETTING_MARK_END_OF_LOADED_LOGS: True,
 			SETTING_FETCH_HOSTMASKS: True,
+			SETTING_MAX_LINES_IN_IO: 500,
 		}
 		save_settings(si)
 		return si

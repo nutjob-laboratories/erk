@@ -15,9 +15,19 @@ import erk.dialogs.about as About
 import erk.dialogs.format as Format
 import erk.dialogs.log_display_size as Linecount
 
+from erk.resources import *
+
+def IOsizeDialog(obj):
+	x = Linecount.Dialog("Maximum lines displayed",obj.max_lines_in_io_display,IO_ICON,obj)
+	info = x.get_length_information("Maximum lines displayed",obj.max_lines_in_io_display,IO_ICON,obj)
+	del x
+
+	if not info: return None
+	return info
+
 def LogsizeDialog(obj):
-	x = Linecount.Dialog(obj)
-	info = x.get_length_information(obj)
+	x = Linecount.Dialog("Log display size",obj.load_log_max,LOG_ICON,obj)
+	info = x.get_length_information("Log display size",obj.load_log_max,LOG_ICON,obj)
 	del x
 
 	if not info: return None

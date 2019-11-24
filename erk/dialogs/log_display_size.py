@@ -40,8 +40,8 @@ from erk.strings import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_length_information(parent=None):
-		dialog = Dialog(parent)
+	def get_length_information(title,setting,icon,parent=None):
+		dialog = Dialog(title,setting,icon,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -55,19 +55,21 @@ class Dialog(QDialog):
 
 		return retval
 
-	def __init__(self,parent=None):
+	def __init__(self,title,setting,icon,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.title = title
+		self.icon = icon
 
-		self.setWindowTitle("Log display size")
-		self.setWindowIcon(QIcon(LOG_ICON))
+		self.setWindowTitle(self.title)
+		self.setWindowIcon(QIcon(self.icon))
 
 		linecountLayout = QHBoxLayout()
 		self.linecountLabel = QLabel("Number of lines")
 		self.linecount = QSpinBox()
 		self.linecount.setRange(0,9999)
-		self.linecount.setValue(self.parent.load_log_max)
+		self.linecount.setValue(setting)
 		linecountLayout.addWidget(self.linecountLabel)
 		linecountLayout.addWidget(self.linecount)
 

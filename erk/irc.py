@@ -647,6 +647,8 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.irc_output(self,line)
 		#print(line)
 
+		erk.events.writeServerOutput(self.gui,self,line)
+
 		return irc.IRCClient.sendLine(self, line)
 
 
@@ -668,6 +670,8 @@ class IRC_Connection(irc.IRCClient):
 
 		#print(line)
 		# self.gui.irc_input(self,line2)
+
+		erk.events.writeServerInput(self.gui,self,line2)
 
 		d = line2.split(" ")
 		if len(d) >= 2:

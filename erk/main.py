@@ -9,7 +9,7 @@ from erk.strings import *
 from erk.widgets import *
 from erk.config import *
 
-from erk.dialogs import ConnectDialog,NetworkDialog,WindowSizeDialog,NewNickDialog,JoinChannelDialog,AboutDialog,FormatDialog,LogsizeDialog
+from erk.dialogs import ConnectDialog,NetworkDialog,WindowSizeDialog,NewNickDialog,JoinChannelDialog,AboutDialog,FormatDialog,LogsizeDialog,IOsizeDialog
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
 import erk.events
@@ -497,8 +497,9 @@ class Erk(QMainWindow):
 		self.load_private_logs				= self.settings[SETTING_LOAD_PRIVATE_LOGS]
 		self.load_log_max					= self.settings[SETTING_LOAD_LOG_MAX_SIZE]
 		self.mark_end_of_loaded_logs		= self.settings[SETTING_MARK_END_OF_LOADED_LOGS]
+		self.get_hostmasks_on_join			= self.settings[SETTING_FETCH_HOSTMASKS]
 
-		self.get_hostmasks_on_join = self.settings[SETTING_FETCH_HOSTMASKS]
+		self.max_lines_in_io_display = self.settings[SETTING_MAX_LINES_IN_IO]
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -616,6 +617,12 @@ class Erk(QMainWindow):
 				entryAction = QWidgetAction(self)
 				entryAction.setDefaultWidget(entryLabel)
 				connectionEntry_Submenu.addAction(entryAction)
+
+				entry = QAction(QIcon(IO_ICON),"View network traffic",self)
+				entry.triggered.connect(lambda state,id=c.id,cmd='io': self.connectionEntryClick(id,cmd))
+				connectionEntry_Submenu.addAction(entry)
+
+				connectionEntry_Submenu.addSeparator()
 
 				entry = QAction(QIcon(USER_WINDOW_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
 				entry.triggered.connect(lambda state,id=c.id,cmd='nick': self.connectionEntryClick(id,cmd))
@@ -770,6 +777,12 @@ class Erk(QMainWindow):
 		displayMenu_Entry_Submenu.addAction(self.displayMisc_Submenu_ClickNick)
 
 		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
+
+		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),"Set maximum line count in network traffic display",self)
+		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
+		displayMenu_Misc_Submenu.addAction(self.settingsMenu_IOLength)
+
+		displayMenu_Misc_Submenu.addSeparator()
 
 		displayMisc_Submenu_WinTitle = QAction(TITLE_FROM_ACTIVE_WINDOW_NAME,self,checkable=True)
 		displayMisc_Submenu_WinTitle.setChecked(self.title_from_active)
@@ -1050,6 +1063,23 @@ class Erk(QMainWindow):
 
 	def connectionEntryClick(self,cid,cmd):
 
+		if cmd=="io":
+			#erk.events.CreateIOWindow
+
+			#self.restoreWindow(item.erk_window,item.erk_window.subwindow)
+			#self.updateActiveChild(item.erk_window.subwindow)
+
+
+
+			for c in  erk.events.getConnections():
+				if c.id==cid:
+					iowin = erk.events.hasIOWindow(c)
+					if iowin:
+						self.restoreWindow(iowin,iowin.subwindow)
+						self.updateActiveChild(iowin.subwindow)
+					else:
+						erk.events.CreateIOWindow(self,c)
+
 		if cmd=="disconnect":
 			for c in  erk.events.getConnections():
 				if c.id==cid:
@@ -1222,6 +1252,12 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="io_length":
+			lsize = IOsizeDialog(self)
+			if lsize:
+				self.max_lines_in_io_display = lsize
+				self.settings[SETTING_MAX_LINES_IN_IO] = self.max_lines_in_io_display
 
 		if setting=="hostmasks":
 			if self.get_hostmasks_on_join:

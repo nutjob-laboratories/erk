@@ -5,6 +5,7 @@ Version 0.600
 	* Added userlist context menu
 	* HTML stripping now works again
 	* The client can now send (and display) special characters associated with HTML (like < and >)
+	* Added a network traffic display
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
