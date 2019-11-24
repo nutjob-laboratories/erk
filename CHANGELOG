@@ -3,6 +3,8 @@ Version 0.600
 	* Removed the "Connections" menu, and placed its contents in the main menu
 	* Added an option to fetch user hostmasks, if necessary
 	* Added userlist context menu
+	* HTML stripping now works again
+	* The client can now send (and display) special characters associated with HTML (like < and >)
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
