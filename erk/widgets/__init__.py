@@ -13,6 +13,7 @@ DEFAULT_APPLICATION_STYLE = 'Windows'
 
 MENU_ICON_SIZE = 26
 MENU_ICON_SMALL_SIZE = 20
+MENU_MODE_ICON_SIZE = 22
 
 TEXT_SEPARATOR = f'''
 <table width="100%" border="0">
@@ -211,3 +212,42 @@ def buildConnectionDisplay(self):
 	connectionDisplay.setTitleBarWidget(QWidget())
 
 	return connectionDisplay
+
+def menuIconLabel(self,icon,title):
+
+	erkmenuLabel = QLabel( menuIconLabel_Html(icon,title) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	return erkmenuAction
+
+def menuIconLabel_Html(icon,text):
+	return f'''
+<table style="width: 100%" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{MENU_MODE_ICON_SIZE}" height="{MENU_MODE_ICON_SIZE}">&nbsp;</td>
+          <td style="vertical-align: middle;">{text}&nbsp;&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+    '''
+
+def menuPlainLabel(self,title):
+
+	erkmenuLabel = QLabel( menuPlainLabel_Html(title) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	return erkmenuAction
+
+def menuPlainLabel_Html(text):
+	return f'''
+<table style="width: 100%" border="0">
+      <tbody>
+        <tr>
+        <td>&nbsp;{text}&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+        '''

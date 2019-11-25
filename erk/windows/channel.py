@@ -91,8 +91,6 @@ class Window(QMainWindow):
 			message = entry[2]
 			timestamp = entry[3]
 
-			#line = render_message(self.gui.styles,mtype,user,message,timestamp)
-
 			line = render_message(
 				self.gui.styles,
 				mtype,
@@ -356,6 +354,8 @@ class Window(QMainWindow):
 			self.subwindow.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
 		else:
 			self.subwindow.setWindowIcon(QIcon(LOCKED_CHANNEL_ICON))
+		#self.rebuildModesMenu()
+		self.buildMenuBar()
 
 	def setNick(self,nick):
 		if self.gui.click_nick_change:
@@ -410,6 +410,8 @@ class Window(QMainWindow):
 		self.modeson = ''
 		self.modesoff = ''
 		self.key = ''
+
+		self.banlist = []
 
 		self.hostmasks = {}
 
@@ -537,6 +539,108 @@ class Window(QMainWindow):
 					self.log = trimLog(self.log,self.gui.load_log_max)
 				if self.gui.mark_end_of_loaded_logs: self.writeLog(HR_MESSAGE,'','')
 				self.rerenderText()
+
+		# Menubar
+		self.menubar = self.menuBar()
+		self.buildMenuBar()
+
+	def buildMenuBar(self):
+		self.menubar.clear()
+
+		if len(self.modeson)>0:
+			self.actModes = self.menubar.addMenu("Modes")
+			self.rebuildModesMenu()
+
+		if len(self.banlist)>0:
+			self.actBans = self.menubar.addMenu("Bans")
+			self.rebuildBanMenu()
+
+	def rebuildBanMenu(self):
+		self.actBans.clear()
+
+		for b in self.banlist:
+			ban = b[0]
+			banner = b[1]
+				
+			mBan = menuPlainLabel(self,f"<b>{ban}</b> (by {banner})")
+			self.actBans.addAction(mBan)
+
+	def rebuildModesMenu(self):
+		self.actModes.clear()
+
+		mset = ''
+
+		for l in self.modeson:
+
+			if l == "k":
+				if "k" in mset: continue
+				#mMode = QAction(QIcon(K_ICON),f"Channel key: \"{self.key}\"",self)
+				mMode = menuIconLabel(self,K_ICON,MODE_KEY+f" \"{self.key}\"")
+				self.actModes.addAction(mMode)
+				mset = mset + "k"
+				continue
+
+			if l == "c":
+				if "c" in mset: continue
+				#mMode = QAction(QIcon(BAN_ICON),"Colors forbidden",self)
+				mMode = menuIconLabel(self,MODE_BAN_ICON,MODE_NO_COLORS)
+				self.actModes.addAction(mMode)
+				mset = mset + "c"
+				continue
+
+			if l == "C":
+				if "C" in mset: continue
+				#mMode = QAction(QIcon(BAN_ICON),"CTCP forbidden",self)
+				mMode = menuIconLabel(self,MODE_BAN_ICON,MODE_CTCP_BAN)
+				self.actModes.addAction(mMode)
+				mset = mset + "C"
+				continue
+
+			if l == "m":
+				if "m" in mset: continue
+				#mMode = QAction(QIcon(M_ICON),"Moderation on",self)
+				mMode = menuIconLabel(self,M_ICON,MODE_MODERATED)
+				self.actModes.addAction(mMode)
+				mset = mset + "m"
+				continue
+
+			if l == "n":
+				if "n" in mset: continue
+				#mMode = QAction(QIcon(BAN_ICON),"External messages forbidden",self)
+				mMode = menuIconLabel(self,MODE_BAN_ICON,MODE_NO_EXTERNAL)
+				self.actModes.addAction(mMode)
+				mset = mset + "n"
+				continue
+
+			if l == "p":
+				if "p" in mset: continue
+				#mMode = QAction(QIcon(P_ICON),"Channel is private",self)
+				mMode = menuIconLabel(self,P_ICON,MODE_PRIVATE)
+				self.actModes.addAction(mMode)
+				mset = mset + "p"
+				continue
+
+			if l == "s":
+				if "s" in mset: continue
+				#mMode = QAction(QIcon(S_ICON),"Channel is secret",self)
+				mMode = menuIconLabel(self,S_ICON,MODE_SECRET)
+				self.actModes.addAction(mMode)
+				mset = mset + "s"
+				continue
+
+			if l == "t":
+				if "t" in mset: continue
+				#mMode = QAction(QIcon(T_ICON),"Only ops can change topic",self)
+				mMode = menuIconLabel(self,T_ICON,MODE_OPS_TOPIC)
+				self.actModes.addAction(mMode)
+				mset = mset + "t"
+				continue
+
+		if len(mset)==0:
+			#mMode = QAction("Unknown",self)
+			mMode = menuIconLabel(self,MODE_UNKNOWN_ICON,"<i>"+MODE_NO_KNOWN+"</i>")
+			self.actModes.addAction(mMode)
+
 
 	def eventFilter(self, source, event):
 

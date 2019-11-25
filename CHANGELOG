@@ -9,6 +9,9 @@ Version 0.600
 	* Added an option to show network traffic from connection on
 	* Fixed net traffic display to follow text format style changes
 	* Added a MOTD display
+	* Added mode display menu to channel windows
+	* Added ban display menu to channel windows
+	* Made mode and ban menus dynamic (if there is no info to display, they are hidden)
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

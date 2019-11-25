@@ -95,3 +95,11 @@ IO_ICON = ":/gui-io.png"
 CLEAR_ICON = ":/menu-clear.png"
 
 TEXT_WINDOW_ICON = ":/gui-text.png"
+
+P_ICON = ":/menu-p.png"
+S_ICON = ":/menu-s.png"
+T_ICON = ":/menu-t.png"
+M_ICON = ":/menu-m.png"
+K_ICON = ":/menu-k.png"
+MODE_BAN_ICON = ":/menu-mode_ban.png"
+MODE_UNKNOWN_ICON = ":/menu-mode_unknown.png"

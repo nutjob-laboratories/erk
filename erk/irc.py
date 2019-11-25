@@ -137,6 +137,12 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_banlist(self,channel,banlist)
 
+		# erk.events.received_network_and_hostname(self.gui,self,p[1],self.hostname)
+
+		# banlist(gui,client,channel,banlist):
+
+		erk.events.banlist(self.gui,self,channel,banlist)
+
 
 	def isupport(self,options):
 		self.options = options

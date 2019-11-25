@@ -332,6 +332,8 @@ def setChannelModes(client,channel,modes):
 						pass
 					else:
 						window.modeson = window.modeson + l
+				#window.rebuildModesMenu()
+				window.buildMenuBar()
 
 def unsetChannelModes(client,channel,modes):
 	for window in CHANNEL_WINDOWS:
@@ -344,6 +346,8 @@ def unsetChannelModes(client,channel,modes):
 						pass
 					else:
 						window.modesoff = window.modesoff + l
+				#window.rebuildModesMenu()
+				window.buildMenuBar()
 
 def writeSytemMsgChannel(client,channel,msg):
 	for window in CHANNEL_WINDOWS:
@@ -618,6 +622,13 @@ def action_message(gui,client,channel,user,message):
 
 	private_chat_window.writeLog(ACTION_MESSAGE,nickname,nickname+" "+message)
 
+def banlist(gui,client,channel,banlist):
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			if window.name == channel:
+				window.banlist = banlist
+				window.buildMenuBar()
+
 def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
@@ -714,10 +725,12 @@ def mode(gui,client,channel,user,mset,modes,args):
 				for u in args:
 					msg = f"{user} banned {u} from {channel}"
 					writeSytemMsgChannel(client,channel,msg)
+					client.sendLine(f"MODE {channel} +b")
 			else:
 				for u in args:
 					msg = f"{user} unbanned {u} from {channel}"
 					writeSytemMsgChannel(client,channel,msg)
+					client.sendLine(f"MODE {channel} +b")
 			continue
 
 		if m=="c":
