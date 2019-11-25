@@ -17,6 +17,7 @@ CONSOLE_COMMANDS = {
 }
 
 INPUT_COMMANDS = {
+	"/topic": "/topic ",
 	"/join": "/join ",
 	"/part": "/part ",
 	"/msg": "/msg ",
@@ -24,6 +25,7 @@ INPUT_COMMANDS = {
 	"/me": "/me ",
 	"/quit": "/quit",
 }
+
 
 def get_style_attribute(style,setting):
 

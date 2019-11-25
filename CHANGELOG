@@ -12,6 +12,8 @@ Version 0.600
 	* Added mode display menu to channel windows
 	* Added ban display menu to channel windows
 	* Made mode and ban menus dynamic (if there is no info to display, they are hidden)
+	* Added /topic command
+	* Command errors are now displayed in red
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

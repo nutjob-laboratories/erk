@@ -14,6 +14,29 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /topic
+	if len(tokens)>0:
+		if tokens[0].lower()=="/topic" and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',"/topic [CHANNEL] TEXT")
+			return
+		if tokens[0].lower()=="/topic" and len(tokens)==2:
+			client.topic(window.name,tokens[1])
+			return
+		if tokens[0].lower()=="/topic" and len(tokens)>2:
+			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
+				# no channel argument
+				tokens.pop(0)	# Remove command
+				msg = ' '.join(tokens)
+				client.topic(window.name,msg)
+				return
+			else:
+				# channel argument
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.topic(channel,msg)
+				return
+
 	# /quit
 	if len(tokens)>0:
 		if tokens[0].lower()==QUIT_COMMAND and len(tokens)==1:
@@ -70,7 +93,7 @@ def channel_window_input(gui,client,window,text):
 			client.join(target)
 			return
 		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(SYSTEM_MESSAGE,'',JOIN_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
 			return
 
 	# /msg
@@ -86,7 +109,7 @@ def channel_window_input(gui,client,window,text):
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(SYSTEM_MESSAGE,'',MSG_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
 			return
 
 	# /nick
@@ -96,7 +119,7 @@ def channel_window_input(gui,client,window,text):
 			client.setNick(tokens.pop(0))
 			return
 		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(SYSTEM_MESSAGE,'',NICK_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
 			return
 
 	# /me
@@ -111,7 +134,7 @@ def channel_window_input(gui,client,window,text):
 			erk.events.outgoing_action_message(gui,client,window.name,msg)
 			return
 		if tokens[0].lower()==ME_COMMAND and len(tokens)<2:
-			window.writeLog(SYSTEM_MESSAGE,'',ME_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',ME_COMMAND_HELP)
 			return
 
 	if gui.use_emojis: text = emoji.emojize(text,use_aliases=True)
@@ -129,6 +152,29 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /topic
+	if len(tokens)>0:
+		if tokens[0].lower()=="/topic" and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+			return
+		if tokens[0].lower()=="/topic" and len(tokens)==2:
+			window.writeLog(ERROR_MESSAGE,'',f"Private message windows don't have topics")
+			window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+			return
+		if tokens[0].lower()=="/topic" and len(tokens)>2:
+			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
+				# no channel argument
+				window.writeLog(ERROR_MESSAGE,'',f"{tokens[1]} is not a valid channel name")
+				window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+				return
+			else:
+				# channel argument
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.topic(channel,msg)
+				return
+
 	# /quit
 	if len(tokens)>0:
 		if tokens[0].lower()==QUIT_COMMAND and len(tokens)==1:
@@ -145,13 +191,13 @@ def private_window_input(gui,client,window,text):
 	# /part
 	if len(tokens)>0:
 		if tokens[0].lower()==PART_COMMAND and len(tokens)==1:
-			window.writeLog(SYSTEM_MESSAGE,'',PART_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
 			return
 		if tokens[0].lower()==PART_COMMAND and len(tokens)>=2:
 			if len(tokens[1])>0:
 				if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 					# no channel passed as argument
-					window.writeLog(SYSTEM_MESSAGE,'',PART_COMMAND_HELP)
+					window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
 					return
 				else:
 					# channel passed as argument
@@ -182,7 +228,7 @@ def private_window_input(gui,client,window,text):
 			client.join(target)
 			return
 		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(SYSTEM_MESSAGE,'',JOIN_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
 			return
 
 	# /msg
@@ -198,7 +244,7 @@ def private_window_input(gui,client,window,text):
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(SYSTEM_MESSAGE,'',MSG_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
 			return
 
 	# /nick
@@ -208,7 +254,7 @@ def private_window_input(gui,client,window,text):
 			client.setNick(tokens.pop(0))
 			return
 		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(SYSTEM_MESSAGE,'',NICK_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
 			return
 
 	# /me
@@ -222,7 +268,7 @@ def private_window_input(gui,client,window,text):
 			erk.events.outgoing_action_message(gui,client,window.name,msg)
 			return
 		if tokens[0].lower()==ME_COMMAND and len(tokens)<2:
-			window.writeLog(SYSTEM_MESSAGE,'',ME_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',ME_COMMAND_HELP)
 			return
 
 	if gui.use_emojis: text = emoji.emojize(text,use_aliases=True)
@@ -256,13 +302,13 @@ def server_window_input(gui,client,window,text):
 	# /part
 	if len(tokens)>0:
 		if tokens[0].lower()==PART_COMMAND and len(tokens)==1:
-			window.writeLog(SYSTEM_MESSAGE,'',PART_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
 			return
 		if tokens[0].lower()==PART_COMMAND and len(tokens)>=2:
 			if len(tokens[1])>0:
 				if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 					# no channel passed as argument
-					window.writeLog(SYSTEM_MESSAGE,'',PART_COMMAND_HELP)
+					window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
 					return
 				else:
 					# channel passed as argument
@@ -292,7 +338,7 @@ def server_window_input(gui,client,window,text):
 			client.join(target)
 			return
 		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(SYSTEM_MESSAGE,'',JOIN_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
 			return
 
 	# /send
@@ -303,7 +349,7 @@ def server_window_input(gui,client,window,text):
 			client.sendLine(msg)
 			return
 		if tokens[0].lower()==SEND_COMMAND and len(tokens)<2:
-			window.writeLog(SYSTEM_MESSAGE,'',SEND_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',SEND_COMMAND_HELP)
 			return
 
 	# /msg
@@ -319,7 +365,7 @@ def server_window_input(gui,client,window,text):
 			erk.events.outgoing_message(gui,client,target,msg)
 			return
 		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(SYSTEM_MESSAGE,'',MSG_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
 			return
 
 	# /nick
@@ -329,5 +375,5 @@ def server_window_input(gui,client,window,text):
 			client.setNick(tokens.pop(0))
 			return
 		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(SYSTEM_MESSAGE,'',NICK_COMMAND_HELP)
+			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
 			return
