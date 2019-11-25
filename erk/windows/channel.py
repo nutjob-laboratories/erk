@@ -17,9 +17,165 @@ import erk.input
 
 from erk.widgets import *
 
-from erk.dialogs import NewNickDialog
+from erk.dialogs import NewNickDialog,TopicDialog,KeyDialog
+
+class ChatDisplay(QTextBrowser):
+
+	def __init__(self, *args):
+		QTextBrowser.__init__(self, *args)
+
+		self.parent = args[0]
+
+	def contextMenuEvent(self, event):
+
+		popup_menu = self.createStandardContextMenu()
+
+		counter = 0
+
+		if "t" in self.parent.modeson:
+			if self.parent.operator:
+				pmenuitem = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+				pmenuitem.triggered.connect(self.parent.setTopic)
+				popup_menu.insertAction(popup_menu.actions()[counter],pmenuitem)
+				counter = counter + 1
+		else:
+			pmenuitem = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			pmenuitem.triggered.connect(self.parent.setTopic)
+			popup_menu.insertAction(popup_menu.actions()[counter],pmenuitem)
+			counter = counter + 1
+
+		if self.parent.operator:
+
+			cmodes = QMenu("Set modes")
+			cmodes.setIcon(QIcon(CHANNEL_WINDOW_ICON))
+
+			if "k" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),"Remove channel key",self)
+				pmenuitem.triggered.connect(lambda state,f="unlock": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),"Set channel key",self)
+				pmenuitem.triggered.connect(lambda state,f="lock": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "t" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(T_ICON),"Set topic to anyone",self)
+				pmenuitem.triggered.connect(lambda state,f="yestopic": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(T_ICON),"Set topic to operator only",self)
+				pmenuitem.triggered.connect(lambda state,f="notopic": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "m" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(M_ICON),"Unmoderate channel",self)
+				pmenuitem.triggered.connect(lambda state,f="unmoderate": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(M_ICON),"Moderate channel",self)
+				pmenuitem.triggered.connect(lambda state,f="moderate": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "c" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(FANCY_COLOR),"Allow IRC colors",self)
+				pmenuitem.triggered.connect(lambda state,f="yescolors": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid IRC colors",self)
+				pmenuitem.triggered.connect(lambda state,f="nocolors": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "n" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(MESSAGE_ICON),"Allow external messages",self)
+				pmenuitem.triggered.connect(lambda state,f="yesx": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid external messages",self)
+				pmenuitem.triggered.connect(lambda state,f="nox": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "C" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(MESSAGE_ICON),"Allow CTCP messages",self)
+				pmenuitem.triggered.connect(lambda state,f="yesctcp": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid CTCP messages",self)
+				pmenuitem.triggered.connect(lambda state,f="noctcp": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			if "s" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(S_ICON),"Make channel public",self)
+				pmenuitem.triggered.connect(lambda state,f="yespub": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(S_ICON),"Make channel secret",self)
+				pmenuitem.triggered.connect(lambda state,f="nopub": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
+			popup_menu.insertMenu(popup_menu.actions()[counter],cmodes)
+			counter = counter + 1
+
+		if counter>0:
+			popup_menu.insertSeparator(popup_menu.actions()[counter])
+
+		popup_menu.exec_(event.globalPos())
+
+		#return super().contextMenuEvent(event)
 
 class Window(QMainWindow):
+
+	def contextOpAction(self,function):
+		if function=="notopic":
+			self.client.mode(self.name,True,"t")
+			return
+		if function=="yestopic":
+			self.client.mode(self.name,False,"t")
+			return
+
+		if function=="nopub":
+			self.client.mode(self.name,True,"s")
+			return
+		if function=="yespub":
+			self.client.mode(self.name,False,"s")
+			return
+
+		if function=="noctcp":
+			self.client.mode(self.name,True,"C")
+			return
+		if function=="yesctcp":
+			self.client.mode(self.name,False,"C")
+			return
+		if function=="nox":
+			self.client.mode(self.name,True,"n")
+			return
+		if function=="yesx":
+			self.client.mode(self.name,False,"n")
+			return
+		if function=="yescolors":
+			self.client.mode(self.name,False,"c")
+			return
+		if function=="nocolors":
+			self.client.mode(self.name,True,"c")
+			return
+		if function=="lock":
+			newkey = KeyDialog(self)
+			if newkey:
+				self.client.sendLine("MODE "+self.name+" +k "+newkey)
+				return
+		if function=="unlock":
+			self.client.sendLine("MODE "+self.name+" -k "+self.key)
+			return
+		if function=="unmoderate":
+			self.client.mode(self.name,False,"m")
+			return
+		if function=="moderate":
+			self.client.mode(self.name,True,"m")
+			return
+
+	def setTopic(self):
+		newtopic = TopicDialog(self.topic,self)
+		if newtopic:
+			self.client.topic(self.name,newtopic)
 
 	def set_uptime(self,uptime):
 
@@ -414,7 +570,8 @@ class Window(QMainWindow):
 		self.setWindowTitle(" "+self.name)
 		self.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
 
-		self.channelChatDisplay = QTextBrowser(self)
+		self.channelChatDisplay = ChatDisplay(self)
+		#self.channelChatDisplay = QTextBrowser(self)
 		self.channelChatDisplay.setObjectName("channelChatDisplay")
 		self.channelChatDisplay.setFocusPolicy(Qt.NoFocus)
 		self.channelChatDisplay.anchorClicked.connect(self.linkClicked)

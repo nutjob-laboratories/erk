@@ -14,8 +14,26 @@ import erk.dialogs.join_channel as JoinChannel
 import erk.dialogs.about as About
 import erk.dialogs.format as Format
 import erk.dialogs.log_display_size as Linecount
+import erk.dialogs.topic as Topic
+import erk.dialogs.key as Key
 
 from erk.resources import *
+
+def KeyDialog(obj):
+	x = Key.Dialog(obj)
+	info = x.get_key_information(obj)
+	del x
+
+	if not info: return None
+	return info
+
+def TopicDialog(topic,obj):
+	x = Topic.Dialog(topic,obj)
+	info = x.get_topic_information(topic,obj)
+	del x
+
+	if not info: return None
+	return info
 
 def IOsizeDialog(obj):
 	x = Linecount.Dialog("Maximum lines displayed",obj.max_lines_in_io_display,IO_ICON,obj)
