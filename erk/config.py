@@ -202,6 +202,9 @@ SETTING_FETCH_HOSTMASKS = "retrieve_hostmasks_on_join_if_needed"
 SETTING_MAX_LINES_IN_IO = "maximum_number_of_lines_displayed_in_io_window"
 SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION = "io_window_shows_traffic_starting_at_connection"
 
+SETTING_CHANNEL_WINDOW_MODES = "show_mode_menu_in_channel_windows"
+SETTING_CHANNEL_WINDOW_BANS = "show_bans_menu_in_channel_windows"
+
 def patch_config_file(data):
 	s = len(data)
 	if not SETTING_FONT in data: data[SETTING_FONT] = ""
@@ -253,6 +256,8 @@ def patch_config_file(data):
 	if not SETTING_FETCH_HOSTMASKS in data: data[SETTING_FETCH_HOSTMASKS] = True
 	if not SETTING_MAX_LINES_IN_IO in data: data[SETTING_MAX_LINES_IN_IO] = 500
 	if not SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION in data: data[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION] = True
+	if not SETTING_CHANNEL_WINDOW_MODES in data: data[SETTING_CHANNEL_WINDOW_MODES] = True
+	if not SETTING_CHANNEL_WINDOW_BANS in data: data[SETTING_CHANNEL_WINDOW_BANS] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -317,6 +322,8 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_FETCH_HOSTMASKS: True,
 			SETTING_MAX_LINES_IN_IO: 500,
 			SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION: True,
+			SETTING_CHANNEL_WINDOW_MODES: True,
+			SETTING_CHANNEL_WINDOW_BANS: True,
 		}
 		save_settings(si)
 		return si

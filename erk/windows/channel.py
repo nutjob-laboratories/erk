@@ -755,13 +755,15 @@ class Window(QMainWindow):
 	def buildMenuBar(self):
 		self.menubar.clear()
 
-		if len(self.modeson)>0:
-			self.actModes = self.menubar.addMenu("Modes")
-			self.rebuildModesMenu()
+		if self.gui.show_channel_modes:
+			if len(self.modeson)>0:
+				self.actModes = self.menubar.addMenu("Modes")
+				self.rebuildModesMenu()
 
-		if len(self.banlist)>0:
-			self.actBans = self.menubar.addMenu("Bans")
-			self.rebuildBanMenu()
+		if self.gui.show_channel_bans:
+			if len(self.banlist)>0:
+				self.actBans = self.menubar.addMenu("Bans")
+				self.rebuildBanMenu()
 
 	def rebuildBanMenu(self):
 		self.actBans.clear()

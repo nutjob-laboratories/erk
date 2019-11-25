@@ -54,8 +54,6 @@ CONNECTION_DISPLAY_WEST = "left side"
 CONNECTION_DISPLAY_EAST = "right side"
 CONNECTION_DISPLAY_VISIBLE = "Enabled"
 
-TEXT_ENTRY_MENU_NAME = "Text entry"
-
 MISC_EXPAND_NODE_ON_CONNECT = "Expand servers on connection"
 CONNECTION_DISPLAY_UPTIME = "Display server uptime"
 CONNECTION_DISPLAY_LOCATION = "Put window list on the..."
@@ -263,3 +261,7 @@ AWAY_COMMAND_DEFAULT_MESSAGE = "Away"
 
 BACK_COMMAND = "/back"
 BACK_COMMAND_HELP = "Usage: /back"
+
+CHANNEL_WINDOW_MENU_NAME = "Channel windows"
+CHANNEL_MODE_MENU_NAME = "Show channel mode menu"
+CHANNEL_BAN_MENU_NAME = "Show channel ban menu"

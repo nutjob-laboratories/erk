@@ -17,6 +17,8 @@ Version 0.600
 	* Added /away and /back commands
 	* If the user has the nickname display visible, going /away will unbold and italicize the nick; /back reverses this back to normal
 	* Added to the left click console menu in channel chat; users can now set modes (if they have the right privledges)
+	* Added an option to hide channel window mode and ban menus
+	* Removed the "Text entry" section from the display settings menu, and added a "Channel window" entry
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

@@ -61,7 +61,6 @@ FANCY_RESIZE = ":/fancy-resize.png"
 FANCY_SERVER = ":/fancy-server.png"
 FANCY_COLOR = ":/fancy-colors.png"
 
-ENTRY_ICON = ":/menu-entry.png"
 VISITED_ICON = ":/menu-visited.png"
 
 CONNECTING_ANIMATION = ":/connecting.gif"

@@ -503,6 +503,9 @@ class Erk(QMainWindow):
 		self.max_lines_in_io_display		= self.settings[SETTING_MAX_LINES_IN_IO]
 		self.show_net_traffic_from_connection = self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION]
 
+		self.show_channel_modes = self.settings[SETTING_CHANNEL_WINDOW_MODES]
+		self.show_channel_bans = self.settings[SETTING_CHANNEL_WINDOW_BANS]
+
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
 		# built-in font
@@ -673,6 +676,28 @@ class Erk(QMainWindow):
 
 		self.displayMenu.addSeparator()
 
+		displayMenu_Channel_Submenu = self.displayMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
+
+		displayMenu_Channel_Modemenu = QAction(CHANNEL_MODE_MENU_NAME,self,checkable=True)
+		displayMenu_Channel_Modemenu.setChecked(self.show_channel_modes)
+		displayMenu_Channel_Modemenu.triggered.connect(lambda state,s="modemenu": self.settingsMenu_Setting(s))
+		displayMenu_Channel_Submenu.addAction(displayMenu_Channel_Modemenu)
+
+		displayMenu_Channel_Banmenu = QAction(CHANNEL_BAN_MENU_NAME,self,checkable=True)
+		displayMenu_Channel_Banmenu.setChecked(self.show_channel_bans)
+		displayMenu_Channel_Banmenu.triggered.connect(lambda state,s="banmenu": self.settingsMenu_Setting(s))
+		displayMenu_Channel_Submenu.addAction(displayMenu_Channel_Banmenu)
+
+		displayMisc_Submenu_ChannelNick = QAction(DISPLAY_NICK_MENU_NAME,self,checkable=True)
+		displayMisc_Submenu_ChannelNick.setChecked(self.show_nick_on_channel_windows)
+		displayMisc_Submenu_ChannelNick.triggered.connect(lambda state,s="shownick": self.settingsMenu_Setting(s))
+		displayMenu_Channel_Submenu.addAction(displayMisc_Submenu_ChannelNick)
+
+		self.displayMisc_Submenu_ClickNick = QAction(CLICK_NICK_MENU_NAME,self,checkable=True)
+		self.displayMisc_Submenu_ClickNick.setChecked(self.click_nick_change)
+		self.displayMisc_Submenu_ClickNick.triggered.connect(lambda state,s="clicknick": self.settingsMenu_Setting(s))
+		displayMenu_Channel_Submenu.addAction(self.displayMisc_Submenu_ClickNick)
+
 		displayMenu_Message_Submenu = self.displayMenu.addMenu(QIcon(MESSAGE_ICON),MESSAGES_MENU_NAME)
 
 		displayMenu_Auto_Private = QAction(MESSAGE_AUTO_CREATE_NAME,self,checkable=True)
@@ -767,18 +792,6 @@ class Erk(QMainWindow):
 			self.connectionSubmenu_Right.setChecked(True)
 		elif self.connection_display_location=="left":
 			self.connectionSubmenu_Left.setChecked(True)
-
-		displayMenu_Entry_Submenu = self.displayMenu.addMenu(QIcon(ENTRY_ICON),TEXT_ENTRY_MENU_NAME)
-
-		displayMisc_Submenu_ChannelNick = QAction(DISPLAY_NICK_MENU_NAME,self,checkable=True)
-		displayMisc_Submenu_ChannelNick.setChecked(self.show_nick_on_channel_windows)
-		displayMisc_Submenu_ChannelNick.triggered.connect(lambda state,s="shownick": self.settingsMenu_Setting(s))
-		displayMenu_Entry_Submenu.addAction(displayMisc_Submenu_ChannelNick)
-
-		self.displayMisc_Submenu_ClickNick = QAction(CLICK_NICK_MENU_NAME,self,checkable=True)
-		self.displayMisc_Submenu_ClickNick.setChecked(self.click_nick_change)
-		self.displayMisc_Submenu_ClickNick.triggered.connect(lambda state,s="clicknick": self.settingsMenu_Setting(s))
-		displayMenu_Entry_Submenu.addAction(self.displayMisc_Submenu_ClickNick)
 
 		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
 
@@ -1268,6 +1281,20 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="banmenu":
+			if self.show_channel_bans:
+				self.show_channel_bans = False
+			else:
+				self.show_channel_bans = True
+			self.settings[SETTING_CHANNEL_WINDOW_BANS] = self.show_channel_bans
+
+		if setting=="modemenu":
+			if self.show_channel_modes:
+				self.show_channel_modes = False
+			else:
+				self.show_channel_modes = True
+			self.settings[SETTING_CHANNEL_WINDOW_MODES] = self.show_channel_modes
 
 		if setting=="traffic_connection":
 			if self.show_net_traffic_from_connection:
