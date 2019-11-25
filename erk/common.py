@@ -8,6 +8,8 @@ DEFAULT_IRCNAME = "Erk IRC Client"
 DEFAULT_ALTERNATIVE = "erk_user_1"
 
 CONSOLE_COMMANDS = {
+	"/away":"/away ",
+	"/back": "/back",
 	"/join": "/join ",
 	"/part": "/part ",
 	"/msg": "/msg ",
@@ -17,6 +19,8 @@ CONSOLE_COMMANDS = {
 }
 
 INPUT_COMMANDS = {
+	"/away":"/away ",
+	"/back": "/back",
 	"/topic": "/topic ",
 	"/join": "/join ",
 	"/part": "/part ",

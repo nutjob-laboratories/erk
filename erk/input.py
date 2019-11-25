@@ -14,15 +14,35 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /away
+	if len(tokens)>0:
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
+			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
+			return
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
+			tokens.pop(0)	# Remove command
+			msg = ' '.join(tokens)
+			client.away(msg)
+			return
+
+	# /back
+	if len(tokens)>0:
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
+			client.back()
+			return
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
+			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
+			return
+
 	# /topic
 	if len(tokens)>0:
-		if tokens[0].lower()=="/topic" and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',"/topic [CHANNEL] TEXT")
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_HELP)
 			return
-		if tokens[0].lower()=="/topic" and len(tokens)==2:
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
 			client.topic(window.name,tokens[1])
 			return
-		if tokens[0].lower()=="/topic" and len(tokens)>2:
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# no channel argument
 				tokens.pop(0)	# Remove command
@@ -152,20 +172,40 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /away
+	if len(tokens)>0:
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
+			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
+			return
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
+			tokens.pop(0)	# Remove command
+			msg = ' '.join(tokens)
+			client.away(msg)
+			return
+
+	# /back
+	if len(tokens)>0:
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
+			client.back()
+			return
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
+			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
+			return
+
 	# /topic
 	if len(tokens)>0:
-		if tokens[0].lower()=="/topic" and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
 			return
-		if tokens[0].lower()=="/topic" and len(tokens)==2:
-			window.writeLog(ERROR_MESSAGE,'',f"Private message windows don't have topics")
-			window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
+			window.writeLog(ERROR_MESSAGE,'',PRIVATE_TOPIC_ERROR)
+			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
 			return
-		if tokens[0].lower()=="/topic" and len(tokens)>2:
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# no channel argument
-				window.writeLog(ERROR_MESSAGE,'',f"{tokens[1]} is not a valid channel name")
-				window.writeLog(ERROR_MESSAGE,'',"/topic CHANNEL TEXT")
+				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_NOT_CHANNEL_ERROR.format(tokens[1]))
+				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
 				return
 			else:
 				# channel argument
@@ -285,6 +325,49 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# /away
+	if len(tokens)>0:
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
+			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
+			return
+		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
+			tokens.pop(0)	# Remove command
+			msg = ' '.join(tokens)
+			client.away(msg)
+			return
+
+	# /back
+	if len(tokens)>0:
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
+			client.back()
+			return
+		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
+			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
+			return
+
+	# /topic
+	if len(tokens)>0:
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
+			return
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
+			window.writeLog(ERROR_MESSAGE,'',CONSOLE_TOPIC_ERROR)
+			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
+			return
+		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
+			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
+				# no channel argument
+				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_NOT_CHANNEL_ERROR.format(tokens[1]))
+				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
+				return
+			else:
+				# channel argument
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.topic(channel,msg)
+				return
 
 	# /quit
 	if len(tokens)>0:

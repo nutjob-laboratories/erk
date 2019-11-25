@@ -357,18 +357,6 @@ class Window(QMainWindow):
 		#self.rebuildModesMenu()
 		self.buildMenuBar()
 
-	def setNick(self,nick):
-		if self.gui.click_nick_change:
-			self.nick.setText("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+nick+" </small></b></a>")
-		else:
-			self.nick.setText("<b><small> "+nick+" </small></b>")
-
-	def onNickClick(self):
-		self.nick.setText("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+self.client.nickname+" </small></b></a>")
-
-	def offNickClick(self):
-		self.nick.setText("<b><small> "+self.client.nickname+" </small></b>")
-
 	def nickClicked(self,link):
 		newnick = NewNickDialog(self.client.nickname,self)
 		if newnick:
@@ -389,6 +377,8 @@ class Window(QMainWindow):
 		self.is_user = False
 
 		self.part_message = ''
+
+		self.is_away = False
 
 		# self.plain_user_lists = False
 		self.plain_user_lists = self.gui.plain_user_lists
@@ -506,10 +496,16 @@ class Window(QMainWindow):
 		self.channelUserDisplay.setMaximumWidth(ulwidth)
 
 		if self.gui.click_nick_change:
-			self.nick = QLabel("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+self.client.nickname+" </small></b></a>")
+			#self.nick = QLabel("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+self.client.nickname+" </small></b></a>")
+			l = self.create_nick_link().format(self.client.nickname)
+			self.nick = QLabel(l)
 		else:
-			self.nick = QLabel("<b><small> "+self.client.nickname+" </small></b>")
+			#self.nick = QLabel("<b><small> "+self.client.nickname+" </small></b>")
+			l = self.create_nick_no_link().format(self.client.nickname)
+			self.nick = QLabel(l)
 		self.nick.linkActivated.connect(self.nickClicked)
+
+		#self.nick.setFixedWidth(fm.width('X')*15)
 
 		entryLayout = QHBoxLayout()
 		entryLayout.setSpacing(window_margin)
@@ -543,6 +539,61 @@ class Window(QMainWindow):
 		# Menubar
 		self.menubar = self.menuBar()
 		self.buildMenuBar()
+
+	def setAway(self):
+		self.is_away = True
+		#self.status_away.setText("<i>Away</i>")
+		self.refresh_nick_display()
+
+	def setUnaway(self):
+		self.is_away = False
+		#self.status_away.setText("")
+		self.refresh_nick_display()
+
+	def refresh_nick_display(self):
+		if self.gui.click_nick_change:
+			l = self.create_nick_link().format(self.client.nickname)
+		else:
+			l = self.create_nick_no_link().format(self.client.nickname)
+
+		self.nick.setText(l)
+
+	def create_nick_link(self):
+		if self.is_away:
+			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><small> <i>{}</i> </small></a>"
+		else:
+			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> {} </small></b></a>"
+
+	def create_nick_no_link(self):
+		if self.is_away:
+			return "<small> <i>{}</i> </small>"
+		else:
+			return "<b><small> {} </small></b>"
+
+	def setNick(self,nick):
+
+		if self.gui.click_nick_change:
+			l = self.create_nick_link().format(nick)
+		else:
+			l = self.create_nick_no_link().format(nick)
+
+		self.nick.setText(l)
+
+		# if self.gui.click_nick_change:
+		# 	self.nick.setText("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+nick+" </small></b></a>")
+		# else:
+		# 	self.nick.setText("<b><small> "+nick+" </small></b>")
+
+	def onNickClick(self):
+		#self.nick.setText("<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> "+self.client.nickname+" </small></b></a>")
+
+		l = self.create_nick_link().format(self.client.nickname)
+		self.nick.setText((l))
+
+	def offNickClick(self):
+		#self.nick.setText("<b><small> "+self.client.nickname+" </small></b>")
+		l = self.create_nick_no_link().format(self.client.nickname)
+		self.nick.setText((l))
 
 	def buildMenuBar(self):
 		self.menubar.clear()

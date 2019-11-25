@@ -14,6 +14,8 @@ Version 0.600
 	* Made mode and ban menus dynamic (if there is no info to display, they are hidden)
 	* Added /topic command
 	* Command errors are now displayed in red
+	* Added /away and /back commands
+	* If the user has the nickname display visible, going /away will unbold and italicize the nick; /back reverses this back to normal
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

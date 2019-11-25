@@ -501,7 +501,6 @@ class Erk(QMainWindow):
 		self.mark_end_of_loaded_logs		= self.settings[SETTING_MARK_END_OF_LOADED_LOGS]
 		self.get_hostmasks_on_join			= self.settings[SETTING_FETCH_HOSTMASKS]
 		self.max_lines_in_io_display		= self.settings[SETTING_MAX_LINES_IN_IO]
-
 		self.show_net_traffic_from_connection = self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION]
 
 		# Load in font information from the settings file

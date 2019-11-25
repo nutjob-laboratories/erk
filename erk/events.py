@@ -622,6 +622,16 @@ def action_message(gui,client,channel,user,message):
 
 	private_chat_window.writeLog(ACTION_MESSAGE,nickname,nickname+" "+message)
 
+def client_away(gui,client):
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			window.setAway()
+
+def client_unaway(gui,client):
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			window.setUnaway()
+
 def banlist(gui,client,channel,banlist):
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:

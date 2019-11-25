@@ -107,6 +107,7 @@ class IRC_Connection(irc.IRCClient):
 		self.is_away = False
 
 		# self.gui.irc_not_away(self,msg)
+		erk.events.client_unaway(self.gui,self)
 
 	def irc_RPL_NOWAWAY(self,prefix,params):
 
@@ -115,6 +116,8 @@ class IRC_Connection(irc.IRCClient):
 		self.is_away = True
 
 		# self.gui.irc_is_away(self,msg)
+
+		erk.events.client_away(self.gui,self)
 
 
 	def irc_RPL_BANLIST(self,prefix,params):

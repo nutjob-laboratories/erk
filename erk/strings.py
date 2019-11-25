@@ -250,3 +250,16 @@ MODE_MODERATED = "Channel is moderated"
 MODE_CTCP_BAN = "CTCP is forbidden"
 MODE_NO_COLORS = "IRC colors forbidden"
 MODE_KEY = "Channel key:"
+
+TOPIC_COMMAND = "/topic"
+TOPIC_COMMAND_HELP = "Usage: /topic [CHANNEL] TEXT"
+TOPIC_COMMAND_PRIVATE_HELP = "Usage: /topic CHANNEL TEXT"
+PRIVATE_TOPIC_ERROR = "Private message windows don't have a topic"
+TOPIC_COMMAND_NOT_CHANNEL_ERROR = "\"{}\" is not a valid channel name"
+CONSOLE_TOPIC_ERROR = "Server windows don't have a topic"
+
+AWAY_COMMAND = "/away"
+AWAY_COMMAND_DEFAULT_MESSAGE = "Away"
+
+BACK_COMMAND = "/back"
+BACK_COMMAND_HELP = "Usage: /back"
