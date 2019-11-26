@@ -20,6 +20,8 @@ EXIT_MENU_NAME = "Exit"
 
 DISPLAY_MENU_NAME = "Settings"
 
+WINDOWS_MENU_NAME = "Windows"
+
 FONT_MENU_NAME = "Font"
 FONT_MENU_DESCRIPTION = "Set application font"
 

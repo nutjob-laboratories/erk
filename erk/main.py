@@ -562,15 +562,17 @@ class Erk(QMainWindow):
 		self.addToolBar(Qt.TopToolBarArea,self.toolbar)
 
 		self.ircMenu = QMenu()
-		self.displayMenu = QMenu()
+		#self.displayMenu = QMenu()
 		self.settingsMenu = QMenu()
 		self.helpMenu = QMenu()
+		self.windowsMenu = QMenu()
 
 		self.toolMenuStyle = SmallerIconsMenuStyle('Windows')
 		self.ircMenu.setStyle(self.toolMenuStyle)
-		self.displayMenu.setStyle(self.toolMenuStyle)
+		#self.displayMenu.setStyle(self.toolMenuStyle)
 		self.settingsMenu.setStyle(self.toolMenuStyle)
 		self.helpMenu.setStyle(self.toolMenuStyle)
+		self.windowsMenu.setStyle(self.toolMenuStyle)
 
 		self.buildToolbar()
 
@@ -583,9 +585,10 @@ class Erk(QMainWindow):
 
 		self.toolbar.clear()
 		self.ircMenu.clear()
-		self.displayMenu.clear()
+		#self.displayMenu.clear()
 		self.settingsMenu.clear()
 		self.helpMenu.clear()
+		self.windowsMenu.clear()
 
 		# Main menu
 		add_toolbar_menu(self.toolbar,APPLICATION_NAME,self.ircMenu)
@@ -993,15 +996,69 @@ class Erk(QMainWindow):
 
 		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
 
-		self.settingsMenu.addSeparator()
+		# Windows menu
+		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)
 
 		menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
 		menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
-		self.settingsMenu.addAction(menuCascade)
+		self.windowsMenu.addAction(menuCascade)
 
 		menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
 		menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
-		self.settingsMenu.addAction(menuTile)
+		self.windowsMenu.addAction(menuTile)
+
+		menuCascade.setEnabled(False)
+		menuTile.setEnabled(False)
+
+		snetworks = {}
+		channels,privates,consoles = erk.events.getWindows()
+
+		if len(consoles)>0:
+			menuCascade.setEnabled(True)
+			menuTile.setEnabled(True)
+
+		for w in channels:
+			n = w.client.network
+			if n in snetworks:
+				snetworks[n].append(w)
+			else:
+				snetworks[n] = []
+				snetworks[n].append(w)
+		for w in privates:
+			n = w.client.network
+			if n in snetworks:
+				snetworks[n].append(w)
+			else:
+				snetworks[n] = []
+				snetworks[n].append(w)
+		for w in consoles:
+			n = w.client.network
+			if n in snetworks:
+				snetworks[n].append(w)
+			else:
+				snetworks[n] = []
+				snetworks[n].append(w)
+
+		for net in snetworks:
+
+			banner = textSeparator(self,"<b>"+net.upper()+"</b>")
+			self.windowsMenu.addAction(banner)
+
+			for window in snetworks[net]:
+				if window.is_console:
+					entry = QAction(QIcon(CONSOLE_WINDOW_ICON),window.name,self)
+					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
+					self.windowsMenu.addAction(entry)
+			for window in snetworks[net]:
+				if window.is_channel:
+					entry = QAction(QIcon(CHANNEL_WINDOW_ICON),window.name,self)
+					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
+					self.windowsMenu.addAction(entry)
+			for window in snetworks[net]:
+				if window.is_user:
+					entry = QAction(QIcon(USER_WINDOW_ICON),window.name,self)
+					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
+					self.windowsMenu.addAction(entry)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)

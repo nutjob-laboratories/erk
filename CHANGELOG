@@ -22,6 +22,7 @@ Version 0.600
 	* Bugfix: ban and mode menus would not disappear is turned off. Now the function works as expected
 	* Consolidated all settings into one menu
 	* Cleaned up settings menu code
+	* Added a windows menu, listing all subwindows
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
