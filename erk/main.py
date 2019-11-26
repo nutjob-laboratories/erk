@@ -675,101 +675,101 @@ class Erk(QMainWindow):
 		self.ircMenu.addAction(ircMenu_Exit)
 
 		# Display menu
-		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.displayMenu)
+		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.settingsMenu)
 
-		self.displayMenu_Font = fancyMenu(self,FANCY_FONT,FONT_MENU_NAME,FONT_MENU_DESCRIPTION,self.displayMenu_Font_Action)
-		self.displayMenu.addAction(self.displayMenu_Font)
+		self.settingsMenu_Font = fancyMenu(self,FANCY_FONT,FONT_MENU_NAME,FONT_MENU_DESCRIPTION,self.displayMenu_Font_Action)
+		self.settingsMenu.addAction(self.settingsMenu_Font)
 
-		self.displayMenu_Color = fancyMenu(self,FANCY_COLOR,FORMAT_MENU_NAME,FORMAT_MENU_DESCRIPTION,self.menuFormat)
-		self.displayMenu.addAction(self.displayMenu_Color)
+		self.settingsMenu_Color = fancyMenu(self,FANCY_COLOR,FORMAT_MENU_NAME,FORMAT_MENU_DESCRIPTION,self.menuFormat)
+		self.settingsMenu.addAction(self.settingsMenu_Color)
 
-		self.displayMenu_Resize = fancyMenu(self,FANCY_RESIZE,WINDOW_SIZE_MENU_NAME,WINDOW_SIZE_MENU_DESCRIPTION,self.displayMenu_Resize_Action)
-		self.displayMenu.addAction(self.displayMenu_Resize)
+		self.settingsMenu_Resize = fancyMenu(self,FANCY_RESIZE,WINDOW_SIZE_MENU_NAME,WINDOW_SIZE_MENU_DESCRIPTION,self.displayMenu_Resize_Action)
+		self.settingsMenu.addAction(self.settingsMenu_Resize)
 
-		self.displayMenu.addSeparator()
+		self.settingsMenu.addSeparator()
 
-		displayMenu_Channel_Submenu = self.displayMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
+		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
 
-		displayMenu_Channel_Modemenu = QAction(CHANNEL_MODE_MENU_NAME,self,checkable=True)
-		displayMenu_Channel_Modemenu.setChecked(self.show_channel_modes)
-		displayMenu_Channel_Modemenu.triggered.connect(lambda state,s="modemenu": self.settingsMenu_Setting(s))
-		displayMenu_Channel_Submenu.addAction(displayMenu_Channel_Modemenu)
+		settingsMenu_Channel_Modemenu = QAction(CHANNEL_MODE_MENU_NAME,self,checkable=True)
+		settingsMenu_Channel_Modemenu.setChecked(self.show_channel_modes)
+		settingsMenu_Channel_Modemenu.triggered.connect(lambda state,s="modemenu": self.settingsMenu_Setting(s))
+		settingsMenu_Channel_Submenu.addAction(settingsMenu_Channel_Modemenu)
 
-		displayMenu_Channel_Banmenu = QAction(CHANNEL_BAN_MENU_NAME,self,checkable=True)
-		displayMenu_Channel_Banmenu.setChecked(self.show_channel_bans)
-		displayMenu_Channel_Banmenu.triggered.connect(lambda state,s="banmenu": self.settingsMenu_Setting(s))
-		displayMenu_Channel_Submenu.addAction(displayMenu_Channel_Banmenu)
+		settingsMenu_Channel_Banmenu = QAction(CHANNEL_BAN_MENU_NAME,self,checkable=True)
+		settingsMenu_Channel_Banmenu.setChecked(self.show_channel_bans)
+		settingsMenu_Channel_Banmenu.triggered.connect(lambda state,s="banmenu": self.settingsMenu_Setting(s))
+		settingsMenu_Channel_Submenu.addAction(settingsMenu_Channel_Banmenu)
 
-		displayMisc_Submenu_ChannelNick = QAction(DISPLAY_NICK_MENU_NAME,self,checkable=True)
-		displayMisc_Submenu_ChannelNick.setChecked(self.show_nick_on_channel_windows)
-		displayMisc_Submenu_ChannelNick.triggered.connect(lambda state,s="shownick": self.settingsMenu_Setting(s))
-		displayMenu_Channel_Submenu.addAction(displayMisc_Submenu_ChannelNick)
+		settingMisc_Submenu_ChannelNick = QAction(DISPLAY_NICK_MENU_NAME,self,checkable=True)
+		settingMisc_Submenu_ChannelNick.setChecked(self.show_nick_on_channel_windows)
+		settingMisc_Submenu_ChannelNick.triggered.connect(lambda state,s="shownick": self.settingsMenu_Setting(s))
+		settingsMenu_Channel_Submenu.addAction(settingMisc_Submenu_ChannelNick)
 
-		self.displayMisc_Submenu_ClickNick = QAction(CLICK_NICK_MENU_NAME,self,checkable=True)
-		self.displayMisc_Submenu_ClickNick.setChecked(self.click_nick_change)
-		self.displayMisc_Submenu_ClickNick.triggered.connect(lambda state,s="clicknick": self.settingsMenu_Setting(s))
-		displayMenu_Channel_Submenu.addAction(self.displayMisc_Submenu_ClickNick)
+		self.settingMisc_Submenu_ClickNick = QAction(CLICK_NICK_MENU_NAME,self,checkable=True)
+		self.settingMisc_Submenu_ClickNick.setChecked(self.click_nick_change)
+		self.settingMisc_Submenu_ClickNick.triggered.connect(lambda state,s="clicknick": self.settingsMenu_Setting(s))
+		settingsMenu_Channel_Submenu.addAction(self.settingMisc_Submenu_ClickNick)
 
-		displayMenu_Message_Submenu = self.displayMenu.addMenu(QIcon(MESSAGE_ICON),MESSAGES_MENU_NAME)
+		settingMenu_Message_Submenu = self.settingsMenu.addMenu(QIcon(MESSAGE_ICON),MESSAGES_MENU_NAME)
 
-		displayMenu_Auto_Private = QAction(MESSAGE_AUTO_CREATE_NAME,self,checkable=True)
-		displayMenu_Auto_Private.setChecked(self.auto_create_private)
-		displayMenu_Auto_Private.triggered.connect(lambda state,s="private": self.settingsMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_Auto_Private)
+		settingMenu_Auto_Private = QAction(MESSAGE_AUTO_CREATE_NAME,self,checkable=True)
+		settingMenu_Auto_Private.setChecked(self.auto_create_private)
+		settingMenu_Auto_Private.triggered.connect(lambda state,s="private": self.settingsMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_Auto_Private)
 
 		settingsMenu_Flash_Private = QAction(MESSAGE_FLASH_PRIVATE_NAME,self,checkable=True)
 		settingsMenu_Flash_Private.setChecked(self.flash_unread_private)
 		settingsMenu_Flash_Private.triggered.connect(lambda state,s="flash": self.settingsMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(settingsMenu_Flash_Private)
+		settingMenu_Message_Submenu.addAction(settingsMenu_Flash_Private)
 
 		settingsMenu_Unseen_Marker = QAction(MESSAGE_MARK_UNSEEN_MENU_NAME,self,checkable=True)
 		settingsMenu_Unseen_Marker.setChecked(self.mark_unread_messages)
 		settingsMenu_Unseen_Marker.triggered.connect(lambda state,s="unseen": self.settingsMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(settingsMenu_Unseen_Marker)
+		settingMenu_Message_Submenu.addAction(settingsMenu_Unseen_Marker)
 
-		displayMenu_Click_Nick = QAction(MESSAGE_CLICKABLE_NICKNAME_NAME,self,checkable=True)
-		displayMenu_Click_Nick.setChecked(self.click_usernames)
-		displayMenu_Click_Nick.triggered.connect(lambda state,s="clicknick": self.displayMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_Click_Nick)
+		settingMenu_Click_Nick = QAction(MESSAGE_CLICKABLE_NICKNAME_NAME,self,checkable=True)
+		settingMenu_Click_Nick.setChecked(self.click_usernames)
+		settingMenu_Click_Nick.triggered.connect(lambda state,s="clicknick": self.displayMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_Click_Nick)
 
-		displayMenu_IRC_Colors = QAction(MESSAGES_IRCCOLOR_MENU_NAME,self,checkable=True)
-		displayMenu_IRC_Colors.setChecked(self.irc_color)
-		displayMenu_IRC_Colors.triggered.connect(lambda state,s="irc_color": self.displayMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_IRC_Colors)
+		settingMenu_IRC_Colors = QAction(MESSAGES_IRCCOLOR_MENU_NAME,self,checkable=True)
+		settingMenu_IRC_Colors.setChecked(self.irc_color)
+		settingMenu_IRC_Colors.triggered.connect(lambda state,s="irc_color": self.displayMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_IRC_Colors)
 
-		displayMenu_HTML = QAction(MESSAGES_HTML_MENU_NAME,self,checkable=True)
-		displayMenu_HTML.setChecked(self.strip_html)
-		displayMenu_HTML.triggered.connect(lambda state,s="html": self.displayMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_HTML)
+		settingMenu_HTML = QAction(MESSAGES_HTML_MENU_NAME,self,checkable=True)
+		settingMenu_HTML.setChecked(self.strip_html)
+		settingMenu_HTML.triggered.connect(lambda state,s="html": self.displayMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_HTML)
 
-		displayMenu_Link = QAction(MESSAGE_LINK_MENU_NAME,self,checkable=True)
-		displayMenu_Link.setChecked(self.create_links)
-		displayMenu_Link.triggered.connect(lambda state,s="link": self.displayMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_Link)
+		settingMenu_Link = QAction(MESSAGE_LINK_MENU_NAME,self,checkable=True)
+		settingMenu_Link.setChecked(self.create_links)
+		settingMenu_Link.triggered.connect(lambda state,s="link": self.displayMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_Link)
 
-		displayMenu_FilterProfanity = QAction(MESSAGE_PROFANITY_MENU_NAME,self,checkable=True)
-		displayMenu_FilterProfanity.setChecked(self.filter_profanity)
-		displayMenu_FilterProfanity.triggered.connect(lambda state,s="profanity": self.displayMenu_Setting(s))
-		displayMenu_Message_Submenu.addAction(displayMenu_FilterProfanity)
+		settingMenu_FilterProfanity = QAction(MESSAGE_PROFANITY_MENU_NAME,self,checkable=True)
+		settingMenu_FilterProfanity.setChecked(self.filter_profanity)
+		settingMenu_FilterProfanity.triggered.connect(lambda state,s="profanity": self.displayMenu_Setting(s))
+		settingMenu_Message_Submenu.addAction(settingMenu_FilterProfanity)
 
-		displayMenu_Timestamp_Submenu = self.displayMenu.addMenu(QIcon(TIMESTAMP_ICON),TIMESTAMP_MENU_NAME)
+		settingMenu_Timestamp_Submenu = self.settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),TIMESTAMP_MENU_NAME)
 
 		timestampSubmenu_Visible = QAction(TIMESTAMP_DISPLAY_MENU_NAME,self,checkable=True)
 		timestampSubmenu_Visible.setChecked(self.show_timestamps)
 		timestampSubmenu_Visible.triggered.connect(lambda state,s="view_timestamp": self.displayMenu_Setting(s))
-		displayMenu_Timestamp_Submenu.addAction(timestampSubmenu_Visible)
+		settingMenu_Timestamp_Submenu.addAction(timestampSubmenu_Visible)
 
 		timestampSubmenu_Seconds = QAction(TIMESTAMP_SECONDS_MENU_NAME,self,checkable=True)
 		timestampSubmenu_Seconds.setChecked(self.show_timestamp_seconds)
 		timestampSubmenu_Seconds.triggered.connect(lambda state,s="seconds_timestamp": self.displayMenu_Setting(s))
-		displayMenu_Timestamp_Submenu.addAction(timestampSubmenu_Seconds)
+		settingMenu_Timestamp_Submenu.addAction(timestampSubmenu_Seconds)
 
 		timestampSubmenu_24hour = QAction(TIMESTAMP_24HOUR_MENU_NAME,self,checkable=True)
 		timestampSubmenu_24hour.setChecked(self.show_timestamp_24hour_clock)
 		timestampSubmenu_24hour.triggered.connect(lambda state,s="24hr_timestamp": self.displayMenu_Setting(s))
-		displayMenu_Timestamp_Submenu.addAction(timestampSubmenu_24hour)
+		settingMenu_Timestamp_Submenu.addAction(timestampSubmenu_24hour)
 
-		settingsMenu_Userlist_Submenu = self.displayMenu.addMenu(QIcon(USERLIST_ICON),USERLIST_MENU_NAME)
+		settingsMenu_Userlist_Submenu = self.settingsMenu.addMenu(QIcon(USERLIST_ICON),USERLIST_MENU_NAME)
 
 		settingsUserlist_PlainUsers = QAction(PLAIN_USERS_MENU_NAME,self,checkable=True)
 		settingsUserlist_PlainUsers.setChecked(self.plain_user_lists)
@@ -781,41 +781,41 @@ class Erk(QMainWindow):
 		settingsUserlist_DoubleclickNick.triggered.connect(lambda state,s="doubleclick": self.settingsMenu_Setting(s))
 		settingsMenu_Userlist_Submenu.addAction(settingsUserlist_DoubleclickNick)
 
-		displayMenu_Connection_Submenu = self.displayMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),CONNECTION_DISPLAY_MENU_NAME)
+		settingMenu_Connection_Submenu = self.settingsMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),CONNECTION_DISPLAY_MENU_NAME)
 
 		self.connectionSubmenu_Visible = QAction(CONNECTION_DISPLAY_VISIBLE,self,checkable=True)
 		self.connectionSubmenu_Visible.setChecked(self.connection_display_visible)
 		self.connectionSubmenu_Visible.triggered.connect(self.connectionSubmenu_Visible_Action)
-		displayMenu_Connection_Submenu.addAction(self.connectionSubmenu_Visible)
+		settingMenu_Connection_Submenu.addAction(self.connectionSubmenu_Visible)
 
 		displayMisc_Submenu_ConnectExpand = QAction(MISC_EXPAND_NODE_ON_CONNECT,self,checkable=True)
 		displayMisc_Submenu_ConnectExpand.setChecked(self.connect_expand_node)
 		displayMisc_Submenu_ConnectExpand.triggered.connect(lambda state,s="expand": self.settingsMenu_Setting(s))
-		displayMenu_Connection_Submenu.addAction(displayMisc_Submenu_ConnectExpand)
+		settingMenu_Connection_Submenu.addAction(displayMisc_Submenu_ConnectExpand)
 
 		displayMisc_Submenu_Uptime = QAction(CONNECTION_DISPLAY_UPTIME,self,checkable=True)
 		displayMisc_Submenu_Uptime.setChecked(self.display_uptimes)
 		displayMisc_Submenu_Uptime.triggered.connect(lambda state,s="uptime": self.settingsMenu_Setting(s))
-		displayMenu_Connection_Submenu.addAction(displayMisc_Submenu_Uptime)
+		settingMenu_Connection_Submenu.addAction(displayMisc_Submenu_Uptime)
 
-		displayMenu_Connection_Submenu.addSeparator()
+		settingMenu_Connection_Submenu.addSeparator()
 
-		displayMenu_Connection_Submenu_Position = displayMenu_Connection_Submenu.addMenu(QIcon(POSITION_ICON),CONNECTION_DISPLAY_LOCATION)
+		settingMenu_Connection_Submenu_Position = settingMenu_Connection_Submenu.addMenu(QIcon(POSITION_ICON),CONNECTION_DISPLAY_LOCATION)
 
 		self.connectionSubmenu_Left = QAction(CONNECTION_DISPLAY_WEST,self,checkable=True)
 		self.connectionSubmenu_Left.triggered.connect(lambda state,s="left": self.displayConnection_Setting(s))
-		displayMenu_Connection_Submenu_Position.addAction(self.connectionSubmenu_Left)
+		settingMenu_Connection_Submenu_Position.addAction(self.connectionSubmenu_Left)
 
 		self.connectionSubmenu_Right = QAction(CONNECTION_DISPLAY_EAST,self,checkable=True)
 		self.connectionSubmenu_Right.triggered.connect(lambda state,s="right": self.displayConnection_Setting(s))
-		displayMenu_Connection_Submenu_Position.addAction(self.connectionSubmenu_Right)
+		settingMenu_Connection_Submenu_Position.addAction(self.connectionSubmenu_Right)
 
 		if self.connection_display_location=="right":
 			self.connectionSubmenu_Right.setChecked(True)
 		elif self.connection_display_location=="left":
 			self.connectionSubmenu_Left.setChecked(True)
 
-		settingsMenu_Entry_Submenu = self.displayMenu.addMenu(QIcon(ENTRY_ICON),"Text entry")
+		settingsMenu_Entry_Submenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Text entry")
 
 		settingsMenu_Emoji_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(EMOJI_ICON),EMOJI_MENU_NAME)
 
@@ -891,7 +891,7 @@ class Erk(QMainWindow):
 			spellcheckSubmenu_Spanish.setEnabled(False)
 			spellcheckSubmenu_German.setEnabled(False)
 
-		settingsMenu_Networking_Submenu = self.displayMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
 
 		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
 		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
@@ -919,7 +919,7 @@ class Erk(QMainWindow):
 		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
 		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
 
-		settingsMenu_Logs_Submenu = self.displayMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
+		settingsMenu_Logs_Submenu = self.settingsMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
 
 		self.logSubmenu_Toggle = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_SAVE_ALL_LOGS,self)
 		self.logSubmenu_Toggle.triggered.connect(lambda state,s="all_log_on": self.settingsMenu_Setting(s))
@@ -984,24 +984,24 @@ class Erk(QMainWindow):
 		if self.mark_end_of_loaded_logs:
 			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
 
-		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
+		settingMenu_Misc_Submenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
 
 		displayMisc_Submenu_WinTitle = QAction(TITLE_FROM_ACTIVE_WINDOW_NAME,self,checkable=True)
 		displayMisc_Submenu_WinTitle.setChecked(self.title_from_active)
 		displayMisc_Submenu_WinTitle.triggered.connect(lambda state,s="title": self.settingsMenu_Setting(s))
-		displayMenu_Misc_Submenu.addAction(displayMisc_Submenu_WinTitle)
+		settingMenu_Misc_Submenu.addAction(displayMisc_Submenu_WinTitle)
 
-		if not self.show_nick_on_channel_windows: self.displayMisc_Submenu_ClickNick.setEnabled(False)
+		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
 
-		self.displayMenu.addSeparator()
+		self.settingsMenu.addSeparator()
 
 		menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
 		menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
-		self.displayMenu.addAction(menuCascade)
+		self.settingsMenu.addAction(menuCascade)
 
 		menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
 		menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
-		self.displayMenu.addAction(menuTile)
+		self.settingsMenu.addAction(menuTile)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)
@@ -1449,11 +1449,11 @@ class Erk(QMainWindow):
 			if self.show_nick_on_channel_windows:
 				self.show_nick_on_channel_windows = False
 				erk.events.channelHideNicks()
-				self.displayMisc_Submenu_ClickNick.setEnabled(False)
+				self.settingMisc_Submenu_ClickNick.setEnabled(False)
 			else:
 				self.show_nick_on_channel_windows = True
 				erk.events.channelShowNicks()
-				self.displayMisc_Submenu_ClickNick.setEnabled(True)
+				self.settingMisc_Submenu_ClickNick.setEnabled(True)
 			self.settings[SETTING_DISPLAY_NICK_ON_CHANNEL_WINDOWS] = self.show_nick_on_channel_windows
 
 		if setting=="uptime":

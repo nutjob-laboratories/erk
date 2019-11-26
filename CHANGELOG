@@ -21,6 +21,7 @@ Version 0.600
 	* Removed the "Text entry" section from the display settings menu, and added a "Channel window" entry
 	* Bugfix: ban and mode menus would not disappear is turned off. Now the function works as expected
 	* Consolidated all settings into one menu
+	* Cleaned up settings menu code
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
