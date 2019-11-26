@@ -9,7 +9,7 @@ from erk.strings import *
 from erk.widgets import *
 from erk.config import *
 
-from erk.dialogs import ConnectDialog,NetworkDialog,WindowSizeDialog,NewNickDialog,JoinChannelDialog,AboutDialog,FormatDialog,LogsizeDialog,IOsizeDialog
+from erk.dialogs import ConnectDialog,NetworkDialog,WindowSizeDialog,NewNickDialog,JoinChannelDialog,AboutDialog,FormatDialog,LogsizeDialog,IOsizeDialog,CmdHistoryLengthDialog
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
 import erk.events
@@ -502,9 +502,11 @@ class Erk(QMainWindow):
 		self.get_hostmasks_on_join			= self.settings[SETTING_FETCH_HOSTMASKS]
 		self.max_lines_in_io_display		= self.settings[SETTING_MAX_LINES_IN_IO]
 		self.show_net_traffic_from_connection = self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION]
+		self.show_channel_modes				= self.settings[SETTING_CHANNEL_WINDOW_MODES]
+		self.show_channel_bans				= self.settings[SETTING_CHANNEL_WINDOW_BANS]
 
-		self.show_channel_modes = self.settings[SETTING_CHANNEL_WINDOW_MODES]
-		self.show_channel_bans = self.settings[SETTING_CHANNEL_WINDOW_BANS]
+		self.window_command_history = self.settings[SETTING_CMD_HISTORY]
+		self.window_command_history_length = self.settings[SETTING_CMG_HISTORY_LENGTH]
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -756,6 +758,19 @@ class Erk(QMainWindow):
 		settingMenu_Message_Submenu.addAction(settingMenu_FilterProfanity)
 
 		settingsMenu_Entry_Submenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),TEXT_ENTRY_MENU_NAME)
+
+		entry = QAction("Enable command history",self,checkable=True)
+		entry.setChecked(self.window_command_history)
+		entry.triggered.connect(lambda state,s="use_history": self.settingsMenu_Setting(s))
+		settingsMenu_Entry_Submenu.addAction(entry)
+
+
+		entry = QAction(QIcon(HISTORY_ICON),"Set command history length",self)
+		entry.triggered.connect(lambda state,s="cmdlen": self.settingsMenu_Setting(s))
+		settingsMenu_Entry_Submenu.addAction(entry)
+
+		settingsMenu_Entry_Submenu.addSeparator()
+
 
 		settingsMenu_Emoji_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(EMOJI_ICON),EMOJI_MENU_NAME)
 
@@ -1332,6 +1347,21 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="use_history":
+			if self.window_command_history:
+				self.window_command_history = False
+				erk.events.reset_command_history()
+			else:
+				self.window_command_history = True
+			self.settings[SETTING_CMD_HISTORY] = self.window_command_history
+
+		if setting=="cmdlen":
+			lsize = CmdHistoryLengthDialog(self)
+			if lsize:
+				self.window_command_history_length = lsize
+				self.settings[SETTING_CMG_HISTORY_LENGTH] = self.window_command_history_length
+				erk.events.set_command_history_length(self.window_command_history_length)
 
 		if setting=="banmenu":
 			if self.show_channel_bans:

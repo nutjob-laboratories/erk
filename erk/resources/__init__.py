@@ -106,3 +106,5 @@ MODE_UNKNOWN_ICON = ":/menu-mode_unknown.png"
 ENTRY_ICON = ":/menu-entry.png"
 
 CHAT_DISPLAY_ICON = ":/menu-chat_display.png"
+
+HISTORY_ICON = ":/menu-history.png"

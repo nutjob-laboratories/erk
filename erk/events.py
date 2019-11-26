@@ -18,6 +18,25 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def reset_command_history():
+	for w in SERVER_WINDOWS:
+		w.history_buffer = ['']
+		w.history_buffer_pointer = 0
+	for w in CHANNEL_WINDOWS:
+		w.history_buffer = ['']
+		w.history_buffer_pointer = 0
+	for w in PRIVATE_WINDOWS:
+		w.history_buffer = ['']
+		w.history_buffer_pointer = 0
+
+def set_command_history_length(cmdlength):
+	for w in SERVER_WINDOWS:
+		w.history_buffer_max = cmdlength
+	for w in CHANNEL_WINDOWS:
+		w.history_buffer_max = cmdlength
+	for w in PRIVATE_WINDOWS:
+		w.history_buffer_max = cmdlength
+
 def rebuildChannelMenus():
 	for w in CHANNEL_WINDOWS:
 		w.buildMenuBar()

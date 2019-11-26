@@ -229,20 +229,25 @@ class Window(QMainWindow):
 		user_input = self.userTextInput.text()
 		self.userTextInput.setText('')
 
-		# remove blank entry
-		clean = []
-		for c in self.history_buffer:
-			if c=='': continue
-			clean.append(c)
-		self.history_buffer = clean
+		if self.gui.window_command_history:
+			# remove blank entry
+			clean = []
+			for c in self.history_buffer:
+				if c=='': continue
+				clean.append(c)
+			self.history_buffer = clean
 
-		self.history_buffer.insert(0,user_input)
-		if len(self.history_buffer)>self.history_buffer_max:
-			self.history_buffer.pop()
-		self.history_buffer_pointer = -1
+			self.history_buffer.insert(0,user_input)
+			if len(self.history_buffer)>self.history_buffer_max:
+				self.history_buffer.pop()
+			self.history_buffer_pointer = -1
 
-		# add blank entry
-		self.history_buffer.append('')
+			# add blank entry
+			self.history_buffer.append('')
+
+			# remove commands that are repeated
+			# one after the other
+			self.history_buffer = [self.history_buffer[i] for i in range(len(self.history_buffer)) if (i==0) or self.history_buffer[i] != self.history_buffer[i-1]]
 
 
 		erk.input.channel_window_input(self.gui,self.client,self,user_input)
@@ -579,7 +584,8 @@ class Window(QMainWindow):
 
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
-		self.history_buffer_max = 20
+		# self.history_buffer_max = 20
+		self.history_buffer_max = self.gui.window_command_history_length
 
 		if self.gui.save_channels:
 			found = False
@@ -721,18 +727,20 @@ class Window(QMainWindow):
 		self.buildMenuBar()
 
 	def keyPressDown(self):
-		if len(self.history_buffer) <= 1: return
-		self.history_buffer_pointer = self.history_buffer_pointer - 1
-		if self.history_buffer_pointer < 0:
-			self.history_buffer_pointer = len(self.history_buffer) - 1
-		self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+		if self.gui.window_command_history:
+			if len(self.history_buffer) <= 1: return
+			self.history_buffer_pointer = self.history_buffer_pointer - 1
+			if self.history_buffer_pointer < 0:
+				self.history_buffer_pointer = len(self.history_buffer) - 1
+			self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
 
 	def keyPressUp(self):
-		if len(self.history_buffer) <= 1: return
-		self.history_buffer_pointer = self.history_buffer_pointer + 1
-		if len(self.history_buffer) - 1 < self.history_buffer_pointer:
-			self.history_buffer_pointer = 0
-		self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+		if self.gui.window_command_history:
+			if len(self.history_buffer) <= 1: return
+			self.history_buffer_pointer = self.history_buffer_pointer + 1
+			if len(self.history_buffer) - 1 < self.history_buffer_pointer:
+				self.history_buffer_pointer = 0
+			self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
 
 		
 

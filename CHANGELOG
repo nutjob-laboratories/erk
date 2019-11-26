@@ -26,6 +26,7 @@ Version 0.600
 	* Changed name of message settings menu to "Message display"
 	* Changed the icon of the message display settings submenu
 	* Added command history to all window text entry widgets
+	* Added options to toggle history on/off and to set the size of the history buffer
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
