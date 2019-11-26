@@ -100,7 +100,6 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_user_away(self,user,msg)
 
-
 	def irc_RPL_UNAWAY(self,prefix,params):
 		msg = params[1]
 
@@ -269,7 +268,6 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_client_joined(self,channel)
 
-
 	def privmsg(self, user, target, msg):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
@@ -292,8 +290,6 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_notice(self,user,channel,msg)
 		erk.events.notice_message(self.gui,self,channel,user,msg)
-
-		
 
 	def receivedMOTD(self, motd):
 		# self.gui.irc_motd(self,motd)
