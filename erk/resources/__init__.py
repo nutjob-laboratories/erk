@@ -55,11 +55,12 @@ NETWORK_SERVER_ICON				= ":/menu-network.png"
 CHECKED_ICON = ":/gui-checked.png"
 UNCHECKED_ICON = ":/gui-unchecked.png"
 
-FANCY_FONT = ":/fancy-font.png"
+
 FANCY_NETWORK = ":/fancy-network.png"
-FANCY_RESIZE = ":/fancy-resize.png"
+
 FANCY_SERVER = ":/fancy-server.png"
-FANCY_COLOR = ":/fancy-colors.png"
+
+
 
 VISITED_ICON = ":/menu-visited.png"
 
@@ -108,3 +109,11 @@ ENTRY_ICON = ":/menu-entry.png"
 CHAT_DISPLAY_ICON = ":/menu-chat_display.png"
 
 HISTORY_ICON = ":/menu-history.png"
+
+#FANCY_COLOR = ":/fancy-colors.png"
+#FANCY_FONT = ":/fancy-font.png"
+#FANCY_RESIZE = ":/fancy-resize.png"
+
+FORMAT_ICON = ":/menu-format.png"
+FONT_ICON = ":/menu-font.png"
+

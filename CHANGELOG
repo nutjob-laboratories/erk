@@ -29,6 +29,9 @@ Version 0.600
 	* Added options to toggle history on/off and to set the size of the history buffer
 	* Moved "save channels", "save history", and "on top" entries to settings menu
 	* Made the main menu a bit prettier
+	* Bugfix: new fonts weren't being applied to all widgets. They are now.
+	* Made the font, formatting, and initial window size entries in the settings menu smaller
+	* The font setting menu entry now shows the font currently being used
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

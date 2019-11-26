@@ -185,6 +185,16 @@ def rerenderAllText():
 
 def rerenderAllText_New_Font(gui):
 	gui.app.setFont(gui.font)
+
+	gui.toolbar.setFont(gui.font)
+	gui.toolbar.setFont(gui.font)
+	gui.ircMenu.setFont(gui.font)
+	gui.settingsMenu.setFont(gui.font)
+	gui.helpMenu.setFont(gui.font)
+	gui.windowsMenu.setFont(gui.font)
+
+	gui.buildToolbar()
+
 	gui.connectionTree.setFont(gui.font)
 	for w in SERVER_WINDOWS:
 		w.setFont(gui.font)
@@ -209,6 +219,19 @@ def rerenderAllText_New_Font(gui):
 		w.channelChatDisplay.setFont(gui.font)
 		w.userTextInput.setFont(gui.font)
 		w.rerenderText()
+
+	for w in MOTD_WINDOWS:
+		w.setFont(gui.font)
+		w.textDisplay.setFont(gui.font)
+		c = w.contents()
+		w.clear()
+		w.write(c)
+
+	for w in IO_WINDOWS:
+		w.setFont(gui.font)
+		w.ircLineDisplay.setFont(gui.font)
+		w.doClear()
+		w.rerender()
 
 def user_double_click(gui,client,user):
 
@@ -266,7 +289,7 @@ def erk_parted_channel(gui,client,channel):
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 def erk_joined_channel(gui,client,channel):
-	
+
 	w = ChannelWindow(channel,gui.MDI,client,gui)
 	CHANNEL_WINDOWS.append(w)
 

@@ -668,25 +668,25 @@ class Erk(QMainWindow):
 		# Display menu
 		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.settingsMenu)
 
-		self.settingsMenu_Font = fancyMenu(self,FANCY_FONT,FONT_MENU_NAME,FONT_MENU_DESCRIPTION,self.displayMenu_Font_Action)
-		self.settingsMenu.addAction(self.settingsMenu_Font)
+		f = self.app.font()
+		s = f.toString()
+		pf = s.split(',')
+		font_name = pf[0]
+		font_size = pf[1]
 
-		self.settingsMenu_Color = fancyMenu(self,FANCY_COLOR,FORMAT_MENU_NAME,FORMAT_MENU_DESCRIPTION,self.menuFormat)
-		self.settingsMenu.addAction(self.settingsMenu_Color)
+		self.menuFont = QAction(QIcon(FONT_ICON),"Font" +" ("+font_name+", "+str(font_size)+"pt)",self)
+		self.menuFont.triggered.connect(self.displayMenu_Font_Action)
+		self.settingsMenu.addAction(self.menuFont)
 
-		self.settingsMenu_Resize = fancyMenu(self,FANCY_RESIZE,WINDOW_SIZE_MENU_NAME,WINDOW_SIZE_MENU_DESCRIPTION,self.displayMenu_Resize_Action)
-		self.settingsMenu.addAction(self.settingsMenu_Resize)
+		entry = QAction(QIcon(FORMAT_ICON),"Text formatting",self)
+		entry.triggered.connect(self.menuFormat)
+		self.settingsMenu.addAction(entry)
+
+		entry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
+		entry.triggered.connect(self.displayMenu_Resize_Action)
+		self.settingsMenu.addAction(entry)
 
 		self.settingsMenu.addSeparator()
-
-		
-
-
-
-
-
-
-
 
 		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
 
@@ -1775,6 +1775,15 @@ class Erk(QMainWindow):
 
 			self.font = font
 			erk.events.rerenderAllText_New_Font(self)
+
+			self.app.setFont(self.font)
+
+			s = self.font.toString()
+			pf = s.split(',')
+			font_name = pf[0]
+			font_size = pf[1]
+
+			self.menuFont.setText("Font" +" ("+font_name+", "+str(font_size)+"pt)")
 
 	def displayMenu_Resize_Action(self):
 		info = WindowSizeDialog(self)
