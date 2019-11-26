@@ -164,7 +164,7 @@ class Dialog(QDialog):
 		self.parent = parent
 
 		self.setWindowTitle(FORMAT_DIALOG_TITLE)
-		self.setWindowIcon(QIcon(FANCY_COLOR))
+		self.setWindowIcon(QIcon(FORMAT_ICON))
 
 		self.styles = get_text_format_settings()
 

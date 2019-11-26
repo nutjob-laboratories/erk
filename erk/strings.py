@@ -212,7 +212,7 @@ FORMAT_DIALOG_ITALIC = "Italic"
 FORMAT_DIALOG_BG_COLOR = "Background Color"
 FORMAT_DIALOG_TXT_COLOR = "Text Color"
 
-FORMAT_DIALOG_TITLE = "Text"
+FORMAT_DIALOG_TITLE = "Text format"
 
 LOGGING_MENU_NAME = "Automatic logging"
 LOGGING_MENU_CONSOLE = "Console windows"
