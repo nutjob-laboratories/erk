@@ -229,6 +229,22 @@ class Window(QMainWindow):
 		user_input = self.userTextInput.text()
 		self.userTextInput.setText('')
 
+		# remove blank entry
+		clean = []
+		for c in self.history_buffer:
+			if c=='': continue
+			clean.append(c)
+		self.history_buffer = clean
+
+		self.history_buffer.insert(0,user_input)
+		if len(self.history_buffer)>self.history_buffer_max:
+			self.history_buffer.pop()
+		self.history_buffer_pointer = -1
+
+		# add blank entry
+		self.history_buffer.append('')
+
+
 		erk.input.channel_window_input(self.gui,self.client,self,user_input)
 
 	def writeText(self,text):
@@ -561,6 +577,10 @@ class Window(QMainWindow):
 
 		self.hostmasks = {}
 
+		self.history_buffer = ['']
+		self.history_buffer_pointer = 0
+		self.history_buffer_max = 20
+
 		if self.gui.save_channels:
 			found = False
 			for e in self.client.kwargs["autojoin"]:
@@ -627,6 +647,9 @@ class Window(QMainWindow):
 		self.userTextInput = SpellTextEdit(self)
 		self.userTextInput.setObjectName("userTextInput")
 		self.userTextInput.returnPressed.connect(self.handleUserInput)
+
+		self.userTextInput.keyUp.connect(self.keyPressUp)
+		self.userTextInput.keyDown.connect(self.keyPressDown)
 
 		# Text input widget should only be one line
 		fm = self.userTextInput.fontMetrics()
@@ -696,6 +719,22 @@ class Window(QMainWindow):
 		# Menubar
 		self.menubar = self.menuBar()
 		self.buildMenuBar()
+
+	def keyPressDown(self):
+		if len(self.history_buffer) <= 1: return
+		self.history_buffer_pointer = self.history_buffer_pointer - 1
+		if self.history_buffer_pointer < 0:
+			self.history_buffer_pointer = len(self.history_buffer) - 1
+		self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+
+	def keyPressUp(self):
+		if len(self.history_buffer) <= 1: return
+		self.history_buffer_pointer = self.history_buffer_pointer + 1
+		if len(self.history_buffer) - 1 < self.history_buffer_pointer:
+			self.history_buffer_pointer = 0
+		self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+
+		
 
 	def setAway(self):
 		self.is_away = True
