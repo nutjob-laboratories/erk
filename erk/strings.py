@@ -28,7 +28,7 @@ FONT_MENU_DESCRIPTION = "Set application font"
 WINDOW_SIZE_MENU_NAME = "Window size"
 WINDOW_SIZE_MENU_DESCRIPTION = "Set initial window size"
 
-MESSAGES_MENU_NAME = "Messages"
+MESSAGES_MENU_NAME = "Message displays"
 
 MESSAGES_IRCCOLOR_MENU_NAME = "Display IRC colors"
 MESSAGES_HTML_MENU_NAME = "Strip HTML from messages"
@@ -49,24 +49,26 @@ TIMESTAMP_DISPLAY_MENU_NAME = "Display"
 TIMESTAMP_SECONDS_MENU_NAME = "Show seconds"
 TIMESTAMP_24HOUR_MENU_NAME = "24-hour clock"
 
-USERLIST_MENU_NAME = "User lists"
+USERLIST_MENU_NAME = "User displays"
 
-CONNECTION_DISPLAY_MENU_NAME = "Window list"
+CONNECTION_DISPLAY_MENU_NAME = "Connection display"
 CONNECTION_DISPLAY_WEST = "left side"
 CONNECTION_DISPLAY_EAST = "right side"
 CONNECTION_DISPLAY_VISIBLE = "Enabled"
 
 MISC_EXPAND_NODE_ON_CONNECT = "Expand servers on connection"
 CONNECTION_DISPLAY_UPTIME = "Display server uptime"
-CONNECTION_DISPLAY_LOCATION = "Put window list on the..."
+CONNECTION_DISPLAY_LOCATION = "Put display on the..."
 
 SAVE_CHANNEL_MENU_NAME = "Save joined channels"
 SAVE_HISTORY_MENU_NAME = "Save connection history"
 
 MISC_MENU_NAME = "Miscellaneous"
-PLAIN_USERS_MENU_NAME = "Plain user lists"
+PLAIN_USERS_MENU_NAME = "Text only"
 
-DISPLAY_NICK_MENU_NAME = "Display nickname on channel windows"
+TEXT_ENTRY_MENU_NAME = "Text entry"
+
+DISPLAY_NICK_MENU_NAME = "Display nickname"
 CLICK_NICK_MENU_NAME = "Click nickname to change"
 
 MENU_ALWAYS_ON_TOP = "Always on top"
@@ -230,7 +232,7 @@ NOTIFICATION_MENU_LOST = "Notify on lost connections"
 LOGGING_MENU_SAVE_ALL_LOGS = "Save all logs"
 LOGGING_MENU_LOAD_ALL_LOGS = "Load and display all logs"
 
-NETWORK_SETTINGS_MENU_NAME = "Networking"
+NETWORK_SETTINGS_MENU_NAME = "Network traffic display"
 GET_HOSTMASKS_MENU_NAME = "Retrieve hostmasks on join"
 
 TRAFFIC_MAX_LINE_MENU_NAME = "Set maximum line count in network traffic display"

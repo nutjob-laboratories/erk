@@ -23,6 +23,8 @@ Version 0.600
 	* Consolidated all settings into one menu
 	* Cleaned up settings menu code
 	* Added a windows menu, listing all subwindows
+	* Changed name of message settings menu to "Message display"
+	* Changed the icon of the message display settings submenu
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
