@@ -102,3 +102,5 @@ M_ICON = ":/menu-m.png"
 K_ICON = ":/menu-k.png"
 MODE_BAN_ICON = ":/menu-mode_ban.png"
 MODE_UNKNOWN_ICON = ":/menu-mode_unknown.png"
+
+ENTRY_ICON = ":/menu-entry.png"

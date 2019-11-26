@@ -18,7 +18,7 @@ RESTART_MENU_NAME = "Restart"
 
 EXIT_MENU_NAME = "Exit"
 
-DISPLAY_MENU_NAME = "Display"
+DISPLAY_MENU_NAME = "Settings"
 
 FONT_MENU_NAME = "Font"
 FONT_MENU_DESCRIPTION = "Set application font"
@@ -106,8 +106,6 @@ WINDOW_SIZE_DIALOG_TITLE = "Initial window size"
 WINDOW_SIZE_WIDTH_NAME = "Width"
 WINDOW_SIZE_HEIGHT_NAME = "Height"
 
-SETTINGS_MENU_NAME = "Preferences"
-
 EMOJI_MENU_NAME = "Emoji shortcodes"
 EMOJI_MENU_USE_EMOJIS_NAME = "Enable emoji shortcodes"
 EMOJI_MENU_USE_ASCIIMOJIS_NAME = "Enable ASCIImoji shortcodes"
@@ -117,8 +115,6 @@ AUTOCOMPLETE_MENU_NICKS_NAME = "Nicknames"
 AUTOCOMPLETE_MENU_EMOJIS_NAME = "Emoji shortcodes"
 AUTOCOMPLETE_MENU_ASCIIMOJIS_NAME = "ASCIImoji shortcodes"
 AUTOCOMPLETE_MENU_COMMANDS_NAME = "Commands"
-
-CONNECTIONS_MENU_NAME = "Connections"
 
 CONNECTIONS_MENU_CHANGE_NICK = "Change nickname"
 CONNECTIONS_MENU_JOIN_CHANNEL = "Join a channel"

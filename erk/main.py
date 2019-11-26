@@ -652,6 +652,18 @@ class Erk(QMainWindow):
 		if self.top:
 			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
 
+		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
+		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
+		self.ircMenu.addAction(self.menuSaveChannels)
+
+		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
+
+		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
+		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
+		self.ircMenu.addAction(self.menuSaveHistory)
+
+		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
+
 		self.ircMenu.addSeparator()
 
 		ircMenu_Restart = QAction(QIcon(RESTART_ICON),RESTART_MENU_NAME,self)
@@ -704,6 +716,16 @@ class Erk(QMainWindow):
 		displayMenu_Auto_Private.setChecked(self.auto_create_private)
 		displayMenu_Auto_Private.triggered.connect(lambda state,s="private": self.settingsMenu_Setting(s))
 		displayMenu_Message_Submenu.addAction(displayMenu_Auto_Private)
+
+		settingsMenu_Flash_Private = QAction(MESSAGE_FLASH_PRIVATE_NAME,self,checkable=True)
+		settingsMenu_Flash_Private.setChecked(self.flash_unread_private)
+		settingsMenu_Flash_Private.triggered.connect(lambda state,s="flash": self.settingsMenu_Setting(s))
+		displayMenu_Message_Submenu.addAction(settingsMenu_Flash_Private)
+
+		settingsMenu_Unseen_Marker = QAction(MESSAGE_MARK_UNSEEN_MENU_NAME,self,checkable=True)
+		settingsMenu_Unseen_Marker.setChecked(self.mark_unread_messages)
+		settingsMenu_Unseen_Marker.triggered.connect(lambda state,s="unseen": self.settingsMenu_Setting(s))
+		displayMenu_Message_Submenu.addAction(settingsMenu_Unseen_Marker)
 
 		displayMenu_Click_Nick = QAction(MESSAGE_CLICKABLE_NICKNAME_NAME,self,checkable=True)
 		displayMenu_Click_Nick.setChecked(self.click_usernames)
@@ -793,35 +815,89 @@ class Erk(QMainWindow):
 		elif self.connection_display_location=="left":
 			self.connectionSubmenu_Left.setChecked(True)
 
-		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
+		settingsMenu_Entry_Submenu = self.displayMenu.addMenu(QIcon(ENTRY_ICON),"Text entry")
+
+		settingsMenu_Emoji_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(EMOJI_ICON),EMOJI_MENU_NAME)
+
+		emojiSubmenu_Emojis = QAction(EMOJI_MENU_USE_EMOJIS_NAME,self,checkable=True)
+		emojiSubmenu_Emojis.setChecked(self.use_emojis)
+		emojiSubmenu_Emojis.triggered.connect(lambda state,s="use_emoji": self.settingsMenu_Setting(s))
+		settingsMenu_Emoji_Submenu.addAction(emojiSubmenu_Emojis)
+
+		asciimojiSubmenu_Emojis = QAction(EMOJI_MENU_USE_ASCIIMOJIS_NAME,self,checkable=True)
+		asciimojiSubmenu_Emojis.setChecked(self.use_asciimojis)
+		asciimojiSubmenu_Emojis.triggered.connect(lambda state,s="use_asciimojis": self.settingsMenu_Setting(s))
+		settingsMenu_Emoji_Submenu.addAction(asciimojiSubmenu_Emojis)
+
+		settingsMenu_Autocomplete_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(AUTOCOMPLETE_ICON),AUTOCOMPLETE_MENU_NAME)
+
+		self.autocompleteSubmenu_Commands = QAction(AUTOCOMPLETE_MENU_COMMANDS_NAME,self,checkable=True)
+		self.autocompleteSubmenu_Commands.setChecked(self.autocomplete_commands)
+		self.autocompleteSubmenu_Commands.triggered.connect(lambda state,s="autocommands": self.settingsMenu_Setting(s))
+		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Commands)
+
+		autocompleteSubmenu_Nicks = QAction(AUTOCOMPLETE_MENU_NICKS_NAME,self,checkable=True)
+		autocompleteSubmenu_Nicks.setChecked(self.autocomplete_nicks)
+		autocompleteSubmenu_Nicks.triggered.connect(lambda state,s="autonick": self.settingsMenu_Setting(s))
+		settingsMenu_Autocomplete_Submenu.addAction(autocompleteSubmenu_Nicks)
+
+		self.autocompleteSubmenu_Emojis = QAction(AUTOCOMPLETE_MENU_EMOJIS_NAME,self,checkable=True)
+		self.autocompleteSubmenu_Emojis.setChecked(self.autocomplete_emojis)
+		self.autocompleteSubmenu_Emojis.triggered.connect(lambda state,s="autoemoji": self.settingsMenu_Setting(s))
+		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Emojis)
+
+		self.autocompleteSubmenu_Asciimojis = QAction(AUTOCOMPLETE_MENU_ASCIIMOJIS_NAME,self,checkable=True)
+		self.autocompleteSubmenu_Asciimojis.setChecked(self.autocomplete_asciimojis)
+		self.autocompleteSubmenu_Asciimojis.triggered.connect(lambda state,s="autoasciimoji": self.settingsMenu_Setting(s))
+		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Asciimojis)
+
+		settingsMenu_Spellcheck_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(SPELLCHECK_ICON),SPELLCHECK_MENU_NAME)
+
+		spellcheckSubmenu_Enable = QAction(SPELLCHECK_ENABLE_NAME,self,checkable=True)
+		spellcheckSubmenu_Enable.setChecked(self.spellcheck)
+		spellcheckSubmenu_Enable.triggered.connect(lambda state,s="spellcheck": self.settingsMenu_Setting(s))
+		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_Enable)
+
+		settingsMenu_Spellcheck_Submenu.addSeparator()
+
+		spellcheckSubmenu_English = QAction(SPELLCHECK_LANGUAGE_ENGLISH,self,checkable=True)
+		spellcheckSubmenu_English.setChecked(False)
+		spellcheckSubmenu_English.triggered.connect(lambda state,l="en": self.setSpellCheckLanguage(l) )
+		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_English)
+
+		spellcheckSubmenu_French = QAction(SPELLCHECK_LANGUAGE_FRENCH,self,checkable=True)
+		spellcheckSubmenu_French.setChecked(False)
+		spellcheckSubmenu_French.triggered.connect(lambda state,l="fr": self.setSpellCheckLanguage(l) )
+		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_French)
+
+		spellcheckSubmenu_Spanish = QAction(SPELLCHECK_LANGUAGE_SPANISH,self,checkable=True)
+		spellcheckSubmenu_Spanish.setChecked(False)
+		spellcheckSubmenu_Spanish.triggered.connect(lambda state,l="es": self.setSpellCheckLanguage(l) )
+		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_Spanish)
+
+		spellcheckSubmenu_German = QAction(SPELLCHECK_LANGUAGE_GERMAN,self,checkable=True)
+		spellcheckSubmenu_German.setChecked(False)
+		spellcheckSubmenu_German.triggered.connect(lambda state,l="de": self.setSpellCheckLanguage(l) )
+		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_German)
+
+		if self.spellCheckLanguage=="en": spellcheckSubmenu_English.setChecked(True)
+		if self.spellCheckLanguage=="fr": spellcheckSubmenu_French.setChecked(True)
+		if self.spellCheckLanguage=="es": spellcheckSubmenu_Spanish.setChecked(True)
+		if self.spellCheckLanguage=="de": spellcheckSubmenu_German.setChecked(True)
+
+		if not self.spellcheck:
+			spellcheckSubmenu_English.setEnabled(False)
+			spellcheckSubmenu_French.setEnabled(False)
+			spellcheckSubmenu_Spanish.setEnabled(False)
+			spellcheckSubmenu_German.setEnabled(False)
+
+		settingsMenu_Networking_Submenu = self.displayMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
 
 		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
 		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
-		displayMenu_Misc_Submenu.addAction(self.settingsMenu_IOLength)
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_IOLength)
 
-		displayMenu_Misc_Submenu.addSeparator()
-
-		displayMisc_Submenu_WinTitle = QAction(TITLE_FROM_ACTIVE_WINDOW_NAME,self,checkable=True)
-		displayMisc_Submenu_WinTitle.setChecked(self.title_from_active)
-		displayMisc_Submenu_WinTitle.triggered.connect(lambda state,s="title": self.settingsMenu_Setting(s))
-		displayMenu_Misc_Submenu.addAction(displayMisc_Submenu_WinTitle)
-
-		if not self.show_nick_on_channel_windows: self.displayMisc_Submenu_ClickNick.setEnabled(False)
-
-		self.displayMenu.addSeparator()
-
-		menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
-		menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
-		self.displayMenu.addAction(menuCascade)
-
-		menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
-		menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
-		self.displayMenu.addAction(menuTile)
-
-		# Settings menu
-		add_toolbar_menu(self.toolbar,SETTINGS_MENU_NAME,self.settingsMenu)
-
-		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+		settingsMenu_Networking_Submenu.addSeparator()
 
 		self.settingsMenu_TrafficCon = QAction("Show network traffic from connection",self,checkable=True)
 		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
@@ -843,7 +919,7 @@ class Erk(QMainWindow):
 		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
 		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
 
-		settingsMenu_Logs_Submenu = self.settingsMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
+		settingsMenu_Logs_Submenu = self.displayMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
 
 		self.logSubmenu_Toggle = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_SAVE_ALL_LOGS,self)
 		self.logSubmenu_Toggle.triggered.connect(lambda state,s="all_log_on": self.settingsMenu_Setting(s))
@@ -851,7 +927,6 @@ class Erk(QMainWindow):
 
 		if self.save_server_logs and self.save_logs and self.save_private_logs:
 			self.logSubmenu_Toggle.setIcon(QIcon(CHECKED_ICON))
-
 
 		self.logSubmenu_Toggle_Load = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_LOAD_ALL_LOGS,self)
 		self.logSubmenu_Toggle_Load.triggered.connect(lambda state,s="all_load_on": self.settingsMenu_Setting(s))
@@ -909,105 +984,24 @@ class Erk(QMainWindow):
 		if self.mark_end_of_loaded_logs:
 			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
 
-		settingsMenu_Notify_Submenu = self.settingsMenu.addMenu(QIcon(NOTIFY_ICON),NOTIFICATION_MENU_NAME)
+		displayMenu_Misc_Submenu = self.displayMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
 
-		settingsMenu_Flash_Private = QAction(MESSAGE_FLASH_PRIVATE_NAME,self,checkable=True)
-		settingsMenu_Flash_Private.setChecked(self.flash_unread_private)
-		settingsMenu_Flash_Private.triggered.connect(lambda state,s="flash": self.settingsMenu_Setting(s))
-		settingsMenu_Notify_Submenu.addAction(settingsMenu_Flash_Private)
+		displayMisc_Submenu_WinTitle = QAction(TITLE_FROM_ACTIVE_WINDOW_NAME,self,checkable=True)
+		displayMisc_Submenu_WinTitle.setChecked(self.title_from_active)
+		displayMisc_Submenu_WinTitle.triggered.connect(lambda state,s="title": self.settingsMenu_Setting(s))
+		displayMenu_Misc_Submenu.addAction(displayMisc_Submenu_WinTitle)
 
-		settingsMenu_Unseen_Marker = QAction(MESSAGE_MARK_UNSEEN_MENU_NAME,self,checkable=True)
-		settingsMenu_Unseen_Marker.setChecked(self.mark_unread_messages)
-		settingsMenu_Unseen_Marker.triggered.connect(lambda state,s="unseen": self.settingsMenu_Setting(s))
-		settingsMenu_Notify_Submenu.addAction(settingsMenu_Unseen_Marker)
+		if not self.show_nick_on_channel_windows: self.displayMisc_Submenu_ClickNick.setEnabled(False)
 
-		settingsMenu_Emoji_Submenu = self.settingsMenu.addMenu(QIcon(EMOJI_ICON),EMOJI_MENU_NAME)
+		self.displayMenu.addSeparator()
 
-		emojiSubmenu_Emojis = QAction(EMOJI_MENU_USE_EMOJIS_NAME,self,checkable=True)
-		emojiSubmenu_Emojis.setChecked(self.use_emojis)
-		emojiSubmenu_Emojis.triggered.connect(lambda state,s="use_emoji": self.settingsMenu_Setting(s))
-		settingsMenu_Emoji_Submenu.addAction(emojiSubmenu_Emojis)
+		menuCascade = QAction(QIcon(CASCADE_ICON),MENU_CASCADE_WINDOWS_NAME,self)
+		menuCascade.triggered.connect(lambda state: self.MDI.cascadeSubWindows())
+		self.displayMenu.addAction(menuCascade)
 
-		asciimojiSubmenu_Emojis = QAction(EMOJI_MENU_USE_ASCIIMOJIS_NAME,self,checkable=True)
-		asciimojiSubmenu_Emojis.setChecked(self.use_asciimojis)
-		asciimojiSubmenu_Emojis.triggered.connect(lambda state,s="use_asciimojis": self.settingsMenu_Setting(s))
-		settingsMenu_Emoji_Submenu.addAction(asciimojiSubmenu_Emojis)
-
-		settingsMenu_Autocomplete_Submenu = self.settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),AUTOCOMPLETE_MENU_NAME)
-
-		self.autocompleteSubmenu_Commands = QAction(AUTOCOMPLETE_MENU_COMMANDS_NAME,self,checkable=True)
-		self.autocompleteSubmenu_Commands.setChecked(self.autocomplete_commands)
-		self.autocompleteSubmenu_Commands.triggered.connect(lambda state,s="autocommands": self.settingsMenu_Setting(s))
-		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Commands)
-
-		autocompleteSubmenu_Nicks = QAction(AUTOCOMPLETE_MENU_NICKS_NAME,self,checkable=True)
-		autocompleteSubmenu_Nicks.setChecked(self.autocomplete_nicks)
-		autocompleteSubmenu_Nicks.triggered.connect(lambda state,s="autonick": self.settingsMenu_Setting(s))
-		settingsMenu_Autocomplete_Submenu.addAction(autocompleteSubmenu_Nicks)
-
-		self.autocompleteSubmenu_Emojis = QAction(AUTOCOMPLETE_MENU_EMOJIS_NAME,self,checkable=True)
-		self.autocompleteSubmenu_Emojis.setChecked(self.autocomplete_emojis)
-		self.autocompleteSubmenu_Emojis.triggered.connect(lambda state,s="autoemoji": self.settingsMenu_Setting(s))
-		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Emojis)
-
-		self.autocompleteSubmenu_Asciimojis = QAction(AUTOCOMPLETE_MENU_ASCIIMOJIS_NAME,self,checkable=True)
-		self.autocompleteSubmenu_Asciimojis.setChecked(self.autocomplete_asciimojis)
-		self.autocompleteSubmenu_Asciimojis.triggered.connect(lambda state,s="autoasciimoji": self.settingsMenu_Setting(s))
-		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Asciimojis)
-
-		settingsMenu_Spellcheck_Submenu = self.settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),SPELLCHECK_MENU_NAME)
-
-		spellcheckSubmenu_Enable = QAction(SPELLCHECK_ENABLE_NAME,self,checkable=True)
-		spellcheckSubmenu_Enable.setChecked(self.spellcheck)
-		spellcheckSubmenu_Enable.triggered.connect(lambda state,s="spellcheck": self.settingsMenu_Setting(s))
-		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_Enable)
-
-		settingsMenu_Spellcheck_Submenu.addSeparator()
-
-		spellcheckSubmenu_English = QAction(SPELLCHECK_LANGUAGE_ENGLISH,self,checkable=True)
-		spellcheckSubmenu_English.setChecked(False)
-		spellcheckSubmenu_English.triggered.connect(lambda state,l="en": self.setSpellCheckLanguage(l) )
-		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_English)
-
-		spellcheckSubmenu_French = QAction(SPELLCHECK_LANGUAGE_FRENCH,self,checkable=True)
-		spellcheckSubmenu_French.setChecked(False)
-		spellcheckSubmenu_French.triggered.connect(lambda state,l="fr": self.setSpellCheckLanguage(l) )
-		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_French)
-
-		spellcheckSubmenu_Spanish = QAction(SPELLCHECK_LANGUAGE_SPANISH,self,checkable=True)
-		spellcheckSubmenu_Spanish.setChecked(False)
-		spellcheckSubmenu_Spanish.triggered.connect(lambda state,l="es": self.setSpellCheckLanguage(l) )
-		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_Spanish)
-
-		spellcheckSubmenu_German = QAction(SPELLCHECK_LANGUAGE_GERMAN,self,checkable=True)
-		spellcheckSubmenu_German.setChecked(False)
-		spellcheckSubmenu_German.triggered.connect(lambda state,l="de": self.setSpellCheckLanguage(l) )
-		settingsMenu_Spellcheck_Submenu.addAction(spellcheckSubmenu_German)
-
-		if self.spellCheckLanguage=="en": spellcheckSubmenu_English.setChecked(True)
-		if self.spellCheckLanguage=="fr": spellcheckSubmenu_French.setChecked(True)
-		if self.spellCheckLanguage=="es": spellcheckSubmenu_Spanish.setChecked(True)
-		if self.spellCheckLanguage=="de": spellcheckSubmenu_German.setChecked(True)
-
-		if not self.spellcheck:
-			spellcheckSubmenu_English.setEnabled(False)
-			spellcheckSubmenu_French.setEnabled(False)
-			spellcheckSubmenu_Spanish.setEnabled(False)
-			spellcheckSubmenu_German.setEnabled(False)
-
-		self.settingsMenu.addSeparator()
-
-		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
-		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
-		self.settingsMenu.addAction(self.menuSaveChannels)
-
-		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
-
-		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
-		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
-		self.settingsMenu.addAction(self.menuSaveHistory)
-
-		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
+		menuTile = QAction(QIcon(TILE_ICON),MENU_TILE_WINDOWS_NAME,self)
+		menuTile.triggered.connect(lambda state: self.MDI.tileSubWindows())
+		self.displayMenu.addAction(menuTile)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)
