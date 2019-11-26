@@ -18,6 +18,10 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def rebuildChannelMenus():
+	for w in CHANNEL_WINDOWS:
+		w.buildMenuBar()
+
 def closeMOTDWindow(client):
 	global MOTD_WINDOWS
 	clean = []

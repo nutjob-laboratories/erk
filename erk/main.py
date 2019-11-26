@@ -1287,6 +1287,7 @@ class Erk(QMainWindow):
 				self.show_channel_bans = False
 			else:
 				self.show_channel_bans = True
+			erk.events.rebuildChannelMenus()
 			self.settings[SETTING_CHANNEL_WINDOW_BANS] = self.show_channel_bans
 
 		if setting=="modemenu":
@@ -1294,6 +1295,7 @@ class Erk(QMainWindow):
 				self.show_channel_modes = False
 			else:
 				self.show_channel_modes = True
+			erk.events.rebuildChannelMenus()
 			self.settings[SETTING_CHANNEL_WINDOW_MODES] = self.show_channel_modes
 
 		if setting=="traffic_connection":
