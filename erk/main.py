@@ -504,9 +504,8 @@ class Erk(QMainWindow):
 		self.show_net_traffic_from_connection = self.settings[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION]
 		self.show_channel_modes				= self.settings[SETTING_CHANNEL_WINDOW_MODES]
 		self.show_channel_bans				= self.settings[SETTING_CHANNEL_WINDOW_BANS]
-
-		self.window_command_history = self.settings[SETTING_CMD_HISTORY]
-		self.window_command_history_length = self.settings[SETTING_CMG_HISTORY_LENGTH]
+		self.window_command_history			= self.settings[SETTING_CMD_HISTORY]
+		self.window_command_history_length	= self.settings[SETTING_CMG_HISTORY_LENGTH]
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -601,10 +600,16 @@ class Erk(QMainWindow):
 		ircMenu_Network = fancyMenu(self,FANCY_NETWORK,NETWORK_MENU_NAME,NETWORK_MENU_DESCRIPTION,self.ircMenu_Network_Action)
 		self.ircMenu.addAction(ircMenu_Network)
 
-		self.ircMenu.addSeparator()
+		#self.ircMenu.addSeparator()
 
 		CONNECTIONS = erk.events.getConnections()
+
+		if len(CONNECTIONS)==0: self.ircMenu.addSeparator()
+
 		if len(CONNECTIONS)>0:
+
+			entry = textSeparator(self,ACTIVE_CONNECTIONS_LABEL)
+			self.ircMenu.addAction(entry)
 
 			channels,privates,consoles = erk.events.getWindows()
 
@@ -650,26 +655,7 @@ class Erk(QMainWindow):
 
 			self.ircMenu.addSeparator()
 
-		self.menuOnTop = QAction(QIcon(UNCHECKED_ICON),MENU_ALWAYS_ON_TOP,self)
-		self.menuOnTop.triggered.connect(self.menuOnTopAction)
-		self.ircMenu.addAction(self.menuOnTop)
-
-		if self.top:
-			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
-
-		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
-		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
-		self.ircMenu.addAction(self.menuSaveChannels)
-
-		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
-
-		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
-		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
-		self.ircMenu.addAction(self.menuSaveHistory)
-
-		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
-
-		self.ircMenu.addSeparator()
+		
 
 		ircMenu_Restart = QAction(QIcon(RESTART_ICON),RESTART_MENU_NAME,self)
 		ircMenu_Restart.triggered.connect(lambda state: restart_program())
@@ -692,6 +678,15 @@ class Erk(QMainWindow):
 		self.settingsMenu.addAction(self.settingsMenu_Resize)
 
 		self.settingsMenu.addSeparator()
+
+		
+
+
+
+
+
+
+
 
 		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
 
@@ -1002,14 +997,34 @@ class Erk(QMainWindow):
 		if self.mark_end_of_loaded_logs:
 			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
 
-		settingMenu_Misc_Submenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),MISC_MENU_NAME)
-
-		displayMisc_Submenu_WinTitle = QAction(TITLE_FROM_ACTIVE_WINDOW_NAME,self,checkable=True)
-		displayMisc_Submenu_WinTitle.setChecked(self.title_from_active)
-		displayMisc_Submenu_WinTitle.triggered.connect(lambda state,s="title": self.settingsMenu_Setting(s))
-		settingMenu_Misc_Submenu.addAction(displayMisc_Submenu_WinTitle)
-
 		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
+
+		self.settingsMenu.addSeparator()
+
+		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
+		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
+		self.settingsMenu.addAction(self.menuSaveChannels)
+
+		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
+
+		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
+		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
+		self.settingsMenu.addAction(self.menuSaveHistory)
+
+		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
+
+		self.menuAppTitle = QAction(QIcon(UNCHECKED_ICON),TITLE_FROM_ACTIVE_WINDOW_NAME,self)
+		self.menuAppTitle.triggered.connect(self.menuWindowTitleAction)
+		self.settingsMenu.addAction(self.menuAppTitle)
+
+		if self.title_from_active: self.menuAppTitle.setIcon(QIcon(CHECKED_ICON))
+
+		self.menuOnTop = QAction(QIcon(UNCHECKED_ICON),MENU_ALWAYS_ON_TOP,self)
+		self.menuOnTop.triggered.connect(self.menuOnTopAction)
+		self.settingsMenu.addAction(self.menuOnTop)
+
+		if self.top:
+			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
 
 		# Windows menu
 		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)
@@ -1114,6 +1129,18 @@ class Erk(QMainWindow):
 
 	def menuShowAbout(self):
 		AboutDialog(self)
+
+	def menuWindowTitleAction(self):
+		if self.title_from_active:
+			self.title_from_active = False
+			self.menuAppTitle.setIcon(QIcon(UNCHECKED_ICON))
+			self.setWindowTitle(APPLICATION_NAME)
+		else:
+			self.title_from_active = True
+			self.menuAppTitle.setIcon(QIcon(CHECKED_ICON))
+			self.MDI.subWindowActivated.connect(self.updateActiveChild)
+		self.settings[SETTING_APPLICATION_TITLE_FROM_ACTIVE] = self.title_from_active
+		save_settings(self.settings)
 
 	def menuSaveHistoryAction(self):
 		if self.save_history:
@@ -1580,12 +1607,12 @@ class Erk(QMainWindow):
 				self.auto_create_private = True
 			self.settings[SETTING_CREATE_PRIVATE_WINDOWS] = self.auto_create_private
 
-		if setting=="title":
-			if self.title_from_active:
-				self.title_from_active = False
-			else:
-				self.title_from_active = True
-			self.settings[SETTING_APPLICATION_TITLE_FROM_ACTIVE] = self.title_from_active
+		# if setting=="title":
+		# 	if self.title_from_active:
+		# 		self.title_from_active = False
+		# 	else:
+		# 		self.title_from_active = True
+		# 	self.settings[SETTING_APPLICATION_TITLE_FROM_ACTIVE] = self.title_from_active
 
 		if setting=="unseen":
 			if self.mark_unread_messages:

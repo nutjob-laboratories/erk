@@ -265,3 +265,5 @@ BACK_COMMAND_HELP = "Usage: /back"
 CHANNEL_WINDOW_MENU_NAME = "Channel windows"
 CHANNEL_MODE_MENU_NAME = "Show channel mode menu"
 CHANNEL_BAN_MENU_NAME = "Show channel ban menu"
+
+ACTIVE_CONNECTIONS_LABEL = "Connected Servers"

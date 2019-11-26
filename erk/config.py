@@ -203,7 +203,6 @@ SETTING_MAX_LINES_IN_IO = "maximum_number_of_lines_displayed_in_io_window"
 SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION = "io_window_shows_traffic_starting_at_connection"
 SETTING_CHANNEL_WINDOW_MODES = "show_mode_menu_in_channel_windows"
 SETTING_CHANNEL_WINDOW_BANS = "show_bans_menu_in_channel_windows"
-
 SETTING_CMD_HISTORY = "input_command_history"
 SETTING_CMG_HISTORY_LENGTH = "maximum_size_of_input_command_history"
 
@@ -260,7 +259,6 @@ def patch_config_file(data):
 	if not SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION in data: data[SETTING_SHOW_NET_TRAFFIC_FROM_CONNECTION] = True
 	if not SETTING_CHANNEL_WINDOW_MODES in data: data[SETTING_CHANNEL_WINDOW_MODES] = True
 	if not SETTING_CHANNEL_WINDOW_BANS in data: data[SETTING_CHANNEL_WINDOW_BANS] = True
-
 	if not SETTING_CMD_HISTORY in data: data[SETTING_CMD_HISTORY] = True
 	if not SETTING_CMG_HISTORY_LENGTH in data: data[SETTING_CMG_HISTORY_LENGTH] = 20
 

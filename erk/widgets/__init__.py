@@ -15,6 +15,34 @@ MENU_ICON_SIZE = 26
 MENU_ICON_SMALL_SIZE = 20
 MENU_MODE_ICON_SIZE = 22
 
+
+TEXT_RIGHT_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">!SPACE!
+			</td>
+			<td style="text-align: right; vertical-align: middle;"><small>!TEXT!</small></td>
+		</tr>
+	</tbody>
+</table>'''
+
+def textRightSeparator(self,text):
+
+	html = TEXT_RIGHT_SEPARATOR.replace("!TEXT!",text+"&nbsp;")
+	html = html.replace("!SPACE!", '&nbsp;'*1     )
+
+	tsLabel = QLabel( html  )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
+
+
+
+
+
 TEXT_SEPARATOR = f'''
 <table width="100%" border="0">
 	<tbody>
