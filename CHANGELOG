@@ -36,6 +36,7 @@ Version 0.600
 	* Removed unnecessary spacing from most dialogs
 	* Setting a channel topic to blank space will result in a channel topic being "unset" (or set to nothing)
 	* Added all IRC message strings to erk.strings
+	* Added options to suppress server message displays in channel windows
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

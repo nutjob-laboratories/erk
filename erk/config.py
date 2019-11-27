@@ -205,6 +205,11 @@ SETTING_CHANNEL_WINDOW_MODES = "show_mode_menu_in_channel_windows"
 SETTING_CHANNEL_WINDOW_BANS = "show_bans_menu_in_channel_windows"
 SETTING_CMD_HISTORY = "input_command_history"
 SETTING_CMG_HISTORY_LENGTH = "maximum_size_of_input_command_history"
+SETTING_CHANNEL_IGNORE_JOIN = "channels_do_not_display_join_messages"
+SETTING_CHANNEL_IGNORE_PART = "channels_do_not_display_part_messages"
+SETTING_CHANNEL_IGNORE_RENAME = "channels_do_not_display_rename_messages"
+SETTING_CHANNEL_IGNORE_TOPIC = "channels_do_not_display_topic_messages"
+SETTING_CHANNEL_IGNORE_MODE = "channels_do_not_display_mode_messages"
 
 def patch_config_file(data):
 	s = len(data)
@@ -261,6 +266,11 @@ def patch_config_file(data):
 	if not SETTING_CHANNEL_WINDOW_BANS in data: data[SETTING_CHANNEL_WINDOW_BANS] = True
 	if not SETTING_CMD_HISTORY in data: data[SETTING_CMD_HISTORY] = True
 	if not SETTING_CMG_HISTORY_LENGTH in data: data[SETTING_CMG_HISTORY_LENGTH] = 20
+	if not SETTING_CHANNEL_IGNORE_JOIN in data: data[SETTING_CHANNEL_IGNORE_JOIN] = False
+	if not SETTING_CHANNEL_IGNORE_PART in data: data[SETTING_CHANNEL_IGNORE_PART] = False
+	if not SETTING_CHANNEL_IGNORE_RENAME in data: data[SETTING_CHANNEL_IGNORE_RENAME] = False
+	if not SETTING_CHANNEL_IGNORE_TOPIC in data: data[SETTING_CHANNEL_IGNORE_TOPIC] = False
+	if not SETTING_CHANNEL_IGNORE_MODE in data: data[SETTING_CHANNEL_IGNORE_MODE] = False
 
 	if len(data)>s:
 		return [True,data]
@@ -329,6 +339,11 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_CHANNEL_WINDOW_BANS: True,
 			SETTING_CMD_HISTORY: True,
 			SETTING_CMG_HISTORY_LENGTH: 20,
+			SETTING_CHANNEL_IGNORE_JOIN: False,
+			SETTING_CHANNEL_IGNORE_PART: False,
+			SETTING_CHANNEL_IGNORE_RENAME: False,
+			SETTING_CHANNEL_IGNORE_TOPIC: False,
+			SETTING_CHANNEL_IGNORE_MODE: False,
 		}
 		save_settings(si)
 		return si

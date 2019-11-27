@@ -74,6 +74,7 @@ FONT_ICON 				= ":/menu-font.png"
 USER_ICON 				= ":/menu-user.png"
 VISITED_ICON 			= ":/menu-visited.png"
 NOTIFY_ICON 			= ":/menu-notifications.png"
+HIDE_ICON 				= ":/menu-hide.png"
 
 FANCY_NETWORK	= ":/fancy-network.png"
 FANCY_SERVER 	= ":/fancy-server.png"

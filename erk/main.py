@@ -485,6 +485,12 @@ class Erk(QMainWindow):
 		self.window_command_history			= self.settings[SETTING_CMD_HISTORY]
 		self.window_command_history_length	= self.settings[SETTING_CMG_HISTORY_LENGTH]
 
+		self.ignore_join = self.settings[SETTING_CHANNEL_IGNORE_JOIN]
+		self.ignore_part = self.settings[SETTING_CHANNEL_IGNORE_PART]
+		self.ignore_rename = self.settings[SETTING_CHANNEL_IGNORE_RENAME]
+		self.ignore_topic = self.settings[SETTING_CHANNEL_IGNORE_TOPIC]
+		self.ignore_mode = self.settings[SETTING_CHANNEL_IGNORE_MODE]
+
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
 		# built-in font
@@ -667,6 +673,35 @@ class Erk(QMainWindow):
 		self.settingsMenu.addSeparator()
 
 		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
+
+		channelMenu_Hide_Submenu = settingsMenu_Channel_Submenu.addMenu(QIcon(HIDE_ICON),"Hide server messages")
+
+		entry = QAction("Join",self,checkable=True)
+		entry.setChecked(self.ignore_join)
+		entry.triggered.connect(lambda state,s="ignore_join": self.settingsMenu_Setting(s))
+		channelMenu_Hide_Submenu.addAction(entry)
+
+		entry = QAction("Part",self,checkable=True)
+		entry.setChecked(self.ignore_part)
+		entry.triggered.connect(lambda state,s="ignore_part": self.settingsMenu_Setting(s))
+		channelMenu_Hide_Submenu.addAction(entry)
+
+		entry = QAction("Nick",self,checkable=True)
+		entry.setChecked(self.ignore_rename)
+		entry.triggered.connect(lambda state,s="ignore_rename": self.settingsMenu_Setting(s))
+		channelMenu_Hide_Submenu.addAction(entry)
+
+		entry = QAction("Topic",self,checkable=True)
+		entry.setChecked(self.ignore_topic)
+		entry.triggered.connect(lambda state,s="ignore_topic": self.settingsMenu_Setting(s))
+		channelMenu_Hide_Submenu.addAction(entry)
+
+		entry = QAction("Mode",self,checkable=True)
+		entry.setChecked(self.ignore_mode)
+		entry.triggered.connect(lambda state,s="ignore_mode": self.settingsMenu_Setting(s))
+		channelMenu_Hide_Submenu.addAction(entry)
+
+		settingsMenu_Channel_Submenu.addSeparator()
 
 		settingsMenu_Channel_Modemenu = QAction(CHANNEL_MODE_MENU_NAME,self,checkable=True)
 		settingsMenu_Channel_Modemenu.setChecked(self.show_channel_modes)
@@ -1353,6 +1388,41 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="ignore_mode":
+			if self.ignore_mode:
+				self.ignore_mode = False
+			else:
+				self.ignore_mode = True
+			self.settings[SETTING_CHANNEL_IGNORE_MODE] = self.ignore_mode
+
+		if setting=="ignore_topic":
+			if self.ignore_topic:
+				self.ignore_topic = False
+			else:
+				self.ignore_topic = True
+			self.settings[SETTING_CHANNEL_IGNORE_TOPIC] = self.ignore_topic
+
+		if setting=="ignore_rename":
+			if self.ignore_rename:
+				self.ignore_rename = False
+			else:
+				self.ignore_rename = True
+			self.settings[SETTING_CHANNEL_IGNORE_RENAME] = self.ignore_rename
+
+		if setting=="ignore_part":
+			if self.ignore_part:
+				self.ignore_part = False
+			else:
+				self.ignore_part = True
+			self.settings[SETTING_CHANNEL_IGNORE_PART] = self.ignore_part
+
+		if setting=="ignore_join":
+			if self.ignore_join:
+				self.ignore_join = False
+			else:
+				self.ignore_join = True
+			self.settings[SETTING_CHANNEL_IGNORE_JOIN] = self.ignore_join
 
 		if setting=="use_history":
 			if self.window_command_history:
