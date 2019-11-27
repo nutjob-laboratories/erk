@@ -267,7 +267,7 @@ class Window(QMainWindow):
 
 		self.commands = self.menubar.addMenu(CONSOLE_COMMAND_MENU_NAME)
 
-		entry = QAction(QIcon(USER_WINDOW_ICON),CONSOLE_MENU_CHANGE_NICK,self)
+		entry = QAction(QIcon(USER_ICON),CONSOLE_MENU_CHANGE_NICK,self)
 		entry.triggered.connect(lambda state,id=self.client.id,cmd='nick': self.connectionEntryClick(id,cmd))
 		self.commands.addAction(entry)
 

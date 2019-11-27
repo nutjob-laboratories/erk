@@ -619,7 +619,7 @@ class Erk(QMainWindow):
 
 				connectionEntry_Submenu.addSeparator()
 
-				entry = QAction(QIcon(USER_WINDOW_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
+				entry = QAction(QIcon(USER_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
 				entry.triggered.connect(lambda state,id=c.id,cmd='nick': self.connectionEntryClick(id,cmd))
 				connectionEntry_Submenu.addAction(entry)
 

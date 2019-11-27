@@ -947,8 +947,8 @@ def topic(gui,client,user,channel,topic):
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:
 			if window.name==channel:
-				window.writeTopic(topic)
-				if topic!='':
+				window.writeTopic(topic.strip())
+				if topic.strip()!='':
 					message = nickname+" set the channel topic to \""+topic+"\""
 					window.writeLog(SYSTEM_MESSAGE,'',message)
 				else:

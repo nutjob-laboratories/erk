@@ -116,4 +116,4 @@ HISTORY_ICON = ":/menu-history.png"
 
 FORMAT_ICON = ":/menu-format.png"
 FONT_ICON = ":/menu-font.png"
-
+USER_ICON = ":/menu-user.png"

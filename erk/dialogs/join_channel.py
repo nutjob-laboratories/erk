@@ -87,7 +87,6 @@ class Dialog(QDialog):
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)
 		finalLayout.addLayout(keyLayout)
-		finalLayout.addStretch()
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

@@ -1007,7 +1007,7 @@ class Window(QMainWindow):
 			actPrivate = menu.addAction(QIcon(MESSAGE_ICON),'Send private message')
 
 			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
-			actCopyNick = clipMenu.addAction(QIcon(USER_WINDOW_ICON),'Nickname')
+			actCopyNick = clipMenu.addAction(QIcon(USER_ICON),'Nickname')
 			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),'Hostmask')
 			actUserlist = clipMenu.addAction(QIcon(USERLIST_ICON),'User list')
 			actTopic = clipMenu.addAction(QIcon(TOPIC_ICON),'Channel topic')
