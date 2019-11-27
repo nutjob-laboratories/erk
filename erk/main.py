@@ -22,15 +22,37 @@ class Erk(QMainWindow):
 		text_color = get_style_attribute(self.styles[BASE_STYLE_NAME],"color")
 		if not text_color: text_color = "#000000"
 
+		BASE_COLOR = get_style_attribute(self.styles[BASE_STYLE_NAME],"background-color")
+		if not BASE_COLOR: text_color = "#FFFFFF"
+
+		DARKER_COLOR = color_variant(BASE_COLOR,-20)
+
 		user_display_qss='''
+			QTreeWidget::item::selected {
+				border: 0px;
+				background: !BASE!;
+			}
+			QTreeWidget::item:hover {
+				border: 0px;
+				background: !DARKER!;
+			}
 			QTreeWidget::item {
 				border: 0px;
 				color: !TEXT_COLOR!;
+			}
+			QTreeWidget::item::active {
+				border: 0px;
+				background: !DARKER!;
+			}
+			QTreeWidget::item::!active {
+				border: 0px;
 			}
 			QTreeWidget {
 				show-decoration-selected: 0;
 			}
 		'''
+		user_display_qss = user_display_qss.replace('!DARKER!',DARKER_COLOR)
+		user_display_qss = user_display_qss.replace('!BASE!',BASE_COLOR)
 		user_display_qss = user_display_qss.replace('!TEXT_COLOR!',text_color)
 		user_display_qss = user_display_qss + self.styles[BASE_STYLE_NAME]
 
@@ -522,7 +544,8 @@ class Erk(QMainWindow):
 		# Connection tree is in the self.connectionTree widget
 		self.connectionDisplayDock = buildConnectionDisplay(self)
 
-		self.connectionTree.setStyleSheet(self.styles[BASE_STYLE_NAME])
+		self.connectionTree.installEventFilter(self)
+
 		
 		if self.connection_display_location=="right":
 			self.addDockWidget(Qt.RightDockWidgetArea,self.connectionDisplayDock)
@@ -1925,4 +1948,50 @@ class Erk(QMainWindow):
 				self.connecting.append(entry)
 				self.start_working()
 
+	def eventFilter(self, source, event):
+
+		# User List Menu
+		if (event.type() == QtCore.QEvent.ContextMenu and source is self.connectionTree):
+
+			item = source.itemAt(event.pos())
+			if item is None: return True
+
+			if hasattr(item,"erk_server"):
+				if item.erk_server:
+					menu = QMenu(self)
+
+					entry = QAction(QIcon(IO_ICON),NET_TRAFFIC_MENU_NAME,self)
+					entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='io': self.connectionEntryClick(id,cmd))
+					menu.addAction(entry)
+
+					entry = QAction(QIcon(TEXT_WINDOW_ICON),MOTD_VIEW_MENU_NAME,self)
+					entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='motd': self.connectionEntryClick(id,cmd))
+					menu.addAction(entry)
+
+					menu.addSeparator()
+					
+					entry = QAction(QIcon(USER_ICON),CONNECTIONS_MENU_CHANGE_NICK,self)
+					entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='nick': self.connectionEntryClick(id,cmd))
+					menu.addAction(entry)
+
+					entry = QAction(QIcon(CHANNEL_WINDOW_ICON),CONNECTIONS_MENU_JOIN_CHANNEL,self)
+					entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='join': self.connectionEntryClick(id,cmd))
+					menu.addAction(entry)
+
+					entry = QAction(QIcon(EXIT_ICON),CONNECTIONS_MENU_DISCONNECT,self)
+					entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='disconnect': self.connectionEntryClick(id,cmd))
+					menu.addAction(entry)
+				else:
+					return True
+			else:
+				return True
+
+			action = menu.exec_(self.connectionTree.mapToGlobal(event.pos()))
+
+			return True
+
+
+
+
+		return super(Erk, self).eventFilter(source, event)
 
