@@ -22,37 +22,15 @@ class Erk(QMainWindow):
 		text_color = get_style_attribute(self.styles[BASE_STYLE_NAME],"color")
 		if not text_color: text_color = "#000000"
 
-		self.connectionTree.setStyleSheet(self.styles[BASE_STYLE_NAME])
-
-		BASE_COLOR = self.connectionTree.palette().color(QPalette.Base).name()
-		DARKER_COLOR = color_variant(BASE_COLOR,-20)
-
 		user_display_qss='''
-			QTreeWidget::item::selected {
-				border: 0px;
-				background: !BASE!;
-			}
-			QTreeWidget::item:hover {
-				border: 0px;
-				background: !DARKER!;
-			}
 			QTreeWidget::item {
 				border: 0px;
 				color: !TEXT_COLOR!;
-			}
-			QTreeWidget::item::active {
-				border: 0px;
-				background: !DARKER!;
-			}
-			QTreeWidget::item::!active {
-				border: 0px;
 			}
 			QTreeWidget {
 				show-decoration-selected: 0;
 			}
 		'''
-		user_display_qss = user_display_qss.replace('!DARKER!',DARKER_COLOR)
-		user_display_qss = user_display_qss.replace('!BASE!',BASE_COLOR)
 		user_display_qss = user_display_qss.replace('!TEXT_COLOR!',text_color)
 		user_display_qss = user_display_qss + self.styles[BASE_STYLE_NAME]
 
