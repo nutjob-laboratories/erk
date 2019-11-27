@@ -34,7 +34,8 @@ Version 0.600
 	* The font setting menu entry now shows the font currently being used
 	* Changed icons from black and white to color
 	* Removed unnecessary spacing from most dialogs
-	* Setting a channel topic to blank space will result in a channel topic being "unset" (or set to nothing) 
+	* Setting a channel topic to blank space will result in a channel topic being "unset" (or set to nothing)
+	* Added all IRC message strings to erk.strings
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

@@ -285,7 +285,8 @@ def erk_parted_channel(gui,client,channel):
 
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
-			message = "Left "+channel
+			#message = "Left "+channel
+			message = IRC_MESSAGE_CLIENT_PART.format(channel)
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 def erk_joined_channel(gui,client,channel):
@@ -297,13 +298,15 @@ def erk_joined_channel(gui,client,channel):
 
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
-			message = "Joined "+channel
+			#message = "Joined "+channel
+			message = IRC_MESSAGE_CLIENT_JOIN.format(channel)
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:
 			if window.name==channel:
-				message = "Joined "+channel
+				#message = "Joined "+channel
+				message = IRC_MESSAGE_CLIENT_JOIN.format(channel)
 				window.writeLog(SYSTEM_MESSAGE,'',message)
 
 def outgoing_message(gui,client,target,message):
@@ -352,13 +355,15 @@ def erk_changed_nick(gui,client,newnick):
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:
 			client.sendLine("NAMES "+window.name)
-			message = "You are now known as "+newnick
+			#message = "You are now known as "+newnick
+			message = IRC_MESSAGE_SELF_NAME_CHANGE.format(newnick)
 			window.writeLog(SYSTEM_MESSAGE,'',message)
 			window.setNick(newnick)
 	
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
-			message = "You are now known as "+newnick
+			#message = "You are now known as "+newnick
+			message = IRC_MESSAGE_SELF_NAME_CHANGE.format(newnick)
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 def setChannelKey(gui,client,channel,key):
@@ -464,7 +469,8 @@ def connection(gui,client):
 
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
-			message = "Connected to "+client.server+":"+str(client.port)
+			#message = "Connected to "+client.server+":"+str(client.port)
+			message = IRC_MESSAGE_CONNECTED.format(client.server+":"+str(client.port))
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 def disconnection(gui,client):
@@ -529,7 +535,8 @@ def registered(gui,client):
 
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
-			message = "Registered with "+client.server+":"+str(client.port)
+			#message = "Registered with "+client.server+":"+str(client.port)
+			message = IRC_MESSAGE_REGISTERED.format(client.server+":"+str(client.port))
 			w.writeLog(SYSTEM_MESSAGE,'',message)
 
 	if gui.connect_expand_node:
@@ -704,9 +711,11 @@ def mode(gui,client,channel,user,mset,modes,args):
 		for w in SERVER_WINDOWS:
 			if w.client.id==client.id:
 				if mset:
-					message = "Mode +"+modes+" set on "+channel
+					#message = "Mode +"+modes+" set on "+channel
+					message = IRC_MESSAGE_MODE_SET.format(modes,channel)
 				else:
-					message = "Mode -"+modes+" set on "+channel
+					#message = "Mode -"+modes+" set on "+channel
+					message = IRC_MESSAGE_MODE_UNSET.format(modes,channel)
 				w.writeLog(SYSTEM_MESSAGE,'',message)
 				return
 
@@ -723,13 +732,15 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					msg = f"{user} set {channel}'s channel key to \"{n}\""
+					#msg = f"{user} set {channel}'s channel key to \"{n}\""
+					msg = IRC_MESSAGE_KEY_SET.format(user,channel,n)
 					setChannelKey(gui,client,channel,n)
 					setChannelModes(client,channel,"k")
 				else:
 					msg = ''
 			else:
-				msg = f"{user} unset {channel}'s channel key"
+				#msg = f"{user} unset {channel}'s channel key"
+				msg = IRC_MESSAGE_KEY_UNSET.format(user,channel)
 				setChannelKey(gui,client,channel,'')
 				unsetChannelModes(client,channel,"k")
 			if len(msg)>0:
@@ -743,12 +754,14 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					msg = f"{user} granted {channel} operator status to {n}"
+					#msg = f"{user} granted {channel} operator status to {n}"
+					msg = IRC_MESSAGE_GRANT_OP.format(user,channel,n)
 				else:
 					msg = ''
 			else:
 				if n:
-					msg = f"{user} took {channel} operator status from {n}"
+					#msg = f"{user} took {channel} operator status from {n}"
+					msg = IRC_MESSAGE_REMOVE_OP.format(user,channel,n)
 				else:
 					msg = ''
 			if len(msg)>0:
@@ -763,12 +776,14 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					msg = f"{user} granted {channel} voiced status to {n}"
+					#msg = f"{user} granted {channel} voiced status to {n}"
+					msg = IRC_MESSAGE_GRANT_VOICE.format(user,channel,n)
 				else:
 					msg = ''
 			else:
 				if n:
-					msg = f"{user} took {channel} voiced status from {n}"
+					#msg = f"{user} took {channel} voiced status from {n}"
+					msg = IRC_MESSAGE_REMOVE_VOICE.format(user,channel,n)
 				else:
 					msg = ''
 			if len(msg)>0:
@@ -779,12 +794,14 @@ def mode(gui,client,channel,user,mset,modes,args):
 		if m=="b":
 			if mset:
 				for u in args:
-					msg = f"{user} banned {u} from {channel}"
+					#msg = f"{user} banned {u} from {channel}"
+					msg = IRC_MESSAGE_BAN.format(user,u,channel)
 					writeSytemMsgChannel(client,channel,msg)
 					client.sendLine(f"MODE {channel} +b")
 			else:
 				for u in args:
-					msg = f"{user} unbanned {u} from {channel}"
+					#msg = f"{user} unbanned {u} from {channel}"
+					msg = IRC_MESSAGE_UNBAN.format(user,u,channel)
 					writeSytemMsgChannel(client,channel,msg)
 					client.sendLine(f"MODE {channel} +b")
 			continue
@@ -859,10 +876,12 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 	if len(reportadd)>0 or len(reportremove)>0:
 		if mset:
-			msg = f"{user} set +{''.join(reportadd)} in {channel}"
+			#msg = f"{user} set +{''.join(reportadd)} in {channel}"
+			msg = IRC_MESSAGE_USER_MODE_SET.format(user,''.join(reportadd),channel)
 			writeSytemMsgChannel(client,channel,msg)
 		else:
-			msg = f"{user} set -{''.join(reportremove)} in {channel}"
+			#msg = f"{user} set -{''.join(reportremove)} in {channel}"
+			msg = IRC_MESSAGE_USER_MODE_UNSET.format(user,''.join(reportadd),channel)
 			writeSytemMsgChannel(client,channel,msg)
 
 	if get_names: client.sendLine(f"NAMES {channel}")
@@ -880,12 +899,14 @@ def join(gui,client,user,channel):
 		if window.client.id==client.id:
 			if window.name == channel:
 				client.sendLine("NAMES "+window.name)
-				message = nickname+" has joined "+channel
+				#message = nickname+" has joined "+channel
+				message = IRC_MESSAGE_JOIN.format(nickname,channel)
 				window.writeLog(SYSTEM_MESSAGE,'',message)
 
 	for window in SERVER_WINDOWS:
 		if window.client.id==client.id:
-			message = nickname+" has joined "+channel
+			#message = nickname+" has joined "+channel
+			message = IRC_MESSAGE_JOIN.format(nickname,channel)
 			window.writeLog(SYSTEM_MESSAGE,'',message)
 
 def part(gui,client,user,channel):
@@ -900,13 +921,15 @@ def part(gui,client,user,channel):
 		if window.client.id==client.id:
 			if window.name == channel:
 				client.sendLine("NAMES "+window.name)
-				message = nickname+" has left "+channel
+				#message = nickname+" has left "+channel
+				message = IRC_MESSAGE_PART.format(nickname,channel)
 				window.writeLog(SYSTEM_MESSAGE,'',message)
 				window.part(nickname)
 
 	for window in SERVER_WINDOWS:
 		if window.client.id==client.id:
-			message = nickname+" has left "+channel
+			#message = nickname+" has left "+channel
+			message = IRC_MESSAGE_PART.format(nickname,channel)
 			window.writeLog(SYSTEM_MESSAGE,'',message)
 
 def nick(gui,client,oldnick,newnick):
@@ -915,7 +938,8 @@ def nick(gui,client,oldnick,newnick):
 		if window.client.id==client.id:
 			if oldnick in window.nicks:
 				client.sendLine("NAMES "+window.name)
-				message = oldnick+" is now known as "+newnick
+				#message = oldnick+" is now known as "+newnick
+				message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
 				window.writeLog(SYSTEM_MESSAGE,'',message)
 
 	for window in PRIVATE_WINDOWS:
@@ -923,13 +947,15 @@ def nick(gui,client,oldnick,newnick):
 			if window.name==oldnick:
 				window.name = newnick
 				window.setWindowTitle(" "+newnick)
-				message = oldnick+" is now known as "+newnick
+				#message = oldnick+" is now known as "+newnick
+				message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
 				window.writeLog(SYSTEM_MESSAGE,'',message)
 				gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
 
 	for window in SERVER_WINDOWS:
 		if window.client.id==client.id:
-			message = oldnick+" is now known as "+newnick
+			#message = oldnick+" is now known as "+newnick
+			message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
 			window.writeLog(SYSTEM_MESSAGE,'',message)
 
 
@@ -949,10 +975,12 @@ def topic(gui,client,user,channel,topic):
 			if window.name==channel:
 				window.writeTopic(topic.strip())
 				if topic.strip()!='':
-					message = nickname+" set the channel topic to \""+topic+"\""
+					#message = nickname+" set the channel topic to \""+topic+"\""
+					message = IRC_MESSAGE_SET_TOPIC.format(nickname,topic)
 					window.writeLog(SYSTEM_MESSAGE,'',message)
 				else:
-					message = nickname+" set the channel topic to nothing"
+					#message = nickname+" set the channel topic to nothing"
+					message = IRC_MESSAGE_NO_TOPIC.format(nickname)
 					window.writeLog(SYSTEM_MESSAGE,'',message)
 
 def quit(gui,client,user,message):

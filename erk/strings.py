@@ -8,6 +8,43 @@ OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 NORMAL_APPLICATION_NAME = "Erk"
 
+
+IRC_MESSAGE_SELF_NAME_CHANGE = "You are now known as {}"
+IRC_MESSAGE_CONNECTED = "Connected to {}"
+IRC_MESSAGE_REGISTERED = "Registered with {}"
+IRC_MESSAGE_MODE_SET = "Mode +{} set on {}"
+IRC_MESSAGE_MODE_UNSET = "Mode -{} set on {}"
+
+IRC_MESSAGE_KEY_SET = "{} set {}'s key to \"{}\""
+IRC_MESSAGE_KEY_UNSET = "{} unset {}'s key"
+
+IRC_MESSAGE_GRANT_OP = "{} granted {} operator status to {}"
+IRC_MESSAGE_REMOVE_OP = "{} took {} operator status from {}"
+
+IRC_MESSAGE_GRANT_VOICE = "{} granted {} voiced status to {}"
+IRC_MESSAGE_REMOVE_VOICE = "{} took {} voiced status from {}"
+
+IRC_MESSAGE_BAN = "{} banned {} from {}"
+IRC_MESSAGE_UNBAN = "{} unbanned {} from {}"
+
+IRC_MESSAGE_USER_MODE_SET =  "{} set +{} in {}"
+IRC_MESSAGE_USER_MODE_UNSET =  "{} set -{} in {}"
+
+IRC_MESSAGE_JOIN = "{} has joined {}"
+IRC_MESSAGE_PART = "{} has left {}"
+
+IRC_MESSAGE_RENAME = "{} is now known as {}"
+
+IRC_MESSAGE_SET_TOPIC = "{} set the channel topic to \"{}\""
+IRC_MESSAGE_NO_TOPIC = "{} set the channel topic to nothing"
+
+IRC_MESSAGE_CLIENT_JOIN = "Joined {}"
+IRC_MESSAGE_CLIENT_PART = "Left {}"
+
+# |=============|
+# | GUI STRINGS |
+# |=============|
+
 CONNECT_MENU_NAME = "Connect"
 CONNECT_MENU_DESCRIPTION = "Connect to an IRC server"
 
@@ -267,3 +304,7 @@ CHANNEL_MODE_MENU_NAME = "Show channel mode menu"
 CHANNEL_BAN_MENU_NAME = "Show channel ban menu"
 
 ACTIVE_CONNECTIONS_LABEL = "Connected Servers"
+
+
+
+
