@@ -9,7 +9,7 @@ timestamp {
 
 username {
 	font-weight: bold;
-	color: blue;
+	color: #0000FF;
 }
 
 message {
@@ -18,44 +18,44 @@ message {
 system {
 	font-style: italic;
 	font-weight: bold;
-	color: orange;
+	color: #FF8C00;
 }
 
 self {
 	font-weight: bold;
-	color: red;
+	color: #FF0000;
 }
 
 action {
 	font-style: italic;
 	font-weight: bold;
-	color: green;
+	color: #006400;
 }
 
 notice {
 	font-weight: bold;
-	color: purple;
+	color: #800080;
 }
 
 hyperlink {
 	text-decoration: underline;
 	font-weight: bold;
-	color: blue;
+	color: #0000FF;
 }
 
 all {
-	background-color: white;
-	color: black;
+	background-color: #FFFFFF;
+	color: #000000;
 }
 
 error {
 	font-style: italic;
 	font-weight: bold;
-	color: red;
+	color: #FF0000;
 }
 
 motd {
 	font-weight: bold;
-	color: blue;
+	color: #0000FF;
 }
 
