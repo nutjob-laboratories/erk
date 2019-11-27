@@ -926,6 +926,17 @@ class Erk(QMainWindow):
 		if self.load_server_logs and self.load_logs and self.load_private_logs:
 			self.logSubmenu_Toggle_Load.setIcon(QIcon(CHECKED_ICON))
 
+		settingsMenu_Log_Length = QAction(QIcon(LOG_LENGTH_ICON),LOGGING_MENU_LENGTH,self)
+		settingsMenu_Log_Length.triggered.connect(lambda state,s="log_length": self.settingsMenu_Setting(s))
+		settingsMenu_Logs_Submenu.addAction(settingsMenu_Log_Length)
+
+		self.settingsMenu_Log_Mark_End = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_MARK_END,self)
+		self.settingsMenu_Log_Mark_End.triggered.connect(lambda state,s="mark_log_end": self.settingsMenu_Setting(s))
+		settingsMenu_Logs_Submenu.addAction(self.settingsMenu_Log_Mark_End)
+
+		entry = textSeparator(self,"<i>Settings by window type</i>")
+		settingsMenu_Logs_Submenu.addAction(entry)
+
 		logSubmenu_Console = settingsMenu_Logs_Submenu.addMenu(QIcon(CONSOLE_WINDOW_ICON),LOGGING_MENU_CONSOLE)
 
 		self.settingsMenu_Log_Console_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
@@ -961,16 +972,6 @@ class Erk(QMainWindow):
 		self.settingsMenu_Log_Private_Load.setChecked(self.load_private_logs)
 		self.settingsMenu_Log_Private_Load.triggered.connect(lambda state,s="private_load": self.settingsMenu_Setting(s))
 		logSubmenu_Private.addAction(self.settingsMenu_Log_Private_Load)
-
-		settingsMenu_Logs_Submenu.addSeparator()
-
-		settingsMenu_Log_Length = QAction(QIcon(LOG_LENGTH_ICON),LOGGING_MENU_LENGTH,self)
-		settingsMenu_Log_Length.triggered.connect(lambda state,s="log_length": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(settingsMenu_Log_Length)
-
-		self.settingsMenu_Log_Mark_End = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_MARK_END,self)
-		self.settingsMenu_Log_Mark_End.triggered.connect(lambda state,s="mark_log_end": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(self.settingsMenu_Log_Mark_End)
 
 		if self.mark_end_of_loaded_logs:
 			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
