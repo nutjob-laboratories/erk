@@ -9,7 +9,17 @@ from erk.strings import *
 from erk.widgets import *
 from erk.config import *
 
-from erk.dialogs import ConnectDialog,NetworkDialog,WindowSizeDialog,NewNickDialog,JoinChannelDialog,AboutDialog,FormatDialog,LogsizeDialog,IOsizeDialog,CmdHistoryLengthDialog
+from erk.dialogs import (ConnectDialog,
+						NetworkDialog,
+						WindowSizeDialog,
+						NewNickDialog,
+						JoinChannelDialog,
+						AboutDialog,
+						FormatDialog,
+						LogsizeDialog,
+						IOsizeDialog,
+						CmdHistoryLengthDialog)
+
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
 import erk.events

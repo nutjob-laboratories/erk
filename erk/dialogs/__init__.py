@@ -19,7 +19,6 @@ import erk.dialogs.key as Key
 
 from erk.resources import *
 
-
 def CmdHistoryLengthDialog(obj):
 	x = Linecount.Dialog("Command history size",obj.window_command_history_length,ERK_ICON,obj)
 	info = x.get_length_information("Command history size",obj.window_command_history_length,ERK_ICON,obj)
