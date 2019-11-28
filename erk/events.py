@@ -980,7 +980,39 @@ def topic(gui,client,user,channel,topic):
 						window.writeLog(SYSTEM_MESSAGE,'',message)
 
 def quit(gui,client,user,message):
-	pass
+
+	userinfo = user.split('!')
+	if len(userinfo)==2:
+		nickname = userinfo[0]
+	else:
+		nickname = user
+
+	for window in SERVER_WINDOWS:
+		if window.client.id==client.id:
+			if message!='':
+				msg = IRC_MESSAGE_QUIT.format(nickname,message)
+			else:
+				msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
+			window.writeLog(SYSTEM_MESSAGE,'',msg)
+	
+	for window in CHANNEL_WINDOWS:
+		if window.client.id==client.id:
+			if nickname in window.nicks:
+				client.sendLine("NAMES "+window.name)
+				if message!='':
+					msg = IRC_MESSAGE_QUIT.format(nickname,message)
+				else:
+					msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
+				window.writeLog(SYSTEM_MESSAGE,'',msg)
+
+	for window in PRIVATE_WINDOWS:
+		if window.client.id==client.id:
+			if window.name==nickname:
+				if message!='':
+					msg = IRC_MESSAGE_QUIT.format(nickname,message)
+				else:
+					msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
+				window.writeLog(SYSTEM_MESSAGE,'',msg)
 
 def userlist(gui,client,channel,users):
 	

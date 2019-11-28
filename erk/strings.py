@@ -41,6 +41,9 @@ IRC_MESSAGE_NO_TOPIC = "{} set the channel topic to nothing"
 IRC_MESSAGE_CLIENT_JOIN = "Joined {}"
 IRC_MESSAGE_CLIENT_PART = "Left {}"
 
+IRC_MESSAGE_QUIT_NO_MESSAGE = "{} quit IRC"
+IRC_MESSAGE_QUIT = "{} quit IRC ({})"
+
 # |=============|
 # | GUI STRINGS |
 # |=============|
