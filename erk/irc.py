@@ -194,6 +194,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.flat_motd = ''
 
+		self.last_tried_nickname = ''
+
 	def uptime_beat(self):
 
 		self.uptime = self.uptime + 1
@@ -237,6 +239,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.uptimeTimer.stop()
 		self.uptime = 0
+
+		self.last_tried_nickname = ''
 
 		erk.events.disconnection(self.gui,self)
 
@@ -336,17 +340,15 @@ class IRC_Connection(irc.IRCClient):
 
 		oldnick = params[1]
 
-		#oldnick = self.nickname
-		if oldnick != self.alternate:
-			newnick = self.alternate
-		else:
-			newnick = oldnick + "_"
+		if self.last_tried_nickname=='':
+			self.last_tried_nickname = self.alternate
+			self.setNick(self.alternate)
+			rk.events.erk_changed_nick(self.gui,self,self.alternate)
+			return
 
-		self.setNick(newnick)
-
-		#self.oldnick = newnick
-
-		erk.events.erk_changed_nick(self.gui,self,newnick)
+		self.last_tried_nickname = self.last_tried_nickname + "_"
+		self.setNick(self.last_tried_nickname)
+		erk.events.erk_changed_nick(self.gui,self,self.last_tried_nickname)
 
 	def userRenamed(self, oldname, newname):
 
