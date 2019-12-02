@@ -971,48 +971,53 @@ class Window(QMainWindow):
 				menu.addAction(tsAction)
 
 			if user_is_op:
-				statusLabel = QLabel(f"<center><small><i>Channel operator</i></small></center>")
+				statusLabel = QLabel(f"<center><small><i>"+USERLIST_CONTEXT_OP+"</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 			elif user_is_voiced:
-				statusLabel = QLabel(f"<center><small><i>Voiced user</i></small></center>")
+				statusLabel = QLabel(f"<center><small><i>"+USERLIST_CONTEXT_VOICE+"</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 			else:
-				statusLabel = QLabel(f"<center><small><i>Normal user</i></small></center>")
+				statusLabel = QLabel(f"<center><small><i>"+USERLIST_CONTEXT_NORMAL+"</i></small></center>")
 				statusAction = QWidgetAction(self)
 				statusAction.setDefaultWidget(statusLabel)
 				menu.addAction(statusAction)
 
 
 			if self.operator:
-				opMenu = menu.addMenu(QIcon(USERLIST_OPERATOR_ICON),"Operator Actions")
+				opMenu = menu.addMenu(QIcon(USERLIST_OPERATOR_ICON),USERLIST_CONTEXT_OP_ACT)
 
-				if user_is_op: actDeop = opMenu.addAction(QIcon(MINUS_ICON),'Take op status')
-				if not user_is_op: actOp = opMenu.addAction(QIcon(PLUS_ICON),'Give op status')
+				if user_is_op: actDeop = opMenu.addAction(QIcon(MINUS_ICON),USERLIST_CONTEXT_TAKE_OP)
+				if not user_is_op: actOp = opMenu.addAction(QIcon(PLUS_ICON),USERLIST_CONTEXT_GIVE_OP)
 
 				if not user_is_op:
-					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),'Take voiced status')
-					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),'Give voiced status')
+					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),USERLIST_CONTEXT_TAKE_VOICE)
+					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),USERLIST_CONTEXT_GIVE_VOICE)
 
-				actKick = opMenu.addAction(QIcon(KICK_ICON),'Kick')
-				actBan = opMenu.addAction(QIcon(BAN_ICON),'Ban')
-				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),'Kick/Ban')
+				actKick = opMenu.addAction(QIcon(KICK_ICON),USERLIST_CONTEXT_KICK)
+				actBan = opMenu.addAction(QIcon(BAN_ICON),USERLIST_CONTEXT_BAN)
+				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),USERLIST_CONTEXT_KICK_BAN)
 
 				menu.addSeparator()
 
-			actOpenWindow = menu.addAction(QIcon(USER_WINDOW_ICON),'Open chat window')
-			actPrivate = menu.addAction(QIcon(MESSAGE_ICON),'Send private message')
+			actWhois = menu.addAction(QIcon(WHOIS_ICON),USERLIST_CONTEXT_WHOIS)
+			actOpenWindow = menu.addAction(QIcon(USER_WINDOW_ICON),USERLIST_CONTEXT_OPEN_WIN)
+			actPrivate = menu.addAction(QIcon(MESSAGE_ICON),USERLIST_CONTEXT_PRIV)
 
-			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
-			actCopyNick = clipMenu.addAction(QIcon(USER_ICON),'Nickname')
-			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),'Hostmask')
-			actUserlist = clipMenu.addAction(QIcon(USERLIST_ICON),'User list')
-			actTopic = clipMenu.addAction(QIcon(TOPIC_ICON),'Channel topic')
+			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),USERLIST_CONTEXT_COPY)
+			actCopyNick = clipMenu.addAction(QIcon(USER_ICON),USERLIST_CONTEXT_CNICK)
+			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),USERLIST_CONTEXT_CHOST)
+			actUserlist = clipMenu.addAction(QIcon(USERLIST_ICON),USERLIST_CONTEXT_CLIST)
+			actTopic = clipMenu.addAction(QIcon(TOPIC_ICON),USERLIST_CONTEXT_CTOPIC)
 
 			action = menu.exec_(self.channelUserDisplay.mapToGlobal(event.pos()))
+
+			if action == actWhois:
+					self.client.sendLine("WHOIS "+user_nick)
+					return True
 
 			if action == actPrivate:
 				self.userTextInput.setText("/msg "+user_nick+" ")

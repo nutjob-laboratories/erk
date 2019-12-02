@@ -75,6 +75,7 @@ USER_ICON 				= ":/menu-user.png"
 VISITED_ICON 			= ":/menu-visited.png"
 NOTIFY_ICON 			= ":/menu-notifications.png"
 HIDE_ICON 				= ":/menu-hide.png"
+WHOIS_ICON 				= ":/menu-whois.png"
 
 FANCY_NETWORK	= ":/fancy-network.png"
 FANCY_SERVER 	= ":/fancy-server.png"
