@@ -913,15 +913,22 @@ class Window(QMainWindow):
 			user_hostmask = None
 			user_is_op = False
 			user_is_voiced = False
+			user_is_ignored = False
 
 			for u in self.users:
 				p = u.split('!')
 				if len(p)==2:
 					nick = p[0]
 					hostmask = p[1]
+					if self.gui.is_ignored(self.client,nick):
+						user_is_ignored = True
+					elif self.gui.is_ignored(self.client,hostmask):
+						user_is_ignored = True
 				else:
 					nick = u
 					hostmask = None
+					if self.gui.is_ignored(self.client,nick):
+						user_is_ignored = True
 
 				if '@' in nick:
 					is_op = True
@@ -1003,6 +1010,11 @@ class Window(QMainWindow):
 
 				menu.addSeparator()
 
+			if user_is_ignored:
+				actIgnore = menu.addAction(QIcon(HIDE_ICON),"Unignore user")
+			else:
+				actIgnore = menu.addAction(QIcon(HIDE_ICON),"Ignore user")
+
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),USERLIST_CONTEXT_WHOIS)
 			actOpenWindow = menu.addAction(QIcon(USER_WINDOW_ICON),USERLIST_CONTEXT_OPEN_WIN)
 			actPrivate = menu.addAction(QIcon(MESSAGE_ICON),USERLIST_CONTEXT_PRIV)
@@ -1014,6 +1026,21 @@ class Window(QMainWindow):
 			actTopic = clipMenu.addAction(QIcon(TOPIC_ICON),USERLIST_CONTEXT_CTOPIC)
 
 			action = menu.exec_(self.channelUserDisplay.mapToGlobal(event.pos()))
+
+			if action == actIgnore:
+				if user_is_ignored:
+					self.gui.remove_ignore(self.client,user_nick)
+					if user_hostmask:
+						self.gui.remove_ignore(self.client,user_hostmask)
+					return True
+				else:
+					if user_hostmask:
+						h = user_hostmask.split('@')[1]
+						# self.gui.add_ignore(self.client,user_hostmask)
+						self.gui.add_ignore(self.client,"*@"+h)
+					else:
+						self.gui.add_ignore(self.client,user_nick)
+					return True
 
 			if action == actWhois:
 					self.client.sendLine("WHOIS "+user_nick)

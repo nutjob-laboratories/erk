@@ -16,8 +16,13 @@ import erk.dialogs.format as Format
 import erk.dialogs.log_display_size as Linecount
 import erk.dialogs.topic as Topic
 import erk.dialogs.key as Key
+import erk.dialogs.ignore as Ignore
 
 from erk.resources import *
+
+def IgnoreDialog(obj):
+	x = Ignore.Dialog(obj)
+	x.show()
 
 def CmdHistoryLengthDialog(obj):
 	x = Linecount.Dialog("Command history size",obj.window_command_history_length,ERK_ICON,obj)

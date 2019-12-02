@@ -1,4 +1,6 @@
 
+import fnmatch
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -18,7 +20,8 @@ from erk.dialogs import (ConnectDialog,
 						FormatDialog,
 						LogsizeDialog,
 						IOsizeDialog,
-						CmdHistoryLengthDialog)
+						CmdHistoryLengthDialog,
+						IgnoreDialog)
 
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
@@ -437,6 +440,43 @@ class Erk(QMainWindow):
 	def closeEvent(self, event):
 		self.app.quit()
 
+	def is_ignored(self,client,user):
+
+		if not client.id in self.ignored: return False
+
+		p = user.split('!')
+		if p==2:
+			for u in self.ignored[client.id]:
+
+				if fnmatch.fnmatch(p[0],u): return True
+				if fnmatch.fnmatch(p[1],u): return True
+
+				# if p[0] == u: return True
+				# if p[1] == u: return True
+		else:
+			for u in self.ignored[client.id]:
+				#if user == u: return True
+				if fnmatch.fnmatch(user,u): return True
+		return False
+
+	def add_ignore(self,client,user):
+		if not client.id in self.ignored:
+			self.ignored[client.id] = []
+			self.ignored[client.id].append(user)
+			self.ignored[client.id] = list(dict.fromkeys(self.ignored[client.id]))
+		else:
+			self.ignored[client.id].append(user)
+			self.ignored[client.id] = list(dict.fromkeys(self.ignored[client.id]))
+
+	def remove_ignore(self,client,user):
+		if not client.id in self.ignored: return
+		clean = []
+		for u in self.ignored[client.id]:
+			#if u==user: continue
+			if fnmatch.fnmatch(user,u): continue
+			clean.append(u)
+		self.ignored[client.id] = clean
+
 	def __init__(self,app,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -449,6 +489,8 @@ class Erk(QMainWindow):
 
 		self.disconnecting = []
 		self.connecting = []
+
+		self.ignored = {}
 
 		# Set default style
 		self.app.setStyle(DEFAULT_APPLICATION_STYLE)
@@ -617,6 +659,10 @@ class Erk(QMainWindow):
 		ircMenu_Network = fancyMenu(self,FANCY_NETWORK,NETWORK_MENU_NAME,NETWORK_MENU_DESCRIPTION,self.ircMenu_Network_Action)
 		self.ircMenu.addAction(ircMenu_Network)
 
+
+		
+
+
 		#self.ircMenu.addSeparator()
 
 		CONNECTIONS = erk.events.getConnections()
@@ -685,6 +731,12 @@ class Erk(QMainWindow):
 		# Display menu
 		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.settingsMenu)
 
+		ircMenu_Ignore = QAction(QIcon(HIDE_ICON),"Ignored users",self)
+		ircMenu_Ignore.triggered.connect(lambda state,x=self: IgnoreDialog(x))
+		self.settingsMenu.addAction(ircMenu_Ignore)
+
+		self.settingsMenu.addSeparator()
+
 		f = self.app.font()
 		s = f.toString()
 		pf = s.split(',')
@@ -703,7 +755,7 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.displayMenu_Resize_Action)
 		self.settingsMenu.addAction(entry)
 
-		self.settingsMenu.addSeparator()
+
 
 		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
 

@@ -652,8 +652,11 @@ def private_message(gui,client,user,message):
 	userinfo = user.split('!')
 	if len(userinfo)==2:
 		nickname = userinfo[0]
+		if gui.is_ignored(client,nickname): return
+		if gui.is_ignored(client,userinfo[1]): return
 	else:
 		nickname = user
+		if gui.is_ignored(client,nickname): return
 
 	private_chat_window = None
 
@@ -685,8 +688,12 @@ def public_message(gui,client,channel,user,message):
 	userinfo = user.split('!')
 	if len(userinfo)==2:
 		nickname = userinfo[0]
+
+		if gui.is_ignored(client,nickname): return
+		if gui.is_ignored(client,userinfo[1]): return
 	else:
 		nickname = user
+		if gui.is_ignored(client,nickname): return
 	
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:
@@ -698,8 +705,13 @@ def notice_message(gui,client,channel,user,message):
 	userinfo = user.split('!')
 	if len(userinfo)==2:
 		nickname = userinfo[0]
+
+		if gui.is_ignored(client,nickname): return
+		if gui.is_ignored(client,userinfo[1]): return
 	else:
 		nickname = user
+
+		if gui.is_ignored(client,nickname): return
 	
 	if channel=='*' or user==client.hostname:
 		if client.hostname:
@@ -733,8 +745,11 @@ def action_message(gui,client,channel,user,message):
 	userinfo = user.split('!')
 	if len(userinfo)==2:
 		nickname = userinfo[0]
+		if gui.is_ignored(client,nickname): return
+		if gui.is_ignored(client,userinfo[1]): return
 	else:
 		nickname = user
+		if gui.is_ignored(client,nickname): return
 	
 	for window in CHANNEL_WINDOWS:
 		if window.client.id==client.id:

@@ -45,6 +45,7 @@ Version 0.600
 	* Outgoing invites are now displayed in the current active window
 	* Added WHOIS command to the user list context menu
 	* Added context menu text to erk.strings
+	* Added user ignore option (and a dialog to manage user ignores)
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
