@@ -39,6 +39,10 @@ Version 0.600
 	* Added options to suppress server message displays in channel windows
 	* Fixed a bug with the connection display (hover background changes now work properly)
 	* Added a right click context menu to the connection display
+	* Added the /whois command
+	* Added /invite command
+	* Incoming invites are now displayed in the current active window
+	* Outgoing invites are now displayed in the current active window
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

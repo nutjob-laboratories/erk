@@ -308,6 +308,8 @@ CHANNEL_BAN_MENU_NAME = "Show channel ban menu"
 
 ACTIVE_CONNECTIONS_LABEL = "Connected Servers"
 
+WHOIS_COMMAND = "/whois"
+WHOIS_COMMAND_HELP = "Usage: /whois NICKNAME [SERVER]"
 
-
-
+INVITE_COMMAND = "/invite"
+INVITE_COMMAND_HELP = "Usage: /invite NICKNAME CHANNEL"

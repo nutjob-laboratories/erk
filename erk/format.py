@@ -109,6 +109,9 @@ def render_message(styles,mtype,user,message,timestamp=None,max_nick_size=20,no_
 
 	if filter_profanity: message = filterProfanityFromText(message)
 
+	# This is for whois messages
+	message = message.replace("\n","<br>")
+
 	#message = fr"{message}"
 
 	if mtype==SYSTEM_MESSAGE:

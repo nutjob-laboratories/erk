@@ -14,6 +14,41 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /invite
+	if len(tokens)>0:
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			channel = tokens.pop(0)
+			client.invite(user,channel)
+			return
+
+	# /whois
+	if len(tokens)>0:
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			client.sendLine("WHOIS "+target)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			server = tokens.pop(0)
+			client.sendLine("WHOIS "+target+" "+server)
+			return
+
 	# /away
 	if len(tokens)>0:
 		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
@@ -172,6 +207,41 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /invite
+	if len(tokens)>0:
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			channel = tokens.pop(0)
+			client.invite(user,channel)
+			return
+
+	# /whois
+	if len(tokens)>0:
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			client.sendLine("WHOIS "+target)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			server = tokens.pop(0)
+			client.sendLine("WHOIS "+target+" "+server)
+			return
+
 	# /away
 	if len(tokens)>0:
 		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
@@ -325,6 +395,41 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# /invite
+	if len(tokens)>0:
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			channel = tokens.pop(0)
+			client.invite(user,channel)
+			return
+
+	# /whois
+	if len(tokens)>0:
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			client.sendLine("WHOIS "+target)
+			return
+		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			target = tokens.pop(0)
+			server = tokens.pop(0)
+			client.sendLine("WHOIS "+target+" "+server)
+			return
 
 	# /away
 	if len(tokens)>0:

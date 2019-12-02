@@ -1,4 +1,6 @@
 
+from datetime import datetime
+
 from erk.resources import *
 from erk.strings import *
 from erk.widgets import *
@@ -423,6 +425,89 @@ def writeErrorMsgActiveWindow(gui,client,msg):
 		if w.client.id==client.id:
 			w.writeLog(ERROR_MESSAGE,'',msg)
 
+def writeWhoisActiveWindow(gui,client,data):
+
+	if gui.active_window:
+		channel = gui.active_window.name
+		cid = gui.active_window.client.id
+
+		msg = "\x02"+data.nickname+"\x0F ("+data.username+"@"+data.host+"): "+data.realname+"\n"
+		msg = msg + "\x02Channels:\x0F "+data.channels + "\n"
+		msg = msg + "\x02Server:\x0F "+data.server +"\n"
+		msg = msg + "\x02Idle:\x0F "+ data.idle +"\n"
+		pretty = datetime.fromtimestamp(int(data.signon)).strftime('%B %d, %Y at %H:%M:%S')
+		msg = msg + "\x02Sign on:\x0F "+ pretty +"\n"
+		msg = msg + "\x02"+data.nickname + "\x0F "+ data.privs +"\n"
+
+		for w in SERVER_WINDOWS:
+			if w.client.id==cid:
+				if w.name==channel:
+					w.writeLog(CHAT_MESSAGE,"WHOIS",msg)
+					return
+
+		for window in CHANNEL_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					window.writeLog(CHAT_MESSAGE,"WHOIS",msg)
+					return
+
+		for window in PRIVATE_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					window.writeLog(CHAT_MESSAGE,"WHOIS",msg)
+					return
+
+def writeInviteActiveWindow(gui,client,user,target):
+
+	if gui.active_window:
+		channel = gui.active_window.name
+		cid = gui.active_window.client.id
+
+		p = user.split('!')
+		if len(p)==2:
+			user = p[0]
+
+		msg = user + " invited you to "+target
+
+		for w in SERVER_WINDOWS:
+			if w.client.id==cid:
+				if w.name==channel:
+					w.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in CHANNEL_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					window.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in PRIVATE_WINDOWS:
+			if window.client.id==cid:
+				window.writeLog(SYSTEM_MESSAGE,"",msg)
+
+def writeInvitingActiveWindow(gui,client,user,target):
+
+	if gui.active_window:
+		channel = gui.active_window.name
+		cid = gui.active_window.client.id
+
+		p = user.split('!')
+		if len(p)==2:
+			user = p[0]
+
+		msg = "You invited " + user + " to " + target
+
+		for w in SERVER_WINDOWS:
+			if w.client.id==cid:
+				if w.name==channel:
+					w.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in CHANNEL_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					window.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in PRIVATE_WINDOWS:
+			if window.client.id==cid:
+				window.writeLog(SYSTEM_MESSAGE,"",msg)
 
 # |------------------------------------|
 # | EVENTS TRIGGERED BY THE IRC SERVER |

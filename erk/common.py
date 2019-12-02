@@ -16,6 +16,8 @@ CONSOLE_COMMANDS = {
 	"/nick": "/nick ",
 	"/send": "/send ",
 	"/quit": "/quit",
+	"/whois": "/whois ",
+	"/invite": "/invite ",
 }
 
 INPUT_COMMANDS = {
@@ -28,6 +30,8 @@ INPUT_COMMANDS = {
 	"/nick": "/nick ",
 	"/me": "/me ",
 	"/quit": "/quit",
+	"/whois": "/whois ",
+	"/invite": "/invite ",
 }
 
 

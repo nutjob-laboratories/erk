@@ -544,6 +544,7 @@ class IRC_Connection(irc.IRCClient):
 
 		if nick in self.whois:
 			#self.gui.irc_whois(self,self.whois[nick])
+			erk.events.writeWhoisActiveWindow(self.gui,self,self.whois[nick])
 			del self.whois[nick]
 
 		
@@ -626,6 +627,7 @@ class IRC_Connection(irc.IRCClient):
 		channel = params[1]
 
 		# self.gui.irc_invited(self,prefix,target,channel)
+		erk.events.writeInviteActiveWindow(self.gui,self,prefix,channel)
 
 		
 
@@ -635,6 +637,7 @@ class IRC_Connection(irc.IRCClient):
 		channel = params[2]
 
 		# self.gui.irc_inviting(self,user,channel)
+		erk.events.writeInvitingActiveWindow(self.gui,self,user,channel)
 
 		
 
