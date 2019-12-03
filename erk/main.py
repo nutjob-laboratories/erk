@@ -679,6 +679,9 @@ class Erk(QMainWindow):
 		self.settingsMenu = QMenu()
 		self.helpMenu = QMenu()
 		self.windowsMenu = QMenu()
+		self.logMenu = QMenu()
+
+		self.connectionMenu = QMenu()
 
 		self.toolMenuStyle = SmallerIconsMenuStyle('Windows')
 		self.ircMenu.setStyle(self.toolMenuStyle)
@@ -686,6 +689,9 @@ class Erk(QMainWindow):
 		self.settingsMenu.setStyle(self.toolMenuStyle)
 		self.helpMenu.setStyle(self.toolMenuStyle)
 		self.windowsMenu.setStyle(self.toolMenuStyle)
+		self.logMenu.setStyle(self.toolMenuStyle)
+
+		self.connectionMenu.setStyle(self.toolMenuStyle)
 
 		self.buildToolbar()
 
@@ -702,6 +708,8 @@ class Erk(QMainWindow):
 		self.settingsMenu.clear()
 		self.helpMenu.clear()
 		self.windowsMenu.clear()
+		self.logMenu.clear()
+		self.connectionMenu.clear()
 
 		# Main menu
 		add_toolbar_menu(self.toolbar,APPLICATION_NAME,self.ircMenu)
@@ -711,10 +719,6 @@ class Erk(QMainWindow):
 
 		ircMenu_Network = fancyMenu(self,FANCY_NETWORK,NETWORK_MENU_NAME,NETWORK_MENU_DESCRIPTION,self.ircMenu_Network_Action)
 		self.ircMenu.addAction(ircMenu_Network)
-
-
-		
-
 
 		#self.ircMenu.addSeparator()
 
@@ -771,7 +775,6 @@ class Erk(QMainWindow):
 
 			self.ircMenu.addSeparator()
 
-		
 
 		ircMenu_Restart = QAction(QIcon(RESTART_ICON),RESTART_MENU_NAME,self)
 		ircMenu_Restart.triggered.connect(lambda state: restart_program())
@@ -781,21 +784,66 @@ class Erk(QMainWindow):
 		ircMenu_Exit.triggered.connect(self.close)
 		self.ircMenu.addAction(ircMenu_Exit)
 
-		# Display menu
-		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.settingsMenu)
+		# Connection menu
+		# self.connectionMenu
 
-		ircMenu_Ignore = QAction(QIcon(HIDE_ICON),"Ignored users",self)
+		add_toolbar_menu(self.toolbar,CONNECTION_MENU_NAME,self.connectionMenu)
+
+		ircMenu_Ignore = QAction(QIcon(HIDE_ICON),IGNORE_MENU_NAME,self)
 		ircMenu_Ignore.triggered.connect(lambda state,x=self: IgnoreDialog(x))
-		self.settingsMenu.addAction(ircMenu_Ignore)
+		self.connectionMenu.addAction(ircMenu_Ignore)
 
-		self.menuSaveIgnore = QAction(QIcon(UNCHECKED_ICON),"Save ignores",self)
+		settingsMenu_Networking_Submenu = self.connectionMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+
+		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
+		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_IOLength)
+
+		settingsMenu_Networking_Submenu.addSeparator()
+
+		self.settingsMenu_TrafficCon = QAction(TRAFFIC_START_MENU_NAME,self,checkable=True)
+		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
+		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
+
+		self.settingsMenu_Hostmasks = QAction(GET_HOSTMASKS_MENU_NAME,self,checkable=True)
+		self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
+		self.settingsMenu_Hostmasks.triggered.connect(lambda state,s="hostmasks": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_Hostmasks)
+
+		settingsMenu_FailNotify_Marker = QAction(NOTIFICATION_MENU_FAILED,self,checkable=True)
+		settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
+		settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailNotify_Marker)
+
+		settingsMenu_FailLost_Marker = QAction(NOTIFICATION_MENU_LOST,self,checkable=True)
+		settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
+		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
+
+		self.connectionMenu.addSeparator()
+
+		self.menuSaveIgnore = QAction(QIcon(UNCHECKED_ICON),SAVE_IGNORE_MENU_NAME,self)
 		self.menuSaveIgnore.triggered.connect(lambda state,s="ignores": self.settingsMenu_Setting(s))
-		self.settingsMenu.addAction(self.menuSaveIgnore)
+		self.connectionMenu.addAction(self.menuSaveIgnore)
 
 		if self.save_ignored:
 			self.menuSaveIgnore.setIcon(QIcon(CHECKED_ICON))
 
-		self.settingsMenu.addSeparator()
+		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
+		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
+		self.connectionMenu.addAction(self.menuSaveChannels)
+
+		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
+
+		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
+		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
+		self.connectionMenu.addAction(self.menuSaveHistory)
+
+		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
+
+		# Display menu
+		add_toolbar_menu(self.toolbar,DISPLAY_MENU_NAME,self.settingsMenu)
 
 		f = self.app.font()
 		s = f.toString()
@@ -803,45 +851,45 @@ class Erk(QMainWindow):
 		font_name = pf[0]
 		font_size = pf[1]
 
-		self.menuFont = QAction(QIcon(FONT_ICON),"Font" +" ("+font_name+", "+str(font_size)+"pt)",self)
+		self.menuFont = QAction(QIcon(FONT_ICON),FONT_MENU_NAME.format(font_name,font_size),self)
 		self.menuFont.triggered.connect(self.displayMenu_Font_Action)
 		self.settingsMenu.addAction(self.menuFont)
 
-		entry = QAction(QIcon(FORMAT_ICON),"Text formatting",self)
+		entry = QAction(QIcon(FORMAT_ICON),FORMAT_MENU_NAME,self)
 		entry.triggered.connect(self.menuFormat)
 		self.settingsMenu.addAction(entry)
 
-		entry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
+		entry = QAction(QIcon(RESIZE_ICON),WINSIZE_MENU_NAME,self)
 		entry.triggered.connect(self.displayMenu_Resize_Action)
 		self.settingsMenu.addAction(entry)
 
-
+		self.settingsMenu.addSeparator()
 
 		settingsMenu_Channel_Submenu = self.settingsMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),CHANNEL_WINDOW_MENU_NAME)
 
-		channelMenu_Hide_Submenu = settingsMenu_Channel_Submenu.addMenu(QIcon(HIDE_ICON),"Hide server messages")
+		channelMenu_Hide_Submenu = settingsMenu_Channel_Submenu.addMenu(QIcon(HIDE_ICON),SERVMSG_MENU_NAME)
 
-		entry = QAction("Join",self,checkable=True)
+		entry = QAction("JOIN",self,checkable=True)
 		entry.setChecked(self.ignore_join)
 		entry.triggered.connect(lambda state,s="ignore_join": self.settingsMenu_Setting(s))
 		channelMenu_Hide_Submenu.addAction(entry)
 
-		entry = QAction("Part",self,checkable=True)
+		entry = QAction("PART",self,checkable=True)
 		entry.setChecked(self.ignore_part)
 		entry.triggered.connect(lambda state,s="ignore_part": self.settingsMenu_Setting(s))
 		channelMenu_Hide_Submenu.addAction(entry)
 
-		entry = QAction("Nick",self,checkable=True)
+		entry = QAction("NICK",self,checkable=True)
 		entry.setChecked(self.ignore_rename)
 		entry.triggered.connect(lambda state,s="ignore_rename": self.settingsMenu_Setting(s))
 		channelMenu_Hide_Submenu.addAction(entry)
 
-		entry = QAction("Topic",self,checkable=True)
+		entry = QAction("TOPIC",self,checkable=True)
 		entry.setChecked(self.ignore_topic)
 		entry.triggered.connect(lambda state,s="ignore_topic": self.settingsMenu_Setting(s))
 		channelMenu_Hide_Submenu.addAction(entry)
 
-		entry = QAction("Mode",self,checkable=True)
+		entry = QAction("MODE",self,checkable=True)
 		entry.setChecked(self.ignore_mode)
 		entry.triggered.connect(lambda state,s="ignore_mode": self.settingsMenu_Setting(s))
 		channelMenu_Hide_Submenu.addAction(entry)
@@ -912,13 +960,13 @@ class Erk(QMainWindow):
 
 		settingsMenu_Entry_Submenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),TEXT_ENTRY_MENU_NAME)
 
-		entry = QAction("Enable command history",self,checkable=True)
+		entry = QAction(ENABLE_CMD_HISTORY_MENU_NAME,self,checkable=True)
 		entry.setChecked(self.window_command_history)
 		entry.triggered.connect(lambda state,s="use_history": self.settingsMenu_Setting(s))
 		settingsMenu_Entry_Submenu.addAction(entry)
 
 
-		entry = QAction(QIcon(HISTORY_ICON),"Set command history length",self)
+		entry = QAction(QIcon(HISTORY_ICON),CMD_HISTORY_LEN_MENU_NAME,self)
 		entry.triggered.connect(lambda state,s="cmdlen": self.settingsMenu_Setting(s))
 		settingsMenu_Entry_Submenu.addAction(entry)
 
@@ -1045,34 +1093,6 @@ class Erk(QMainWindow):
 		elif self.connection_display_location=="left":
 			self.connectionSubmenu_Left.setChecked(True)
 
-		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
-
-		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
-		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_IOLength)
-
-		settingsMenu_Networking_Submenu.addSeparator()
-
-		self.settingsMenu_TrafficCon = QAction("Start collecting at connection",self,checkable=True)
-		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
-		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
-
-		self.settingsMenu_Hostmasks = QAction(GET_HOSTMASKS_MENU_NAME,self,checkable=True)
-		self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
-		self.settingsMenu_Hostmasks.triggered.connect(lambda state,s="hostmasks": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_Hostmasks)
-
-		settingsMenu_FailNotify_Marker = QAction(NOTIFICATION_MENU_FAILED,self,checkable=True)
-		settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
-		settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailNotify_Marker)
-
-		settingsMenu_FailLost_Marker = QAction(NOTIFICATION_MENU_LOST,self,checkable=True)
-		settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
-		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
-
 		settingMenu_Timestamp_Submenu = self.settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),TIMESTAMP_MENU_NAME)
 
 		timestampSubmenu_Visible = QAction(TIMESTAMP_DISPLAY_MENU_NAME,self,checkable=True)
@@ -1090,87 +1110,9 @@ class Erk(QMainWindow):
 		timestampSubmenu_24hour.triggered.connect(lambda state,s="24hr_timestamp": self.displayMenu_Setting(s))
 		settingMenu_Timestamp_Submenu.addAction(timestampSubmenu_24hour)
 
-		settingsMenu_Logs_Submenu = self.settingsMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
-
-		self.logSubmenu_Toggle = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_SAVE_ALL_LOGS,self)
-		self.logSubmenu_Toggle.triggered.connect(lambda state,s="all_log_on": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(self.logSubmenu_Toggle)
-
-		if self.save_server_logs and self.save_logs and self.save_private_logs:
-			self.logSubmenu_Toggle.setIcon(QIcon(CHECKED_ICON))
-
-		self.logSubmenu_Toggle_Load = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_LOAD_ALL_LOGS,self)
-		self.logSubmenu_Toggle_Load.triggered.connect(lambda state,s="all_load_on": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(self.logSubmenu_Toggle_Load)
-
-		if self.load_server_logs and self.load_logs and self.load_private_logs:
-			self.logSubmenu_Toggle_Load.setIcon(QIcon(CHECKED_ICON))
-
-		settingsMenu_Log_Length = QAction(QIcon(LOG_LENGTH_ICON),LOGGING_MENU_LENGTH,self)
-		settingsMenu_Log_Length.triggered.connect(lambda state,s="log_length": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(settingsMenu_Log_Length)
-
-		self.settingsMenu_Log_Mark_End = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_MARK_END,self)
-		self.settingsMenu_Log_Mark_End.triggered.connect(lambda state,s="mark_log_end": self.settingsMenu_Setting(s))
-		settingsMenu_Logs_Submenu.addAction(self.settingsMenu_Log_Mark_End)
-
-		entry = textSeparator(self,"<i>Settings by window type</i>")
-		settingsMenu_Logs_Submenu.addAction(entry)
-
-		logSubmenu_Console = settingsMenu_Logs_Submenu.addMenu(QIcon(CONSOLE_WINDOW_ICON),LOGGING_MENU_CONSOLE)
-
-		self.settingsMenu_Log_Console_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
-		self.settingsMenu_Log_Console_Save.setChecked(self.save_server_logs)
-		self.settingsMenu_Log_Console_Save.triggered.connect(lambda state,s="console_save": self.settingsMenu_Setting(s))
-		logSubmenu_Console.addAction(self.settingsMenu_Log_Console_Save)
-
-		self.settingsMenu_Log_Console_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
-		self.settingsMenu_Log_Console_Load.setChecked(self.load_server_logs)
-		self.settingsMenu_Log_Console_Load.triggered.connect(lambda state,s="console_load": self.settingsMenu_Setting(s))
-		logSubmenu_Console.addAction(self.settingsMenu_Log_Console_Load)
-
-		logSubmenu_Channel = settingsMenu_Logs_Submenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),LOGGING_MENU_CHANNEL)
-
-		self.settingsMenu_Log_Channel_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
-		self.settingsMenu_Log_Channel_Save.setChecked(self.save_logs)
-		self.settingsMenu_Log_Channel_Save.triggered.connect(lambda state,s="channel_save": self.settingsMenu_Setting(s))
-		logSubmenu_Channel.addAction(self.settingsMenu_Log_Channel_Save)
-
-		self.settingsMenu_Log_Channel_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
-		self.settingsMenu_Log_Channel_Load.setChecked(self.load_logs)
-		self.settingsMenu_Log_Channel_Load.triggered.connect(lambda state,s="channel_load": self.settingsMenu_Setting(s))
-		logSubmenu_Channel.addAction(self.settingsMenu_Log_Channel_Load)
-
-		logSubmenu_Private = settingsMenu_Logs_Submenu.addMenu(QIcon(USER_WINDOW_ICON),LOGGING_MENU_PRIVATE)
-
-		self.settingsMenu_Log_Private_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
-		self.settingsMenu_Log_Private_Save.setChecked(self.save_private_logs)
-		self.settingsMenu_Log_Private_Save.triggered.connect(lambda state,s="private_save": self.settingsMenu_Setting(s))
-		logSubmenu_Private.addAction(self.settingsMenu_Log_Private_Save)
-
-		self.settingsMenu_Log_Private_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
-		self.settingsMenu_Log_Private_Load.setChecked(self.load_private_logs)
-		self.settingsMenu_Log_Private_Load.triggered.connect(lambda state,s="private_load": self.settingsMenu_Setting(s))
-		logSubmenu_Private.addAction(self.settingsMenu_Log_Private_Load)
-
-		if self.mark_end_of_loaded_logs:
-			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
-
 		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
 
 		self.settingsMenu.addSeparator()
-
-		self.menuSaveChannels = QAction(QIcon(UNCHECKED_ICON),SAVE_CHANNEL_MENU_NAME,self)
-		self.menuSaveChannels.triggered.connect(self.menuSaveChannelsAction)
-		self.settingsMenu.addAction(self.menuSaveChannels)
-
-		if self.save_channels: self.menuSaveChannels.setIcon(QIcon(CHECKED_ICON))
-
-		self.menuSaveHistory = QAction(QIcon(UNCHECKED_ICON),SAVE_HISTORY_MENU_NAME,self)
-		self.menuSaveHistory.triggered.connect(self.menuSaveHistoryAction)
-		self.settingsMenu.addAction(self.menuSaveHistory)
-
-		if self.save_history: self.menuSaveHistory.setIcon(QIcon(CHECKED_ICON))
 
 		self.menuAppTitle = QAction(QIcon(UNCHECKED_ICON),TITLE_FROM_ACTIVE_WINDOW_NAME,self)
 		self.menuAppTitle.triggered.connect(self.menuWindowTitleAction)
@@ -1184,6 +1126,74 @@ class Erk(QMainWindow):
 
 		if self.top:
 			self.menuOnTop.setIcon(QIcon(CHECKED_ICON))
+
+		# Log menu
+		#settingsMenu_Logs_Submenu = self.settingsMenu.addMenu(QIcon(LOG_ICON),LOGGING_MENU_NAME)
+		add_toolbar_menu(self.toolbar,LOGGING_MENU_NAME,self.logMenu)
+
+		self.logSubmenu_Toggle = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_SAVE_ALL_LOGS,self)
+		self.logSubmenu_Toggle.triggered.connect(lambda state,s="all_log_on": self.settingsMenu_Setting(s))
+		self.logMenu.addAction(self.logSubmenu_Toggle)
+
+		if self.save_server_logs and self.save_logs and self.save_private_logs:
+			self.logSubmenu_Toggle.setIcon(QIcon(CHECKED_ICON))
+
+		self.logSubmenu_Toggle_Load = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_LOAD_ALL_LOGS,self)
+		self.logSubmenu_Toggle_Load.triggered.connect(lambda state,s="all_load_on": self.settingsMenu_Setting(s))
+		self.logMenu.addAction(self.logSubmenu_Toggle_Load)
+
+		if self.load_server_logs and self.load_logs and self.load_private_logs:
+			self.logSubmenu_Toggle_Load.setIcon(QIcon(CHECKED_ICON))
+
+		settingsMenu_Log_Length = QAction(QIcon(LOG_LENGTH_ICON),LOGGING_MENU_LENGTH,self)
+		settingsMenu_Log_Length.triggered.connect(lambda state,s="log_length": self.settingsMenu_Setting(s))
+		self.logMenu.addAction(settingsMenu_Log_Length)
+
+		self.settingsMenu_Log_Mark_End = QAction(QIcon(UNCHECKED_ICON),LOGGING_MENU_MARK_END,self)
+		self.settingsMenu_Log_Mark_End.triggered.connect(lambda state,s="mark_log_end": self.settingsMenu_Setting(s))
+		self.logMenu.addAction(self.settingsMenu_Log_Mark_End)
+
+		entry = textSeparator(self,"<i>"+LOGGING_WIN_TYPE_MENU_SEPARATOR+"</i>")
+		self.logMenu.addAction(entry)
+
+		logSubmenu_Console = self.logMenu.addMenu(QIcon(CONSOLE_WINDOW_ICON),LOGGING_MENU_CONSOLE)
+
+		self.settingsMenu_Log_Console_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
+		self.settingsMenu_Log_Console_Save.setChecked(self.save_server_logs)
+		self.settingsMenu_Log_Console_Save.triggered.connect(lambda state,s="console_save": self.settingsMenu_Setting(s))
+		logSubmenu_Console.addAction(self.settingsMenu_Log_Console_Save)
+
+		self.settingsMenu_Log_Console_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
+		self.settingsMenu_Log_Console_Load.setChecked(self.load_server_logs)
+		self.settingsMenu_Log_Console_Load.triggered.connect(lambda state,s="console_load": self.settingsMenu_Setting(s))
+		logSubmenu_Console.addAction(self.settingsMenu_Log_Console_Load)
+
+		logSubmenu_Channel = self.logMenu.addMenu(QIcon(CHANNEL_WINDOW_ICON),LOGGING_MENU_CHANNEL)
+
+		self.settingsMenu_Log_Channel_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
+		self.settingsMenu_Log_Channel_Save.setChecked(self.save_logs)
+		self.settingsMenu_Log_Channel_Save.triggered.connect(lambda state,s="channel_save": self.settingsMenu_Setting(s))
+		logSubmenu_Channel.addAction(self.settingsMenu_Log_Channel_Save)
+
+		self.settingsMenu_Log_Channel_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
+		self.settingsMenu_Log_Channel_Load.setChecked(self.load_logs)
+		self.settingsMenu_Log_Channel_Load.triggered.connect(lambda state,s="channel_load": self.settingsMenu_Setting(s))
+		logSubmenu_Channel.addAction(self.settingsMenu_Log_Channel_Load)
+
+		logSubmenu_Private = self.logMenu.addMenu(QIcon(USER_WINDOW_ICON),LOGGING_MENU_PRIVATE)
+
+		self.settingsMenu_Log_Private_Save = QAction(LOGGING_MENU_SAVE,self,checkable=True)
+		self.settingsMenu_Log_Private_Save.setChecked(self.save_private_logs)
+		self.settingsMenu_Log_Private_Save.triggered.connect(lambda state,s="private_save": self.settingsMenu_Setting(s))
+		logSubmenu_Private.addAction(self.settingsMenu_Log_Private_Save)
+
+		self.settingsMenu_Log_Private_Load = QAction(LOGGING_MENU_LOAD,self,checkable=True)
+		self.settingsMenu_Log_Private_Load.setChecked(self.load_private_logs)
+		self.settingsMenu_Log_Private_Load.triggered.connect(lambda state,s="private_load": self.settingsMenu_Setting(s))
+		logSubmenu_Private.addAction(self.settingsMenu_Log_Private_Load)
+
+		if self.mark_end_of_loaded_logs:
+			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
 
 		# Windows menu
 		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)

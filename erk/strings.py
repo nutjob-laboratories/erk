@@ -62,9 +62,6 @@ DISPLAY_MENU_NAME = "Settings"
 
 WINDOWS_MENU_NAME = "Windows"
 
-FONT_MENU_NAME = "Font"
-FONT_MENU_DESCRIPTION = "Set application font"
-
 WINDOW_SIZE_MENU_NAME = "Window size"
 WINDOW_SIZE_MENU_DESCRIPTION = "Set initial window size"
 
@@ -254,7 +251,7 @@ FORMAT_DIALOG_TXT_COLOR = "Text Color"
 
 FORMAT_DIALOG_TITLE = "Text format"
 
-LOGGING_MENU_NAME = "Automatic logging"
+LOGGING_MENU_NAME = "Logs"
 LOGGING_MENU_CONSOLE = "Console windows"
 LOGGING_MENU_CHANNEL = "Channel windows"
 LOGGING_MENU_PRIVATE = "Private windows"
@@ -262,15 +259,15 @@ LOGGING_MENU_LENGTH = "Set log display length"
 LOGGING_MENU_MARK_END = "Mark end of loaded logs"
 
 LOGGING_MENU_SAVE = "Save logs"
-LOGGING_MENU_LOAD = "Load and display logs"
+LOGGING_MENU_LOAD = "Load logs"
 
 NOTIFICATION_MENU_NAME = "Notifications"
 
 NOTIFICATION_MENU_FAILED = "Notify on failed connections"
 NOTIFICATION_MENU_LOST = "Notify on lost connections"
 
-LOGGING_MENU_SAVE_ALL_LOGS = "Save all logs"
-LOGGING_MENU_LOAD_ALL_LOGS = "Load and display all logs"
+LOGGING_MENU_SAVE_ALL_LOGS = "Automatically save logs"
+LOGGING_MENU_LOAD_ALL_LOGS = "Automatically load logs"
 
 NETWORK_SETTINGS_MENU_NAME = "Network traffic display"
 GET_HOSTMASKS_MENU_NAME = "Retrieve hostmasks on join"
@@ -365,3 +362,21 @@ KNOCK_COMMAND = "/knock"
 KNOCK_COMMAND_HELP = "Usage: /knock CHANNEL [MESSAGE]"
 
 MODE_INVITE_ONLY = "Channel is invite only"
+
+FONT_MENU_NAME = "Font ({}, {}pt)"
+FORMAT_MENU_NAME = "Text formatting"
+WINSIZE_MENU_NAME = "Set initial window size"
+
+SERVMSG_MENU_NAME = "Hide server messages"
+
+CONNECTION_MENU_NAME = "Connections"
+IGNORE_MENU_NAME = "Ignored users"
+
+TRAFFIC_START_MENU_NAME = "Start collecting at connection"
+
+SAVE_IGNORE_MENU_NAME = "Save ignored users"
+
+ENABLE_CMD_HISTORY_MENU_NAME = "Enable command history"
+CMD_HISTORY_LEN_MENU_NAME = "Set command history length"
+
+LOGGING_WIN_TYPE_MENU_SEPARATOR = "Settings by window type"
