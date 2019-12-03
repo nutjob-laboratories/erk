@@ -70,6 +70,10 @@ class Window(QMainWindow):
 		self.show_input = True
 		self.show_output = True
 
+		self.is_channel = False
+		self.is_console = False
+		self.is_user = False
+
 		if not self.name:
 			pass
 		else:

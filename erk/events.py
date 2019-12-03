@@ -20,6 +20,9 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def getNetTraffics():
+	return IO_WINDOWS
+
 def does_server_support_knock(client):
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
@@ -608,10 +611,6 @@ def writeUserhostActiveWindow(gui,client,data):
 					window.writeLog(SYSTEM_MESSAGE,"",l)
 				return
 
-
-
-
-
 # |------------------------------------|
 # | EVENTS TRIGGERED BY THE IRC SERVER |
 # |------------------------------------|
@@ -647,7 +646,7 @@ def connection(gui,client):
 
 	if gui.show_net_traffic_from_connection:
 		w = IOWindow(name,gui.MDI,client,gui)
-		w.subwindow.close()
+		#w.subwindow.close()
 		IO_WINDOWS.append(w)
 
 	server_console_window = ServerWindow(name,gui.MDI,client,gui)

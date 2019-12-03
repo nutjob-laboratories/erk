@@ -68,6 +68,9 @@ Version 0.600
 	* Moved "get hostmasks on channel join" to root "connections" menu
 	* Fixed a bug with the "get hostmasks" menu entry
 	* Moved network display settings back to the "settings" menu
+	* If the network display is set to show traffic from connection, the window is no longer created and hidden immediately
+	* Network display windows are now shown in the "windows" menu
+	* Tracking network traffic from connection is now turned off by default
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

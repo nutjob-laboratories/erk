@@ -1220,6 +1220,7 @@ class Erk(QMainWindow):
 
 		snetworks = {}
 		channels,privates,consoles = erk.events.getWindows()
+		ntwins = erk.events.getNetTraffics()
 
 		if len(consoles)>0:
 			menuCascade.setEnabled(True)
@@ -1246,6 +1247,14 @@ class Erk(QMainWindow):
 			else:
 				snetworks[n] = []
 				snetworks[n].append(w)
+		for w in ntwins:
+			if w.client.network:
+				n = w.client.network
+				if n in snetworks:
+					snetworks[n].append(w)
+				else:
+					snetworks[n] = []
+					snetworks[n].append(w)
 
 		for net in snetworks:
 
@@ -1265,6 +1274,12 @@ class Erk(QMainWindow):
 			for window in snetworks[net]:
 				if window.is_user:
 					entry = QAction(QIcon(USER_WINDOW_ICON),window.name,self)
+					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
+					self.windowsMenu.addAction(entry)
+
+			for window in snetworks[net]:
+				if not window.is_user and not window.is_channel and not window.is_console:
+					entry = QAction(QIcon(IO_ICON),window.name+" traffic",self)
 					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
 					self.windowsMenu.addAction(entry)
 
