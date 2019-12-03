@@ -51,6 +51,7 @@ Version 0.600
 	* Added server identification to the ignore dialog
 	* Added universal (not connection-specific) ignoring
 	* Modified ignore dialogs and back-end to work with universal ignores
+	* Added use information to the "add ignore" dialog
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

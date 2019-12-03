@@ -66,11 +66,17 @@ class Dialog(QDialog):
 		self.setWindowTitle(f"Add User")
 		self.setWindowIcon(QIcon(USER_ICON))
 
+		self.descLabel = QLabel("<small>Use Unix shell-style wildcards</small>")
+		self.descLabel.setAlignment(Qt.AlignCenter)
+
+		self.descLabel2 = QLabel("<small>Ignore will be applied to all connections</small>")
+		self.descLabel2.setAlignment(Qt.AlignCenter)
+
 		nameLayout = QHBoxLayout()
 		self.nameLabel = QLabel("Nick/Host")
 		self.name = QLineEdit()
 		nameLayout.addWidget(self.nameLabel)
-		nameLayout.addStretch()
+		#nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
 		# Buttons
@@ -80,7 +86,10 @@ class Dialog(QDialog):
 		buttons.rejected.connect(self.close)
 
 		finalLayout = QVBoxLayout()
+		
 		finalLayout.addLayout(nameLayout)
+		finalLayout.addWidget(self.descLabel)
+		finalLayout.addWidget(self.descLabel2)
 		finalLayout.addStretch()
 		finalLayout.addWidget(buttons)
 
