@@ -38,6 +38,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.common import *
+from erk.strings import *
 
 from spellchecker import SpellChecker
 
