@@ -533,6 +533,39 @@ def writeInvitingActiveWindow(gui,client,user,target):
 			if window.client.id==cid:
 				window.writeLog(SYSTEM_MESSAGE,"",msg)
 
+
+
+
+
+def writeTimeActiveWindow(gui,client,server,time):
+
+	if gui.active_window:
+		channel = gui.active_window.name
+		cid = gui.active_window.client.id
+
+		msg = server + " time: " + time
+
+		for w in SERVER_WINDOWS:
+			if w.client.id==cid:
+				if w.name==channel:
+					w.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in CHANNEL_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					window.writeLog(SYSTEM_MESSAGE,"",msg)
+
+		for window in PRIVATE_WINDOWS:
+			if window.client.id==cid:
+				window.writeLog(SYSTEM_MESSAGE,"",msg)
+
+
+
+
+
+
+
+
 # |------------------------------------|
 # | EVENTS TRIGGERED BY THE IRC SERVER |
 # |------------------------------------|

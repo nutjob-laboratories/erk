@@ -14,6 +14,18 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /time
+	if len(tokens)>0:
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
+			client.sendLine("TIME "+tokens[1])
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
+			client.sendLine("TIME")
+			return
+
 	CNOTICE = gui.does_server_support_cnotice(client)
 	CPRIVMSG = gui.does_server_support_cprivmsg(client)
 
@@ -289,6 +301,18 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /time
+	if len(tokens)>0:
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
+			client.sendLine("TIME "+tokens[1])
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
+			client.sendLine("TIME")
+			return
+
 	CNOTICE = gui.does_server_support_cnotice(client)
 	CPRIVMSG = gui.does_server_support_cprivmsg(client)
 
@@ -559,6 +583,18 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# /time
+	if len(tokens)>0:
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
+			client.sendLine("TIME "+tokens[1])
+			return
+		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
+			client.sendLine("TIME")
+			return
 
 	CNOTICE = gui.does_server_support_cnotice(client)
 	CPRIVMSG = gui.does_server_support_cprivmsg(client)

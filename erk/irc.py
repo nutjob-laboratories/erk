@@ -662,6 +662,13 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_end_list(self,server)
 
+	def irc_RPL_TIME(self,prefix,params):
+
+		server = params[1]
+		time = params[2]
+
+		erk.events.writeTimeActiveWindow(self.gui,self,server,time)
+
 	def sendLine(self,line):
 		
 		# self.gui.irc_output(self,line)

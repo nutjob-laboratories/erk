@@ -21,6 +21,7 @@ CONSOLE_COMMANDS = {
 	"/oper": "/oper ",
 	"/ignore": "/ignore ",
 	"/unignore": "/unignore ",
+	"/time": "/time",
 }
 
 INPUT_COMMANDS = {
@@ -38,6 +39,7 @@ INPUT_COMMANDS = {
 	"/oper": "/oper ",
 	"/ignore": "/ignore ",
 	"/unignore": "/unignore ",
+	"/time": "/time",
 }
 
 

@@ -351,3 +351,6 @@ CNOTICE_COMMAND = "/cnotice"
 CNOTICE_COMMAND_HELP = "Usage: /cnotice NICKNAME CHANNEL MESSAGE"
 
 CPRIV_CNOTICE_NOT_SUPPORTED = "This server does not support the {} command"
+
+TIME_COMMAND = "/time"
+TIME_COMMAND_HELP = "Usage: /time [SERVER]"
