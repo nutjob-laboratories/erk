@@ -14,6 +14,19 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /userhost
+	if len(tokens)>0:
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
+			tokens.pop(0)	# Remove command
+			client.sendLine("USERHOST "+' '.join(tokens))
+			return
+
 	# /time
 	if len(tokens)>0:
 		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
@@ -301,6 +314,19 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /userhost
+	if len(tokens)>0:
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
+			tokens.pop(0)	# Remove command
+			client.sendLine("USERHOST "+' '.join(tokens))
+			return
+
 	# /time
 	if len(tokens)>0:
 		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
@@ -583,6 +609,19 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# /userhost
+	if len(tokens)>0:
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
+			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
+			return
+		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
+			tokens.pop(0)	# Remove command
+			client.sendLine("USERHOST "+' '.join(tokens))
+			return
 
 	# /time
 	if len(tokens)>0:

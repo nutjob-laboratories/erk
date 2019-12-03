@@ -55,6 +55,7 @@ Version 0.600
 	* Added /cnotice and /cprivmsg commands
 	* /cnotice and /cprivmsg will only autocomplete if the server supports the command
 	* Added /time command
+	* Added /userhost command
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

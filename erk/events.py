@@ -534,9 +534,6 @@ def writeInvitingActiveWindow(gui,client,user,target):
 				window.writeLog(SYSTEM_MESSAGE,"",msg)
 
 
-
-
-
 def writeTimeActiveWindow(gui,client,server,time):
 
 	if gui.active_window:
@@ -560,7 +557,43 @@ def writeTimeActiveWindow(gui,client,server,time):
 				window.writeLog(SYSTEM_MESSAGE,"",msg)
 
 
+def writeUserhostActiveWindow(gui,client,data):
 
+	if gui.active_window:
+		channel = gui.active_window.name
+		cid = gui.active_window.client.id
+
+		msg = []
+		msg.append(BEGIN_USERHOST_DATA)
+		for e in data.split(' '):
+			if len(e.strip())==0: continue
+			msg.append(e)
+		msg.append(END_USERHOST_DATA)
+
+
+		for w in SERVER_WINDOWS:
+			if w.client.id==cid:
+				if w.name==channel:
+					#w.writeLog(SYSTEM_MESSAGE,"",e)
+
+					for l in msg:
+						w.writeLog(SYSTEM_MESSAGE,"",l)
+					return
+
+		for window in CHANNEL_WINDOWS:
+			if window.client.id==cid:
+				if window.name == channel:
+					#window.writeLog(SYSTEM_MESSAGE,"",e)
+					for l in msg:
+						window.writeLog(SYSTEM_MESSAGE,"",l)
+					return
+
+		for window in PRIVATE_WINDOWS:
+			if window.client.id==cid:
+				#window.writeLog(SYSTEM_MESSAGE,"",e)
+				for l in msg:
+					window.writeLog(SYSTEM_MESSAGE,"",l)
+				return
 
 
 

@@ -669,6 +669,11 @@ class IRC_Connection(irc.IRCClient):
 
 		erk.events.writeTimeActiveWindow(self.gui,self,server,time)
 
+	def irc_RPL_USERHOST(self,prefix,params):
+		data = params[1]
+
+		erk.events.writeUserhostActiveWindow(self.gui,self,data)
+
 	def sendLine(self,line):
 		
 		# self.gui.irc_output(self,line)

@@ -354,3 +354,9 @@ CPRIV_CNOTICE_NOT_SUPPORTED = "This server does not support the {} command"
 
 TIME_COMMAND = "/time"
 TIME_COMMAND_HELP = "Usage: /time [SERVER]"
+
+BEGIN_USERHOST_DATA = "Begin userhost information"
+END_USERHOST_DATA = "End userhost information"
+
+USERHOST_COMMAND = "/userhost"
+USERHOST_COMMAND_HELP = "Usage: /userhost NICK [NICK ...]"
