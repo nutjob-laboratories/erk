@@ -52,6 +52,8 @@ Version 0.600
 	* Added universal (not connection-specific) ignoring
 	* Modified ignore dialogs and back-end to work with universal ignores
 	* Added use information to the "add ignore" dialog
+	* Added /cnotice and /cprivmsg commands
+	* /cnotice and /cprivmsg will only autocomplete if the server supports the command
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

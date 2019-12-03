@@ -343,7 +343,7 @@ class IRC_Connection(irc.IRCClient):
 		if self.last_tried_nickname=='':
 			self.last_tried_nickname = self.alternate
 			self.setNick(self.alternate)
-			rk.events.erk_changed_nick(self.gui,self,self.alternate)
+			erk.events.erk_changed_nick(self.gui,self,self.alternate)
 			return
 
 		self.last_tried_nickname = self.last_tried_nickname + "_"

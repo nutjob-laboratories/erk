@@ -85,6 +85,13 @@ class SpellTextEdit(QPlainTextEdit):
 					else:
 						COMMAND_LIST = INPUT_COMMANDS
 
+					# Inject /cnotice and /cprivmsg if supported
+					if self.parent.gui.does_server_support_cnotice(self.parent.client):
+						COMMAND_LIST[CNOTICE_COMMAND] = CNOTICE_COMMAND+" "
+
+					if self.parent.gui.does_server_support_cprivmsg(self.parent.client):
+						COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
+
 					for c in COMMAND_LIST:
 						cmd = c
 						rep = COMMAND_LIST[c]

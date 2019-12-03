@@ -343,3 +343,11 @@ IGNORE_COMMAND_HELP = "Usage: /ignore USER"
 
 UNIGNORE_COMMAND = "/unignore"
 UNIGNORE_COMMAND_HELP = "Usage: /unignore USER"
+
+CPRIVMSG_COMMAND = "/cprivmsg"
+CPRIVMSG_COMMAND_HELP = "Usage: /cprivmsg NICKNAME CHANNEL MESSAGE"
+
+CNOTICE_COMMAND = "/cnotice"
+CNOTICE_COMMAND_HELP = "Usage: /cnotice NICKNAME CHANNEL MESSAGE"
+
+CPRIV_CNOTICE_NOT_SUPPORTED = "This server does not support the {} command"

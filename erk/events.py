@@ -20,6 +20,25 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def does_server_support_cnotice(client):
+	for w in SERVER_WINDOWS:
+		if w.client.id==client.id:
+			for c in w.supports:
+				if c.lower()=="cnotice": return True
+	return False
+
+def does_server_support_cprivmsg(client):
+	for w in SERVER_WINDOWS:
+		if w.client.id==client.id:
+			for c in w.supports:
+				if c.lower()=="cprivmsg": return True
+	return False
+
+def get_console_window(client):
+	for w in SERVER_WINDOWS:
+		if w.client.id==client.id: return w
+	return None
+
 def clientid_to_client(cid):
 	for c in CONNECTIONS:
 		if c.id == cid: return c

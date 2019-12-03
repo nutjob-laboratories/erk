@@ -14,6 +14,45 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	CNOTICE = gui.does_server_support_cnotice(client)
+	CPRIVMSG = gui.does_server_support_cprivmsg(client)
+
+	if CPRIVMSG:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
+				return
+
+	if CNOTICE:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
+				return
+
 	# /unignore
 	if len(tokens)>0:
 		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
@@ -250,6 +289,45 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	CNOTICE = gui.does_server_support_cnotice(client)
+	CPRIVMSG = gui.does_server_support_cprivmsg(client)
+
+	if CPRIVMSG:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
+				return
+
+	if CNOTICE:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
+				return
+
 	# /unignore
 	if len(tokens)>0:
 		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
@@ -481,6 +559,45 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	CNOTICE = gui.does_server_support_cnotice(client)
+	CPRIVMSG = gui.does_server_support_cprivmsg(client)
+
+	if CPRIVMSG:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CPRIVMSG_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
+				return
+
+	if CNOTICE:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
+				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
+				return
+			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
+				tokens.pop(0)	# Remove command
+				nickname = tokens.pop(0)
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==CNOTICE_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
+				return
 
 	# /unignore
 	if len(tokens)>0:

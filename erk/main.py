@@ -500,6 +500,12 @@ class Erk(QMainWindow):
 	def clientid_to_client(self,cid):
 		return erk.events.clientid_to_client(cid)
 
+	def does_server_support_cnotice(self,client):
+		return erk.events.does_server_support_cnotice(client)
+
+	def does_server_support_cprivmsg(self,client):
+		return erk.events.does_server_support_cprivmsg(client)
+
 	def __init__(self,app,parent=None):
 		super(Erk, self).__init__(parent)
 
