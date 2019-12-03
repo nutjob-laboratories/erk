@@ -52,6 +52,8 @@ class Dialog(QDialog):
 
 		item = QListWidgetItem(user)
 		item.setIcon(QIcon(USER_ICON))
+		item.user = user
+		item.client = "*"
 		self.parent.ignoredUsers.addItem(item)
 
 		self.close()

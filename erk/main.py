@@ -442,6 +442,17 @@ class Erk(QMainWindow):
 
 	def is_ignored(self,client,user):
 
+		if '*' in self.ignored:
+			p = user.split('!')
+			if p==2:
+				for u in self.ignored["*"]:
+					if fnmatch.fnmatch(p[0],u): return True
+					if fnmatch.fnmatch(p[1],u): return True
+			else:
+				for u in self.ignored["*"]:
+					#if user == u: return True
+					if fnmatch.fnmatch(user,u): return True
+
 		if not client.id in self.ignored: return False
 
 		p = user.split('!')
@@ -469,6 +480,15 @@ class Erk(QMainWindow):
 			self.ignored[client.id] = list(dict.fromkeys(self.ignored[client.id]))
 
 	def remove_ignore(self,client,user):
+
+		if '*' in self.ignored:
+			clean = []
+			for u in self.ignored["*"]:
+				#if u==user: continue
+				if fnmatch.fnmatch(user,u): continue
+				clean.append(u)
+			self.ignored = clean
+
 		if not client.id in self.ignored: return
 		clean = []
 		for u in self.ignored[client.id]:
@@ -476,6 +496,9 @@ class Erk(QMainWindow):
 			if fnmatch.fnmatch(user,u): continue
 			clean.append(u)
 		self.ignored[client.id] = clean
+
+	def clientid_to_client(self,cid):
+		return erk.events.clientid_to_client(cid)
 
 	def __init__(self,app,parent=None):
 		super(Erk, self).__init__(parent)

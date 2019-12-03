@@ -18,6 +18,9 @@ CONSOLE_COMMANDS = {
 	"/quit": "/quit",
 	"/whois": "/whois ",
 	"/invite": "/invite ",
+	"/oper": "/oper ",
+	"/ignore": "/ignore ",
+	"/unignore": "/unignore ",
 }
 
 INPUT_COMMANDS = {
@@ -32,6 +35,9 @@ INPUT_COMMANDS = {
 	"/quit": "/quit",
 	"/whois": "/whois ",
 	"/invite": "/invite ",
+	"/oper": "/oper ",
+	"/ignore": "/ignore ",
+	"/unignore": "/unignore ",
 }
 
 

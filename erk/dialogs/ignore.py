@@ -95,11 +95,15 @@ class Dialog(QDialog):
 		self.setWindowIcon(QIcon(HIDE_ICON))
 
 		self.ignoredUsers = QListWidget(self)
-		self.ignoredUsers.setMaximumWidth(175)
+		#self.ignoredUsers.setMaximumWidth(175)
 
 		for c in self.ignored:
 			for e in self.ignored[c]:
-				item = QListWidgetItem(e)
+				client = self.parent.clientid_to_client(c)
+				if client:
+					item = QListWidgetItem(e+" ("+client.server+":"+str(client.port)+")")
+				else:
+					item = QListWidgetItem(e)
 				item.setIcon(QIcon(USER_ICON))
 				item.client = c
 				item.user = e

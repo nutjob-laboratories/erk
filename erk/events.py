@@ -20,6 +20,11 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def clientid_to_client(cid):
+	for c in CONNECTIONS:
+		if c.id == cid: return c
+	return None
+
 def reset_command_history():
 	for w in SERVER_WINDOWS:
 		w.history_buffer = ['']

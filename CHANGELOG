@@ -46,6 +46,11 @@ Version 0.600
 	* Added WHOIS command to the user list context menu
 	* Added context menu text to erk.strings
 	* Added user ignore option (and a dialog to manage user ignores)
+	* Added /oper command
+	* Added /ignore and /unignore commands
+	* Added server identification to the ignore dialog
+	* Added universal (not connection-specific) ignoring
+	* Modified ignore dialogs and back-end to work with universal ignores
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

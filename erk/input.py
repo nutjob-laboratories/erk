@@ -14,6 +14,49 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /unignore
+	if len(tokens)>0:
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.remove_ignore(client,user)
+			return
+
+	# /ignore
+	if len(tokens)>0:
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.add_ignore(client,user)
+			return
+
+	# /oper
+	if len(tokens)>0:
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			password = tokens.pop(0)
+			client.sendLine("OPER "+user+" "+password)
+			return
+
 	# /invite
 	if len(tokens)>0:
 		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
@@ -207,6 +250,49 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# /unignore
+	if len(tokens)>0:
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.remove_ignore(client,user)
+			return
+
+	# /ignore
+	if len(tokens)>0:
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.add_ignore(client,user)
+			return
+
+	# /oper
+	if len(tokens)>0:
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			password = tokens.pop(0)
+			client.sendLine("OPER "+user+" "+password)
+			return
+
 	# /invite
 	if len(tokens)>0:
 		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
@@ -395,6 +481,49 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# /unignore
+	if len(tokens)>0:
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.remove_ignore(client,user)
+			return
+
+	# /ignore
+	if len(tokens)>0:
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
+			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
+			return
+		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			gui.add_ignore(client,user)
+			return
+
+	# /oper
+	if len(tokens)>0:
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
+			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
+			return
+		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
+			tokens.pop(0)	# Remove command
+			user = tokens.pop(0)
+			password = tokens.pop(0)
+			client.sendLine("OPER "+user+" "+password)
+			return
 
 	# /invite
 	if len(tokens)>0:
