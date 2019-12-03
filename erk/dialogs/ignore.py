@@ -99,11 +99,7 @@ class Dialog(QDialog):
 
 		for c in self.ignored:
 			for e in self.ignored[c]:
-				client = self.parent.clientid_to_client(c)
-				if client:
-					item = QListWidgetItem(e+" ("+client.server+":"+str(client.port)+")")
-				else:
-					item = QListWidgetItem(e)
+				item = QListWidgetItem(e +" ("+c+")")
 				item.setIcon(QIcon(USER_ICON))
 				item.client = c
 				item.user = e

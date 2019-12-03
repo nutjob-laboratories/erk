@@ -50,7 +50,7 @@ class Dialog(QDialog):
 			self.close()
 			return
 
-		item = QListWidgetItem(user)
+		item = QListWidgetItem(user+" (*)")
 		item.setIcon(QIcon(USER_ICON))
 		item.user = user
 		item.client = "*"

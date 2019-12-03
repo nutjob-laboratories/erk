@@ -453,11 +453,13 @@ class Erk(QMainWindow):
 					#if user == u: return True
 					if fnmatch.fnmatch(user,u): return True
 
-		if not client.id in self.ignored: return False
+		cid = client.server+":"+str(client.port)
+
+		if not cid in self.ignored: return False
 
 		p = user.split('!')
 		if p==2:
-			for u in self.ignored[client.id]:
+			for u in self.ignored[cid]:
 
 				if fnmatch.fnmatch(p[0],u): return True
 				if fnmatch.fnmatch(p[1],u): return True
@@ -465,19 +467,20 @@ class Erk(QMainWindow):
 				# if p[0] == u: return True
 				# if p[1] == u: return True
 		else:
-			for u in self.ignored[client.id]:
+			for u in self.ignored[cid]:
 				#if user == u: return True
 				if fnmatch.fnmatch(user,u): return True
 		return False
 
 	def add_ignore(self,client,user):
-		if not client.id in self.ignored:
-			self.ignored[client.id] = []
-			self.ignored[client.id].append(user)
-			self.ignored[client.id] = list(dict.fromkeys(self.ignored[client.id]))
+		cid = client.server+":"+str(client.port)
+		if not cid in self.ignored:
+			self.ignored[cid] = []
+			self.ignored[cid].append(user)
+			self.ignored[cid] = list(dict.fromkeys(self.ignored[cid]))
 		else:
-			self.ignored[client.id].append(user)
-			self.ignored[client.id] = list(dict.fromkeys(self.ignored[client.id]))
+			self.ignored[cid].append(user)
+			self.ignored[cid] = list(dict.fromkeys(self.ignored[cid]))
 
 	def remove_ignore(self,client,user):
 
@@ -489,13 +492,14 @@ class Erk(QMainWindow):
 				clean.append(u)
 			self.ignored = clean
 
-		if not client.id in self.ignored: return
+		cid = client.server+":"+str(client.port)
+		if not cid in self.ignored: return
 		clean = []
-		for u in self.ignored[client.id]:
+		for u in self.ignored[cid]:
 			#if u==user: continue
 			if fnmatch.fnmatch(user,u): continue
 			clean.append(u)
-		self.ignored[client.id] = clean
+		self.ignored[cid] = clean
 
 	def clientid_to_client(self,cid):
 		return erk.events.clientid_to_client(cid)
