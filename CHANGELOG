@@ -63,6 +63,8 @@ Version 0.600
 	* Moved logging options to their own top-level menu
 	* Moved connection options to their own top-level menu
 	* Added new menu entries to erk.strings
+	* Fixed nicknames being displayed improperly on channel windows
+	* Added chat display context menu entries to erk.strings
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

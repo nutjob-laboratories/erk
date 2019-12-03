@@ -34,12 +34,12 @@ class ChatDisplay(QTextBrowser):
 
 		if "t" in self.parent.modeson:
 			if self.parent.operator:
-				pmenuitem = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+				pmenuitem = QAction(QIcon(TOPIC_ICON),CHAT_DISPLAY_CONTEXT_SET_TOPIC,self)
 				pmenuitem.triggered.connect(self.parent.setTopic)
 				popup_menu.insertAction(popup_menu.actions()[counter],pmenuitem)
 				counter = counter + 1
 		else:
-			pmenuitem = QAction(QIcon(TOPIC_ICON),"Set topic",self)
+			pmenuitem = QAction(QIcon(TOPIC_ICON),CHAT_DISPLAY_CONTEXT_SET_TOPIC,self)
 			pmenuitem.triggered.connect(self.parent.setTopic)
 			popup_menu.insertAction(popup_menu.actions()[counter],pmenuitem)
 			counter = counter + 1
@@ -50,74 +50,74 @@ class ChatDisplay(QTextBrowser):
 			cmodes.setIcon(QIcon(CHANNEL_WINDOW_ICON))
 
 			if "k" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),"Remove channel key",self)
+				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),CHAT_DISPLAY_CONTEXT_RKEY,self)
 				pmenuitem.triggered.connect(lambda state,f="unlock": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),"Set channel key",self)
+				pmenuitem = QAction(QIcon(LOCKED_CHANNEL_ICON),CHAT_DISPLAY_CONTEXT_KEY,self)
 				pmenuitem.triggered.connect(lambda state,f="lock": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "t" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(T_ICON),"Set topic to anyone",self)
+				pmenuitem = QAction(QIcon(T_ICON),CHAT_DISPLAY_CONTEXT_ATOPIC,self)
 				pmenuitem.triggered.connect(lambda state,f="yestopic": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(T_ICON),"Set topic to operator only",self)
+				pmenuitem = QAction(QIcon(T_ICON),CHAT_DISPLAY_CONTEXT_OTOPIC,self)
 				pmenuitem.triggered.connect(lambda state,f="notopic": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "m" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(M_ICON),"Unmoderate channel",self)
+				pmenuitem = QAction(QIcon(M_ICON),CHAT_DISPLAY_CONTEXT_UMOD,self)
 				pmenuitem.triggered.connect(lambda state,f="unmoderate": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(M_ICON),"Moderate channel",self)
+				pmenuitem = QAction(QIcon(M_ICON),CHAT_DISPLAY_CONTEXT_MOD,self)
 				pmenuitem.triggered.connect(lambda state,f="moderate": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "c" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(FANCY_COLOR),"Allow IRC colors",self)
+				pmenuitem = QAction(QIcon(FANCY_COLOR),CHAT_DISPLAY_CONTEXT_ACOLOR,self)
 				pmenuitem.triggered.connect(lambda state,f="yescolors": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid IRC colors",self)
+				pmenuitem = QAction(QIcon(BAN_ICON),CHAT_DISPLAY_CONTEXT_COLOR,self)
 				pmenuitem.triggered.connect(lambda state,f="nocolors": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "n" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(MESSAGE_ICON),"Allow external messages",self)
+				pmenuitem = QAction(QIcon(MESSAGE_ICON),CHAT_DISPLAY_CONTEXT_AEXTMSG,self)
 				pmenuitem.triggered.connect(lambda state,f="yesx": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid external messages",self)
+				pmenuitem = QAction(QIcon(BAN_ICON),CHAT_DISPLAY_CONTEXT_EXT_MSG,self)
 				pmenuitem.triggered.connect(lambda state,f="nox": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "C" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(MESSAGE_ICON),"Allow CTCP messages",self)
+				pmenuitem = QAction(QIcon(MESSAGE_ICON),CHAT_DISPLAY_CONTEXT_ACTCP,self)
 				pmenuitem.triggered.connect(lambda state,f="yesctcp": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(BAN_ICON),"Forbid CTCP messages",self)
+				pmenuitem = QAction(QIcon(BAN_ICON),CHAT_DISPLAY_CONTEXT_CTCP,self)
 				pmenuitem.triggered.connect(lambda state,f="noctcp": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "s" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(S_ICON),"Make channel public",self)
+				pmenuitem = QAction(QIcon(S_ICON),CHAT_DISPLAY_CONTEXT_APUB,self)
 				pmenuitem.triggered.connect(lambda state,f="yespub": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(S_ICON),"Make channel secret",self)
+				pmenuitem = QAction(QIcon(S_ICON),CHAT_DISPLAY_CONTEXT_PUB,self)
 				pmenuitem.triggered.connect(lambda state,f="nopub": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
 			if "i" in self.parent.modeson:
-				pmenuitem = QAction(QIcon(I_ICON),"Remove channel invite requirement",self)
+				pmenuitem = QAction(QIcon(I_ICON),CHAT_DISPLAY_CONTEXT_AINVITE,self)
 				pmenuitem.triggered.connect(lambda state,f="yesinvite": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 			else:
-				pmenuitem = QAction(QIcon(I_ICON),"Make channel invite only",self)
+				pmenuitem = QAction(QIcon(I_ICON),CHAT_DISPLAY_CONTEXT_INVITE,self)
 				pmenuitem.triggered.connect(lambda state,f="noinvite": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
@@ -780,15 +780,15 @@ class Window(QMainWindow):
 
 	def create_nick_link(self):
 		if self.is_away:
-			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><small> <i>{}</i> </small></a>"
+			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><small>&nbsp;<i>{}</i>&nbsp;</small></a>"
 		else:
-			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small> {} </small></b></a>"
+			return "<a style=\"color:inherit; text-decoration: none;\" href=\"!\"><b><small>&nbsp;{}&nbsp;</small></b></a>"
 
 	def create_nick_no_link(self):
 		if self.is_away:
-			return "<small> <i>{}</i> </small>"
+			return "<small>&nbsp;<i>{}</i>&nbsp;</small>"
 		else:
-			return "<b><small> {} </small></b>"
+			return "<b><small>&nbsp;{}&nbsp;</small></b>"
 
 	def setNick(self,nick):
 
@@ -835,7 +835,8 @@ class Window(QMainWindow):
 			ban = b[0]
 			banner = b[1]
 				
-			mBan = menuPlainLabel(self,f"<b>{ban}</b> (by {banner})")
+			# mBan = menuPlainLabel(self,f"<b>{ban}</b> (by {banner})")
+			mBan = menuPlainLabel(self,BAN_MENU_ENTRY.format(ban,banner))
 			self.actBans.addAction(mBan)
 
 	def rebuildModesMenu(self):
@@ -1035,9 +1036,9 @@ class Window(QMainWindow):
 				menu.addSeparator()
 
 			if user_is_ignored:
-				actIgnore = menu.addAction(QIcon(HIDE_ICON),"Unignore user")
+				actIgnore = menu.addAction(QIcon(HIDE_ICON),USERLIST_CONTEXT_UNIGNORE)
 			else:
-				actIgnore = menu.addAction(QIcon(HIDE_ICON),"Ignore user")
+				actIgnore = menu.addAction(QIcon(HIDE_ICON),USERLIST_CONTEXT_IGNORE)
 
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),USERLIST_CONTEXT_WHOIS)
 			actOpenWindow = menu.addAction(QIcon(USER_WINDOW_ICON),USERLIST_CONTEXT_OPEN_WIN)
