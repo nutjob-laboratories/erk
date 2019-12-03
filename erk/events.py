@@ -20,10 +20,21 @@ MOTD_WINDOWS = []
 # | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
 # |---------------------------------------------------------|
 
+def does_server_support_knock(client):
+	for w in SERVER_WINDOWS:
+		if w.client.id==client.id:
+			for c in w.supports:
+				if c.lower()=="knock": return True
+			for c in w.cmds:
+				if c.lower()=="knock": return True
+	return False
+
 def does_server_support_cnotice(client):
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
 			for c in w.supports:
+				if c.lower()=="cnotice": return True
+			for c in w.cmds:
 				if c.lower()=="cnotice": return True
 	return False
 
@@ -31,6 +42,8 @@ def does_server_support_cprivmsg(client):
 	for w in SERVER_WINDOWS:
 		if w.client.id==client.id:
 			for c in w.supports:
+				if c.lower()=="cprivmsg": return True
+			for c in w.cmds:
 				if c.lower()=="cprivmsg": return True
 	return False
 
@@ -1057,6 +1070,15 @@ def mode(gui,client,channel,user,mset,modes,args):
 			else:
 				unsetChannelModes(client,channel,"t")
 				reportremove.append("t")
+			continue
+
+		if m=="i":
+			if mset:
+				setChannelModes(client,channel,"i")
+				reportadd.append("i")
+			else:
+				unsetChannelModes(client,channel,"i")
+				reportremove.append("i")
 			continue
 
 		if mset:

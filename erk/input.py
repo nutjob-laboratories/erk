@@ -14,6 +14,31 @@ def channel_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	KNOCK = gui.does_server_support_knock(client)
+
+	# /knock
+	if KNOCK:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
+				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				client.sendLine("KNOCK "+channel)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("KNOCK "+channel+" "+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
+				return
+
 	# /userhost
 	if len(tokens)>0:
 		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
@@ -314,6 +339,31 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	KNOCK = gui.does_server_support_knock(client)
+
+	# /knock
+	if KNOCK:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
+				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				client.sendLine("KNOCK "+channel)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("KNOCK "+channel+" "+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
+				return
+
 	# /userhost
 	if len(tokens)>0:
 		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
@@ -609,6 +659,31 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	KNOCK = gui.does_server_support_knock(client)
+
+	# /knock
+	if KNOCK:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
+				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				client.sendLine("KNOCK "+channel)
+				return
+			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
+				tokens.pop(0)	# Remove command
+				channel = tokens.pop(0)
+				msg = ' '.join(tokens)
+				client.sendLine("KNOCK "+channel+" "+msg)
+				return
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==KNOCK_COMMAND:
+				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
+				return
 
 	# /userhost
 	if len(tokens)>0:

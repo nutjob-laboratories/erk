@@ -360,3 +360,8 @@ END_USERHOST_DATA = "End userhost information"
 
 USERHOST_COMMAND = "/userhost"
 USERHOST_COMMAND_HELP = "Usage: /userhost NICK [NICK ...]"
+
+KNOCK_COMMAND = "/knock"
+KNOCK_COMMAND_HELP = "Usage: /knock CHANNEL [MESSAGE]"
+
+MODE_INVITE_ONLY = "Channel is invite only"

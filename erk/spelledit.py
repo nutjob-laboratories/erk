@@ -92,6 +92,9 @@ class SpellTextEdit(QPlainTextEdit):
 					if self.parent.gui.does_server_support_cprivmsg(self.parent.client):
 						COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
 
+					if self.parent.gui.does_server_support_knock(self.parent.client):
+						COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
+
 					for c in COMMAND_LIST:
 						cmd = c
 						rep = COMMAND_LIST[c]

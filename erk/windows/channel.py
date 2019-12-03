@@ -112,6 +112,15 @@ class ChatDisplay(QTextBrowser):
 				pmenuitem.triggered.connect(lambda state,f="nopub": self.parent.contextOpAction(f))
 				cmodes.addAction(pmenuitem)
 
+			if "i" in self.parent.modeson:
+				pmenuitem = QAction(QIcon(I_ICON),"Remove channel invite requirement",self)
+				pmenuitem.triggered.connect(lambda state,f="yesinvite": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+			else:
+				pmenuitem = QAction(QIcon(I_ICON),"Make channel invite only",self)
+				pmenuitem.triggered.connect(lambda state,f="noinvite": self.parent.contextOpAction(f))
+				cmodes.addAction(pmenuitem)
+
 			popup_menu.insertMenu(popup_menu.actions()[counter],cmodes)
 			counter = counter + 1
 
@@ -125,6 +134,13 @@ class ChatDisplay(QTextBrowser):
 class Window(QMainWindow):
 
 	def contextOpAction(self,function):
+		if function=="noinvite":
+			self.client.mode(self.name,True,"i")
+			return
+		if function=="yesinvite":
+			self.client.mode(self.name,False,"i")
+			return
+
 		if function=="notopic":
 			self.client.mode(self.name,True,"t")
 			return
@@ -891,6 +907,14 @@ class Window(QMainWindow):
 				mMode = menuIconLabel(self,T_ICON,MODE_OPS_TOPIC)
 				self.actModes.addAction(mMode)
 				mset = mset + "t"
+				continue
+
+			if l == "i":
+				if "i" in mset: continue
+				#mMode = QAction(QIcon(T_ICON),"Only ops can change topic",self)
+				mMode = menuIconLabel(self,I_ICON,MODE_INVITE_ONLY)
+				self.actModes.addAction(mMode)
+				mset = mset + "i"
 				continue
 
 		if len(mset)==0:

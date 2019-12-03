@@ -506,6 +506,9 @@ class Erk(QMainWindow):
 	def does_server_support_cprivmsg(self,client):
 		return erk.events.does_server_support_cprivmsg(client)
 
+	def does_server_support_knock(self,client):
+		return erk.events.does_server_support_knock(client)
+
 	def __init__(self,app,parent=None):
 		super(Erk, self).__init__(parent)
 
