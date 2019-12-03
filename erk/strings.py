@@ -100,7 +100,7 @@ CONNECTION_DISPLAY_LOCATION = "Put display on the..."
 SAVE_CHANNEL_MENU_NAME = "Save joined channels"
 SAVE_HISTORY_MENU_NAME = "Save connection history"
 
-MISC_MENU_NAME = "Miscellaneous"
+#MISC_MENU_NAME = "Miscellaneous"
 PLAIN_USERS_MENU_NAME = "Text only"
 
 TEXT_ENTRY_MENU_NAME = "Text entry"
@@ -231,7 +231,7 @@ FORMAT_DIALOG_OK_BUTTON = "Apply"
 FORMAT_DIALOG_RESTART_BUTTON = "Apply and Restart"
 FORMAT_DIALOG_DEFAULTS_BUTTON = "Defaults"
 FORMAT_DIALOG_CANCEL_BUTTON = "Cancel"
-FORMAT_DIALOG_WARNING = "<small>Some settings may require restarting to take effect</small>"
+FORMAT_DIALOG_WARNING = "<small>Some settings may require a restart to take effect</small>"
 
 FORMAT_DIALOG_NOTICE = "Notice usernames"
 FORMAT_DIALOG_OTHER = "Other usernames"
@@ -270,9 +270,9 @@ LOGGING_MENU_SAVE_ALL_LOGS = "Automatically save logs"
 LOGGING_MENU_LOAD_ALL_LOGS = "Automatically load logs"
 
 NETWORK_SETTINGS_MENU_NAME = "Network traffic display"
-GET_HOSTMASKS_MENU_NAME = "Retrieve hostmasks on join"
+GET_HOSTMASKS_MENU_NAME = "Get hostmasks on channel join"
 
-TRAFFIC_MAX_LINE_MENU_NAME = "Set maximum line count in network traffic display"
+TRAFFIC_MAX_LINE_MENU_NAME = "Set maximum lines to display"
 NET_TRAFFIC_MENU_NAME = "View network traffic"
 MOTD_VIEW_MENU_NAME = "View MOTD"
 

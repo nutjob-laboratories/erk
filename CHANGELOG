@@ -65,6 +65,9 @@ Version 0.600
 	* Added new menu entries to erk.strings
 	* Fixed nicknames being displayed improperly on channel windows
 	* Added chat display context menu entries to erk.strings
+	* Moved "get hostmasks on channel join" to root "connections" menu
+	* Fixed a bug with the "get hostmasks" menu entry
+	* Moved network display settings back to the "settings" menu
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

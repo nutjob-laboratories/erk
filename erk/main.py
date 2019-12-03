@@ -793,35 +793,31 @@ class Erk(QMainWindow):
 		ircMenu_Ignore.triggered.connect(lambda state,x=self: IgnoreDialog(x))
 		self.connectionMenu.addAction(ircMenu_Ignore)
 
-		settingsMenu_Networking_Submenu = self.connectionMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
-
-		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
-		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_IOLength)
-
-		settingsMenu_Networking_Submenu.addSeparator()
-
-		self.settingsMenu_TrafficCon = QAction(TRAFFIC_START_MENU_NAME,self,checkable=True)
-		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
-		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
-
-		self.settingsMenu_Hostmasks = QAction(GET_HOSTMASKS_MENU_NAME,self,checkable=True)
-		self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
-		self.settingsMenu_Hostmasks.triggered.connect(lambda state,s="hostmasks": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_Hostmasks)
-
-		settingsMenu_FailNotify_Marker = QAction(NOTIFICATION_MENU_FAILED,self,checkable=True)
-		settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
-		settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailNotify_Marker)
-
-		settingsMenu_FailLost_Marker = QAction(NOTIFICATION_MENU_LOST,self,checkable=True)
-		settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
-		settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
-		settingsMenu_Networking_Submenu.addAction(settingsMenu_FailLost_Marker)
-
 		self.connectionMenu.addSeparator()
+
+		self.settingsMenu_FailLost_Marker = QAction(QIcon(UNCHECKED_ICON),NOTIFICATION_MENU_LOST,self)
+		#self.settingsMenu_FailLost_Marker.setChecked(self.notify_lost)
+		self.settingsMenu_FailLost_Marker.triggered.connect(lambda state,s="lost": self.settingsMenu_Setting(s))
+		self.connectionMenu.addAction(self.settingsMenu_FailLost_Marker)
+
+		if self.notify_lost:
+			self.settingsMenu_FailLost_Marker.setIcon(QIcon(CHECKED_ICON))
+
+		self.settingsMenu_FailNotify_Marker = QAction(QIcon(UNCHECKED_ICON),NOTIFICATION_MENU_FAILED,self)
+		#self.settingsMenu_FailNotify_Marker.setChecked(self.notify_fail)
+		self.settingsMenu_FailNotify_Marker.triggered.connect(lambda state,s="fail": self.settingsMenu_Setting(s))
+		self.connectionMenu.addAction(self.settingsMenu_FailNotify_Marker)
+
+		if self.notify_fail:
+			self.settingsMenu_FailNotify_Marker.setIcon(QIcon(CHECKED_ICON))
+
+		self.settingsMenu_Hostmasks = QAction(QIcon(UNCHECKED_ICON),GET_HOSTMASKS_MENU_NAME)
+		#self.settingsMenu_Hostmasks.setChecked(self.get_hostmasks_on_join)
+		self.settingsMenu_Hostmasks.triggered.connect(lambda state,s="hostmasks": self.settingsMenu_Setting(s))
+		self.connectionMenu.addAction(self.settingsMenu_Hostmasks)
+
+		if self.get_hostmasks_on_join:
+			self.settingsMenu_Hostmasks.setIcon(QIcon(CHECKED_ICON))
 
 		self.menuSaveIgnore = QAction(QIcon(UNCHECKED_ICON),SAVE_IGNORE_MENU_NAME,self)
 		self.menuSaveIgnore.triggered.connect(lambda state,s="ignores": self.settingsMenu_Setting(s))
@@ -1111,6 +1107,19 @@ class Erk(QMainWindow):
 		settingMenu_Timestamp_Submenu.addAction(timestampSubmenu_24hour)
 
 		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
+
+		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+
+		self.settingsMenu_TrafficCon = QAction(TRAFFIC_START_MENU_NAME,self,checkable=True)
+		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
+		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
+
+		settingsMenu_Networking_Submenu.addSeparator()
+
+		self.settingsMenu_IOLength = QAction(QIcon(IO_ICON),TRAFFIC_MAX_LINE_MENU_NAME,self)
+		self.settingsMenu_IOLength.triggered.connect(lambda state,s="io_length": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_IOLength)
 
 		self.settingsMenu.addSeparator()
 
@@ -1641,7 +1650,12 @@ class Erk(QMainWindow):
 				self.get_hostmasks_on_join = False
 			else:
 				self.get_hostmasks_on_join = True
-			self.settings[SETTING_FETCH_HOSTMASKS] = get_hostmasks_on_join
+			self.settings[SETTING_FETCH_HOSTMASKS] = self.get_hostmasks_on_join
+
+			if self.get_hostmasks_on_join:
+				self.settingsMenu_Hostmasks.setIcon(QIcon(CHECKED_ICON))
+			else:
+				self.settingsMenu_Hostmasks.setIcon(QIcon(UNCHECKED_ICON))
 
 		if setting=="all_load_on":
 			if self.load_server_logs and self.load_logs and self.load_private_logs:
@@ -1760,12 +1774,22 @@ class Erk(QMainWindow):
 				self.notify_fail = True
 			self.settings[SETTING_NOTIFY_FAIL] = self.notify_fail
 
+			if self.notify_fail:
+				self.settingsMenu_FailNotify_Marker.setIcon(QIcon(CHECKED_ICON))
+			else:
+				self.settingsMenu_FailNotify_Marker.setIcon(QIcon(UNCHECKED_ICON))
+
 		if setting=="lost":
 			if self.notify_lost:
 				self.notify_lost = False
 			else:
 				self.notify_lost = True
 			self.settings[SETTING_NOTIFY_LOST] = self.notify_lost
+
+			if self.notify_lost:
+				self.settingsMenu_FailLost_Marker.setIcon(QIcon(CHECKED_ICON))
+			else:
+				self.settingsMenu_FailLost_Marker.setIcon(QIcon(UNCHECKED_ICON))
 
 		if setting=="clicknick":
 			if self.click_nick_change:
