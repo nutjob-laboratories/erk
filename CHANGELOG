@@ -59,6 +59,7 @@ Version 0.600
 	* Added /knock command
 	* Added "i" to the channel mode display
 	* Changed how ignore data is saved (connection ID is now the server's IP and port)
+	* Added an option to save ignore data to disk
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

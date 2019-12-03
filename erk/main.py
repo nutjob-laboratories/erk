@@ -478,28 +478,40 @@ class Erk(QMainWindow):
 			self.ignored[cid] = []
 			self.ignored[cid].append(user)
 			self.ignored[cid] = list(dict.fromkeys(self.ignored[cid]))
+			if self.save_ignored: save_ignore(self.ignored)
 		else:
 			self.ignored[cid].append(user)
 			self.ignored[cid] = list(dict.fromkeys(self.ignored[cid]))
+			if self.save_ignored: save_ignore(self.ignored)
 
 	def remove_ignore(self,client,user):
 
+		changed = False
 		if '*' in self.ignored:
 			clean = []
 			for u in self.ignored["*"]:
 				#if u==user: continue
-				if fnmatch.fnmatch(user,u): continue
+				if fnmatch.fnmatch(user,u):
+					changed = True
+					continue
 				clean.append(u)
 			self.ignored = clean
 
 		cid = client.server+":"+str(client.port)
-		if not cid in self.ignored: return
+		if not cid in self.ignored:
+			if changed:
+				if self.save_ignored: save_ignore(self.ignored)
+			return
 		clean = []
 		for u in self.ignored[cid]:
 			#if u==user: continue
-			if fnmatch.fnmatch(user,u): continue
+			if fnmatch.fnmatch(user,u):
+				changed = True
+				continue
 			clean.append(u)
 		self.ignored[cid] = clean
+		if changed:
+			if self.save_ignored: save_ignore(self.ignored)
 
 	def clientid_to_client(self,cid):
 		return erk.events.clientid_to_client(cid)
@@ -600,6 +612,11 @@ class Erk(QMainWindow):
 		self.ignore_rename = self.settings[SETTING_CHANNEL_IGNORE_RENAME]
 		self.ignore_topic = self.settings[SETTING_CHANNEL_IGNORE_TOPIC]
 		self.ignore_mode = self.settings[SETTING_CHANNEL_IGNORE_MODE]
+
+		self.save_ignored = self.settings[SETTING_SAVE_IGNORE]
+
+		if self.save_ignored:
+			self.ignored = load_ignore()
 
 		# Load in font information from the settings file
 		# If there is no font selected, load the default,
@@ -770,6 +787,13 @@ class Erk(QMainWindow):
 		ircMenu_Ignore = QAction(QIcon(HIDE_ICON),"Ignored users",self)
 		ircMenu_Ignore.triggered.connect(lambda state,x=self: IgnoreDialog(x))
 		self.settingsMenu.addAction(ircMenu_Ignore)
+
+		self.menuSaveIgnore = QAction(QIcon(UNCHECKED_ICON),"Save ignores",self)
+		self.menuSaveIgnore.triggered.connect(lambda state,s="ignores": self.settingsMenu_Setting(s))
+		self.settingsMenu.addAction(self.menuSaveIgnore)
+
+		if self.save_ignored:
+			self.menuSaveIgnore.setIcon(QIcon(CHECKED_ICON))
 
 		self.settingsMenu.addSeparator()
 
@@ -1509,6 +1533,19 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="ignores":
+			if self.save_ignored:
+				self.save_ignored = False
+			else:
+				self.save_ignored = True
+				save_ignore(self.ignored)
+			self.settings[SETTING_SAVE_IGNORE] = self.save_ignored
+
+			if self.save_ignored:
+				self.menuSaveIgnore.setIcon(QIcon(CHECKED_ICON))
+			else:
+				self.menuSaveIgnore.setIcon(QIcon(UNCHECKED_ICON))
 
 		if setting=="ignore_mode":
 			if self.ignore_mode:

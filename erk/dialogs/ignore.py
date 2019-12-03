@@ -61,6 +61,9 @@ class Dialog(QDialog):
 			#items.append(self.ignoredUsers.item(index).text())
 
 		self.parent.ignored = comp
+
+		if self.parent.save_ignored: save_ignore(self.parent.ignored)
+
 		self.close()
 
 	def doCancel(self):

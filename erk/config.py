@@ -23,6 +23,7 @@ if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 TEXT_FORMAT_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
+IGNORE_FILE = os.path.join(SETTINGS_DIRECTORY, "ignored.json")
 
 ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
@@ -56,6 +57,18 @@ f.close()
 
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
+
+def save_ignore(settings,filename=IGNORE_FILE):
+	with open(filename, "w") as write_data:
+		json.dump(settings, write_data, indent=4, sort_keys=True)
+
+def load_ignore(filename=IGNORE_FILE):
+	if os.path.isfile(filename):
+		with open(filename, "r") as igfile:
+			data = json.load(igfile)
+			return data
+	else:
+		return {}
 
 def censorWord(word,punc=True):
 	result = ''
@@ -211,6 +224,8 @@ SETTING_CHANNEL_IGNORE_RENAME = "channels_do_not_display_rename_messages"
 SETTING_CHANNEL_IGNORE_TOPIC = "channels_do_not_display_topic_messages"
 SETTING_CHANNEL_IGNORE_MODE = "channels_do_not_display_mode_messages"
 
+SETTING_SAVE_IGNORE = "save_ignore_data_to_file"
+
 def patch_config_file(data):
 	s = len(data)
 	if not SETTING_FONT in data: data[SETTING_FONT] = ""
@@ -271,6 +286,7 @@ def patch_config_file(data):
 	if not SETTING_CHANNEL_IGNORE_RENAME in data: data[SETTING_CHANNEL_IGNORE_RENAME] = False
 	if not SETTING_CHANNEL_IGNORE_TOPIC in data: data[SETTING_CHANNEL_IGNORE_TOPIC] = False
 	if not SETTING_CHANNEL_IGNORE_MODE in data: data[SETTING_CHANNEL_IGNORE_MODE] = False
+	if not SETTING_SAVE_IGNORE in data: data[SETTING_SAVE_IGNORE] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -344,6 +360,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_CHANNEL_IGNORE_RENAME: False,
 			SETTING_CHANNEL_IGNORE_TOPIC: False,
 			SETTING_CHANNEL_IGNORE_MODE: False,
+			SETTING_SAVE_IGNORE: True,
 		}
 		save_settings(si)
 		return si
