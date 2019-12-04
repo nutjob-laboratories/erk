@@ -1296,14 +1296,15 @@ class Erk(QMainWindow):
 		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
 		self.macroMenu.addAction(ircMenu_Macro)
 
-		entry = textSeparator(self,"<i>Installed macros</i>")
-		self.macroMenu.addAction(entry)
-
-		for m in MACROS:
-			macroname = m["trigger"]
-
-			entry = QAction(QIcon(MACRO_ICON),macroname,self)
+		if len(MACROS)>0:
+			entry = textSeparator(self,"<i>Installed macros</i>")
 			self.macroMenu.addAction(entry)
+
+			for m in MACROS:
+				macroname = m["trigger"]
+
+				entry = QAction(QIcon(MACRO_ICON),macroname,self)
+				self.macroMenu.addAction(entry)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)
