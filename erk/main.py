@@ -1359,6 +1359,8 @@ class Erk(QMainWindow):
 
 	def menuReloadMacros(self):
 
+		act = self.active_window
+
 		global MACROS
 		global MACRO_LIST
 
@@ -1374,6 +1376,9 @@ class Erk(QMainWindow):
 			MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
 
 		self.buildToolbar()
+
+		if act:
+			self.restoreWindow(act,act.subwindow)
 
 	def open_link_in_browser(self,url):
 		u = QUrl()

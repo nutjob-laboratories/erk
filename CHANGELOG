@@ -80,6 +80,7 @@ Version 0.600
 	* Added macro argument count to the macro menu display
 	* Bugfix: macros can no longer require a maximum # of arguments lower than the minimun # of arguments, and vice-versa
 	* Macro menu can be rebuilt from the menu
+	* Bugfix: refreshing the macro directory no longer changes the active window
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
