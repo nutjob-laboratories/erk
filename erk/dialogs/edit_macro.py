@@ -145,7 +145,14 @@ class Dialog(QDialog):
 
 		buttons.button(QDialogButtonBox.Ok).setText("Save")
 
+		# filedisplay = QLabel("<b><i>"+self.base+"</i></b>")
+		# filedisplay.setAlignment(Qt.AlignCenter)
+
+		fileBox = QGroupBox(self.base)
+		fileBox.setAlignment(Qt.AlignHCenter)
+
 		finalLayout = QVBoxLayout()
+		#finalLayout.addWidget(filedisplay)
 		finalLayout.addLayout(triggerLayout)
 		finalLayout.addStretch()
 		finalLayout.addWidget(QLabel('''
@@ -170,7 +177,12 @@ class Dialog(QDialog):
 		finalLayout.addLayout(outputLayout)
 		finalLayout.addWidget(buttons)
 
+		fileBox.setLayout(finalLayout)
+
+		fileLayout = QVBoxLayout()
+		fileLayout.addWidget(fileBox)
+
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
-		self.setLayout(finalLayout)
+		self.setLayout(fileLayout)
