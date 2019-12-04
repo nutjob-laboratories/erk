@@ -227,8 +227,9 @@ SETTING_CHANNEL_IGNORE_PART = "channels_do_not_display_part_messages"
 SETTING_CHANNEL_IGNORE_RENAME = "channels_do_not_display_rename_messages"
 SETTING_CHANNEL_IGNORE_TOPIC = "channels_do_not_display_topic_messages"
 SETTING_CHANNEL_IGNORE_MODE = "channels_do_not_display_mode_messages"
-
 SETTING_SAVE_IGNORE = "save_ignore_data_to_file"
+
+SETTING_AUTO_MACRO = "autocomplete_macros"
 
 def patch_config_file(data):
 	s = len(data)
@@ -291,6 +292,7 @@ def patch_config_file(data):
 	if not SETTING_CHANNEL_IGNORE_TOPIC in data: data[SETTING_CHANNEL_IGNORE_TOPIC] = False
 	if not SETTING_CHANNEL_IGNORE_MODE in data: data[SETTING_CHANNEL_IGNORE_MODE] = False
 	if not SETTING_SAVE_IGNORE in data: data[SETTING_SAVE_IGNORE] = True
+	if not SETTING_AUTO_MACRO in data: data[SETTING_AUTO_MACRO] = True
 
 	if len(data)>s:
 		return [True,data]
@@ -365,6 +367,7 @@ def get_settings(filename=SETTINGS_FILE):
 			SETTING_CHANNEL_IGNORE_TOPIC: False,
 			SETTING_CHANNEL_IGNORE_MODE: False,
 			SETTING_SAVE_IGNORE: True,
+			SETTING_AUTO_MACRO: True,
 		}
 		save_settings(si)
 		return si

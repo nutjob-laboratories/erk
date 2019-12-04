@@ -21,12 +21,22 @@ MACRO_LIST = {}
 for m in MACROS:
 	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
 
-#reload_macros()
-
 def add_new_macro(macro):
 	global MACROS
 	global MACRO_LIST
 
-	MACROS.append(macro)
-	MACRO_LIST[ macro["trigger"] ] = macro["trigger"]+" "
+	found = False
+	um = []
+	for m in MACROS:
+		if m["trigger"]==macro["trigger"]:
+			found = True
+			um.append(macro)
+		else:
+			um.append(m)
+
+	if found:
+		MACROS = um
+	else:
+		MACROS.append(macro)
+		MACRO_LIST[ macro["trigger"] ] = macro["trigger"]+" "
 

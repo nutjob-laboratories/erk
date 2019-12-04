@@ -617,6 +617,8 @@ class Erk(QMainWindow):
 
 		self.save_ignored = self.settings[SETTING_SAVE_IGNORE]
 
+		self.autocomplete_macros = self.settings[SETTING_AUTO_MACRO]
+
 		if self.save_ignored:
 			self.ignored = load_ignore()
 
@@ -985,6 +987,11 @@ class Erk(QMainWindow):
 		settingsMenu_Emoji_Submenu.addAction(asciimojiSubmenu_Emojis)
 
 		settingsMenu_Autocomplete_Submenu = settingsMenu_Entry_Submenu.addMenu(QIcon(AUTOCOMPLETE_ICON),AUTOCOMPLETE_MENU_NAME)
+
+		self.autocompleteSubmenu_Macros = QAction("Macros",self,checkable=True)
+		self.autocompleteSubmenu_Macros.setChecked(self.autocomplete_macros)
+		self.autocompleteSubmenu_Macros.triggered.connect(lambda state,s="automacro": self.settingsMenu_Setting(s))
+		settingsMenu_Autocomplete_Submenu.addAction(self.autocompleteSubmenu_Macros)
 
 		self.autocompleteSubmenu_Commands = QAction(AUTOCOMPLETE_MENU_COMMANDS_NAME,self,checkable=True)
 		self.autocompleteSubmenu_Commands.setChecked(self.autocomplete_commands)
@@ -1655,6 +1662,13 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="automacro":
+			if self.autocomplete_macros:
+				self.autocomplete_macros = False
+			else:
+				self.autocomplete_macros = True
+			self.settings[SETTING_AUTO_MACRO] = self.autocomplete_macros
 
 		if setting=="ignores":
 			if self.save_ignored:

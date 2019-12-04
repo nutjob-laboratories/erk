@@ -77,6 +77,27 @@ class SpellTextEdit(QPlainTextEdit):
 
 			if self.toPlainText().strip()=='': return
 
+			if self.parent.gui.autocomplete_macros:
+
+				# Auto-complete macros
+				if len(erk.macro.MACRO_LIST)>0:
+						
+					cursor.select(QTextCursor.BlockUnderCursor)
+					self.setTextCursor(cursor)
+					if self.textCursor().hasSelection():
+						text = self.textCursor().selectedText()
+
+						for c in erk.macro.MACRO_LIST:
+							cmd = c
+							rep = erk.macro.MACRO_LIST[c]
+
+							#if text in cmd:
+							if fnmatch.fnmatch(cmd,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(rep)
+								cursor.endEditBlock()
+								return
+
 			if self.parent.gui.autocomplete_commands:
 
 				# Auto-complete commands
@@ -85,28 +106,26 @@ class SpellTextEdit(QPlainTextEdit):
 				if self.textCursor().hasSelection():
 					text = self.textCursor().selectedText()
 
+					self.COMMAND_LIST = {}
+
 					if self.parent.is_console:
-						COMMAND_LIST = CONSOLE_COMMANDS
+						self.COMMAND_LIST = CONSOLE_COMMANDS
 					else:
-						COMMAND_LIST = INPUT_COMMANDS
+						self.COMMAND_LIST = INPUT_COMMANDS
 
 					# Inject /cnotice and /cprivmsg if supported
 					if self.parent.gui.does_server_support_cnotice(self.parent.client):
-						COMMAND_LIST[CNOTICE_COMMAND] = CNOTICE_COMMAND+" "
+						self.COMMAND_LIST[CNOTICE_COMMAND] = CNOTICE_COMMAND+" "
 
 					if self.parent.gui.does_server_support_cprivmsg(self.parent.client):
-						COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
+						self.COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
 
 					if self.parent.gui.does_server_support_knock(self.parent.client):
-						COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
+						self.COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
 
-					# Add in macros
-					if len(erk.macro.MACRO_LIST)>0:
-						COMMAND_LIST.update(erk.macro.MACRO_LIST)
-
-					for c in COMMAND_LIST:
+					for c in self.COMMAND_LIST:
 						cmd = c
-						rep = COMMAND_LIST[c]
+						rep = self.COMMAND_LIST[c]
 
 						#if text in cmd:
 						if fnmatch.fnmatch(cmd,f"{text}*"):

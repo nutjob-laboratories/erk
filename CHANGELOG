@@ -83,6 +83,9 @@ Version 0.600
 	* Bugfix: refreshing the macro directory no longer changes the active window
 	* Macros have been moved to their own file/namespace
 	* Macros are now removed from memory if they are not in the filesystem
+	* Moved macro autocomplete to its own subroutine
+	* Added an option to turn macro autocomplete on and off
+	* Deleted macros are now removed from autocomplete correctly
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons
