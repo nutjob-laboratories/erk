@@ -37,6 +37,9 @@
 * Command/nickname auto-completion
 	* Type the first few letters of a command or nickname and hit the tab key
 	* Auto-complete works for emoji and ASCIImoji shortcodes, too
+* Macros
+	* Create macros directly in the client
+	* Macros are saved with JSON, making editing outside the client easy
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
 * Automatic channel and private message logging
