@@ -81,6 +81,8 @@ Version 0.600
 	* Bugfix: macros can no longer require a maximum # of arguments lower than the minimun # of arguments, and vice-versa
 	* Macro menu can be rebuilt from the menu
 	* Bugfix: refreshing the macro directory no longer changes the active window
+	* Macros have been moved to their own file/namespace
+	* Macros are now removed from memory if they are not in the filesystem
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

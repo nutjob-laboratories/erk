@@ -44,6 +44,8 @@ from erk.config import *
 
 from spellchecker import SpellChecker
 
+import erk.macro
+
 class SpellTextEdit(QPlainTextEdit):
 
 	returnPressed = pyqtSignal()
@@ -99,8 +101,8 @@ class SpellTextEdit(QPlainTextEdit):
 						COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
 
 					# Add in macros
-					if len(MACRO_LIST)>0:
-						COMMAND_LIST.update(MACRO_LIST)
+					if len(erk.macro.MACRO_LIST)>0:
+						COMMAND_LIST.update(erk.macro.MACRO_LIST)
 
 					for c in COMMAND_LIST:
 						cmd = c

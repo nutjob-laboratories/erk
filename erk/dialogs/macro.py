@@ -40,6 +40,8 @@ from erk.resources import *
 from erk.strings import *
 from erk.config import *
 
+import erk.macro
+
 class Dialog(QDialog):
 
 	@staticmethod
@@ -69,7 +71,9 @@ class Dialog(QDialog):
 			with open(fileName, "w") as write_data:
 				json.dump(macro, write_data, indent=4, sort_keys=True)
 
-			add_new_macro(macro)
+			macro["filename"] = fileName
+
+			erk.macro.add_new_macro(macro)
 
 		return True
 
@@ -77,13 +81,13 @@ class Dialog(QDialog):
 		minargs = self.minargs.value()
 		maxargs = self.maxargs.value()
 
-		if maxargs<minargs: self.maxargs.setValue(minargs)
+		if maxargs<minargs and maxargs!=0: self.maxargs.setValue(minargs)
 
 	def maxvaluechange(self):
 		minargs = self.minargs.value()
 		maxargs = self.maxargs.value()
 
-		if maxargs<minargs: self.minargs.setValue(maxargs)
+		if maxargs<minargs and maxargs!=0: self.minargs.setValue(maxargs)
 
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)

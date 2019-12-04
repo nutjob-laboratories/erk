@@ -62,42 +62,6 @@ f.close()
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
 
-# Load in macros
-MACROS = []
-target = os.path.join(MACRO_DIRECTORY, "*.json")
-for file in glob.glob(target):
-	with open(file, "r") as macrofile:
-		data = json.load(macrofile)
-		MACROS.append(data)
-
-MACRO_LIST = {}
-for m in MACROS:
-	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
-
-def reload_macros():
-	global MACROS
-	global MACRO_LIST
-
-	MACROS = []
-	# target = os.path.join(MACRO_DIRECTORY, "*.json")
-	# for file in glob.glob(target):
-	# 	with open(file, "r") as macrofile:
-	# 		data = json.load(macrofile)
-	# 		MACROS.append(data)
-
-	MACRO_LIST = {}
-	# for m in MACROS:
-	# 	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
-
-#reload_macros()
-
-def add_new_macro(macro):
-	global MACROS
-	global MACRO_LIST
-
-	MACROS.append(macro)
-	MACRO_LIST[ macro["trigger"] ] = macro["trigger"]+" "
-
 def save_ignore(settings,filename=IGNORE_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(settings, write_data, indent=4, sort_keys=True)

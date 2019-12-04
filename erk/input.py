@@ -10,6 +10,8 @@ from erk.config import *
 from erk.format import *
 from erk.strings import *
 
+import erk.macro
+
 def channel_window_input(gui,client,window,text):
 
 	if len(text.strip())==0: return
@@ -17,7 +19,7 @@ def channel_window_input(gui,client,window,text):
 	tokens = text.split()
 
 	# Macros
-	for macro in MACROS:
+	for macro in erk.macro.MACROS:
 		trigger = macro["trigger"]
 		minargs = int(macro["arguments"]["minimum"])
 		maxargs = int(macro["arguments"]["maximum"])
@@ -392,7 +394,7 @@ def private_window_input(gui,client,window,text):
 	tokens = text.split()
 
 	# Macros
-	for macro in MACROS:
+	for macro in erk.macro.MACROS:
 		trigger = macro["trigger"]
 		minargs = int(macro["arguments"]["minimum"])
 		maxargs = int(macro["arguments"]["maximum"])
@@ -763,7 +765,7 @@ def server_window_input(gui,client,window,text):
 	tokens = text.split()
 
 	# Macros
-	for macro in MACROS:
+	for macro in erk.macro.MACROS:
 		trigger = macro["trigger"]
 		minargs = int(macro["arguments"]["minimum"])
 		maxargs = int(macro["arguments"]["maximum"])

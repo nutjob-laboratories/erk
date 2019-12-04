@@ -27,6 +27,7 @@ from erk.dialogs import (ConnectDialog,
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
 import erk.events
+import erk.macro
 
 class Erk(QMainWindow):
 
@@ -1217,18 +1218,36 @@ class Erk(QMainWindow):
 		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
 		self.macroMenu.addAction(ircMenu_Macro)
 
-		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
+		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macros",self)
 		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
 		self.macroMenu.addAction(ircMenu_Macro)
 
-		if len(MACROS)>0:
+		act = self.active_window
+		domax = False
+		if act:
+			if act.isMaximized() or act.subwindow.isMaximized(): domax = True
+
+		erk.macro.MACROS = []
+		target = os.path.join(erk.macro.MACRO_DIRECTORY, "*.json")
+		for file in glob.glob(target):
+			with open(file, "r") as macrofile:
+				data = json.load(macrofile)
+				data["filename"] = file
+				erk.macro.MACROS.append(data)
+
+		erk.macro.MACRO_LIST = {}
+		for m in erk.macro.MACROS:
+			erk.macro.MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
+
+		if len(erk.macro.MACROS)>0:
 			entry = textSeparator(self,"<i>Installed macros</i>")
 			self.macroMenu.addAction(entry)
 
-			for m in MACROS:
+			for m in erk.macro.MACROS:
 				macroname = m["trigger"]
 				minargs = m["arguments"]["minimum"]
 				maxargs = m["arguments"]["maximum"]
+				filename = m["filename"]
 
 				if maxargs==0:
 					numargs = str(minargs)+"+ arguments"
@@ -1248,6 +1267,10 @@ class Erk(QMainWindow):
 				tsAction = QWidgetAction(self)
 				tsAction.setDefaultWidget(tsLabel)
 				self.macroMenu.addAction(tsAction)
+
+		if act:
+			self.restoreWindow(act,act.subwindow)
+			if domax: act.subwindow.showMaximized()
 
 		# Windows menu
 		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)
@@ -1361,19 +1384,16 @@ class Erk(QMainWindow):
 
 		act = self.active_window
 
-		global MACROS
-		global MACRO_LIST
-
-		MACROS = []
-		target = os.path.join(MACRO_DIRECTORY, "*.json")
+		erk.macro.MACROS = []
+		target = os.path.join(erk.macro.MACRO_DIRECTORY, "*.json")
 		for file in glob.glob(target):
 			with open(file, "r") as macrofile:
 				data = json.load(macrofile)
-				MACROS.append(data)
+				erk.macro.MACROS.append(data)
 
-		MACRO_LIST = {}
-		for m in MACROS:
-			MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
+		erk.macro.MACRO_LIST = {}
+		for m in erk.macro.MACROS:
+			erk.macro.MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
 
 		self.buildToolbar()
 
