@@ -1217,15 +1217,37 @@ class Erk(QMainWindow):
 		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
 		self.macroMenu.addAction(ircMenu_Macro)
 
+		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
+		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
+		self.macroMenu.addAction(ircMenu_Macro)
+
 		if len(MACROS)>0:
 			entry = textSeparator(self,"<i>Installed macros</i>")
 			self.macroMenu.addAction(entry)
 
 			for m in MACROS:
 				macroname = m["trigger"]
+				minargs = m["arguments"]["minimum"]
+				maxargs = m["arguments"]["maximum"]
 
-				entry = QAction(QIcon(MACRO_ICON),macroname,self)
-				self.macroMenu.addAction(entry)
+				if maxargs==0:
+					numargs = str(minargs)+"+ arguments"
+				else:
+					if minargs==maxargs:
+						numargs = str(minargs)+" argument"
+						if minargs>1: numargs = numargs + "S"
+					else:
+						numargs = str(minargs)+"-"+str(maxargs)+" argument"
+						if maxargs>1: numargs = numargs +"s"
+
+
+				# entry = QAction(QIcon(MACRO_ICON),macroname,self)
+				# self.macroMenu.addAction(entry)
+
+				tsLabel = QLabel("<span>&nbsp;"+macroname+"&nbsp;("+numargs+")&nbsp;</span>")
+				tsAction = QWidgetAction(self)
+				tsAction.setDefaultWidget(tsLabel)
+				self.macroMenu.addAction(tsAction)
 
 		# Windows menu
 		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)
@@ -1334,6 +1356,24 @@ class Erk(QMainWindow):
 		self.helpMenu.addAction(helpLink)
 
 		end_toolbar_menu(self.toolbar)
+
+	def menuReloadMacros(self):
+
+		global MACROS
+		global MACRO_LIST
+
+		MACROS = []
+		target = os.path.join(MACRO_DIRECTORY, "*.json")
+		for file in glob.glob(target):
+			with open(file, "r") as macrofile:
+				data = json.load(macrofile)
+				MACROS.append(data)
+
+		MACRO_LIST = {}
+		for m in MACROS:
+			MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
+
+		self.buildToolbar()
 
 	def open_link_in_browser(self,url):
 		u = QUrl()

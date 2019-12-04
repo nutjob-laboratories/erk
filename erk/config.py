@@ -74,6 +74,23 @@ MACRO_LIST = {}
 for m in MACROS:
 	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
 
+def reload_macros():
+	global MACROS
+	global MACRO_LIST
+
+	MACROS = []
+	# target = os.path.join(MACRO_DIRECTORY, "*.json")
+	# for file in glob.glob(target):
+	# 	with open(file, "r") as macrofile:
+	# 		data = json.load(macrofile)
+	# 		MACROS.append(data)
+
+	MACRO_LIST = {}
+	# for m in MACROS:
+	# 	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
+
+#reload_macros()
+
 def add_new_macro(macro):
 	global MACROS
 	global MACRO_LIST

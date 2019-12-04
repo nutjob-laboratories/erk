@@ -73,6 +73,18 @@ class Dialog(QDialog):
 
 		return True
 
+	def minvaluechange(self):
+		minargs = self.minargs.value()
+		maxargs = self.maxargs.value()
+
+		if maxargs<minargs: self.maxargs.setValue(minargs)
+
+	def maxvaluechange(self):
+		minargs = self.minargs.value()
+		maxargs = self.maxargs.value()
+
+		if maxargs<minargs: self.minargs.setValue(maxargs)
+
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
 
@@ -104,6 +116,9 @@ class Dialog(QDialog):
 		self.maxargs.setValue(1)
 		maxargsLayout.addWidget(self.maxargsLabel)
 		maxargsLayout.addWidget(self.maxargs)
+
+		self.minargs.valueChanged.connect(self.minvaluechange)
+		self.maxargs.valueChanged.connect(self.maxvaluechange)
 
 		outputLayout = QHBoxLayout()
 		# outputLayout.addStretch()
