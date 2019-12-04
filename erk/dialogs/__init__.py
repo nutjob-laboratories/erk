@@ -18,8 +18,16 @@ import erk.dialogs.topic as Topic
 import erk.dialogs.key as Key
 import erk.dialogs.ignore as Ignore
 import erk.dialogs.macro as Macro
+import erk.dialogs.edit_macro as EditMacro
 
 from erk.resources import *
+
+def EditMacroDialog(filename,obj):
+	x = EditMacro.Dialog(filename,obj)
+	info = x.get_macro_information(filename,obj)
+	if not info: return None
+	obj.buildToolbar()
+	return info
 
 def MacroDialog(obj):
 	x = Macro.Dialog(obj)

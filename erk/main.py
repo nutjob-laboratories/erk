@@ -22,7 +22,8 @@ from erk.dialogs import (ConnectDialog,
 						IOsizeDialog,
 						CmdHistoryLengthDialog,
 						IgnoreDialog,
-						MacroDialog)
+						MacroDialog,
+						EditMacroDialog)
 
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
@@ -1266,14 +1267,9 @@ class Erk(QMainWindow):
 						numargs = str(minargs)+"-"+str(maxargs)+" argument"
 						if maxargs>1: numargs = numargs +"s"
 
-
-				# entry = QAction(QIcon(MACRO_ICON),macroname,self)
-				# self.macroMenu.addAction(entry)
-
-				tsLabel = QLabel("<span>&nbsp;"+macroname+"&nbsp;("+numargs+")&nbsp;</span>")
-				tsAction = QWidgetAction(self)
-				tsAction.setDefaultWidget(tsLabel)
-				self.macroMenu.addAction(tsAction)
+				ircMenu_Macro = QAction(QIcon(MACRO_ICON),macroname+" ("+numargs+")",self)
+				ircMenu_Macro.triggered.connect(lambda state,f=filename,s=self: EditMacroDialog(f,s))
+				self.macroMenu.addAction(ircMenu_Macro)
 
 		if act:
 			self.restoreWindow(act,act.subwindow)
