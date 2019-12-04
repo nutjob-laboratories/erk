@@ -75,6 +75,7 @@ Version 0.600
 	* Added macros
 	* Added a macro creation dialog
 	* Added a macro menu to show installed macros
+	* Moved macro menu to before the "windows" menu
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

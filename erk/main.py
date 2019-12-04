@@ -1206,6 +1206,27 @@ class Erk(QMainWindow):
 		if self.mark_end_of_loaded_logs:
 			self.settingsMenu_Log_Mark_End.setIcon(QIcon(CHECKED_ICON))
 
+		# Macro menu
+		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
+
+		ircMenu_Macro = QAction(QIcon(MACRO_ICON),"Create new macro",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=self: MacroDialog(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		if len(MACROS)>0:
+			entry = textSeparator(self,"<i>Installed macros</i>")
+			self.macroMenu.addAction(entry)
+
+			for m in MACROS:
+				macroname = m["trigger"]
+
+				entry = QAction(QIcon(MACRO_ICON),macroname,self)
+				self.macroMenu.addAction(entry)
+
 		# Windows menu
 		add_toolbar_menu(self.toolbar,WINDOWS_MENU_NAME,self.windowsMenu)
 
@@ -1284,27 +1305,6 @@ class Erk(QMainWindow):
 					entry = QAction(QIcon(IO_ICON),window.name+" traffic",self)
 					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
 					self.windowsMenu.addAction(entry)
-
-		# Macro menu
-		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
-
-		ircMenu_Macro = QAction(QIcon(MACRO_ICON),"Create new macro",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=self: MacroDialog(s))
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		if len(MACROS)>0:
-			entry = textSeparator(self,"<i>Installed macros</i>")
-			self.macroMenu.addAction(entry)
-
-			for m in MACROS:
-				macroname = m["trigger"]
-
-				entry = QAction(QIcon(MACRO_ICON),macroname,self)
-				self.macroMenu.addAction(entry)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)
