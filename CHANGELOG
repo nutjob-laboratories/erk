@@ -71,6 +71,10 @@ Version 0.600
 	* If the network display is set to show traffic from connection, the window is no longer created and hidden immediately
 	* Network display windows are now shown in the "windows" menu
 	* Tracking network traffic from connection is now turned off by default
+	* When traversing command history, the cursor is now moved to the end of the history text
+	* Added macros
+	* Added a macro creation dialog
+	* Added a macro menu to show installed macros
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

@@ -21,7 +21,8 @@ from erk.dialogs import (ConnectDialog,
 						LogsizeDialog,
 						IOsizeDialog,
 						CmdHistoryLengthDialog,
-						IgnoreDialog)
+						IgnoreDialog,
+						MacroDialog)
 
 from erk.irc import connect,connectSSL,reconnect,reconnectSSL
 
@@ -680,7 +681,7 @@ class Erk(QMainWindow):
 		self.helpMenu = QMenu()
 		self.windowsMenu = QMenu()
 		self.logMenu = QMenu()
-
+		self.macroMenu = QMenu()
 		self.connectionMenu = QMenu()
 
 		self.toolMenuStyle = SmallerIconsMenuStyle('Windows')
@@ -710,6 +711,7 @@ class Erk(QMainWindow):
 		self.windowsMenu.clear()
 		self.logMenu.clear()
 		self.connectionMenu.clear()
+		self.macroMenu.clear()
 
 		# Main menu
 		add_toolbar_menu(self.toolbar,APPLICATION_NAME,self.ircMenu)
@@ -1282,6 +1284,26 @@ class Erk(QMainWindow):
 					entry = QAction(QIcon(IO_ICON),window.name+" traffic",self)
 					entry.triggered.connect(lambda state,w=window,s=window.subwindow: self.restoreWindow(w,s))
 					self.windowsMenu.addAction(entry)
+
+		# Macro menu
+		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
+
+		ircMenu_Macro = QAction(QIcon(MACRO_ICON),"Create new macro",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=self: MacroDialog(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=MACRO_DIRECTORY: os.startfile(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		entry = textSeparator(self,"<i>Installed macros</i>")
+		self.macroMenu.addAction(entry)
+
+		for m in MACROS:
+			macroname = m["trigger"]
+
+			entry = QAction(QIcon(MACRO_ICON),macroname,self)
+			self.macroMenu.addAction(entry)
 
 		# Help menu
 		add_toolbar_menu(self.toolbar,HELP_MENU_NAME,self.helpMenu)

@@ -302,6 +302,7 @@ class Window(QMainWindow):
 			if self.history_buffer_pointer < 0:
 				self.history_buffer_pointer = len(self.history_buffer) - 1
 			self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+			self.userTextInput.moveCursor(QTextCursor.End)
 
 	def keyPressUp(self):
 		if self.gui.window_command_history:
@@ -310,6 +311,7 @@ class Window(QMainWindow):
 			if len(self.history_buffer) - 1 < self.history_buffer_pointer:
 				self.history_buffer_pointer = 0
 			self.userTextInput.setText(self.history_buffer[self.history_buffer_pointer])
+			self.userTextInput.moveCursor(QTextCursor.End)
 
 	def connectionEntryClick(self,cid,cmd):
 

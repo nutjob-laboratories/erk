@@ -40,6 +40,8 @@ from PyQt5 import QtCore
 from erk.common import *
 from erk.strings import *
 
+from erk.config import *
+
 from spellchecker import SpellChecker
 
 class SpellTextEdit(QPlainTextEdit):
@@ -95,6 +97,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 					if self.parent.gui.does_server_support_knock(self.parent.client):
 						COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
+
+					# Add in macros
+					if len(MACRO_LIST)>0:
+						COMMAND_LIST.update(MACRO_LIST)
 
 					for c in COMMAND_LIST:
 						cmd = c

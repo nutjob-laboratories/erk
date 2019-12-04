@@ -3,6 +3,8 @@ import html
 
 import emoji
 
+from PyQt5.QtGui import *
+
 import erk.events
 from erk.config import *
 from erk.format import *
@@ -13,6 +15,56 @@ def channel_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# Macros
+	for macro in MACROS:
+		trigger = macro["trigger"]
+		minargs = int(macro["arguments"]["minimum"])
+		maxargs = int(macro["arguments"]["maximum"])
+
+		# If maxargs is set to zero, there can be an
+		# unlimited number of arguments
+		if maxargs==0: maxargs = 9999
+
+		output = macro["output"]
+
+		# Check number of arguments passed to the macro
+		if len(tokens)>0:
+			if tokens[0]==trigger:
+				tokens.pop(0) # Remove command
+				if len(tokens)>maxargs:
+					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
+					return
+				if len(tokens)<minargs:
+					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
+					return
+
+				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
+				output = output.replace("$0",' '.join(tokens))
+
+				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
+				counter = 0
+				for a in tokens:
+					output = output.replace("$"+str(counter+1),a)
+					counter = counter + 1
+
+				# If a macro does not take an unlimited number of arguments,
+				# and the macro can take can take a variable number of arguments,
+				# remove any $n symbols for missing arguments
+				if maxargs!=9999:
+					if counter < maxargs:
+						extraargs = maxargs-counter
+						counter = 1
+						while counter < maxargs:
+							output = output.replace("$"+str(counter+1),"")
+							counter = counter + 1
+
+				# Write the macro to the text input
+				window.userTextInput.setText(output)
+				window.userTextInput.moveCursor(QTextCursor.End)
+				return
 
 	KNOCK = gui.does_server_support_knock(client)
 
@@ -339,6 +391,56 @@ def private_window_input(gui,client,window,text):
 
 	tokens = text.split()
 
+	# Macros
+	for macro in MACROS:
+		trigger = macro["trigger"]
+		minargs = int(macro["arguments"]["minimum"])
+		maxargs = int(macro["arguments"]["maximum"])
+
+		# If maxargs is set to zero, there can be an
+		# unlimited number of arguments
+		if maxargs==0: maxargs = 9999
+
+		output = macro["output"]
+
+		# Check number of arguments passed to the macro
+		if len(tokens)>0:
+			if tokens[0]==trigger:
+				tokens.pop(0) # Remove command
+				if len(tokens)>maxargs:
+					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
+					return
+				if len(tokens)<minargs:
+					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
+					return
+
+				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
+				output = output.replace("$0",' '.join(tokens))
+
+				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
+				counter = 0
+				for a in tokens:
+					output = output.replace("$"+str(counter+1),a)
+					counter = counter + 1
+
+				# If a macro does not take an unlimited number of arguments,
+				# and the macro can take can take a variable number of arguments,
+				# remove any $n symbols for missing arguments
+				if maxargs!=9999:
+					if counter < maxargs:
+						extraargs = maxargs-counter
+						counter = 1
+						while counter < maxargs:
+							output = output.replace("$"+str(counter+1),"")
+							counter = counter + 1
+
+				# Write the macro to the text input
+				window.userTextInput.setText(output)
+				window.userTextInput.moveCursor(QTextCursor.End)
+				return
+
 	KNOCK = gui.does_server_support_knock(client)
 
 	# /knock
@@ -659,6 +761,56 @@ def server_window_input(gui,client,window,text):
 	if len(text.strip())==0: return
 
 	tokens = text.split()
+
+	# Macros
+	for macro in MACROS:
+		trigger = macro["trigger"]
+		minargs = int(macro["arguments"]["minimum"])
+		maxargs = int(macro["arguments"]["maximum"])
+
+		# If maxargs is set to zero, there can be an
+		# unlimited number of arguments
+		if maxargs==0: maxargs = 9999
+
+		output = macro["output"]
+
+		# Check number of arguments passed to the macro
+		if len(tokens)>0:
+			if tokens[0]==trigger:
+				tokens.pop(0) # Remove command
+				if len(tokens)>maxargs:
+					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
+					return
+				if len(tokens)<minargs:
+					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
+					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
+					return
+
+				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
+				output = output.replace("$0",' '.join(tokens))
+
+				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
+				counter = 0
+				for a in tokens:
+					output = output.replace("$"+str(counter+1),a)
+					counter = counter + 1
+
+				# If a macro does not take an unlimited number of arguments,
+				# and the macro can take can take a variable number of arguments,
+				# remove any $n symbols for missing arguments
+				if maxargs!=9999:
+					if counter < maxargs:
+						extraargs = maxargs-counter
+						counter = 1
+						while counter < maxargs:
+							output = output.replace("$"+str(counter+1),"")
+							counter = counter + 1
+
+				# Write the macro to the text input
+				window.userTextInput.setText(output)
+				window.userTextInput.moveCursor(QTextCursor.End)
+				return
 
 	KNOCK = gui.does_server_support_knock(client)
 

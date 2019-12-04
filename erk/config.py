@@ -6,6 +6,7 @@ import re
 from collections import defaultdict
 import string
 import random
+import glob
 
 from erk.common import *
 
@@ -19,6 +20,9 @@ if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
+
+MACRO_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "macros")
+if not os.path.isdir(MACRO_DIRECTORY): os.mkdir(MACRO_DIRECTORY)
 
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 TEXT_FORMAT_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
@@ -57,6 +61,25 @@ f.close()
 
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
+
+# Load in macros
+MACROS = []
+target = os.path.join(MACRO_DIRECTORY, "*.json")
+for file in glob.glob(target):
+	with open(file, "r") as macrofile:
+		data = json.load(macrofile)
+		MACROS.append(data)
+
+MACRO_LIST = {}
+for m in MACROS:
+	MACRO_LIST[ m["trigger"] ] = m["trigger"]+" "
+
+def add_new_macro(macro):
+	global MACROS
+	global MACRO_LIST
+
+	MACROS.append(macro)
+	MACRO_LIST[ macro["trigger"] ] = macro["trigger"]+" "
 
 def save_ignore(settings,filename=IGNORE_FILE):
 	with open(filename, "w") as write_data:

@@ -77,6 +77,8 @@ NOTIFY_ICON 			= ":/menu-notifications.png"
 HIDE_ICON 				= ":/menu-hide.png"
 WHOIS_ICON 				= ":/menu-whois.png"
 I_ICON 				= ":/menu-i.png"
+MACRO_ICON 				= ":/menu-macro.png"
+DIRECTORY_ICON 				= ":/menu-directory.png"
 
 FANCY_NETWORK	= ":/fancy-network.png"
 FANCY_SERVER 	= ":/fancy-server.png"

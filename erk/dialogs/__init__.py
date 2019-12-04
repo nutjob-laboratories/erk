@@ -17,8 +17,16 @@ import erk.dialogs.log_display_size as Linecount
 import erk.dialogs.topic as Topic
 import erk.dialogs.key as Key
 import erk.dialogs.ignore as Ignore
+import erk.dialogs.macro as Macro
 
 from erk.resources import *
+
+def MacroDialog(obj):
+	x = Macro.Dialog(obj)
+	info = x.get_macro_information(obj)
+	if not info: return None
+	obj.buildToolbar()
+	return info
 
 def IgnoreDialog(obj):
 	x = Ignore.Dialog(obj)

@@ -403,3 +403,6 @@ CHAT_DISPLAY_CONTEXT_APUB = "Make channel public"
 CHAT_DISPLAY_CONTEXT_PUB = "Make channel secret"
 CHAT_DISPLAY_CONTEXT_AINVITE = "Remove channel invite requirement"
 CHAT_DISPLAY_CONTEXT_INVITE = "Make channel invite only"
+
+MACRO_NOT_ENOUGH_ARGS = "Not enough arguments to {} (minimum {} argument(s))"
+MACRO_TOO_MANY_ARGS = "Too many arguments to {} (minimum {} argument(s))"
