@@ -372,7 +372,7 @@ SERVMSG_MENU_NAME = "Hide server messages"
 CONNECTION_MENU_NAME = "Connections"
 IGNORE_MENU_NAME = "Ignored users"
 
-TRAFFIC_START_MENU_NAME = "Start collecting at connection"
+TRAFFIC_START_MENU_NAME = "Show on connection"
 
 SAVE_IGNORE_MENU_NAME = "Save ignored users"
 
@@ -406,3 +406,5 @@ CHAT_DISPLAY_CONTEXT_INVITE = "Make channel invite only"
 
 MACRO_NOT_ENOUGH_ARGS = "Not enough arguments to {} (minimum {} argument(s))"
 MACRO_TOO_MANY_ARGS = "Too many arguments to {} (minimum {} argument(s))"
+
+NET_DISPLAY_HIDE_MENU_NAME = "Hide instead of closing window"

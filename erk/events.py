@@ -129,6 +129,10 @@ def CreateIOWindow(gui,client):
 	w = IOWindow(client.hostname,gui.MDI,client,gui)
 	IO_WINDOWS.append(w)
 
+	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
+
+
+
 def erk_close_io(gui,client):
 	global IO_WINDOWS
 	clean = []
@@ -136,6 +140,10 @@ def erk_close_io(gui,client):
 		if c.client.id==client.id: continue
 		clean.append(c)
 	IO_WINDOWS = clean
+
+	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
+
+
 
 def set_channel_hostmask(gui,client,nickname,hostmask):
 	for window in CHANNEL_WINDOWS:

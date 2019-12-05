@@ -16,23 +16,25 @@ class Window(QMainWindow):
 
 	def closeEvent(self, event):
 
-		#erk.events.erk_parted_channel(self.gui,self.client,self.name)
-		if self.do_actual_close:
+		if self.gui.io_do_not_close:
+
+			if self.do_actual_close:
+				erk.events.erk_close_io(self.gui,self.client)
+				if self.gui.title_from_active:
+					self.gui.setWindowTitle(APPLICATION_NAME)
+				self.subwindow.close()
+				self.close()
+				event.accept()
+				self.gui.set_window_not_active(self)
+				return
+
+			self.subwindow.hide()
+			self.hide()
+			event.ignore()
+
+		else:
 			erk.events.erk_close_io(self.gui,self.client)
-			if self.gui.title_from_active:
-				self.gui.setWindowTitle(APPLICATION_NAME)
-			self.subwindow.close()
-			self.close()
 			event.accept()
-			self.gui.set_window_not_active(self)
-			return
-
-		# self.subwindow.close()
-		# event.accept()
-
-		self.subwindow.hide()
-		self.hide()
-		event.ignore()
 
 	def reapplyStyles(self):
 

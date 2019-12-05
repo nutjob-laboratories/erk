@@ -267,6 +267,16 @@ class Window(QMainWindow):
 
 		self.commands = self.menubar.addMenu(CONSOLE_COMMAND_MENU_NAME)
 
+		entry = QAction(QIcon(IO_ICON),NET_TRAFFIC_MENU_NAME,self)
+		entry.triggered.connect(lambda state,id=self.client.id,cmd='io': self.connectionEntryClick(id,cmd))
+		self.commands.addAction(entry)
+
+		entry = QAction(QIcon(TEXT_WINDOW_ICON),MOTD_VIEW_MENU_NAME,self)
+		entry.triggered.connect(lambda state,id=self.client.id,cmd='motd': self.connectionEntryClick(id,cmd))
+		self.commands.addAction(entry)
+
+		self.commands.addSeparator()
+
 		entry = QAction(QIcon(USER_ICON),CONSOLE_MENU_CHANGE_NICK,self)
 		entry.triggered.connect(lambda state,id=self.client.id,cmd='nick': self.connectionEntryClick(id,cmd))
 		self.commands.addAction(entry)
@@ -274,8 +284,6 @@ class Window(QMainWindow):
 		entry = QAction(QIcon(CHANNEL_WINDOW_ICON),CONSOLE_MENU_JOIN_CHANNEL,self)
 		entry.triggered.connect(lambda state,id=self.client.id,cmd='join': self.connectionEntryClick(id,cmd))
 		self.commands.addAction(entry)
-
-		self.commands.addSeparator()
 
 		entry = QAction(QIcon(EXIT_ICON),CONSOLE_MENU_DISCONNECT,self)
 		entry.triggered.connect(lambda state,id=self.client.id,cmd='disconnect': self.connectionEntryClick(id,cmd))
@@ -314,6 +322,33 @@ class Window(QMainWindow):
 			self.userTextInput.moveCursor(QTextCursor.End)
 
 	def connectionEntryClick(self,cid,cmd):
+
+		if cmd=="io":
+			for c in  erk.events.getConnections():
+				if c.id==cid:
+					iowin = erk.events.hasIOWindow(c)
+					if iowin:
+						self.gui.restoreWindow(iowin,iowin.subwindow)
+						self.gui.updateActiveChild(iowin.subwindow)
+					else:
+						erk.events.CreateIOWindow(self.gui,c)
+
+
+		if cmd=="motd":
+			for c in  erk.events.getConnections():
+				if c.id==cid:
+					iowin = erk.events.hasMOTDWindow(c)
+					if iowin:
+						self.gui.restoreWindow(iowin,iowin.subwindow)
+						self.gui.updateActiveChild(iowin.subwindow)
+					else:
+						erk.events.CreateMOTDWindow(self.gui,c)
+
+
+
+
+
+
 
 		if cmd=="disconnect":
 			for c in  erk.events.getConnections():

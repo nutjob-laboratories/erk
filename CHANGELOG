@@ -87,6 +87,13 @@ Version 0.600
 	* Added an option to turn macro autocomplete on and off
 	* Deleted macros are now removed from autocomplete correctly
 	* Added a macro editor
+	* Changed the IO display window icon to match the other icons
+	* Changed the current window display indicator
+	* IO windows are now shown in the connection display
+	* IO windows can now hide on close; added a user setting to control this
+	* Removed the "networking" icon in favor or the IO window icon
+	* Added "view network io" and "view motd" to the consoles' command menus
+	* Icons in the macro menu are now the same size as the rest of the main window menu icons
 
 Version 0.510
 	* Resized the icons for channel, locked channel, and user windows to match the margins with other icons

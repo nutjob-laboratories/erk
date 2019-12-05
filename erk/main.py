@@ -260,6 +260,8 @@ class Erk(QMainWindow):
 								item.setIcon(0,QIcon(USER_WINDOW_ICON))
 							elif item.erk_console:
 								item.setIcon(0,QIcon(CONSOLE_WINDOW_ICON))
+							elif item.erk_traffic:
+								item.setIcon(0,QIcon(IO_ICON))
 							else:
 								item.setIcon(0,QIcon(SERVER_ICON))
 				iterator += 1
@@ -286,6 +288,9 @@ class Erk(QMainWindow):
 					break
 
 	def populateConnectionDisplay(self,connections,channels,privates,consoles):
+
+		# Get network io windows
+		ntwins = erk.events.getNetTraffics()
 
 		# Rebuild the toolbar
 		self.buildToolbar()
@@ -328,6 +333,7 @@ class Erk(QMainWindow):
 			parent.erk_private = False
 			parent.erk_console = False
 			parent.erk_locked = False
+			parent.erk_traffic = False
 			parent.erk_client = c
 
 			if self.display_uptimes:
@@ -342,6 +348,36 @@ class Erk(QMainWindow):
 
 			if c.id in expanded:
 				parent.setExpanded(True)
+
+
+
+			for n in ntwins:
+				if c.id==n.client.id:
+					child = QTreeWidgetItem(parent)
+					child.setText(0,"Network traffic")
+
+					child.setIcon(0,QIcon(IO_ICON))
+					child.erk_window = n
+					child.erk_server = False
+					child.erk_channel = False
+					child.erk_private = False
+					child.erk_console = False
+					child.erk_locked = False
+					child.erk_traffic = True
+					child.erk_client = c
+
+					if self.active_window:
+						if self.active_window.name==n.name:
+							if self.active_window.client.id==n.client.id:
+								# Window is active
+								f = child.font(0)
+								f.setBold(True)
+								child.setFont(0,f)
+								child.setIcon(0,QIcon(ACTIVE_ICON))
+
+
+
+
 
 			for s in consoles:
 				if c.id==s.client.id:
@@ -358,6 +394,7 @@ class Erk(QMainWindow):
 					child.erk_private = False
 					child.erk_console = True
 					child.erk_locked = False
+					child.erk_traffic = False
 					child.erk_client = c
 
 					if self.active_window:
@@ -392,6 +429,7 @@ class Erk(QMainWindow):
 					child.erk_server = False
 					child.erk_private = False
 					child.erk_console = False
+					child.erk_traffic = False
 					child.erk_client = c
 
 					if self.active_window:
@@ -423,6 +461,7 @@ class Erk(QMainWindow):
 					child.erk_private = True
 					child.erk_console = False
 					child.erk_locked = False
+					child.erk_traffic = False
 					child.erk_client = c
 
 					if self.active_window:
@@ -620,6 +659,11 @@ class Erk(QMainWindow):
 
 		self.autocomplete_macros = self.settings[SETTING_AUTO_MACRO]
 
+
+		self.io_do_not_close = self.settings[SETTING_HIDE_IO]
+
+
+
 		if self.save_ignored:
 			self.ignored = load_ignore()
 
@@ -695,7 +739,7 @@ class Erk(QMainWindow):
 		self.helpMenu.setStyle(self.toolMenuStyle)
 		self.windowsMenu.setStyle(self.toolMenuStyle)
 		self.logMenu.setStyle(self.toolMenuStyle)
-
+		self.macroMenu.setStyle(self.toolMenuStyle)
 		self.connectionMenu.setStyle(self.toolMenuStyle)
 
 		self.buildToolbar()
@@ -1119,12 +1163,19 @@ class Erk(QMainWindow):
 
 		if not self.show_nick_on_channel_windows: self.settingMisc_Submenu_ClickNick.setEnabled(False)
 
-		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(NETWORKING_ICON),NETWORK_SETTINGS_MENU_NAME)
+		settingsMenu_Networking_Submenu = self.settingsMenu.addMenu(QIcon(IO_ICON),NETWORK_SETTINGS_MENU_NAME)
 
 		self.settingsMenu_TrafficCon = QAction(TRAFFIC_START_MENU_NAME,self,checkable=True)
 		self.settingsMenu_TrafficCon.setChecked(self.show_net_traffic_from_connection)
 		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="traffic_connection": self.settingsMenu_Setting(s))
 		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
+
+
+		self.settingsMenu_TrafficCon = QAction(NET_DISPLAY_HIDE_MENU_NAME,self,checkable=True)
+		self.settingsMenu_TrafficCon.setChecked(self.io_do_not_close)
+		self.settingsMenu_TrafficCon.triggered.connect(lambda state,s="hide_io": self.settingsMenu_Setting(s))
+		settingsMenu_Networking_Submenu.addAction(self.settingsMenu_TrafficCon)
+
 
 		settingsMenu_Networking_Submenu.addSeparator()
 
@@ -1594,6 +1645,8 @@ class Erk(QMainWindow):
 								item.setIcon(0,QIcon(USER_WINDOW_ICON))
 							elif item.erk_console:
 								item.setIcon(0,QIcon(CONSOLE_WINDOW_ICON))
+							elif item.erk_traffic:
+								item.setIcon(0,QIcon(IO_ICON))
 							else:
 								item.setIcon(0,QIcon(SERVER_ICON))
 
@@ -1658,6 +1711,13 @@ class Erk(QMainWindow):
 		erk.events.togglePlainUserLists()
 
 	def settingsMenu_Setting(self,setting):
+
+		if setting=="hide_io":
+			if self.io_do_not_close:
+				self.io_do_not_close = False
+			else:
+				self.io_do_not_close = True
+			self.settings[SETTING_HIDE_IO] = self.io_do_not_close
 
 		if setting=="automacro":
 			if self.autocomplete_macros:

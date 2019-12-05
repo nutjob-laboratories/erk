@@ -57,7 +57,9 @@ PLUS_ICON 				= ":/menu-plus.png"
 MINUS_ICON 				= ":/menu-minus.png"
 CLIPBOARD_ICON 			= ":/menu-clipboard.png"
 TOPIC_ICON 				= ":/menu-topic.png"
-NETWORKING_ICON 		= ":/menu-networking.png"
+
+#NETWORKING_ICON 		= ":/menu-networking.png"
+
 CLEAR_ICON 				= ":/menu-clear.png"
 P_ICON 					= ":/menu-p.png"
 S_ICON 					= ":/menu-s.png"
