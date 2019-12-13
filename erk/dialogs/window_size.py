@@ -35,7 +35,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.resources import *
-from erk.strings import *
+import erk.config
 
 class Dialog(QDialog):
 
@@ -60,24 +60,24 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle(WINDOW_SIZE_DIALOG_TITLE)
+		self.setWindowTitle("Set initial window size")
 		self.setWindowIcon(QIcon(RESIZE_ICON))
 
 		widthLayout = QHBoxLayout()
-		self.widthLabel = QLabel(WINDOW_SIZE_WIDTH_NAME)
+		self.widthLabel = QLabel("Width")
 		self.width = QSpinBox()
 		self.width.setRange(100,2000)
-		self.width.setValue(self.parent.initial_window_width)
+		self.width.setValue(erk.config.DEFAULT_APP_WIDTH)
 		widthLayout.addWidget(self.widthLabel)
 		#widthLayout.addStretch()
 		widthLayout.addWidget(self.width)
 		widthLayout.addWidget(QLabel("pixels"))
 
 		heightLayout = QHBoxLayout()
-		self.heightLabel = QLabel(WINDOW_SIZE_HEIGHT_NAME)
+		self.heightLabel = QLabel("Height")
 		self.height = QSpinBox()
 		self.height.setRange(100,2000)
-		self.height.setValue(self.parent.initial_window_height)
+		self.height.setValue(erk.config.DEFAULT_APP_HEIGHT)
 		heightLayout.addWidget(self.heightLabel)
 		#heightLayout.addStretch()
 		heightLayout.addWidget(self.height)

@@ -36,6 +36,7 @@ from PyQt5 import QtCore
 
 from erk.resources import *
 from erk.strings import *
+from erk.files import *
 
 class Dialog(QDialog):
 
@@ -74,17 +75,17 @@ class Dialog(QDialog):
 
 		self.save_as_default = False
 
-		self.setWindowTitle(NICK_DIALOG_TITLE)
-		self.setWindowIcon(QIcon(USER_WINDOW_ICON))
+		self.setWindowTitle("Change nickname")
+		#self.setWindowIcon(QIcon(USER_WINDOW_ICON))
 
 		nameLayout = QHBoxLayout()
-		self.nameLabel = QLabel(NICK_DIALOG_LABEL)
+		self.nameLabel = QLabel("Nickname")
 		self.name = QLineEdit()
 		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
-		self.savenick = QCheckBox(NICK_DIALOG_SAVE,self)
+		self.savenick = QCheckBox("Save nickname",self)
 		self.savenick.stateChanged.connect(self.clickSave)
 
 		self.name.setPlaceholderText(self.nick)

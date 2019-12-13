@@ -37,10 +37,11 @@ import string
 from collections import defaultdict
 import time
 
-from erk.common import *
+from erk.resources import *
+from erk.files import *
 from erk.strings import *
-from erk.config import *
-from erk.format import *
+import erk.config
+
 import erk.events
 
 from PyQt5.QtCore import *
@@ -106,7 +107,7 @@ class IRC_Connection(irc.IRCClient):
 		self.is_away = False
 
 		# self.gui.irc_not_away(self,msg)
-		erk.events.client_unaway(self.gui,self)
+		#erk.events.client_unaway(self.gui,self)
 
 	def irc_RPL_NOWAWAY(self,prefix,params):
 
@@ -116,7 +117,7 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_is_away(self,msg)
 
-		erk.events.client_away(self.gui,self)
+		#erk.events.client_away(self.gui,self)
 
 
 	def irc_RPL_BANLIST(self,prefix,params):
@@ -155,11 +156,11 @@ class IRC_Connection(irc.IRCClient):
 				if p[0].lower()=='network':
 					self.network = p[1]
 					# self.gui.irc_network_and_hostname(self,p[1],self.hostname)
-					erk.events.received_network_and_hostname(self.gui,self,p[1],self.hostname)
+					#erk.events.received_network_and_hostname(self.gui,self,p[1],self.hostname)
 
 					# update_user_history_network(host,port,network,filename=USER_FILE):
-					if self.gui.save_history:
-						update_user_history_network(self.server,self.port,p[1])
+					# if self.gui.save_history:
+					# 	update_user_history_network(self.server,self.port,p[1])
 
 
 
@@ -196,6 +197,12 @@ class IRC_Connection(irc.IRCClient):
 
 		self.last_tried_nickname = ''
 
+		entry = [self.server,self.port]
+		self.gui.connecting.append(entry)
+		self.gui.start_spinner()
+
+		erk.events.startup(self.gui,self)
+
 	def uptime_beat(self):
 
 		self.uptime = self.uptime + 1
@@ -205,7 +212,7 @@ class IRC_Connection(irc.IRCClient):
 		
 		# self.gui.irc_uptime(self,self.uptime)
 
-		if self.gui.get_hostmasks_on_join:
+		if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
 			if len(self.do_whois)>0:
 				nick = self.do_whois.pop(0)
 				if len(nick.strip())>0:
@@ -220,9 +227,9 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_connect(self)
 
-		self.uptimeTimer = UptimeHeartbeat()
-		self.uptimeTimer.beat.connect(self.uptime_beat)
-		self.uptimeTimer.start()
+		# self.uptimeTimer = UptimeHeartbeat()
+		# self.uptimeTimer.beat.connect(self.uptime_beat)
+		# self.uptimeTimer.start()
 
 		erk.events.connection(self.gui,self)
 
@@ -232,10 +239,11 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_disconnect(self,reason)
 
-		if self.gui.save_channels:
-			u = get_user()
-			u["channels"] = self.kwargs["autojoin"]
-			save_user(u)
+		# MUST BE ABLE TO TRACK AND SAVE KEY FOR THIS TO ACTUALLY WORK
+		# if erk.config.SAVE_JOINED_CHANNELS:
+		# 	u = get_user()
+		# 	u["channels"] = self.kwargs["autojoin"]
+		# 	save_user(u)
 
 		self.uptimeTimer.stop()
 		self.uptime = 0
@@ -249,6 +257,10 @@ class IRC_Connection(irc.IRCClient):
 	def signedOn(self):
 
 		erk.events.registered(self.gui,self)
+
+		self.uptimeTimer = UptimeHeartbeat()
+		self.uptimeTimer.beat.connect(self.uptime_beat)
+		self.uptimeTimer.start()
 
 		self.registered = True
 
@@ -299,14 +311,17 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.irc_motd(self,motd)
 		erk.events.motd(self.gui,self,motd)
 
-		self.flat_motd = "\n".join(motd)
-		self.flat_motd = convert_irc_color_to_html(self.flat_motd)
+		#self.flat_motd = "\n".join(motd)
+		#self.flat_motd = convert_irc_color_to_html(self.flat_motd)
 
 	def modeChanged(self, user, channel, mset, modes, args):
 		if "b" in modes: self.sendLine(f"MODE {channel} +b")
+		if "o" in modes: self.sendLine("NAMES "+channel)
+		if "v" in modes: self.sendLine("NAMES "+channel)
 
 		# self.gui.irc_mode(self,user,channel,mset,modes,args)
 		erk.events.mode(self.gui,self,channel,user,mset,modes,args)
+
 		
 		
 	def nickChanged(self,nick):
@@ -316,6 +331,9 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.buildConnectionsMenu()
 		erk.events.erk_changed_nick(self.gui,self,nick)
 
+		for c in erk.events.fetch_channel_list(self):
+			self.sendLine("NAMES "+c)
+
 	def userJoined(self, user, channel):
 		if user.split('!')[0] == self.nickname:
 			return
@@ -324,17 +342,21 @@ class IRC_Connection(irc.IRCClient):
 		if len(p)==2:
 			if p[0] == self.nickname: return
 		else:
-			if self.gui.get_hostmasks_on_join:
+			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
 				self.do_whois.append(user)
 
 		# self.gui.irc_join(self,user,channel)
 		erk.events.join(self.gui,self,user,channel)
+
+		self.sendLine("NAMES "+channel)
 
 
 	def userLeft(self, user, channel):
 
 		# self.gui.irc_part(self,user,channel)
 		erk.events.part(self.gui,self,user,channel)
+
+		self.sendLine("NAMES "+channel)
 
 	def irc_ERR_NICKNAMEINUSE(self, prefix, params):
 
@@ -351,6 +373,9 @@ class IRC_Connection(irc.IRCClient):
 		erk.events.erk_changed_nick(self.gui,self,self.last_tried_nickname)
 
 	def userRenamed(self, oldname, newname):
+
+		for c in erk.events.where_is_user(self,oldname):
+			self.sendLine("NAMES "+c)
 
 		# self.gui.irc_nick_changed(self,oldname,newname)
 		erk.events.nick(self.gui,self,oldname,newname)
@@ -400,7 +425,7 @@ class IRC_Connection(irc.IRCClient):
 		nicklist = params[3].split(' ')
 
 		if channel in self.joined_channels:
-			if self.gui.get_hostmasks_on_join:
+			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
 				for u in nicklist:
 					p = u.split('!')
 					if len(p)!=2:
@@ -471,7 +496,7 @@ class IRC_Connection(irc.IRCClient):
 
 		if nick in self.request_whois:
 			#self.gui.update_user_hostmask(self,nick,username+"@"+host)
-			erk.events.set_channel_hostmask(self.gui,self,nick,username+"@"+host)
+			erk.events.received_hostmask_for_channel_user(self.gui,self,nick,username+"@"+host)
 			return
 
 		if nick in self.whois:
@@ -544,7 +569,7 @@ class IRC_Connection(irc.IRCClient):
 
 		if nick in self.whois:
 			#self.gui.irc_whois(self,self.whois[nick])
-			erk.events.writeWhoisActiveWindow(self.gui,self,self.whois[nick])
+			erk.events.received_whois(self.gui,self,self.whois[nick])
 			del self.whois[nick]
 
 		
@@ -627,7 +652,7 @@ class IRC_Connection(irc.IRCClient):
 		channel = params[1]
 
 		# self.gui.irc_invited(self,prefix,target,channel)
-		erk.events.writeInviteActiveWindow(self.gui,self,prefix,channel)
+		#erk.events.writeInviteActiveWindow(self.gui,self,prefix,channel)
 
 		
 
@@ -637,7 +662,7 @@ class IRC_Connection(irc.IRCClient):
 		channel = params[2]
 
 		# self.gui.irc_inviting(self,user,channel)
-		erk.events.writeInvitingActiveWindow(self.gui,self,user,channel)
+		#erk.events.writeInvitingActiveWindow(self.gui,self,user,channel)
 
 		
 
@@ -667,19 +692,19 @@ class IRC_Connection(irc.IRCClient):
 		server = params[1]
 		time = params[2]
 
-		erk.events.writeTimeActiveWindow(self.gui,self,server,time)
+		#erk.events.writeTimeActiveWindow(self.gui,self,server,time)
 
 	def irc_RPL_USERHOST(self,prefix,params):
 		data = params[1]
 
-		erk.events.writeUserhostActiveWindow(self.gui,self,data)
+		#erk.events.writeUserhostActiveWindow(self.gui,self,data)
 
 	def sendLine(self,line):
 		
 		# self.gui.irc_output(self,line)
 		#print(line)
 
-		erk.events.writeServerOutput(self.gui,self,line)
+		erk.events.line_output(self.gui,self,line)
 
 		return irc.IRCClient.sendLine(self, line)
 
@@ -714,7 +739,7 @@ class IRC_Connection(irc.IRCClient):
 		#print(line)
 		# self.gui.irc_input(self,line2)
 
-		erk.events.writeServerInput(self.gui,self,line2)
+		erk.events.line_input(self.gui,self,line2)
 
 		d = line2.split(" ")
 		if len(d) >= 2:
@@ -828,10 +853,12 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		return bot
 
 	def clientConnectionLost(self, connector, reason):
-		self.kwargs["gui"].connectionLost(self.kwargs["server"],self.kwargs["port"])
+		#self.kwargs["gui"].connectionLost(self.kwargs["server"],self.kwargs["port"])
+		pass
 
 	def clientConnectionFailed(self, connector, reason):
-		self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
+		#self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
+		pass
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 	def __init__(self,**kwargs):
@@ -843,54 +870,50 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		return bot
 
 	def clientConnectionLost(self, connector, reason):
-		# if self.kwargs["gui"].quitting:
-		# 	return
 
-		# cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
-		# self.kwargs["gui"].remove_connection(cid)
-		# if cid in self.kwargs["gui"].disconnected:
-		# 	try:
-		# 		self.kwargs["gui"].disconnected.remove(cid)
-		# 	except:
-		# 		pass
-		# 	return
-		# self.kwargs["gui"].remove_connection(cid)
+		#print(self.kwargs["gui"].quitting)
 
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
-		if cid in self.kwargs["gui"].disconnecting:
+		if cid in self.kwargs["gui"].quitting:
 			try:
-				self.kwargs["gui"].disconnecting.remove(cid)
+				self.kwargs["gui"].quitting.remove(cid)
 			except:
 				pass
 			return
+
+		# cid = self.kwargs["server"]+str(self.kwargs["port"])
+		# if cid in self.kwargs["gui"].disconnecting:
+		# 	try:
+		# 		self.kwargs["gui"].disconnecting.remove(cid)
+		# 	except:
+		# 		pass
+		# 	return
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 	def clientConnectionFailed(self, connector, reason):
 
-		# if self.kwargs["gui"].quitting:
-		# 	return
-
-		# cid = self.kwargs["server"]+":"+str(self.kwargs["port"])
-		# self.kwargs["gui"].remove_connection(cid)
-		# if cid in self.kwargs["gui"].disconnected:
-		# 	try:
-		# 		self.kwargs["gui"].disconnected.remove(cid)
-		# 	except:
-		# 		pass
-		# 	return
+		#print(self.kwargs["gui"].quitting)
 
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
-		if cid in self.kwargs["gui"].disconnecting:
+		if cid in self.kwargs["gui"].quitting:
 			try:
-				self.kwargs["gui"].disconnecting.remove(cid)
+				self.kwargs["gui"].quitting.remove(cid)
 			except:
 				pass
 			return
 
-		self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
+		# cid = self.kwargs["server"]+str(self.kwargs["port"])
+		# if cid in self.kwargs["gui"].disconnecting:
+		# 	try:
+		# 		self.kwargs["gui"].disconnecting.remove(cid)
+		# 	except:
+		# 		pass
+		# 	return
+
+		#self.kwargs["gui"].connectionFailed(self.kwargs["server"],self.kwargs["port"])
 		
-		#protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
+		protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
 class UptimeHeartbeat(QThread):
 

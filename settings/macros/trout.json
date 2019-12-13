@@ -1,8 +1,0 @@
-{
-    "arguments": {
-        "maximum": 1,
-        "minimum": 1
-    },
-    "output": "/me slaps $1 with a trout",
-    "trigger": "/trout"
-}

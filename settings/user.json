@@ -1,0 +1,18 @@
+{
+    "alternate": "wr41thn1x",
+    "autojoin": true,
+    "channels": [
+        [
+            "#themaxx",
+            ""
+        ]
+    ],
+    "last_password": "",
+    "last_port": "6667",
+    "last_server": "localhost",
+    "nickname": "wraithnix",
+    "realname": "Erk IRC Client",
+    "reconnect": true,
+    "ssl": false,
+    "username": "erk_user"
+}

@@ -1,1117 +1,250 @@
 
-import html
-
+#import erk.events
 import emoji
 
-from PyQt5.QtGui import *
+from erk.objects import *
+from erk.files import *
+import erk.config
 
-import erk.events
-from erk.config import *
-from erk.format import *
-from erk.strings import *
+COMMON_COMMANDS = {
+	"/log": "/log",
+	"/msg": "/msg ",
+	"/switch": "/switch ",
+	"/part": "/part ",
+	"/join": "/join ",
+	"/nick": "/nick ",
+}
 
-import erk.macro
+CHANNEL_COMMANDS = {
+	"/me": "/me ",	
+	"/part": "/part",
+}
 
-def channel_window_input(gui,client,window,text):
+PRIVATE_COMMANDS = {
+	"/me": "/me ",	
+}
 
-	if len(text.strip())==0: return
+def handle_channel_input(window,client,text):
 
 	tokens = text.split()
 
-	# Macros
-	for macro in erk.macro.MACROS:
-		trigger = macro["trigger"]
-		minargs = int(macro["arguments"]["minimum"])
-		maxargs = int(macro["arguments"]["maximum"])
-
-		# If maxargs is set to zero, there can be an
-		# unlimited number of arguments
-		if maxargs==0: maxargs = 9999
-
-		output = macro["output"]
-
-		# Check number of arguments passed to the macro
-		if len(tokens)>0:
-			if tokens[0]==trigger:
-				tokens.pop(0) # Remove command
-				if len(tokens)>maxargs:
-					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
-					return
-				if len(tokens)<minargs:
-					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
-					return
-
-				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
-				output = output.replace("$0",' '.join(tokens))
-
-				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
-				counter = 0
-				for a in tokens:
-					output = output.replace("$"+str(counter+1),a)
-					counter = counter + 1
-
-				# If a macro does not take an unlimited number of arguments,
-				# and the macro can take can take a variable number of arguments,
-				# remove any $n symbols for missing arguments
-				if maxargs!=9999:
-					if counter < maxargs:
-						extraargs = maxargs-counter
-						counter = 1
-						while counter < maxargs:
-							output = output.replace("$"+str(counter+1),"")
-							counter = counter + 1
-
-				# Write the macro to the text input
-				window.userTextInput.setText(output)
-				window.userTextInput.moveCursor(QTextCursor.End)
-				return
-
-	KNOCK = gui.does_server_support_knock(client)
-
-	# /knock
-	if KNOCK:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
-				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				client.sendLine("KNOCK "+channel)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("KNOCK "+channel+" "+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
-				return
-
-	# /userhost
 	if len(tokens)>0:
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
-			tokens.pop(0)	# Remove command
-			client.sendLine("USERHOST "+' '.join(tokens))
-			return
-
-	# /time
-	if len(tokens)>0:
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
-			client.sendLine("TIME "+tokens[1])
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
-			client.sendLine("TIME")
-			return
-
-	CNOTICE = gui.does_server_support_cnotice(client)
-	CPRIVMSG = gui.does_server_support_cprivmsg(client)
-
-	if CPRIVMSG:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
-				return
-
-	if CNOTICE:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
-				return
-
-	# /unignore
-	if len(tokens)>0:
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.remove_ignore(client,user)
-			return
-
-	# /ignore
-	if len(tokens)>0:
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.add_ignore(client,user)
-			return
-
-	# /oper
-	if len(tokens)>0:
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			password = tokens.pop(0)
-			client.sendLine("OPER "+user+" "+password)
-			return
-
-	# /invite
-	if len(tokens)>0:
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			channel = tokens.pop(0)
-			client.invite(user,channel)
-			return
-
-	# /whois
-	if len(tokens)>0:
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.sendLine("WHOIS "+target)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			server = tokens.pop(0)
-			client.sendLine("WHOIS "+target+" "+server)
-			return
-
-	# /away
-	if len(tokens)>0:
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
-			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
-			return
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
+		if tokens[0].lower()=='/me' and len(tokens)>=2:
+			tokens.pop(0)
 			msg = ' '.join(tokens)
-			client.away(msg)
-			return
-
-	# /back
-	if len(tokens)>0:
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
-			client.back()
-			return
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
-			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
-			return
-
-	# /topic
-	if len(tokens)>0:
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_HELP)
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
-			client.topic(window.name,tokens[1])
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
-			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-				# no channel argument
-				tokens.pop(0)	# Remove command
-				msg = ' '.join(tokens)
-				client.topic(window.name,msg)
-				return
-			else:
-				# channel argument
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.topic(channel,msg)
-				return
-
-	# /quit
-	if len(tokens)>0:
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)==1:
-			client.quit()
-			return
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-			client.quit(msg)
-			return
-
-	# /part
-	if len(tokens)>0:
-		if tokens[0].lower()==PART_COMMAND and len(tokens)==1:
-			erk.events.erk_close_channel(gui,client,window.name)
-			return
-		if tokens[0].lower()==PART_COMMAND and len(tokens)>=2:
-			if len(tokens[1])>0:
-				if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-					# no channel passed as argument
-					tokens.pop(0)	# Remove command
-					msg = ' '.join(tokens)
-					if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-					if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-					erk.events.erk_close_channel(gui,client,window.name,msg)
-					return
-				else:
-					# channel passed as argument
-					tokens.pop(0)	# Remove command
-					channel = tokens.pop(0)
-					if len(tokens)>0:
-						msg = ' '.join(tokens)
-						if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-						if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-						erk.events.erk_close_channel(gui,client,channel,msg)
-						return
-					else:
-						erk.events.erk_close_channel(gui,client,channel)
-						return
-
-	# /join
-	if len(tokens)>0:
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			key = tokens.pop(0)
-			client.join(target,key)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.join(target)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
-			return
-
-	# /msg
-	if len(tokens)>0:
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)>=3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-			client.msg(target,msg)
-			msg = html.escape(msg)
-			erk.events.outgoing_message(gui,client,target,msg)
-			return
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
-			return
-
-	# /nick
-	if len(tokens)>0:
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			client.setNick(tokens.pop(0))
-			return
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
-			return
-
-	# /me
-	if len(tokens)>0:
-		if tokens[0].lower()==ME_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
+			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
+			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 			client.describe(window.name,msg)
-			msg = html.escape(msg)
-			erk.events.outgoing_action_message(gui,client,window.name,msg)
-			return
-		if tokens[0].lower()==ME_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',ME_COMMAND_HELP)
-			return
+			out = Message(ACTION_MESSAGE,client.nickname,msg)
+			window.writeText(out)
+			return True
+		if tokens[0].lower()=='/me':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
+			window.writeText(msg)
+			return True
 
-	if gui.use_emojis: text = emoji.emojize(text,use_aliases=True)
-	if gui.use_asciimojis: text = inject_asciiemojis(text)
+	# Handle channel-specific cases of the /part command
+	if len(tokens)>0:
+		if tokens[0].lower()=='/part' and len(tokens)==1:
+			window.leaveChannel(window.name)
+			return True
+		if tokens[0].lower()=='/part' and len(tokens)>=2:
+			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
+				# channel has not been passed as an argument
+				tokens.pop(0)
+				partmsg = ' '.join(tokens)
+				window.leaveChannel(window.name,partmsg)
+				return True
 
+
+	if handle_common_input(window,client,text): return
+
+	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
+	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
+	
 	client.msg(window.name,text)
 
-	text = html.escape(text)
+	out = Message(SELF_MESSAGE,client.nickname,text)
+	window.writeText(out)
 
-	erk.events.outgoing_message(gui,client,window.name,text)
-
-def private_window_input(gui,client,window,text):
-
-	if len(text.strip())==0: return
+def handle_private_input(window,client,text):
 
 	tokens = text.split()
 
-	# Macros
-	for macro in erk.macro.MACROS:
-		trigger = macro["trigger"]
-		minargs = int(macro["arguments"]["minimum"])
-		maxargs = int(macro["arguments"]["maximum"])
-
-		# If maxargs is set to zero, there can be an
-		# unlimited number of arguments
-		if maxargs==0: maxargs = 9999
-
-		output = macro["output"]
-
-		# Check number of arguments passed to the macro
-		if len(tokens)>0:
-			if tokens[0]==trigger:
-				tokens.pop(0) # Remove command
-				if len(tokens)>maxargs:
-					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
-					return
-				if len(tokens)<minargs:
-					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
-					return
-
-				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
-				output = output.replace("$0",' '.join(tokens))
-
-				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
-				counter = 0
-				for a in tokens:
-					output = output.replace("$"+str(counter+1),a)
-					counter = counter + 1
-
-				# If a macro does not take an unlimited number of arguments,
-				# and the macro can take can take a variable number of arguments,
-				# remove any $n symbols for missing arguments
-				if maxargs!=9999:
-					if counter < maxargs:
-						extraargs = maxargs-counter
-						counter = 1
-						while counter < maxargs:
-							output = output.replace("$"+str(counter+1),"")
-							counter = counter + 1
-
-				# Write the macro to the text input
-				window.userTextInput.setText(output)
-				window.userTextInput.moveCursor(QTextCursor.End)
-				return
-
-	KNOCK = gui.does_server_support_knock(client)
-
-	# /knock
-	if KNOCK:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
-				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				client.sendLine("KNOCK "+channel)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("KNOCK "+channel+" "+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
-				return
-
-	# /userhost
 	if len(tokens)>0:
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
-			tokens.pop(0)	# Remove command
-			client.sendLine("USERHOST "+' '.join(tokens))
-			return
-
-	# /time
-	if len(tokens)>0:
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
-			client.sendLine("TIME "+tokens[1])
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
-			client.sendLine("TIME")
-			return
-
-	CNOTICE = gui.does_server_support_cnotice(client)
-	CPRIVMSG = gui.does_server_support_cprivmsg(client)
-
-	if CPRIVMSG:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
-				return
-
-	if CNOTICE:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
-				return
-
-	# /unignore
-	if len(tokens)>0:
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.remove_ignore(client,user)
-			return
-
-	# /ignore
-	if len(tokens)>0:
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.add_ignore(client,user)
-			return
-
-	# /oper
-	if len(tokens)>0:
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			password = tokens.pop(0)
-			client.sendLine("OPER "+user+" "+password)
-			return
-
-	# /invite
-	if len(tokens)>0:
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			channel = tokens.pop(0)
-			client.invite(user,channel)
-			return
-
-	# /whois
-	if len(tokens)>0:
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.sendLine("WHOIS "+target)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			server = tokens.pop(0)
-			client.sendLine("WHOIS "+target+" "+server)
-			return
-
-	# /away
-	if len(tokens)>0:
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
-			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
-			return
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
+		if tokens[0].lower()=='/me' and len(tokens)>=2:
+			tokens.pop(0)
 			msg = ' '.join(tokens)
-			client.away(msg)
-			return
-
-	# /back
-	if len(tokens)>0:
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
-			client.back()
-			return
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
-			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
-			return
-
-	# /topic
-	if len(tokens)>0:
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
-			window.writeLog(ERROR_MESSAGE,'',PRIVATE_TOPIC_ERROR)
-			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
-			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-				# no channel argument
-				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_NOT_CHANNEL_ERROR.format(tokens[1]))
-				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-				return
-			else:
-				# channel argument
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.topic(channel,msg)
-				return
-
-	# /quit
-	if len(tokens)>0:
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)==1:
-			client.quit()
-			return
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-			client.quit(msg)
-			return
-
-	# /part
-	if len(tokens)>0:
-		if tokens[0].lower()==PART_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
-			return
-		if tokens[0].lower()==PART_COMMAND and len(tokens)>=2:
-			if len(tokens[1])>0:
-				if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-					# no channel passed as argument
-					window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
-					return
-				else:
-					# channel passed as argument
-					tokens.pop(0)	# Remove command
-					channel = tokens.pop(0)
-					if len(tokens)>0:
-						msg = ' '.join(tokens)
-						if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-						if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-						msg = html.escape(msg)
-						erk.events.erk_close_channel(gui,client,channel,msg)
-						return
-					else:
-						erk.events.erk_close_channel(gui,client,channel)
-						return
-
-	# /join
-	if len(tokens)>0:
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			key = tokens.pop(0)
-			client.join(target,key)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.join(target)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
-			return
-
-	# /msg
-	if len(tokens)>0:
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)>=3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-			client.msg(target,msg)
-			msg = html.escape(msg)
-			erk.events.outgoing_message(gui,client,target,msg)
-			return
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
-			return
-
-	# /nick
-	if len(tokens)>0:
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			client.setNick(tokens.pop(0))
-			return
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
-			return
-
-	# /me
-	if len(tokens)>0:
-		if tokens[0].lower()==ME_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
+			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
+			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 			client.describe(window.name,msg)
-			erk.events.outgoing_action_message(gui,client,window.name,msg)
-			return
-		if tokens[0].lower()==ME_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',ME_COMMAND_HELP)
-			return
+			out = Message(ACTION_MESSAGE,client.nickname,msg)
+			window.writeText(out)
+			return True
+		if tokens[0].lower()=='/me':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
+			window.writeText(msg)
+			return True
 
-	if gui.use_emojis: text = emoji.emojize(text,use_aliases=True)
-	if gui.use_asciimojis: text = inject_asciiemojis(text)
+	if handle_common_input(window,client,text): return
 
+	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
+	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
+	
 	client.msg(window.name,text)
 
-	text = html.escape(text)
+	out = Message(SELF_MESSAGE,client.nickname,text)
+	window.writeText(out)
 
-	erk.events.outgoing_message(gui,client,window.name,text)
+def handle_console_input(window,client,text):
+	
+	if handle_common_input(window,client,text): return
 
-def server_window_input(gui,client,window,text):
-
+def handle_input(window,client,text):
 	if len(text.strip())==0: return
+	if window.type==erk.config.CHANNEL_WINDOW:
+		handle_channel_input(window,client,text)
+	elif window.type==erk.config.PRIVATE_WINDOW:
+		handle_private_input(window,client,text)
+	elif window.type==erk.config.SERVER_WINDOW:
+		handle_console_input(window,client,text)
+
+def handle_common_input(window,client,text):
 
 	tokens = text.split()
 
-	# Macros
-	for macro in erk.macro.MACROS:
-		trigger = macro["trigger"]
-		minargs = int(macro["arguments"]["minimum"])
-		maxargs = int(macro["arguments"]["maximum"])
-
-		# If maxargs is set to zero, there can be an
-		# unlimited number of arguments
-		if maxargs==0: maxargs = 9999
-
-		output = macro["output"]
-
-		# Check number of arguments passed to the macro
-		if len(tokens)>0:
-			if tokens[0]==trigger:
-				tokens.pop(0) # Remove command
-				if len(tokens)>maxargs:
-					# window.writeLog(ERROR_MESSAGE,'',"Too many arguments to "+trigger+" macro (maximum "+str(maxargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_TOO_MANY_ARGS.format(trigger,str(maxargs)))
-					return
-				if len(tokens)<minargs:
-					#window.writeLog(ERROR_MESSAGE,'',"Not enough arguments to "+trigger+" macro (minimum "+str(minargs)+" arguments)")
-					window.writeLog(ERROR_MESSAGE,'',MACRO_NOT_ENOUGH_ARGS.format(trigger,str(minargs)))
-					return
-
-				# $0 is interpolated as all tokens passed to the macro, delimited by spaces
-				output = output.replace("$0",' '.join(tokens))
-
-				# Interpolate $n for each argument(first argument: $1, second: $2, etc)
-				counter = 0
-				for a in tokens:
-					output = output.replace("$"+str(counter+1),a)
-					counter = counter + 1
-
-				# If a macro does not take an unlimited number of arguments,
-				# and the macro can take can take a variable number of arguments,
-				# remove any $n symbols for missing arguments
-				if maxargs!=9999:
-					if counter < maxargs:
-						extraargs = maxargs-counter
-						counter = 1
-						while counter < maxargs:
-							output = output.replace("$"+str(counter+1),"")
-							counter = counter + 1
-
-				# Write the macro to the text input
-				window.userTextInput.setText(output)
-				window.userTextInput.moveCursor(QTextCursor.End)
-				return
-
-	KNOCK = gui.does_server_support_knock(client)
-
-	# /knock
-	if KNOCK:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)<2:
-				window.writeLog(ERROR_MESSAGE,'',KNOCK_COMMAND_HELP)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)==2:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				client.sendLine("KNOCK "+channel)
-				return
-			if tokens[0].lower()==KNOCK_COMMAND and len(tokens)>=3:
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("KNOCK "+channel+" "+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==KNOCK_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("KNOCK"))
-				return
-
-	# /userhost
 	if len(tokens)>0:
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)>6:
-			window.writeLog(ERROR_MESSAGE,'',USERHOST_COMMAND_HELP)
-			return
-		if tokens[0].lower()==USERHOST_COMMAND and len(tokens)<=6:
-			tokens.pop(0)	# Remove command
-			client.sendLine("USERHOST "+' '.join(tokens))
-			return
+		if tokens[0].lower()=='/log' and len(tokens)==1:
+			window.parent.stack.setCurrentWidget(client.gui.starter)
+			return True
 
-	# /time
 	if len(tokens)>0:
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',TIME_COMMAND_HELP)
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==2:
-			client.sendLine("TIME "+tokens[1])
-			return
-		if tokens[0].lower()==TIME_COMMAND and len(tokens)==1:
-			client.sendLine("TIME")
-			return
-
-	CNOTICE = gui.does_server_support_cnotice(client)
-	CPRIVMSG = gui.does_server_support_cprivmsg(client)
-
-	if CPRIVMSG:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CPRIVMSG_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CPRIVMSG_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CPRIVMSG "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CPRIVMSG_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CPRIVMSG"))
-				return
-
-	if CNOTICE:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)<4:
-				window.writeLog(ERROR_MESSAGE,'',CNOTICE_COMMAND_HELP)
-				return
-			if tokens[0].lower()==CNOTICE_COMMAND and len(tokens)>=4:
-				tokens.pop(0)	# Remove command
-				nickname = tokens.pop(0)
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.sendLine("CNOTICE "+nickname+" "+channel+" :"+msg)
-				return
-	else:
-		if len(tokens)>0:
-			if tokens[0].lower()==CNOTICE_COMMAND:
-				window.writeLog(ERROR_MESSAGE,'',CPRIV_CNOTICE_NOT_SUPPORTED.format("CNOTICE"))
-				return
-
-	# /unignore
-	if len(tokens)>0:
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',UNIGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==UNIGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.remove_ignore(client,user)
-			return
-
-	# /ignore
-	if len(tokens)>0:
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)>2:
-			window.writeLog(ERROR_MESSAGE,'',IGNORE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==IGNORE_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			gui.add_ignore(client,user)
-			return
-
-	# /oper
-	if len(tokens)>0:
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',OPER_COMMAND_HELP)
-			return
-		if tokens[0].lower()==OPER_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			password = tokens.pop(0)
-			client.sendLine("OPER "+user+" "+password)
-			return
-
-	# /invite
-	if len(tokens)>0:
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',INVITE_COMMAND_HELP)
-			return
-		if tokens[0].lower()==INVITE_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			user = tokens.pop(0)
-			channel = tokens.pop(0)
-			client.invite(user,channel)
-			return
-
-	# /whois
-	if len(tokens)>0:
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)>3:
-			window.writeLog(ERROR_MESSAGE,'',WHOIS_COMMAND_HELP)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.sendLine("WHOIS "+target)
-			return
-		if tokens[0].lower()==WHOIS_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			server = tokens.pop(0)
-			client.sendLine("WHOIS "+target+" "+server)
-			return
-
-	# /away
-	if len(tokens)>0:
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)==1:
-			client.away(AWAY_COMMAND_DEFAULT_MESSAGE)
-			return
-		if tokens[0].lower()==AWAY_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			client.away(msg)
-			return
-
-	# /back
-	if len(tokens)>0:
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)==1:
-			client.back()
-			return
-		if tokens[0].lower()==BACK_COMMAND and len(tokens)>1:
-			window.writeLog(ERROR_MESSAGE,'',BACK_COMMAND_HELP)
-			return
-
-	# /topic
-	if len(tokens)>0:
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)==2:
-			window.writeLog(ERROR_MESSAGE,'',CONSOLE_TOPIC_ERROR)
-			window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-			return
-		if tokens[0].lower()==TOPIC_COMMAND and len(tokens)>2:
-			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-				# no channel argument
-				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_NOT_CHANNEL_ERROR.format(tokens[1]))
-				window.writeLog(ERROR_MESSAGE,'',TOPIC_COMMAND_PRIVATE_HELP)
-				return
-			else:
-				# channel argument
-				tokens.pop(0)	# Remove command
-				channel = tokens.pop(0)
-				msg = ' '.join(tokens)
-				client.topic(channel,msg)
-				return
-
-	# /quit
-	if len(tokens)>0:
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)==1:
-			client.quit()
-			return
-		if tokens[0].lower()==QUIT_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-			client.quit(msg)
-			return
-
-	# /part
-	if len(tokens)>0:
-		if tokens[0].lower()==PART_COMMAND and len(tokens)==1:
-			window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
-			return
-		if tokens[0].lower()==PART_COMMAND and len(tokens)>=2:
-			if len(tokens[1])>0:
-				if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
-					# no channel passed as argument
-					window.writeLog(ERROR_MESSAGE,'',PART_COMMAND_HELP)
-					return
-				else:
-					# channel passed as argument
-					tokens.pop(0)	# Remove command
-					channel = tokens.pop(0)
-					if len(tokens)>0:
-						msg = ' '.join(tokens)
-						if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-						if gui.use_asciimojis: msg = inject_asciiemojis(msg)
-						erk.events.erk_close_channel(gui,client,channel,msg)
-						return
-					else:
-						erk.events.erk_close_channel(gui,client,channel)
-						return
-
-	# /join
-	if len(tokens)>0:
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==3:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			key = tokens.pop(0)
-			client.join(target,key)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			target = tokens.pop(0)
-			client.join(target)
-			return
-		if tokens[0].lower()==JOIN_COMMAND and (len(tokens)<2 or len(tokens)>3):
-			window.writeLog(ERROR_MESSAGE,'',JOIN_COMMAND_HELP)
-			return
-
-	# /send
-	if len(tokens)>0:
-		if tokens[0].lower()==SEND_COMMAND and len(tokens)>=2:
-			tokens.pop(0)	# Remove command
-			msg = ' '.join(tokens)
-			client.sendLine(msg)
-			return
-		if tokens[0].lower()==SEND_COMMAND and len(tokens)<2:
-			window.writeLog(ERROR_MESSAGE,'',SEND_COMMAND_HELP)
-			return
-
-	# /msg
-	if len(tokens)>0:
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)>=3:
-			tokens.pop(0)	# Remove command
+		if tokens[0].lower()=='/msg' and len(tokens)>=3:
+			tokens.pop(0)
 			target = tokens.pop(0)
 			msg = ' '.join(tokens)
-			if gui.use_emojis: msg = emoji.emojize(msg,use_aliases=True)
-			if gui.use_asciimojis: msg = inject_asciiemojis(msg)
+
+			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
+			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
+
 			client.msg(target,msg)
-			msg = html.escape(msg)
-			erk.events.outgoing_message(gui,client,target,msg)
-			return
-		if tokens[0].lower()==MSG_COMMAND and len(tokens)<3:
-			window.writeLog(ERROR_MESSAGE,'',MSG_COMMAND_HELP)
-			return
 
-	# /nick
+			if target in window.channelList():
+				swin = window.nameToChannel(target)
+				msg = Message(SELF_MESSAGE,client.nickname,msg)
+				swin.writeText(msg)
+				return True
+
+			if target in window.privateList():
+				swin = window.nameToPrivate(target)
+				msg = Message(SELF_MESSAGE,client.nickname,msg)
+				swin.writeText(msg)
+				return True
+
+			if target[:1]!='#' and target[:1]!='&' and target[:1]!='!' and target[:1]!='+':
+				# Target was not a channel
+				if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+					window.newPrivate(target)
+					swin = window.nameToPrivate(target)
+					msg = Message(SELF_MESSAGE,client.nickname,msg)
+					swin.writeText(msg)
+					return True
+
+		if tokens[0].lower()=='/msg':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /msg TARGET MESSAGE")
+			window.writeText(msg)
+			return True
+
+
 	if len(tokens)>0:
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)==2:
-			tokens.pop(0)	# Remove command
-			client.setNick(tokens.pop(0))
-			return
-		if tokens[0].lower()==NICK_COMMAND and len(tokens)!=2:
-			window.writeLog(ERROR_MESSAGE,'',NICK_COMMAND_HELP)
-			return
+		if tokens[0].lower()=='/switch' and len(tokens)==2:
+			tokens.pop(0)
+			winname = tokens.pop(0)
+			channels = window.channelList()
+			privates = window.privateList()
+
+			if winname.lower()=="list":
+				dl = channels + privates
+				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+				window.writeText(msg)
+				return True
+
+			if not winname in channels:
+				if not winname in privates:
+					msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
+					window.writeText(msg)
+					return True
+			if winname in channels:
+				swin = window.nameToChannel(winname)
+			elif winname in privates:
+				swin = window.nameToPrivate(winname)
+			else:
+				msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
+				window.writeText(msg)
+				return True
+			window.parent.stack.setCurrentWidget(swin)
+			return True
+		if tokens[0].lower()=='/switch':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/part' and len(tokens)==2:
+			tokens.pop(0)
+			channel = tokens.pop(0)
+			if not channel in window.channelList():
+				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
+				window.writeText(msg)
+				return True
+			window.leaveChannel(channel)
+			return True
+		if tokens[0].lower()=='/part' and len(tokens)>=2:
+			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
+				# channel has not been passed as an argument
+				msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
+				window.writeText(msg)
+				return True
+			tokens.pop(0)
+			channel = tokens.pop(0)
+			if not channel in window.channelList():
+				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
+				window.writeText(msg)
+				return True
+			partmsg = ' '.join(tokens)
+			window.leaveChannel(channel,partmsg)
+			return True
+		if tokens[0].lower()=='/part':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/join' and len(tokens)==3:
+			tokens.pop(0)
+			channel = tokens.pop(0)
+			key = tokens.pop(0)
+			client.join(channel,key)
+			return True
+		if tokens[0].lower()=='/join' and len(tokens)==2:
+			tokens.pop(0)
+			channel = tokens.pop(0)
+			client.join(channel)
+			return True
+		if tokens[0].lower()=='/join':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /join CHANNEL [KEY]")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/nick' and len(tokens)==2:
+			tokens.pop(0)
+			newnick = tokens.pop(0)
+			client.setNick(newnick)
+			return True
+		if tokens[0].lower()=='/nick':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /nick NEW_NICKNAME")
+			window.writeText(msg)
+			return True
+
+	return False

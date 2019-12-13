@@ -20,7 +20,6 @@ from erk.strings import *
 
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
-os.mkdir("./dist/logs")
 
 os.system("compile_resources.bat")
 

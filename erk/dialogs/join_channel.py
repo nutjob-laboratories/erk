@@ -60,18 +60,18 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle(JOIN_DIALOG_TITLE)
-		self.setWindowIcon(QIcon(CHANNEL_WINDOW_ICON))
+		self.setWindowTitle("Join channel")
+		self.setWindowIcon(QIcon(CHANNEL_ICON))
 
 		nameLayout = QHBoxLayout()
-		self.nameLabel = QLabel(JOIN_DIALOG_CHANNEL_LABEL)
+		self.nameLabel = QLabel("Channel")
 		self.name = QLineEdit()
 		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
 		keyLayout = QHBoxLayout()
-		self.keyLabel = QLabel(JOIN_DIALOG_KEY_LABEL)
+		self.keyLabel = QLabel("Key")
 		self.key = QLineEdit()
 		self.key.setEchoMode(QLineEdit.Password)
 		keyLayout.addWidget(self.keyLabel)

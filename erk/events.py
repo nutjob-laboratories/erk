@@ -2,905 +2,493 @@
 from datetime import datetime
 
 from erk.resources import *
-from erk.strings import *
+from erk.files import *
 from erk.widgets import *
-from erk.config import *
+from erk.objects import *
+from erk.strings import *
 from erk.common import *
-from erk.windows import *
-from erk.format import *
+import erk.config
+import erk.format
 
+CHANNELS = []
 CONNECTIONS = []
-CHANNEL_WINDOWS = []
-PRIVATE_WINDOWS = []
-SERVER_WINDOWS = []
-IO_WINDOWS = []
-MOTD_WINDOWS = []
+CONSOLES = []
+PRIVATES = []
 
-# |---------------------------------------------------------|
-# | HELPER FUNCTIONS AND EVENTS TRIGGERED BY THE ERK CLIENT |
-# |---------------------------------------------------------|
+UNSEEN = []
 
-def getNetTraffics():
-	return IO_WINDOWS
+def starterWrite(client,msg):
 
-def does_server_support_knock(client):
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			for c in w.supports:
-				if c.lower()=="knock": return True
-			for c in w.cmds:
-				if c.lower()=="knock": return True
-	return False
+	ts = datetime.timestamp(datetime.now())
+	pretty_timestamp = datetime.fromtimestamp(ts).strftime('%H:%M')
 
-def does_server_support_cnotice(client):
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			for c in w.supports:
-				if c.lower()=="cnotice": return True
-			for c in w.cmds:
-				if c.lower()=="cnotice": return True
-	return False
+	STARTER_MESSAGE = f'''
+	<table style="width: 100%" border="0">
+      <tbody>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">&nbsp;<b>{client.server+":"+str(client.port)} [{pretty_timestamp}]&nbsp;</b>
+          </td>
+          <td style="text-align: left; vertical-align: middle;">{msg}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+	'''
 
-def does_server_support_cprivmsg(client):
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			for c in w.supports:
-				if c.lower()=="cprivmsg": return True
-			for c in w.cmds:
-				if c.lower()=="cprivmsg": return True
-	return False
+	client.gui.starter.append(STARTER_MESSAGE)
+	client.gui.starter.moveCursor(QTextCursor.End)
 
-def get_console_window(client):
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id: return w
-	return None
-
-def clientid_to_client(cid):
+def quit_all():
 	for c in CONNECTIONS:
-		if c.id == cid: return c
-	return None
+		c.quit()
 
-def reset_command_history():
-	for w in SERVER_WINDOWS:
-		w.history_buffer = ['']
-		w.history_buffer_pointer = 0
-	for w in CHANNEL_WINDOWS:
-		w.history_buffer = ['']
-		w.history_buffer_pointer = 0
-	for w in PRIVATE_WINDOWS:
-		w.history_buffer = ['']
-		w.history_buffer_pointer = 0
-
-def set_command_history_length(cmdlength):
-	for w in SERVER_WINDOWS:
-		w.history_buffer_max = cmdlength
-	for w in CHANNEL_WINDOWS:
-		w.history_buffer_max = cmdlength
-	for w in PRIVATE_WINDOWS:
-		w.history_buffer_max = cmdlength
-
-def rebuildChannelMenus():
-	for w in CHANNEL_WINDOWS:
-		w.buildMenuBar()
-
-def closeMOTDWindow(client):
-	global MOTD_WINDOWS
+def clear_unseen(window):
+	global UNSEEN
 	clean = []
-	for w in MOTD_WINDOWS:
-		if w.client.id==client.id: continue
+	for w in UNSEEN:
+		if w.client.id==window.client.id:
+			if w.name==window.name:
+				continue
 		clean.append(w)
-	MOTD_WINDOWS = clean
+	UNSEEN = clean
 
-def hasMOTDWindow(client):
-	for w in MOTD_WINDOWS:
-		if w.client.id==client.id: return w
-	return None
-
-def CreateMOTDWindow(gui,client):
-
-	for w in MOTD_WINDOWS:
-		if w.client.id==client.id: return
-
-	w = TextWindow(client.hostname+" MOTD",gui.MDI,client,gui)
-	MOTD_WINDOWS.append(w)
-
-	w.write(w.client.flat_motd)
-
-def hasIOWindow(client):
-	for w in IO_WINDOWS:
-		if w.client.id==client.id: return w
-	return None
-
-def writeServerInput(gui,client,data):
-	for w in IO_WINDOWS:
-		if w.client.id==client.id:
-			w.writeLine(data,True)
-
-def writeServerOutput(gui,client,data):
-	for w in IO_WINDOWS:
-		if w.client.id==client.id:
-			w.writeLine(data,False)
-
-def CreateIOWindow(gui,client):
-
-	for w in IO_WINDOWS:
-		if w.client.id==client.id: return
-
-	w = IOWindow(client.hostname,gui.MDI,client,gui)
-	IO_WINDOWS.append(w)
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-
-
-def erk_close_io(gui,client):
-	global IO_WINDOWS
-	clean = []
-	for c in IO_WINDOWS:
-		if c.client.id==client.id: continue
-		clean.append(c)
-	IO_WINDOWS = clean
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-
-
-def set_channel_hostmask(gui,client,nickname,hostmask):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if nickname in window.nicks:
-				window.join(nickname,hostmask)
-
-def channel_has_hostmask(gui,client,channel,nickname):
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				if nickname in window.hostmasks: return True
+def window_has_unseen(window):
+	for w in UNSEEN:
+		if w.client.id==window.client.id:
+			if w.name==window.name: return True
 	return False
 
-def channelTurnOnNickClick():
-	for w in CHANNEL_WINDOWS:
-		w.onNickClick()
+def build_connection_display(gui,new_server=None):
 
-def channelTurnOffNickClick():
-	for w in CHANNEL_WINDOWS:
-		w.offNickClick()
+	# Make a list of expanded server nodes, and make sure they
+	# are still expanded when we rewrite the display
+	expanded = []
 
-def channelShowNicks():
-	for w in CHANNEL_WINDOWS:
-		w.nick.show()
+	if new_server: expanded.append(new_server.id)
 
-def channelHideNicks():
-	for w in CHANNEL_WINDOWS:
-		w.nick.hide()
-
-def refreshDisplayConnection(gui):
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-def uptime(gui,client,uptime):
-	gui.got_uptime(client,uptime)
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id: w.set_uptime(uptime)
-	for w in CHANNEL_WINDOWS:
-		if w.client.id==client.id: w.set_uptime(uptime)
-	for w in PRIVATE_WINDOWS:
-		if w.client.id==client.id: w.set_uptime(uptime)
-
-def getConnections():
-	return CONNECTIONS
-
-def getWindows():
-	return [CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS]
-
-def setNewSpellCheckLanguage(lang):
-	for w in SERVER_WINDOWS:
-		w.userTextInput.changeLanguage(lang)
-	for w in CHANNEL_WINDOWS:
-		w.userTextInput.changeLanguage(lang)
-	for w in PRIVATE_WINDOWS:
-		w.userTextInput.changeLanguage(lang)
-
-def toggleSpellcheck():
-	for w in SERVER_WINDOWS:
-		t = w.userTextInput.toPlainText()
-		w.userTextInput.setPlainText(t)
-		w.userTextInput.moveCursor(QTextCursor.End)
-	for w in CHANNEL_WINDOWS:
-		t = w.userTextInput.toPlainText()
-		w.userTextInput.setPlainText(t)
-		w.userTextInput.moveCursor(QTextCursor.End)
-	for w in PRIVATE_WINDOWS:
-		t = w.userTextInput.toPlainText()
-		w.userTextInput.setPlainText(t)
-		w.userTextInput.moveCursor(QTextCursor.End)
-
-def togglePlainUserLists():
-	for w in CHANNEL_WINDOWS:
-		if w.plain_user_lists:
-			w.plain_user_lists = False
+	iterator = QTreeWidgetItemIterator(gui.connection_display)
+	while True:
+		item = iterator.value()
+		if item is not None:
+			if hasattr(item,"isExpanded"):
+				if item.isExpanded():
+					if hasattr(item,"erk_client"):
+						expanded.append(item.erk_client.id)
+			iterator += 1
 		else:
-			w.plain_user_lists = True
-		w.refreshUserlist()
+			break
 
-def rerenderAllText():
-	for w in SERVER_WINDOWS:
-		w.rerenderText()
-	for w in CHANNEL_WINDOWS:
-		w.rerenderText()
-	for w in PRIVATE_WINDOWS:
-		w.rerenderText()
-	for w in IO_WINDOWS:
-		w.rerender()
+	clearQTreeWidget(gui.connection_display)
 
-def rerenderAllText_New_Font(gui):
-	gui.app.setFont(gui.font)
+	servers = []
 
-	gui.toolbar.setFont(gui.font)
-	gui.toolbar.setFont(gui.font)
-	gui.ircMenu.setFont(gui.font)
-	gui.settingsMenu.setFont(gui.font)
-	gui.helpMenu.setFont(gui.font)
-	gui.windowsMenu.setFont(gui.font)
-
-	gui.buildToolbar()
-
-	gui.connectionTree.setFont(gui.font)
-	for w in SERVER_WINDOWS:
-		w.setFont(gui.font)
-		w.channelChatDisplay.setFont(gui.font)
-		w.userTextInput.setFont(gui.font)
-		w.rerenderText()
-	for w in CHANNEL_WINDOWS:
-		w.setFont(gui.font)
-		w.channelChatDisplay.setFont(gui.font)
-		w.userTextInput.setFont(gui.font)
-		b = gui.font
-		b.setBold(True)
-		w.channelUserDisplay.setFont(b)
-
-		fm = QFontMetrics(w.channelChatDisplay.font())
-		fheight = fm.height() + 2
-		w.channelUserDisplay.setIconSize(QSize(fheight,fheight))
-
-		w.rerenderText()
-	for w in PRIVATE_WINDOWS:
-		w.setFont(gui.font)
-		w.channelChatDisplay.setFont(gui.font)
-		w.userTextInput.setFont(gui.font)
-		w.rerenderText()
-
-	for w in MOTD_WINDOWS:
-		w.setFont(gui.font)
-		w.textDisplay.setFont(gui.font)
-		c = w.contents()
-		w.clear()
-		w.write(c)
-
-	for w in IO_WINDOWS:
-		w.setFont(gui.font)
-		w.ircLineDisplay.setFont(gui.font)
-		w.doClear()
-		w.rerender()
-
-def user_double_click(gui,client,user):
-
-	# See if a private message window already exists
-	window_is_created = False
-	private_chat_window = None
-	for w in PRIVATE_WINDOWS:
-		if w.client.id==client.id:
-			if w.name==user:
-				window_is_created = True
-				private_chat_window = w
-				break
-
-	if not window_is_created:
-		private_chat_window = PrivateWindow(user,gui.MDI,client,gui)
-		PRIVATE_WINDOWS.append(private_chat_window)
-	else:
-		gui.restoreWindow(private_chat_window,private_chat_window.subwindow)
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-def erk_parted_private(gui,client,user):
-	global PRIVATE_WINDOWS
-	clean = []
-	for c in PRIVATE_WINDOWS:
-		if c.client.id==client.id:
-			if c.name==user: continue
-		clean.append(c)
-	PRIVATE_WINDOWS = clean
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-def erk_close_channel(gui,client,channel,msg=None):
-	for c in CHANNEL_WINDOWS:
-		if c.client.id==client.id:
-			if c.name==channel:
-				if msg:
-					c.part_message = msg
-				c.close()
-
-def erk_parted_channel(gui,client,channel):
-	global CHANNEL_WINDOWS
-	clean = []
-	for c in CHANNEL_WINDOWS:
-		if c.client.id==client.id:
-			if c.name==channel: continue
-		clean.append(c)
-	CHANNEL_WINDOWS = clean
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			#message = "Left "+channel
-			message = IRC_MESSAGE_CLIENT_PART.format(channel)
-			w.writeLog(SYSTEM_MESSAGE,'',message)
-
-def erk_joined_channel(gui,client,channel):
-
-	w = ChannelWindow(channel,gui.MDI,client,gui)
-	CHANNEL_WINDOWS.append(w)
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			#message = "Joined "+channel
-			message = IRC_MESSAGE_CLIENT_JOIN.format(channel)
-			w.writeLog(SYSTEM_MESSAGE,'',message)
-
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				#message = "Joined "+channel
-				message = IRC_MESSAGE_CLIENT_JOIN.format(channel)
-				window.writeLog(SYSTEM_MESSAGE,'',message)
-
-def outgoing_message(gui,client,target,message):
-	
-	for window in PRIVATE_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==target:
-				window.writeLog(SELF_MESSAGE,client.nickname,message)
-				return
-
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==target:
-				window.writeLog(SELF_MESSAGE,client.nickname,message)
-				return
-
-	if len(target)>0:
-		if target[0]=='&' or target[0]=='#' or target[0]=='!':
-			# message target is a channel
-			# do *not* open a window
-			pass
-		else:
-			# message target is a user
-			# open a private message window
-			private_chat_window = PrivateWindow(target,gui.MDI,client,gui)
-			PRIVATE_WINDOWS.append(private_chat_window)
-			gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-			private_chat_window.writeLog(CHAT_MESSAGE,target,message)
-
-def outgoing_action_message(gui,client,channel,message):
-
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeLog(ACTION_MESSAGE,client.nickname,client.nickname+" "+message)
-				return
-
-	for window in PRIVATE_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeLog(ACTION_MESSAGE,client.nickname,client.nickname+" "+message)
-
-def erk_changed_nick(gui,client,newnick):
-
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			client.sendLine("NAMES "+window.name)
-			#message = "You are now known as "+newnick
-			message = IRC_MESSAGE_SELF_NAME_CHANGE.format(newnick)
-			window.writeLog(SYSTEM_MESSAGE,'',message)
-			window.setNick(newnick)
-	
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			#message = "You are now known as "+newnick
-			message = IRC_MESSAGE_SELF_NAME_CHANGE.format(newnick)
-			w.writeLog(SYSTEM_MESSAGE,'',message)
-
-def setChannelKey(gui,client,channel,key):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel: window.setKey(key)
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-def setChannelModes(client,channel,modes):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				for l in modes:
-					if l in window.modesoff:
-						window.modesoff = window.modesoff.replace(l,"")
-					if l in window.modeson:
-						pass
-					else:
-						window.modeson = window.modeson + l
-				#window.rebuildModesMenu()
-				window.buildMenuBar()
-
-def unsetChannelModes(client,channel,modes):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				for l in modes:
-					if l in window.modeson:
-						window.modeson = window.modeson.replace(l,"")
-					if l in window.modesoff:
-						pass
-					else:
-						window.modesoff = window.modesoff + l
-				#window.rebuildModesMenu()
-				window.buildMenuBar()
-
-def writeSytemMsgChannel(client,channel,msg):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel: window.writeLog(SYSTEM_MESSAGE,'',msg)
-
-def writeErrorMsgActiveWindow(gui,client,msg):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel: window.writeLog(ERROR_MESSAGE,'',msg)
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel: window.writeLog(ERROR_MESSAGE,'',msg)
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			w.writeLog(ERROR_MESSAGE,'',msg)
-
-def writeWhoisActiveWindow(gui,client,data):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		msg = "\x02"+data.nickname+"\x0F ("+data.username+"@"+data.host+"): "+data.realname+"\n"
-		msg = msg + "\x02Channels:\x0F "+data.channels + "\n"
-		msg = msg + "\x02Server:\x0F "+data.server +"\n"
-		msg = msg + "\x02Idle:\x0F "+ data.idle +"\n"
-		pretty = datetime.fromtimestamp(int(data.signon)).strftime('%B %d, %Y at %H:%M:%S')
-		msg = msg + "\x02Sign on:\x0F "+ pretty +"\n"
-		msg = msg + "\x02"+data.nickname + "\x0F "+ data.privs +"\n"
-
-		for w in SERVER_WINDOWS:
-			if w.client.id==cid:
-				if w.name==channel:
-					w.writeLog(CHAT_MESSAGE,"WHOIS",msg)
-					return
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					window.writeLog(CHAT_MESSAGE,"WHOIS",msg)
-					return
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					window.writeLog(CHAT_MESSAGE,"WHOIS",msg)
-					return
-
-def writeInviteActiveWindow(gui,client,user,target):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		p = user.split('!')
-		if len(p)==2:
-			user = p[0]
-
-		msg = user + " invited you to "+target
-
-		for w in SERVER_WINDOWS:
-			if w.client.id==cid:
-				if w.name==channel:
-					w.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-def writeInvitingActiveWindow(gui,client,user,target):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		p = user.split('!')
-		if len(p)==2:
-			user = p[0]
-
-		msg = "You invited " + user + " to " + target
-
-		for w in SERVER_WINDOWS:
-			if w.client.id==cid:
-				if w.name==channel:
-					w.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-
-def writeTimeActiveWindow(gui,client,server,time):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		msg = server + " time: " + time
-
-		for w in SERVER_WINDOWS:
-			if w.client.id==cid:
-				if w.name==channel:
-					w.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				window.writeLog(SYSTEM_MESSAGE,"",msg)
-
-
-def writeUserhostActiveWindow(gui,client,data):
-
-	if gui.active_window:
-		channel = gui.active_window.name
-		cid = gui.active_window.client.id
-
-		msg = []
-		msg.append(BEGIN_USERHOST_DATA)
-		for e in data.split(' '):
-			if len(e.strip())==0: continue
-			msg.append(e)
-		msg.append(END_USERHOST_DATA)
-
-
-		for w in SERVER_WINDOWS:
-			if w.client.id==cid:
-				if w.name==channel:
-					#w.writeLog(SYSTEM_MESSAGE,"",e)
-
-					for l in msg:
-						w.writeLog(SYSTEM_MESSAGE,"",l)
-					return
-
-		for window in CHANNEL_WINDOWS:
-			if window.client.id==cid:
-				if window.name == channel:
-					#window.writeLog(SYSTEM_MESSAGE,"",e)
-					for l in msg:
-						window.writeLog(SYSTEM_MESSAGE,"",l)
-					return
-
-		for window in PRIVATE_WINDOWS:
-			if window.client.id==cid:
-				#window.writeLog(SYSTEM_MESSAGE,"",e)
-				for l in msg:
-					window.writeLog(SYSTEM_MESSAGE,"",l)
-				return
-
-# |------------------------------------|
-# | EVENTS TRIGGERED BY THE IRC SERVER |
-# |------------------------------------|
-
-def received_error(gui,client,msg):
-	writeErrorMsgActiveWindow(gui,client,msg)
-
-def server_options(gui,client,options):
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			w.server_options(options)
-
-def received_network_and_hostname(gui,client,network,hostname):
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			w.setWindowTitle(" "+hostname+" ("+network+")")
-
-	for w in IO_WINDOWS:
-		if w.client.id==client.id:
-			w.setWindowTitle(" "+hostname)
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-def connection(gui,client):
-	CONNECTIONS.append(client)
-
-	if client.hostname:
-		name = client.hostname
-	else:
-		name = client.server+":"+str(client.port)
-
-	if gui.show_net_traffic_from_connection:
-		w = IOWindow(name,gui.MDI,client,gui)
-		#w.subwindow.close()
-		IO_WINDOWS.append(w)
-
-	server_console_window = ServerWindow(name,gui.MDI,client,gui)
-	SERVER_WINDOWS.append(server_console_window)
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			#message = "Connected to "+client.server+":"+str(client.port)
-			message = IRC_MESSAGE_CONNECTED.format(client.server+":"+str(client.port))
-			w.writeLog(SYSTEM_MESSAGE,'',message)
-
-def disconnection(gui,client):
-	global CONNECTIONS
-	global CHANNEL_WINDOWS
-	global PRIVATE_WINDOWS
-	global SERVER_WINDOWS
-	global IO_WINDOWS
-
-	gui.client_disconnected(client)
-
-	clean = []
 	for c in CONNECTIONS:
-		if c.id==client.id: continue
-		clean.append(c)
-	CONNECTIONS = clean
+		channels = []
+		for window in CHANNELS:
+			if window.widget.client.id == c.id:
+				channels.append(window.widget)
 
-	clean = []
-	for c in CHANNEL_WINDOWS:
-		if c.client.id==client.id:
-			c.close()
-			continue
-		clean.append(c)
-	CHANNEL_WINDOWS = clean
+		for window in PRIVATES:
+			if window.widget.client.id == c.id:
+				channels.append(window.widget)
 
-	clean = []
-	for c in PRIVATE_WINDOWS:
-		if c.client.id==client.id:
-			c.close()
-			continue
-		clean.append(c)
-	PRIVATE_WINDOWS = clean
-
-	clean = []
-	for c in SERVER_WINDOWS:
-		if c.client.id==client.id:
-			c.do_actual_close = True
-			c.close()
-			continue
-		clean.append(c)
-	SERVER_WINDOWS = clean
-
-	clean = []
-	for c in IO_WINDOWS:
-		if c.client.id==client.id:
-			c.do_actual_close = True
-			c.close()
-			continue
-		clean.append(c)
-	IO_WINDOWS = clean
-
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-	gui.updateActiveChild(gui.MDI.activeSubWindow())
-
-
-def registered(gui,client):
-
-	gui.client_connected(client)
-	
-	gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			#message = "Registered with "+client.server+":"+str(client.port)
-			message = IRC_MESSAGE_REGISTERED.format(client.server+":"+str(client.port))
-			w.writeLog(SYSTEM_MESSAGE,'',message)
-
-	if gui.connect_expand_node:
-		iterator = QTreeWidgetItemIterator(gui.connectionTree)
-		while True:
-			item = iterator.value()
-			if item is not None:
-				if hasattr(item,"erk_server"):
-					if item.erk_server:
-						if hasattr(item,"erk_client"):
-							if item.erk_client.id==client.id:
-								item.setExpanded(True)
-				iterator += 1
-			else:
-				break
-
-def motd(gui,client,motd):
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			m = "\n".join(motd)
-			w.writeLog(MOTD_MESSAGE,'',m)
-			# for line in motd:
-			# 	w.writeLog(MOTD_MESSAGE,'',line)
-
-def private_message(gui,client,user,message):
-
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
-		if gui.is_ignored(client,nickname): return
-		if gui.is_ignored(client,userinfo[1]): return
-	else:
-		nickname = user
-		if gui.is_ignored(client,nickname): return
-
-	private_chat_window = None
-
-	# See if a private message window already exists
-	window_is_created = False
-	for w in PRIVATE_WINDOWS:
-		if w.client.id==client.id:
-			if w.name==nickname:
-				window_is_created = True
-				private_chat_window = w
-				break
-
-	if not window_is_created:
-		if gui.auto_create_private:
-			private_chat_window = PrivateWindow(nickname,gui.MDI,client,gui)
-			PRIVATE_WINDOWS.append(private_chat_window)
-			gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
+		if c.hostname:
+			servers.append( [c.hostname,c,channels] )
 		else:
-			for w in SERVER_WINDOWS:
-				if w.client.id==client.id:
-					w.writeLog(CHAT_MESSAGE,nickname,message)
+			servers.append( ["Connecting...",c,channels] )
+
+	root = gui.connection_display.invisibleRootItem()
+
+	# BEGIN STARTER DISPLAY
+
+	if len(CONSOLES)>0 or len(CHANNELS)>0 or len(PRIVATES)>0:
+
+		gui.connection_dock.show()
+
+		parent = QTreeWidgetItem(root)
+		parent.setText(0,MASTER_LOG_NAME)
+		parent.setIcon(0,QIcon(LOG_ICON))
+		parent.erk_client = None
+		parent.erk_channel = False
+		parent.erk_widget = gui.starter
+		parent.erk_name = MASTER_LOG_NAME
+		parent.erk_server = False
+		parent.erk_console = False
+
+		if gui.current_page:
+			if hasattr(gui.current_page,"name"):
+				if gui.current_page.name==MASTER_LOG_NAME:
+					f = parent.font(0)
+					f.setItalic(False)
+					f.setBold(True)
+					parent.setFont(0,f)
+
+	else:
+		gui.connection_dock.hide()
+
+	# END STARTER DISPLAY
+
+	for s in servers:
+
+		parent = QTreeWidgetItem(root)
+		parent.setText(0,s[0])
+		parent.setIcon(0,QIcon(SERVER_ICON))
+		parent.erk_client = s[1]
+		parent.erk_channel = False
+		parent.erk_widget = None
+		parent.erk_name = None
+		parent.erk_server = True
+		parent.erk_console = False
+
+		if erk.config.DISPLAY_CONNECTION_UPTIME:
+			child = QTreeWidgetItem(parent)
+			if s[1].id in gui.uptimers:
+				child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
+			else:
+				child.setText(0,"00:00:00")
+			child.setIcon(0,QIcon(UPTIME_ICON))
+			child.erk_uptime = True
+			child.erk_client = s[1]
+			child.erk_console = False
+
+		if s[1].id in expanded:
+			parent.setExpanded(True)
+
+		# Add console "window"
+		for c in CONSOLES:
+			if c.widget.client.id == s[1].id:
+				if s[0]!="Connecting...":
+
+					parent.erk_widget = c.widget
+
+					if c.widget.client.network:
+						parent.erk_name = c.widget.client.network
+						parent.setText(0,c.widget.client.network)
+						parent.setIcon(0,QIcon(NETWORK_ICON))
+					else:
+						parent.erk_name = s[0]
+
+					parent.erk_console = True
+
+					if window_has_unseen(c.widget):
+						f = parent.font(0)
+						f.setItalic(True)
+						parent.setFont(0,f)
+					
+					if gui.current_page:
+						if hasattr(gui.current_page,"name"):
+							if gui.current_page.name==SERVER_CONSOLE_NAME:
+								if gui.current_page.client.id==s[1].id:
+									f = parent.font(0)
+									f.setItalic(False)
+									f.setBold(True)
+									parent.setFont(0,f)
+
+		for channel in s[2]:
+			child = QTreeWidgetItem(parent)
+			child.setText(0,channel.name)
+			if channel.type==erk.config.CHANNEL_WINDOW:
+				child.erk_channel = True
+				child.setIcon(0,QIcon(CHANNEL_ICON))
+			elif channel.type==erk.config.PRIVATE_WINDOW:
+				child.setIcon(0,QIcon(NICK_ICON))
+				child.erk_channel = False
+			child.erk_client = s[1]
+			child.erk_widget = channel
+			child.erk_name = channel.name
+			child.erk_console = False
+
+			if window_has_unseen(channel):
+				f = child.font(0)
+				f.setItalic(True)
+				child.setFont(0,f)
+
+			if gui.current_page:
+				if hasattr(gui.current_page,"name"):
+					if gui.current_page.name==channel.name:
+						if gui.current_page.client.id==s[1].id:
+							f = child.font(0)
+							f.setBold(True)
+							child.setFont(0,f)
+
+							continue
+
+def rerender_all():
+	for c in CHANNELS:
+		c.widget.rerender()
+	for c in PRIVATES:
+		c.widget.rerender()
+	for c in CONSOLES:
+		c.widget.rerender()
+
+def toggle_nickspell():
+	for c in CHANNELS:
+		c.widget.input.addNicks(c.widget.nicks)
+	for c in PRIVATES:
+		c.widget.input.addNicks(c.widget.nicks)
+	for c in CONSOLES:
+		c.widget.input.addNicks(c.widget.nicks)
+
+def newspell_all(lang):
+	for c in CHANNELS:
+		c.widget.changeSpellcheckLanguage(lang)
+	for c in PRIVATES:
+		c.widget.changeSpellcheckLanguage(lang)
+	for c in CONSOLES:
+		c.widget.changeSpellcheckLanguage(lang)
+
+def resetinput_all():
+	for c in CHANNELS:
+		c.widget.reset_input()
+	for c in PRIVATES:
+		c.widget.reset_input()
+	for c in CONSOLES:
+		c.widget.reset_input()
+
+def set_fonts_all(font):
+	for c in CHANNELS:
+		c.widget.chat.setFont(font)
+		c.widget.topic.setFont(font)
+		c.widget.userlist.setFont(font)
+		c.widget.input.setFont(font)
+		c.widget.name_display.setFont(font)
+		c.widget.nick_display.setFont(font)
+	for c in PRIVATES:
+		c.widget.chat.setFont(font)
+		c.widget.input.setFont(font)
+		c.widget.name_display.setFont(font)
+	for c in CONSOLES:
+		c.widget.chat.setFont(font)
+		c.widget.input.setFont(font)
+		c.widget.name_display.setFont(font)
+
+def close_channel_window(client,name,msg=None):
+	global CHANNELS
+
+	starterWrite(client,"Left "+name)
+
+	clean = []
+	windex = 0
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				windex = client.gui.stack.indexOf(c.widget)
+				c.widget.client.part(name,msg)
+				c.widget.close()
+				continue
+		clean.append(c)
+	CHANNELS = clean
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"You left "+name) )
+
+	if len(CHANNELS)>0:
+		w = None
+		for c in CHANNELS:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
 			return
 
+	if len(PRIVATES)>0:
+		w = None
+		for c in PRIVATES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
 
-	private_chat_window.writeLog(CHAT_MESSAGE,nickname,message)
+	if len(CONSOLES)>0:
+		w = None
+		for c in CONSOLES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
 
-def public_message(gui,client,channel,user,message):
+	client.gui.stack.setCurrentWidget(client.gui.starter)
+	build_connection_display(client.gui)
 
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
+def close_private_window(client,name):
+	global PRIVATES
 
-		if gui.is_ignored(client,nickname): return
-		if gui.is_ignored(client,userinfo[1]): return
-	else:
-		nickname = user
-		if gui.is_ignored(client,nickname): return
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeLog(CHAT_MESSAGE,nickname,message)
+	starterWrite(client,"Closed private chat with "+name)
 
-def notice_message(gui,client,channel,user,message):
+	clean = []
+	windex = 0
+	for c in PRIVATES:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				windex = client.gui.stack.indexOf(c.widget)
+				c.widget.close()
+				continue
+		clean.append(c)
+	PRIVATES = clean
 
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
+	if len(CHANNELS)>0:
+		w = None
+		for c in CHANNELS:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
 
-		if gui.is_ignored(client,nickname): return
-		if gui.is_ignored(client,userinfo[1]): return
-	else:
-		nickname = user
+	if len(PRIVATES)>0:
+		w = None
+		for c in PRIVATES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
 
-		if gui.is_ignored(client,nickname): return
-	
-	if channel=='*' or user==client.hostname:
-		if client.hostname:
-			sender = client.hostname
-		else:
-			sender = client.server + ":" + str(client.port)
+	if len(CONSOLES)>0:
+		w = None
+		for c in CONSOLES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
 
-		for w in SERVER_WINDOWS:
-			if w.client.id==client.id:
-				w.writeLog(NOTICE_MESSAGE,sender,message)
+	client.gui.stack.setCurrentWidget(client.gui.starter)
+	build_connection_display(client.gui)
+
+def full_nick_list(client):
+	nicks = []
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			nicks = nicks + window.widget.nicks
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			if not window.widget.name in nicks:
+				nicks.append(window.widget.name)
+	return nicks
+
+
+def fetch_channel_window(client,channel):
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if window.widget.name==channel:
+				return window.widget
+	return None
+
+def fetch_private_window(client,channel):
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			if window.widget.name==channel:
+				return window.widget
+	return None
+
+def fetch_console_window(client):
+	for window in CONSOLES:
+		if window.widget.client.id==client.id:
+			return window.widget
+	return None
+
+def fetch_channel_list(client):
+	channels = []
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			channels.append(window.widget.name)
+	return channels
+
+def fetch_private_list(client):
+	channels = []
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			channels.append(window.widget.name)
+	return channels
+
+def name_to_channel(client,channel):
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if window.widget.name==channel:
+				return window.widget
+	return None
+
+def name_to_private(client,channel):
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			if window.widget.name==channel:
+				return window.widget
+	return None
+
+def open_private_window(client,target):
+
+	window = fetch_private_window(client,target)
+	if window:
+		gui.stack.setCurrentWidget(window)
 		return
-
-	if channel==client.nickname:
-		for w in SERVER_WINDOWS:
-			if w.client.id==client.id:
-				w.writeLog(NOTICE_MESSAGE,nickname,message)
-		return
-
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeLog(NOTICE_MESSAGE,nickname,message)
-				return
-
-	for w in SERVER_WINDOWS:
-		if w.client.id==client.id:
-			w.writeLog(NOTICE_MESSAGE,nickname,message)
-
-def action_message(gui,client,channel,user,message):
-	
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
-		if gui.is_ignored(client,nickname): return
-		if gui.is_ignored(client,userinfo[1]): return
 	else:
-		nickname = user
-		if gui.is_ignored(client,nickname): return
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeLog(ACTION_MESSAGE,nickname,nickname+" "+message)
-				return
+		starterWrite(client,"Started private chat with "+target)
 
-	private_chat_window = None
+		newchan = Chat(
+			target,
+			client,
+			erk.config.PRIVATE_WINDOW,
+			client.gui.app,
+			client.gui
+			)
 
-	# See if a private message window already exists
-	window_is_created = False
-	for w in PRIVATE_WINDOWS:
-		if w.client.id==client.id:
-			if w.name==nickname:
-				window_is_created = True
-				private_chat_window = w
-				break
+		index = client.gui.stack.addWidget(newchan)
+		if erk.config.SWITCH_TO_NEW_WINDOWS:
+			client.gui.stack.setCurrentWidget(newchan)
 
-	if not window_is_created:
-		private_chat_window = PrivateWindow(nickname,gui.MDI,client,gui)
-		PRIVATE_WINDOWS.append(private_chat_window)
-		gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
+		#client.gui.setWindowTitle(target)
 
-	private_chat_window.writeLog(ACTION_MESSAGE,nickname,nickname+" "+message)
+		PRIVATES.append( Window(index,newchan) )
 
-def client_away(gui,client):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			window.setAway()
+		# Update connection display
+		build_connection_display(client.gui)
 
-def client_unaway(gui,client):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			window.setUnaway()
+def where_is_user(client,nick):
+	channels = []
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if nick in window.widget.nicks:
+				channels.append(window.widget.name)
+			
+	return channels
 
-def banlist(gui,client,channel,banlist):
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				window.banlist = banlist
-				window.buildMenuBar()
+def channel_has_hostmask(gui,client,channel,user):
+
+	window = fetch_channel_window(client,channel)
+	if window:
+		if user in window.hostmasks: return True
+		return False
+
+	# Window not found, so return true
+	return True
+
+def line_output(gui,client,line):
+	pass
+
+def line_input(gui,client,line):
+	pass
+
+def received_error(gui,client,error):
+
+	starterWrite(client,"Error: "+error)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(ERROR_MESSAGE,'',error) )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(ERROR_MESSAGE,'',error) )
 
 def mode(gui,client,channel,user,mset,modes,args):
 	
@@ -918,20 +506,21 @@ def mode(gui,client,channel,user,mset,modes,args):
 		user = p[0]
 
 	if channel==client.nickname:
-		for w in SERVER_WINDOWS:
-			if w.client.id==client.id:
-				if mset:
-					#message = "Mode +"+modes+" set on "+channel
-					message = IRC_MESSAGE_MODE_SET.format(modes,channel)
-				else:
-					#message = "Mode -"+modes+" set on "+channel
-					message = IRC_MESSAGE_MODE_UNSET.format(modes,channel)
-				w.writeLog(SYSTEM_MESSAGE,'',message)
-				return
+		if mset:
+			msg = Message(SYSTEM_MESSAGE,'',"Mode +"+modes+" set on "+channel)
+			starterWrite(client,user+" set mode +"+modes)
+		else:
+			msg = Message(SYSTEM_MESSAGE,'',"Mode -"+modes+" set on "+channel)
+			starterWrite(client,user+" set mode -"+modes)
+		window = fetch_console_window(client)
+		if window:
+			window.writeText( msg )
+		return
 
 	reportadd = []
 	reportremove = []
-	get_names = False
+	window = fetch_channel_window(client,channel)
+	if not window: return
 
 	for m in modes:
 
@@ -942,19 +531,27 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					#msg = f"{user} set {channel}'s channel key to \"{n}\""
-					msg = IRC_MESSAGE_KEY_SET.format(user,channel,n)
-					setChannelKey(gui,client,channel,n)
-					setChannelModes(client,channel,"k")
+					window.setKey(n)
+					if 'k' in window.modesoff:
+						window.modesoff = window.modesoff.replace('k','')
+					if not 'k' in window.modeson:
+						window.modeson = window.modeson +'k'
+					msg = Message(SYSTEM_MESSAGE,'',user+" set "+channel+"'s key to \""+n+"\"")
 				else:
-					msg = ''
+					msg = None
 			else:
-				#msg = f"{user} unset {channel}'s channel key"
-				msg = IRC_MESSAGE_KEY_UNSET.format(user,channel)
-				setChannelKey(gui,client,channel,'')
-				unsetChannelModes(client,channel,"k")
-			if len(msg)>0:
-				if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
+				window.setKey('')
+				if 'k' in window.modeson:
+					window.modeson = window.modeson.replace('k','')
+				if not 'k' in window.modesoff:
+					window.modesoff = window.modesoff +'k'
+				msg = Message(SYSTEM_MESSAGE,'',user+" unset "+channel+"'s key")
+			if msg:
+				window.writeText( msg )
+
+			# Update connection display
+			build_connection_display(gui)
+
 			continue
 
 		if m=="o":
@@ -964,19 +561,17 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					#msg = f"{user} granted {channel} operator status to {n}"
-					msg = IRC_MESSAGE_GRANT_OP.format(user,channel,n)
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} operator status to {n}")
 				else:
-					msg = ''
+					msg = None
 			else:
 				if n:
 					#msg = f"{user} took {channel} operator status from {n}"
-					msg = IRC_MESSAGE_REMOVE_OP.format(user,channel,n)
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} operator status from {n}")
 				else:
-					msg = ''
-			if len(msg)>0:
-				if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
-			get_names = True
+					msg = None
+			if msg:
+				window.writeText( msg )
 			continue
 
 		if m=="v":
@@ -986,105 +581,136 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					#msg = f"{user} granted {channel} voiced status to {n}"
-					msg = IRC_MESSAGE_GRANT_VOICE.format(user,channel,n)
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} voiced status to {n}")
 				else:
-					msg = ''
+					msg = None
 			else:
 				if n:
-					#msg = f"{user} took {channel} voiced status from {n}"
-					msg = IRC_MESSAGE_REMOVE_VOICE.format(user,channel,n)
+					#msg = f"{user} took {channel} operator status from {n}"
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} voiced status from {n}")
 				else:
-					msg = ''
-			if len(msg)>0:
-				if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
-			get_names = True
-			continue
-
-		if m=="b":
-			if mset:
-				for u in args:
-					#msg = f"{user} banned {u} from {channel}"
-					msg = IRC_MESSAGE_BAN.format(user,u,channel)
-					if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
-					client.sendLine(f"MODE {channel} +b")
-			else:
-				for u in args:
-					#msg = f"{user} unbanned {u} from {channel}"
-					msg = IRC_MESSAGE_UNBAN.format(user,u,channel)
-					if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
-					client.sendLine(f"MODE {channel} +b")
+					msg = None
+			if msg:
+				window.writeText( msg )
 			continue
 
 		if m=="c":
 			if mset:
-				setChannelModes(client,channel,"c")
+				if 'c' in window.modesoff:
+					window.modesoff = window.modesoff.replace('c','')
+				if not 'c' in window.modeson:
+					window.modeson = window.modeson +'c'
 				reportadd.append("c")
 			else:
-				unsetChannelModes(client,channel,"c")
+				if 'c' in window.modeson:
+					window.modeson = window.modeson.replace('c','')
+				if not 'c' in window.modesoff:
+					window.modesoff = window.modesoff +'c'
 				reportremove.append("c")
 			continue
 
 		if m=="C":
 			if mset:
-				setChannelModes(client,channel,"C")
+				if "C" in window.modesoff:
+					window.modesoff = window.modesoff.replace("C",'')
+				if not "C" in window.modeson:
+					window.modeson = window.modeson +"C"
 				reportadd.append("C")
 			else:
-				unsetChannelModes(client,channel,"C")
+				if "C" in window.modeson:
+					window.modeson = window.modeson.replace("C",'')
+				if not "C" in window.modesoff:
+					window.modesoff = window.modesoff +"C"
 				reportremove.append("C")
 			continue
 
 		if m=="m":
 			if mset:
-				setChannelModes(client,channel,"m")
+				if "m" in window.modesoff:
+					window.modesoff = window.modesoff.replace("m",'')
+				if not "m" in window.modeson:
+					window.modeson = window.modeson +"m"
 				reportadd.append("m")
 			else:
-				unsetChannelModes(client,channel,"m")
+				if "m" in window.modeson:
+					window.modeson = window.modeson.replace("m",'')
+				if not "m" in window.modesoff:
+					window.modesoff = window.modesoff +"m"
 				reportremove.append("m")
 			continue
 
 		if m=="n":
 			if mset:
-				setChannelModes(client,channel,"n")
+				if "n" in window.modesoff:
+					window.modesoff = window.modesoff.replace("n",'')
+				if not "n" in window.modeson:
+					window.modeson = window.modeson +"n"
 				reportadd.append("n")
 			else:
-				unsetChannelModes(client,channel,"n")
+				if "n" in window.modeson:
+					window.modeson = window.modeson.replace("n",'')
+				if not "n" in window.modesoff:
+					window.modesoff = window.modesoff +"n"
 				reportremove.append("n")
 			continue
 
 		if m=="p":
 			if mset:
-				setChannelModes(client,channel,"p")
+				if "p" in window.modesoff:
+					window.modesoff = window.modesoff.replace("p",'')
+				if not "p" in window.modeson:
+					window.modeson = window.modeson +"p"
 				reportadd.append("p")
 			else:
-				unsetChannelModes(client,channel,"p")
+				if "p" in window.modeson:
+					window.modeson = window.modeson.replace("p",'')
+				if not "p" in window.modesoff:
+					window.modesoff = window.modesoff +"p"
 				reportremove.append("p")
 			continue
 
 		if m=="s":
 			if mset:
-				setChannelModes(client,channel,"s")
+				if "s" in window.modesoff:
+					window.modesoff = window.modesoff.replace("s",'')
+				if not "s" in window.modeson:
+					window.modeson = window.modeson +"s"
 				reportadd.append("s")
 			else:
-				unsetChannelModes(client,channel,"s")
+				if "s" in window.modeson:
+					window.modeson = window.modeson.replace("s",'')
+				if not "s" in window.modesoff:
+					window.modesoff = window.modesoff +"s"
 				reportremove.append("s")
 			continue
 
 		if m=="t":
 			if mset:
-				setChannelModes(client,channel,"t")
+				if "t" in window.modesoff:
+					window.modesoff = window.modesoff.replace("t",'')
+				if not "t" in window.modeson:
+					window.modeson = window.modeson +"t"
 				reportadd.append("t")
 			else:
-				unsetChannelModes(client,channel,"t")
+				if "t" in window.modeson:
+					window.modeson = window.modeson.replace("t",'')
+				if not "t" in window.modesoff:
+					window.modesoff = window.modesoff +"t"
 				reportremove.append("t")
 			continue
 
 		if m=="i":
 			if mset:
-				setChannelModes(client,channel,"i")
+				if "i" in window.modesoff:
+					window.modesoff = window.modesoff.replace("i",'')
+				if not "i" in window.modeson:
+					window.modeson = window.modeson +"i"
 				reportadd.append("i")
 			else:
-				unsetChannelModes(client,channel,"i")
+				if "i" in window.modeson:
+					window.modeson = window.modeson.replace("i",'')
+				if not "i" in window.modesoff:
+					window.modesoff = window.modesoff +"i"
 				reportremove.append("i")
 			continue
 
@@ -1095,149 +721,581 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 	if len(reportadd)>0 or len(reportremove)>0:
 		if mset:
-			#msg = f"{user} set +{''.join(reportadd)} in {channel}"
-			msg = IRC_MESSAGE_USER_MODE_SET.format(user,''.join(reportadd),channel)
-			if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
+
+			for m in reportadd:
+				if not m in window.modeson: window.modeson = window.modeson + m
+				if m in window.modesoff: window.modesoff.replace(m,'')
+
+			msg = Message(SYSTEM_MESSAGE,'',f"{user} set +{''.join(reportadd)} in {channel}")
+			window.writeText( msg )
 		else:
-			#msg = f"{user} set -{''.join(reportremove)} in {channel}"
-			msg = IRC_MESSAGE_USER_MODE_UNSET.format(user,''.join(reportadd),channel)
-			if not gui.ignore_mode: writeSytemMsgChannel(client,channel,msg)
 
-	if get_names: client.sendLine(f"NAMES {channel}")
+			for m in reportremove:
+				if not m in window.modesoff: window.modesoff = window.modesoff + m
+				if m in window.modeson: window.modeson.replace(m,'')
 
+			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}")
+			window.writeText( msg )
 
-def join(gui,client,user,channel):
+	if erk.config.DISPLAY_CHANNEL_MODES:
+		# Change the channel's name display
+		if len(window.modeson)>0:
+			window.name_display.setText("<b>"+window.name+"</b> <i>+"+window.modeson+"</i>")
+		else:
+			window.name_display.setText("<b>"+window.name+"</b>")
 
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
+def toggle_channel_mode_display():
+	for window in CHANNELS:
+		if erk.config.DISPLAY_CHANNEL_MODES:
+			if len(window.widget.modeson)>0:
+				window.widget.name_display.setText("<b>"+window.widget.name+"</b> <i>+"+window.widget.modeson+"</i>")
+			else:
+				window.widget.name_display.setText("<b>"+window.widget.name+"</b>")
+		else:
+			window.widget.name_display.setText("<b>"+window.widget.name+"</b>")
+
+def received_hostmask_for_channel_user(gui,client,nick,hostmask):
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if nick in window.widget.nicks:
+				window.widget.hostmasks[nick] = hostmask
+
+def received_whois(gui,client,whoisdata):
+	pass
+
+def topic(gui,client,setter,channel,topic):
+	p = setter.split('!')
+	if len(p)==2:
+		nick = p[0]
 	else:
-		nickname = user
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				client.sendLine("NAMES "+window.name)
-				if not gui.ignore_join:
-					message = IRC_MESSAGE_JOIN.format(nickname,channel)
-					window.writeLog(SYSTEM_MESSAGE,'',message)
+		nick = setter
 
-	for window in SERVER_WINDOWS:
-		if window.client.id==client.id:
-			message = IRC_MESSAGE_JOIN.format(nickname,channel)
-			window.writeLog(SYSTEM_MESSAGE,'',message)
+	if nick=='': nick = "The server"
 
-def part(gui,client,user,channel):
-	
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
+	window = fetch_channel_window(client,channel)
+	if window:
+		window.setTopic(topic)
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"") )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic in "+channel+" to \""+topic+"\"") )
+
+def userlist(gui,client,channel,userlist):
+
+	# Update connection display
+	build_connection_display(gui)
+
+	window = fetch_channel_window(client,channel)
+	if window: window.writeUserlist(userlist)
+
+def quit(gui,client,nick,message):
+	pass
+
+def action_message(gui,client,target,user,message):
+	global UNSEEN
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
 	else:
-		nickname = user
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name == channel:
-				client.sendLine("NAMES "+window.name)
-				if not gui.ignore_part:
-					message = IRC_MESSAGE_PART.format(nickname,channel)
-					window.writeLog(SYSTEM_MESSAGE,'',message)
-				window.part(nickname)
+		nick = user
 
-	for window in SERVER_WINDOWS:
-		if window.client.id==client.id:
-			message = IRC_MESSAGE_PART.format(nickname,channel)
-			window.writeLog(SYSTEM_MESSAGE,'',message)
+	window = fetch_channel_window(client,target)
+	if window:
+		window.writeText( Message(ACTION_MESSAGE,user,message) )
+	else:
+		window = fetch_private_window(client,nick)
+		if window:
+			window.writeText( Message(ACTION_MESSAGE,user,message) )
+		else:
+			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+				newchan = Chat(
+					nick,
+					client,
+					erk.config.PRIVATE_WINDOW,
+					gui.app,
+					gui
+					)
+
+				index = gui.stack.addWidget(newchan)
+				if erk.config.SWITCH_TO_NEW_WINDOWS:
+					gui.stack.setCurrentWidget(newchan)
+
+				#gui.setWindowTitle(nick)
+
+				PRIVATES.append( Window(index,newchan) )
+
+				newchan.writeText( Message(ACTION_MESSAGE,user,message) )
+
+				window = newchan
+
+				# Update connection display
+				build_connection_display(gui)
+			else:
+				# Write the private messages to the console window
+				window = fetch_console_window(client)
+				if window:
+					window.writeText( Message(ACTION_MESSAGE,user,message) )
+
+					posted_to_current = False
+					if gui.current_page:
+						if gui.current_page.name==SERVER_CONSOLE_NAME:
+							if gui.current_page.client.id==client.id:
+								posted_to_current = True
+
+					if not posted_to_current:
+						UNSEEN.append(window)
+
+						# Update connection display
+						build_connection_display(gui)
+			return
+
+	posted_to_current = False
+	if gui.current_page:
+		if gui.current_page.name==nick:
+			if gui.current_page.client.id==client.id:
+				posted_to_current = True
+
+	if not posted_to_current:
+		if not window_has_unseen(window):
+			UNSEEN.append(window)
+
+		# Update connection display
+		build_connection_display(gui)
 
 def nick(gui,client,oldnick,newnick):
+
+	channels = where_is_user(client,oldnick)
+	msg = Message(SYSTEM_MESSAGE,'',oldnick+" is now known as "+newnick)
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if window.widget.name in channels:
+				window.widget.writeText(msg)
 	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if oldnick in window.nicks:
-				client.sendLine("NAMES "+window.name)
-				if not gui.ignore_rename:
-					message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
-					window.writeLog(SYSTEM_MESSAGE,'',message)
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			if window.widget.name==oldnick:
+				window.widget.name = newnick
+				window.widget.name_display.setText("<b>"+newnick+"</b>")
 
-	for window in PRIVATE_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==oldnick:
-				window.name = newnick
-				window.setWindowTitle(" "+newnick)
-				message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
-				window.writeLog(SYSTEM_MESSAGE,'',message)
-				gui.populateConnectionDisplay(CONNECTIONS,CHANNEL_WINDOWS,PRIVATE_WINDOWS,SERVER_WINDOWS)
+	window = fetch_console_window(client)
+	if window:
+		window.writeText(msg)
 
-	for window in SERVER_WINDOWS:
-		if window.client.id==client.id:
-			message = IRC_MESSAGE_RENAME.format(oldnick,newnick)
-			window.writeLog(SYSTEM_MESSAGE,'',message)
+	# Update connection display
+	build_connection_display(gui)
 
 
-def topic(gui,client,user,channel,topic):
+def erk_changed_nick(gui,client,newnick):
+	starterWrite(client,"Nickname changed to "+newnick)
 
-	if user=='':
-		nickname = client.hostname
-	else:
-		userinfo = user.split('!')
-		if len(userinfo)==2:
-			nickname = userinfo[0]
-		else:
-			nickname = user
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
+
+	# Update channel window nick displays
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			window.widget.nickDisplay(newnick)
+
+def erk_joined_channel(gui,client,channel):
+	global CHANNELS
+
+	starterWrite(client,"Joined "+channel)
 	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==channel:
-				window.writeTopic(topic.strip())
-				if topic.strip()!='':
-					if not gui.ignore_topic:
-						message = IRC_MESSAGE_SET_TOPIC.format(nickname,topic)
-						window.writeLog(SYSTEM_MESSAGE,'',message)
-				else:
-					if not gui.ignore_topic:
-						message = IRC_MESSAGE_NO_TOPIC.format(nickname)
-						window.writeLog(SYSTEM_MESSAGE,'',message)
+	newchan = Chat(
+		channel,
+		client,
+		erk.config.CHANNEL_WINDOW,
+		gui.app,
+		gui
+		)
 
-def quit(gui,client,user,message):
+	index = gui.stack.addWidget(newchan)
+	if erk.config.SWITCH_TO_NEW_WINDOWS:
+		gui.stack.setCurrentWidget(newchan)
 
-	userinfo = user.split('!')
-	if len(userinfo)==2:
-		nickname = userinfo[0]
-	else:
-		nickname = user
+	#gui.setWindowTitle(channel)
 
-	for window in SERVER_WINDOWS:
-		if window.client.id==client.id:
-			if message!='':
-				msg = IRC_MESSAGE_QUIT.format(nickname,message)
+	CHANNELS.append( Window(index,newchan) )
+
+	newchan.writeText( Message(SYSTEM_MESSAGE,'',"Joined "+channel) )
+
+	# Set focus to the input widget
+	newchan.input.setFocus()
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"Joined "+channel) )
+
+	# Update connection display
+	build_connection_display(gui)
+
+def uptime(gui,client,uptime):
+	
+	gui.uptimers[client.id] = uptime
+
+	if erk.config.DISPLAY_CONNECTION_UPTIME:
+		iterator = QTreeWidgetItemIterator(gui.connection_display)
+		while True:
+			item = iterator.value()
+			if item is not None:
+				if hasattr(item,"erk_uptime"):
+					if item.erk_uptime:
+						if item.erk_client.id==client.id:
+							item.setText(0,prettyUptime(uptime))
+				iterator += 1
 			else:
-				msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
-			window.writeLog(SYSTEM_MESSAGE,'',msg)
-	
-	for window in CHANNEL_WINDOWS:
-		if window.client.id==client.id:
-			if nickname in window.nicks:
-				client.sendLine("NAMES "+window.name)
-				if message!='':
-					msg = IRC_MESSAGE_QUIT.format(nickname,message)
-				else:
-					msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
-				window.writeLog(SYSTEM_MESSAGE,'',msg)
+				break
 
-	for window in PRIVATE_WINDOWS:
-		if window.client.id==client.id:
-			if window.name==nickname:
-				if message!='':
-					msg = IRC_MESSAGE_QUIT.format(nickname,message)
-				else:
-					msg = IRC_MESSAGE_QUIT_NO_MESSAGE.format(nickname)
-				window.writeLog(SYSTEM_MESSAGE,'',msg)
+def part(gui,client,user,channel):
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+	else:
+		nick = user
 
-def userlist(gui,client,channel,users):
+	window = fetch_channel_window(client,channel)
+	if window: window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel") )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left "+channel) )
+
+def join(gui,client,user,channel):
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+	else:
+		nick = user
+
+	window = fetch_channel_window(client,channel)
+	if window: window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel") )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined "+channel) )
+
+def motd(gui,client,motd):
 	
-	for win in CHANNEL_WINDOWS:
-		# Make sure the event and the window are using
-		# the same IRC connection
-		if client.id==win.client.id:
-			if win.name==channel:
-				win.writeUserlist(users)
+	window = fetch_console_window(client)
+	window.writeText( Message(SYSTEM_MESSAGE,'',"BEGIN MOTD") )
+	if window:
+		for line in motd:
+			window.writeText( Message(SYSTEM_MESSAGE,'',line) )
+	window.writeText( Message(SYSTEM_MESSAGE,'',"END MOTD") )
+
+def notice_message(gui,client,target,user,message):
+
+	if len(user.strip())==0:
+		if client.hostname:
+			user = client.hostname
+		else:
+			user = client.server+":"+str(client.port)
+
+	window = fetch_channel_window(client,target)
+	if window:
+		window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
+		posted_to_current = False
+		if gui.current_page:
+			if gui.current_page.name==target:
+				if gui.current_page.client.id==client.id:
+					posted_to_current = True
+
+		if not posted_to_current:
+			if not window_has_unseen(window):
+				UNSEEN.append(window)
+
+			# Update connection display
+			build_connection_display(gui)
+		return
+
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+	else:
+		nick = user
+
+	window = fetch_private_window(client,nick)
+	if window:
+		window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
+		posted_to_current = False
+		if gui.current_page:
+			if gui.current_page.name==nick:
+				if gui.current_page.client.id==client.id:
+					posted_to_current = True
+
+		if not posted_to_current:
+			if not window_has_unseen(window):
+				UNSEEN.append(window)
+
+			# Update connection display
+			build_connection_display(gui)
+
+		return
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
+		posted_to_current = False
+		if gui.current_page:
+			if gui.current_page.name==SERVER_CONSOLE_NAME:
+				if gui.current_page.client.id==client.id:
+					posted_to_current = True
+
+		if not posted_to_current:
+			if not window_has_unseen(window):
+				UNSEEN.append(window)
+
+			# Update connection display
+			build_connection_display(gui)
+
+def private_message(gui,client,user,message):
+	global UNSEEN
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+	else:
+		nick = user
+	
+	msg = Message(CHAT_MESSAGE,user,message)
+
+	window = fetch_private_window(client,nick)
+	if window:
+		window.writeText(msg)
+	else:
+		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+			newchan = Chat(
+				nick,
+				client,
+				erk.config.PRIVATE_WINDOW,
+				gui.app,
+				gui
+				)
+
+			index = gui.stack.addWidget(newchan)
+			if erk.config.SWITCH_TO_NEW_WINDOWS:
+				gui.stack.setCurrentWidget(newchan)
+
+			#gui.setWindowTitle(nick)
+
+			PRIVATES.append( Window(index,newchan) )
+
+			newchan.writeText(msg)
+
+			window = newchan
+
+			# Update connection display
+			build_connection_display(gui)
+		else:
+			# Write the private messages to the console window
+			window = fetch_console_window(client)
+			if window:
+				window.writeText(msg)
+
+				posted_to_current = False
+				if gui.current_page:
+					if gui.current_page.name==SERVER_CONSOLE_NAME:
+						if gui.current_page.client.id==client.id:
+							posted_to_current = True
+
+				if not posted_to_current:
+
+					found = False
+					for w in UNSEEN:
+						if w.client.id==window.client.id:
+							if w.name==window.name:
+								found = True
+
+					if not found: UNSEEN.append(window)
+
+					# Update connection display
+					build_connection_display(gui)
+		return
+
+	posted_to_current = False
+	if gui.current_page:
+		if gui.current_page.name==nick:
+			if gui.current_page.client.id==client.id:
+				posted_to_current = True
+
+	if not posted_to_current:
+		
+		found = False
+		for w in UNSEEN:
+			if w.client.id==window.client.id:
+				if w.name==window.name:
+					found = True
+
+		if not found: UNSEEN.append(window)
+
+		# Update connection display
+		build_connection_display(gui)
+
+def public_message(gui,client,channel,user,message):
+	#print(target+" "+user+": "+message)
+
+	msg = Message(CHAT_MESSAGE,user,message)
+
+	window = fetch_channel_window(client,channel)
+	if window: window.writeText(msg)
+
+	posted_to_current = False
+	if gui.current_page:
+		if gui.current_page.name==channel:
+			if gui.current_page.client.id==client.id:
+				posted_to_current = True
+
+	if not posted_to_current:
+		if window:
+			global UNSEEN
+			found = False
+			for w in UNSEEN:
+				if w.client.id==window.client.id:
+					if w.name==window.name:
+						found = True
+
+			if not found: UNSEEN.append(window)
+
+			# Update connection display
+			build_connection_display(gui)
+
+def registered(gui,client):
+
+	starterWrite(client,"Registered with server")
+
+	gui.registered(client)
+
+	window = fetch_console_window(client)
+	window.writeText( Message(SYSTEM_MESSAGE,'',"Registered with "+client.server+":"+str(client.port)+"!") )
+	
+	# Update connection display
+	build_connection_display(gui)
+
+def disconnect_from_server(client):
+
+	starterWrite(client,"Sent QUIT command to server")
+
+	client.gui.quitting.append(client.server+str(client.port))
+
+	client.quit()
+
+def disconnection(gui,client):
+
+	starterWrite(client,"Disconnected from server")
+
+	global CONNECTIONS
+	clean = []
+	for c in CONNECTIONS:
+		if c.id == client.id: continue
+		clean.append(c)
+	CONNECTIONS = clean
+
+	global PRIVATES
+	clean = []
+	for c in PRIVATES:
+		if c.widget.client.id == client.id:
+			c.widget.close()
+			continue
+		clean.append(c)
+	PRIVATES = clean
+
+	global CHANNELS
+	clean = []
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			c.widget.close()
+			continue
+		clean.append(c)
+	CHANNELS = clean
+
+	global CONSOLES
+	clean = []
+	for window in CONSOLES:
+		if window.widget.client.id==client.id:
+			window.widget.close()
+			continue
+		clean.append(window)
+	CONSOLES = clean
+
+	if len(CHANNELS)>0:
+		w = None
+		for c in CHANNELS:
+			w = c.widget
+		client.gui.stack.setCurrentWidget(w)
+	elif len(PRIVATES)>0:
+		w = None
+		for c in PRIVATES:
+			w = c.widget
+		client.gui.stack.setCurrentWidget(w)
+	elif len(CONSOLES)>0:
+		w = None
+		for c in CONSOLES:
+			w = c.widget
+		client.gui.stack.setCurrentWidget(w)
+	else:
+		client.gui.stack.setCurrentWidget(client.gui.starter)
+
+	# Update connection display
+	build_connection_display(gui)
+
+def connection(gui,client):
+	global CONNECTIONS
+	CONNECTIONS.append(client)
+
+	starterWrite(client,"Connected to server")
+
+	window = fetch_console_window(client)
+	window.writeText( Message(SYSTEM_MESSAGE,'',"Connected to "+client.server+":"+str(client.port)+"!") )
+
+	# Update connection display
+	build_connection_display(gui,client)
+
+def server_options(gui,client,options):
+	
+	window = fetch_console_window(client)
+
+	window.writeText( Message(SYSTEM_MESSAGE,'', ", ".join(options)    ) )
+
+def banlist(gui,client,channel,banlist):
+	pass
+
+def startup(gui,client):
+	global CONSOLES
+
+	starterWrite(client,"Connecting to server...")
+
+	newconsole = Chat(
+		SERVER_CONSOLE_NAME,
+		client,
+		erk.config.SERVER_WINDOW,
+		gui.app,
+		gui
+		)
+
+	index = gui.stack.addWidget(newconsole)
+
+	# if erk.config.SWITCH_TO_NEW_WINDOWS:
+	# 	gui.stack.setCurrentWidget(newconsole)
+
+	if client.hostname:
+		gui.setWindowTitle(client.hostname)
+	else:
+		gui.setWindowTitle(client.server+":"+str(client.port))
+
+	CONSOLES.append( Window(index,newconsole) )
+
+	newconsole.writeText( Message(SYSTEM_MESSAGE,'',"Connecting to "+client.server+":"+str(client.port)+"...") )
+
+	# Set focus to the input widget
+	newconsole.input.setFocus()
+	
+	# Update connection display
+	build_connection_display(gui)

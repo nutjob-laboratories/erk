@@ -1,3 +1,7 @@
+Version 0.700
+	* Complete re-write
+	* All-new items: no more MDI interface, uses far less memory, is far more stable, and is far easier to use
+
 Version 0.600
 	* Complete re-write
 	* Removed the "Connections" menu, and placed its contents in the main menu

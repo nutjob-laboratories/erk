@@ -1,43 +1,30 @@
 
 from datetime import datetime
+import html
 from itertools import combinations
 
-import html
+from erk.files import *
+from erk.objects import *
+import erk.config
 
-from erk.config import *
-from erk.resources import *
+STYLES = get_text_format_settings()
 
-CHAT_MESSAGE = "0"
-SELF_MESSAGE = "1"
-ACTION_MESSAGE = "2"
-NOTICE_MESSAGE = "3"
-ERROR_MESSAGE = "4"
-SYSTEM_MESSAGE = "5"
-MOTD_MESSAGE = "6"
-HR_MESSAGE = "7"
-
-HORIZONTAL_RULE = f'''
-<table width="100%" border="0">
-	<tbody>
-		<tr>
-			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
-			</td>
-		</tr>
-	</tbody>
-</table>'''
-
-UNSEEN_MESSAGES_MARKER = f'''
-<table width="100%" border="0">
-	<tbody>
-		<tr>
-			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;"><small>&nbsp;</small>
-			</td>
-			<td><center><small>NEW</small></center></td>
-			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;"><small>&nbsp;</small>
-			</td>
-		</tr>
-	</tbody>
-</table>'''
+IRC_00 = "#FFFFFF"
+IRC_01 = "#000000"
+IRC_02 = "#0000FF"
+IRC_03 = "#008000"
+IRC_04 = "#FF0000"
+IRC_05 = "#A52A2A"
+IRC_06 = "#800080"
+IRC_07 = "#FFA500"
+IRC_08 = "#FFFF00"
+IRC_09 = "#90EE90"
+IRC_10 = "#008080"
+IRC_11 = "#00FFFF"
+IRC_12 = "#ADD8E6"
+IRC_13 = "#FFC0CB"
+IRC_14 = "#808080"
+IRC_15 = "#D3D3D3"
 
 TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;"><div style="!TIMESTAMP_STYLE!">[!TIME!]</div></td><td style="font-size:small;">&nbsp;</td>"""
 
@@ -46,18 +33,6 @@ MESSAGE_TEMPLATE = f"""
 	<tbody>
 	<tr>!TIMESTAMP!
 		<td style="text-align: right; vertical-align: top;"><div style="!ID_STYLE!">!ID!</div></td>
-		<td style="text-align: left; vertical-align: top;">&nbsp;</td>
-		!INSERT_MESSAGE_TEMPLATE!
-	</tr>
-	</tbody>
-</table>
-"""
-
-MESSAGE_TEMPLATE_USERLINK = f"""
-<table style="width: 100%;" border="0">
-	<tbody>
-	<tr>!TIMESTAMP!
-		<td style="text-align: right; vertical-align: top;"><a style="color:inherit; text-decoration: none;" href="!ID!"><div style="!ID_STYLE!">!ID!</div></a></td>
 		<td style="text-align: left; vertical-align: top;">&nbsp;</td>
 		!INSERT_MESSAGE_TEMPLATE!
 	</tr>
@@ -78,147 +53,99 @@ SYSTEM_TEMPLATE = f"""
 MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><div style="!MESSAGE_STYLE!">!MESSAGE!</div></td>"""
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
-IRC_00 = "#FFFFFF"
-IRC_01 = "#000000"
-IRC_02 = "#0000FF"
-IRC_03 = "#008000"
-IRC_04 = "#FF0000"
-IRC_05 = "#A52A2A"
-IRC_06 = "#800080"
-IRC_07 = "#FFA500"
-IRC_08 = "#FFFF00"
-IRC_09 = "#90EE90"
-IRC_10 = "#008080"
-IRC_11 = "#00FFFF"
-IRC_12 = "#ADD8E6"
-IRC_13 = "#FFC0CB"
-IRC_14 = "#808080"
-IRC_15 = "#D3D3D3"
 
-def render_message(styles,mtype,user,message,timestamp=None,max_nick_size=20,no_html=True,irc_color=True,links=True,show_timestamp=True,timestamp_seconds=False,timestamp_24=True,filter_profanity=False,click_usernames=True):
+def render_message(message):
 
-	# message = html.escape(message)
+	msg_to_display = message.contents
 
-	if no_html: message = remove_html_markup(message)
-	if links: message = inject_www_links(message,styles[HYPERLINK_STYLE_NAME])
-	if irc_color:
-		if string_has_irc_formatting_codes(message):
-			message = convert_irc_color_to_html(message)
+	# First, make sure that the message doesn't contain
+	# any HTML formatting stuff; to do this, we escape all
+	# HTML-relevant stuff so the message is *not* rendered
+	# as HTML
+	msg_to_display = html.escape(msg_to_display)
+
+	if erk.config.CONVERT_URLS_TO_LINKS:
+		msg_to_display = inject_www_links(msg_to_display,STYLES["hyperlink"])
+
+	if erk.config.DISPLAY_IRC_COLORS:
+		if string_has_irc_formatting_codes(msg_to_display):
+			msg_to_display = convert_irc_color_to_html(msg_to_display)
 	else:
-		message = strip_color(message)
+		msg_to_display = strip_color(msg_to_display)
 
-	if filter_profanity: message = filterProfanityFromText(message)
+	if erk.config.FILTER_PROFANITY: msg_to_display = filterProfanityFromText(msg_to_display)
 
-	# This is for whois messages
-	message = message.replace("\n","<br>")
-
-	#message = fr"{message}"
-
-	if mtype==SYSTEM_MESSAGE:
-
-		output = SYSTEM_TEMPLATE
-		mstyle = styles[SYSTEM_STYLE_NAME]
-
-	elif mtype==ERROR_MESSAGE:
-
-		output = SYSTEM_TEMPLATE
-		mstyle = styles[ERROR_STYLE_NAME]
-
-	elif mtype==ACTION_MESSAGE:
-
-		output = SYSTEM_TEMPLATE
-		mstyle = styles[ACTION_STYLE_NAME]
-
-	elif mtype==MOTD_MESSAGE:
-
-		message = message.replace("\n","<br>")
-
-		output = SYSTEM_TEMPLATE
-		mstyle = styles[MOTD_STYLE_NAME]
-
-	elif mtype==HR_MESSAGE:
-
-		output = HORIZONTAL_RULE
-		mstyle = styles[MESSAGE_STYLE_NAME]
-
+	p = message.sender.split('!')
+	if len(p)==2:
+		nick = p[0]
 	else:
+		nick = message.sender
 
-		if click_usernames:
-			if mtype==SELF_MESSAGE:
-				output = MESSAGE_TEMPLATE
-			else:
-				output = MESSAGE_TEMPLATE_USERLINK
+	if message.type==SYSTEM_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = STYLES["system"]
+	elif message.type==ERROR_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = STYLES["error"]
+	elif message.type==ACTION_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = STYLES["action"]
+	elif message.type==CHAT_MESSAGE:
+		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
+	elif message.type==SELF_MESSAGE:
+		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
+	elif message.type==NOTICE_MESSAGE:
+		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
 
-		else:
-
-			output = MESSAGE_TEMPLATE
-		mstyle = styles[MESSAGE_STYLE_NAME]
-
-	if mstyle=="":
+	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
 	else:
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_STYLE_TEMPLATE)
-		output = output.replace("!MESSAGE_STYLE!",mstyle)
+		output = output.replace("!MESSAGE_STYLE!",style)
 
-	if show_timestamp:
-		if timestamp==None:
-			t = datetime.timestamp(datetime.now())
-		else:
-			t = timestamp
+	if erk.config.DISPLAY_TIMESTAMP:
 
-		if timestamp_24:
+		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
 			tfs = '%H:%M'
 		else:
 			tfs = '%I:%M'
 
-		if timestamp_seconds:
-			tfs = tfs + ':%S'
+		pretty_timestamp = datetime.fromtimestamp(message.timestamp).strftime(tfs)
 
-		pretty_timestamp = datetime.fromtimestamp(t).strftime(tfs)
-
-		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",styles[TIMESTAMP_STYLE_NAME])
+		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",STYLES["timestamp"])
 		ts = ts.replace("!TIME!",pretty_timestamp)
 		output = output.replace("!TIMESTAMP!",ts)
 	else:
 		output = output.replace("!TIMESTAMP!",'')
 
-	idl = max_nick_size - len(user)
-	if idl>0:
-		ident = ('&nbsp;'*idl)+user
-	else:
-		ident = user
-
-	if mtype==SELF_MESSAGE:
-		user_style = styles[SELF_STYLE_NAME]
-	elif mtype==CHAT_MESSAGE:
-		user_style = styles[USERNAME_STYLE_NAME]
-	elif mtype==NOTICE_MESSAGE:
-		user_style = styles[NOTICE_STYLE_NAME]
+	if message.type==SELF_MESSAGE:
+		user_style = STYLES["self"]
+	elif message.type==CHAT_MESSAGE:
+		user_style = STYLES["username"]
+	elif message.type==NOTICE_MESSAGE:
+		user_style = STYLES["notice"]
 	else:
 		user_style = ''
 
-	output = output.replace("!ID_STYLE!",user_style)
-	output = output.replace("!ID!",ident)
+	# Pad nickname
+	if message.type!=ACTION_MESSAGE:
+		idl = erk.config.NICK_DISPLAY_WIDTH - len(nick)
+		if idl>0:
+			nick = ('&nbsp;'*idl)+nick
 
-	output = output.replace("!MESSAGE!",message)
+	output = output.replace("!ID_STYLE!",user_style)
+	output = output.replace("!ID!",nick)
+
+	if message.type==ACTION_MESSAGE:
+		output = output.replace("!MESSAGE!",nick +" " +msg_to_display)
+	else:
+		output = output.replace("!MESSAGE!",msg_to_display)
 	return output
 
-def remove_html_markup(s):
-	tag = False
-	quote = False
-	out = ""
-
-	for c in s:
-			if c == '<' and not quote:
-				tag = True
-			elif c == '>' and not quote:
-				tag = False
-			elif (c == '"' or c == "'") and tag:
-				quote = not quote
-			elif not tag:
-				out = out + c
-
-	return out
+# URL LINKS
 
 def inject_www_links(txt,style):
 	urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', txt)
@@ -227,6 +154,8 @@ def inject_www_links(txt,style):
 		link = f"<a href=\"{u}\"><span style=\"{style}\">{u}</span></a>"
 		txt = txt.replace(u,link)
 	return txt
+
+# IRC COLOR CODES
 
 def string_has_irc_formatting_codes(data):
 	for code in ["\x03","\x02","\x1D","\x1F","\x0F"]:

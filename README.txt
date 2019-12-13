@@ -8,14 +8,6 @@
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
-# Screenshot
-
-<p align="center">
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Erk connected to 2600.net, EFNet,and Freenode</b><br>
-	<i>Click image to enlarge</i><br>
-</p>
-
 # Features
 
 * **Erk** does chat, and _only_ chat.
@@ -23,7 +15,6 @@
 	* **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
 	* Just plain ol' fashioned IRC
 * Supports multiple connections (you can chat on more than one IRC server at a time)
-* Uses a [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (similar to [mIRC](https://www.mirc.com/))
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * An extensive set of configuration options
 	* Almost every part of the interface can be customized
@@ -37,24 +28,9 @@
 * Command/nickname auto-completion
 	* Type the first few letters of a command or nickname and hit the tab key
 	* Auto-complete works for emoji and ASCIImoji shortcodes, too
-* Macros
-	* Create macros directly in the client
-	* Macros are saved with JSON, making editing outside the client easy
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
-* Automatic channel and private message logging
-* Optional server connection history
 * A built-in list of over 80 IRC servers to connect to
-* Many command-line options to control **Erk**'s start up
-	* Set a server to connect to on startup
-	* Connect with an [IRC URL](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
-		* To connect to a server: `irc://hostname:port`
-		* To connect to a channel on a server: `irc://hostname:port/channel`
-			* Prefixing the channel name with a `#` is optional
-		* To connect to a channel that requires a key: `irc://hostname:port/channel,key`
-		* To connect to a server that requires a password: `irc://erk@password:hostname:port`
-			* The standard requires a username (whitch is `erk` in the above example). Any username can be used.
-		* To connect with an IRC URL with SSL/TLS, add the command-line option `--ssl`.
 
 # Requirements
 **Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
@@ -90,16 +66,33 @@ The previous name for this client was "Quirc", but after working on it for a whi
 
 ## Another IRC client? Why not use HexChat?
 
-Mostly because I don't like HexChat's interface.  I started using IRC in the mid to late 90's, and the first client I used regularly was mIRC.  I liked the simplicity of that client in the early days of IRC, and I felt like most modern IRC clients were either u/linux-centric, focused on everything **but** chat, or weird command-line-style interfaces grafted onto a half-thought out GUI.  I wanted to use an IRC client I actually enjoyed using, and since I haven't found one yet, the only thing left to do was create one.
+HexChat is, well, aging. The last I heard, there was nobody maintaining the source. I wanted a new IRC client written in a modern, accessible language; I wanted a client that was *not* written in C or C++. I wanted a pretty, attractive client that looks like it was written in the last decade. And, moreover, I wanted a client written for the desktop; I didn't want one that runs in a web browser, or on a smartphone, or in "the cloud". I wanted a client that was open source (both free as in beer and free as in speech).  I wanted a client that ran fast, consumed resources commensurate with the task of a text-only chat protocol.  I wanted a client that wasn't limited to just text;  a client that can send and display emojis.
+
+Since I couldn't find that IRC client, I decided to write my own.
 
 When I decided to write a new IRC client, I wanted it to feature a few things:
 
 * It had to be open source (free as in speech and as in beer)
 * The ability to connect to multiple servers at a time (something almost every open source client does)
-* A full, modern GUI (HexChat is sort of modern, I guess)
-* A [multiple document interface](https://en.wikipedia.org/wiki/Multiple_document_interface) (I've heard that KVIrc does this)
+* A full, modern GUI (HexChat is sort of modern, I guess, if was still 1999-2000)
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
 * Focuses on the chat experience (not downloading/uploading files)
 * Cross-platform without having to jump through hoops
 
 **Erk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
+
+## Is **Erk** completed?
+
+No. I'm still adding features and tracking down and squashing bugs.
+
+## Can I use **Erk** to chat on IRC?
+
+Yes! Most basic functionality is done, and it's ready for most IRC stuff. Some things that are not complete, but will be soon:
+
+* Setting modes
+* Logging
+* Saving server information
+* Not all "traditional" IRC commands are in place
+	* `/me`, `/join`, `/part`, `/msg`, and `/nick` are in and functioning
+* Plugins
+* Macros

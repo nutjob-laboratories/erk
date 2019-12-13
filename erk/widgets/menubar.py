@@ -31,6 +31,24 @@ toolbar_button_style_hover = '''
 	}
 '''
 
+toolbar_menu_style = '''
+	QMenu {
+		margin: 2px;
+	}
+	QMenu::item:selected {
+		background-color: #a9a9a9;
+		color: white;
+	}
+	QMenu::item {
+		background-color: transparent;
+		color: black;
+	}
+	QMenu::item:disabled {
+		background-color: transparent;
+		color: grey;
+	}
+'''
+
 def generate_menu_toolbar(self):
 
 	toolbar = QToolBar(self)
@@ -50,6 +68,8 @@ def add_toolbar_menu(toolbar,name,menu):
 	f = toolbar.font()
 	f.setBold(True)
 
+	menu.setStyleSheet(toolbar_menu_style)
+
 	toolMenuButton = MenuButton(
 			toolbar_button_style,
 			toolbar_button_style_hover,
@@ -63,6 +83,20 @@ def add_toolbar_menu(toolbar,name,menu):
 
 def end_toolbar_menu(toolbar):
 	toolbar.addWidget(QLabel(' '))
+
+def add_toolbar_image(toolbar,icon):
+
+	f = toolbar.font()
+	f.setBold(True)
+
+	toolMenuButton = QPushButton()
+	toolMenuButton.setIcon(QIcon(icon))
+
+	toolMenuButton.setStyleSheet("border: 0px;")
+
+	toolbar.addWidget(toolMenuButton)
+
+	return toolMenuButton
 
 class MenuButton(QPushButton):
 
