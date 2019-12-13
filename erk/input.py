@@ -13,6 +13,10 @@ COMMON_COMMANDS = {
 	"/part": "/part ",
 	"/join": "/join ",
 	"/nick": "/nick ",
+	"/connect": "/connect ",
+	"/reconnect": "/reconnect ",
+	"/ssl": "/ssl ",
+	"/ressl": "/ressl ",
 }
 
 CHANNEL_COMMANDS = {
@@ -232,8 +236,7 @@ def handle_common_input(window,client,text):
 			client.join(channel)
 			return True
 		if tokens[0].lower()=='/join':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /join CHANNEL [KEY]")
-			window.writeText(msg)
+			window.doJoin(client)
 			return True
 
 	if len(tokens)>0:
@@ -243,8 +246,215 @@ def handle_common_input(window,client,text):
 			client.setNick(newnick)
 			return True
 		if tokens[0].lower()=='/nick':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /nick NEW_NICKNAME")
-			window.writeText(msg)
+			window.doNick(client)
+			return True
+
+	# /connect SERVER [PORT] [PASSWORD]
+	# /reconnect SERVER [PORT] [PASSWORD]
+	# /ssl ...
+	# /ressl ...
+	if len(tokens)>0:
+
+		if tokens[0].lower()=='/connect' and len(tokens)==2:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = 6667
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/connect' and len(tokens)==3:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/connect' and len(tokens)==4:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			password =tokens.pop(0)
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+			# RECONNECT
+
+		if tokens[0].lower()=='/reconnect' and len(tokens)==2:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = 6667
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/reconnect' and len(tokens)==3:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/reconnect' and len(tokens)==4:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			password =tokens.pop(0)
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+			#ssl
+
+		if tokens[0].lower()=='/ssl' and len(tokens)==2:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = 6667
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/ssl' and len(tokens)==3:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/ssl' and len(tokens)==4:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			password =tokens.pop(0)
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			window.doConnect(info)
+			return True
+
+			#ressl
+
+		if tokens[0].lower()=='/ressl' and len(tokens)==2:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = 6667
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/ressl' and len(tokens)==3:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/ressl' and len(tokens)==4:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			port = tokens.pop(0)
+
+			try:
+				port = int(port)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
+				window.writeText(msg)
+				return True
+
+			password =tokens.pop(0)
+
+			user = get_user()
+
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			window.doConnect(info)
+			return True
+
+		if tokens[0].lower()=='/connect' or tokens[0].lower()=='/reconnect' or tokens[0].lower()=='/ssl' or tokens[0].lower()=='/ressl':
+			window.connectDialog()
 			return True
 
 	return False

@@ -17,7 +17,6 @@ import erk.config
 import erk.format
 import erk.input
 
-
 class Window(QMainWindow):
 
 	# def closeEvent(self, event):
@@ -300,6 +299,18 @@ class Window(QMainWindow):
 		# self.input.setFocus()
 
 	# BEGIN GUI METHODS
+
+	def connectDialog(self):
+		self.parent.menuCombo()
+
+	def doConnect(self,info):
+		self.parent.connectToIRCServer(info)
+
+	def doNick(self,client):
+		self.parent.menuNick(client)
+
+	def doJoin(self,client):
+		self.parent.menuJoin(client)
 
 	def newPrivate(self,target):
 		erk.events.open_private_window(self.client,target)

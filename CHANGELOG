@@ -3,6 +3,8 @@ Version 0.700
 	* All-new items: no more MDI interface, uses far less memory, is far more stable, and is far easier to use
 	* Cleaned up the "connect" dialog
 	* Users can now save server information for servers they've connected to
+	* /nick and /join now show their respective dialogs if executed with no arguments
+	* Added /connect, /reconnect, /ssl, and /ressl commands
 
 Version 0.600
 	* Complete re-write

@@ -45,6 +45,7 @@ class Erk(QMainWindow):
 			self.disconnect.setEnabled(False)
 
 	def pageChange(self,index):
+		erk.events.build_connection_display(self)
 		window = self.stack.widget(index)
 
 		self.current_page = window
@@ -68,7 +69,7 @@ class Erk(QMainWindow):
 			window.input.setFocus()
 
 		if hasattr(window,"client"): erk.events.clear_unseen(window)
-		erk.events.build_connection_display(self)
+		# erk.events.build_connection_display(self)
 
 	def connectionNodeSingleClicked(self,item,column):
 		if erk.config.DOUBLECLICK_SWITCH: return

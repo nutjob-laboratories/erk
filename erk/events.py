@@ -1280,6 +1280,8 @@ def server_options(gui,client,options):
 			user_info["history"] = newhistory
 			save_user(user_info)
 
+	# Update connection display
+	build_connection_display(gui)
 
 def banlist(gui,client,channel,banlist):
 	pass
@@ -1299,8 +1301,8 @@ def startup(gui,client):
 
 	index = gui.stack.addWidget(newconsole)
 
-	# if erk.config.SWITCH_TO_NEW_WINDOWS:
-	# 	gui.stack.setCurrentWidget(newconsole)
+	if erk.config.SWITCH_TO_NEW_WINDOWS:
+		gui.stack.setCurrentWidget(newconsole)
 
 	if client.hostname:
 		gui.setWindowTitle(client.hostname)

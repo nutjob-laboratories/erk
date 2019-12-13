@@ -76,7 +76,7 @@ class Dialog(QDialog):
 		self.save_as_default = False
 
 		self.setWindowTitle("Change nickname")
-		#self.setWindowIcon(QIcon(USER_WINDOW_ICON))
+		self.setWindowIcon(QIcon(NICK_ICON))
 
 		nameLayout = QHBoxLayout()
 		self.nameLabel = QLabel("Nickname")
