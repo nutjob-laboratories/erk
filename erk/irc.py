@@ -416,6 +416,9 @@ class IRC_Connection(irc.IRCClient):
 		else:
 			msg = ""
 
+		for c in erk.events.where_is_user(self,nick):
+			self.sendLine("NAMES "+c)
+
 		# self.gui.irc_quit(self,prefix,msg)
 		erk.events.quit(self.gui,self,nick,msg)
 

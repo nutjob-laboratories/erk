@@ -60,7 +60,6 @@ def handle_channel_input(window,client,text):
 				window.leaveChannel(window.name,partmsg)
 				return True
 
-
 	if handle_common_input(window,client,text): return
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
@@ -104,23 +103,9 @@ def handle_console_input(window,client,text):
 	
 	if handle_common_input(window,client,text): return
 
-def handle_input(window,client,text):
-	if len(text.strip())==0: return
-	if window.type==erk.config.CHANNEL_WINDOW:
-		handle_channel_input(window,client,text)
-	elif window.type==erk.config.PRIVATE_WINDOW:
-		handle_private_input(window,client,text)
-	elif window.type==erk.config.SERVER_WINDOW:
-		handle_console_input(window,client,text)
-
 def handle_common_input(window,client,text):
 
 	tokens = text.split()
-
-	if len(tokens)>0:
-		if tokens[0].lower()=='/log' and len(tokens)==1:
-			window.parent.stack.setCurrentWidget(client.gui.starter)
-			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/msg' and len(tokens)>=3:
@@ -156,40 +141,6 @@ def handle_common_input(window,client,text):
 
 		if tokens[0].lower()=='/msg':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /msg TARGET MESSAGE")
-			window.writeText(msg)
-			return True
-
-
-	if len(tokens)>0:
-		if tokens[0].lower()=='/switch' and len(tokens)==2:
-			tokens.pop(0)
-			winname = tokens.pop(0)
-			channels = window.channelList()
-			privates = window.privateList()
-
-			if winname.lower()=="list":
-				dl = channels + privates
-				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
-				window.writeText(msg)
-				return True
-
-			if not winname in channels:
-				if not winname in privates:
-					msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
-					window.writeText(msg)
-					return True
-			if winname in channels:
-				swin = window.nameToChannel(winname)
-			elif winname in privates:
-				swin = window.nameToPrivate(winname)
-			else:
-				msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
-				window.writeText(msg)
-				return True
-			window.parent.stack.setCurrentWidget(swin)
-			return True
-		if tokens[0].lower()=='/switch':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
 			window.writeText(msg)
 			return True
 
@@ -247,6 +198,62 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/nick':
 			window.doNick(client)
+			return True
+
+	return False
+
+def handle_input(window,client,text):
+	if len(text.strip())==0: return
+
+	if handle_ui_input(window,client,text): return
+	
+	if window.type==erk.config.CHANNEL_WINDOW:
+		handle_channel_input(window,client,text)
+	elif window.type==erk.config.PRIVATE_WINDOW:
+		handle_private_input(window,client,text)
+	elif window.type==erk.config.SERVER_WINDOW:
+		handle_console_input(window,client,text)
+
+def handle_ui_input(window,client,text):
+
+	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/switch' and len(tokens)==2:
+			tokens.pop(0)
+			winname = tokens.pop(0)
+			channels = window.channelList()
+			privates = window.privateList()
+
+			if winname.lower()=="list":
+				dl = channels + privates
+				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+				window.writeText(msg)
+				return True
+
+			if not winname in channels:
+				if not winname in privates:
+					msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
+					window.writeText(msg)
+					return True
+			if winname in channels:
+				swin = window.nameToChannel(winname)
+			elif winname in privates:
+				swin = window.nameToPrivate(winname)
+			else:
+				msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
+				window.writeText(msg)
+				return True
+			window.parent.stack.setCurrentWidget(swin)
+			return True
+		if tokens[0].lower()=='/switch':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/log' and len(tokens)==1:
+			window.parent.stack.setCurrentWidget(client.gui.starter)
 			return True
 
 	# /connect SERVER [PORT] [PASSWORD]

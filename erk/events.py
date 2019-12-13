@@ -790,7 +790,14 @@ def userlist(gui,client,channel,userlist):
 	if window: window.writeUserlist(userlist)
 
 def quit(gui,client,nick,message):
-	pass
+
+	for channel in where_is_user(client,nick):
+		window = fetch_channel_window(client,channel)
+		if window:
+			if len(message)>0:
+				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC ("+message+")") )
+			else:
+				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC") )
 
 def action_message(gui,client,target,user,message):
 	global UNSEEN
