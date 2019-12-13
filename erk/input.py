@@ -108,6 +108,16 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
+		if tokens[0].lower()=='/quit' and len(tokens)>=2:
+			tokens.pop(0)
+			msg = ' '.join(tokens)
+			window.parent.disconnect_current(msg)
+			return True
+		if tokens[0].lower()=='/quit' and len(tokens)==1:
+			window.parent.disconnect_current()
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()=='/msg' and len(tokens)>=3:
 			tokens.pop(0)
 			target = tokens.pop(0)

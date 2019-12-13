@@ -38,9 +38,9 @@ class Erk(QMainWindow):
 	def closeEvent(self, event):
 		self.app.quit()
 
-	def disconnect_current(self):
+	def disconnect_current(self,msg=None):
 		if self.current_client:
-			erk.events.disconnect_from_server(self.current_client)
+			erk.events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
 			self.disconnect.setEnabled(False)
 

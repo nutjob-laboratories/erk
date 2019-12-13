@@ -6,6 +6,7 @@ Version 0.700
 	* /nick and /join now show their respective dialogs if executed with no arguments
 	* Added /connect, /reconnect, /ssl, and /ressl commands
 	* Implemented the QUIT event
+	* Added /quit command
 
 Version 0.600
 	* Complete re-write

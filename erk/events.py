@@ -1186,13 +1186,13 @@ def registered(gui,client):
 	# Update connection display
 	build_connection_display(gui)
 
-def disconnect_from_server(client):
+def disconnect_from_server(client,msg=None):
 
 	starterWrite(client,"Sent QUIT command to server")
 
 	client.gui.quitting.append(client.server+str(client.port))
 
-	client.quit()
+	client.quit(msg)
 
 def disconnection(gui,client):
 
