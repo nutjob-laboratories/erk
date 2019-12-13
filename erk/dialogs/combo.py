@@ -340,7 +340,7 @@ class Dialog(QDialog):
 
 		fstoreLayout = QVBoxLayout()
 		fstoreLayout.addStretch()
-		#fstoreLayout.addWidget(QLabel(' '))
+		fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addWidget(self.description)
 		#fstoreLayout.addStretch()
 		fstoreLayout.addWidget(self.servers)
