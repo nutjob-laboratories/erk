@@ -1264,6 +1264,23 @@ def server_options(gui,client,options):
 
 	window.writeText( Message(SYSTEM_MESSAGE,'', ", ".join(options)    ) )
 
+	if client.network:
+		user_info = get_user()
+		newhistory = []
+		change = False
+		for s in user_info["history"]:
+			if s[0]==client.server:
+				if s[1]==str(client.port):
+					if s[2]==UNKNOWN_NETWORK:
+						s[2] = client.network
+						change = True
+			newhistory.append(s)
+
+		if change:
+			user_info["history"] = newhistory
+			save_user(user_info)
+
+
 def banlist(gui,client,channel,banlist):
 	pass
 

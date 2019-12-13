@@ -142,6 +142,8 @@ def get_user(filename=USER_FILE):
 			"ssl": False,
 			"reconnect": False,
 			"autojoin": False,
+			"history": [],
+			"save_history": False,
 		}
 		return si
 

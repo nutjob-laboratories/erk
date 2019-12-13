@@ -38,6 +38,7 @@ from erk.resources import *
 from erk.objects import *
 from erk.files import *
 from erk.widgets import *
+from erk.strings import *
 # import erk.config
 
 from erk.dialogs import AddChannelDialog
@@ -66,6 +67,40 @@ class Dialog(QDialog):
 		else:
 			password = None
 
+		user_history = self.user_info["history"]
+		if self.SAVE_HISTORY:
+
+			# make sure server isn't in the built-in list
+			inlist = False
+			for s in self.built_in_server_list:
+				if s[0]==self.host.text():
+					if s[1]==self.port.text():
+						inlist = True
+
+			# make sure server isn't in history
+			inhistory = False
+			for s in user_history:
+				if s[0]==self.host.text():
+					if s[1]==self.port.text():
+						inhistory = True
+
+			if inlist==False and inhistory==False:
+
+				if self.DIALOG_CONNECT_VIA_SSL:
+					ussl = "ssl"
+				else:
+					ussl = "normal"
+
+
+				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text()    ]
+				user_history.append(entry)
+			
+		# else:
+		# 	pass
+			#user_history = self.user_info["history"]
+
+
+
 		# Save user info
 		user = {
 			"nickname": self.nick.text(),
@@ -79,6 +114,8 @@ class Dialog(QDialog):
 			"ssl": self.DIALOG_CONNECT_VIA_SSL,
 			"reconnect": self.RECONNECT,
 			"autojoin": self.AUTOJOIN_CHANNELS,
+			"history": user_history,
+			"save_history": self.SAVE_HISTORY,
 		}
 		save_user(user)
 
@@ -101,6 +138,13 @@ class Dialog(QDialog):
 
 		return retval
 
+	def clickHistory(self,state):
+		# self.SAVE_HISTORY
+		if state == Qt.Checked:
+			self.SAVE_HISTORY = True
+		else:
+			self.SAVE_HISTORY = False
+
 	def clickSSL(self,state):
 		if state == Qt.Checked:
 			self.DIALOG_CONNECT_VIA_SSL = True
@@ -120,10 +164,18 @@ class Dialog(QDialog):
 			self.AUTOJOIN_CHANNELS = False
 
 	def setServer(self):
+
+		if not len(self.user_info["last_server"])>0:
+			if self.placeholder:
+				self.servers.removeItem(0)
+				self.StoredData.pop(0)
+				self.placeholder = False
+
 		self.StoredServer = self.servers.currentIndex()
 
 		if self.StoredData[self.StoredServer][2]=="Last server":
-			self.netType.setText("<big><b>Last server</b></big>")
+			#self.netType.setText("<big><b>Last server</b></big>")
+			self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
 		else:
 			self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 		if "ssl" in self.StoredData[self.StoredServer][3]:
@@ -171,12 +223,15 @@ class Dialog(QDialog):
 		self.StoredServer = 0
 		self.StoredData = []
 
+		self.placeholder = False
+
 		self.DIALOG_CONNECT_VIA_SSL = False
 		self.RECONNECT = False
 		self.AUTOJOIN_CHANNELS = False
+		self.SAVE_HISTORY = False
 
-		self.setWindowTitle(f"Connect to IRC")
-		self.setWindowIcon(QIcon(ERK_ICON))
+		self.setWindowTitle(f"Connect")
+		self.setWindowIcon(QIcon(CHANNEL_ICON))
 
 		self.user_info = get_user()
 		# last_server = get_last_server()
@@ -198,7 +253,6 @@ class Dialog(QDialog):
 		self.tabs.setFont(f)
 
 		# NETWORK TAB BEGIN
-
 
 		# Server information
 		self.entryType = QLabel("")
@@ -230,19 +284,30 @@ class Dialog(QDialog):
 		self.servers = QComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
+
 		if self.user_info["ssl"]:
 			dussl = "ssl"
 		else:
 			dussl = "normal"
 
-		self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
+		if len(self.user_info["last_server"])>0:
+			self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
+			self.servers.addItem("Last server connection")
+		else:
+			self.StoredData.append( ['',"6667",'','normal','' ]    )
+			self.servers.addItem("Servers")
+			self.placeholder = True
 
-		self.servers.addItem("Last server" + " - " + self.user_info["last_server"])
+		self.built_in_server_list = get_network_list()
 
-		servlist = get_network_list()
+		if len(self.user_info["history"])>0:
+			# servers are in history
+			for s in self.user_info["history"]:
+				#self.built_in_server_list.append(s)
+				self.built_in_server_list.insert(0,s)
 
 		counter = -1
-		for entry in servlist:
+		for entry in self.built_in_server_list:
 			counter = counter + 1
 			if len(entry) < 4: continue
 
@@ -255,26 +320,32 @@ class Dialog(QDialog):
 		self.StoredServer = self.servers.currentIndex()
 
 
-		if self.StoredData[self.StoredServer][2]=="Last server":
-			self.netType.setText("<big><b>Last server</b></big>")
-		else:
-			self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
+		if len(self.user_info["last_server"])>0:
+			if self.StoredData[self.StoredServer][2]=="Last server":
+				# self.netType.setText("<big><b>Last server</b></big>")
+				self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
+			else:
+				self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
 
-		#self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
-
-		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			if "ssl" in self.StoredData[self.StoredServer][3]:
+				self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			else:
+				self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
 		else:
-			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+			# self.netType.setText("<big><b>Choose an IRC server to connect to</b></big>")
+			self.netType.setText("")
+
+
+
 
 		fstoreLayout = QVBoxLayout()
 		fstoreLayout.addStretch()
-		fstoreLayout.addWidget(QLabel(' '))
+		#fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addWidget(self.description)
-		fstoreLayout.addStretch()
+		#fstoreLayout.addStretch()
 		fstoreLayout.addWidget(self.servers)
 		fstoreLayout.addStretch()
-		fstoreLayout.addWidget(QHLine())
+		#fstoreLayout.addWidget(QHLine())
 		fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
@@ -289,30 +360,15 @@ class Dialog(QDialog):
 
 		# SERVER INFO BEGIN
 
-		hostLayout = QHBoxLayout()
-		hostLayout.addStretch()
-		self.hostLabel = QLabel("Host     ")
+		serverLayout = QFormLayout()
 		self.host = QLineEdit(self.user_info["last_server"])
-		hostLayout.addWidget(self.hostLabel)
-		hostLayout.addWidget(self.host)
-		hostLayout.addStretch()
-
-		portLayout = QHBoxLayout()
-		portLayout.addStretch()
-		self.portLabel = QLabel("Port     ")
 		self.port = QLineEdit(self.user_info["last_port"])
-		portLayout.addWidget(self.portLabel)
-		portLayout.addWidget(self.port)
-		portLayout.addStretch()
-
-		passLayout = QHBoxLayout()
-		passLayout.addStretch()
-		self.passLabel = QLabel("Password ")
 		self.password = QLineEdit(self.user_info["last_password"])
 		self.password.setEchoMode(QLineEdit.Password)
-		passLayout.addWidget(self.passLabel)
-		passLayout.addWidget(self.password)
-		passLayout.addStretch()
+
+		serverLayout.addRow(QLabel("Host"), self.host)
+		serverLayout.addRow(QLabel("Port"), self.port)
+		serverLayout.addRow(QLabel("Password"), self.password)
 
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
 		self.ssl.stateChanged.connect(self.clickSSL)
@@ -333,86 +389,47 @@ class Dialog(QDialog):
 		sslLayout = QHBoxLayout()
 		sslLayout.addStretch()
 		sslLayout.addWidget(self.ssl)
-		sslLayout.addStretch()
 
-		servLayout = QVBoxLayout()
-		servLayout.addStretch()
-		servLayout.addLayout(hostLayout)
-		servLayout.addLayout(portLayout)
-		servLayout.addLayout(passLayout)
-		servLayout.addStretch()
-		#servLayout.addWidget(self.ssl)
-		servLayout.addLayout(sslLayout)
-		# servLayout.addWidget(self.reconnect)
-		servLayout.addStretch()
+		serverTabLayout = QVBoxLayout()
+		serverTabLayout.addStretch()
+		serverTabLayout.addLayout(serverLayout)
+		serverTabLayout.addLayout(sslLayout)
+		serverTabLayout.addStretch()
 
-		#servBox = QGroupBox("IRC Server")
-		#servBox.setLayout(servLayout)
+		serverTabCenter = QHBoxLayout()
+		serverTabCenter.addStretch()
+		serverTabCenter.addLayout(serverTabLayout)
+		serverTabCenter.addStretch()
 
-		self.server_tab.setLayout(servLayout)
+		self.server_tab.setLayout(serverTabCenter)
 
 		# SERVER INFO END
 
 		# USER INFO BEGIN
 
-		nickLayout = QHBoxLayout()
-		nickLayout.addStretch()
-		self.nickLabel = QLabel("Nickname  ")
+		userLayout = QFormLayout()
+
 		self.nick = QLineEdit(self.user_info["nickname"])
-		#self.nick = QLineEdit()
-		nickLayout.addWidget(self.nickLabel)
-		#nickLayout.addStretch()
-		nickLayout.addWidget(self.nick)
-		nickLayout.addStretch()
-
-		self.nick.setMaximumWidth( self.calculate_text_entry_size(self.nick,20)  )
-
-		alternateLayout = QHBoxLayout()
-		alternateLayout.addStretch()
-		self.altLabel = QLabel("Alternate ")
 		self.alternative = QLineEdit(self.user_info["alternate"])
-		#self.alternative = QLineEdit()
-		alternateLayout.addWidget(self.altLabel)
-		#alternateLayout.addStretch()
-		alternateLayout.addWidget(self.alternative)
-		alternateLayout.addStretch()
-
-		self.alternative.setMaximumWidth( self.calculate_text_entry_size(self.alternative,20)  )
-
-		userLayout = QHBoxLayout()
-		userLayout.addStretch()
-		self.userLabel = QLabel("Username  ")
 		self.username = QLineEdit(self.user_info["username"])
-		#self.username = QLineEdit()
-		userLayout.addWidget(self.userLabel)
-		#userLayout.addStretch()
-		userLayout.addWidget(self.username)
-		userLayout.addStretch()
-
-		self.username.setMaximumWidth( self.calculate_text_entry_size(self.username,20)  )
-
-		realLayout = QHBoxLayout()
-		realLayout.addStretch()
-		self.realLabel = QLabel("Real Name ")
 		self.realname = QLineEdit(self.user_info["realname"])
-		#self.realname = QLineEdit()
-		realLayout.addWidget(self.realLabel)
-		#realLayout.addStretch()
-		realLayout.addWidget(self.realname)
-		realLayout.addStretch()
 
-		self.realname.setMaximumWidth( self.calculate_text_entry_size(self.realname,20)  )
+		userLayout.addRow(QLabel("Nickname"), self.nick)
+		userLayout.addRow(QLabel("Alternate"), self.alternative)
+		userLayout.addRow(QLabel("Username"), self.username)
+		userLayout.addRow(QLabel("Real name"), self.realname)
 
-		nurLayout = QVBoxLayout()
-		nurLayout.addLayout(nickLayout)
-		nurLayout.addLayout(alternateLayout)
-		nurLayout.addLayout(userLayout)
-		nurLayout.addLayout(realLayout)
+		userTabLayout = QVBoxLayout()
+		userTabLayout.addStretch()
+		userTabLayout.addLayout(userLayout)
+		userTabLayout.addStretch()
 
-		#nickBox = QGroupBox("User Information")
-		#nickBox.setLayout(nurLayout)
+		userTabCenter = QHBoxLayout()
+		userTabCenter.addStretch()
+		userTabCenter.addLayout(userTabLayout)
+		userTabCenter.addStretch()
 
-		self.user_tab.setLayout(nurLayout)
+		self.user_tab.setLayout(userTabCenter)
 
 		# CHANNELS TAB
 
@@ -424,8 +441,6 @@ class Dialog(QDialog):
 
 		self.autoChannels = QListWidget(self)
 		self.autoChannels.setMaximumHeight(100)
-
-		#self.autoChannels.setMaximumWidth( self.calculate_text_entry_size(self.realname,20)  )
 
 		self.addChannelButton = QPushButton("+")
 		self.addChannelButton.clicked.connect(self.buttonAdd)
@@ -463,6 +478,12 @@ class Dialog(QDialog):
 
 		# CHANNELS TAB
 
+		self.history = QCheckBox("Save server history",self)
+		self.history.stateChanged.connect(self.clickHistory)
+
+		if self.user_info["save_history"]:
+			self.history.toggle()
+
 		# USER INFO END
 
 		vLayout = QVBoxLayout()
@@ -472,6 +493,7 @@ class Dialog(QDialog):
 
 		vLayout.addWidget(self.reconnect)
 		vLayout.addWidget(self.do_autojoin)
+		vLayout.addWidget(self.history)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -531,10 +553,3 @@ class Dialog(QDialog):
 			self.autojoins = clean
 		except:
 			pass
-
-	def calculate_text_entry_size(self,widget,size=20):
-		fm = widget.fontMetrics()
-		m = widget.textMargins()
-		c = widget.contentsMargins()
-		w = size*fm.width('x')+m.left()+m.right()+c.left()+c.right()
-		return w
