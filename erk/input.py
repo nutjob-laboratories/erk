@@ -235,8 +235,13 @@ def handle_ui_input(window,client,text):
 			channels = window.channelList()
 			privates = window.privateList()
 
+			if winname.lower()=="home":
+				window.parent.stack.setCurrentWidget(client.gui.starter)
+				return True
+
 			if winname.lower()=="list":
 				dl = channels + privates
+				dl.insert(0,'home')
 				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
 				window.writeText(msg)
 				return True
@@ -259,11 +264,6 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()=='/switch':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
 			window.writeText(msg)
-			return True
-
-	if len(tokens)>0:
-		if tokens[0].lower()=='/log' and len(tokens)==1:
-			window.parent.stack.setCurrentWidget(client.gui.starter)
 			return True
 
 	# /connect SERVER [PORT] [PASSWORD]

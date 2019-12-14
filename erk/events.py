@@ -105,23 +105,23 @@ def build_connection_display(gui,new_server=None):
 
 		gui.connection_dock.show()
 
-		parent = QTreeWidgetItem(root)
-		parent.setText(0,MASTER_LOG_NAME)
-		parent.setIcon(0,QIcon(LOG_ICON))
-		parent.erk_client = None
-		parent.erk_channel = False
-		parent.erk_widget = gui.starter
-		parent.erk_name = MASTER_LOG_NAME
-		parent.erk_server = False
-		parent.erk_console = False
+		# parent = QTreeWidgetItem(root)
+		# parent.setText(0,MASTER_LOG_NAME)
+		# parent.setIcon(0,QIcon(LOG_ICON))
+		# parent.erk_client = None
+		# parent.erk_channel = False
+		# parent.erk_widget = gui.starter
+		# parent.erk_name = MASTER_LOG_NAME
+		# parent.erk_server = False
+		# parent.erk_console = False
 
-		if gui.current_page:
-			if hasattr(gui.current_page,"name"):
-				if gui.current_page.name==MASTER_LOG_NAME:
-					f = parent.font(0)
-					f.setItalic(False)
-					f.setBold(True)
-					parent.setFont(0,f)
+		# if gui.current_page:
+		# 	if hasattr(gui.current_page,"name"):
+		# 		if gui.current_page.name==MASTER_LOG_NAME:
+		# 			f = parent.font(0)
+		# 			f.setItalic(False)
+		# 			f.setBold(True)
+		# 			parent.setFont(0,f)
 
 	else:
 		gui.connection_dock.hide()

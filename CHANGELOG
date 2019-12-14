@@ -12,6 +12,9 @@ Version 0.700
 	* Users can have a channel status icon next to their nickname on channel windows
 	* Users can now hide/show the channel window nickname and channel status display
 	* Consolidated "display" and "settings" menu into a single "settings" menu
+	* Removed "log" shortcut from the connection display
+	* Added a new command: /switch (allows users to switch chats with commands)
+	* Added "home" (the master log) to the /switch command
 
 Version 0.600
 	* Complete re-write
