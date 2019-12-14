@@ -8,6 +8,10 @@ Version 0.700
 	* Implemented the QUIT event
 	* Added /quit command
 	* New channel status icons
+	* Users can now use text-only user lists in channels
+	* Users can have a channel status icon next to their nickname on channel windows
+	* Users can now hide/show the channel window nickname and channel status display
+	* Consolidated "display" and "settings" menu into a single "settings" menu
 
 Version 0.600
 	* Complete re-write

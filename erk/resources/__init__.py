@@ -54,8 +54,14 @@ NETWORK_ICON = ":/gui-network.png"
 
 AUTOCOMPLETE_ICON = ":/gui-autocomplete.png"
 
-LANGUAGE_ICON = ":/gui-language.png"
+#LANGUAGE_ICON = ":/gui-language.png"
 
 DISCONNECT_ICON = ":/gui-disconnect.png"
 
 EMOJI_ICON = ":/gui-emoji.png"
+
+HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
+
+MESSAGE_ICON = ":/gui-message.png"
+
+ENTRY_ICON = ":/gui-entry.png"

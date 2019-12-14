@@ -4,7 +4,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.700</b></a>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.700.098**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.700.099**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -91,8 +91,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. Some t
 
 * Setting modes
 * Logging
-* Saving server information
 * Not all "traditional" IRC commands are in place
-	* `/me`, `/join`, `/part`, `/msg`, and `/nick` are in and functioning
+	* `/me`, `/join`, `/part`, `/msg`, `/nick`, `/connect` and `/msg` are in and functioning
 * Plugins
 * Macros

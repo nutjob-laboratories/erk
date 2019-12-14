@@ -221,6 +221,14 @@ def rerender_all():
 	for c in CONSOLES:
 		c.widget.rerender()
 
+def rerender_userlists():
+	for c in CHANNELS:
+		c.widget.rerender_userlist()
+
+def rerender_channel_nickname():
+	for c in CHANNELS:
+		c.widget.channelNickVisibility()
+
 def toggle_nickspell():
 	for c in CHANNELS:
 		c.widget.input.addNicks(c.widget.nicks)

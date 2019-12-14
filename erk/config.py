@@ -14,6 +14,7 @@ SAVE_JOINED_CHANNELS = False
 # Settings changable in the UI
 DEFAULT_APP_WIDTH = 800
 DEFAULT_APP_HEIGHT = 600
+
 GET_HOSTMASKS_ON_CHANNEL_JOIN = True
 SPELLCHECK_INPUT = True
 SPELLCHECK_LANGUAGE = "en"
@@ -38,8 +39,10 @@ USE_EMOJIS = True
 USE_ASCIIMOJIS = True
 AUTOCOMPLETE_EMOJI = True
 AUTOCOMPLETE_ASCIIMOJI = True
-
 FILTER_PROFANITY = False
+PLAIN_USER_LISTS = False
+DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
+DISPLAY_NICKNAME_ON_CHANNEL = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -74,6 +77,9 @@ def save_settings(filename=SETTINGS_FILE):
 		"autocomplete_emoji": AUTOCOMPLETE_EMOJI,
 		"autocomplete_asciimoji": AUTOCOMPLETE_ASCIIMOJI,
 		"filter_profanity": FILTER_PROFANITY,
+		"text_only_channel_user_lists": PLAIN_USER_LISTS,
+		"display_channel_status": DISPLAY_CHANNEL_STATUS_NICK_DISPLAY,
+		"display_nickname_on_channels": DISPLAY_NICKNAME_ON_CHANNEL,
 	}
 
 	with open(filename, "w") as write_data:
@@ -110,6 +116,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_EMOJI
 	global AUTOCOMPLETE_ASCIIMOJI
 	global FILTER_PROFANITY
+	global PLAIN_USER_LISTS
+	global DISPLAY_CHANNEL_STATUS_NICK_DISPLAY
+	global DISPLAY_NICKNAME_ON_CHANNEL
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -145,6 +154,9 @@ def load_settings(filename=SETTINGS_FILE):
 			AUTOCOMPLETE_EMOJI = data["autocomplete_emoji"]
 			AUTOCOMPLETE_ASCIIMOJI = data["autocomplete_asciimoji"]
 			FILTER_PROFANITY = data["filter_profanity"]
+			PLAIN_USER_LISTS = data["text_only_channel_user_lists"]
+			DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = data["display_channel_status"]
+			DISPLAY_NICKNAME_ON_CHANNEL = data["display_nickname_on_channels"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

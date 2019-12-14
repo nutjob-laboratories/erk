@@ -91,8 +91,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. Some t
 
 * Setting modes
 * Logging
-* Saving server information
 * Not all "traditional" IRC commands are in place
-	* `/me`, `/join`, `/part`, `/msg`, and `/nick` are in and functioning
+	* `/me`, `/join`, `/part`, `/msg`, `/nick`, `/connect` and `/msg` are in and functioning
 * Plugins
 * Macros

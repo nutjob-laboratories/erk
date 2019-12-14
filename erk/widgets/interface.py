@@ -156,8 +156,6 @@ class Window(QMainWindow):
 
 		self.log = []
 
-		self.plain_user_lists = False
-
 		self.channel_topic = ''
 
 		self.modeson = ''
@@ -261,10 +259,64 @@ class Window(QMainWindow):
 			self.userlist.resize(ulwidth,self.height())
 			self.userlist_width = ulwidth
 
+			# self.show_status_in_nick_display
+
+			# Load status icons for the nick display into memory
+			self.op_icon = QLabel(self)
+			pixmap = QPixmap(USERLIST_OPERATOR_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.op_icon.setPixmap(pixmap)
+
+			self.voice_icon = QLabel(self)
+			pixmap = QPixmap(USERLIST_VOICED_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.voice_icon.setPixmap(pixmap)
+
+			self.owner_icon = QLabel(self)
+			pixmap = QPixmap(USERLIST_OWNER_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.owner_icon.setPixmap(pixmap)
+
+			self.admin_icon = QLabel(self)
+			pixmap = QPixmap(USERLIST_ADMIN_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.admin_icon.setPixmap(pixmap)
+
+			self.halfop_icon = QLabel(self)
+			pixmap = QPixmap(USERLIST_HALFOP_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.halfop_icon.setPixmap(pixmap)
+
+			self.op_icon.hide()
+			self.voice_icon.hide()
+			self.owner_icon.hide()
+			self.admin_icon.hide()
+			self.halfop_icon.hide()
+
+			self.nick_display = QLabel(" <b>"+self.client.nickname+"</b> ")
+
+			if not erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.nick_display.hide()
+
+			nicknameLayout = QHBoxLayout()
+			nicknameLayout.addWidget(self.op_icon)
+			nicknameLayout.addWidget(self.voice_icon)
+			nicknameLayout.addWidget(self.owner_icon)
+			nicknameLayout.addWidget(self.admin_icon)
+			nicknameLayout.addWidget(self.halfop_icon)
+			nicknameLayout.addWidget(self.nick_display)
+			nicknameLayout.setAlignment(Qt.AlignVCenter)
+
 			inputLayout = QHBoxLayout()
-			self.nick_display = QLabel(" <small><b>"+self.client.nickname+"</b></small> ")
-			inputLayout.addWidget(self.nick_display)
+			# inputLayout.addWidget(self.nick_display)
+			inputLayout.addLayout(nicknameLayout)
 			inputLayout.addWidget(self.input)
+
+			#inputLayout.setAlignment(Qt.AlignVCenter)
 
 			self.key_display = QLabel(self)
 			pixmap = QPixmap(KEY_ICON)
@@ -299,6 +351,12 @@ class Window(QMainWindow):
 		# self.input.setFocus()
 
 	# BEGIN GUI METHODS
+
+	def channelNickVisibility(self):
+		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
+			self.nick_display.show()
+		else:
+			self.nick_display.hide()
 
 	def connectDialog(self):
 		self.parent.menuCombo()
@@ -340,7 +398,7 @@ class Window(QMainWindow):
 			self.key_display.show()
 
 	def nickDisplay(self,nick):
-		self.nick_display.setText(" <small><b>"+nick+"</b></small> ")
+		self.nick_display.setText(" <b>"+nick+"</b> ")
 
 	def setTopic(self,topic):
 
@@ -389,6 +447,9 @@ class Window(QMainWindow):
 
 		self.chat.moveCursor(QTextCursor.End)
 
+	def rerender_userlist(self):
+		self.writeUserlist(self.users)
+
 	def writeUserlist(self,users):
 
 		if not hasattr(self,"userlist"): return
@@ -422,45 +483,70 @@ class Window(QMainWindow):
 				nickname = u
 				hostmask = None
 
-			if self.plain_user_lists:
+			#if self.plain_user_lists:
+			if erk.config.PLAIN_USER_LISTS:
 				if '@' in nickname:
 					ops.append(nickname)
-					#if nickname==self.client.nickname: self.operator = True
+					if nickname==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname)
-					#if nickname==self.client.nickname: self.voiced = True
+					if nickname==self.client.nickname: self.voiced = True
 				elif '~' in nickname:
 					owners.append(nickname)
-					#if nickname==self.client.nickname: self.owner = True
+					if nickname==self.client.nickname: self.owner = True
 				elif '&' in nickname:
 					admins.append(nickname)
-					#if nickname==self.client.nickname: self.admin = True
+					if nickname==self.client.nickname: self.admin = True
 				elif '%' in nickname:
 					halfops.append(nickname)
-					#if nickname==self.client.nickname: self.halfop = True
+					if nickname==self.client.nickname: self.halfop = True
 				else:
 					normal.append(nickname)
 			else:
 				if '@' in nickname:
 					ops.append(nickname.replace('@',''))
-					#if nickname.replace('@','')==self.client.nickname: self.operator = True
+					if nickname.replace('@','')==self.client.nickname: self.operator = True
 				elif '+' in nickname:
 					voiced.append(nickname.replace('+',''))
-					#if nickname.replace('+','')==self.client.nickname: self.voiced = True
+					if nickname.replace('+','')==self.client.nickname: self.voiced = True
 				elif '~' in nickname:
 					owners.append(nickname.replace('~',''))
-					#if nickname.replace('~','')==self.client.nickname: self.owner = True
+					if nickname.replace('~','')==self.client.nickname: self.owner = True
 				elif '&' in nickname:
 					admins.append(nickname.replace('&',''))
-					#if nickname.replace('&','')==self.client.nickname: self.admin = True
+					if nickname.replace('&','')==self.client.nickname: self.admin = True
 				elif '%' in nickname:
 					halfops.append(nickname.replace('%',''))
-					#if nickname.replace('%','')==self.client.nickname: self.halfop = True
+					if nickname.replace('%','')==self.client.nickname: self.halfop = True
 				else:
 					normal.append(nickname)
 
 		# Store a list of the nicks in this channel
 		self.nicks = owners + admins + halfops + ops + voiced + normal
+
+		# Display nick status, if necessary
+		if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
+
+			self.op_icon.hide()
+			self.voice_icon.hide()
+			self.owner_icon.hide()
+			self.admin_icon.hide()
+			self.halfop_icon.hide()
+
+			if self.operator: self.op_icon.show()
+			if self.voiced: self.voice_icon.show()
+
+			if self.owner: self.owner_icon.show()
+			if self.admin: self.admin_icon.show()
+			if self.halfop: self.halfop_icon.show()
+
+		else:
+
+			self.op_icon.hide()
+			self.voice_icon.hide()
+			self.owner_icon.hide()
+			self.admin_icon.hide()
+			self.halfop_icon.hide()
 
 		# Add nicks to the spellchecker
 		self.input.addNicks(self.nicks)
@@ -476,42 +562,42 @@ class Window(QMainWindow):
 		# Add owners
 		for u in owners:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_OWNER_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OWNER_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add admins
 		for u in admins:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_ADMIN_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_ADMIN_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add ops
 		for u in ops:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_OPERATOR_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add halfops
 		for u in halfops:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_HALFOP_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_HALFOP_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add voiced
 		for u in voiced:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_VOICED_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_VOICED_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add normal
 		for u in normal:
 			ui = QListWidgetItem()
-			if not self.plain_user_lists: ui.setIcon(QIcon(USERLIST_NORMAL_ICON))
+			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_NORMAL_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 

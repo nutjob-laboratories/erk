@@ -182,109 +182,90 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.close)
 		mainMenu.addAction(entry)
 
-		displayMenu = QMenu()
+		settingsMenu = QMenu()
 
-		add_toolbar_menu(self.toolbar,"Display",displayMenu)
+		add_toolbar_menu(self.toolbar,"Settings",settingsMenu)
 
-		entry = QAction(QIcon(FONT_ICON),"Font",self)
-		entry.triggered.connect(self.menuFont)
-		displayMenu.addAction(entry)
+		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
+		self.fontMenuEntry.triggered.connect(self.menuFont)
+		settingsMenu.addAction(self.fontMenuEntry)
 
-		entry = QAction(QIcon(RESIZE_ICON),"Initial window size",self)
-		entry.triggered.connect(self.menuResize)
-		displayMenu.addAction(entry)
 
-		timestampMenu = displayMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
+		f = self.app.font()
+		fs = f.toString()
+		pfs = fs.split(',')
+		font_name = pfs[0]
+		font_size = pfs[1]
 
-		self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
-		self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
-		timestampMenu.addAction(self.set_timestamps)
+		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
-		if erk.config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
 
-		self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
-		self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
-		timestampMenu.addAction(self.set_24hr)
+		self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
+		self.winsizeMenuEntry.triggered.connect(self.menuResize)
+		settingsMenu.addAction(self.winsizeMenuEntry)
 
-		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+		w = erk.config.DEFAULT_APP_WIDTH
+		h =  erk.config.DEFAULT_APP_HEIGHT
 
-		self.set_color = QAction(QIcon(UNCHECKED_ICON),"IRC color codes",self)
+		self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
+
+		# Channel display submenu
+
+		settingsMenu.addSeparator()
+
+		# Message display submenu
+
+		messageMenu = settingsMenu.addMenu(QIcon(MESSAGE_ICON),"Messages")
+
+		self.set_color = QAction(QIcon(UNCHECKED_ICON),"Display IRC colors",self)
 		self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
-		displayMenu.addAction(self.set_color)
+		messageMenu.addAction(self.set_color)
 
 		if erk.config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_links = QAction(QIcon(UNCHECKED_ICON),"Convert URLs to links",self)
 		self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
-		displayMenu.addAction(self.set_links)
+		messageMenu.addAction(self.set_links)
 
 		if erk.config.DISPLAY_IRC_COLORS: self.set_links.setIcon(QIcon(CHECKED_ICON))
 
 
 		self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
 		self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
-		displayMenu.addAction(self.set_profanity)
+		messageMenu.addAction(self.set_profanity)
+
+		# Channel display submenu
+
+		channelMenu = settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
 
 		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
 
-
-
-
-		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
+		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display modes",self)
 		self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
-		displayMenu.addAction(self.set_modes)
+		channelMenu.addAction(self.set_modes)
 
 		if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
 
-		settingsMenu = QMenu()
-		add_toolbar_menu(self.toolbar,"Settings",settingsMenu)
 
+		self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
+		self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
+		channelMenu.addAction(self.set_plainusers)
 
-		spellcheckMenu = settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
+		if erk.config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
 
-		self.set_spellcheck = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-		self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
-		spellcheckMenu.addAction(self.set_spellcheck)
+		self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
+		self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
+		channelMenu.addAction(self.set_displaystatus)
 
-		if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
 
+		self.set_displaynick = QAction(QIcon(UNCHECKED_ICON),"Display nickname",self)
+		self.set_displaynick.triggered.connect(lambda state,s="display_nick": self.toggleSetting(s))
+		channelMenu.addAction(self.set_displaynick)
 
-		self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
-		self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
-		spellcheckMenu.addAction(self.set_spellnicks)
+		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
 
-		if erk.config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-
-
-		spelllanguageMenu = spellcheckMenu.addMenu(QIcon(LANGUAGE_ICON),"Language")
-
-		self.spell_en = QAction(QIcon(UNCHECKED_ICON),"English",self)
-		self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
-		spelllanguageMenu.addAction(self.spell_en)
-
-		self.spell_fr = QAction(QIcon(UNCHECKED_ICON),"French",self)
-		self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
-		spelllanguageMenu.addAction(self.spell_fr)
-
-		self.spell_es = QAction(QIcon(UNCHECKED_ICON),"Spanish",self)
-		self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
-		spelllanguageMenu.addAction(self.spell_es)
-
-		self.spell_de = QAction(QIcon(UNCHECKED_ICON),"German",self)
-		self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
-		spelllanguageMenu.addAction(self.spell_de)
-
-		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
-
-		if not erk.config.SPELLCHECK_INPUT:
-			self.spell_en.setEnabled(False)
-			self.spell_fr.setEnabled(False)
-			self.spell_es.setEnabled(False)
-			self.spell_de.setEnabled(False)
-
+		# Connection display submenu
 
 		connectionDisplayMenu = settingsMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),"Connection display")
 
@@ -331,6 +312,8 @@ class Erk(QMainWindow):
 			self.set_doubleclickswitch.setEnabled(False)
 			self.set_location.setEnabled(False)
 
+		# Autocomplete submenu
+
 		autocompleteMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
 
 		self.set_autonick = QAction(QIcon(UNCHECKED_ICON),"Nicknames",self)
@@ -346,8 +329,6 @@ class Erk(QMainWindow):
 
 		if erk.config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
 
-
-
 		self.set_autoemoji = QAction(QIcon(UNCHECKED_ICON),"Emoji shortcodes",self)
 		self.set_autoemoji.triggered.connect(lambda state,s="autoemoji": self.toggleSetting(s))
 		autocompleteMenu.addAction(self.set_autoemoji)
@@ -360,11 +341,53 @@ class Erk(QMainWindow):
 
 		if erk.config.AUTOCOMPLETE_ASCIIMOJI: self.set_autoasciimoji.setIcon(QIcon(CHECKED_ICON))
 
+		# Spellcheck submenu
+
+		spellcheckMenu = settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
+
+		self.set_spellcheck = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+		self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
+		spellcheckMenu.addAction(self.set_spellcheck)
+
+		if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
 
 
+		self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
+		self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
+		spellcheckMenu.addAction(self.set_spellnicks)
 
+		if erk.config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
 
+		spellcheckMenu.addSeparator()
 
+		self.spell_en = QAction(QIcon(UNCHECKED_ICON),"English",self)
+		self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_en)
+
+		self.spell_fr = QAction(QIcon(UNCHECKED_ICON),"French",self)
+		self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_fr)
+
+		self.spell_es = QAction(QIcon(UNCHECKED_ICON),"Spanish",self)
+		self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_es)
+
+		self.spell_de = QAction(QIcon(UNCHECKED_ICON),"German",self)
+		self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_de)
+
+		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.SPELLCHECK_INPUT:
+			self.spell_en.setEnabled(False)
+			self.spell_fr.setEnabled(False)
+			self.spell_es.setEnabled(False)
+			self.spell_de.setEnabled(False)
+
+		# Emoji submenu
 
 		emojiMenu = settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
 
@@ -380,10 +403,24 @@ class Erk(QMainWindow):
 
 		if erk.config.USE_ASCIIMOJIS: self.set_asciimoji.setIcon(QIcon(CHECKED_ICON))
 
+		# Timestamp display submenu
+
+		timestampMenu = settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
+
+		self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
+		self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
+		timestampMenu.addAction(self.set_timestamps)
+
+		if erk.config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
+		self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
+		timestampMenu.addAction(self.set_24hr)
+
+		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
 
-
-
+		settingsMenu.addSeparator()
 
 		self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
 		self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
@@ -463,14 +500,41 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
-
-	# self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
-	# 	self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
-	# 	displayMenu.addAction(self.set_profanity)
-
-	# 	if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-
 	def toggleSetting(self,setting):
+
+		if setting=="display_nick":
+			if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
+				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = False
+				self.set_displaynick.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = True
+				self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.rerender_channel_nickname()
+			return
+
+
+		if setting=="display_status":
+			if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
+				erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = False
+				self.set_displaystatus.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
+				self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.rerender_userlists()
+			return
+
+		if setting=="plainlists":
+			if erk.config.PLAIN_USER_LISTS:
+				erk.config.PLAIN_USER_LISTS = False
+				self.set_plainusers.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.PLAIN_USER_LISTS = True
+				self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.rerender_userlists()
+			return
 
 		if setting=="profanity":
 			if erk.config.FILTER_PROFANITY:
@@ -776,6 +840,12 @@ class Erk(QMainWindow):
 			self.app.setFont(self.font)
 			erk.events.set_fonts_all(self.font)
 
+			pfs = erk.config.DISPLAY_FONT.split(',')
+			font_name = pfs[0]
+			font_size = pfs[1]
+
+			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
 	def menuJoin(self,client):
 		info = JoinDialog()
 		if info!=None:
@@ -795,6 +865,11 @@ class Erk(QMainWindow):
 			erk.config.DEFAULT_APP_HEIGHT = info[1]
 			erk.config.save_settings()
 			self.resize(info[0],info[1])
+
+			w = erk.config.DEFAULT_APP_WIDTH
+			h =  erk.config.DEFAULT_APP_HEIGHT
+
+			self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
 	def eventFilter(self, source, event):
 
