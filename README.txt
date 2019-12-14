@@ -8,6 +8,14 @@
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
+# Screenshot
+
+<p align="center">
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
+	<b>Erk connected to EFnet, Freenode, DALnet, and a private server</b><br>
+	<i>Click image to enlarge</i><br>
+</p>
+
 # Features
 
 * **Erk** does chat, and _only_ chat.
