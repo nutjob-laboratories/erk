@@ -246,13 +246,8 @@ def handle_ui_input(window,client,text):
 			channels = window.channelList()
 			privates = window.privateList()
 
-			if winname.lower()=="home":
-				window.parent.stack.setCurrentWidget(client.gui.starter)
-				return True
-
 			if winname.lower()=="list":
 				dl = channels + privates
-				dl.insert(0,'home')
 				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
 				window.writeText(msg)
 				return True

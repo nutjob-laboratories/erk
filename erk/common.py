@@ -25,28 +25,43 @@ def prettyUptime(uptime):
 	if len(str(seconds))==1: seconds = f"0{seconds}"
 	return f"{hours}:{minutes}:{seconds}"
 
+# START_BANNER = f'''
+# 		<table style="width: 100%" border="0">
+#       <tbody>
+#         <tr>
+#           <td style="text-align: center; vertical-align: middle;">&nbsp;<img src="{LOGO_IMAGE}">&nbsp;&nbsp;</td>
+#           <td>
+#             <table style="width: 100%" border="0">
+#               <tbody>
+#               <tr>
+#               <td style="text-align: left; vertical-align: middle;">&nbsp;
+#               </td>
+#               </tr>
+#                 <tr>
+#                   <td style="text-align: left; vertical-align: middle;"><big><b>Version {APPLICATION_VERSION}</b></big></td>
+#                 </tr>
+#                 <tr>
+#                   <td style="text-align: left; vertical-align: middle;"><i>It's how you say IRC</i></td>
+#                 </tr>
+#               </tbody>
+#             </table>
+#           </td>
+#         </tr>
+#       </tbody>
+#     </table>'''
+
 START_BANNER = f'''
-		<table style="width: 100%" border="0">
+<center><table style="height: 100%" border="0">
       <tbody>
         <tr>
-          <td style="text-align: center; vertical-align: middle;">&nbsp;<img src="{LOGO_IMAGE}">&nbsp;&nbsp;</td>
-          <td>
-            <table style="width: 100%" border="0">
-              <tbody>
-              <tr>
-              <td style="text-align: left; vertical-align: middle;">&nbsp;
-              </td>
-              </tr>
-                <tr>
-                  <td style="text-align: left; vertical-align: middle;"><big><b>Version {APPLICATION_VERSION}</b></big></td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; vertical-align: middle;"><i>It's how you say IRC</i></td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
+          <td>TOP&nbsp;</td>
+        </tr>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">&nbsp;<center><img src="{LOGO_IMAGE}"></center></td>
+        </tr>
+        <tr>
+          <td>BOTTOM&nbsp;</td>
         </tr>
       </tbody>
-    </table>'''
-
+    </table></center>
+'''

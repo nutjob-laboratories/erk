@@ -17,26 +17,26 @@ PRIVATES = []
 
 UNSEEN = []
 
-def starterWrite(client,msg):
+# def starterWrite(client,msg):
 
-	ts = datetime.timestamp(datetime.now())
-	pretty_timestamp = datetime.fromtimestamp(ts).strftime('%H:%M')
+	# ts = datetime.timestamp(datetime.now())
+	# pretty_timestamp = datetime.fromtimestamp(ts).strftime('%H:%M')
 
-	STARTER_MESSAGE = f'''
-	<table style="width: 100%" border="0">
-      <tbody>
-        <tr>
-          <td style="text-align: center; vertical-align: middle;">&nbsp;<b>{client.server+":"+str(client.port)} [{pretty_timestamp}]&nbsp;</b>
-          </td>
-          <td style="text-align: left; vertical-align: middle;">{msg}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-	'''
+	# STARTER_MESSAGE = f'''
+	# <table style="width: 100%" border="0">
+ #      <tbody>
+ #        <tr>
+ #          <td style="text-align: center; vertical-align: middle;">&nbsp;<b>{client.server+":"+str(client.port)} [{pretty_timestamp}]&nbsp;</b>
+ #          </td>
+ #          <td style="text-align: left; vertical-align: middle;">{msg}
+ #          </td>
+ #        </tr>
+ #      </tbody>
+ #    </table>
+	# '''
 
-	client.gui.starter.append(STARTER_MESSAGE)
-	client.gui.starter.moveCursor(QTextCursor.End)
+	# client.gui.starter.append(STARTER_MESSAGE)
+	# client.gui.starter.moveCursor(QTextCursor.End)
 
 def quit_all():
 	for c in CONNECTIONS:
@@ -105,24 +105,6 @@ def build_connection_display(gui,new_server=None):
 	if len(CONSOLES)>0 or len(CHANNELS)>0 or len(PRIVATES)>0:
 
 		gui.connection_dock.show()
-
-		# parent = QTreeWidgetItem(root)
-		# parent.setText(0,MASTER_LOG_NAME)
-		# parent.setIcon(0,QIcon(LOG_ICON))
-		# parent.erk_client = None
-		# parent.erk_channel = False
-		# parent.erk_widget = gui.starter
-		# parent.erk_name = MASTER_LOG_NAME
-		# parent.erk_server = False
-		# parent.erk_console = False
-
-		# if gui.current_page:
-		# 	if hasattr(gui.current_page,"name"):
-		# 		if gui.current_page.name==MASTER_LOG_NAME:
-		# 			f = parent.font(0)
-		# 			f.setItalic(False)
-		# 			f.setBold(True)
-		# 			parent.setFont(0,f)
 
 	else:
 		gui.connection_dock.hide()
@@ -279,7 +261,7 @@ def set_fonts_all(font):
 def close_channel_window(client,name,msg=None):
 	global CHANNELS
 
-	starterWrite(client,"Left "+name)
+	#starterWrite(client,"Left "+name)
 
 	clean = []
 	windex = 0
@@ -333,7 +315,7 @@ def close_channel_window(client,name,msg=None):
 def close_private_window(client,name):
 	global PRIVATES
 
-	starterWrite(client,"Closed private chat with "+name)
+	#starterWrite(client,"Closed private chat with "+name)
 
 	clean = []
 	windex = 0
@@ -446,7 +428,7 @@ def open_private_window(client,target):
 		client.gui.stack.setCurrentWidget(window)
 		return
 	else:
-		starterWrite(client,"Started private chat with "+target)
+		#starterWrite(client,"Started private chat with "+target)
 
 		newchan = Chat(
 			target,
@@ -494,7 +476,7 @@ def line_input(gui,client,line):
 
 def received_error(gui,client,error):
 
-	starterWrite(client,"Error: "+error)
+	#starterWrite(client,"Error: "+error)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
@@ -522,10 +504,10 @@ def mode(gui,client,channel,user,mset,modes,args):
 	if channel==client.nickname:
 		if mset:
 			msg = Message(SYSTEM_MESSAGE,'',"Mode +"+modes+" set on "+channel)
-			starterWrite(client,user+" set mode +"+modes)
+			#starterWrite(client,user+" set mode +"+modes)
 		else:
 			msg = Message(SYSTEM_MESSAGE,'',"Mode -"+modes+" set on "+channel)
-			starterWrite(client,user+" set mode -"+modes)
+			#starterWrite(client,user+" set mode -"+modes)
 		window = fetch_console_window(client)
 		if window:
 			window.writeText( msg )
@@ -560,6 +542,7 @@ def mode(gui,client,channel,user,mset,modes,args):
 				if not 'k' in window.modesoff:
 					window.modesoff = window.modesoff +'k'
 				msg = Message(SYSTEM_MESSAGE,'',user+" unset "+channel+"'s key")
+
 			if msg:
 				window.writeText( msg )
 
@@ -916,7 +899,7 @@ def nick(gui,client,oldnick,newnick):
 
 
 def erk_changed_nick(gui,client,newnick):
-	starterWrite(client,"Nickname changed to "+newnick)
+	#starterWrite(client,"Nickname changed to "+newnick)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
@@ -934,7 +917,7 @@ def erk_changed_nick(gui,client,newnick):
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
 
-	starterWrite(client,"Joined "+channel)
+	#starterWrite(client,"Joined "+channel)
 	
 	newchan = Chat(
 		channel,
@@ -1198,7 +1181,7 @@ def public_message(gui,client,channel,user,message):
 
 def registered(gui,client):
 
-	starterWrite(client,"Registered with server")
+	#starterWrite(client,"Registered with server")
 
 	gui.registered(client)
 
@@ -1210,7 +1193,7 @@ def registered(gui,client):
 
 def disconnect_from_server(client,msg=None):
 
-	starterWrite(client,"Sent QUIT command to server")
+	#starterWrite(client,"Sent QUIT command to server")
 
 	client.gui.quitting.append(client.server+str(client.port))
 
@@ -1218,7 +1201,7 @@ def disconnect_from_server(client,msg=None):
 
 def disconnection(gui,client):
 
-	starterWrite(client,"Disconnected from server")
+	#starterWrite(client,"Disconnected from server")
 
 	global CONNECTIONS
 	clean = []
@@ -1279,7 +1262,7 @@ def connection(gui,client):
 	global CONNECTIONS
 	CONNECTIONS.append(client)
 
-	starterWrite(client,"Connected to server")
+	#starterWrite(client,"Connected to server")
 
 	window = fetch_console_window(client)
 	window.writeText( Message(SYSTEM_MESSAGE,'',"Connected to "+client.server+":"+str(client.port)+"!") )
@@ -1318,7 +1301,7 @@ def banlist(gui,client,channel,banlist):
 def startup(gui,client):
 	global CONSOLES
 
-	starterWrite(client,"Connecting to server...")
+	#starterWrite(client,"Connecting to server...")
 
 	newconsole = Chat(
 		SERVER_CONSOLE_NAME,

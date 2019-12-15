@@ -168,6 +168,8 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.irc_options(self,options)
 		erk.events.server_options(self.gui,self,options)
 
+		
+
 	def __init__(self,**kwargs):
 
 		self.kwargs = kwargs
