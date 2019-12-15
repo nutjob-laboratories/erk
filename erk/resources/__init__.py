@@ -63,3 +63,13 @@ HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
 MESSAGE_ICON = ":/gui-message.png"
 
 ENTRY_ICON = ":/gui-entry.png"
+
+PLUS_ICON = ":/gui-plus.png"
+MINUS_ICON = ":/gui-minus.png"
+
+
+KICK_ICON = ":/gui-kick.png"
+BAN_ICON = ":/gui-ban.png"
+KICKBAN_ICON = ":/gui-kickban.png"
+
+CLIPBOARD_ICON = ":/gui-clipboard.png"

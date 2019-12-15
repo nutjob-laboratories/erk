@@ -437,7 +437,7 @@ def open_private_window(client,target):
 
 	window = fetch_private_window(client,target)
 	if window:
-		gui.stack.setCurrentWidget(window)
+		client.gui.stack.setCurrentWidget(window)
 		return
 	else:
 		starterWrite(client,"Started private chat with "+target)

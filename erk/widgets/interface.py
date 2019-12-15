@@ -200,6 +200,7 @@ class Window(QMainWindow):
 			self.userlist = QListWidget(self)
 			self.userlist.setFocusPolicy(Qt.NoFocus)
 			self.userlist.itemDoubleClicked.connect(self._handleDoubleClick)
+			self.userlist.installEventFilter(self)
 
 			# Make sure that user status icons are just a little
 			# bigger than the user entry text
@@ -261,6 +262,12 @@ class Window(QMainWindow):
 
 			# self.show_status_in_nick_display
 
+			self.user_icon = QLabel()
+			pixmap = QPixmap(NICK_ICON)
+			fm = QFontMetrics(self.app.font())
+			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			self.user_icon.setPixmap(pixmap)
+
 			# Load status icons for the nick display into memory
 			self.op_icon = QLabel(self)
 			pixmap = QPixmap(USERLIST_OPERATOR_ICON)
@@ -268,11 +275,17 @@ class Window(QMainWindow):
 			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 			self.op_icon.setPixmap(pixmap)
 
+			self.user_op = QLabel()
+			self.user_op.setPixmap(pixmap)
+
 			self.voice_icon = QLabel(self)
 			pixmap = QPixmap(USERLIST_VOICED_ICON)
 			fm = QFontMetrics(self.app.font())
 			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 			self.voice_icon.setPixmap(pixmap)
+
+			self.user_voice = QLabel()
+			self.user_voice.setPixmap(pixmap)
 
 			self.owner_icon = QLabel(self)
 			pixmap = QPixmap(USERLIST_OWNER_ICON)
@@ -280,17 +293,26 @@ class Window(QMainWindow):
 			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 			self.owner_icon.setPixmap(pixmap)
 
+			self.user_owner = QLabel()
+			self.user_owner.setPixmap(pixmap)
+
 			self.admin_icon = QLabel(self)
 			pixmap = QPixmap(USERLIST_ADMIN_ICON)
 			fm = QFontMetrics(self.app.font())
 			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 			self.admin_icon.setPixmap(pixmap)
 
+			self.user_admin = QLabel()
+			self.user_admin.setPixmap(pixmap)
+
 			self.halfop_icon = QLabel(self)
 			pixmap = QPixmap(USERLIST_HALFOP_ICON)
 			fm = QFontMetrics(self.app.font())
 			pixmap = pixmap.scaled(fm.height(), fm.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 			self.halfop_icon.setPixmap(pixmap)
+
+			self.user_halfop = QLabel()
+			self.user_halfop.setPixmap(pixmap)
 
 			self.op_icon.hide()
 			self.voice_icon.hide()
@@ -602,6 +624,256 @@ class Window(QMainWindow):
 			self.userlist.addItem(ui)
 
 		self.userlist.update()
+
+	def eventFilter(self, source, event):
+
+		# User List Menu
+		if (event.type() == QtCore.QEvent.ContextMenu and source is self.userlist):
+
+			item = source.itemAt(event.pos())
+			if item is None: return True
+
+			user = item.text()
+
+			user_nick = ''
+			user_hostmask = None
+			user_is_op = False
+			user_is_voiced = False
+			user_is_admin = False
+			user_is_owner = False
+			user_is_halfop = False
+
+			for u in self.users:
+				p = u.split('!')
+				if len(p)==2:
+					nick = p[0]
+					hostmask = p[1]
+				else:
+					nick = u
+					hostmask = None
+
+				if '@' in nick:
+					is_op = True
+					nick = nick.replace('@','')
+				else:
+					is_op = False
+				if '+' in nick:
+					is_voiced = True
+					nick = nick.replace('+','')
+				else:
+					is_voiced = False
+				if '~' in nick:
+					is_owner = True
+					nick = nick.replace('~','')
+				else:
+					is_owner = False
+				if '&' in nick:
+					is_admin = True
+					nick = nick.replace('&','')
+				else:
+					is_admin = False
+				if '%' in nick:
+					is_halfop = True
+					nick = nick.replace('%','')
+				else:
+					is_halfop = False
+				if nick==user:
+					user_nick = nick
+					if hostmask:
+						user_hostmask = hostmask
+					else:
+						if nick in self.hostmasks:
+							user_hostmask = self.hostmasks[nick]
+					user_is_op = is_op
+					user_is_voiced = is_voiced
+					user_is_owner = is_owner
+					user_is_admin = is_admin
+					user_is_halfop = is_halfop
+					break
+
+			menu = QMenu(self)
+
+			# self.user_icon
+
+			userLayout = QHBoxLayout()
+			if user_is_op:
+				userLayout.addWidget(self.user_op)
+			elif user_is_voiced:
+				userLayout.addWidget(self.user_voice)
+			elif user_is_owner:
+				userLayout.addWidget(self.user_owner)
+			elif user_is_admin:
+				userLayout.addWidget(self.user_admin)
+			elif user_is_halfop:
+				userLayout.addWidget(self.user_halfop)
+			else:
+				userLayout.addWidget(self.user_icon)
+			userLayout.addWidget(QLabel("<b>"+user_nick+"</b>"))
+			userLayout.addStretch()
+			u = QWidget()
+			u.setLayout(userLayout)
+			tsAction = QWidgetAction(self)
+			tsAction.setDefaultWidget(u)
+			menu.addAction(tsAction)
+
+			# tsLabel = QLabel( "<center><small>"+user_nick+"</small></center>" )
+			# tsAction = QWidgetAction(self)
+			# tsAction.setDefaultWidget(tsLabel)
+			# menu.addAction(tsAction)
+
+			if user_hostmask:
+				max_length = 25
+				if len(user_hostmask)>max_length:
+					if len(user_hostmask)>=max_length+3:
+						offset = max_length-3
+					elif len(user_hostmask)==max_length+2:
+						offset = max_length-2
+					elif len(user_hostmask)==max_length+1:
+						offset = max_length-1
+					else:
+						offset = max_length
+					display_hostmask = user_hostmask[0:offset]+"..."
+				else:
+					display_hostmask = user_hostmask
+				tsLabel = QLabel( "&nbsp;<span>"+display_hostmask+"</span>" )
+				tsAction = QWidgetAction(self)
+				tsAction.setDefaultWidget(tsLabel)
+				menu.addAction(tsAction)
+
+			if user_is_op:
+				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Operator"+"</i>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			elif user_is_voiced:
+				statusLabel = QLabel(f"&nbsp;<i>"+"Voiced User"+"</i>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			elif user_is_owner:
+				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Owner"+"</i>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			elif user_is_admin:
+				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Admin"+"</i>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			elif user_is_halfop:
+				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Half-Op"+"</i>")
+				statusAction = QWidgetAction(self)
+				statusAction.setDefaultWidget(statusLabel)
+				menu.addAction(statusAction)
+			# else:
+			# 	statusLabel = QLabel(f"&nbsp;<i>"+"Normal User"+"</i>")
+			# 	statusAction = QWidgetAction(self)
+			# 	statusAction.setDefaultWidget(statusLabel)
+			# 	menu.addAction(statusAction)
+
+			menu.addSeparator()
+
+			if self.operator:
+
+				opMenu = menu.addMenu(QIcon(USERLIST_OPERATOR_ICON),"Operator actions")
+
+				if user_is_op: actDeop = opMenu.addAction(QIcon(MINUS_ICON),"Take operator status")
+				if not user_is_op: actOp = opMenu.addAction(QIcon(PLUS_ICON),"Give operator status")
+
+				if not user_is_op:
+					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),"Take voiced status")
+					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),"Give voiced status")
+
+				opMenu.addSeparator()
+
+				actKick = opMenu.addAction(QIcon(KICK_ICON),"Kick")
+				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")
+				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),"Kick/Ban")
+
+			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
+			actCopyNick = clipMenu.addAction(QIcon(NICK_ICON),"User's nickname")
+			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),"User's hostmask")
+
+			action = menu.exec_(self.userlist.mapToGlobal(event.pos()))
+
+			if action == actCopyNick:
+				cb = QApplication.clipboard()
+				cb.clear(mode=cb.Clipboard)
+				cb.setText(f"{user_nick}", mode=cb.Clipboard)
+				return True
+
+			if user_hostmask:
+				if action == actHostmask:
+					cb = QApplication.clipboard()
+					cb.clear(mode=cb.Clipboard)
+					cb.setText(f"{user_hostmask}", mode=cb.Clipboard)
+					return True
+
+			if self.operator:
+
+				if action == actKick:
+					self.client.kick(self.name,user_nick)
+					return True
+
+				if action == actBan:
+					if user_hostmask:
+						h = user_hostmask.split('@')[1]
+						banmask = "*@"+h
+					else:
+						banmask = user_nick
+					self.client.mode(self.name,True,"b",None,None,banmask)
+					return True
+
+				if action == actKickBan:
+					if user_hostmask:
+						h = user_hostmask.split('@')[1]
+						banmask = "*@"+h
+					else:
+						banmask = user_nick
+					self.client.mode(self.name,True,"b",None,None,banmask)
+					self.client.kick(self.name,user_nick)
+					return True
+
+				if user_is_op:
+					if action == actDeop:
+						self.client.mode(self.name,False,"o",None,user_nick)
+						return True
+
+				if not user_is_op:
+					if user_is_voiced:
+						if action == actDevoice:
+							self.client.mode(self.name,False,"v",None,user_nick)
+							return True
+
+				if not user_is_op:
+					if action == actOp:
+						self.client.mode(self.name,True,"o",None,user_nick)
+						return True
+
+				if not user_is_op:
+					if not user_is_voiced:
+						if action == actVoice:
+							self.client.mode(self.name,True,"v",None,user_nick)
+							return True
+
+			return True
+
+
+
+		return super(Window, self).eventFilter(source, event)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class TopicEdit(QLineEdit):
