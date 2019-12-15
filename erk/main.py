@@ -491,12 +491,6 @@ class Erk(QMainWindow):
 		css =  "QTextBrowser { background-image: url(" + LOGO_IMAGE + "); background-attachment: fixed; background-repeat: no-repeat; background-position: center middle; }"
 		self.starter.setStyleSheet(css)
 
-		#self.starter.append(START_BANNER)
-		# self.starter.append("&nbsp;<b><a href=\"https://github.com/nutjob-laboratories/erk\">https://github.com/nutjob-laboratories/erk</a></b>")
-		# self.starter.append("")
-		# self.starter.append("&nbsp;<i>Click <b>Connect</b> in the <b>IRC</b> menu to connect to IRC!</i>")
-		# self.starter.append("")
-
 		self.starter.anchorClicked.connect(self.linkClicked)
 
 	def spellcheck_language(self,setting):
