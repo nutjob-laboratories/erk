@@ -790,11 +790,17 @@ class Window(QMainWindow):
 				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")
 				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),"Kick/Ban")
 
+			actWhois = menu.addAction(QIcon(WHOIS_ICON),"WHOIS")
+
 			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
 			actCopyNick = clipMenu.addAction(QIcon(NICK_ICON),"User's nickname")
 			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),"User's hostmask")
 
 			action = menu.exec_(self.userlist.mapToGlobal(event.pos()))
+
+			if action == actWhois:
+				self.client.sendLine("WHOIS "+user_nick)
+				return True
 
 			if action == actCopyNick:
 				cb = QApplication.clipboard()

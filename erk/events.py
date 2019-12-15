@@ -769,7 +769,15 @@ def received_hostmask_for_channel_user(gui,client,nick,hostmask):
 				window.widget.hostmasks[nick] = hostmask
 
 def received_whois(gui,client,whoisdata):
-	pass
+	
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.username+"@"+whoisdata.host+": "+whoisdata.realname) )
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.server) )
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.channels) )
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", "Signed on: "+whoisdata.signon) )
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", "Idle: "+whoisdata.idle+" seconds") )
+			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.privs) )
 
 def topic(gui,client,setter,channel,topic):
 	p = setter.split('!')

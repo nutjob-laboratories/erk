@@ -73,3 +73,5 @@ BAN_ICON = ":/gui-ban.png"
 KICKBAN_ICON = ":/gui-kickban.png"
 
 CLIPBOARD_ICON = ":/gui-clipboard.png"
+
+WHOIS_ICON = ":/gui-whois.png"

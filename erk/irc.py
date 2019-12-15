@@ -40,6 +40,7 @@ import time
 from erk.resources import *
 from erk.files import *
 from erk.strings import *
+from erk.objects import *
 import erk.config
 
 import erk.events
