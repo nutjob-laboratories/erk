@@ -694,6 +694,24 @@ class Window(QMainWindow):
 					user_is_halfop = is_halfop
 					break
 
+			if len(user_nick.strip())==0:
+				if '@' in user:
+					user_is_op = True
+					user = user.replace('@','')
+				if '+' in user:
+					user_is_voiced = True
+					user = user.replace('+','')
+				if '~' in user:
+					user_is_owner = True
+					user = user.replace('~','')
+				if '&' in user:
+					user_is_admin = True
+					user = user.replace('&','')
+				if '%' in user:
+					user_is_halfop = True
+					user = user.replace('%','')
+				user_nick = user
+
 			menu = QMenu(self)
 
 			# self.user_icon
