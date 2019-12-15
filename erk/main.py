@@ -25,13 +25,13 @@ from erk.irc import(
 	reconnectSSL
 	)
 
-class ErkMenuStyle(QProxyStyle):
-	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
+# class ErkMenuStyle(QProxyStyle):
+# 	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
 
-		if QStyle_PixelMetric == QStyle.PM_SmallIconSize:
-			return 22
-		else:
-			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
+# 		if QStyle_PixelMetric == QStyle.PM_SmallIconSize:
+# 			return 22
+# 		else:
+# 			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
 
 class Erk(QMainWindow):
 
@@ -293,6 +293,12 @@ class Erk(QMainWindow):
 
 		if erk.config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
 
+		self.set_connectexpand = QAction(QIcon(UNCHECKED_ICON),"Expand server on connect",self)
+		self.set_connectexpand.triggered.connect(lambda state,s="connexpand": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_connectexpand)
+
+		if erk.config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
+
 		connectionDisplayMenu.addSeparator()
 
 		self.set_location = QAction(QIcon(RIGHT_ICON),"Display on left",self)
@@ -419,8 +425,13 @@ class Erk(QMainWindow):
 
 		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
-
 		settingsMenu.addSeparator()
+
+		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Track input history",self)
+		self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_history)
+
+		if erk.config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
 		self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
@@ -502,6 +513,27 @@ class Erk(QMainWindow):
 
 	def toggleSetting(self,setting):
 
+		if setting=="history":
+			if erk.config.TRACK_COMMAND_HISTORY:
+				erk.config.TRACK_COMMAND_HISTORY = False
+				self.set_history.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.TRACK_COMMAND_HISTORY = True
+				self.set_history.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.reset_history()
+			return
+
+		if setting=="connexpand":
+			if erk.config.EXPAND_SERVER_ON_CONNECT:
+				erk.config.EXPAND_SERVER_ON_CONNECT = False
+				self.set_connectexpand.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EXPAND_SERVER_ON_CONNECT = True
+				self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
 		if setting=="display_nick":
 			if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
 				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = False
@@ -512,7 +544,6 @@ class Erk(QMainWindow):
 			erk.config.save_settings()
 			erk.events.rerender_channel_nickname()
 			return
-
 
 		if setting=="display_status":
 			if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:

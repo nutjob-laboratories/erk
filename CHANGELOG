@@ -19,6 +19,8 @@ Version 0.700
 	* Added a context menu to channel userlist widgets
 	* Added WHOIS display, and a WHOIS command to the userlist context menu
 	* Added /whois command
+	* Added an option to toggle whether servers expand on connection in the connection display
+	* Added an option to turn input history on/off
 
 Version 0.600
 	* Complete re-write

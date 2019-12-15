@@ -42,6 +42,9 @@ FILTER_PROFANITY = False
 PLAIN_USER_LISTS = False
 DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
 DISPLAY_NICKNAME_ON_CHANNEL = True
+EXPAND_SERVER_ON_CONNECT = True
+
+TRACK_COMMAND_HISTORY = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -79,6 +82,8 @@ def save_settings(filename=SETTINGS_FILE):
 		"text_only_channel_user_lists": PLAIN_USER_LISTS,
 		"display_channel_status": DISPLAY_CHANNEL_STATUS_NICK_DISPLAY,
 		"display_nickname_on_channels": DISPLAY_NICKNAME_ON_CHANNEL,
+		"expand_server_node_on_connection": EXPAND_SERVER_ON_CONNECT,
+		"enable_command_history": TRACK_COMMAND_HISTORY,
 	}
 
 	with open(filename, "w") as write_data:
@@ -118,6 +123,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global PLAIN_USER_LISTS
 	global DISPLAY_CHANNEL_STATUS_NICK_DISPLAY
 	global DISPLAY_NICKNAME_ON_CHANNEL
+	global EXPAND_SERVER_ON_CONNECT
+	global TRACK_COMMAND_HISTORY
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -156,6 +163,8 @@ def load_settings(filename=SETTINGS_FILE):
 			PLAIN_USER_LISTS = data["text_only_channel_user_lists"]
 			DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = data["display_channel_status"]
 			DISPLAY_NICKNAME_ON_CHANNEL = data["display_nickname_on_channels"]
+			EXPAND_SERVER_ON_CONNECT = data["expand_server_node_on_connection"]
+			TRACK_COMMAND_HISTORY = data["enable_command_history"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

@@ -64,7 +64,8 @@ def build_connection_display(gui,new_server=None):
 	# are still expanded when we rewrite the display
 	expanded = []
 
-	if new_server: expanded.append(new_server.id)
+	if erk.config.EXPAND_SERVER_ON_CONNECT:
+		if new_server: expanded.append(new_server.id)
 
 	iterator = QTreeWidgetItemIterator(gui.connection_display)
 	while True:
@@ -228,6 +229,11 @@ def rerender_userlists():
 def rerender_channel_nickname():
 	for c in CHANNELS:
 		c.widget.channelNickVisibility()
+
+def reset_history():
+	for c in CHANNELS:
+		c.widget.history_buffer = ['']
+		c.widget.history_buffer_pointer = 0
 
 def toggle_nickspell():
 	for c in CHANNELS:
