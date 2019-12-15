@@ -22,6 +22,7 @@ Version 0.700
 	* Added an option to toggle whether servers expand on connection in the connection display
 	* Added an option to turn input history on/off
 	* Bugfix: context menus didn't work with text only userlists
+	* Clarified some menu entries
 
 Version 0.600
 	* Complete re-write

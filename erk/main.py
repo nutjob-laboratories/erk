@@ -240,7 +240,7 @@ class Erk(QMainWindow):
 
 		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
 
-		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display modes",self)
+		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 		self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
 		channelMenu.addAction(self.set_modes)
 
@@ -397,13 +397,13 @@ class Erk(QMainWindow):
 
 		emojiMenu = settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
 
-		self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emojis",self)
+		self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
 		self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
 		emojiMenu.addAction(self.set_emoji)
 
 		if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
 
-		self.set_asciimoji = QAction(QIcon(UNCHECKED_ICON),"Use ASCIImojis",self)
+		self.set_asciimoji = QAction(QIcon(UNCHECKED_ICON),"Use ASCIImoji shortcodes",self)
 		self.set_asciimoji.triggered.connect(lambda state,s="asciimoji": self.toggleSetting(s))
 		emojiMenu.addAction(self.set_asciimoji)
 
@@ -427,7 +427,7 @@ class Erk(QMainWindow):
 
 		settingsMenu.addSeparator()
 
-		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Track input history",self)
+		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enable input history",self)
 		self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_history)
 
