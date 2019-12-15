@@ -108,6 +108,17 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
+		if tokens[0].lower()=='/whois' and len(tokens)==2:
+			tokens.pop(0)
+			target = tokens.pop(0)
+			client.sendLine("WHOIS "+target)
+			return True
+		if tokens[0].lower()=='/whois':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /whois NICKNAME [NICKNAME] ...")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()=='/quit' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)

@@ -18,6 +18,7 @@ Version 0.700
 	* Fixed a crashing bug (triggered when attempting to switch to an already open private chat)
 	* Added a context menu to channel userlist widgets
 	* Added WHOIS display, and a WHOIS command to the userlist context menu
+	* Added /whois command
 
 Version 0.600
 	* Complete re-write
