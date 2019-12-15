@@ -51,7 +51,7 @@ class Window(QMainWindow):
 
 			# If history is larger than it's supposed to be,
 			# remove the last entry
-			if len(self.history_buffer)>self.history_buffer_max:
+			if len(self.history_buffer)>erk.config.HISTORY_LENGTH:
 				self.history_buffer.pop()
 
 			# "Zero" the history buffer pointer
@@ -178,7 +178,7 @@ class Window(QMainWindow):
 
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
-		self.history_buffer_max = erk.config.HISTORY_LENGTH
+		# self.history_buffer_max = erk.config.HISTORY_LENGTH
 
 		self.userlist_width = 0
 

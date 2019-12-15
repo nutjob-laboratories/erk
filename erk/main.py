@@ -15,7 +15,8 @@ from erk.dialogs import(
 	ComboDialog,
 	JoinDialog,
 	NickDialog,
-	WindowSizeDialog
+	WindowSizeDialog,
+	HistorySizeDialog
 	)
 
 from erk.irc import(
@@ -24,14 +25,6 @@ from erk.irc import(
 	reconnect,
 	reconnectSSL
 	)
-
-# class ErkMenuStyle(QProxyStyle):
-# 	def pixelMetric(self, QStyle_PixelMetric, option=None, widget=None):
-
-# 		if QStyle_PixelMetric == QStyle.PM_SmallIconSize:
-# 			return 22
-# 		else:
-# 			return QProxyStyle.pixelMetric(self, QStyle_PixelMetric, option, widget)
 
 class Erk(QMainWindow):
 
@@ -229,7 +222,6 @@ class Erk(QMainWindow):
 
 		if erk.config.DISPLAY_IRC_COLORS: self.set_links.setIcon(QIcon(CHECKED_ICON))
 
-
 		self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
 		self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
 		messageMenu.addAction(self.set_profanity)
@@ -245,7 +237,6 @@ class Erk(QMainWindow):
 		channelMenu.addAction(self.set_modes)
 
 		if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
-
 
 		self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
 		self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
@@ -328,7 +319,6 @@ class Erk(QMainWindow):
 
 		if erk.config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
 
-
 		self.set_autocmd = QAction(QIcon(UNCHECKED_ICON),"Commands",self)
 		self.set_autocmd.triggered.connect(lambda state,s="autocmd": self.toggleSetting(s))
 		autocompleteMenu.addAction(self.set_autocmd)
@@ -356,7 +346,6 @@ class Erk(QMainWindow):
 		spellcheckMenu.addAction(self.set_spellcheck)
 
 		if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
-
 
 		self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
 		self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
@@ -425,13 +414,25 @@ class Erk(QMainWindow):
 
 		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
-		settingsMenu.addSeparator()
+		# Entry submenu
 
-		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enable input history",self)
+		entryMenu = settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input history")
+
+		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
 		self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_history)
+		entryMenu.addAction(self.set_history)
 
 		if erk.config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
+
+		self.historySize = QAction(QIcon(HISTORY_LENGTH_ICON),"Set history length",self)
+		self.historySize.triggered.connect(self.menuHistoryLength)
+		entryMenu.addAction(self.historySize)
+
+		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
+
+		# Miscellaneous settings
+
+		settingsMenu.addSeparator()
 
 		self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
 		self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
@@ -855,6 +856,12 @@ class Erk(QMainWindow):
 			QDesktopServices.openUrl(url)
 			self.starter.setSource(QUrl())
 			self.starter.moveCursor(QTextCursor.End)
+
+	def menuHistoryLength(self):
+		info = HistorySizeDialog()
+		if info!=None:
+			erk.config.HISTORY_LENGTH = info
+		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
 
 	def menuCombo(self):
 		info = ComboDialog()
