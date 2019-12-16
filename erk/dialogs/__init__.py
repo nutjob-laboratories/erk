@@ -11,6 +11,15 @@ import erk.dialogs.join_channel as JoinChannel
 import erk.dialogs.new_nick as Nick
 import erk.dialogs.window_size as WindowSize
 import erk.dialogs.history_size as HistorySize
+import erk.dialogs.log_size as LogSize
+
+def LogSizeDialog():
+	x = LogSize.Dialog()
+	info = x.get_entry_information()
+	del x
+
+	if not info: return None
+	return info
 
 def HistorySizeDialog():
 	x = HistorySize.Dialog()

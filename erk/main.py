@@ -16,7 +16,8 @@ from erk.dialogs import(
 	JoinDialog,
 	NickDialog,
 	WindowSizeDialog,
-	HistorySizeDialog
+	HistorySizeDialog,
+	LogSizeDialog
 	)
 
 from erk.irc import(
@@ -472,9 +473,6 @@ class Erk(QMainWindow):
 
 		privateMenu = logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
 
-
-
-
 		self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
 		self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
 		privateMenu.addAction(self.set_privlogsave)
@@ -486,11 +484,6 @@ class Erk(QMainWindow):
 		privateMenu.addAction(self.set_privlogload)
 
 		if erk.config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
-
-
-
-
-
 
 		logMenu.addSeparator()
 
@@ -505,6 +498,12 @@ class Erk(QMainWindow):
 		logMenu.addAction(self.set_logresume)
 
 		if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+
+		self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
+		self.logSize.triggered.connect(self.menuLogSize)
+		logMenu.addAction(self.logSize)
+
+		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 		# End of menus
 		end_toolbar_menu(self.toolbar)
@@ -968,10 +967,18 @@ class Erk(QMainWindow):
 			self.starter.setSource(QUrl())
 			self.starter.moveCursor(QTextCursor.End)
 
+	def menuLogSize(self):
+		info = LogSizeDialog()
+		if info!=None:
+			erk.config.LOG_LOAD_SIZE_MAX = info
+			erk.config.save_settings()
+		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
+
 	def menuHistoryLength(self):
 		info = HistorySizeDialog()
 		if info!=None:
 			erk.config.HISTORY_LENGTH = info
+			erk.config.save_settings()
 		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
 
 	def menuCombo(self):

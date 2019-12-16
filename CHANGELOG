@@ -31,6 +31,8 @@ Version 0.700
 	* Added settings to mark log load end and log resume
 	* Added private message autologging
 	* Added settings to turn on/off private autologging
+	* Added an option to set the size of the logs loaded
+	* Fixed a bug where some settings would not be saved
 
 Version 0.600
 	* Complete re-write
