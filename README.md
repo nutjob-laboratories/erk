@@ -39,6 +39,9 @@
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
 * A built-in list of over 80 IRC servers to connect to
+* Automatic logging of channel and private chats
+	* Logging can be switched on and off
+	* Logs can be automatically loaded when resuming public or private chats
 
 # Requirements
 **Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
