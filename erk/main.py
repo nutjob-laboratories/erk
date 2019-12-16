@@ -17,7 +17,8 @@ from erk.dialogs import(
 	NickDialog,
 	WindowSizeDialog,
 	HistorySizeDialog,
-	LogSizeDialog
+	LogSizeDialog,
+	FormatTextDialog
 	)
 
 from erk.irc import(
@@ -28,6 +29,10 @@ from erk.irc import(
 	)
 
 class Erk(QMainWindow):
+
+	def newStyle(self,style):
+		erk.events.apply_style(style)
+		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
 		self.app.quit()
@@ -191,6 +196,10 @@ class Erk(QMainWindow):
 		font_size = pfs[1]
 
 		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
+		entry = QAction(QIcon(FORMAT_ICON),"Colors",self)
+		entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
+		settingsMenu.addAction(entry)
 
 		self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
 		self.winsizeMenuEntry.triggered.connect(self.menuResize)
@@ -966,6 +975,9 @@ class Erk(QMainWindow):
 			QDesktopServices.openUrl(url)
 			self.starter.setSource(QUrl())
 			self.starter.moveCursor(QTextCursor.End)
+
+	def reload_all_text(self):
+		erk.events.rerender_all()
 
 	def menuLogSize(self):
 		info = LogSizeDialog()

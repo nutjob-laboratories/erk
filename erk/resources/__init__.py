@@ -77,3 +77,5 @@ CLIPBOARD_ICON = ":/gui-clipboard.png"
 WHOIS_ICON = ":/gui-whois.png"
 
 HISTORY_LENGTH_ICON = ":/gui-history_length.png"
+
+FORMAT_ICON = ":/gui-format.png"

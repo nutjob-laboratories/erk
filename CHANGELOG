@@ -33,6 +33,7 @@ Version 0.700
 	* Added settings to turn on/off private autologging
 	* Added an option to set the size of the logs loaded
 	* Fixed a bug where some settings would not be saved
+	* Added a text color/format dialog
 
 Version 0.600
 	* Complete re-write

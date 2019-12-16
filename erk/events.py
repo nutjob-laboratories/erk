@@ -175,6 +175,20 @@ def build_connection_display(gui,new_server=None):
 
 							continue
 
+def apply_style(style):
+	for c in CHANNELS:
+		c.widget.chat.setStyleSheet(style)
+		c.widget.userlist.setStyleSheet(style)
+		c.widget.input.setStyleSheet(style)
+	for c in PRIVATES:
+		c.widget.chat.setStyleSheet(style)
+		c.widget.input.setStyleSheet(style)
+	for c in CONSOLES:
+		c.widget.chat.setStyleSheet(style)
+		c.widget.input.setStyleSheet(style)
+
+
+
 def rerender_all():
 	for c in CHANNELS:
 		c.widget.rerender()

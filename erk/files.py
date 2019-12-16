@@ -156,6 +156,21 @@ def save_user(user,filename=USER_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(user, write_data, indent=4, sort_keys=True)
 
+def write_style_file(style,filename=STYLE_FILE):
+	output = "/*\n\tThis file uses a sub-set of CSS used by Qt called \"QSS\"\n\thttps://doc.qt.io/qt-5/stylesheet-syntax.html\n*/\n\n"
+
+	for key in style:
+		output = output + key + " {\n"
+		for s in style[key].split(';'):
+			s = s.strip()
+			if len(s)==0: continue
+			output = output + "\t" + s + ";\n"
+		output = output + "}\n\n"
+
+	f=open(filename, "w")
+	f.write(output)
+	f.close()
+
 def read_style_file(filename=STYLE_FILE):
 
 	# Read in the file
