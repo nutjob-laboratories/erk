@@ -13,6 +13,12 @@ import erk.dialogs.window_size as WindowSize
 import erk.dialogs.history_size as HistorySize
 import erk.dialogs.log_size as LogSize
 import erk.dialogs.format as FormatText
+import erk.dialogs.about as About
+
+def AboutDialog():
+	x = About.Dialog()
+	x.show()
+	return x
 
 def FormatTextDialog(obj):
 	x = FormatText.Dialog(obj)

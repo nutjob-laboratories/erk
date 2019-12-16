@@ -79,3 +79,7 @@ WHOIS_ICON = ":/gui-whois.png"
 HISTORY_LENGTH_ICON = ":/gui-history_length.png"
 
 FORMAT_ICON = ":/gui-format.png"
+
+ERK_BIG_ICON = ":/gui-erk_button.png"
+
+ABOUT_ICON = ":/gui-about.png"

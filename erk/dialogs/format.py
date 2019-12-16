@@ -297,7 +297,7 @@ class Dialog(QDialog):
 		saveButton = QPushButton(" Apply + Save ")
 		saveButton.clicked.connect(self.save)
 
-		defaultButton = QPushButton("Default")
+		defaultButton = QPushButton("Defaults")
 		defaultButton.clicked.connect(self.resetStyles)
 
 		cancelButton = QPushButton("Cancel")

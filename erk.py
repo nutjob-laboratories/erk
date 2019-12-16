@@ -21,9 +21,9 @@ parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	description=f''' ___      _   
-|__ \ _ _| |__	|==========
+|__ \ _ _| |__	|==============
 / _  | '_| / /	| {APPLICATION_NAME} {APPLICATION_VERSION}
-\___/|_| |_\_\\	|==========
+\___/|_| |_\_\\	|==============
 
 An open source IRC client
 ''',

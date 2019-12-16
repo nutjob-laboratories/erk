@@ -18,7 +18,8 @@ from erk.dialogs import(
 	WindowSizeDialog,
 	HistorySizeDialog,
 	LogSizeDialog,
-	FormatTextDialog
+	FormatTextDialog,
+	AboutDialog
 	)
 
 from erk.irc import(
@@ -514,6 +515,16 @@ class Erk(QMainWindow):
 
 		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
 
+		# Help menu
+
+		helpMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Help",helpMenu)
+
+		self.about = QAction(QIcon(ABOUT_ICON),"About",self)
+		self.about.triggered.connect(self.menuAbout)
+		helpMenu.addAction(self.about)
+
 		# End of menus
 		end_toolbar_menu(self.toolbar)
 
@@ -552,6 +563,8 @@ class Erk(QMainWindow):
 
 		css =  "QTextBrowser { background-image: url(" + LOGO_IMAGE + "); background-attachment: fixed; background-repeat: no-repeat; background-position: center middle; }"
 		self.starter.setStyleSheet(css)
+
+		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b></small></p>")
 
 		self.starter.anchorClicked.connect(self.linkClicked)
 
@@ -975,6 +988,9 @@ class Erk(QMainWindow):
 			QDesktopServices.openUrl(url)
 			self.starter.setSource(QUrl())
 			self.starter.moveCursor(QTextCursor.End)
+
+	def menuAbout(self):
+		self.about_dialog = AboutDialog()
 
 	def reload_all_text(self):
 		erk.events.rerender_all()
