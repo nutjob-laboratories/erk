@@ -470,6 +470,28 @@ class Erk(QMainWindow):
 
 		if erk.config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
 
+		privateMenu = logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
+
+
+
+
+		self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+		self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
+		privateMenu.addAction(self.set_privlogsave)
+
+		if erk.config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+		self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
+		privateMenu.addAction(self.set_privlogload)
+
+		if erk.config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+
+
+
+
+
+
 		logMenu.addSeparator()
 
 		self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
@@ -542,6 +564,26 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
+
+		if setting=="privlogsave":
+			if erk.config.SAVE_PRIVATE_LOGS:
+				erk.config.SAVE_PRIVATE_LOGS = False
+				self.set_privlogsave.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.SAVE_PRIVATE_LOGS = True
+				self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
+		if setting=="privlogload":
+			if erk.config.LOAD_PRIVATE_LOGS:
+				erk.config.LOAD_PRIVATE_LOGS = False
+				self.set_privlogload.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.LOAD_PRIVATE_LOGS = True
+				self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="logresume":
 			if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:

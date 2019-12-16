@@ -25,6 +25,10 @@ class Window(QMainWindow):
 			if erk.config.SAVE_CHANNEL_LOGS:
 				saveLog(self.client.network,self.name,self.newLog)
 
+		if self.type==erk.config.PRIVATE_WINDOW:
+			if erk.config.SAVE_PRIVATE_LOGS:
+				saveLog(self.client.network,self.name,self.newLog)
+
 	def handleTopicInput(self):
 		#print(self.topic.text())
 		self.client.topic(self.name,self.topic.text())
@@ -366,25 +370,34 @@ class Window(QMainWindow):
 			#finalLayout.addWidget(self.input)
 			finalLayout.addLayout(inputLayout)
 
-			# Logs
+		# Logs
+		load_log_from_disk = False
+
+		if self.type==erk.config.CHANNEL_WINDOW:
 			if erk.config.LOAD_CHANNEL_LOGS:
-				loadLog = readLog(self.client.network,self.name)
-				if len(loadLog)>erk.config.CHANNEL_LOG_LOAD_SIZE_MAX:
-					loadLog = trimLog(loadLog,erk.config.CHANNEL_LOG_LOAD_SIZE_MAX)
+				load_log_from_disk = True
 
-				if len(loadLog)>0:
-					self.log = loadLog + self.log
-					if erk.config.MARK_END_OF_LOADED_LOG:
-						self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
+		if self.type==erk.config.PRIVATE_WINDOW:
+			if erk.config.LOAD_PRIVATE_LOGS:
+				load_log_from_disk = True
 
+		if load_log_from_disk:
+			loadLog = readLog(self.client.network,self.name)
+			if len(loadLog)>erk.config.LOG_LOAD_SIZE_MAX:
+				loadLog = trimLog(loadLog,erk.config.LOG_LOAD_SIZE_MAX)
 
-					if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
-						t = datetime.timestamp(datetime.now())
-						pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
-						m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
-						self.writeText(m)
+			if len(loadLog)>0:
+				self.log = loadLog + self.log
+				if erk.config.MARK_END_OF_LOADED_LOG:
+					self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
 
-					self.rerender()
+				if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
+					t = datetime.timestamp(datetime.now())
+					pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
+					m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
+					self.writeText(m)
+
+				self.rerender()
 
 
 		interface = QWidget()

@@ -44,12 +44,13 @@ DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
 DISPLAY_NICKNAME_ON_CHANNEL = True
 EXPAND_SERVER_ON_CONNECT = True
 TRACK_COMMAND_HISTORY = True
-
 SAVE_CHANNEL_LOGS = True
 LOAD_CHANNEL_LOGS = True
-CHANNEL_LOG_LOAD_SIZE_MAX = 500
+LOG_LOAD_SIZE_MAX = 500
 MARK_END_OF_LOADED_LOG = True
 DISPLAY_CHAT_RESUME_DATE_TIME = True
+SAVE_PRIVATE_LOGS = False
+LOAD_PRIVATE_LOGS = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -91,9 +92,12 @@ def save_settings(filename=SETTINGS_FILE):
 		"enable_command_history": TRACK_COMMAND_HISTORY,
 		"save_channel_logs": SAVE_CHANNEL_LOGS,
 		"load_channel_logs": LOAD_CHANNEL_LOGS,
-		"maximum_channel_log_display_size": CHANNEL_LOG_LOAD_SIZE_MAX,
+		"maximum_log_display_size": LOG_LOAD_SIZE_MAX,
 		"mark_end_of_loaded_log": MARK_END_OF_LOADED_LOG,
 		"display_date_and_time_of_channel_log_resume": DISPLAY_CHAT_RESUME_DATE_TIME,
+
+		"save_private_logs": SAVE_PRIVATE_LOGS,
+		"load_private_logs": LOAD_PRIVATE_LOGS,
 	}
 
 	with open(filename, "w") as write_data:
@@ -137,9 +141,11 @@ def load_settings(filename=SETTINGS_FILE):
 	global TRACK_COMMAND_HISTORY
 	global SAVE_CHANNEL_LOGS
 	global LOAD_CHANNEL_LOGS
-	global CHANNEL_LOG_LOAD_SIZE_MAX
+	global LOG_LOAD_SIZE_MAX
 	global MARK_END_OF_LOADED_LOG
 	global DISPLAY_CHAT_RESUME_DATE_TIME
+	global SAVE_PRIVATE_LOGS
+	global LOAD_PRIVATE_LOGS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -182,9 +188,11 @@ def load_settings(filename=SETTINGS_FILE):
 			TRACK_COMMAND_HISTORY = data["enable_command_history"]
 			SAVE_CHANNEL_LOGS = data["save_channel_logs"]
 			LOAD_CHANNEL_LOGS = data["load_channel_logs"]
-			CHANNEL_LOG_LOAD_SIZE_MAX = data["maximum_channel_log_display_size"]
+			LOG_LOAD_SIZE_MAX = data["maximum_log_display_size"]
 			MARK_END_OF_LOADED_LOG = data["mark_end_of_loaded_log"]
 			DISPLAY_CHAT_RESUME_DATE_TIME = data["display_date_and_time_of_channel_log_resume"]
+			SAVE_PRIVATE_LOGS = data["save_private_logs"]
+			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

@@ -29,6 +29,8 @@ Version 0.700
 	* Added channel autologging
 	* Added settings to turn channel logging on/off
 	* Added settings to mark log load end and log resume
+	* Added private message autologging
+	* Added settings to turn on/off private autologging
 
 Version 0.600
 	* Complete re-write
