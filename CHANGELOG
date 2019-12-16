@@ -26,6 +26,9 @@ Version 0.700
 	* Moved input history toggle to its own menu, and added an option to grow/shrink the history size
 	* Changed the starter page image
 	* Removed logging information from the starter page
+	* Added channel autologging
+	* Added settings to turn channel logging on/off
+	* Added settings to mark log load end and log resume
 
 Version 0.600
 	* Complete re-write

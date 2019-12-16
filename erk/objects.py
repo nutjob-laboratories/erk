@@ -29,8 +29,11 @@ PRIVATE_MESSAGE = 6
 HORIZONTAL_RULE_MESSAGE = 7
 
 class Message:
-	def __init__(self,mtype,sender,contents):
-		self.timestamp = datetime.timestamp(datetime.now())
+	def __init__(self,mtype,sender,contents,timestamp=None):
+		if timestamp:
+			self.timestamp = timestamp
+		else:
+			self.timestamp = datetime.timestamp(datetime.now())
 		self.type = mtype
 		self.sender = sender
 		self.contents = contents

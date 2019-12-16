@@ -19,8 +19,11 @@ import erk.input
 
 class Window(QMainWindow):
 
-	# def closeEvent(self, event):
-	# 	self.app.quit()
+	def closeEvent(self, event):
+		# Logs
+		if self.type==erk.config.CHANNEL_WINDOW:
+			if erk.config.SAVE_CHANNEL_LOGS:
+				saveLog(self.client.network,self.name,self.newLog)
 
 	def handleTopicInput(self):
 		#print(self.topic.text())
@@ -70,12 +73,6 @@ class Window(QMainWindow):
 		# ==============================
 
 		erk.input.handle_input(self,self.client,user_input)
-
-		# self.client.msg(self.name,user_input)
-
-		# out = Message(SELF_MESSAGE,self.client.nickname,user_input)
-		# self.writeText(out)
-		
 
 	def keyPressDown(self):
 		if erk.config.TRACK_COMMAND_HISTORY:
@@ -158,6 +155,7 @@ class Window(QMainWindow):
 		self.app = app
 
 		self.log = []
+		self.newLog = []
 
 		self.channel_topic = ''
 
@@ -368,6 +366,27 @@ class Window(QMainWindow):
 			#finalLayout.addWidget(self.input)
 			finalLayout.addLayout(inputLayout)
 
+			# Logs
+			if erk.config.LOAD_CHANNEL_LOGS:
+				loadLog = readLog(self.client.network,self.name)
+				if len(loadLog)>erk.config.CHANNEL_LOG_LOAD_SIZE_MAX:
+					loadLog = trimLog(loadLog,erk.config.CHANNEL_LOG_LOAD_SIZE_MAX)
+
+				if len(loadLog)>0:
+					self.log = loadLog + self.log
+					if erk.config.MARK_END_OF_LOADED_LOG:
+						self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
+
+
+					if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
+						t = datetime.timestamp(datetime.now())
+						pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
+						m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
+						self.writeText(m)
+
+					self.rerender()
+
+
 		interface = QWidget()
 		interface.setLayout(finalLayout)
 		self.setCentralWidget(interface)
@@ -462,6 +481,7 @@ class Window(QMainWindow):
 		self.chat.moveCursor(QTextCursor.End)
 
 		self.log.append(message)
+		self.newLog.append(message)
 
 	def rerender(self):
 		self.chat.clear()

@@ -7,7 +7,6 @@ SERVER_WINDOW = 1
 CHANNEL_WINDOW = 2
 PRIVATE_WINDOW = 3
 
-
 CHAT_WINDOW_WIDGET_SPACING = 5
 SAVE_JOINED_CHANNELS = False
 
@@ -45,6 +44,12 @@ DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
 DISPLAY_NICKNAME_ON_CHANNEL = True
 EXPAND_SERVER_ON_CONNECT = True
 TRACK_COMMAND_HISTORY = True
+
+SAVE_CHANNEL_LOGS = True
+LOAD_CHANNEL_LOGS = True
+CHANNEL_LOG_LOAD_SIZE_MAX = 500
+MARK_END_OF_LOADED_LOG = True
+DISPLAY_CHAT_RESUME_DATE_TIME = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -84,6 +89,11 @@ def save_settings(filename=SETTINGS_FILE):
 		"display_nickname_on_channels": DISPLAY_NICKNAME_ON_CHANNEL,
 		"expand_server_node_on_connection": EXPAND_SERVER_ON_CONNECT,
 		"enable_command_history": TRACK_COMMAND_HISTORY,
+		"save_channel_logs": SAVE_CHANNEL_LOGS,
+		"load_channel_logs": LOAD_CHANNEL_LOGS,
+		"maximum_channel_log_display_size": CHANNEL_LOG_LOAD_SIZE_MAX,
+		"mark_end_of_loaded_log": MARK_END_OF_LOADED_LOG,
+		"display_date_and_time_of_channel_log_resume": DISPLAY_CHAT_RESUME_DATE_TIME,
 	}
 
 	with open(filename, "w") as write_data:
@@ -125,6 +135,11 @@ def load_settings(filename=SETTINGS_FILE):
 	global DISPLAY_NICKNAME_ON_CHANNEL
 	global EXPAND_SERVER_ON_CONNECT
 	global TRACK_COMMAND_HISTORY
+	global SAVE_CHANNEL_LOGS
+	global LOAD_CHANNEL_LOGS
+	global CHANNEL_LOG_LOAD_SIZE_MAX
+	global MARK_END_OF_LOADED_LOG
+	global DISPLAY_CHAT_RESUME_DATE_TIME
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -165,6 +180,11 @@ def load_settings(filename=SETTINGS_FILE):
 			DISPLAY_NICKNAME_ON_CHANNEL = data["display_nickname_on_channels"]
 			EXPAND_SERVER_ON_CONNECT = data["expand_server_node_on_connection"]
 			TRACK_COMMAND_HISTORY = data["enable_command_history"]
+			SAVE_CHANNEL_LOGS = data["save_channel_logs"]
+			LOAD_CHANNEL_LOGS = data["load_channel_logs"]
+			CHANNEL_LOG_LOAD_SIZE_MAX = data["maximum_channel_log_display_size"]
+			MARK_END_OF_LOADED_LOG = data["mark_end_of_loaded_log"]
+			DISPLAY_CHAT_RESUME_DATE_TIME = data["display_date_and_time_of_channel_log_resume"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

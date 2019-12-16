@@ -8,6 +8,7 @@ import string
 import random
 
 from erk.strings import *
+from erk.objects import *
 
 # Application directories
 INSTALL_DIRECTORY = sys.path[0]
@@ -18,6 +19,10 @@ AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 # Configuration directories
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
+
+# Log directory
+LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
+if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Configuration files
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
@@ -209,3 +214,71 @@ def read_style_file(filename=STYLE_FILE):
 
 	# Return the dict
 	return style
+
+# Converts an array of Message() objects to an array of arrays
+def log_to_array(log):
+	out = []
+	for l in log:
+		entry = [ l.timestamp,l.type,l.sender,l.contents ]
+		out.append(entry)
+	return out
+
+# Converts an array of arrays to an array of Message Objects
+def array_to_log(log):
+	out = []
+	for l in log:
+		m = Message(l[1],l[2],l[3],l[0])
+		out.append(m)
+	return out
+
+def trimLog(ilog,maxsize):
+	count = 0
+	shortlog = []
+	for line in reversed(ilog):
+		count = count + 1
+		shortlog.append(line)
+		if count >= maxsize:
+			break
+	return list(reversed(shortlog))
+
+def encodeLogName(network,name=None):
+	network = network.replace(":","-")
+	if name==None:
+		return f"{network}.json"
+	else:
+		return f"{network}-{name}.json"
+
+# Takes an array of Message() objects, converts it to
+# an AoA, and appens the AoA to a file containing
+# AoAs on disk
+def saveLog(network,name,logs):
+	f = encodeLogName(network,name)
+	logfile = os.path.join(LOG_DIRECTORY,f)
+
+	logs = log_to_array(logs)
+
+	slog = loadLog(network,name)
+	for e in logs:
+		slog.append(e)
+
+	with open(logfile, "w") as writelog:
+		json.dump(slog, writelog, indent=4, sort_keys=True)
+
+# Loads an AoA from disk and returns it
+def loadLog(network,name):
+	f = encodeLogName(network,name)
+	logfile = os.path.join(LOG_DIRECTORY,f)
+
+	if os.path.isfile(logfile):
+		with open(logfile, "r") as logentries:
+			data = json.load(logentries)
+			return data
+	else:
+		return []
+
+# Loads an AoA from disk, converts it to an arroy
+# of Message() objects, and returns it
+def readLog(network,name):
+	logs = loadLog(network,name)
+	logs = array_to_log(logs)
+	return logs

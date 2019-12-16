@@ -183,7 +183,6 @@ class Erk(QMainWindow):
 		self.fontMenuEntry.triggered.connect(self.menuFont)
 		settingsMenu.addAction(self.fontMenuEntry)
 
-
 		f = self.app.font()
 		fs = f.toString()
 		pfs = fs.split(',')
@@ -191,7 +190,6 @@ class Erk(QMainWindow):
 		font_size = pfs[1]
 
 		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
-
 
 		self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
 		self.winsizeMenuEntry.triggered.connect(self.menuResize)
@@ -452,6 +450,40 @@ class Erk(QMainWindow):
 
 		if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
 
+		# Log menu
+
+		logMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Logs",logMenu)
+
+		channelMenu = logMenu.addMenu(QIcon(CHANNEL_ICON),"Channels")
+
+		self.set_chanlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+		self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
+		channelMenu.addAction(self.set_chanlogsave)
+
+		if erk.config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+		self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
+		channelMenu.addAction(self.set_chanlogload)
+
+		if erk.config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+
+		logMenu.addSeparator()
+
+		self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
+		self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
+		logMenu.addAction(self.set_marklogend)
+
+		if erk.config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
+		self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
+		logMenu.addAction(self.set_logresume)
+
+		if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+
 		# End of menus
 		end_toolbar_menu(self.toolbar)
 
@@ -510,6 +542,46 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
+
+		if setting=="logresume":
+			if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
+				erk.config.DISPLAY_CHAT_RESUME_DATE_TIME = False
+				self.set_logresume.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.DISPLAY_CHAT_RESUME_DATE_TIME = True
+				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
+		if setting=="marklogend":
+			if erk.config.MARK_END_OF_LOADED_LOG:
+				erk.config.MARK_END_OF_LOADED_LOG = False
+				self.set_marklogend.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.MARK_END_OF_LOADED_LOG = True
+				self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
+		if setting=="chanlogload":
+			if erk.config.LOAD_CHANNEL_LOGS:
+				erk.config.LOAD_CHANNEL_LOGS = False
+				self.set_chanlogload.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.LOAD_CHANNEL_LOGS = True
+				self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
+		if setting=="chanlogsave":
+			if erk.config.SAVE_CHANNEL_LOGS:
+				erk.config.SAVE_CHANNEL_LOGS = False
+				self.set_chanlogsave.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.SAVE_CHANNEL_LOGS = True
+				self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="history":
 			if erk.config.TRACK_COMMAND_HISTORY:

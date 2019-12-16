@@ -5,6 +5,7 @@ from itertools import combinations
 
 from erk.files import *
 from erk.objects import *
+from erk.resources import *
 import erk.config
 
 STYLES = get_text_format_settings()
@@ -25,6 +26,16 @@ IRC_12 = "#ADD8E6"
 IRC_13 = "#FFC0CB"
 IRC_14 = "#808080"
 IRC_15 = "#D3D3D3"
+
+HORIZONTAL_RULE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
 
 TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;"><div style="!TIMESTAMP_STYLE!">[!TIME!]</div></td><td style="font-size:small;">&nbsp;</td>"""
 
@@ -98,6 +109,9 @@ def render_message(message):
 		style = STYLES["message"]
 	elif message.type==NOTICE_MESSAGE:
 		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
+	elif message.type==HORIZONTAL_RULE_MESSAGE:
+		output = HORIZONTAL_RULE
 		style = STYLES["message"]
 
 	if style=="":
