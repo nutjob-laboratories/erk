@@ -31,6 +31,20 @@ from erk.irc import(
 
 class Erk(QMainWindow):
 
+	# Occasionally, when restoring the main window, chat windows' text display
+	# gets "zoomed in" on new text, for some reason. This prevents this from
+	# being displayed to the user
+	def changeEvent(self,event):
+		if event.type() == QEvent.WindowStateChange:
+			if event.oldState() and Qt.WindowMinimized:
+				erk.events.resize_font_fix()
+			elif event.oldState() == Qt.WindowNoState:
+				erk.events.resize_font_fix()
+			elif self.windowState() == Qt.WindowMaximized:
+				erk.events.resize_font_fix()
+		
+		return QMainWindow.changeEvent(self, event)
+
 	def newStyle(self,style):
 		erk.events.apply_style(style)
 		self.connection_display.setStyleSheet(style)

@@ -187,7 +187,19 @@ def apply_style(style):
 		c.widget.chat.setStyleSheet(style)
 		c.widget.input.setStyleSheet(style)
 
-
+def resize_font_fix():
+	for c in CHANNELS:
+		c.widget.chat.zoomIn()
+		c.widget.chat.zoomOut()
+		c.widget.chat.moveCursor(QTextCursor.End)
+	for c in PRIVATES:
+		c.widget.chat.zoomIn()
+		c.widget.chat.zoomOut()
+		c.widget.chat.moveCursor(QTextCursor.End)
+	for c in CONSOLES:
+		c.widget.chat.zoomIn()
+		c.widget.chat.zoomOut()
+		c.widget.chat.moveCursor(QTextCursor.End)
 
 def rerender_all():
 	for c in CHANNELS:
