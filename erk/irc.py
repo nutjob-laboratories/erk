@@ -286,10 +286,17 @@ class IRC_Connection(irc.IRCClient):
 		erk.events.erk_joined_channel(self.gui,self,channel)
 
 		# self.gui.irc_client_joined(self,channel)
+		self.autojoin.append( [channel,''] )
 
 	def left(self, channel):
 
 		erk.events.erk_left_channel(self.gui,self,channel)
+
+		clean = []
+		for c in self.autojoin:
+			if c[0]==channel: continue
+			clean.append(c)
+		self.autojoin = clean
 
 	def privmsg(self, user, target, msg):
 		pnick = user.split('!')[0]
