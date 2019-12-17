@@ -895,6 +895,9 @@ def erk_changed_nick(gui,client,newnick):
 		if window.widget.client.id==client.id:
 			window.widget.nickDisplay(newnick)
 
+def erk_left_channel(gui,client,channel):
+	pass
+
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
 	

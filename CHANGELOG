@@ -35,6 +35,8 @@ Version 0.700
 	* Fixed a bug where some settings would not be saved
 	* Added a text color/format dialog
 	* Added an "about" dialog
+	* "Lock" icon is now properly displayed on keyed channels
+	* Upon disconnections, channels are now rejoined on reconnection
 
 Version 0.600
 	* Complete re-write

@@ -287,6 +287,10 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_client_joined(self,channel)
 
+	def left(self, channel):
+
+		erk.events.erk_left_channel(self.gui,self,channel)
+
 	def privmsg(self, user, target, msg):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
@@ -324,6 +328,39 @@ class IRC_Connection(irc.IRCClient):
 
 		# self.gui.irc_mode(self,user,channel,mset,modes,args)
 		erk.events.mode(self.gui,self,channel,user,mset,modes,args)
+
+		for m in modes:
+			if m=='k':
+				if mset:
+					# Update autojoins
+					if len(self.autojoin)>0:
+						chans = []
+						changed = False
+						key=args[0]
+						for c in self.autojoin:
+							chan = c[0]
+							ckey = c[1]
+							if chan==channel:
+								changed = True
+								e = [channel,key]
+								chans.append(e)
+								continue
+							chans.append(c)
+						if changed: self.autojoin = chans
+				else:
+					if len(self.autojoin)>0:
+						chans = []
+						changed = False
+						for c in self.autojoin:
+							chan = c[0]
+							ckey = c[1]
+							if chan==channel:
+								changed = True
+								e = [channel,'']
+								chans.append(e)
+								continue
+							chans.append(c)
+						if changed: self.autojoin = chans
 
 		
 		
@@ -624,6 +661,21 @@ class IRC_Connection(irc.IRCClient):
 						chankey = params.pop(0)
 						# self.gui.irc_mode(self,self.hostname,channel,True,m,[chankey])
 						erk.events.mode(self.gui,self,channel,self.hostname,True,m,[chankey])
+
+						# Update autojoins
+						if len(self.autojoin)>0:
+							chans = []
+							changed = False
+							for c in self.autojoin:
+								chan = c[0]
+								key = c[1]
+								if chan==channel:
+									changed = True
+									e = [channel,chankey]
+									chans.append(e)
+									continue
+								chans.append(c)
+							if changed: self.autojoin = chans
 						continue
 					# mode added
 					# self.gui.irc_mode(self,self.hostname,channel,True,m,[])
@@ -633,6 +685,22 @@ class IRC_Connection(irc.IRCClient):
 					# mode removed
 					# self.gui.irc_mode(self,self.hostname,channel,False,m,[])
 					erk.events.mode(self.gui,self,channel,self.hostname,False,m,[])
+
+					# Update autojoins
+					if m=="k":
+						if len(self.autojoin)>0:
+							chans = []
+							changed = False
+							for c in self.autojoin:
+								chan = c[0]
+								key = c[1]
+								if chan==channel:
+									changed = True
+									e = [channel,'']
+									chans.append(e)
+									continue
+								chans.append(c)
+							if changed: self.autojoin = chans
 		
 		
 

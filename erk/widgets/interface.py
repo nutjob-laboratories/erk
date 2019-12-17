@@ -349,7 +349,7 @@ class Window(QMainWindow):
 			pixmap = QPixmap(KEY_ICON)
 
 			fm = QFontMetrics(self.app.font())
-			pixmap = pixmap.scaled((fm.height() + 2), (fm.height() + 2), Qt.KeepAspectRatio, Qt.FastTransformation)
+			pixmap = pixmap.scaled((fm.height() + 2), (fm.height() + 2), Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
 			self.key_display.setPixmap(pixmap)
 
