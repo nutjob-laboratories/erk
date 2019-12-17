@@ -525,6 +525,26 @@ class Erk(QMainWindow):
 		self.about.triggered.connect(self.menuAbout)
 		helpMenu.addAction(self.about)
 
+		helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
+		helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 2812",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
+		helpMenu.addAction(helpLink)
+
+		helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
+		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
+		helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"List of ASCIImoji shortcodes",self)
+		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.open_link_in_browser(u))
+		helpMenu.addAction(helpLink)
+
 		# End of menus
 		end_toolbar_menu(self.toolbar)
 
@@ -988,6 +1008,11 @@ class Erk(QMainWindow):
 			QDesktopServices.openUrl(url)
 			self.starter.setSource(QUrl())
 			self.starter.moveCursor(QTextCursor.End)
+
+	def open_link_in_browser(self,url):
+		u = QUrl()
+		u.setUrl(url)
+		QDesktopServices.openUrl(u)
 
 	def menuAbout(self):
 		self.about_dialog = AboutDialog()

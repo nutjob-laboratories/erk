@@ -37,6 +37,9 @@ Version 0.700
 	* Added an "about" dialog
 	* "Lock" icon is now properly displayed on keyed channels
 	* Upon disconnections, channels are now rejoined on reconnection
+	* Added /send message (to send raw, unaltered commands to the server)
+	* Added RFC links to help menu
+	* Added shortcode lists (for emojis and ASCIImojis) to help menu
 
 Version 0.600
 	* Complete re-write

@@ -83,3 +83,6 @@ FORMAT_ICON = ":/gui-format.png"
 ERK_BIG_ICON = ":/gui-erk_button.png"
 
 ABOUT_ICON = ":/gui-about.png"
+
+DOCUMENT_ICON = ":/gui-document.png"
+LINK_ICON = ":/gui-link.png"

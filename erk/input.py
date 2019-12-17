@@ -108,6 +108,17 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
+		if tokens[0].lower()=='/send' and len(tokens)>=2:
+			tokens.pop(0)
+			data = ' '.join(tokens)
+			client.sendLine(data)
+			return True
+		if tokens[0].lower()=='/send':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /send MESSAGE")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()=='/whois' and len(tokens)==2:
 			tokens.pop(0)
 			target = tokens.pop(0)
