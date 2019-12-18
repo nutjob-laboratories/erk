@@ -125,7 +125,10 @@ def build_connection_display(gui,new_server=None):
 
 					if c.widget.client.network:
 						parent.erk_name = c.widget.client.network
-						parent.setText(0,c.widget.client.network)
+						if c.widget.client.is_away:
+							parent.setText(0,c.widget.client.network+" (away)")
+						else:
+							parent.setText(0,c.widget.client.network)
 						parent.setIcon(0,QIcon(NETWORK_ICON))
 					else:
 						parent.erk_name = s[0]

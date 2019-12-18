@@ -106,6 +106,7 @@ class IRC_Connection(irc.IRCClient):
 		msg = params[1]
 
 		self.is_away = False
+		erk.events.build_connection_display(self.gui)
 
 		# self.gui.irc_not_away(self,msg)
 		#erk.events.client_unaway(self.gui,self)
@@ -115,6 +116,7 @@ class IRC_Connection(irc.IRCClient):
 		msg = params[1]
 
 		self.is_away = True
+		erk.events.build_connection_display(self.gui)
 
 		# self.gui.irc_is_away(self,msg)
 

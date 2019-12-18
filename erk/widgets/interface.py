@@ -409,6 +409,9 @@ class Window(QMainWindow):
 
 	# BEGIN GUI METHODS
 
+	def rebuildConnection(self):
+		erk.events.build_connection_display(self.parent)
+
 	def channelNickVisibility(self):
 		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
 			self.nick_display.show()

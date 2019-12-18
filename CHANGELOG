@@ -42,6 +42,7 @@ Version 0.700
 	* Added shortcode lists (for emojis and ASCIImojis) to help menu
 	* Bugfix; chat text windows change font size occasionally. This is now prevented
 	* Added /send and /mode commands
+	* Added /away and /back commands
 
 Version 0.600
 	* Complete re-write

@@ -19,6 +19,8 @@ COMMON_COMMANDS = {
 	"/ressl": "/ressl ",
 	"/send": "/send ",
 	"/mode": "/mode ",
+	"/away": "/away ",
+	"/back": "/back",
 }
 
 CHANNEL_COMMANDS = {
@@ -108,6 +110,28 @@ def handle_console_input(window,client,text):
 def handle_common_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/back' and len(tokens)==1:
+			client.back()
+			#window.rebuildConnection()
+			return True
+		if tokens[0].lower()=='/back' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: /back")
+			window.writeText(msg)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/away' and len(tokens)>=2:
+			tokens.pop(0)
+			msg = ' '.join(tokens)
+			client.away(msg)
+			#window.rebuildConnection()
+			return True
+		if tokens[0].lower()=='/away' and len(tokens)==1:
+			client.away('busy')
+			#window.rebuildConnection()
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/mode' and len(tokens)>=2:
