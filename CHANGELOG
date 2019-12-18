@@ -41,6 +41,7 @@ Version 0.700
 	* Added RFC links to help menu
 	* Added shortcode lists (for emojis and ASCIImojis) to help menu
 	* Bugfix; chat text windows change font size occasionally. This is now prevented
+	* Added /send and /mode commands
 
 Version 0.600
 	* Complete re-write
