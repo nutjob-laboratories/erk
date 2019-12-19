@@ -167,6 +167,8 @@ class IRC_Connection(irc.IRCClient):
 			if len(p)==2:
 				if p[0].lower()=='network':
 					self.network = p[1]
+
+
 					# self.gui.irc_network_and_hostname(self,p[1],self.hostname)
 					#erk.events.received_network_and_hostname(self.gui,self,p[1],self.hostname)
 
@@ -175,6 +177,7 @@ class IRC_Connection(irc.IRCClient):
 					# 	update_user_history_network(self.server,self.port,p[1])
 
 
+		self.server_options(options)
 
 		# self.gui.irc_options(self,options)
 		erk.events.server_options(self.gui,self,options)
@@ -210,6 +213,25 @@ class IRC_Connection(irc.IRCClient):
 		self.flat_motd = ''
 
 		self.last_tried_nickname = ''
+
+		# BEGIN SERVER INFO
+
+		self.maxnicklen = 0
+		self.maxchannels = 0
+		self.channellen = 0
+		self.topiclen = 0
+		self.kicklen = 0
+		self.awaylen = 0
+		self.maxtargets = 0
+		self.casemapping = ""
+		self.cmds = []
+		self.prefix = []
+		self.chanmodes = []
+		self.supports = []
+		self.modes = 0
+		self.maxmodes = []
+
+		# END SERVER INFO
 
 		entry = [self.server,self.port]
 		self.gui.connecting.append(entry)
@@ -896,6 +918,93 @@ class IRC_Connection(irc.IRCClient):
 			pass
 
 		return irc.IRCClient.lineReceived(self, line)
+
+	# BEGIN SERVER OPTIONS
+
+	def server_options(self,options):
+
+		# Options are sent in chunks: not every option
+		# will be set in each chunk
+
+		supports = []
+		maxchannels = 0
+		maxnicklen = 0
+		nicklen = 0
+		channellen = 0
+		topiclen = 0
+		kicklen = 0
+		awaylen = 0
+		maxtargets = 0
+		modes = 0
+		maxmodes = []
+		chanmodes = []
+		prefix = []
+		cmds = []
+		casemapping = "none"
+
+		for o in options:
+			if "=" in o:
+				p = o.split("=")
+				if len(p)>1:
+					if p[0].lower() == "maxchannels": maxchannels = int(p[1])
+					if p[0].lower() == "maxnicklen": maxnicklen = int(p[1])
+					if p[0].lower() == "nicklen": nicklen = int(p[1])
+					if p[0].lower() == "channellen": channellen = int(p[1])
+					if p[0].lower() == "topiclen": topiclen = int(p[1])
+					if p[0].lower() == "kicklen": kicklen = int(p[1])
+					if p[0].lower() == "awaylen": awaylen = int(p[1])
+					if p[0].lower() == "maxtargets": maxtargets = int(p[1])
+					if p[0].lower() == "modes": modes = int(p[1])
+					if p[0].lower() == "casemapping": casemapping = p[1]
+
+					if p[0].lower() == "cmds":
+						for c in p[1].split(","):
+							cmds.append(c)
+
+					if p[0].lower() == "prefix":
+						pl = p[1].split(")")
+						if len(pl)>=2:
+							pl[0] = pl[0][1:]	# get rid of prefixed (
+
+							for i in range(len(pl[0])):
+								entry = [ pl[0][i], pl[1][i] ]
+								prefix.append(entry)
+
+					if p[0].lower() == "chanmodes":
+						for e in p[1].split(","):
+							chanmodes.append(e)
+
+					if p[0].lower() == "maxlist":
+						for e in p[1].split(","):
+							ml = e.split(':')
+							if len(ml)==2:
+								entry = [ml[0],int(ml[1])]
+								maxmodes.append(entry)
+			else:
+				supports.append(o)
+
+		if len(maxmodes)>0: self.maxmodes = maxmodes
+		if maxnicklen>0: self.maxnicklen = maxnicklen
+		if maxchannels > 0: self.maxchannels = maxchannels
+		if channellen > 0: self.channellen = channellen
+		if topiclen > 0: self.topiclen = topiclen
+		if kicklen > 0: self.kicklen = kicklen
+		if awaylen > 0: self.awaylen = awaylen
+		if maxtargets > 0: self.maxtargets = maxtargets
+		if modes > 0: self.modes = modes
+		if casemapping != "": self.casemapping = casemapping
+
+		if len(cmds)>0:
+			for c in cmds:
+				self.cmds.append(c)
+
+		if len(prefix)>0: self.prefix = prefix
+		if len(chanmodes)>0: self.chanmodes = chanmodes
+		if len(supports)>0:
+			for s in supports:
+				self.supports.append(s)
+
+	# BEGIN SERVER OPTIONS
 
 
 def config(obj,**kwargs):

@@ -1135,6 +1135,35 @@ class Erk(QMainWindow):
 						#if item.text(0)==SERVER_CONSOLE_NAME:
 						if item.erk_console:
 
+							entryLabel = QLabel(f"&nbsp;<big><b>"+item.erk_client.server+":"+str(item.erk_client.port)+"</b></big>",self)
+							entry = QWidgetAction(self)
+							entry.setDefaultWidget(entryLabel)
+							menu.addAction(entry)
+
+							if item.erk_client.hostname:
+								entryLabel = QLabel(f"&nbsp;<small>"+item.erk_client.hostname+"</small>",self)
+								entry = QWidgetAction(self)
+								entry.setDefaultWidget(entryLabel)
+								menu.addAction(entry)
+
+							menu.addSeparator()
+
+							# get_network_url(net)
+							if item.erk_client.network:
+								link = get_network_url(item.erk_client.network)
+								if link:
+									entry = QAction(QIcon(LINK_ICON),item.erk_client.network+" website",self)
+									entry.triggered.connect(lambda state,u=link: self.open_link_in_browser(u))
+									menu.addAction(entry)
+
+
+							settingsMenu = buildServerSettingsMenu(self,item.erk_client)
+							settingsMenu.setIcon(QIcon(SETTINGS_ICON))
+
+							menu.addMenu(settingsMenu)
+
+							menu.addSeparator()
+
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuNick(client))
 							menu.addAction(entry)
@@ -1145,7 +1174,7 @@ class Erk(QMainWindow):
 
 							menu.addSeparator()
 
-							entry = QAction(QIcon(EXIT_ICON),"Disconnect",self)
+							entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: erk.events.disconnect_from_server(client))
 							menu.addAction(entry)
 						else:
@@ -1245,3 +1274,117 @@ class Erk(QMainWindow):
 					autojoin=info.autojoin
 				)
 
+# SERVER SETTINGS MENU
+
+def buildServerSettingsMenu(self,client):
+
+	supports = client.supports # list
+	maxchannels = client.maxchannels
+	maxnicklen = client.maxnicklen
+	channellen = client.channellen
+	topiclen = client.topiclen
+	kicklen = client.kicklen
+	awaylen = client.awaylen
+	maxtargets = client.maxtargets
+	modes = client.modes
+	chanmodes = client.chanmodes #list
+	prefix = client.prefix # list
+	cmds = client.cmds # list
+	casemapping = client.casemapping
+	maxmodes = client.maxmodes
+
+	#self.config.clear()
+
+	optionsMenu = QMenu("Server options")
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channels"+f":</b> {maxchannels}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum nickname length"+f":</b> {maxnicklen}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channel length"+f":</b> {channellen}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum topic length"+f":</b> {topiclen}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum kick length"+f":</b> {kicklen}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum away length"+f":</b> {awaylen}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum message targets"+f":</b> {maxtargets}&nbsp;&nbsp;",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum modes per user"+f":</b> {modes}",self)
+	e = QWidgetAction(self)
+	e.setDefaultWidget(el)
+	optionsMenu.addAction(e)
+
+	optionsMenu.addSeparator()
+
+	maxmodesmenu = QMenu("Maximum modes",self)
+	for c in maxmodes:
+		e = QAction(F"{c[0]}: {c[1]}", self) 
+		maxmodesmenu.addAction(e)
+	optionsMenu.addMenu(maxmodesmenu)
+
+	cmdmenu = QMenu("Commands",self)
+	for c in cmds:
+		e = QAction(F"{c}", self) 
+		cmdmenu.addAction(e)
+	optionsMenu.addMenu(cmdmenu)
+
+	supportsmenu = QMenu("Supports",self)
+	for c in supports:
+		e = QAction(F"{c}", self) 
+		supportsmenu.addAction(e)
+	optionsMenu.addMenu(supportsmenu)
+
+	chanmodemenu = QMenu("Channel modes",self)
+	ct = 0
+	for c in chanmodes:
+		if ct==0:
+			ctype = "A"
+		elif ct==1:
+			ctype = "B"
+		elif ct==2:
+			ctype = "C"
+		elif ct==3:
+			ctype = "D"
+		e = QAction(F"{ctype}: {c}", self) 
+		chanmodemenu.addAction(e)
+		ct = ct + 1
+	optionsMenu.addMenu(chanmodemenu)
+
+	prefixmenu = QMenu("Status prefixes",self)
+	for c in prefix:
+		m = c[0]
+		s = c[1]
+		if s=="&": s="&&"
+		e = QAction(F"{m}: {s}", self)
+		if m=="o": e.setIcon(QIcon(USERLIST_OPERATOR_ICON))
+		if m=="v": e.setIcon(QIcon(USERLIST_VOICED_ICON))
+		if m=="a": e.setIcon(QIcon(USERLIST_ADMIN_ICON))
+		if m=="q": e.setIcon(QIcon(USERLIST_OWNER_ICON))
+		if m=="h": e.setIcon(QIcon(USERLIST_HALFOP_ICON))
+		prefixmenu.addAction(e)
+	optionsMenu.addMenu(prefixmenu)
+
+	return optionsMenu

@@ -86,3 +86,5 @@ ABOUT_ICON = ":/gui-about.png"
 
 DOCUMENT_ICON = ":/gui-document.png"
 LINK_ICON = ":/gui-link.png"
+
+SETTINGS_ICON = ":/gui-settings.png"

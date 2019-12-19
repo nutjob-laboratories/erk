@@ -50,6 +50,10 @@ Version 0.700
 	* System messages are now prefixed with a symbol
 	* Users can dis/enable system message symbol prefix
 	* Away messages triggered by "auto-whois on join" are no longer displayed
+	* Added server settings display to the connection display context menu
+	* Added a link to the IRC network webpage (if there is one) to the connection display context menu
+	* Added server IP, port, and hostname to the connection display context menu
+	* Changed the "exit" icon
 
 Version 0.600
 	* Complete re-write
