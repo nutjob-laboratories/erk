@@ -37,6 +37,19 @@ def handle_channel_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
+		if tokens[0].lower()=='/mode' and len(tokens)>=2:
+			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
+				# channel has been passed as an argument
+				# Do not handle the command here, let the command get
+				# handled in handle_common_input()
+				pass
+			else:
+				tokens.pop(0)
+				data = ' '.join(tokens)
+				client.sendLine("MODE "+window.name+" "+data)
+				return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()=='/me' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)
@@ -114,7 +127,6 @@ def handle_common_input(window,client,text):
 	if len(tokens)>0:
 		if tokens[0].lower()=='/back' and len(tokens)==1:
 			client.back()
-			#window.rebuildConnection()
 			return True
 		if tokens[0].lower()=='/back' and len(tokens)==1:
 			msg = Message(ERROR_MESSAGE,'',"Usage: /back")
@@ -126,21 +138,19 @@ def handle_common_input(window,client,text):
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			client.away(msg)
-			#window.rebuildConnection()
 			return True
 		if tokens[0].lower()=='/away' and len(tokens)==1:
 			client.away('busy')
-			#window.rebuildConnection()
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/mode' and len(tokens)>=2:
+		if tokens[0].lower()=='/mode' and len(tokens)>=3:
 			tokens.pop(0)
 			data = ' '.join(tokens)
 			client.sendLine("MODE "+data)
 			return True
-		if tokens[0].lower()=='/send':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /send MESSAGE")
+		if tokens[0].lower()=='/mode':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /mode TARGET MODE [ARGUMENTS]")
 			window.writeText(msg)
 			return True
 

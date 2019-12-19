@@ -43,6 +43,7 @@ Version 0.700
 	* Bugfix; chat text windows change font size occasionally. This is now prevented
 	* Added /send and /mode commands
 	* Added /away and /back commands
+	* Bugfix for /mode command (/mode can now implicitly issue changes for the current channel, or explicitly for other channels)
 
 Version 0.600
 	* Complete re-write
