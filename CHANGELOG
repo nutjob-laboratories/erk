@@ -44,6 +44,7 @@ Version 0.700
 	* Added /send and /mode commands
 	* Added /away and /back commands
 	* Bugfix for /mode command (/mode can now implicitly issue changes for the current channel, or explicitly for other channels)
+	* Added the /oper command
 
 Version 0.600
 	* Complete re-write

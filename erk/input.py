@@ -21,6 +21,7 @@ COMMON_COMMANDS = {
 	"/mode": "/mode ",
 	"/away": "/away ",
 	"/back": "/back",
+	"/oper": "/oper ",
 }
 
 CHANNEL_COMMANDS = {
@@ -123,6 +124,18 @@ def handle_console_input(window,client,text):
 def handle_common_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/oper' and len(tokens)==3:
+			tokens.pop(0)
+			username = tokens.pop(0)
+			password = tokens.pop(0)
+			client.sendLine("OPER "+username+" "+password)
+			return True
+		if tokens[0].lower()=='/oper':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /oper USERNAME PASSWORD")
+			window.writeText(msg)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/back' and len(tokens)==1:
