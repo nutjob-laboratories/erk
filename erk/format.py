@@ -86,6 +86,10 @@ def render_message(message):
 
 	if erk.config.FILTER_PROFANITY: msg_to_display = filterProfanityFromText(msg_to_display)
 
+	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
+		if message.type==SYSTEM_MESSAGE:
+			msg_to_display = "&diams; "+msg_to_display
+
 	p = message.sender.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -113,6 +117,9 @@ def render_message(message):
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
 		output = HORIZONTAL_RULE
 		style = STYLES["message"]
+	elif message.type==WHOIS_MESSAGE:
+		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
@@ -131,6 +138,7 @@ def render_message(message):
 
 		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",STYLES["timestamp"])
 		ts = ts.replace("!TIME!",pretty_timestamp)
+
 		output = output.replace("!TIMESTAMP!",ts)
 	else:
 		output = output.replace("!TIMESTAMP!",'')
@@ -141,6 +149,8 @@ def render_message(message):
 		user_style = STYLES["username"]
 	elif message.type==NOTICE_MESSAGE:
 		user_style = STYLES["notice"]
+	elif message.type==WHOIS_MESSAGE:
+		user_style = STYLES["system"]
 	else:
 		user_style = ''
 
@@ -157,6 +167,7 @@ def render_message(message):
 		output = output.replace("!MESSAGE!",nick +" " +msg_to_display)
 	else:
 		output = output.replace("!MESSAGE!",msg_to_display)
+
 	return output
 
 # URL LINKS

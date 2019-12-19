@@ -27,6 +27,7 @@ ACTION_MESSAGE = 4
 NOTICE_MESSAGE = 5
 PRIVATE_MESSAGE = 6
 HORIZONTAL_RULE_MESSAGE = 7
+WHOIS_MESSAGE = 8
 
 class Message:
 	def __init__(self,mtype,sender,contents,timestamp=None):

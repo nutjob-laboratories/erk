@@ -281,10 +281,6 @@ def close_channel_window(client,name,msg=None):
 		clean.append(c)
 	CHANNELS = clean
 
-	window = fetch_console_window(client)
-	if window:
-		window.writeText( Message(SYSTEM_MESSAGE,'',"You left "+name) )
-
 	if len(CHANNELS)>0:
 		w = None
 		for c in CHANNELS:
@@ -484,6 +480,17 @@ def received_error(gui,client,error):
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(ERROR_MESSAGE,'',error) )
+
+def user_away(gui,client,user,msg):
+	# print(user +" "+ msg)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',user+" is away ("+msg+")") )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',user+" is away ("+msg+")") )
 
 def mode(gui,client,channel,user,mset,modes,args):
 	
@@ -758,12 +765,20 @@ def received_whois(gui,client,whoisdata):
 	
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.username+"@"+whoisdata.host+": "+whoisdata.realname) )
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.server) )
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.channels) )
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", "Signed on: "+whoisdata.signon) )
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", "Idle: "+whoisdata.idle+" seconds") )
-			gui.current_page.writeText( Message(CHAT_MESSAGE,"["+whoisdata.nickname+"]", whoisdata.privs) )
+			if erk.config.DISPLAY_IRC_COLORS:
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x1D"+whoisdata.username+"@"+whoisdata.host+"\x0F: \x02"+whoisdata.realname+"\x0F") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.server+"\x0F") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.channels+"\x0F") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Signed on:\x0F \x1D"+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')+"\x0F") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Idle:\x0F \x1D"+whoisdata.idle+" seconds\x0F") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.privs+"\x0F") )
+			else:
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.username+"@"+whoisdata.host+"<: "+whoisdata.realname) )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.server) )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.channels) )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "Signed on: "+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')) )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "Idle: "+whoisdata.idle+" seconds") )
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.privs) )
 
 def topic(gui,client,setter,channel,topic):
 	p = setter.split('!')
@@ -911,7 +926,10 @@ def erk_changed_nick(gui,client,newnick):
 			window.widget.nickDisplay(newnick)
 
 def erk_left_channel(gui,client,channel):
-	pass
+	
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"You left "+channel) )
 
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
@@ -992,11 +1010,11 @@ def join(gui,client,user,channel):
 def motd(gui,client,motd):
 	
 	window = fetch_console_window(client)
-	window.writeText( Message(SYSTEM_MESSAGE,'',"BEGIN MOTD") )
+	#window.writeText( Message(SYSTEM_MESSAGE,'',"BEGIN MOTD") )
 	if window:
 		for line in motd:
 			window.writeText( Message(SYSTEM_MESSAGE,'',line) )
-	window.writeText( Message(SYSTEM_MESSAGE,'',"END MOTD") )
+	#window.writeText( Message(SYSTEM_MESSAGE,'',"END MOTD") )
 
 def notice_message(gui,client,target,user,message):
 

@@ -100,6 +100,15 @@ class IRC_Connection(irc.IRCClient):
 		user = params[1]
 		msg = params[2]
 
+		# Make sure to not display the away message
+		# if the reason why we're receiving it is
+		# because of an automatic "whois" request
+		for nick in self.request_whois:
+			if nick==user: return
+
+		
+		erk.events.user_away(self.gui,self,user,msg)
+
 		# self.gui.irc_user_away(self,user,msg)
 
 	def irc_RPL_UNAWAY(self,prefix,params):

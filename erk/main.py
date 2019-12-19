@@ -249,11 +249,17 @@ class Erk(QMainWindow):
 		self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
 		messageMenu.addAction(self.set_profanity)
 
+		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
+		self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
+		messageMenu.addAction(self.set_sysprefix)
+
+		if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+
 		# Channel display submenu
 
 		channelMenu = settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
-
-		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 		self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
@@ -618,7 +624,26 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
+
+	# self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
+	# 	self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
+	# 	messageMenu.addAction(self.set_sysprefix)
+
+	# 	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+
+
 	def toggleSetting(self,setting):
+
+		if setting=="sysprefix":
+			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
+				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = False
+				self.set_sysprefix.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
+				self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.rerender_all()
+			return
 
 		if setting=="privlogsave":
 			if erk.config.SAVE_PRIVATE_LOGS:

@@ -45,6 +45,11 @@ Version 0.700
 	* Added /away and /back commands
 	* Bugfix for /mode command (/mode can now implicitly issue changes for the current channel, or explicitly for other channels)
 	* Added the /oper command
+	* Made WHOIS data messages a bit prettier (username is displayed in system colors, and other data is displayed with IRC color codes)
+	* Users are now shown away messages when trying to PM or whois a user
+	* System messages are now prefixed with a symbol
+	* Users can dis/enable system message symbol prefix
+	* Away messages triggered by "auto-whois on join" are no longer displayed
 
 Version 0.600
 	* Complete re-write
