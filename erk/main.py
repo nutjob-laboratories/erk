@@ -693,7 +693,7 @@ class Erk(QMainWindow):
 		self.macroMenu.addAction(ircMenu_Macro)
 
 		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=self: erk.macros.load_macros())
+		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
 		self.macroMenu.addAction(ircMenu_Macro)
 
 		self.macroMenu.addSeparator()
@@ -712,6 +712,10 @@ class Erk(QMainWindow):
 	# 	messageMenu.addAction(self.set_sysprefix)
 
 	# 	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+
+	def menuReloadMacros(self):
+		erk.macros.load_macros()
+		self.rebuildMacroMenu()
 
 
 	def toggleSetting(self,setting):
