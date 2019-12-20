@@ -4,7 +4,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Erk 0.700</b></a>
 </p>
 
-**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.700.134**.
+**Erk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.700.135**.
 
 **Erk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
@@ -42,6 +42,9 @@
 * Automatic logging of channel and private chats
 	* Logging can be switched on and off
 	* Logs can be automatically loaded when resuming public or private chats
+* Powerful macro engine
+	* Users can create and edit macros directly in the client
+	* Macros can send messages or execute commands
 
 # Requirements
 **Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
