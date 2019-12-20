@@ -129,7 +129,7 @@ class Dialog(QDialog):
 		macroLayout.addRow(QLabel("<small><i><b>$channel</b></i></small>"), QLabel("<small>The name of the channel window where the macro was triggered</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$server</b></i></small>"), QLabel("<small>Address used to connect to the IRC server</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$port</b></i></small>"), QLabel("<small>Port connected to</small>"))
-		macroLayout.addRow(QLabel("<small><i><b>$hostname</b></i></small>"), QLabel("<small>The server's hostname/small>"))
+		macroLayout.addRow(QLabel("<small><i><b>$hostname</b></i></small>"), QLabel("<small>The server's hostname</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$network</b></i></small>"), QLabel("<small>The server's network</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$self</b></i></small>"), QLabel("<small>Your nickname</small>"))
 
