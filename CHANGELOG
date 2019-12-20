@@ -54,6 +54,9 @@ Version 0.700
 	* Added a link to the IRC network webpage (if there is one) to the connection display context menu
 	* Added server IP, port, and hostname to the connection display context menu
 	* Changed the "exit" icon
+	* Added user macros
+	* Added a dialog for creating and editing macros
+	* Added "macro" menu for macro management
 
 Version 0.600
 	* Complete re-write

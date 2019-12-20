@@ -46,6 +46,7 @@ from erk.objects import *
 import erk.config
 import erk.format
 import erk.input
+import erk.macros
 
 class Window(QMainWindow):
 
@@ -1073,6 +1074,8 @@ class SpellTextEdit(QPlainTextEdit):
 					text = self.textCursor().selectedText()
 
 					self.COMMAND_LIST = self.parent.commands
+
+					self.COMMAND_LIST.update(erk.macros.MACRO_COMMANDS)
 
 					# # Inject /cnotice and /cprivmsg if supported
 					# if self.parent.gui.does_server_support_cnotice(self.parent.client):

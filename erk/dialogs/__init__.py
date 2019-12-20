@@ -45,6 +45,12 @@ import erk.dialogs.log_size as LogSize
 import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
 
+import erk.dialogs.macro as Macro
+
+def MacroDialog(obj,filename=None):
+	x = Macro.Dialog(filename,obj)
+	x.show()
+
 def AboutDialog():
 	x = About.Dialog()
 	x.show()

@@ -49,7 +49,8 @@ from erk.dialogs import(
 	HistorySizeDialog,
 	LogSizeDialog,
 	FormatTextDialog,
-	AboutDialog
+	AboutDialog,
+	MacroDialog
 	)
 
 from erk.irc import(
@@ -565,6 +566,29 @@ class Erk(QMainWindow):
 
 		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
 
+		# Macro menu
+
+		self.macroMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
+
+		self.rebuildMacroMenu()
+
+		# self.editmacro = QAction("New macro",self)
+		# self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
+		# self.macroMenu.addAction(self.editmacro)
+
+		# self.macroMenu.addSeparator()
+
+		# for m in erk.macros.MACROS:
+		# 	trigger = m["trigger"]
+		# 	filename = m["filename"]
+
+		# 	entry = QAction(trigger,self)
+		# 	entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
+		# 	self.macroMenu.addAction(entry)
+
+
 		# Help menu
 
 		helpMenu = QMenu()
@@ -653,6 +677,34 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+
+	def rebuildMacroMenu(self):
+
+		#erk.macros.load_macros()
+
+		self.macroMenu.clear()
+
+		self.editmacro = QAction(QIcon(MACRO_ICON),"New macro",self)
+		self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
+		self.macroMenu.addAction(self.editmacro)
+
+		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=self: erk.macros.load_macros())
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		self.macroMenu.addSeparator()
+
+		for m in erk.macros.MACROS:
+			trigger = m["trigger"]
+			filename = m["filename"]
+
+			entry = QAction(QIcon(MACRO_FILE_ICON),trigger,self)
+			entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
+			self.macroMenu.addAction(entry)
 
 
 	# self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)

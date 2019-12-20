@@ -118,3 +118,8 @@ DOCUMENT_ICON = ":/gui-document.png"
 LINK_ICON = ":/gui-link.png"
 
 SETTINGS_ICON = ":/gui-settings.png"
+
+MACRO_ICON = ":/gui-macro.png"
+MACRO_FILE_ICON = ":/gui-macro_file.png"
+
+DIRECTORY_ICON = ":/gui-directory.png"

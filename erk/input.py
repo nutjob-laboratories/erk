@@ -32,9 +32,12 @@
 #import erk.events
 import emoji
 
+from PyQt5.QtGui import *
+
 from erk.objects import *
 from erk.files import *
 import erk.config
+import erk.macros
 
 COMMON_COMMANDS = {
 	"/msg": "/msg ",
@@ -62,9 +65,148 @@ PRIVATE_COMMANDS = {
 	"/me": "/me ",	
 }
 
+def handle_macro_input(window,client,text):
+	tokens = text.split()
+
+	# Macros
+	for m in erk.macros.MACROS:
+		argc = m["arguments"]
+		output = m["output"]
+		trigger = m["trigger"]
+		mtype = m["type"]
+		execute = m["execute"]
+
+		if len(tokens)>0:
+			if tokens[0].lower()==trigger and (len(tokens)-1)==argc:
+				tokens.pop(0)
+
+				output = output.replace('$$',"_ESCAPED_DOLLAR_SIGN_")
+
+				#output = output.replace('$channel',window.name,1)
+				output = erk.macros.macro_variables(window,client,output)
+
+				for a in tokens:
+					output = output.replace('$',a,1)
+
+				output = output.replace('_ESCAPED_DOLLAR_SIGN_',"$")
+
+				if mtype=="privmsg":
+
+					if window.type==erk.config.CHANNEL_WINDOW or window.type==erk.config.PRIVATE_WINDOW:
+
+						if execute:
+							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
+							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
+							client.msg(window.name,output)
+							out = Message(SELF_MESSAGE,client.nickname,output)
+							window.writeText(out)
+						else:
+							window.input.setText("/msg "+output)
+							window.input.moveCursor(QTextCursor.End)
+						return True
+					else:
+						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
+						window.writeText(msg)
+						return True
+
+				elif mtype=="action":
+
+					if window.type==erk.config.CHANNEL_WINDOW or window.type==erk.config.PRIVATE_WINDOW:
+
+						if execute:
+							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
+							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
+							client.describe(window.name,output)
+							out = Message(ACTION_MESSAGE,client.nickname,output)
+							window.writeText(out)
+						else:
+							window.input.setText("/me "+output)
+							window.input.moveCursor(QTextCursor.End)
+						return True
+					else:
+						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
+						window.writeText(msg)
+						return True
+				elif mtype=="command":
+					if execute:
+						if window.type==erk.config.CHANNEL_WINDOW:
+							handle_channel_input(window,client,output)
+							return True
+
+						if window.type==erk.config.PRIVATE_WINDOW:
+							handle_private_input(window,client,output)
+							return True
+
+						handle_console_input(window,client,output)
+						return True
+					else:
+						window.input.setText(output)
+						window.input.moveCursor(QTextCursor.End)
+						return True
+
+				#return True
+			if tokens[0].lower()==trigger:
+
+				passed = (len(tokens)-1)
+
+				if argc==0 or argc==1:
+					sarg = "argument"
+				else:
+					sarg = "arguments"
+
+				if passed>argc:
+					# too many arguments
+					msg = Message(ERROR_MESSAGE,'',"Too many arguments: \""+trigger+"\" takes "+str(argc)+" "+sarg)
+				elif passed<argc:
+					# too few argument
+					msg = Message(ERROR_MESSAGE,'',"Not enough arguments: \""+trigger+"\" takes "+str(argc)+" "+sarg)
+
+				window.writeText(msg)
+				return True
+
 def handle_channel_input(window,client,text):
 
 	tokens = text.split()
+
+	# # Macros
+	# for m in erk.macros.MACROS:
+	# 	argc = m["arguments"]
+	# 	output = m["output"]
+	# 	trigger = m["trigger"]
+	# 	mtype = m["type"]
+
+	# 	if len(tokens)>0:
+	# 		if tokens[0].lower()==trigger and (len(tokens)-1)==argc:
+	# 			tokens.pop(0)
+	# 			#output = output.replace('$channel',window.name,1)
+	# 			output = erk.macros.macro_variables(window,client,output)
+
+	# 			for a in tokens:
+	# 				output = output.replace('$',a,1)
+
+	# 			if mtype=="privmsg":
+	# 				if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
+	# 				if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
+	# 				client.msg(window.name,output)
+	# 				out = Message(SELF_MESSAGE,client.nickname,output)
+	# 				window.writeText(out)
+	# 			elif mtype=="action":
+	# 				if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
+	# 				if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
+	# 				client.describe(window.name,output)
+	# 				out = Message(ACTION_MESSAGE,client.nickname,output)
+	# 				window.writeText(out)
+	# 			elif mtype=="command":
+	# 				handle_channel_input(window,client,output)
+
+	# 			return True
+	# 		if tokens[0].lower()==trigger:
+	# 			msg = Message(ERROR_MESSAGE,'',"Wrong number of arguments to "+trigger+" (passed "+str((len(tokens)-1))+", requires "+str(argc)+")")
+	# 			window.writeText(msg)
+	# 			return True
+
+
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/mode' and len(tokens)>=2:
@@ -153,6 +295,8 @@ def handle_console_input(window,client,text):
 def handle_common_input(window,client,text):
 
 	tokens = text.split()
+
+	if handle_macro_input(window,client,text): return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/oper' and len(tokens)==3:
