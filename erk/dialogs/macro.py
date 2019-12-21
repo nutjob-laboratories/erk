@@ -88,51 +88,38 @@ class Dialog(QDialog):
 
 		macroLayout.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
 
-		#macroLayout.addRow(QLabel(" "))
-
 		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>command</b></i> to interpret the macro as a command</small>")
 
 		typeDesc.setWordWrap(True)
 		macroLayout.addRow(typeDesc)
 
-		# macroLayout.addRow(QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message</small>"))
-		# macroLayout.addRow(QLabel("<small>Set to <i><b>action</b></i> to send the macro as a CTCP action message</small>"))
-		# macroLayout.addRow(QLabel("<small>Set to <i><b>command</b></i> to interpret the macro as a command</small>"))
-
 		macroLayout.addRow(QLabel("<b>Macro type</b>"), self.type)
-
-		#macroLayout.addRow(QLabel(" "))
 
 		exeDesc = QLabel("<small>If set to execute immediately, the macro will be processed immediately; if not, the macro's output will be inserted into the window's text entry</small>")
 
 		exeDesc.setWordWrap(True)
 		macroLayout.addRow(exeDesc)
 
-		# macroLayout.addRow(QLabel("<small>If set to execute immediately, the macro will be</small>"))
-		# macroLayout.addRow(QLabel("<small>processed immediately; if not, the macro's output</small>"))
-		# macroLayout.addRow(QLabel("<small>will be inserted into the window's text entry</small>"))
-
 		macroLayout.addRow(QLabel("<b>Execute immediately</b>"), self.execute)
-
-		#macroLayout.addRow(QLabel(" "))
 
 		outDesc = QLabel("<small>Macro arguments will be interpolated into the output. Use <i><b>$</b></i> to insert arguments; the first <i><b>$</b></i> will be replaced with the first macro argument, and so on. To insert an actual \"$\" symbol into the output, use \"$$\".</small>")
 		outDesc.setWordWrap(True)
 		macroLayout.addRow(outDesc)
 
-		# outDesc = QLabel("<small>Built-in special variables: <i><b>$channel</b></i> (the name of the channel window where the macro was triggered), <i><b>$server</b></i> (the IRC server address), <i><b>$port</b></i> (IRC server port number, <i><b>$hostname</b></i> (server's hostname), <i><b>$network</b></i> (server's network), <i><b>$self</b></i> (your nickname)</small>")
-		# outDesc.setWordWrap(True)
-		# macroLayout.addRow(outDesc)
-
 		macroLayout.addRow(QLabel("<small><u><b>Special Variables</b></u></small>"),QLabel("<small><u><b>Description</b></u></small>"))
 
-		macroLayout.addRow(QLabel("<small><i><b>$channel</b></i></small>"), QLabel("<small>The name of the channel window where the macro was triggered</small>"))
-		macroLayout.addRow(QLabel("<small><i><b>$server</b></i></small>"), QLabel("<small>Address used to connect to the IRC server</small>"))
+		chanDesc = QLabel("<small>The name of the channel window where the macro was triggered</small>")
+		chanDesc.setWordWrap(True)
+
+		servDesc = QLabel("<small>Address used to connect to the IRC server</small>")
+		servDesc.setWordWrap(True)
+
+		macroLayout.addRow(QLabel("<small><i><b>$channel</b></i></small>"), chanDesc)
+		macroLayout.addRow(QLabel("<small><i><b>$server</b></i></small>"), servDesc)
 		macroLayout.addRow(QLabel("<small><i><b>$port</b></i></small>"), QLabel("<small>Port connected to</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$hostname</b></i></small>"), QLabel("<small>The server's hostname</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$network</b></i></small>"), QLabel("<small>The server's network</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$self</b></i></small>"), QLabel("<small>Your nickname</small>"))
-
 
 		macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
 
