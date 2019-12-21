@@ -80,15 +80,15 @@ class Dialog(QDialog):
 		self.execute = QCheckBox(self)
 		self.execute.stateChanged.connect(self.clickExecute)
 
-		macroLayout.addRow(QLabel("Trigger"), self.trigger)
+		macroLayout.addRow(QLabel("<small>The word that will \"trigger\" the macro</small>"))
 
-		macroLayout.addRow(QLabel(" "))
+		macroLayout.addRow(QLabel("<b>Trigger</b>"), self.trigger)
 
 		macroLayout.addRow(QLabel("<small>How many arguments the macro will accept</small>"))
 
-		macroLayout.addRow(QLabel("Number of arguments"), self.argc)
+		macroLayout.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
 
-		macroLayout.addRow(QLabel(" "))
+		#macroLayout.addRow(QLabel(" "))
 
 		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>command</b></i> to interpret the macro as a command</small>")
 
@@ -99,9 +99,9 @@ class Dialog(QDialog):
 		# macroLayout.addRow(QLabel("<small>Set to <i><b>action</b></i> to send the macro as a CTCP action message</small>"))
 		# macroLayout.addRow(QLabel("<small>Set to <i><b>command</b></i> to interpret the macro as a command</small>"))
 
-		macroLayout.addRow(QLabel("Macro type"), self.type)
+		macroLayout.addRow(QLabel("<b>Macro type</b>"), self.type)
 
-		macroLayout.addRow(QLabel(" "))
+		#macroLayout.addRow(QLabel(" "))
 
 		exeDesc = QLabel("<small>If set to execute immediately, the macro will be processed immediately; if not, the macro's output will be inserted into the window's text entry</small>")
 
@@ -112,9 +112,9 @@ class Dialog(QDialog):
 		# macroLayout.addRow(QLabel("<small>processed immediately; if not, the macro's output</small>"))
 		# macroLayout.addRow(QLabel("<small>will be inserted into the window's text entry</small>"))
 
-		macroLayout.addRow(QLabel("Execute immediately"), self.execute)
+		macroLayout.addRow(QLabel("<b>Execute immediately</b>"), self.execute)
 
-		macroLayout.addRow(QLabel(" "))
+		#macroLayout.addRow(QLabel(" "))
 
 		outDesc = QLabel("<small>Macro arguments will be interpolated into the output. Use <i><b>$</b></i> to insert arguments; the first <i><b>$</b></i> will be replaced with the first macro argument, and so on. To insert an actual \"$\" symbol into the output, use \"$$\".</small>")
 		outDesc.setWordWrap(True)
@@ -124,7 +124,7 @@ class Dialog(QDialog):
 		# outDesc.setWordWrap(True)
 		# macroLayout.addRow(outDesc)
 
-		macroLayout.addRow(QLabel("<small><b>Special Variables</b></small>"),QLabel("<small><b>Description</b></small>"))
+		macroLayout.addRow(QLabel("<small><u><b>Special Variables</b></u></small>"),QLabel("<small><u><b>Description</b></u></small>"))
 
 		macroLayout.addRow(QLabel("<small><i><b>$channel</b></i></small>"), QLabel("<small>The name of the channel window where the macro was triggered</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$server</b></i></small>"), QLabel("<small>Address used to connect to the IRC server</small>"))
@@ -134,7 +134,7 @@ class Dialog(QDialog):
 		macroLayout.addRow(QLabel("<small><i><b>$self</b></i></small>"), QLabel("<small>Your nickname</small>"))
 
 
-		macroLayout.addRow(QLabel("Output"), self.output)
+		macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
 
 		if self.filename:
 			m = erk.macros.get_macro(self.filename)
