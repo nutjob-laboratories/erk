@@ -103,9 +103,5 @@ No. I'm still adding features and tracking down and squashing bugs.
 
 Yes! Most basic functionality is done, and it's ready for most IRC stuff. Some things that are not complete, but will be soon:
 
-* Setting modes
-* Logging
-* Not all "traditional" IRC commands are in place
-	* `/me`, `/join`, `/part`, `/msg`, `/nick`, and `/connect` are in and functioning
 * Plugins
-* Macros
+
