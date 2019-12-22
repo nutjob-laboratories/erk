@@ -1,3 +1,6 @@
+Version 0.701
+	* The application tool bar is now built (and rebuilt) programmatically
+
 Version 0.700
 	* Complete re-write
 	* All-new items: no more MDI interface, uses far less memory, is far more stable, and is far easier to use

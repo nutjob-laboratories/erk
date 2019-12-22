@@ -202,426 +202,14 @@ class Erk(QMainWindow):
 		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
 
 		# MENU TOOLBAR
-
-		mainMenu = QMenu()
-
-		add_toolbar_menu(self.toolbar,"IRC",mainMenu)
-
-		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
-		mainMenu.addAction(entry)
-
-		mainMenu.addSeparator()
-
-		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		self.disconnect.triggered.connect(self.disconnect_current)
-		mainMenu.addAction(self.disconnect)
-		self.disconnect.setEnabled(False)
-
-		mainMenu.addSeparator()
-		
-		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
-		entry.triggered.connect(lambda state: restart_program())
-		mainMenu.addAction(entry)
-
-		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
-		entry.triggered.connect(self.close)
-		mainMenu.addAction(entry)
-
-		settingsMenu = QMenu()
-
-		add_toolbar_menu(self.toolbar,"Settings",settingsMenu)
-
-		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
-		self.fontMenuEntry.triggered.connect(self.menuFont)
-		settingsMenu.addAction(self.fontMenuEntry)
-
-		f = self.app.font()
-		fs = f.toString()
-		pfs = fs.split(',')
-		font_name = pfs[0]
-		font_size = pfs[1]
-
-		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
-
-		entry = QAction(QIcon(FORMAT_ICON),"Colors",self)
-		entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
-		settingsMenu.addAction(entry)
-
-		self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
-		self.winsizeMenuEntry.triggered.connect(self.menuResize)
-		settingsMenu.addAction(self.winsizeMenuEntry)
-
-		w = erk.config.DEFAULT_APP_WIDTH
-		h =  erk.config.DEFAULT_APP_HEIGHT
-
-		self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
-
-		# Channel display submenu
-
-		settingsMenu.addSeparator()
-
-		# Message display submenu
-
-		messageMenu = settingsMenu.addMenu(QIcon(MESSAGE_ICON),"Messages")
-
-		self.set_color = QAction(QIcon(UNCHECKED_ICON),"Display IRC colors",self)
-		self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
-		messageMenu.addAction(self.set_color)
-
-		if erk.config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_links = QAction(QIcon(UNCHECKED_ICON),"Convert URLs to links",self)
-		self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
-		messageMenu.addAction(self.set_links)
-
-		if erk.config.DISPLAY_IRC_COLORS: self.set_links.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
-		self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
-		messageMenu.addAction(self.set_profanity)
-
-		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
-		self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
-		messageMenu.addAction(self.set_sysprefix)
-
-		if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-
-		# Channel display submenu
-
-		channelMenu = settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
-
-		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
-		self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
-		channelMenu.addAction(self.set_modes)
-
-		if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
-		self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
-		channelMenu.addAction(self.set_plainusers)
-
-		if erk.config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
-		self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
-		channelMenu.addAction(self.set_displaystatus)
-
-		if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_displaynick = QAction(QIcon(UNCHECKED_ICON),"Display nickname",self)
-		self.set_displaynick.triggered.connect(lambda state,s="display_nick": self.toggleSetting(s))
-		channelMenu.addAction(self.set_displaynick)
-
-		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
-
-		# Connection display submenu
-
-		connectionDisplayMenu = settingsMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),"Connection display")
-
-		self.set_cvisible = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-		self.set_cvisible.triggered.connect(lambda state,s="cvisible": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_cvisible)
-
-		if erk.config.CONNECTION_DISPLAY_VISIBLE: self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_float = QAction(QIcon(UNCHECKED_ICON),"Floatable",self)
-		self.set_float.triggered.connect(lambda state,s="float": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_float)
-
-		if erk.config.CONNECTION_DISPLAY_MOVE: self.set_float.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_uptime = QAction(QIcon(UNCHECKED_ICON),"Show uptimes",self)
-		self.set_uptime.triggered.connect(lambda state,s="uptime": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_uptime)
-
-		if erk.config.DISPLAY_CONNECTION_UPTIME: self.set_uptime.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_doubleclickswitch = QAction(QIcon(UNCHECKED_ICON),"Double click to switch chats",self)
-		self.set_doubleclickswitch.triggered.connect(lambda state,s="dcswitch": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_doubleclickswitch)
-
-		if erk.config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_connectexpand = QAction(QIcon(UNCHECKED_ICON),"Expand server on connect",self)
-		self.set_connectexpand.triggered.connect(lambda state,s="connexpand": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_connectexpand)
-
-		if erk.config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
-
-		connectionDisplayMenu.addSeparator()
-
-		self.set_location = QAction(QIcon(RIGHT_ICON),"Display on left",self)
-		self.set_location.triggered.connect(lambda state,s="location": self.toggleSetting(s))
-		connectionDisplayMenu.addAction(self.set_location)
-
-		if erk.config.CONNECTION_DISPLAY_LOCATION=="right":
-			self.set_location.setText("Display on left")
-			self.set_location.setIcon(QIcon(LEFT_ICON))
-		else:
-			self.set_location.setText("Display on right")
-			self.set_location.setIcon(QIcon(RIGHT_ICON))
-
-		if not erk.config.CONNECTION_DISPLAY_VISIBLE:
-			self.set_float.setEnabled(False)
-			self.set_uptime.setEnabled(False)
-			self.set_doubleclickswitch.setEnabled(False)
-			self.set_location.setEnabled(False)
-
-		# Autocomplete submenu
-
-		autocompleteMenu = settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
-
-		self.set_autonick = QAction(QIcon(UNCHECKED_ICON),"Nicknames",self)
-		self.set_autonick.triggered.connect(lambda state,s="autonick": self.toggleSetting(s))
-		autocompleteMenu.addAction(self.set_autonick)
-
-		if erk.config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_autocmd = QAction(QIcon(UNCHECKED_ICON),"Commands",self)
-		self.set_autocmd.triggered.connect(lambda state,s="autocmd": self.toggleSetting(s))
-		autocompleteMenu.addAction(self.set_autocmd)
-
-		if erk.config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_autoemoji = QAction(QIcon(UNCHECKED_ICON),"Emoji shortcodes",self)
-		self.set_autoemoji.triggered.connect(lambda state,s="autoemoji": self.toggleSetting(s))
-		autocompleteMenu.addAction(self.set_autoemoji)
-
-		if erk.config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_autoasciimoji = QAction(QIcon(UNCHECKED_ICON),"ASCIImoji shortcodes",self)
-		self.set_autoasciimoji.triggered.connect(lambda state,s="autoasciimoji": self.toggleSetting(s))
-		autocompleteMenu.addAction(self.set_autoasciimoji)
-
-		if erk.config.AUTOCOMPLETE_ASCIIMOJI: self.set_autoasciimoji.setIcon(QIcon(CHECKED_ICON))
-
-		# Spellcheck submenu
-
-		spellcheckMenu = settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
-
-		self.set_spellcheck = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-		self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
-		spellcheckMenu.addAction(self.set_spellcheck)
-
-		if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
-		self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
-		spellcheckMenu.addAction(self.set_spellnicks)
-
-		if erk.config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-
-		spellcheckMenu.addSeparator()
-
-		self.spell_en = QAction(QIcon(UNCHECKED_ICON),"English",self)
-		self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
-		spellcheckMenu.addAction(self.spell_en)
-
-		self.spell_fr = QAction(QIcon(UNCHECKED_ICON),"French",self)
-		self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
-		spellcheckMenu.addAction(self.spell_fr)
-
-		self.spell_es = QAction(QIcon(UNCHECKED_ICON),"Spanish",self)
-		self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
-		spellcheckMenu.addAction(self.spell_es)
-
-		self.spell_de = QAction(QIcon(UNCHECKED_ICON),"German",self)
-		self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
-		spellcheckMenu.addAction(self.spell_de)
-
-		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
-
-		if not erk.config.SPELLCHECK_INPUT:
-			self.spell_en.setEnabled(False)
-			self.spell_fr.setEnabled(False)
-			self.spell_es.setEnabled(False)
-			self.spell_de.setEnabled(False)
-
-		# Emoji submenu
-
-		emojiMenu = settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
-
-		self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
-		self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
-		emojiMenu.addAction(self.set_emoji)
-
-		if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_asciimoji = QAction(QIcon(UNCHECKED_ICON),"Use ASCIImoji shortcodes",self)
-		self.set_asciimoji.triggered.connect(lambda state,s="asciimoji": self.toggleSetting(s))
-		emojiMenu.addAction(self.set_asciimoji)
-
-		if erk.config.USE_ASCIIMOJIS: self.set_asciimoji.setIcon(QIcon(CHECKED_ICON))
-
-		# Timestamp display submenu
-
-		timestampMenu = settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
-
-		self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
-		self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
-		timestampMenu.addAction(self.set_timestamps)
-
-		if erk.config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
-		self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
-		timestampMenu.addAction(self.set_24hr)
-
-		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
-
-		# Entry submenu
-
-		entryMenu = settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input history")
-
-		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-		self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
-		entryMenu.addAction(self.set_history)
-
-		if erk.config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
-
-		self.historySize = QAction(QIcon(HISTORY_LENGTH_ICON),"Set history length",self)
-		self.historySize.triggered.connect(self.menuHistoryLength)
-		entryMenu.addAction(self.historySize)
-
-		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
-
-		# Miscellaneous settings
-
-		settingsMenu.addSeparator()
-
-		self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
-		self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_privopen)
-
-		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
-		self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_autohostmask)
-
-		if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Automatically switch to new chats",self)
-		self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_autoswitch)
-
-		if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
-
-		# Log menu
-
-		logMenu = QMenu()
-
-		add_toolbar_menu(self.toolbar,"Logs",logMenu)
-
-		channelMenu = logMenu.addMenu(QIcon(CHANNEL_ICON),"Channels")
-
-		self.set_chanlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
-		self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
-		channelMenu.addAction(self.set_chanlogsave)
-
-		if erk.config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
-		self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
-		channelMenu.addAction(self.set_chanlogload)
-
-		if erk.config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
-
-		privateMenu = logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
-
-		self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
-		self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
-		privateMenu.addAction(self.set_privlogsave)
-
-		if erk.config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
-		self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
-		privateMenu.addAction(self.set_privlogload)
-
-		if erk.config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
-
-		logMenu.addSeparator()
-
-		self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
-		self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
-		logMenu.addAction(self.set_marklogend)
-
-		if erk.config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
-		self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
-		logMenu.addAction(self.set_logresume)
-
-		if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
-
-		self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
-		self.logSize.triggered.connect(self.menuLogSize)
-		logMenu.addAction(self.logSize)
-
-		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
-
-		# Macro menu
-
+		self.mainMenu = QMenu()
+		self.settingsMenu = QMenu()
+		self.logMenu = QMenu()
+		self.helpMenu = QMenu()
 		self.macroMenu = QMenu()
 
-		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
-
-		self.rebuildMacroMenu()
-
-		# self.editmacro = QAction("New macro",self)
-		# self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
-		# self.macroMenu.addAction(self.editmacro)
-
-		# self.macroMenu.addSeparator()
-
-		# for m in erk.macros.MACROS:
-		# 	trigger = m["trigger"]
-		# 	filename = m["filename"]
-
-		# 	entry = QAction(trigger,self)
-		# 	entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
-		# 	self.macroMenu.addAction(entry)
-
-
-		# Help menu
-
-		helpMenu = QMenu()
-
-		add_toolbar_menu(self.toolbar,"Help",helpMenu)
-
-		self.about = QAction(QIcon(ABOUT_ICON),"About",self)
-		self.about.triggered.connect(self.menuAbout)
-		helpMenu.addAction(self.about)
-
-		helpMenu.addSeparator()
-
-		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
-		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
-		helpMenu.addAction(helpLink)
-
-		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 2812",self)
-		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
-		helpMenu.addAction(helpLink)
-
-		helpMenu.addSeparator()
-
-		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
-		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
-		helpMenu.addAction(helpLink)
-
-		helpLink = QAction(QIcon(LINK_ICON),"List of ASCIImoji shortcodes",self)
-		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.open_link_in_browser(u))
-		helpMenu.addAction(helpLink)
-
-		# End of menus
-		end_toolbar_menu(self.toolbar)
-
+		self.buildToolbar()
+		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 
 		if erk.config.CONNECTION_DISPLAY_LOCATION=="left":
@@ -677,6 +265,413 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+
+	def buildToolbar(self):
+		# mainMenu = QMenu()
+
+		self.toolbar.clear()
+
+		add_toolbar_menu(self.toolbar,"IRC",self.mainMenu)
+
+		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
+		self.mainMenu.addAction(entry)
+
+		self.mainMenu.addSeparator()
+
+		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+		self.disconnect.triggered.connect(self.disconnect_current)
+		self.mainMenu.addAction(self.disconnect)
+		self.disconnect.setEnabled(False)
+
+		self.mainMenu.addSeparator()
+		
+		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
+		entry.triggered.connect(lambda state: restart_program())
+		self.mainMenu.addAction(entry)
+
+		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
+		entry.triggered.connect(self.close)
+		self.mainMenu.addAction(entry)
+
+		# settingsMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
+
+		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
+		self.fontMenuEntry.triggered.connect(self.menuFont)
+		self.settingsMenu.addAction(self.fontMenuEntry)
+
+		f = self.app.font()
+		fs = f.toString()
+		pfs = fs.split(',')
+		font_name = pfs[0]
+		font_size = pfs[1]
+
+		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
+		entry = QAction(QIcon(FORMAT_ICON),"Colors",self)
+		entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
+		self.settingsMenu.addAction(entry)
+
+		self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
+		self.winsizeMenuEntry.triggered.connect(self.menuResize)
+		self.settingsMenu.addAction(self.winsizeMenuEntry)
+
+		w = erk.config.DEFAULT_APP_WIDTH
+		h =  erk.config.DEFAULT_APP_HEIGHT
+
+		self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
+
+		# Channel display submenu
+
+		self.settingsMenu.addSeparator()
+
+		# Message display submenu
+
+		messageMenu = self.settingsMenu.addMenu(QIcon(MESSAGE_ICON),"Messages")
+
+		self.set_color = QAction(QIcon(UNCHECKED_ICON),"Display IRC colors",self)
+		self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
+		messageMenu.addAction(self.set_color)
+
+		if erk.config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_links = QAction(QIcon(UNCHECKED_ICON),"Convert URLs to links",self)
+		self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
+		messageMenu.addAction(self.set_links)
+
+		if erk.config.DISPLAY_IRC_COLORS: self.set_links.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
+		self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
+		messageMenu.addAction(self.set_profanity)
+
+		if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
+		self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
+		messageMenu.addAction(self.set_sysprefix)
+
+		if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+
+		# Channel display submenu
+
+		channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
+
+		self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
+		self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
+		channelMenu.addAction(self.set_modes)
+
+		if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
+		self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
+		channelMenu.addAction(self.set_plainusers)
+
+		if erk.config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
+		self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
+		channelMenu.addAction(self.set_displaystatus)
+
+		if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_displaynick = QAction(QIcon(UNCHECKED_ICON),"Display nickname",self)
+		self.set_displaynick.triggered.connect(lambda state,s="display_nick": self.toggleSetting(s))
+		channelMenu.addAction(self.set_displaynick)
+
+		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
+
+		# Connection display submenu
+
+		connectionDisplayMenu = self.settingsMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),"Connection display")
+
+		self.set_cvisible = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+		self.set_cvisible.triggered.connect(lambda state,s="cvisible": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_cvisible)
+
+		if erk.config.CONNECTION_DISPLAY_VISIBLE: self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_float = QAction(QIcon(UNCHECKED_ICON),"Floatable",self)
+		self.set_float.triggered.connect(lambda state,s="float": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_float)
+
+		if erk.config.CONNECTION_DISPLAY_MOVE: self.set_float.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_uptime = QAction(QIcon(UNCHECKED_ICON),"Show uptimes",self)
+		self.set_uptime.triggered.connect(lambda state,s="uptime": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_uptime)
+
+		if erk.config.DISPLAY_CONNECTION_UPTIME: self.set_uptime.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_doubleclickswitch = QAction(QIcon(UNCHECKED_ICON),"Double click to switch chats",self)
+		self.set_doubleclickswitch.triggered.connect(lambda state,s="dcswitch": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_doubleclickswitch)
+
+		if erk.config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_connectexpand = QAction(QIcon(UNCHECKED_ICON),"Expand server on connect",self)
+		self.set_connectexpand.triggered.connect(lambda state,s="connexpand": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_connectexpand)
+
+		if erk.config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
+
+		connectionDisplayMenu.addSeparator()
+
+		self.set_location = QAction(QIcon(RIGHT_ICON),"Display on left",self)
+		self.set_location.triggered.connect(lambda state,s="location": self.toggleSetting(s))
+		connectionDisplayMenu.addAction(self.set_location)
+
+		if erk.config.CONNECTION_DISPLAY_LOCATION=="right":
+			self.set_location.setText("Display on left")
+			self.set_location.setIcon(QIcon(LEFT_ICON))
+		else:
+			self.set_location.setText("Display on right")
+			self.set_location.setIcon(QIcon(RIGHT_ICON))
+
+		if not erk.config.CONNECTION_DISPLAY_VISIBLE:
+			self.set_float.setEnabled(False)
+			self.set_uptime.setEnabled(False)
+			self.set_doubleclickswitch.setEnabled(False)
+			self.set_location.setEnabled(False)
+
+		# Autocomplete submenu
+
+		autocompleteMenu = self.settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
+
+		self.set_autonick = QAction(QIcon(UNCHECKED_ICON),"Nicknames",self)
+		self.set_autonick.triggered.connect(lambda state,s="autonick": self.toggleSetting(s))
+		autocompleteMenu.addAction(self.set_autonick)
+
+		if erk.config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_autocmd = QAction(QIcon(UNCHECKED_ICON),"Commands",self)
+		self.set_autocmd.triggered.connect(lambda state,s="autocmd": self.toggleSetting(s))
+		autocompleteMenu.addAction(self.set_autocmd)
+
+		if erk.config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_autoemoji = QAction(QIcon(UNCHECKED_ICON),"Emoji shortcodes",self)
+		self.set_autoemoji.triggered.connect(lambda state,s="autoemoji": self.toggleSetting(s))
+		autocompleteMenu.addAction(self.set_autoemoji)
+
+		if erk.config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_autoasciimoji = QAction(QIcon(UNCHECKED_ICON),"ASCIImoji shortcodes",self)
+		self.set_autoasciimoji.triggered.connect(lambda state,s="autoasciimoji": self.toggleSetting(s))
+		autocompleteMenu.addAction(self.set_autoasciimoji)
+
+		if erk.config.AUTOCOMPLETE_ASCIIMOJI: self.set_autoasciimoji.setIcon(QIcon(CHECKED_ICON))
+
+		# Spellcheck submenu
+
+		spellcheckMenu = self.settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
+
+		self.set_spellcheck = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+		self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
+		spellcheckMenu.addAction(self.set_spellcheck)
+
+		if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
+		self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
+		spellcheckMenu.addAction(self.set_spellnicks)
+
+		if erk.config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
+
+		spellcheckMenu.addSeparator()
+
+		self.spell_en = QAction(QIcon(UNCHECKED_ICON),"English",self)
+		self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_en)
+
+		self.spell_fr = QAction(QIcon(UNCHECKED_ICON),"French",self)
+		self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_fr)
+
+		self.spell_es = QAction(QIcon(UNCHECKED_ICON),"Spanish",self)
+		self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_es)
+
+		self.spell_de = QAction(QIcon(UNCHECKED_ICON),"German",self)
+		self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
+		spellcheckMenu.addAction(self.spell_de)
+
+		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
+		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.SPELLCHECK_INPUT:
+			self.spell_en.setEnabled(False)
+			self.spell_fr.setEnabled(False)
+			self.spell_es.setEnabled(False)
+			self.spell_de.setEnabled(False)
+
+		# Emoji submenu
+
+		emojiMenu = self.settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
+
+		self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
+		self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
+		emojiMenu.addAction(self.set_emoji)
+
+		if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_asciimoji = QAction(QIcon(UNCHECKED_ICON),"Use ASCIImoji shortcodes",self)
+		self.set_asciimoji.triggered.connect(lambda state,s="asciimoji": self.toggleSetting(s))
+		emojiMenu.addAction(self.set_asciimoji)
+
+		if erk.config.USE_ASCIIMOJIS: self.set_asciimoji.setIcon(QIcon(CHECKED_ICON))
+
+		# Timestamp display submenu
+
+		timestampMenu = self.settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
+
+		self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
+		self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
+		timestampMenu.addAction(self.set_timestamps)
+
+		if erk.config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
+		self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
+		timestampMenu.addAction(self.set_24hr)
+
+		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+
+		# Entry submenu
+
+		entryMenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input history")
+
+		self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+		self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
+		entryMenu.addAction(self.set_history)
+
+		if erk.config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
+
+		self.historySize = QAction(QIcon(HISTORY_LENGTH_ICON),"Set history length",self)
+		self.historySize.triggered.connect(self.menuHistoryLength)
+		entryMenu.addAction(self.historySize)
+
+		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
+
+		# Miscellaneous settings
+
+		self.settingsMenu.addSeparator()
+
+		self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
+		self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
+		self.settingsMenu.addAction(self.set_privopen)
+
+		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
+		self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
+		self.settingsMenu.addAction(self.set_autohostmask)
+
+		if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Automatically switch to new chats",self)
+		self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
+		self.settingsMenu.addAction(self.set_autoswitch)
+
+		if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
+
+		# Log menu
+
+		# logMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Logs",self.logMenu)
+
+		channelMenu = self.logMenu.addMenu(QIcon(CHANNEL_ICON),"Channels")
+
+		self.set_chanlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+		self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
+		channelMenu.addAction(self.set_chanlogsave)
+
+		if erk.config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+		self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
+		channelMenu.addAction(self.set_chanlogload)
+
+		if erk.config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+
+		privateMenu = self.logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
+
+		self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+		self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
+		privateMenu.addAction(self.set_privlogsave)
+
+		if erk.config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+		self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
+		privateMenu.addAction(self.set_privlogload)
+
+		if erk.config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+
+		self.logMenu.addSeparator()
+
+		self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
+		self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
+		self.logMenu.addAction(self.set_marklogend)
+
+		if erk.config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
+		self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
+		self.logMenu.addAction(self.set_logresume)
+
+		if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+
+		self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
+		self.logSize.triggered.connect(self.menuLogSize)
+		self.logMenu.addAction(self.logSize)
+
+		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
+
+		# Macro menu
+
+		# self.macroMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
+
+		self.rebuildMacroMenu()
+
+		# Help menu
+
+		# helpMenu = QMenu()
+
+		add_toolbar_menu(self.toolbar,"Help",self.helpMenu)
+
+		self.about = QAction(QIcon(ABOUT_ICON),"About",self)
+		self.about.triggered.connect(self.menuAbout)
+		self.helpMenu.addAction(self.about)
+
+		self.helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 2812",self)
+		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		self.helpMenu.addSeparator()
+
+		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
+		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"List of ASCIImoji shortcodes",self)
+		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		# End of menus
+		end_toolbar_menu(self.toolbar)
 
 	def rebuildMacroMenu(self):
 
