@@ -107,7 +107,7 @@ def handle_macro_input(window,client,text):
 						return True
 					else:
 						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg)
+						window.writeText(msg,True)
 						return True
 
 				elif mtype=="action":
@@ -127,7 +127,7 @@ def handle_macro_input(window,client,text):
 						return True
 					else:
 						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg)
+						window.writeText(msg,True)
 						return True
 				elif mtype=="notice":
 
@@ -146,7 +146,7 @@ def handle_macro_input(window,client,text):
 						return True
 					else:
 						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg)
+						window.writeText(msg,True)
 						return True
 				elif mtype=="command":
 					if execute:
@@ -182,7 +182,7 @@ def handle_macro_input(window,client,text):
 					# too few argument
 					msg = Message(ERROR_MESSAGE,'',"Not enough arguments: \""+trigger+"\" takes "+str(argc)+" "+sarg)
 
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 def handle_channel_input(window,client,text):
@@ -215,7 +215,7 @@ def handle_channel_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/me':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	# Handle channel-specific cases of the /part command
@@ -256,7 +256,7 @@ def handle_private_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/me':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if handle_common_input(window,client,text): return
@@ -292,7 +292,7 @@ def handle_common_input(window,client,text):
 
 		if tokens[0].lower()=='/notice':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /notice TARGET MESSAGE")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -304,7 +304,7 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/oper':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /oper USERNAME PASSWORD")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -313,7 +313,7 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/back' and len(tokens)==1:
 			msg = Message(ERROR_MESSAGE,'',"Usage: /back")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -334,7 +334,7 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/mode':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /mode TARGET MODE [ARGUMENTS]")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -345,7 +345,7 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/send':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /send MESSAGE")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -356,7 +356,7 @@ def handle_common_input(window,client,text):
 			return True
 		if tokens[0].lower()=='/whois':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /whois NICKNAME [NICKNAME] ...")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -384,7 +384,7 @@ def handle_common_input(window,client,text):
 
 		if tokens[0].lower()=='/msg':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /msg TARGET MESSAGE")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -393,7 +393,7 @@ def handle_common_input(window,client,text):
 			channel = tokens.pop(0)
 			if not channel in window.channelList():
 				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 			window.leaveChannel(channel)
 			return True
@@ -401,20 +401,20 @@ def handle_common_input(window,client,text):
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# channel has not been passed as an argument
 				msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 			tokens.pop(0)
 			channel = tokens.pop(0)
 			if not channel in window.channelList():
 				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 			partmsg = ' '.join(tokens)
 			window.leaveChannel(channel,partmsg)
 			return True
 		if tokens[0].lower()=='/part':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
@@ -471,13 +471,13 @@ def handle_ui_input(window,client,text):
 			if winname.lower()=="list":
 				dl = channels + privates
 				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			if not winname in channels:
 				if not winname in privates:
 					msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
-					window.writeText(msg)
+					window.writeText(msg,True)
 					return True
 			if winname in channels:
 				swin = window.nameToChannel(winname)
@@ -485,13 +485,13 @@ def handle_ui_input(window,client,text):
 				swin = window.nameToPrivate(winname)
 			else:
 				msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 			window.parent.stack.setCurrentWidget(swin)
 			return True
 		if tokens[0].lower()=='/switch':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
-			window.writeText(msg)
+			window.writeText(msg,True)
 			return True
 
 	# /connect SERVER [PORT] [PASSWORD]
@@ -519,7 +519,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			user = get_user()
@@ -537,7 +537,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			password =tokens.pop(0)
@@ -569,7 +569,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			user = get_user()
@@ -587,7 +587,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			password =tokens.pop(0)
@@ -619,7 +619,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			user = get_user()
@@ -637,7 +637,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			password =tokens.pop(0)
@@ -669,7 +669,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			user = get_user()
@@ -687,7 +687,7 @@ def handle_ui_input(window,client,text):
 				port = int(port)
 			except:
 				msg = Message(ERROR_MESSAGE,'',"\""+str(port)+"\" is not a valid port number")
-				window.writeText(msg)
+				window.writeText(msg,True)
 				return True
 
 			password =tokens.pop(0)

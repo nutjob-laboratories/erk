@@ -8,6 +8,7 @@ Version 0.701
 	* Added an option to send macros as notice messages
 	* Patched methods now write text to chat by default
 	* Outgoing CTCP replies no longer will create chat windows (or displayed at all)
+	* Errors and output resulting from commands are no longer saved to log
 
 Version 0.700
 	* Complete re-write

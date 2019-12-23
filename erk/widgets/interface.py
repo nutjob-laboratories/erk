@@ -520,7 +520,7 @@ class Window(QMainWindow):
 		self.input.setText(user_input)
 		self.input.moveCursor(cursor.position())
 
-	def writeText(self,message):
+	def writeText(self,message,do_not_save=False):
 
 		d = erk.format.render_message(message)
 
@@ -528,6 +528,9 @@ class Window(QMainWindow):
 		self.chat.moveCursor(QTextCursor.End)
 
 		self.log.append(message)
+
+		if do_not_save: return 
+		
 		self.newLog.append(message)
 
 	def rerender(self):
