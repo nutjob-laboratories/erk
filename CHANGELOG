@@ -1,5 +1,11 @@
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
+	* Patched the Twisted IRC client class to optionally write outgoing messages to chat displays
+	* Patched ^^ to optionally open private chat windows (if the "create private windows" setting is true)
+	* Patched .describe to optionally write to chat windows
+	* Added the /notice command
+	* Patched .notice to optionally write to chat windows
+	* Added an option to send macros as notice messages
 
 Version 0.700
 	* Complete re-write

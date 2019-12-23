@@ -43,6 +43,7 @@ COMMON_COMMANDS = {
 	"/msg": "/msg ",
 	"/part": "/part ",
 	"/join": "/join ",
+	"/notice": "/notice ",
 	"/nick": "/nick ",
 	"/mode": "/mode ",
 	"/away": "/away ",
@@ -82,7 +83,6 @@ def handle_macro_input(window,client,text):
 
 				output = output.replace('$$',"_ESCAPED_DOLLAR_SIGN_")
 
-				#output = output.replace('$channel',window.name,1)
 				output = erk.macros.macro_variables(window,client,output)
 
 				for a in tokens:
@@ -97,9 +97,9 @@ def handle_macro_input(window,client,text):
 						if execute:
 							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
 							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
-							client.msg(window.name,output)
-							out = Message(SELF_MESSAGE,client.nickname,output)
-							window.writeText(out)
+
+							client.msg(window.name,output,True)
+
 						else:
 							window.input.setText("/msg "+output)
 							window.input.moveCursor(QTextCursor.End)
@@ -116,11 +116,29 @@ def handle_macro_input(window,client,text):
 						if execute:
 							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
 							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
-							client.describe(window.name,output)
-							out = Message(ACTION_MESSAGE,client.nickname,output)
-							window.writeText(out)
+
+							client.describe(window.name,output,True)
+
 						else:
 							window.input.setText("/me "+output)
+							window.input.moveCursor(QTextCursor.End)
+						return True
+					else:
+						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
+						window.writeText(msg)
+						return True
+				elif mtype=="notice":
+
+					if window.type==erk.config.CHANNEL_WINDOW or window.type==erk.config.PRIVATE_WINDOW:
+
+						if execute:
+							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
+							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
+
+							client.notice(window.name,output,True)
+
+						else:
+							window.input.setText("/notice "+output)
 							window.input.moveCursor(QTextCursor.End)
 						return True
 					else:
@@ -168,46 +186,6 @@ def handle_channel_input(window,client,text):
 
 	tokens = text.split()
 
-	# # Macros
-	# for m in erk.macros.MACROS:
-	# 	argc = m["arguments"]
-	# 	output = m["output"]
-	# 	trigger = m["trigger"]
-	# 	mtype = m["type"]
-
-	# 	if len(tokens)>0:
-	# 		if tokens[0].lower()==trigger and (len(tokens)-1)==argc:
-	# 			tokens.pop(0)
-	# 			#output = output.replace('$channel',window.name,1)
-	# 			output = erk.macros.macro_variables(window,client,output)
-
-	# 			for a in tokens:
-	# 				output = output.replace('$',a,1)
-
-	# 			if mtype=="privmsg":
-	# 				if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-	# 				if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
-	# 				client.msg(window.name,output)
-	# 				out = Message(SELF_MESSAGE,client.nickname,output)
-	# 				window.writeText(out)
-	# 			elif mtype=="action":
-	# 				if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-	# 				if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
-	# 				client.describe(window.name,output)
-	# 				out = Message(ACTION_MESSAGE,client.nickname,output)
-	# 				window.writeText(out)
-	# 			elif mtype=="command":
-	# 				handle_channel_input(window,client,output)
-
-	# 			return True
-	# 		if tokens[0].lower()==trigger:
-	# 			msg = Message(ERROR_MESSAGE,'',"Wrong number of arguments to "+trigger+" (passed "+str((len(tokens)-1))+", requires "+str(argc)+")")
-	# 			window.writeText(msg)
-	# 			return True
-
-
-
-
 	if len(tokens)>0:
 		if tokens[0].lower()=='/mode' and len(tokens)>=2:
 			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
@@ -227,9 +205,9 @@ def handle_channel_input(window,client,text):
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
 			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
-			client.describe(window.name,msg)
-			out = Message(ACTION_MESSAGE,client.nickname,msg)
-			window.writeText(out)
+
+			client.describe(window.name,msg,True)
+
 			return True
 		if tokens[0].lower()=='/me':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
@@ -253,11 +231,8 @@ def handle_channel_input(window,client,text):
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
 	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
-	
-	client.msg(window.name,text)
 
-	out = Message(SELF_MESSAGE,client.nickname,text)
-	window.writeText(out)
+	client.msg(window.name,text,True)
 
 def handle_private_input(window,client,text):
 
@@ -269,9 +244,9 @@ def handle_private_input(window,client,text):
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
 			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
-			client.describe(window.name,msg)
-			out = Message(ACTION_MESSAGE,client.nickname,msg)
-			window.writeText(out)
+
+			client.describe(window.name,msg,True)
+
 			return True
 		if tokens[0].lower()=='/me':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
@@ -282,11 +257,8 @@ def handle_private_input(window,client,text):
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
 	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
-	
-	client.msg(window.name,text)
 
-	out = Message(SELF_MESSAGE,client.nickname,text)
-	window.writeText(out)
+	client.msg(window.name,text,True)
 
 def handle_console_input(window,client,text):
 	
@@ -297,6 +269,23 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/notice' and len(tokens)>=3:
+			tokens.pop(0)
+			target = tokens.pop(0)
+			msg = ' '.join(tokens)
+
+			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
+			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
+
+			client.notice(target,msg,True)
+			return True
+
+		if tokens[0].lower()=='/notice':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /notice TARGET MESSAGE")
+			window.writeText(msg)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/oper' and len(tokens)==3:
@@ -381,28 +370,8 @@ def handle_common_input(window,client,text):
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
 			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 
-			client.msg(target,msg)
-
-			if target in window.channelList():
-				swin = window.nameToChannel(target)
-				msg = Message(SELF_MESSAGE,client.nickname,msg)
-				swin.writeText(msg)
-				return True
-
-			if target in window.privateList():
-				swin = window.nameToPrivate(target)
-				msg = Message(SELF_MESSAGE,client.nickname,msg)
-				swin.writeText(msg)
-				return True
-
-			if target[:1]!='#' and target[:1]!='&' and target[:1]!='!' and target[:1]!='+':
-				# Target was not a channel
-				if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
-					window.newPrivate(target)
-					swin = window.nameToPrivate(target)
-					msg = Message(SELF_MESSAGE,client.nickname,msg)
-					swin.writeText(msg)
-					return True
+			client.msg(target,msg,True)
+			return True
 
 		if tokens[0].lower()=='/msg':
 			msg = Message(ERROR_MESSAGE,'',"Usage: /msg TARGET MESSAGE")

@@ -834,6 +834,70 @@ class IRC_Connection(irc.IRCClient):
 	def irc_ERR_CANNOTSENDTOCHAN(self,prefix,params):
 		erk.events.received_error(self.gui,self,params[1]+": "+params[2])
 
+
+	def msg(self,target,msg,write=False):
+
+		if write:
+			found = False
+			for window in erk.events.fetch_window_list(self):
+				if window.name==target:
+					out = Message(SELF_MESSAGE,self.nickname,msg)
+					window.writeText(out)
+					found = True
+
+			if not found:
+				if target[:1]!='#' and target[:1]!='&' and target[:1]!='!' and target[:1]!='+':
+					# target is not a channel
+					if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+						w = erk.events.open_private_window(self,target)
+						if w:
+							out = Message(SELF_MESSAGE,self.nickname,msg)
+							w.writeText(out)
+
+		return irc.IRCClient.msg(self, target, msg)
+
+	def describe(self,target,msg,write=False):
+
+		if write:
+			found = False
+			for window in erk.events.fetch_window_list(self):
+				if window.name==target:
+					out = Message(ACTION_MESSAGE,self.nickname,msg)
+					window.writeText(out)
+					found = True
+
+			if not found:
+				if target[:1]!='#' and target[:1]!='&' and target[:1]!='!' and target[:1]!='+':
+					# target is not a channel
+					if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+						w = erk.events.open_private_window(self,target)
+						if w:
+							out = Message(ACTION_MESSAGE,self.nickname,msg)
+							w.writeText(out)
+
+		return irc.IRCClient.describe(self, target, msg)
+
+	def notice(self,target,msg,write=False):
+
+		if write:
+			found = False
+			for window in erk.events.fetch_window_list(self):
+				if window.name==target:
+					out = Message(NOTICE_MESSAGE,self.nickname,msg)
+					window.writeText(out)
+					found = True
+
+			if not found:
+				if target[:1]!='#' and target[:1]!='&' and target[:1]!='!' and target[:1]!='+':
+					# target is not a channel
+					if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+						w = erk.events.open_private_window(self,target)
+						if w:
+							out = Message(NOTICE_MESSAGE,self.nickname,msg)
+							w.writeText(out)
+
+		return irc.IRCClient.notice(self, target, msg)
+
 	def lineReceived(self, line):
 
 		# Decode the incoming text line

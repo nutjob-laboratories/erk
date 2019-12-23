@@ -75,6 +75,7 @@ class Dialog(QDialog):
 		self.type.activated.connect(self.setType)
 		self.type.addItem("privmsg")
 		self.type.addItem("action")
+		self.type.addItem("notice")
 		self.type.addItem("command")
 
 		self.execute = QCheckBox(self)
@@ -88,7 +89,7 @@ class Dialog(QDialog):
 
 		macroLayout.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
 
-		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>command</b></i> to interpret the macro as a command</small>")
+		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>notice</b></i> to send the macro as a notice; set to <i><b>command</b></i> to interpret the macro as a command</small>")
 
 		typeDesc.setWordWrap(True)
 		macroLayout.addRow(typeDesc)
@@ -135,10 +136,12 @@ class Dialog(QDialog):
 				pi = self.type.findText("privmsg")
 				ai = self.type.findText("action")
 				ci = self.type.findText("command")
+				ni = self.type.findText("notice")
 
 				if m["type"]=="privmsg": self.type.setCurrentIndex(pi)
 				if m["type"]=="action": self.type.setCurrentIndex(ai)
 				if m["type"]=="command": self.type.setCurrentIndex(ci)
+				if m["type"]=="notice": self.type.setCurrentIndex(ni)
 
 				self.argc.setValue(int(m["arguments"]))
 

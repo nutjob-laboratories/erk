@@ -402,6 +402,15 @@ def full_nick_list(client):
 				nicks.append(window.widget.name)
 	return nicks
 
+def fetch_window_list(client):
+	wl = []
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			wl.append(window.widget)
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			wl.append(window.widget)
+	return wl
 
 def fetch_channel_window(client,channel):
 	for window in CHANNELS:
@@ -475,6 +484,8 @@ def open_private_window(client,target):
 
 		# Update connection display
 		build_connection_display(client.gui)
+
+		return newchan
 
 def where_is_user(client,nick):
 	channels = []
