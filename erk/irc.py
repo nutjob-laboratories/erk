@@ -835,7 +835,7 @@ class IRC_Connection(irc.IRCClient):
 		erk.events.received_error(self.gui,self,params[1]+": "+params[2])
 
 
-	def msg(self,target,msg,write=False):
+	def msg(self,target,msg,write=True):
 
 		if write:
 			found = False
@@ -856,7 +856,7 @@ class IRC_Connection(irc.IRCClient):
 
 		return irc.IRCClient.msg(self, target, msg)
 
-	def describe(self,target,msg,write=False):
+	def describe(self,target,msg,write=True):
 
 		if write:
 			found = False
@@ -877,7 +877,7 @@ class IRC_Connection(irc.IRCClient):
 
 		return irc.IRCClient.describe(self, target, msg)
 
-	def notice(self,target,msg,write=False):
+	def notice(self,target,msg,write=True):
 
 		if write:
 			found = False

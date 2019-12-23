@@ -6,6 +6,7 @@ Version 0.701
 	* Added the /notice command
 	* Patched .notice to optionally write to chat windows
 	* Added an option to send macros as notice messages
+	* Patched methods now write text to chat by default
 
 Version 0.700
 	* Complete re-write
