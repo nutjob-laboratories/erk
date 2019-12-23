@@ -57,6 +57,7 @@ except Exception as exception:
 	pass
 
 from twisted.words.protocols import irc
+from twisted.words.protocols.irc import ctcpStringify
 
 
 def connect(**kwargs):
@@ -897,6 +898,14 @@ class IRC_Connection(irc.IRCClient):
 							w.writeText(out)
 
 		return irc.IRCClient.notice(self, target, msg)
+
+	def ctcpMakeReply(self, user, messages):
+		"""
+		Send one or more C{extended messages} as a CTCP reply.
+		@type messages: a list of extended messages.  An extended
+		message is a (tag, data) tuple, where 'data' may be C{None}.
+		"""
+		self.notice(user, ctcpStringify(messages),False)
 
 	def lineReceived(self, line):
 
