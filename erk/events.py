@@ -806,20 +806,12 @@ def received_whois(gui,client,whoisdata):
 	
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
-			if erk.config.DISPLAY_IRC_COLORS:
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x1D"+whoisdata.username+"@"+whoisdata.host+"\x0F: \x02"+whoisdata.realname+"\x0F"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.server+"\x0F"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.channels+"\x0F"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Signed on:\x0F \x1D"+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')+"\x0F"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Idle:\x0F \x1D"+whoisdata.idle+" seconds\x0F"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.privs+"\x0F"), True )
-			else:
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.username+"@"+whoisdata.host+"<: "+whoisdata.realname), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.server), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.channels), True)
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "Signed on: "+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "Idle: "+whoisdata.idle+" seconds"), True )
-				gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.privs), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x1D"+whoisdata.username+"@"+whoisdata.host+"\x0F: \x02"+whoisdata.realname+"\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.server+"\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.channels+"\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Signed on:\x0F \x1D"+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')+"\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Idle:\x0F \x1D"+whoisdata.idle+" seconds\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.privs+"\x0F"), True )
 
 def topic(gui,client,setter,channel,topic):
 	p = setter.split('!')
