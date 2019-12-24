@@ -530,7 +530,7 @@ class Window(QMainWindow):
 		self.log.append(message)
 
 		if do_not_save: return 
-		
+
 		self.newLog.append(message)
 
 	def rerender(self):
@@ -781,6 +781,9 @@ class Window(QMainWindow):
 					user_is_halfop = True
 					user = user.replace('%','')
 				user_nick = user
+
+				if user_nick in self.hostmasks:
+					user_hostmask = self.hostmasks[user_nick]
 
 			menu = QMenu(self)
 

@@ -11,6 +11,7 @@ Version 0.701
 	* Errors and output resulting from commands are no longer saved to log
 	* WHOIS results are also no longer saved to log
 	* Fixed a bug with IRC color display
+	* Bugfix (hostmasks didn't display in the userlist context menu w/ text only userlists)
 
 Version 0.700
 	* Complete re-write
