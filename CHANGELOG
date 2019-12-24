@@ -12,6 +12,7 @@ Version 0.701
 	* WHOIS results are also no longer saved to log
 	* Fixed a bug with IRC color display
 	* Bugfix (hostmasks didn't display in the userlist context menu w/ text only userlists)
+	* Added a new commandline flag: -l or --last to automatically connect to the last server
 
 Version 0.700
 	* Complete re-write

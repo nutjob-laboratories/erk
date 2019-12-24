@@ -45,6 +45,8 @@ from twisted.internet import reactor
 
 from erk.dialogs import ComboDialog
 from erk.main import Erk
+from erk.files import *
+from erk.objects import *
 from erk.strings import *
 
 parser = argparse.ArgumentParser(
@@ -63,6 +65,7 @@ https://github.com/nutjob-laboratories/erk''',
 )
 
 parser.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
+parser.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 
 args = parser.parse_args()
 
@@ -72,6 +75,30 @@ if __name__ == '__main__':
 
 	if args.noconnect:
 		GUI = Erk(app)
+		GUI.show()
+	elif args.last:
+		u = get_user()
+		if u["last_password"] == '':
+			pword = None
+		else:
+			pword = u["last_password"]
+		if u["autojoin"]:
+			c = u["channels"]
+		else:
+			c = []
+		i = ConnectInfo(
+				u["last_server"],
+				int(u["last_port"]),
+				pword,
+				u["ssl"],
+				u["nickname"],
+				u["alternate"],
+				u["username"],
+				u["realname"],
+				u["reconnect"],
+				c
+			)
+		GUI = Erk(app,i)
 		GUI.show()
 	else:
 		info = ComboDialog()
