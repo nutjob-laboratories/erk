@@ -787,33 +787,10 @@ class Window(QMainWindow):
 
 			menu = QMenu(self)
 
-			# self.user_icon
-
-			userLayout = QHBoxLayout()
-			if user_is_op:
-				userLayout.addWidget(self.user_op)
-			elif user_is_voiced:
-				userLayout.addWidget(self.user_voice)
-			elif user_is_owner:
-				userLayout.addWidget(self.user_owner)
-			elif user_is_admin:
-				userLayout.addWidget(self.user_admin)
-			elif user_is_halfop:
-				userLayout.addWidget(self.user_halfop)
-			else:
-				userLayout.addWidget(self.user_icon)
-			userLayout.addWidget(QLabel("<b>"+user_nick+"</b>"))
-			userLayout.addStretch()
-			u = QWidget()
-			u.setLayout(userLayout)
+			tsLabel = QLabel( "&nbsp;<big><b>"+user_nick+"</b></big>" )
 			tsAction = QWidgetAction(self)
-			tsAction.setDefaultWidget(u)
+			tsAction.setDefaultWidget(tsLabel)
 			menu.addAction(tsAction)
-
-			# tsLabel = QLabel( "<center><small>"+user_nick+"</small></center>" )
-			# tsAction = QWidgetAction(self)
-			# tsAction.setDefaultWidget(tsLabel)
-			# menu.addAction(tsAction)
 
 			if user_hostmask:
 				max_length = 25
@@ -829,41 +806,36 @@ class Window(QMainWindow):
 					display_hostmask = user_hostmask[0:offset]+"..."
 				else:
 					display_hostmask = user_hostmask
-				tsLabel = QLabel( "&nbsp;<span>"+display_hostmask+"</span>" )
+				tsLabel = QLabel( "&nbsp;<i>"+display_hostmask+"</i>" )
 				tsAction = QWidgetAction(self)
 				tsAction.setDefaultWidget(tsLabel)
 				menu.addAction(tsAction)
 
+			statusLayout = QHBoxLayout()
 			if user_is_op:
-				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Operator"+"</i>")
-				statusAction = QWidgetAction(self)
-				statusAction.setDefaultWidget(statusLabel)
-				menu.addAction(statusAction)
+				statusLayout.addWidget(self.user_op)
+				statusLayout.addWidget(QLabel(f"<i>"+"Channel Operator"+"</i>"))
 			elif user_is_voiced:
-				statusLabel = QLabel(f"&nbsp;<i>"+"Voiced User"+"</i>")
-				statusAction = QWidgetAction(self)
-				statusAction.setDefaultWidget(statusLabel)
-				menu.addAction(statusAction)
+				statusLayout.addWidget(self.user_voice)
+				statusLayout.addWidget(QLabel(f"<i>"+"Voiced user"+"</i>"))
 			elif user_is_owner:
-				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Owner"+"</i>")
-				statusAction = QWidgetAction(self)
-				statusAction.setDefaultWidget(statusLabel)
-				menu.addAction(statusAction)
+				statusLayout.addWidget(self.user_owner)
+				statusLayout.addWidget(QLabel(f"<i>"+"Channel Owner"+"</i>"))
 			elif user_is_admin:
-				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Admin"+"</i>")
-				statusAction = QWidgetAction(self)
-				statusAction.setDefaultWidget(statusLabel)
-				menu.addAction(statusAction)
+				statusLayout.addWidget(self.user_admin)
+				statusLayout.addWidget(QLabel(f"<i>"+"Channel Admin"+"</i>"))
 			elif user_is_halfop:
-				statusLabel = QLabel(f"&nbsp;<i>"+"Channel Half-Op"+"</i>")
-				statusAction = QWidgetAction(self)
-				statusAction.setDefaultWidget(statusLabel)
-				menu.addAction(statusAction)
-			# else:
-			# 	statusLabel = QLabel(f"&nbsp;<i>"+"Normal User"+"</i>")
-			# 	statusAction = QWidgetAction(self)
-			# 	statusAction.setDefaultWidget(statusLabel)
-			# 	menu.addAction(statusAction)
+				statusLayout.addWidget(self.user_halfop)
+				statusLayout.addWidget(QLabel(f"<i>"+"Channel Half-Operator"+"</i>"))
+			else:
+				statusLayout.addWidget(self.user_icon)
+				statusLayout.addWidget(QLabel(f"<i>"+"Normal user"+"</i>"))
+			statusLayout.addStretch()
+			u = QWidget()
+			u.setLayout(statusLayout)
+			tsAction = QWidgetAction(self)
+			tsAction.setDefaultWidget(u)
+			menu.addAction(tsAction)
 
 			menu.addSeparator()
 
