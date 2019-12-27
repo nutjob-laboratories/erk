@@ -64,6 +64,13 @@ https://github.com/nutjob-laboratories/erk''',
 	#add_help=False,
 )
 
+parser.add_argument("server", type=str,help="Server to connect to", metavar="SERVER", nargs='?')
+parser.add_argument("port", type=int,help="Server port to connect to (6667)", default=6667, nargs='?', metavar="PORT")
+parser.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store_true")
+parser.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
+parser.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
+parser.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
+
 parser.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
 parser.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 
@@ -73,40 +80,77 @@ if __name__ == '__main__':
 
 	app = QApplication([])
 
-	if args.noconnect:
-		GUI = Erk(app)
-		GUI.show()
-	elif args.last:
-		u = get_user()
-		if u["last_password"] == '':
+	if args.server:
+		if args.password=='':
 			pword = None
 		else:
-			pword = u["last_password"]
-		if u["autojoin"]:
-			c = u["channels"]
-		else:
-			c = []
+			pword = args.password
+		chans = []
+		if args.channel:
+			for c in args.channel:
+				p = c.split(':')
+				if len(p)==2:
+					chans.append(p)
+				else:
+					chans.append( [c,''] )
+		u = get_user()
 		i = ConnectInfo(
-				u["last_server"],
-				int(u["last_port"]),
+				args.server,
+				args.port,
 				pword,
-				u["ssl"],
+				args.ssl,
 				u["nickname"],
 				u["alternate"],
 				u["username"],
 				u["realname"],
-				u["reconnect"],
-				c
+				args.reconnect,
+				chans
 			)
 		GUI = Erk(app,i)
 		GUI.show()
 	else:
-		info = ComboDialog()
-		if info!=None:
-			GUI = Erk(app,info)
+
+		if args.noconnect:
+			GUI = Erk(app)
+			GUI.show()
+		elif args.last:
+			u = get_user()
+			if u["last_password"] == '':
+				pword = None
+			else:
+				pword = u["last_password"]
+			if u["autojoin"]:
+				c = u["channels"]
+			else:
+				c = []
+			if args.channel:
+				for ch in args.channel:
+					p = ch.split(':')
+					if len(p)==2:
+						c.append(p)
+					else:
+						c.append( [ch,''] )
+			i = ConnectInfo(
+					u["last_server"],
+					int(u["last_port"]),
+					pword,
+					u["ssl"],
+					u["nickname"],
+					u["alternate"],
+					u["username"],
+					u["realname"],
+					u["reconnect"],
+					c
+				)
+			GUI = Erk(app,i)
 			GUI.show()
 		else:
-			app.quit()
+			info = ComboDialog()
+			if info!=None:
+				GUI = Erk(app,info)
+				GUI.show()
+			else:
+				app.quit()
 
 
 	reactor.run()

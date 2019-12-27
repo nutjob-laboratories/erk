@@ -38,6 +38,7 @@ from erk.resources import *
 from erk.widgets import *
 from erk.files import *
 from erk.common import *
+from erk.plugins import PluginCollection
 import erk.config
 import erk.events
 
@@ -81,6 +82,7 @@ class Erk(QMainWindow):
 		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
+		self.plugins.unload()
 		self.app.quit()
 
 	def disconnect_current(self,msg=None):
@@ -201,12 +203,33 @@ class Erk(QMainWindow):
 		self.spinner = QMovie(SPINNER_ANIMATION)
 		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
 
+		self.plugin_icon = QLabel()
+		pixmap = QPixmap(PLUGIN_ICON)
+		#fm = QFontMetrics(self.app.font())
+		pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+		self.plugin_icon.setPixmap(pixmap)
+
+		self.disabled_plugin_icon = QLabel()
+		pixmap = QPixmap(DISABLED_PLUGIN_ICON)
+		#fm = QFontMetrics(self.app.font())
+		pixmap = pixmap.scaled(16, 16, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+		self.disabled_plugin_icon.setPixmap(pixmap)
+
+		# Plugins
+		self.plugins = PluginCollection("plugins")
+		if len(self.plugins.errors())>0:
+			print("Plugin load error(s)!")
+			for l in self.plugins.errors():
+				print(l)
+		self.plugins.load()
+
 		# MENU TOOLBAR
 		self.mainMenu = QMenu()
 		self.settingsMenu = QMenu()
 		self.logMenu = QMenu()
 		self.helpMenu = QMenu()
 		self.macroMenu = QMenu()
+		self.pluginMenu = QMenu()
 
 		self.buildToolbar()
 		
@@ -249,6 +272,8 @@ class Erk(QMainWindow):
 		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b></small></p>")
 
 		self.starter.anchorClicked.connect(self.linkClicked)
+
+		
 
 	def spellcheck_language(self,setting):
 
@@ -640,6 +665,12 @@ class Erk(QMainWindow):
 
 		self.rebuildMacroMenu()
 
+		# Plugin menu
+
+		add_toolbar_menu(self.toolbar,"Plugins",self.pluginMenu)
+
+		self.rebuildPluginMenu()
+
 		# Help menu
 
 		# helpMenu = QMenu()
@@ -672,6 +703,29 @@ class Erk(QMainWindow):
 
 		# End of menus
 		end_toolbar_menu(self.toolbar)
+
+	def rebuildPluginMenu(self):
+
+		self.pluginMenu.clear()
+
+		for p in self.plugins.plugins:
+
+			# self.plugin_icon
+
+			entryLayout = QHBoxLayout()
+			entryLayout.addWidget(self.plugin_icon)
+			#entryLayout.addWidget(QIcon(PLUGIN_ICON))
+			entryLayout.addWidget(QLabel(p.name))
+
+			u = QWidget()
+			u.setLayout(entryLayout)
+			tsAction = QWidgetAction(self)
+			tsAction.setDefaultWidget(u)
+			self.pluginMenu.addAction(tsAction)
+
+			# entry = QAction(QIcon(MACRO_FILE_ICON),p.name,self)
+			# self.pluginMenu.addAction(entry)
+
 
 	def rebuildMacroMenu(self):
 

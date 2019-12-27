@@ -187,6 +187,8 @@ def handle_macro_input(window,client,text):
 
 def handle_channel_input(window,client,text):
 
+	if client.gui.plugins.input(client,window.name,text): return True
+
 	tokens = text.split()
 
 	if len(tokens)>0:
@@ -241,6 +243,8 @@ def handle_channel_input(window,client,text):
 
 def handle_private_input(window,client,text):
 
+	if client.gui.plugins.input(client,window.name,text): return True
+
 	tokens = text.split()
 
 	if len(tokens)>0:
@@ -259,7 +263,7 @@ def handle_private_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
-	if handle_common_input(window,client,text): return
+	if handle_common_input(window,client,text): return True
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
 	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
@@ -268,6 +272,8 @@ def handle_private_input(window,client,text):
 	client.msg(window.name,text)
 
 def handle_console_input(window,client,text):
+
+	if client.gui.plugins.input(client,window.name,text): return
 	
 	if handle_common_input(window,client,text): return
 

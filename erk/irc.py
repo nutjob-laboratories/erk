@@ -907,6 +907,14 @@ class IRC_Connection(irc.IRCClient):
 		"""
 		self.notice(user, ctcpStringify(messages),False)
 
+	def ctcpMakeQuery(self, user, messages):
+		"""
+		Send one or more C{extended messages} as a CTCP query.
+		@type messages: a list of extended messages.  An extended
+		message is a (tag, data) tuple, where 'data' may be C{None}.
+		"""
+		self.msg(user, ctcpStringify(messages), False)
+
 	def lineReceived(self, line):
 
 		# Decode the incoming text line

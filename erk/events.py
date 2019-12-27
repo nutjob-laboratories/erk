@@ -1118,6 +1118,9 @@ def notice_message(gui,client,target,user,message):
 			build_connection_display(gui)
 
 def private_message(gui,client,user,message):
+
+	if client.gui.plugins.private(client,user,message): return
+
 	global UNSEEN
 	p = user.split('!')
 	if len(p)==2:
@@ -1200,6 +1203,9 @@ def private_message(gui,client,user,message):
 		build_connection_display(gui)
 
 def public_message(gui,client,channel,user,message):
+
+	if client.gui.plugins.public(client,channel,user,message): return
+
 	#print(target+" "+user+": "+message)
 
 	msg = Message(CHAT_MESSAGE,user,message)
