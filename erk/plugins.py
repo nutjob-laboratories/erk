@@ -9,6 +9,7 @@ import imp
 
 from erk.objects import *
 from erk.strings import *
+from erk.events import *
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -17,26 +18,31 @@ if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 class ErkFunctions(object):
 
 	def __init__(self):
-		self._window = None
+		self.client = None
 
 	def info(self):
 		return APPLICATION_NAME+" "+APPLICATION_VERSION
 
-	def write(self,text):
-		if self._window:
-			#self._window.pluginWriteText(text)
+	def write(self,name,text):
 
-			msg = Message(PLUGIN_MESSAGE,'',text)
-			self._window.writeText(msg,True)
+		if self.client:
+
+			windows = erk.events.fetch_window_list(self.client)
+			for w in windows:
+				if w.name==name:
+					msg = Message(PLUGIN_MESSAGE,'',text)
+					w.writeText(msg,True)
 
 	def log(self,text):
-		if self._window:
-			msg = Message(PLUGIN_MESSAGE,'',text)
-			self._window.writeText(msg,False)
+		if self.client:
+			windows = erk.events.fetch_window_list(self.client)
+			for w in windows:
+				if w.name==name:
+					msg = Message(PLUGIN_MESSAGE,'',text)
+					w.writeText(msg,True)
 
-	def _set_window_widget(self,obj):
-		
-		self._window = obj
+
+
 
 class Plugin(ErkFunctions):
 	"""Base class that each plugin must inherit from. within this class
@@ -129,26 +135,36 @@ class PluginCollection(object):
 	def private(self,client,user,text):
 		for p in self.plugins:
 			if hasattr(p,"private"):
+				p.client = client
 				p.private(client,user,text)
+				p.client = None
 
 	def public(self,client,channel,user,text):
 		for p in self.plugins:
 			if hasattr(p,"public"):
+				p.client = client
 				p.public(client,channel,user,text)
+				p.client = None
 
 	def input(self,client,name,text):
 		for p in self.plugins:
 			if hasattr(p,"input"):
-				if p.input(client,name,text): return True
+				p.client = client
+				if p.input(client,name,text):
+					p.client = None
+					return True
+				p.client = None
 
 	def load(self):
 		for p in self.plugins:
 			if hasattr(p,"load"):
+				p.client = None
 				p.load()
 
 	def unload(self):
 		for p in self.plugins:
 			if hasattr(p,"unload"):
+				p.client = None
 				p.unload()
 
 	def errors(self):

@@ -99,11 +99,12 @@ def render_message(message):
 
 	msg_to_display = message.contents
 
-	# First, make sure that the message doesn't contain
-	# any HTML formatting stuff; to do this, we escape all
-	# HTML-relevant stuff so the message is *not* rendered
-	# as HTML
-	msg_to_display = html.escape(msg_to_display)
+	if message.type!=PLUGIN_MESSAGE:
+		# First, make sure that the message doesn't contain
+		# any HTML formatting stuff; to do this, we escape all
+		# HTML-relevant stuff so the message is *not* rendered
+		# as HTML
+		msg_to_display = html.escape(msg_to_display)
 
 	if erk.config.CONVERT_URLS_TO_LINKS:
 		msg_to_display = inject_www_links(msg_to_display,STYLES["hyperlink"])
@@ -149,6 +150,9 @@ def render_message(message):
 		style = STYLES["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
+		style = STYLES["message"]
+	elif message.type==PLUGIN_MESSAGE:
+		output = SYSTEM_TEMPLATE
 		style = STYLES["message"]
 
 	if style=="":

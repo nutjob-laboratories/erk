@@ -59,6 +59,8 @@ PRIVATE_MESSAGE = 6
 HORIZONTAL_RULE_MESSAGE = 7
 WHOIS_MESSAGE = 8
 
+PLUGIN_MESSAGE = 9
+
 class Message:
 	def __init__(self,mtype,sender,contents,timestamp=None):
 		if timestamp:

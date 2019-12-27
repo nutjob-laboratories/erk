@@ -203,11 +203,11 @@ class Erk(QMainWindow):
 		self.spinner = QMovie(SPINNER_ANIMATION)
 		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
 
-		self.plugin_icon = QLabel()
-		pixmap = QPixmap(PLUGIN_ICON)
-		#fm = QFontMetrics(self.app.font())
-		pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-		self.plugin_icon.setPixmap(pixmap)
+		# self.plugin_icon = QLabel()
+		# pixmap = QPixmap(PLUGIN_ICON)
+		# #fm = QFontMetrics(self.app.font())
+		# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+		# self.plugin_icon.setPixmap(pixmap)
 
 		self.disabled_plugin_icon = QLabel()
 		pixmap = QPixmap(DISABLED_PLUGIN_ICON)
@@ -712,10 +712,16 @@ class Erk(QMainWindow):
 
 			# self.plugin_icon
 
+			plugin_icon = QLabel()
+			pixmap = QPixmap(PLUGIN_ICON)
+			pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			plugin_icon.setPixmap(pixmap)
+
 			entryLayout = QHBoxLayout()
-			entryLayout.addWidget(self.plugin_icon)
+			entryLayout.addWidget(plugin_icon)
 			#entryLayout.addWidget(QIcon(PLUGIN_ICON))
 			entryLayout.addWidget(QLabel(p.name))
+			entryLayout.addStretch()
 
 			u = QWidget()
 			u.setLayout(entryLayout)

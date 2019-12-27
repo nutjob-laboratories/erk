@@ -20,7 +20,9 @@ Version 0.701
 	* Initial plugin framework code has been introduced in the source
 	* Added documentation to the plugin framework
 	* Added a crude detector for malicious plugin code (looks for code that prevents all user input)
-
+	* Added .write() and .log() plugin methods
+	* Fixed a bug where plugin icons were not shown in the menu
+	
 Version 0.700
 	* Complete re-write
 	* All-new items: no more MDI interface, uses far less memory, is far more stable, and is far easier to use
