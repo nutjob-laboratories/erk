@@ -45,6 +45,8 @@
 * Powerful macro engine
 	* Users can create and edit macros directly in the client
 	* Macros can send messages or execute commands
+* Plugins!
+	* Plugins are written in Python 3, just like **Erk**!
 
 # Requirements
 **Erk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
@@ -101,7 +103,5 @@ No. I'm still adding features and tracking down and squashing bugs.
 
 ## Can I use **Erk** to chat on IRC?
 
-Yes! Most basic functionality is done, and it's ready for most IRC stuff. Some things that are not complete, but will be soon:
-
-* Plugins
+Yes! Most basic functionality is done, and it's ready for most IRC stuff.
 

@@ -188,6 +188,8 @@ def handle_macro_input(window,client,text):
 def handle_channel_input(window,client,text):
 
 	if client.gui.plugins.input(client,window.name,text): return True
+	# x = client.gui.plugins.input(client,window.name,text)
+	# print(x)
 
 	tokens = text.split()
 

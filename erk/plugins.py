@@ -8,6 +8,7 @@ import pkgutil
 import imp
 
 from erk.objects import *
+from erk.strings import *
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -17,6 +18,9 @@ class ErkFunctions(object):
 
 	def __init__(self):
 		self._window = None
+
+	def info(self):
+		return APPLICATION_NAME+" "+APPLICATION_VERSION
 
 	def write(self,text):
 		if self._window:
@@ -110,7 +114,7 @@ class PluginCollection(object):
 	def input(self,client,name,text):
 		for p in self.plugins:
 			if hasattr(p,"input"):
-				p.input(client,name,text)
+				if p.input(client,name,text): return True
 
 	def load(self):
 		for p in self.plugins:
