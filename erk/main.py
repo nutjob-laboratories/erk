@@ -203,18 +203,6 @@ class Erk(QMainWindow):
 		self.spinner = QMovie(SPINNER_ANIMATION)
 		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
 
-		# self.plugin_icon = QLabel()
-		# pixmap = QPixmap(PLUGIN_ICON)
-		# #fm = QFontMetrics(self.app.font())
-		# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-		# self.plugin_icon.setPixmap(pixmap)
-
-		self.disabled_plugin_icon = QLabel()
-		pixmap = QPixmap(DISABLED_PLUGIN_ICON)
-		#fm = QFontMetrics(self.app.font())
-		pixmap = pixmap.scaled(16, 16, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-		self.disabled_plugin_icon.setPixmap(pixmap)
-
 		# Plugins
 		self.plugins = PluginCollection("plugins")
 		if len(self.plugins.errors())>0:
@@ -708,26 +696,61 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
+		plist = {}
+
 		for p in self.plugins.plugins:
+
+			if p._package in plist:
+				plist[p._package].append(p)
+			else:
+				plist[p._package] = []
+				plist[p._package].append(p)
+
+		for pack in plist:
+			m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
+			for p in plist[pack]:
+
+				entry = MenuNoAction(self,PLUGIN_ICON,p.name,p.description,25)
+				m.addAction(entry)
+
+				m.addSeparator()
+
+				# plugin_icon = QLabel()
+				# pixmap = QPixmap(PLUGIN_ICON)
+				# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+				# plugin_icon.setPixmap(pixmap)
+
+				# entryLayout = QHBoxLayout()
+				# entryLayout.addWidget(plugin_icon)
+				# #entryLayout.addWidget(QIcon(PLUGIN_ICON))
+				# entryLayout.addWidget(QLabel(p.name))
+				# entryLayout.addStretch()
+
+				# u = QWidget()
+				# u.setLayout(entryLayout)
+				# tsAction = QWidgetAction(self)
+				# tsAction.setDefaultWidget(u)
+				# m.addAction(tsAction)
+
 
 			# self.plugin_icon
 
-			plugin_icon = QLabel()
-			pixmap = QPixmap(PLUGIN_ICON)
-			pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-			plugin_icon.setPixmap(pixmap)
+			# plugin_icon = QLabel()
+			# pixmap = QPixmap(PLUGIN_ICON)
+			# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+			# plugin_icon.setPixmap(pixmap)
 
-			entryLayout = QHBoxLayout()
-			entryLayout.addWidget(plugin_icon)
-			#entryLayout.addWidget(QIcon(PLUGIN_ICON))
-			entryLayout.addWidget(QLabel(p.name))
-			entryLayout.addStretch()
+			# entryLayout = QHBoxLayout()
+			# entryLayout.addWidget(plugin_icon)
+			# #entryLayout.addWidget(QIcon(PLUGIN_ICON))
+			# entryLayout.addWidget(QLabel(p.name))
+			# entryLayout.addStretch()
 
-			u = QWidget()
-			u.setLayout(entryLayout)
-			tsAction = QWidgetAction(self)
-			tsAction.setDefaultWidget(u)
-			self.pluginMenu.addAction(tsAction)
+			# u = QWidget()
+			# u.setLayout(entryLayout)
+			# tsAction = QWidgetAction(self)
+			# tsAction.setDefaultWidget(u)
+			# self.pluginMenu.addAction(tsAction)
 
 			# entry = QAction(QIcon(MACRO_FILE_ICON),p.name,self)
 			# self.pluginMenu.addAction(entry)

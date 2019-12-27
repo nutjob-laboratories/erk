@@ -125,4 +125,5 @@ MACRO_FILE_ICON = ":/gui-macro_file.png"
 DIRECTORY_ICON = ":/gui-directory.png"
 
 PLUGIN_ICON = ":/gui-plugin.png"
-DISABLED_PLUGIN_ICON = ":/gui-disabled_plugin.png"
+
+PACKAGE_ICON = ":/gui-package.png"

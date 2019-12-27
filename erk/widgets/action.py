@@ -73,6 +73,14 @@ def MenuAction(self,icon,title,description,icon_size,func):
 
 	return erkmenuAction
 
+def MenuNoAction(self,icon,title,description,icon_size):
+
+	erkmenuLabel = MenuLabel( menuHtml(icon,title,description,icon_size) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	return erkmenuAction
+
 def menuHtml(icon,text,description,icon_size):
 	return f'''
 <table style="width: 100%" border="0">
