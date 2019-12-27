@@ -1211,7 +1211,8 @@ def public_message(gui,client,channel,user,message):
 	msg = Message(CHAT_MESSAGE,user,message)
 
 	window = fetch_channel_window(client,channel)
-	if window: window.writeText(msg)
+	if window:
+		window.writeText(msg)
 
 	posted_to_current = False
 	if gui.current_page:
