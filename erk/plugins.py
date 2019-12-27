@@ -88,6 +88,31 @@ def check_for_methods(p):
 		return True
 	return False
 
+def check_for_bad_input(p):
+	if not hasattr(p,"input"): return False
+
+	s = inspect.getsourcelines(p.input)
+
+	c = []
+	for l in s[0]:
+		l = l.strip()
+		if len(l)>0:
+			# Strip comments
+			if l[0]=='#': continue
+			# Strip print commands
+			if l[:5]=="print": continue
+
+			c.append(l)
+
+	if len(c)>=2:
+		# source is greater or equal to two lines
+		if len(c)<3:
+			# source is less than three lines
+			if 'return True' in c:
+				# probably malicious
+				return True
+
+	return False
 
 class PluginCollection(object):
 	"""Upon creation, this class will read the plugins package for modules
@@ -182,6 +207,11 @@ class PluginCollection(object):
 							if p.name == plugin.name:
 								self.load_errors.append(plugin.__file__+": A plugin named \""+plugin.name+"\" is already loaded")
 								no_plugin_errors = False
+
+						# Check for a malicious input method
+						if check_for_bad_input(plugin):
+							self.load_errors.append(plugin.__file__+": Malicious input method detected")
+							no_plugin_errors = False
 
 						if no_plugin_errors: self.plugins.append(plugin)
 

@@ -18,6 +18,8 @@ Version 0.701
 	* Added commandline options/flags to set server/channel auto-connection
 	* Fixed a bug where CTCP replies would be displayed multiple times
 	* Initial plugin framework code has been introduced in the source
+	* Added documentation to the plugin framework
+	* Added a crude detector for malicious plugin code (looks for code that prevents all user input)
 
 Version 0.700
 	* Complete re-write
