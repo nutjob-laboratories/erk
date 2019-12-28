@@ -23,6 +23,7 @@ Version 0.701
 	* Added .write() and .log() plugin methods
 	* Fixed a bug where plugin icons were not shown in the menu
 	* Plugin menu now displays plugins by package, and is a little prettier
+	* Plugins now look for icons where they are displayed
 
 Version 0.700
 	* Complete re-write

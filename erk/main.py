@@ -29,6 +29,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import sys
+import os
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -707,10 +710,16 @@ class Erk(QMainWindow):
 				plist[p._package].append(p)
 
 		for pack in plist:
+
 			m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
 			for p in plist[pack]:
 
-				entry = MenuNoAction(self,PLUGIN_ICON,p.name,p.description,25)
+				if os.path.isfile(p._icon):
+					icon = p._icon
+				else:
+					icon = PLUGIN_ICON
+
+				entry = MenuNoAction(self,icon,p.name,p.description,25)
 				m.addAction(entry)
 
 				m.addSeparator()
