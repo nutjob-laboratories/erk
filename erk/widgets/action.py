@@ -81,6 +81,49 @@ def MenuNoAction(self,icon,title,description,icon_size):
 
 	return erkmenuAction
 
+def Menu3Action(self,icon,title,description,description2,icon_size):
+
+	erkmenuLabel = MenuLabel( menu3Html(icon,title,description,description2,icon_size) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	return erkmenuAction
+
+
+def Menu4Action(self,icon,title,description,description2,description3,icon_size):
+
+	erkmenuLabel = MenuLabel( menu4Html(icon,title,description,description2,description3,icon_size) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	erkmenuLabel.setOpenExternalLinks(True)
+
+	return erkmenuAction
+
+def Menu5Action(self,icon,title,description,description2,description3,description4,icon_size):
+
+	erkmenuLabel = MenuLabel( menu5Html(icon,title,description,description2,description3,description4,icon_size) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	erkmenuLabel.setOpenExternalLinks(True)
+
+# def Menu4Action(self,icon,title,description,description2,description3,icon_size):
+
+# 	erkmenuLabel = MenuLabel( menu4Html(icon,title,description,description2,description3,icon_size) )
+# 	erkmenuAction = QWidgetAction(self)
+# 	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+# 	return erkmenuAction
+
+# def Menu5Action(self,icon,title,description,description2,description3,description4,icon_size):
+
+# 	erkmenuLabel = MenuLabel( menu5Html(icon,title,description,description2,description3,description4,icon_size) )
+# 	erkmenuAction = QWidgetAction(self)
+# 	erkmenuAction.setDefaultWidget(erkmenuLabel)
+
+	return erkmenuAction
+
 def menuHtml(icon,text,description,icon_size):
 	return f'''
 <table style="width: 100%" border="0">
@@ -95,6 +138,90 @@ def menuHtml(icon,text,description,icon_size):
 				</tr>
 				<tr>
 				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def menu3Html(icon,text,description,description2,icon_size):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}</big></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: bold;"><small>{description}&nbsp;&nbsp;</small></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: bold;"><small>{description2}&nbsp;&nbsp;</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def menu4Html(icon,text,description,description2,description3,icon_size):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: bold;"><small>{description2}&nbsp;&nbsp;</small></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: bold;"><small>{description3}&nbsp;&nbsp;</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def menu5Html(icon,text,description,description2,description3,description4,icon_size):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: normal;"><small>{description2}&nbsp;&nbsp;</small></td>
+				</tr>
+				<tr>
+				  <td style="font-weight: bold;"><small>{description3}<&nbsp;&nbsp;</small> <small>{description4}&nbsp;&nbsp;</small></td>
 				</tr>
 			  </tbody>
 			</table>

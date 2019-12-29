@@ -24,6 +24,7 @@ Version 0.701
 	* Fixed a bug where plugin icons were not shown in the menu
 	* Plugin menu now displays plugins by package, and is a little prettier
 	* Plugins now look for icons where they are displayed
+	* Plugins can now be enabled (and disabled) individually
 
 Version 0.700
 	* Complete re-write

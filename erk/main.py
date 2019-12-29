@@ -31,6 +31,7 @@
 
 import sys
 import os
+from itertools import combinations_with_replacement
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -41,7 +42,7 @@ from erk.resources import *
 from erk.widgets import *
 from erk.files import *
 from erk.common import *
-from erk.plugins import PluginCollection
+from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled
 import erk.config
 import erk.events
 
@@ -719,50 +720,53 @@ class Erk(QMainWindow):
 				else:
 					icon = PLUGIN_ICON
 
-				entry = MenuNoAction(self,icon,p.name,p.description,25)
+				args = []
+				if p.version:
+					PLUGIN_VERSION = p.version + " "
+				else:
+					PLUGIN_VERSION = ''
+
+				if p.author and p.author!="Unknown":
+					args.append(p.author)
+
+				if p.website:
+					args.append(f"<a href=\"{p.website}\">Website</a>")
+
+				if p.source:
+					args.append(f"<a href=\"{p.source}\">Source Code</a>")
+
+
+				if len(args)==3:
+					entry = Menu5Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+				elif len(args)==2:
+					entry = Menu4Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+				elif len(args)==1:
+					entry = Menu3Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+				else:
+					entry = MenuNoAction(self,icon,p.name+" "+PLUGIN_VERSION,p.description,25)
+
+				m.addAction(entry)
+
+				if p.name in DISABLED_PLUGINS:
+					enabled = False
+					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+				else:
+					enabled = True
+					entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
+
+				#entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
+				entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
 				m.addAction(entry)
 
 				m.addSeparator()
 
-				# plugin_icon = QLabel()
-				# pixmap = QPixmap(PLUGIN_ICON)
-				# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-				# plugin_icon.setPixmap(pixmap)
-
-				# entryLayout = QHBoxLayout()
-				# entryLayout.addWidget(plugin_icon)
-				# #entryLayout.addWidget(QIcon(PLUGIN_ICON))
-				# entryLayout.addWidget(QLabel(p.name))
-				# entryLayout.addStretch()
-
-				# u = QWidget()
-				# u.setLayout(entryLayout)
-				# tsAction = QWidgetAction(self)
-				# tsAction.setDefaultWidget(u)
-				# m.addAction(tsAction)
-
-
-			# self.plugin_icon
-
-			# plugin_icon = QLabel()
-			# pixmap = QPixmap(PLUGIN_ICON)
-			# pixmap = pixmap.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-			# plugin_icon.setPixmap(pixmap)
-
-			# entryLayout = QHBoxLayout()
-			# entryLayout.addWidget(plugin_icon)
-			# #entryLayout.addWidget(QIcon(PLUGIN_ICON))
-			# entryLayout.addWidget(QLabel(p.name))
-			# entryLayout.addStretch()
-
-			# u = QWidget()
-			# u.setLayout(entryLayout)
-			# tsAction = QWidgetAction(self)
-			# tsAction.setDefaultWidget(u)
-			# self.pluginMenu.addAction(tsAction)
-
-			# entry = QAction(QIcon(MACRO_FILE_ICON),p.name,self)
-			# self.pluginMenu.addAction(entry)
+	def toggle_plugin(self,name):
+		if name in DISABLED_PLUGINS:
+			DISABLED_PLUGINS.remove(name)
+		else:
+			DISABLED_PLUGINS.append(name)
+		save_disabled()
+		self.rebuildPluginMenu()
 
 
 	def rebuildMacroMenu(self):

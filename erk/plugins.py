@@ -6,6 +6,7 @@ import inspect
 import os
 import pkgutil
 import imp
+import json
 
 from erk.objects import *
 from erk.strings import *
@@ -14,6 +15,26 @@ from erk.events import *
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
+
+SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
+DISABLED_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.json")
+
+DISABLED_PLUGINS = []
+
+def get_disabled(filename=DISABLED_FILE):
+	if os.path.isfile(filename):
+		with open(filename, "r") as read_disabled:
+			data = json.load(read_disabled)
+			return data
+	else:
+		return []
+
+def save_disabled(filename=DISABLED_FILE):
+	with open(filename, "w") as write_data:
+		json.dump(DISABLED_PLUGINS, write_data, indent=4, sort_keys=True)
+
+
+DISABLED_PLUGINS = get_disabled()
 
 class ErkFunctions(object):
 
@@ -134,6 +155,7 @@ class PluginCollection(object):
 
 	def private(self,client,user,text):
 		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"private"):
 				p.client = client
 				p.private(client,user,text)
@@ -141,6 +163,7 @@ class PluginCollection(object):
 
 	def public(self,client,channel,user,text):
 		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"public"):
 				p.client = client
 				p.public(client,channel,user,text)
@@ -148,6 +171,7 @@ class PluginCollection(object):
 
 	def input(self,client,name,text):
 		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"input"):
 				p.client = client
 				if p.input(client,name,text):
@@ -157,12 +181,14 @@ class PluginCollection(object):
 
 	def load(self):
 		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"load"):
 				p.client = None
 				p.load()
 
 	def unload(self):
 		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"unload"):
 				p.client = None
 				p.unload()
