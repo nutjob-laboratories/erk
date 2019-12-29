@@ -81,8 +81,9 @@ MARK_END_OF_LOADED_LOG = True
 DISPLAY_CHAT_RESUME_DATE_TIME = True
 SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
-
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
+
+PLUGINS_ENABLED = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -129,8 +130,8 @@ def save_settings(filename=SETTINGS_FILE):
 		"display_date_and_time_of_channel_log_resume": DISPLAY_CHAT_RESUME_DATE_TIME,
 		"save_private_logs": SAVE_PRIVATE_LOGS,
 		"load_private_logs": LOAD_PRIVATE_LOGS,
-
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
+		"enable_plugins": PLUGINS_ENABLED,
 	}
 
 	with open(filename, "w") as write_data:
@@ -180,6 +181,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SAVE_PRIVATE_LOGS
 	global LOAD_PRIVATE_LOGS
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
+	global PLUGINS_ENABLED
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -227,8 +229,9 @@ def load_settings(filename=SETTINGS_FILE):
 			DISPLAY_CHAT_RESUME_DATE_TIME = data["display_date_and_time_of_channel_log_resume"]
 			SAVE_PRIVATE_LOGS = data["save_private_logs"]
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
-
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
+
+			PLUGINS_ENABLED = data["enable_plugins"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

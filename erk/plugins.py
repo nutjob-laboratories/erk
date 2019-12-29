@@ -11,6 +11,7 @@ import json
 from erk.objects import *
 from erk.strings import *
 from erk.events import *
+import erk.config
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -154,6 +155,7 @@ class PluginCollection(object):
 		self.reload_plugins()
 
 	def private(self,client,user,text):
+		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"private"):
@@ -162,6 +164,7 @@ class PluginCollection(object):
 				p.client = None
 
 	def public(self,client,channel,user,text):
+		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"public"):
@@ -170,6 +173,7 @@ class PluginCollection(object):
 				p.client = None
 
 	def input(self,client,name,text):
+		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"input"):
@@ -180,6 +184,7 @@ class PluginCollection(object):
 				p.client = None
 
 	def load(self):
+		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"load"):
@@ -187,6 +192,7 @@ class PluginCollection(object):
 				p.load()
 
 	def unload(self):
+		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"unload"):

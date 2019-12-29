@@ -700,6 +700,14 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
+		entry = QAction(QIcon(UNCHECKED_ICON),"Plugins enabled",self)
+		entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
+
+		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+
+		self.pluginMenu.addSeparator()
+
 		plist = {}
 
 		for p in self.plugins.plugins:
@@ -713,6 +721,10 @@ class Erk(QMainWindow):
 		for pack in plist:
 
 			m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
+
+			if not erk.config.PLUGINS_ENABLED:
+				m.setEnabled(False)
+
 			for p in plist[pack]:
 
 				if os.path.isfile(p._icon):
@@ -798,18 +810,20 @@ class Erk(QMainWindow):
 			self.macroMenu.addAction(entry)
 
 
-	# self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
-	# 	self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
-	# 	messageMenu.addAction(self.set_sysprefix)
-
-	# 	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-
 	def menuReloadMacros(self):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-
 	def toggleSetting(self,setting):
+
+		if setting=="pluginenable":
+			if erk.config.PLUGINS_ENABLED:
+				erk.config.PLUGINS_ENABLED = False
+			else:
+				erk.config.PLUGINS_ENABLED = True
+			erk.config.save_settings()
+			self.rebuildPluginMenu()
+			return
 
 		if setting=="sysprefix":
 			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
