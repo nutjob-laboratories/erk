@@ -26,6 +26,7 @@ Version 0.701
 	* Plugins now look for icons where they are displayed
 	* Plugins can now be enabled (and disabled) individually
 	* Added an option to disable (or enable) all plugins at once
+	* Added an option to disable (or enable) all macros at once
 
 Version 0.700
 	* Complete re-write

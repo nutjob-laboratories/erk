@@ -82,8 +82,9 @@ DISPLAY_CHAT_RESUME_DATE_TIME = True
 SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
-
 PLUGINS_ENABLED = True
+
+MACROS_ENABLED = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -132,6 +133,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"load_private_logs": LOAD_PRIVATE_LOGS,
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
 		"enable_plugins": PLUGINS_ENABLED,
+		"enable_macros": MACROS_ENABLED,
 	}
 
 	with open(filename, "w") as write_data:
@@ -182,6 +184,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global LOAD_PRIVATE_LOGS
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
 	global PLUGINS_ENABLED
+	global MACROS_ENABLED
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -230,8 +233,9 @@ def load_settings(filename=SETTINGS_FILE):
 			SAVE_PRIVATE_LOGS = data["save_private_logs"]
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
-
 			PLUGINS_ENABLED = data["enable_plugins"]
+
+			MACROS_ENABLED = data["enable_macros"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

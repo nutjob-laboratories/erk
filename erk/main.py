@@ -787,17 +787,31 @@ class Erk(QMainWindow):
 
 		self.macroMenu.clear()
 
+		self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
+		self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
+		self.macroMenu.addAction(self.set_macroenable)
+
+		if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+
+		self.macroMenu.addSeparator()
+
 		self.editmacro = QAction(QIcon(MACRO_ICON),"New macro",self)
 		self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
 		self.macroMenu.addAction(self.editmacro)
+
+		if not erk.config.MACROS_ENABLED: self.editmacro.setEnabled(False)
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
 		self.macroMenu.addAction(ircMenu_Macro)
 
+		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
+
 		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
 		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
 		self.macroMenu.addAction(ircMenu_Macro)
+
+		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
 		self.macroMenu.addSeparator()
 
@@ -809,12 +823,31 @@ class Erk(QMainWindow):
 			entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
 			self.macroMenu.addAction(entry)
 
+			if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
+
 
 	def menuReloadMacros(self):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
+	# self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
+	# 	self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
+	# 	self.macroMenu.addAction(self.set_macroenable)
+
+	# 	if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+
 	def toggleSetting(self,setting):
+
+		if setting=="enablemacros":
+			if erk.config.MACROS_ENABLED:
+				erk.config.MACROS_ENABLED = False
+				self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.MACROS_ENABLED = True
+				self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			self.rebuildMacroMenu()
+			return
 
 		if setting=="pluginenable":
 			if erk.config.PLUGINS_ENABLED:
