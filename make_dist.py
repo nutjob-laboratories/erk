@@ -21,6 +21,14 @@ from erk.strings import *
 os.mkdir("./dist")
 os.mkdir("./dist/settings")
 
+os.mkdir("./dist/plugins")
+os.mkdir("./dist/plugins/examples")
+
+shutil.copy("./plugins/examples/documentation.png", "./dist/plugins/examples/documentation.png")
+shutil.copy("./plugins/examples/documentation.py", "./dist/plugins/examples/documentation.py")
+shutil.copy("./plugins/examples/package.png", "./dist/plugins/examples/package.png")
+shutil.copy("./plugins/examples/package.txt", "./dist/plugins/examples/package.txt")
+
 os.system("compile_resources.bat")
 
 shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))

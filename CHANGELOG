@@ -27,6 +27,9 @@ Version 0.701
 	* Plugins can now be enabled (and disabled) individually
 	* Added an option to disable (or enable) all plugins at once
 	* Added an option to disable (or enable) all macros at once
+	* Plugin packages can now have customizable names
+	* Plugin packages can now have custom icons
+	* Added documentation plugin examples to the distribution
 
 Version 0.700
 	* Complete re-write

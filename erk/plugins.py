@@ -34,7 +34,6 @@ def save_disabled(filename=DISABLED_FILE):
 	with open(filename, "w") as write_data:
 		json.dump(DISABLED_PLUGINS, write_data, indent=4, sort_keys=True)
 
-
 DISABLED_PLUGINS = get_disabled()
 
 class ErkFunctions(object):
@@ -224,6 +223,50 @@ class PluginCollection(object):
 				if do_reload:
 					plugin_module = imp.reload(plugin_module)
 
+				# get_package_info
+				#print(inspect.getmodule(plugin_module))
+				#print(plugin_module.__name__)
+
+				# Find the directory the module is stored in
+				m = plugin_module.__name__.split('.')
+				# Remove plugin.
+				m.pop(0)
+				# Remove .classfile
+				m.pop()
+				mfile = PLUGIN_DIRECTORY
+				for f in m:
+					mfile = os.path.join(mfile, f)
+
+				no_package_info = True
+				pinfo = os.path.join(mfile, "package")
+				if not os.path.isfile(pinfo):
+					pinfo = pinfo + ".txt"
+					if os.path.isfile(pinfo):
+						no_package_info = False
+				else:
+					no_package_info = False
+
+				if not no_package_info:
+					x = open(pinfo,mode="r", encoding='latin-1')
+					package_name = str(x.read())
+					x.close()
+					package_name = package_name.strip()
+				else:
+					package_name = None
+
+				package_icon = os.path.join(mfile, "package.png")
+
+				# # Load in package.json
+				# packinfo = os.path.join(mfile, "package.json")
+				# info = get_package_info(packinfo)
+
+				# if "name" in info:
+				# 	package_name = info["name"]
+				# else:
+				# 	package_name = None
+
+				# print(packinfo,package_name)
+
 				clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
 				for (_, c) in clsmembers:
 
@@ -234,7 +277,16 @@ class PluginCollection(object):
 						pm.pop(0)
 						plugin._icon = inspect.getfile(c).replace(".py",".png")
 						plugin.__file__ = inspect.getfile(c).replace(".pyc",".py")
-						plugin._package = ".".join(pm)
+
+						plugin._packicon = package_icon
+
+						if package_name:
+							plugin._package = package_name
+						else:
+							plugin._package = ".".join(pm)
+
+						# plugin._package = ".".join(pm)
+
 						plugin._class = f"{c.__name__}"
 						
 						no_plugin_errors = True

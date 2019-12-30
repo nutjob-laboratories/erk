@@ -727,6 +727,8 @@ class Erk(QMainWindow):
 
 			for p in plist[pack]:
 
+				if os.path.isfile(p._packicon): m.setIcon(QIcon(p._packicon))
+
 				if os.path.isfile(p._icon):
 					icon = p._icon
 				else:
