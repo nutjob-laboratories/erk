@@ -30,6 +30,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import string
+import shutil
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -74,11 +76,55 @@ parser.add_argument("-c","--channel", type=str,help="Join channel on connection"
 parser.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
 parser.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 
+parser.add_argument("-g","--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
+
 args = parser.parse_args()
 
 if __name__ == '__main__':
 
 	app = QApplication([])
+
+	if args.generate!='':
+		safe_name = args.generate
+		for c in string.punctuation:
+			safe_name=safe_name.replace(c,"")
+		safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
+
+		ERK_MODULE_DIRECTORY = os.path.join(sys.path[0], "erk")
+		DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
+		PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
+
+		print("Creating plugin package "+safe_name+"...")
+		os.mkdir(safe_name)
+		shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(safe_name, "package.png"))
+		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(safe_name, "plugin.png"))
+		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.py"), os.path.join(safe_name, "plugin.py"))
+		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.txt"), os.path.join(safe_name, "plugin.txt"))
+
+		f = open(os.path.join(safe_name, "plugin.txt"),"r")
+		ptxt = f.read()
+		f.close()
+
+		ptxt = ptxt.replace("!PLUGIN_FULL_NAME!",args.generate)
+
+		f = open(os.path.join(safe_name, "plugin.txt"),"w")
+		f.write(ptxt)
+		f.close()
+
+		f = open(os.path.join(safe_name, "plugin.py"),"r")
+		ppy = f.read()
+		f.close()
+
+		ppy = ppy.replace("!PLUGIN_FULL_NAME!",args.generate)
+		ppy = ppy.replace("!_PLUGIN_NAME!",safe_name)
+
+		f = open(os.path.join(safe_name, "plugin.py"),"w")
+		f.write(ppy)
+		f.close()
+
+		print("Done!")
+
+		sys.exit(0)
 
 	if args.server:
 		if args.password=='':

@@ -29,6 +29,9 @@ shutil.copy("./plugins/examples/documentation.py", "./dist/plugins/examples/docu
 shutil.copy("./plugins/examples/package.png", "./dist/plugins/examples/package.png")
 shutil.copy("./plugins/examples/package.txt", "./dist/plugins/examples/package.txt")
 
+os.mkdir("./dist/documentation")
+shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./dist/documentation/Erk_Plugin_Guide.pdf")
+
 os.system("compile_resources.bat")
 
 shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))

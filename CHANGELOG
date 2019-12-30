@@ -30,6 +30,7 @@ Version 0.701
 	* Plugin packages can now have customizable names
 	* Plugin packages can now have custom icons
 	* Added documentation plugin examples to the distribution
+	* Added a command-line flag to generate a new "blank" plugin
 
 Version 0.700
 	* Complete re-write
