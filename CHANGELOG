@@ -5,6 +5,7 @@ Version 0.702
 	* Fixed a bug where occasionally plugins would not unload on exit
 	* Added the console() plugin method to write to server consoles
 	* Updated plugin documentation
+	* Added an option to reload all plugins (so that new ones can be loaded) at runtime
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

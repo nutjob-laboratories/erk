@@ -706,6 +706,10 @@ class Erk(QMainWindow):
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 
+		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+		entry.triggered.connect(self.menuReloadPlugins)
+		self.pluginMenu.addAction(entry)
+
 		self.pluginMenu.addSeparator()
 
 		plist = {}
@@ -783,6 +787,9 @@ class Erk(QMainWindow):
 		self.plugins.load()
 		self.rebuildPluginMenu()
 
+	def menuReloadPlugins(self):
+		self.plugins.reload_plugins(True)
+		self.rebuildPluginMenu()
 
 	def rebuildMacroMenu(self):
 
