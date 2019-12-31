@@ -45,10 +45,15 @@ class ErkFunctions(object):
 	def info(self):
 		return APPLICATION_NAME+" "+APPLICATION_VERSION
 
-	def write(self,name,text):
-
+	def console(self,text):
 		if self.client:
+			window = erk.events.fetch_console_window(self.client)
+			if window:
+				msg = Message(PLUGIN_MESSAGE,'',text)
+				window.writeText(msg,True)
 
+	def write(self,name,text):
+		if self.client:
 			windows = erk.events.fetch_window_list(self.client)
 			for w in windows:
 				if w.name==name:

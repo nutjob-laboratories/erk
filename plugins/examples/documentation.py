@@ -11,16 +11,15 @@ class HelloWorld(Plugin):
 
 	def input(self,client,name,text):
 
-		# Since we can't write to console windows,
-		# we won't try to, and exit if the plugin
-		# was triggered by console input
-		if name=="Server": return False
-
 		# Look for our new command
 		if text=="/hello":
 
-			# Found it! Now lets display our message
-			self.write(name,"Hello, world!")
+			# Write to either the console or to
+			# the chat display the command was entered into
+			if name=="Server":
+				self.console("Hello, world!")
+			else:
+				self.write(name,"Hello, world!")
 
 			# Now, we return "True" to make sure that
 			# "/hello" isn't sent to the IRC server as
@@ -34,11 +33,6 @@ class Notes(Plugin):
 		self.notes = []
 
 	def input(self,client,name,text):
-
-		# Since we can't write to console windows,
-		# we won't try to, and exit if the plugin
-		# was triggered by console input
-		if name=="Server": return False
 
 		# Tokenize the input
 		tokens = text.split()
@@ -64,7 +58,10 @@ class Notes(Plugin):
 			# If there are no stored notes, let the
 			# user know and return
 			if len(self.notes)==0:
-				self.write(name,"No notes found")
+				if name=="Server":
+					self.console("No notes found")
+				else:
+					self.write(name,"No notes found")
 				return True
 
 			# Format the note list using HTML
@@ -74,5 +71,8 @@ class Notes(Plugin):
 			t = t + "</ul>"
 
 			# Display the stored notes to the user
-			self.write(name,t)
+			if name=="Server":
+				self.console(t)
+			else:
+				self.write(name,t)
 			return True
