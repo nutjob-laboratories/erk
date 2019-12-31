@@ -194,9 +194,7 @@ class PluginCollection(object):
 				LOADED_PLUGINS.append(p.name)
 
 	def unload(self):
-		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
 			if not p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"unload"):
 				p.client = None

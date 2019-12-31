@@ -2,6 +2,7 @@ Version 0.702
 	* Plugin loading is now handled in plugins.py
 	* Plugins are only loaded once
 	* Plugins are not unloaded if they haven't been loaded
+	* Fixed a bug where occasionally plugins would not unload on exit
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
