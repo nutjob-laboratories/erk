@@ -40,29 +40,37 @@ DISABLED_PLUGINS = get_disabled()
 class ErkFunctions(object):
 
 	def __init__(self):
-		self.client = None
+		self._erk_client = None
+		self._erk_window_name = None
 
 	def info(self):
 		return APPLICATION_NAME+" "+APPLICATION_VERSION
 
+	def print(self,text):
+		if self._erk_client and self._erk_window_name:
+			if self._erk_window_name=="Server":
+				self.console(text)
+			else:
+				self.write(self._erk_window_name,text)
+
 	def console(self,text):
-		if self.client:
-			window = erk.events.fetch_console_window(self.client)
+		if self._erk_client:
+			window = erk.events.fetch_console_window(self._erk_client)
 			if window:
 				msg = Message(PLUGIN_MESSAGE,'',text)
 				window.writeText(msg,True)
 
 	def write(self,name,text):
-		if self.client:
-			windows = erk.events.fetch_window_list(self.client)
+		if self._erk_client:
+			windows = erk.events.fetch_window_list(self._erk_client)
 			for w in windows:
 				if w.name==name:
 					msg = Message(PLUGIN_MESSAGE,'',text)
 					w.writeText(msg,True)
 
 	def log(self,text):
-		if self.client:
-			windows = erk.events.fetch_window_list(self.client)
+		if self._erk_client:
+			windows = erk.events.fetch_window_list(self._erk_client)
 			for w in windows:
 				if w.name==name:
 					msg = Message(PLUGIN_MESSAGE,'',text)
@@ -161,32 +169,44 @@ class PluginCollection(object):
 
 	def private(self,client,user,text):
 		if not erk.config.PLUGINS_ENABLED: return
+		p = user.split('!')
+		if len(p)==2:
+			name = p[0]
+		else:
+			name = user
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"private"):
-				p.client = client
+				p._erk_client = client
+				p._erk_window_name = name
 				p.private(client,user,text)
-				p.client = None
+				p._erk_client = None
+				p._erk_window_name = None
 
 	def public(self,client,channel,user,text):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"public"):
-				p.client = client
+				p._erk_client = client
+				p._erk_window_name = channel
 				p.public(client,channel,user,text)
-				p.client = None
+				p._erk_client = None
+				p._erk_window_name = None
 
 	def input(self,client,name,text):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"input"):
-				p.client = client
+				p._erk_client = client
+				p._erk_window_name = name
 				if p.input(client,name,text):
-					p.client = None
+					p._erk_client = None
+					p._erk_window_name = None
 					return True
-				p.client = None
+				p._erk_client = None
+				p._erk_window_name = None
 
 	def load(self):
 		if not erk.config.PLUGINS_ENABLED: return
@@ -194,7 +214,8 @@ class PluginCollection(object):
 			if p.name in DISABLED_PLUGINS: continue
 			if p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"load"):
-				p.client = None
+				p._erk_client = None
+				p._erk_window_name = None
 				p.load()
 				LOADED_PLUGINS.append(p.name)
 
@@ -202,7 +223,8 @@ class PluginCollection(object):
 		for p in self.plugins:
 			if not p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"unload"):
-				p.client = None
+				p._erk_client = None
+				p._erk_window_name = None
 				p.unload()
 
 	def errors(self):

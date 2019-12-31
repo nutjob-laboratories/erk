@@ -14,12 +14,8 @@ class HelloWorld(Plugin):
 		# Look for our new command
 		if text=="/hello":
 
-			# Write to either the console or to
-			# the chat display the command was entered into
-			if name=="Server":
-				self.console("Hello, world!")
-			else:
-				self.write(name,"Hello, world!")
+			# Found it! Display our message
+			self.print("Hello, world!")
 
 			# Now, we return "True" to make sure that
 			# "/hello" isn't sent to the IRC server as
@@ -57,12 +53,8 @@ class Notes(Plugin):
 
 			# If there are no stored notes, let the
 			# user know and return
-			if len(self.notes)==0:
-				if name=="Server":
-					self.console("No notes found")
-				else:
-					self.write(name,"No notes found")
-				return True
+			self.print("No notes found")
+			return True
 
 			# Format the note list using HTML
 			t = "<ul>"
@@ -71,8 +63,5 @@ class Notes(Plugin):
 			t = t + "</ul>"
 
 			# Display the stored notes to the user
-			if name=="Server":
-				self.console(t)
-			else:
-				self.write(name,t)
+			self.print(t)
 			return True

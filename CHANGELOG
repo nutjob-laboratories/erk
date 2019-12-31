@@ -7,6 +7,8 @@ Version 0.702
 	* Updated plugin documentation
 	* Added an option to reload all plugins (so that new ones can be loaded) at runtime
 	* Added a menu command to display the plugin directory
+	* Added the built-in plugin method print() for text display
+	* Updated the example plugins (and documentation) with the new print() method
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
