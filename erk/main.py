@@ -42,7 +42,7 @@ from erk.resources import *
 from erk.widgets import *
 from erk.files import *
 from erk.common import *
-from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled
+from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY
 import erk.config
 import erk.events
 
@@ -705,6 +705,12 @@ class Erk(QMainWindow):
 		self.pluginMenu.addAction(entry)
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+
+		self.pluginMenu.addSeparator()
+
+		plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
+		self.pluginMenu.addAction(plugin_dir)
 
 		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
 		entry.triggered.connect(self.menuReloadPlugins)
