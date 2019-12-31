@@ -213,7 +213,7 @@ class Erk(QMainWindow):
 			print("Plugin load error(s)!")
 			for l in self.plugins.errors():
 				print(l)
-		self.plugins.load()
+		#self.plugins.load()
 
 		# MENU TOOLBAR
 		self.mainMenu = QMenu()
@@ -780,6 +780,7 @@ class Erk(QMainWindow):
 		else:
 			DISABLED_PLUGINS.append(name)
 		save_disabled()
+		self.plugins.load()
 		self.rebuildPluginMenu()
 
 

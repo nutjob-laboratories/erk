@@ -21,6 +21,7 @@ SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
 DISABLED_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.json")
 
 DISABLED_PLUGINS = []
+LOADED_PLUGINS = []
 
 def get_disabled(filename=DISABLED_FILE):
 	if os.path.isfile(filename):
@@ -186,14 +187,17 @@ class PluginCollection(object):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
+			if p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"load"):
 				p.client = None
 				p.load()
+				LOADED_PLUGINS.append(p.name)
 
 	def unload(self):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
+			if not p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"unload"):
 				p.client = None
 				p.unload()
@@ -223,10 +227,6 @@ class PluginCollection(object):
 				if do_reload:
 					plugin_module = imp.reload(plugin_module)
 
-				# get_package_info
-				#print(inspect.getmodule(plugin_module))
-				#print(plugin_module.__name__)
-
 				# Find the directory the module is stored in
 				m = plugin_module.__name__.split('.')
 				# Remove plugin.
@@ -255,17 +255,6 @@ class PluginCollection(object):
 					package_name = None
 
 				package_icon = os.path.join(mfile, "package.png")
-
-				# # Load in package.json
-				# packinfo = os.path.join(mfile, "package.json")
-				# info = get_package_info(packinfo)
-
-				# if "name" in info:
-				# 	package_name = info["name"]
-				# else:
-				# 	package_name = None
-
-				# print(packinfo,package_name)
 
 				clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
 				for (_, c) in clsmembers:
@@ -314,6 +303,8 @@ class PluginCollection(object):
 							no_plugin_errors = False
 
 						if no_plugin_errors: self.plugins.append(plugin)
+
+				self.load()
 
 		# Now that we have looked at all the modules in the current package, start looking
 		# recursively for additional modules in sub packages

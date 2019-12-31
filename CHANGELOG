@@ -1,3 +1,8 @@
+Version 0.702
+	* Plugin loading is now handled in plugins.py
+	* Plugins are only loaded once
+	* Plugins are not unloaded if they haven't been loaded
+
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
 	* Patched the Twisted IRC client class to optionally write outgoing messages to chat displays
