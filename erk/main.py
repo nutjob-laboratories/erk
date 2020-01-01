@@ -1443,6 +1443,8 @@ class Erk(QMainWindow):
 
 			action = menu.exec_(self.connection_display.mapToGlobal(event.pos()))
 
+			self.connection_display.clearSelection()
+
 			return True
 
 

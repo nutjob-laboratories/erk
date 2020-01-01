@@ -9,6 +9,7 @@ Version 0.702
 	* Added a menu command to display the plugin directory
 	* Added the built-in plugin method print() for text display
 	* Updated the example plugins (and documentation) with the new print() method
+	* Fixed a minor bug where items in the connection display would stay selected if the context menu was invoked
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
