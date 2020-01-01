@@ -147,3 +147,4 @@ PASTE_ICON = ":/gui-paste.png"
 
 INDENT_ICON = ":/gui-indent.png"
 
+INSERT_ICON = ":/gui-insert.png"

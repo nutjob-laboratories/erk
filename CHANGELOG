@@ -15,6 +15,7 @@ Version 0.702
 	* Added development mode (menu options to write/edit plugins can be turned on/off)
 	* Added an option to the editor to manage indents (spaces vs tabs)
 	* Added an option to the editor to toggle wordwrap
+	* Added a plugin template generator to the editor
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

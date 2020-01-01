@@ -1,0 +1,26 @@
+class !_PLUGIN_NAME_!(Plugin):
+
+!_INDENT_!def __init__(self):
+!_INDENT_!!_INDENT_!self.name = "!_PLUGIN_FULL_NAME_!"
+!_INDENT_!!_INDENT_!self.description = "UNKNOWN"
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!self.author = "UNKNOWN"
+!_INDENT_!!_INDENT_!self.version = "1.0"
+
+!_INDENT_!!_INDENT_!self.website = None
+!_INDENT_!!_INDENT_!self.source = None
+
+!_INDENT_!def load(self):
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def unload(self):
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def input(self,client,name,text):
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def public(self,client,channel,user,message):
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def private(self,client,user,message):
+!_INDENT_!!_INDENT_!pass

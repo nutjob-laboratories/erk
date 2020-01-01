@@ -1,6 +1,7 @@
 
 import sys
 import os
+import string
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -8,7 +9,9 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.resources import *
+from erk.files import PLUGIN_TEMPLATE
 import erk.dialogs.find as Find
+import erk.dialogs.template as Template
 import erk.config
 
 INSTALL_DIRECTORY = sys.path[0]
@@ -130,6 +133,44 @@ class Window(QMainWindow):
 		self.findWindow.show()
 		return
 
+	def build_plugin_from_template(self,name,fullname):
+
+		if self.indentspace:
+			i = ' '*self.tabsize
+		else:
+			i = "\t"
+
+		out = PLUGIN_TEMPLATE
+		out = out.replace('!_INDENT_!',i)
+		out = out.replace('!_PLUGIN_NAME_!',name)
+		out = out.replace('!_PLUGIN_FULL_NAME_!',fullname)
+
+		if 'from erk import *' in self.editor.toPlainText():
+			pass
+		else:
+			if 'from erk import Plugin' in self.editor.toPlainText():
+				pass
+			else:
+				out = 'from erk import *'+"\n\n"+out
+
+		return out
+
+	# 	x = Template.Dialog(obj)
+	#info = x.get_name_information(obj)
+
+	def menuTemplate(self):
+		x = Template.Dialog(self)
+		info = x.get_name_information(self)
+
+		if info:
+			safe_name = info
+			for c in string.punctuation:
+				safe_name=safe_name.replace(c,"")
+			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
+
+			t = self.build_plugin_from_template(safe_name,info)
+			self.editor.insertPlainText(t)
+
 	def __init__(self,filename=None,obj=None,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -217,6 +258,12 @@ class Window(QMainWindow):
 		fileMenu.addAction(entry)
 
 		editMenu = self.menubar.addMenu("Edit")
+
+		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
+		entry.triggered.connect(self.menuTemplate)
+		editMenu.addAction(entry)
+
+		editMenu.addSeparator()
 
 		mefind = QAction(QIcon(WHOIS_ICON),"Find",self)
 		mefind.triggered.connect(self.doFind)

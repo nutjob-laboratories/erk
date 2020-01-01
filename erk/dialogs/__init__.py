@@ -46,12 +46,15 @@ import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
 import erk.dialogs.macro as Macro
 import erk.dialogs.editor as Editor
+# import erk.dialogs.template as Template
 
-# import erk.dialogs.find as Find
+# def TemplateDialog(obj):
+	# x = Template.Dialog(obj)
+	# info = x.get_name_information(obj)
+# 	del x
 
-# def FnarplgFindDialog(parent):
-# 	x = Find.Dialog(parent)
-# 	return x
+# 	if not info: return None
+# 	return info
 
 def EditorDialog(obj=None,filename=None):
 	x = Editor.Window(filename,obj)

@@ -67,6 +67,13 @@ ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.tx
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
+# Plugin template for the editor
+PLUGIN_TEMPLATE_FILE = os.path.join(DATA_DIRECTORY, "plugin_template.txt")
+PLUGIN_TEMPLATE = ''
+f = open(PLUGIN_TEMPLATE_FILE,"r")
+PLUGIN_TEMPLATE = f.read()
+f.close()
+
 # Read in the ascii emoji list
 ASCIIEMOJIS = {}
 with open(ASCIIEMOJI_LIST, "r",encoding="utf-8") as read_emojis:
