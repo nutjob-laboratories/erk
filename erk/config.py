@@ -83,8 +83,9 @@ SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 PLUGINS_ENABLED = True
-
 MACROS_ENABLED = True
+
+DEVELOPER_MODE = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -134,6 +135,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
 		"enable_plugins": PLUGINS_ENABLED,
 		"enable_macros": MACROS_ENABLED,
+		"plugin_developement_mode": DEVELOPER_MODE,
 	}
 
 	with open(filename, "w") as write_data:
@@ -185,6 +187,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
 	global PLUGINS_ENABLED
 	global MACROS_ENABLED
+	global DEVELOPER_MODE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -234,8 +237,8 @@ def load_settings(filename=SETTINGS_FILE):
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
 			PLUGINS_ENABLED = data["enable_plugins"]
-
 			MACROS_ENABLED = data["enable_macros"]
+			DEVELOPER_MODE = data["plugin_developement_mode"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

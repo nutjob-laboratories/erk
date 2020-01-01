@@ -208,6 +208,16 @@ class PluginCollection(object):
 				p._erk_client = None
 				p._erk_window_name = None
 
+	def forceload(self,name):
+		for p in self.plugins:
+			if name==p.name:
+				if hasattr(p,"load"):
+					p._erk_client = None
+					p._erk_window_name = None
+					p.load()
+					if not p.name in LOADED_PLUGINS:
+						LOADED_PLUGINS.append(p.name)
+
 	def load(self):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:

@@ -44,8 +44,18 @@ import erk.dialogs.history_size as HistorySize
 import erk.dialogs.log_size as LogSize
 import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
-
 import erk.dialogs.macro as Macro
+import erk.dialogs.editor as Editor
+
+# import erk.dialogs.find as Find
+
+# def FnarplgFindDialog(parent):
+# 	x = Find.Dialog(parent)
+# 	return x
+
+def EditorDialog(obj=None,filename=None):
+	x = Editor.Window(filename,obj)
+	return x
 
 def MacroDialog(obj,filename=None):
 	x = Macro.Dialog(filename,obj)

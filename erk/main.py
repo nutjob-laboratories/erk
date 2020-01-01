@@ -55,7 +55,8 @@ from erk.dialogs import(
 	LogSizeDialog,
 	FormatTextDialog,
 	AboutDialog,
-	MacroDialog
+	MacroDialog,
+	EditorDialog
 	)
 
 from erk.irc import(
@@ -168,6 +169,8 @@ class Erk(QMainWindow):
 
 		self.app = app
 		self.parent = parent
+
+		self.editor = None
 
 		self.quitting = []
 		self.connecting = []
@@ -706,15 +709,27 @@ class Erk(QMainWindow):
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 
+		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
+
+		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+
 		self.pluginMenu.addSeparator()
 
-		plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-		self.pluginMenu.addAction(plugin_dir)
+		if erk.config.DEVELOPER_MODE:
 
-		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-		entry.triggered.connect(self.menuReloadPlugins)
-		self.pluginMenu.addAction(entry)
+			entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
+			entry.triggered.connect(self.menuEditor)
+			self.pluginMenu.addAction(entry)
+
+			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
+			self.pluginMenu.addAction(plugin_dir)
+
+			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+			entry.triggered.connect(self.menuReloadPlugins)
+			self.pluginMenu.addAction(entry)
 
 		self.pluginMenu.addSeparator()
 
@@ -771,6 +786,17 @@ class Erk(QMainWindow):
 
 				m.addAction(entry)
 
+				if erk.config.DEVELOPER_MODE:
+
+					entry = QAction(QIcon(EDITOR_ICON),"Edit "+os.path.basename(p.__file__),self)
+					entry.triggered.connect(lambda state,f=p.__file__: self.editPlugin(f))
+					m.addAction(entry)
+
+					entry = QAction(QIcon(RESTART_ICON),"Execute plugin load()",self)
+					entry.triggered.connect(lambda state,f=p.name: self.plugins.forceload(f))
+					m.addAction(entry)
+
+
 				if p.name in DISABLED_PLUGINS:
 					enabled = False
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
@@ -783,6 +809,20 @@ class Erk(QMainWindow):
 				m.addAction(entry)
 
 				m.addSeparator()
+
+	def menuEditor(self):
+		x = EditorDialog(self)
+		w = erk.config.DEFAULT_APP_WIDTH
+		h = erk.config.DEFAULT_APP_HEIGHT
+		x.resize(w,h)
+		x.show()
+
+	def editPlugin(self,filename):
+		x = EditorDialog(self,filename)
+		w = erk.config.DEFAULT_APP_WIDTH
+		h = erk.config.DEFAULT_APP_HEIGHT
+		x.resize(w,h)
+		x.show()
 
 	def toggle_plugin(self,name):
 		if name in DISABLED_PLUGINS:
@@ -846,13 +886,22 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-	# self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
-	# 	self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-	# 	self.macroMenu.addAction(self.set_macroenable)
+	# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+	# 	entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+	# 	self.pluginMenu.addAction(entry)
 
-	# 	if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+	# 	if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
+
+		if setting=="plugindev":
+			if erk.config.DEVELOPER_MODE:
+				erk.config.DEVELOPER_MODE = False
+			else:
+				erk.config.DEVELOPER_MODE = True
+			erk.config.save_settings()
+			self.rebuildPluginMenu()
+			return
 
 		if setting=="enablemacros":
 			if erk.config.MACROS_ENABLED:

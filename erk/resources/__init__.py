@@ -127,3 +127,20 @@ DIRECTORY_ICON = ":/gui-directory.png"
 PLUGIN_ICON = ":/gui-plugin.png"
 
 PACKAGE_ICON = ":/gui-package.png"
+
+EDITOR_ICON = ":/gui-editor.png"
+
+NEWFILE_ICON = ":/gui-new_file.png"
+OPENFILE_ICON = ":/gui-open_file.png"
+
+SAVEFILE_ICON = ":/gui-save_file.png"
+SAVEASFILE_ICON = ":/gui-saveas_file.png"
+
+SELECTALL_ICON = ":/gui-select_all.png"
+UNDO_ICON = ":/gui-undo.png"
+REDO_ICON = ":/gui-redo.png"
+
+CUT_ICON = ":/gui-cut.png"
+COPY_ICON = ":/gui-copy.png"
+
+PASTE_ICON = ":/gui-paste.png"
