@@ -84,12 +84,19 @@ LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 PLUGINS_ENABLED = True
 MACROS_ENABLED = True
-
 DEVELOPER_MODE = False
+USE_SPACES_FOR_INDENT = True
+NUMBER_OF_SPACES_FOR_INDENT = 2
+EDITOR_WORD_WRAP = False
 
 def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
+
+		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
+		"number_of_indent_spaces": NUMBER_OF_SPACES_FOR_INDENT,
+		"editor_word_wrap": EDITOR_WORD_WRAP,
+
 		"command_history_length": HISTORY_LENGTH,
 		"chat_display_widget_spacing": CHAT_WINDOW_WIDGET_SPACING,
 		"get_hostmasks_on_channel_join": GET_HOSTMASKS_ON_CHANNEL_JOIN,
@@ -188,11 +195,20 @@ def load_settings(filename=SETTINGS_FILE):
 	global PLUGINS_ENABLED
 	global MACROS_ENABLED
 	global DEVELOPER_MODE
+	global USE_SPACES_FOR_INDENT
+	global NUMBER_OF_SPACES_FOR_INDENT
+	global EDITOR_WORD_WRAP
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_settings:
 			data = json.load(read_settings)
+
+			USE_SPACES_FOR_INDENT = data["use_spaces_for_indent"]
+			NUMBER_OF_SPACES_FOR_INDENT = data["number_of_indent_spaces"]
+
+			EDITOR_WORD_WRAP = data["editor_word_wrap"]
+
 			HISTORY_LENGTH = data["command_history_length"]
 			CHAT_WINDOW_WIDGET_SPACING = data["chat_display_widget_spacing"]
 			GET_HOSTMASKS_ON_CHANNEL_JOIN = data["get_hostmasks_on_channel_join"]

@@ -9,6 +9,7 @@ from PyQt5 import QtCore
 
 from erk.resources import *
 import erk.dialogs.find as Find
+import erk.config
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -147,10 +148,13 @@ class Window(QMainWindow):
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		# Use spaces for indent
-		self.indentspace = True
+		self.indentspace = erk.config.USE_SPACES_FOR_INDENT
 
 		# Number of spaces for indent
-		self.tabsize = 2
+		self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+
+		# Wordwrap
+		self.wordwrap = erk.config.EDITOR_WORD_WRAP
 
 		self.editor = QCodeEditor(self)
 		self.highlight = PythonHighlighter(self.editor.document())
@@ -161,6 +165,15 @@ class Window(QMainWindow):
 		self.editor.copyAvailable.connect(self.hasCopy)
 
 		self.setCentralWidget(self.editor)
+
+		if self.wordwrap:
+			self.editor.setWordWrapMode(QTextOption.WordWrap)
+			self.editor.update()
+			self.update()
+		else:
+			self.editor.setWordWrapMode(QTextOption.NoWrap)
+			self.editor.update()
+			self.update()
 
 		if self.filename:
 			if os.path.isfile(self.filename):
@@ -261,6 +274,147 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.editor.zoomOut)
 		entry.setShortcut("Ctrl+-")
 		editMenu.addAction(entry)
+
+		settingsMenu = self.menubar.addMenu("Settings")
+
+		#indentMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Indent")
+
+		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
+		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_indent_spaces)
+
+		if erk.config.USE_SPACES_FOR_INDENT: self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
+
+		self.spacesMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
+
+		self.set_spaces_1 = QAction(QIcon(UNCHECKED_ICON),"One",self)
+		self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_1)
+
+		if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_spaces_2 = QAction(QIcon(UNCHECKED_ICON),"Two",self)
+		self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_2)
+
+		if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_spaces_3 = QAction(QIcon(UNCHECKED_ICON),"Three",self)
+		self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_3)
+
+		if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_spaces_4 = QAction(QIcon(UNCHECKED_ICON),"Four",self)
+		self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_4)
+
+		if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_spaces_5 = QAction(QIcon(UNCHECKED_ICON),"Five",self)
+		self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_5)
+
+		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
+
+		settingsMenu.addSeparator()
+
+		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Wordwrap",self)
+		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_wordwrap)
+
+		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
+
+	def toggleSetting(self,setting):
+
+		if setting=="wordrap":
+			if erk.config.EDITOR_WORD_WRAP:
+				erk.config.EDITOR_WORD_WRAP = False
+				self.editor.setWordWrapMode(QTextOption.NoWrap)
+				self.editor.update()
+				self.update()
+				self.set_wordwrap.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EDITOR_WORD_WRAP = True
+				self.editor.setWordWrapMode(QTextOption.WordWrap)
+				self.editor.update()
+				self.update()
+				self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
+
+		if setting=="spaces_5":
+			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 5
+			erk.config.save_settings()
+			self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
+			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			return
+
+		if setting=="spaces_4":
+			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 4
+			erk.config.save_settings()
+			self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			return
+
+		if setting=="spaces_3":
+			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 3
+			erk.config.save_settings()
+			self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			return
+
+		if setting=="spaces_2":
+			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 2
+			erk.config.save_settings()
+			self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			return
+
+		if setting=="spaces_1":
+			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 1
+			erk.config.save_settings()
+			self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			return
+
+		if setting=="indentspace":
+			if erk.config.USE_SPACES_FOR_INDENT:
+				erk.config.USE_SPACES_FOR_INDENT = False
+				self.spacesMenu.setEnabled(False)
+			else:
+				erk.config.USE_SPACES_FOR_INDENT = True
+				self.spacesMenu.setEnabled(True)
+			erk.config.save_settings()
+			if erk.config.USE_SPACES_FOR_INDENT:
+				self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
+			else:
+				self.set_indent_spaces.setIcon(QIcon(UNCHECKED_ICON))
+			self.indentspace = erk.config.USE_SPACES_FOR_INDENT
+			return
+
 
 
 # Editor widgets/etc

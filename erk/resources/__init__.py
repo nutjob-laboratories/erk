@@ -144,3 +144,6 @@ CUT_ICON = ":/gui-cut.png"
 COPY_ICON = ":/gui-copy.png"
 
 PASTE_ICON = ":/gui-paste.png"
+
+INDENT_ICON = ":/gui-indent.png"
+
