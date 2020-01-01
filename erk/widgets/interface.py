@@ -266,7 +266,12 @@ class Window(QMainWindow):
 
 		self.input.changeLanguage(self.language)
 
-		self.name_display = QLabel("<b>"+self.name+"</b>")
+		if self.type==erk.config.SERVER_WINDOW:
+			self.name_display = QLabel("<b>Server</b>")
+		else:
+			self.name_display = QLabel("<b>"+self.name+"</b>")
+
+		# self.name_display = QLabel("<b>"+self.name+"</b>")
 		self.name_display.setStyleSheet("border: 1px solid black; padding: 2px;")
 
 		if self.type!=erk.config.CHANNEL_WINDOW:

@@ -16,6 +16,7 @@ Version 0.702
 	* Added an option to the editor to manage indents (spaces vs tabs)
 	* Added an option to the editor to toggle wordwrap
 	* Added a plugin template generator to the editor
+	* Bugfix (changed the name of server consoles passed to plugins)
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

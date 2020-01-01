@@ -55,7 +55,7 @@ OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
 PROGRAM_FILENAME = "erk.py"
 NORMAL_APPLICATION_NAME = "Erk"
 
-SERVER_CONSOLE_NAME = "Server"
+SERVER_CONSOLE_NAME = "_Server"
 
 MASTER_LOG_NAME = "Log"
 

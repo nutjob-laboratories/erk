@@ -48,7 +48,7 @@ class ErkFunctions(object):
 
 	def print(self,text):
 		if self._erk_client and self._erk_window_name:
-			if self._erk_window_name=="Server":
+			if self._erk_window_name==SERVER_CONSOLE_NAME:
 				self.console(text)
 			else:
 				self.write(self._erk_window_name,text)
