@@ -133,7 +133,7 @@ class Window(QMainWindow):
 		self.findWindow.show()
 		return
 
-	def build_plugin_from_template(self,name,fullname):
+	def build_plugin_from_template(self,name,fullname,description):
 
 		if self.indentspace:
 			i = ' '*self.tabsize
@@ -144,6 +144,7 @@ class Window(QMainWindow):
 		out = out.replace('!_INDENT_!',i)
 		out = out.replace('!_PLUGIN_NAME_!',name)
 		out = out.replace('!_PLUGIN_FULL_NAME_!',fullname)
+		out = out.replace('!_PLUGIN_DESCRIPTION_!',description)
 
 		if 'from erk import *' in self.editor.toPlainText():
 			pass
@@ -163,12 +164,19 @@ class Window(QMainWindow):
 		info = x.get_name_information(self)
 
 		if info:
-			safe_name = info
+			# Create Python-safe name
+			safe_name = info[0]
 			for c in string.punctuation:
 				safe_name=safe_name.replace(c,"")
 			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
 
-			t = self.build_plugin_from_template(safe_name,info)
+			# Escape double quotes in non-safe name
+			info[0] = info[0].replace('"','\\"')
+
+			# Escape double quotes in description
+			info[1] = info[1].replace('"','\\"')
+
+			t = self.build_plugin_from_template(safe_name,info[0],info[1])
 			self.editor.insertPlainText(t)
 
 	def __init__(self,filename=None,obj=None,parent=None):

@@ -2,11 +2,10 @@ class !_PLUGIN_NAME_!(Plugin):
 
 !_INDENT_!def __init__(self):
 !_INDENT_!!_INDENT_!self.name = "!_PLUGIN_FULL_NAME_!"
-!_INDENT_!!_INDENT_!self.description = "UNKNOWN"
+!_INDENT_!!_INDENT_!self.description = "!_PLUGIN_DESCRIPTION_!"
 !_INDENT_!!_INDENT_!
-!_INDENT_!!_INDENT_!self.author = "UNKNOWN"
-!_INDENT_!!_INDENT_!self.version = "1.0"
-
+!_INDENT_!!_INDENT_!self.author = None
+!_INDENT_!!_INDENT_!self.version = None
 !_INDENT_!!_INDENT_!self.website = None
 !_INDENT_!!_INDENT_!self.source = None
 

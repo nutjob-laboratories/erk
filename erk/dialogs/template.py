@@ -51,7 +51,7 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
-		retval = self.name.text()
+		retval = [self.name.text(),self.description.text()]
 
 		return retval
 
@@ -60,7 +60,7 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle("Plugin name")
+		self.setWindowTitle("Plugin information")
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		nameLayout = QHBoxLayout()
@@ -70,6 +70,13 @@ class Dialog(QDialog):
 		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
+		descriptionLayout = QHBoxLayout()
+		self.descriptionLabel = QLabel("Description")
+		self.description = QLineEdit()
+		descriptionLayout.addWidget(self.descriptionLabel)
+		descriptionLayout.addStretch()
+		descriptionLayout.addWidget(self.description)
+
 		# Buttons
 		buttons = QDialogButtonBox(self)
 		buttons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
@@ -78,6 +85,7 @@ class Dialog(QDialog):
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)
+		finalLayout.addLayout(descriptionLayout)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

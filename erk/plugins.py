@@ -84,8 +84,8 @@ class Plugin(ErkFunctions):
 	you must define the methods that all of your plugins must implement
 	"""
 	name = "No name"
-	author = "Unknown"
-	version = "1.0"
+	author = None
+	version = None
 
 	description = 'UNKNOWN'
 

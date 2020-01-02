@@ -17,6 +17,7 @@ Version 0.702
 	* Added an option to the editor to toggle wordwrap
 	* Added a plugin template generator to the editor
 	* Bugfix (changed the name of server consoles passed to plugins)
+	* Bugfix (double quotes are now escaped in plugin info passed to the template generator)
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
