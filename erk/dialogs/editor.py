@@ -156,9 +156,6 @@ class Window(QMainWindow):
 
 		return out
 
-	# 	x = Template.Dialog(obj)
-	#info = x.get_name_information(obj)
-
 	def menuTemplate(self):
 		x = Template.Dialog(self)
 		info = x.get_name_information(self)
@@ -376,7 +373,7 @@ class Window(QMainWindow):
 
 		settingsMenu.addSeparator()
 
-		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Wordwrap",self)
+		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_wordwrap)
 
@@ -470,10 +467,6 @@ class Window(QMainWindow):
 			self.indentspace = erk.config.USE_SPACES_FOR_INDENT
 			return
 
-
-
-# Editor widgets/etc
-
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
 	"""
@@ -489,7 +482,6 @@ def format(color, style=''):
 
 	return _format
 
-
 # Syntax styles that can be shared by all languages
 STYLES = {
 	'keyword': format('blue'),
@@ -502,7 +494,6 @@ STYLES = {
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
 }
-
 
 class PythonHighlighter (QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.
@@ -584,7 +575,6 @@ class PythonHighlighter (QSyntaxHighlighter):
 		self.rules = [(QRegExp(pat), index, fmt)
 			for (pat, index, fmt) in rules]
 
-
 	def highlightBlock(self, text):
 		"""Apply syntax highlighting to the given block of text.
 		"""
@@ -606,7 +596,6 @@ class PythonHighlighter (QSyntaxHighlighter):
 		in_multiline = self.match_multiline(text, *self.tri_single)
 		if not in_multiline:
 			in_multiline = self.match_multiline(text, *self.tri_double)
-
 
 	def match_multiline(self, text, delimiter, in_state, style):
 		"""Do highlighting of multi-line strings. ``delimiter`` should be a
@@ -659,7 +648,6 @@ class QLineNumberArea(QWidget):
 
 	def paintEvent(self, event):
 		self.codeEditor.lineNumberAreaPaintEvent(event)
-
 
 class QCodeEditor(QPlainTextEdit):
 	def __init__(self, parent=None):

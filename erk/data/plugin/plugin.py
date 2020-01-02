@@ -4,11 +4,10 @@ class !_PLUGIN_NAME!(Plugin):
 
 	def __init__(self):
 		self.name = "!PLUGIN_FULL_NAME!"
-		self.description = "UNKNOWN"
+		self.description = None
 		
-		self.author = "UNKNOWN"
-		self.version = "1.0"
-
+		self.author = None
+		self.version = None
 		self.website = None
 		self.source = None
 

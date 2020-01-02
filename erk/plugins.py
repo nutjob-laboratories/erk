@@ -83,11 +83,11 @@ class Plugin(ErkFunctions):
 	"""Base class that each plugin must inherit from. within this class
 	you must define the methods that all of your plugins must implement
 	"""
-	name = "No name"
+	name = None
 	author = None
 	version = None
 
-	description = 'UNKNOWN'
+	description = None
 
 	website = None
 	source = None
@@ -111,13 +111,13 @@ def check_for_attributes(p):
 	errors = []
 
 	if hasattr(p,"description"):
-		if p.description=='UNKNOWN':
+		if p.description==None:
 			errors.append(p.__file__+": \"description\" attribute is set to the default")
 	else:
 		errors.append(p.__file__+': Missing \"description\" attribute')
 
 	if hasattr(p,"name"):
-		if p.name=='No name':
+		if p.name==None:
 			errors.append(p.__file__+": \"name\" attribute is set to the default")
 	else:
 		errors.append(p.__file__+': Missing \"name\" attribute')
