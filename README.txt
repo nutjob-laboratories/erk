@@ -13,7 +13,7 @@
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Erk connected to EFnet, 2600net, and QuakeNet</b><br>
+	<b>Erk connected to EFnet, EnterTheGame, and DALnet</b><br>
 	<i>Click image to enlarge</i><br>
 </p>
 
