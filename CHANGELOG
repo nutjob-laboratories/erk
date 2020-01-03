@@ -20,6 +20,7 @@ Version 0.702
 	* Bugfix (double quotes are now escaped in plugin info passed to the template generator)
 	* Connection history now tracks servers in the built-in server list
 	* The connection dialog now shows servers connected to previously
+	* Bugfix (un-floating the connection display would leave the current chat display at a non-last message location)
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

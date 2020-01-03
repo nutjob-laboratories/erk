@@ -1193,7 +1193,7 @@ class Erk(QMainWindow):
 					self.connection_dock.show()
 				self.connection_dock.setFeatures( QDockWidget.NoDockWidgetFeatures )
 				self.connection_dock.setTitleBarWidget(QWidget())
-
+				erk.events.resize_font_fix()
 			else:
 				erk.config.CONNECTION_DISPLAY_MOVE = True
 				self.set_float.setIcon(QIcon(CHECKED_ICON))
