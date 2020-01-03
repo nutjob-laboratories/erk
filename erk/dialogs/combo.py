@@ -72,10 +72,10 @@ class Dialog(QDialog):
 
 			# make sure server isn't in the built-in list
 			inlist = False
-			for s in self.built_in_server_list:
-				if s[0]==self.host.text():
-					if s[1]==self.port.text():
-						inlist = True
+			# for s in self.built_in_server_list:
+			# 	if s[0]==self.host.text():
+			# 		if s[1]==self.port.text():
+			# 			inlist = True
 
 			# make sure server isn't in history
 			inhistory = False
@@ -94,12 +94,6 @@ class Dialog(QDialog):
 
 				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text()    ]
 				user_history.append(entry)
-			
-		# else:
-		# 	pass
-			#user_history = self.user_info["history"]
-
-
 
 		# Save user info
 		user = {
@@ -119,27 +113,16 @@ class Dialog(QDialog):
 		}
 		save_user(user)
 
-		# Save channels
-		#saveChannels(self.autojoins)
-
 		if self.AUTOJOIN_CHANNELS:
 			channels = self.autojoins
 		else:
 			channels = []
-
-		# # Save server info
-		# save_last_server(self.host.text(),self.port.text(),self.password.text(),self.DIALOG_CONNECT_VIA_SSL,self.RECONNECT,self.AUTOJOIN_CHANNELS)
-
-		# # Save history
-		# if self.parent.save_server_history:
-		# 	add_history(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,UNKNOWN_IRC_NETWORK)
 
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
 
 		return retval
 
 	def clickHistory(self,state):
-		# self.SAVE_HISTORY
 		if state == Qt.Checked:
 			self.SAVE_HISTORY = True
 		else:
@@ -174,7 +157,6 @@ class Dialog(QDialog):
 		self.StoredServer = self.servers.currentIndex()
 
 		if self.StoredData[self.StoredServer][2]=="Last server":
-			#self.netType.setText("<big><b>Last server</b></big>")
 			self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
 		else:
 			self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
@@ -234,8 +216,6 @@ class Dialog(QDialog):
 		self.setWindowIcon(QIcon(CHANNEL_ICON))
 
 		self.user_info = get_user()
-		# last_server = get_last_server()
-		# channels = loadChannels()
 
 		self.tabs = QTabWidget()
 		self.network_tab = QWidget()
@@ -304,7 +284,15 @@ class Dialog(QDialog):
 			# servers are in history
 			for s in self.user_info["history"]:
 				#self.built_in_server_list.append(s)
-				self.built_in_server_list.insert(0,s)
+
+				builtin = False
+				for entry in self.built_in_server_list:
+					if entry[0]==s[0]:
+						if entry[1]==s[1]:
+							builtin = True
+
+				if not builtin:
+					self.built_in_server_list.insert(0,s)
 
 		counter = -1
 		for entry in self.built_in_server_list:
@@ -314,8 +302,18 @@ class Dialog(QDialog):
 			if "ssl" in entry[3]:
 				if not self.can_do_ssl: continue
 
+			visited = False
+			if len(self.user_info["history"])>0:
+				for s in self.user_info["history"]:
+					if s[0]==entry[0]:
+						if s[1]==entry[1]:
+							visited = True
+
 			self.StoredData.append(entry)
-			self.servers.addItem(entry[2] + " - " + entry[0])
+			if visited:
+				self.servers.addItem(QIcon(VISITED_ICON),entry[2] + " - " + entry[0])
+			else:
+				self.servers.addItem(QIcon(UNVISITED_ICON),entry[2] + " - " + entry[0])
 
 		self.StoredServer = self.servers.currentIndex()
 

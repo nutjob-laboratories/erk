@@ -148,3 +148,6 @@ PASTE_ICON = ":/gui-paste.png"
 INDENT_ICON = ":/gui-indent.png"
 
 INSERT_ICON = ":/gui-insert.png"
+
+VISITED_ICON = ":/gui-visited.png"
+UNVISITED_ICON = ":/gui-unvisited.png"

@@ -96,7 +96,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
 		"number_of_indent_spaces": NUMBER_OF_SPACES_FOR_INDENT,
 		"editor_word_wrap": EDITOR_WORD_WRAP,
-
 		"command_history_length": HISTORY_LENGTH,
 		"chat_display_widget_spacing": CHAT_WINDOW_WIDGET_SPACING,
 		"get_hostmasks_on_channel_join": GET_HOSTMASKS_ON_CHANNEL_JOIN,
@@ -206,9 +205,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			USE_SPACES_FOR_INDENT = data["use_spaces_for_indent"]
 			NUMBER_OF_SPACES_FOR_INDENT = data["number_of_indent_spaces"]
-
 			EDITOR_WORD_WRAP = data["editor_word_wrap"]
-
 			HISTORY_LENGTH = data["command_history_length"]
 			CHAT_WINDOW_WIDGET_SPACING = data["chat_display_widget_spacing"]
 			GET_HOSTMASKS_ON_CHANNEL_JOIN = data["get_hostmasks_on_channel_join"]
