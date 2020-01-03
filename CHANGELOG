@@ -21,6 +21,9 @@ Version 0.702
 	* Connection history now tracks servers in the built-in server list
 	* The connection dialog now shows servers connected to previously
 	* Bugfix (un-floating the connection display would leave the current chat display at a non-last message location)
+	* Bugfix (editor title wouldn't show if a file was saved or not)
+	* Plugin menu only shows an option to force load() or unload() execution if the plugun supports it
+	* Parent Plugin class no longer has "empty" method stubs
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

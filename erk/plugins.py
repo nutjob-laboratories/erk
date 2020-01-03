@@ -92,20 +92,20 @@ class Plugin(ErkFunctions):
 	website = None
 	source = None
 
-	def input(self,client,name,text):
-		pass
+	# def input(self,client,name,text):
+	# 	pass
 
-	def public(self,client,channel,user,message):
-		pass
+	# def public(self,client,channel,user,message):
+	# 	pass
 
-	def private(self,client,user,message):
-		pass
+	# def private(self,client,user,message):
+	# 	pass
 
-	def load(self):
-		pass
+	# def load(self):
+	# 	pass
 
-	def unload(self):
-		pass
+	# def unload(self):
+	# 	pass
 
 def check_for_attributes(p):
 	errors = []
@@ -217,6 +217,16 @@ class PluginCollection(object):
 					p.load()
 					if not p.name in LOADED_PLUGINS:
 						LOADED_PLUGINS.append(p.name)
+
+	def forceunload(self,name):
+		for p in self.plugins:
+			if name==p.name:
+				if hasattr(p,"unload"):
+					p._erk_client = None
+					p._erk_window_name = None
+					p.unload()
+					if p.name in LOADED_PLUGINS:
+						LOADED_PLUGINS.remove(p.name)
 
 	def load(self):
 		if not erk.config.PLUGINS_ENABLED: return

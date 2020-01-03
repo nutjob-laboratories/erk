@@ -66,6 +66,7 @@ class Window(QMainWindow):
 	def doFileSave(self):
 		code = open(self.filename,"w")
 		code.write(self.editor.toPlainText())
+		self.title = os.path.basename(self.filename)
 		self.setWindowTitle(self.title)
 		self.changed = False
 		if self.findWindow != None:

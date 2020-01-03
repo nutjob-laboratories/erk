@@ -792,9 +792,17 @@ class Erk(QMainWindow):
 					entry.triggered.connect(lambda state,f=p.__file__: self.editPlugin(f))
 					m.addAction(entry)
 
-					entry = QAction(QIcon(RESTART_ICON),"Execute plugin load()",self)
-					entry.triggered.connect(lambda state,f=p.name: self.plugins.forceload(f))
-					m.addAction(entry)
+					if hasattr(p,"load"):
+
+						entry = QAction(QIcon(LAMBDA_ICON),"Execute load()",self)
+						entry.triggered.connect(lambda state,f=p.name: self.plugins.forceload(f))
+						m.addAction(entry)
+
+					if hasattr(p,"unload"):
+
+						entry = QAction(QIcon(LAMBDA_ICON),"Execute unload()",self)
+						entry.triggered.connect(lambda state,f=p.name: self.plugins.forceunload(f))
+						m.addAction(entry)
 
 
 				if p.name in DISABLED_PLUGINS:

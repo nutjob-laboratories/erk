@@ -151,3 +151,5 @@ INSERT_ICON = ":/gui-insert.png"
 
 VISITED_ICON = ":/gui-visited.png"
 UNVISITED_ICON = ":/gui-unvisited.png"
+
+LAMBDA_ICON = ":/gui-lambda.png"
