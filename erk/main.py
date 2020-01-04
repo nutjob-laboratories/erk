@@ -227,6 +227,10 @@ class Erk(QMainWindow):
 		self.pluginMenu = QMenu()
 
 		self.buildToolbar()
+		# class BeepBoop():
+		# 	def setEnabled(self,t):
+		# 		pass
+		# self.disconnect = BeepBoop()
 		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 
@@ -290,6 +294,8 @@ class Erk(QMainWindow):
 		# mainMenu = QMenu()
 
 		self.toolbar.clear()
+
+		self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
 
 		add_toolbar_menu(self.toolbar,"IRC",self.mainMenu)
 
@@ -803,7 +809,6 @@ class Erk(QMainWindow):
 						entry = QAction(QIcon(LAMBDA_ICON),"Execute unload()",self)
 						entry.triggered.connect(lambda state,f=p.name: self.plugins.forceunload(f))
 						m.addAction(entry)
-
 
 				if p.name in DISABLED_PLUGINS:
 					enabled = False

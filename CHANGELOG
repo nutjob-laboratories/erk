@@ -24,6 +24,7 @@ Version 0.702
 	* Bugfix (editor title wouldn't show if a file was saved or not)
 	* Plugin menu only shows an option to force load() or unload() execution if the plugun supports it
 	* Parent Plugin class no longer has "empty" method stubs
+	* Bugfix (spinner restored to the main menu toolbar)
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
