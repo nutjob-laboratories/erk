@@ -66,20 +66,27 @@ https://github.com/nutjob-laboratories/erk''',
 	#add_help=False,
 )
 
-parser.add_argument("server", type=str,help="Server to connect to", metavar="SERVER", nargs='?')
-parser.add_argument("port", type=int,help="Server port to connect to (6667)", default=6667, nargs='?', metavar="PORT")
-parser.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store_true")
-parser.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
-parser.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
-parser.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
+congroup = parser.add_argument_group('Connection')
 
-parser.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
-parser.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
+congroup.add_argument("server", type=str,help="Server to connect to", metavar="SERVER", nargs='?')
+congroup.add_argument("port", type=int,help="Server port to connect to (6667)", default=6667, nargs='?', metavar="PORT")
+congroup.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store_true")
+congroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
+congroup.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
+congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
 
-parser.add_argument("-g","--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
 
-parser.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
-parser.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
+congroup.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
+
+devgroup = parser.add_argument_group('Plugin development')
+
+devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
+
+disgroup = parser.add_argument_group('Disable functionality')
+
+disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
+disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
+disgroup.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
 
 args = parser.parse_args()
 
@@ -102,15 +109,15 @@ if __name__ == '__main__':
 		shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(safe_name, "package.png"))
 		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(safe_name, "plugin.png"))
 		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.py"), os.path.join(safe_name, "plugin.py"))
-		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.txt"), os.path.join(safe_name, "plugin.txt"))
+		shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(safe_name, "package.txt"))
 
-		f = open(os.path.join(safe_name, "plugin.txt"),"r")
+		f = open(os.path.join(safe_name, "package.txt"),"r")
 		ptxt = f.read()
 		f.close()
 
 		ptxt = ptxt.replace("!PLUGIN_FULL_NAME!",args.generate)
 
-		f = open(os.path.join(safe_name, "plugin.txt"),"w")
+		f = open(os.path.join(safe_name, "package.txt"),"w")
 		f.write(ptxt)
 		f.close()
 

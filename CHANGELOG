@@ -27,6 +27,8 @@ Version 0.702
 	* Bugfix (spinner restored to the main menu toolbar)
 	* Added a commandline option to disable plugins completely
 	* Added a commandline option to disable macros completely
+	* Added a plugin package generator to the code editor
+	* Fixed a bug in the commandline package generator
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

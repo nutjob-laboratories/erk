@@ -2,6 +2,7 @@
 import sys
 import os
 import string
+import shutil
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -13,9 +14,13 @@ from erk.files import PLUGIN_TEMPLATE
 import erk.dialogs.find as Find
 import erk.dialogs.template as Template
 import erk.config
+from erk.widgets import *
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
+ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
+DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
+PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 
 class Window(QMainWindow):
 
@@ -134,7 +139,7 @@ class Window(QMainWindow):
 		self.findWindow.show()
 		return
 
-	def build_plugin_from_template(self,name,fullname,description):
+	def build_plugin_from_template(self,name,fullname,description,do_check=True):
 
 		if self.indentspace:
 			i = ' '*self.tabsize
@@ -147,13 +152,14 @@ class Window(QMainWindow):
 		out = out.replace('!_PLUGIN_FULL_NAME_!',fullname)
 		out = out.replace('!_PLUGIN_DESCRIPTION_!',description)
 
-		if 'from erk import *' in self.editor.toPlainText():
-			pass
-		else:
-			if 'from erk import Plugin' in self.editor.toPlainText():
+		if do_check:
+			if 'from erk import *' in self.editor.toPlainText():
 				pass
 			else:
-				out = 'from erk import *'+"\n\n"+out
+				if 'from erk import Plugin' in self.editor.toPlainText():
+					pass
+				else:
+					out = 'from erk import *'+"\n\n"+out
 
 		return out
 
@@ -176,6 +182,62 @@ class Window(QMainWindow):
 
 			t = self.build_plugin_from_template(safe_name,info[0],info[1])
 			self.editor.insertPlainText(t)
+
+	def newPackage(self):
+		x = Template.Dialog(self)
+		info = x.get_name_information(self)
+
+		if info:
+			# Create Python-safe name
+			safe_name = info[0]
+			for c in string.punctuation:
+				safe_name=safe_name.replace(c,"")
+			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
+
+			outdir = os.path.join(PLUGIN_DIRECTORY, safe_name)
+
+			if not os.path.exists(outdir):
+				os.mkdir(outdir)
+				shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
+				shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
+				#shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(outdir, "package.txt"))
+
+				# Escape double quotes in non-safe name
+				info[0] = info[0].replace('"','\\"')
+
+				f = open(os.path.join(outdir, "package.txt"),"w")
+				f.write(info[0])
+				f.close()
+
+				# Escape double quotes in description
+				info[1] = info[1].replace('"','\\"')
+
+				t = self.build_plugin_from_template(safe_name,info[0],info[1],False)
+				t = "from erk import *\n\n"+ t
+
+				f = open(os.path.join(outdir, "plugin.py"),"w")
+				f.write(t)
+				f.close()
+
+				# Load source into the editor
+				self.editor.setPlainText(t)
+				self.filename = os.path.join(outdir, "plugin.py")
+				self.menuSave.setEnabled(True)
+				self.title = "plugin.py"
+				self.setWindowTitle(self.title)
+				self.changed = False
+				if self.findWindow != None:
+					self.findWindow.close()
+
+			else:
+
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Error")
+				msg.setInformativeText("A plugin packaged named \""+safe_name+"\" already exists")
+				msg.setWindowTitle("Error")
+				msg.exec_()
+
 
 	def __init__(self,filename=None,obj=None,parent=None):
 		super(Window, self).__init__(parent)
@@ -236,7 +298,18 @@ class Window(QMainWindow):
 
 		fileMenu = self.menubar.addMenu("File")
 
-		entry = QAction(QIcon(NEWFILE_ICON),"New",self)
+		entry = MenuAction(self,PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
+		fileMenu.addAction(entry)
+
+		fileMenu.addSeparator()
+
+		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
+		entry.triggered.connect(self.menuTemplate)
+		fileMenu.addAction(entry)
+
+		fileMenu.addSeparator()
+
+		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
 		entry.triggered.connect(self.doNewFile)
 		entry.setShortcut("Ctrl+N")
 		fileMenu.addAction(entry)
@@ -264,12 +337,6 @@ class Window(QMainWindow):
 		fileMenu.addAction(entry)
 
 		editMenu = self.menubar.addMenu("Edit")
-
-		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
-		entry.triggered.connect(self.menuTemplate)
-		editMenu.addAction(entry)
-
-		editMenu.addSeparator()
 
 		mefind = QAction(QIcon(WHOIS_ICON),"Find",self)
 		mefind.triggered.connect(self.doFind)

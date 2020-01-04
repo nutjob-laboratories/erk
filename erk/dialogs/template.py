@@ -51,6 +51,24 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
+		if self.name.text().strip()=='':
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Error")
+			msg.setInformativeText("Plugin name is required")
+			msg.setWindowTitle("Error")
+			msg.exec_()
+			return None
+
+		if self.description.text().strip()=='':
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Error")
+			msg.setInformativeText("Plugin description is required")
+			msg.setWindowTitle("Error")
+			msg.exec_()
+			return None
+
 		retval = [self.name.text(),self.description.text()]
 
 		return retval
