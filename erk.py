@@ -79,6 +79,7 @@ parser.add_argument( "-l","--last", help=f"Automatically connect to the last ser
 parser.add_argument("-g","--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
 
 parser.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
+parser.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
 
 args = parser.parse_args()
 
@@ -154,7 +155,7 @@ if __name__ == '__main__':
 				args.reconnect,
 				chans
 			)
-		GUI = Erk(app,i,args.noplugins)
+		GUI = Erk(app,i,args.noplugins,args.nomacros)
 		GUI.show()
 	else:
 
@@ -190,12 +191,12 @@ if __name__ == '__main__':
 					u["reconnect"],
 					c
 				)
-			GUI = Erk(app,i,args.noplugins)
+			GUI = Erk(app,i,args.noplugins,args.nomacros)
 			GUI.show()
 		else:
 			info = ComboDialog()
 			if info!=None:
-				GUI = Erk(app,info,args.noplugins)
+				GUI = Erk(app,info,args.noplugins,args.nomacros)
 				GUI.show()
 			else:
 				app.quit()

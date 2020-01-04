@@ -68,6 +68,8 @@ PRIVATE_COMMANDS = {
 
 def handle_macro_input(window,client,text):
 
+	if client.gui.block_macros: return False
+
 	if not erk.config.MACROS_ENABLED: return False
 
 	tokens = text.split()

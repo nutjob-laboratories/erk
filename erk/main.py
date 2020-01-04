@@ -165,7 +165,7 @@ class Erk(QMainWindow):
 		if len(self.connecting)==0: self.stop_spinner()
 
 
-	def __init__(self,app,info=None,block_plugins=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -181,6 +181,8 @@ class Erk(QMainWindow):
 		self.current_client = None
 
 		self.block_plugins = block_plugins
+
+		self.block_macros = block_macros
 
 		# Load application settings
 		erk.config.load_settings()
@@ -662,9 +664,10 @@ class Erk(QMainWindow):
 
 		# self.macroMenu = QMenu()
 
-		add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
+		if not self.block_macros:
+			add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
 
-		self.rebuildMacroMenu()
+			self.rebuildMacroMenu()
 
 		# Plugin menu
 
