@@ -25,6 +25,7 @@ Version 0.702
 	* Plugin menu only shows an option to force load() or unload() execution if the plugun supports it
 	* Parent Plugin class no longer has "empty" method stubs
 	* Bugfix (spinner restored to the main menu toolbar)
+	* Added a commandline option to disable plugins completely
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

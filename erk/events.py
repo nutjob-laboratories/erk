@@ -1119,7 +1119,8 @@ def notice_message(gui,client,target,user,message):
 
 def private_message(gui,client,user,message):
 
-	if client.gui.plugins.private(client,user,message): return
+	if not client.gui.block_plugins:
+		if client.gui.plugins.private(client,user,message): return
 
 	global UNSEEN
 	p = user.split('!')
@@ -1204,7 +1205,8 @@ def private_message(gui,client,user,message):
 
 def public_message(gui,client,channel,user,message):
 
-	if client.gui.plugins.public(client,channel,user,message): return
+	if not client.gui.block_plugins:
+		if client.gui.plugins.public(client,channel,user,message): return
 
 	#print(target+" "+user+": "+message)
 

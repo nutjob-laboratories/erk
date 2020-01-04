@@ -190,7 +190,8 @@ def handle_macro_input(window,client,text):
 
 def handle_channel_input(window,client,text):
 
-	if client.gui.plugins.input(client,window.name,text): return True
+	if not client.gui.block_plugins:
+		if client.gui.plugins.input(client,window.name,text): return True
 	# x = client.gui.plugins.input(client,window.name,text)
 	# print(x)
 
@@ -248,7 +249,8 @@ def handle_channel_input(window,client,text):
 
 def handle_private_input(window,client,text):
 
-	if client.gui.plugins.input(client,window.name,text): return True
+	if not client.gui.block_plugins:
+		if client.gui.plugins.input(client,window.name,text): return True
 
 	tokens = text.split()
 
@@ -278,7 +280,8 @@ def handle_private_input(window,client,text):
 
 def handle_console_input(window,client,text):
 
-	if client.gui.plugins.input(client,window.name,text): return
+	if not client.gui.block_plugins:
+		if client.gui.plugins.input(client,window.name,text): return
 	
 	if handle_common_input(window,client,text): return
 

@@ -87,7 +87,8 @@ class Erk(QMainWindow):
 		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
-		self.plugins.unload()
+		if not self.block_plugins:
+			self.plugins.unload()
 		self.app.quit()
 
 	def disconnect_current(self,msg=None):
@@ -164,7 +165,7 @@ class Erk(QMainWindow):
 		if len(self.connecting)==0: self.stop_spinner()
 
 
-	def __init__(self,app,info=None,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -178,6 +179,8 @@ class Erk(QMainWindow):
 		self.uptimers = {}
 
 		self.current_client = None
+
+		self.block_plugins = block_plugins
 
 		# Load application settings
 		erk.config.load_settings()
@@ -211,11 +214,12 @@ class Erk(QMainWindow):
 		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
 
 		# Plugins
-		self.plugins = PluginCollection("plugins")
-		if len(self.plugins.errors())>0:
-			print("Plugin load error(s)!")
-			for l in self.plugins.errors():
-				print(l)
+		if not self.block_plugins:
+			self.plugins = PluginCollection("plugins")
+			if len(self.plugins.errors())>0:
+				print("Plugin load error(s)!")
+				for l in self.plugins.errors():
+					print(l)
 		#self.plugins.load()
 
 		# MENU TOOLBAR
@@ -227,10 +231,6 @@ class Erk(QMainWindow):
 		self.pluginMenu = QMenu()
 
 		self.buildToolbar()
-		# class BeepBoop():
-		# 	def setEnabled(self,t):
-		# 		pass
-		# self.disconnect = BeepBoop()
 		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 
@@ -668,9 +668,11 @@ class Erk(QMainWindow):
 
 		# Plugin menu
 
-		add_toolbar_menu(self.toolbar,"Plugins",self.pluginMenu)
+		if not self.block_plugins:
 
-		self.rebuildPluginMenu()
+			add_toolbar_menu(self.toolbar,"Plugins",self.pluginMenu)
+
+			self.rebuildPluginMenu()
 
 		# Help menu
 
