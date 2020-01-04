@@ -153,3 +153,5 @@ VISITED_ICON = ":/gui-visited.png"
 UNVISITED_ICON = ":/gui-unvisited.png"
 
 LAMBDA_ICON = ":/gui-lambda.png"
+
+ARCHIVE_ICON = ":/gui-archive.png"

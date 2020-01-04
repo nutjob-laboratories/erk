@@ -32,6 +32,7 @@
 import sys
 import os
 from itertools import combinations_with_replacement
+from zipfile import ZipFile
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -720,29 +721,14 @@ class Erk(QMainWindow):
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 
-		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		self.pluginMenu.addAction(entry)
-
-		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
-
 		self.pluginMenu.addSeparator()
 
-		if erk.config.DEVELOPER_MODE:
+		self.plug_install = QAction(QIcon(ARCHIVE_ICON),"Install plugin",self)
+		self.plug_install.triggered.connect(self.menuInstall)
+		self.pluginMenu.addAction(self.plug_install)
 
-			entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
-			entry.triggered.connect(self.menuEditor)
-			self.pluginMenu.addAction(entry)
-
-			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-			self.pluginMenu.addAction(plugin_dir)
-
-			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-			entry.triggered.connect(self.menuReloadPlugins)
-			self.pluginMenu.addAction(entry)
-
-		self.pluginMenu.addSeparator()
+		if not erk.config.PLUGINS_ENABLED:
+			self.plug_install.setEnabled(False)
 
 		plist = {}
 
@@ -827,6 +813,44 @@ class Erk(QMainWindow):
 				m.addAction(entry)
 
 				m.addSeparator()
+
+		self.pluginMenu.addSeparator()
+
+		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
+
+		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		if erk.config.DEVELOPER_MODE:
+
+			entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
+			entry.triggered.connect(self.menuEditor)
+			self.pluginMenu.addAction(entry)
+
+			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
+			self.pluginMenu.addAction(plugin_dir)
+
+			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+			entry.triggered.connect(self.menuReloadPlugins)
+			self.pluginMenu.addAction(entry)
+
+			
+
+	def menuInstall(self):
+		# PLUGIN_DIRECTORY
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Open Plugin Package", None,"Zip File (*.zip);;All Files (*)", options=options)
+		if fileName:
+			with ZipFile(fileName,'r') as zipObj:
+				zipObj.extractall(PLUGIN_DIRECTORY)
+			self.plugins.reload_plugins(True)
+			self.rebuildPluginMenu()
 
 	def menuEditor(self):
 		x = EditorDialog(self)

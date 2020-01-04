@@ -29,6 +29,8 @@ Version 0.702
 	* Added a commandline option to disable macros completely
 	* Added a plugin package generator to the code editor
 	* Fixed a bug in the commandline package generator
+	* Added an option to zip up plugin packages for export
+	* Added an option to install zipped plugin packages in the GUI
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

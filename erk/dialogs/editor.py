@@ -3,6 +3,7 @@ import sys
 import os
 import string
 import shutil
+import zipfile
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -16,6 +17,8 @@ import erk.dialogs.template as Template
 import erk.config
 from erk.widgets import *
 
+import erk.dialogs.export_package as Export
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -27,7 +30,7 @@ class Window(QMainWindow):
 	def closeEvent(self, event):
 		if self.changed:
 			self.doExitSave(self.filename)
-
+		event.accept()
 		self.close()
 
 	def docModified(self):
@@ -239,6 +242,33 @@ class Window(QMainWindow):
 				msg.exec_()
 
 
+	def exportPackage(self):
+		x = Export.Dialog(self)
+		info = x.get_name_information(self)
+
+		if info:
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+			if fileName:
+				if '.zip' in fileName:
+					pass
+				else:
+					fileName = fileName + '.zip'
+				zf = zipfile.ZipFile(fileName, "w")
+				for dirname, subdirs, files in os.walk(info):
+					pname = os.path.basename(info)
+					for fname in files:
+						if "__pycache__" in fname: continue
+						filename, file_extension = os.path.splitext(fname)
+						if file_extension.lower()==".pyc": continue
+						sfile = os.path.join(dirname,fname)
+						bname = os.path.basename(sfile)
+
+						zf.write(sfile,pname+"\\"+bname)
+				zf.close()
+
+
 	def __init__(self,filename=None,obj=None,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -299,6 +329,9 @@ class Window(QMainWindow):
 		fileMenu = self.menubar.addMenu("File")
 
 		entry = MenuAction(self,PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
+		fileMenu.addAction(entry)
+
+		entry = MenuAction(self,ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
 		fileMenu.addAction(entry)
 
 		fileMenu.addSeparator()
