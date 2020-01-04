@@ -723,13 +723,6 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
-		self.plug_install = QAction(QIcon(ARCHIVE_ICON),"Install plugin",self)
-		self.plug_install.triggered.connect(self.menuInstall)
-		self.pluginMenu.addAction(self.plug_install)
-
-		if not erk.config.PLUGINS_ENABLED:
-			self.plug_install.setEnabled(False)
-
 		plist = {}
 
 		for p in self.plugins.plugins:
@@ -815,6 +808,13 @@ class Erk(QMainWindow):
 				m.addSeparator()
 
 		self.pluginMenu.addSeparator()
+
+		self.plug_install = QAction(QIcon(ARCHIVE_ICON),"Install plugin",self)
+		self.plug_install.triggered.connect(self.menuInstall)
+		self.pluginMenu.addAction(self.plug_install)
+
+		if not erk.config.PLUGINS_ENABLED:
+			self.plug_install.setEnabled(False)
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
 		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
