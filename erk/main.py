@@ -827,6 +827,8 @@ class Erk(QMainWindow):
 
 		if erk.config.DEVELOPER_MODE:
 
+			self.pluginMenu.addSeparator()
+
 			entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
 			entry.triggered.connect(self.menuEditor)
 			self.pluginMenu.addAction(entry)
