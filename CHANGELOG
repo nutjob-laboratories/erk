@@ -31,6 +31,7 @@ Version 0.702
 	* Fixed a bug in the commandline package generator
 	* Added an option to zip up plugin packages for export
 	* Added an option to install zipped plugin packages in the GUI
+	* Added a commandline option to disable settings menus
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

@@ -86,6 +86,7 @@ disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
 disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
+disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menus", action="store_true")
 disgroup.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
 
 args = parser.parse_args()
@@ -162,12 +163,12 @@ if __name__ == '__main__':
 				args.reconnect,
 				chans
 			)
-		GUI = Erk(app,i,args.noplugins,args.nomacros)
+		GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings)
 		GUI.show()
 	else:
 
 		if args.noconnect:
-			GUI = Erk(app)
+			GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings)
 			GUI.show()
 		elif args.last:
 			u = get_user()
@@ -198,12 +199,12 @@ if __name__ == '__main__':
 					u["reconnect"],
 					c
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings)
 			GUI.show()
 		else:
 			info = ComboDialog()
 			if info!=None:
-				GUI = Erk(app,info,args.noplugins,args.nomacros)
+				GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings)
 				GUI.show()
 			else:
 				app.quit()
