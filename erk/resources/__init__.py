@@ -155,3 +155,6 @@ UNVISITED_ICON = ":/gui-unvisited.png"
 LAMBDA_ICON = ":/gui-lambda.png"
 
 ARCHIVE_ICON = ":/gui-archive.png"
+
+INSTALL_ICON = ":/gui-install.png"
+UNINSTALL_ICON = ":/gui-uninstall.png"

@@ -33,6 +33,7 @@ import sys
 import os
 from itertools import combinations_with_replacement
 from zipfile import ZipFile
+import shutil
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -57,7 +58,8 @@ from erk.dialogs import(
 	FormatTextDialog,
 	AboutDialog,
 	MacroDialog,
-	EditorDialog
+	EditorDialog,
+	UninstallDialog
 	)
 
 from erk.irc import(
@@ -725,6 +727,23 @@ class Erk(QMainWindow):
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 
+		#self.pluginMenu.addSeparator()
+
+		self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
+		self.plug_install.triggered.connect(self.menuInstall)
+		self.pluginMenu.addAction(self.plug_install)
+
+		if not erk.config.PLUGINS_ENABLED:
+			self.plug_install.setEnabled(False)
+
+
+		self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
+		self.plug_uninstall.triggered.connect(self.menuUninstall)
+		self.pluginMenu.addAction(self.plug_uninstall)
+
+		if not erk.config.PLUGINS_ENABLED:
+			self.plug_uninstall.setEnabled(False)
+
 		self.pluginMenu.addSeparator()
 
 		plist = {}
@@ -813,13 +832,6 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
-		self.plug_install = QAction(QIcon(ARCHIVE_ICON),"Install plugin",self)
-		self.plug_install.triggered.connect(self.menuInstall)
-		self.pluginMenu.addAction(self.plug_install)
-
-		if not erk.config.PLUGINS_ENABLED:
-			self.plug_install.setEnabled(False)
-
 		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
 		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
 		self.pluginMenu.addAction(entry)
@@ -845,7 +857,19 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.menuReloadPlugins)
 			self.pluginMenu.addAction(entry)
 
-			
+	
+	def menuUninstall(self):
+		pack = UninstallDialog()
+
+		if pack:
+			if os.path.isdir(pack):
+				shutil.rmtree(pack)
+			elif os.path.isfile(pack):
+				os.remove(pack)
+
+			self.plugins.reload_plugins(True)
+			self.rebuildPluginMenu()
+
 
 	def menuInstall(self):
 		# PLUGIN_DIRECTORY

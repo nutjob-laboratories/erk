@@ -32,6 +32,8 @@ Version 0.702
 	* Added an option to zip up plugin packages for export
 	* Added an option to install zipped plugin packages in the GUI
 	* Added a commandline option to disable settings menus
+	* Added an option to uninstall plugins from the "Plugins" menu
+	* Changed some dialog button text to make intent clearer
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically

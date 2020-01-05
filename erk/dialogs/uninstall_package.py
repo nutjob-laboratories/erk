@@ -45,10 +45,10 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle("Export package")
-		self.setWindowIcon(QIcon(ARCHIVE_ICON))
+		self.setWindowTitle("Uninstall package")
+		self.setWindowIcon(QIcon(UNINSTALL_ICON))
 
-		self.title = QLabel("Select a package to export")
+		self.title = QLabel("Select a package or plugin to uninstall")
 
 		self.packlist = QListWidget(self)
 		self.packlist.setMaximumHeight(100)
@@ -57,6 +57,10 @@ class Dialog(QDialog):
 			if x.lower()=="__pycache__": continue
 			pack = os.path.join(PLUGIN_DIRECTORY, x)
 			if os.path.isdir(pack):
+				item = QListWidgetItem(x)
+				item.file = pack
+				self.packlist.addItem(item)
+			if os.path.isfile(pack):
 				item = QListWidgetItem(x)
 				item.file = pack
 				self.packlist.addItem(item)
@@ -70,7 +74,7 @@ class Dialog(QDialog):
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 
-		buttons.button(QDialogButtonBox.Ok).setText("Export")
+		buttons.button(QDialogButtonBox.Ok).setText("Uninstall")
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(self.title)

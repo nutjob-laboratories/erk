@@ -40,8 +40,8 @@ from erk.strings import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_name_information(parent=None):
-		dialog = Dialog(parent)
+	def get_name_information(title="Insert",parent=None):
+		dialog = Dialog(title,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -73,10 +73,11 @@ class Dialog(QDialog):
 
 		return retval
 
-	def __init__(self,parent=None):
+	def __init__(self,title,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.title = title
 
 		self.setWindowTitle("Plugin information")
 		self.setWindowIcon(QIcon(EDITOR_ICON))
@@ -100,6 +101,8 @@ class Dialog(QDialog):
 		buttons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
+
+		buttons.button(QDialogButtonBox.Ok).setText(self.title)
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)

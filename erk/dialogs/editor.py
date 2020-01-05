@@ -167,8 +167,8 @@ class Window(QMainWindow):
 		return out
 
 	def menuTemplate(self):
-		x = Template.Dialog(self)
-		info = x.get_name_information(self)
+		x = Template.Dialog("Insert",self)
+		info = x.get_name_information("Insert",self)
 
 		if info:
 			# Create Python-safe name
@@ -187,8 +187,8 @@ class Window(QMainWindow):
 			self.editor.insertPlainText(t)
 
 	def newPackage(self):
-		x = Template.Dialog(self)
-		info = x.get_name_information(self)
+		x = Template.Dialog("Create",self)
+		info = x.get_name_information("Create",self)
 
 		if info:
 			# Create Python-safe name

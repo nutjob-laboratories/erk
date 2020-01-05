@@ -46,6 +46,9 @@ import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
 import erk.dialogs.macro as Macro
 import erk.dialogs.editor as Editor
+
+import erk.dialogs.uninstall_package as Uninstall
+
 # import erk.dialogs.template as Template
 
 # def TemplateDialog(obj):
@@ -55,6 +58,14 @@ import erk.dialogs.editor as Editor
 
 # 	if not info: return None
 # 	return info
+
+def UninstallDialog():
+	x = Uninstall.Dialog()
+	info = x.get_name_information()
+	del x
+
+	if not info: return None
+	return info
 
 def EditorDialog(obj=None,filename=None):
 	x = Editor.Window(filename,obj)
