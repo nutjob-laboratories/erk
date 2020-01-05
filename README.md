@@ -48,6 +48,9 @@
 	* Macros can send messages or execute commands
 * Plugins!
 	* Plugins are written in Python 3, just like **Erk**
+	* **Erk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
+		* Text editor with syntax highlighting
+		* Tools to create, package, and export plugin packages
 	* Plugins can be found in the [official **Erk** plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 
 # Requirements
