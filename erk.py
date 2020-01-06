@@ -91,8 +91,9 @@ disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="stor
 disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
 disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menus", action="store_true")
 disgroup.add_argument( "-N","--nomenu", help=f"Disable main menu", action="store_true")
+disgroup.add_argument( "-D","--noconnect", help=f"Disable connection commands", action="store_true")
 
-disgroup.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
+disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
 
 args = parser.parse_args()
 
@@ -162,6 +163,8 @@ if __name__ == '__main__':
 
 			sys.exit(0)
 
+		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS= True
+
 		if args.server:
 			if args.password=='':
 				pword = None
@@ -192,7 +195,7 @@ if __name__ == '__main__':
 			GUI.show()
 		else:
 
-			if args.noconnect:
+			if args.noask:
 				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
 				GUI.show()
 			elif args.last:

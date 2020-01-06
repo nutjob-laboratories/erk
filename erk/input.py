@@ -510,6 +510,8 @@ def handle_ui_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
+	if erk.config.DISABLE_CONNECT_COMMANDS: return False
+
 	# /connect SERVER [PORT] [PASSWORD]
 	# /reconnect SERVER [PORT] [PASSWORD]
 	# /ssl ...
