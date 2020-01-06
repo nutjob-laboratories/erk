@@ -192,6 +192,8 @@ class Erk(QMainWindow):
 
 		self.block_toolbar = block_toolbar
 
+		self.fullscreen = False
+
 		# Load application settings
 		erk.config.load_settings()
 
@@ -208,6 +210,9 @@ class Erk(QMainWindow):
 			self.font = f
 
 		self.app.setFont(self.font)
+
+		if erk.config.ALWAYS_ON_TOP:
+			self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 
 		self.stack = QStackedWidget(self)
 		self.stack.currentChanged.connect(self.pageChange)
@@ -396,6 +401,12 @@ class Erk(QMainWindow):
 
 			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
 
+			self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Open new chat for private messages",self)
+			self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
+			messageMenu.addAction(self.set_privopen)
+
+			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
+
 			# Channel display submenu
 
 			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
@@ -423,6 +434,12 @@ class Erk(QMainWindow):
 			channelMenu.addAction(self.set_displaynick)
 
 			if erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
+			self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
+			channelMenu.addAction(self.set_autohostmask)
+
+			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
 
 			# Connection display submenu
 
@@ -499,12 +516,6 @@ class Erk(QMainWindow):
 
 			if erk.config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_autoasciimoji = QAction(QIcon(UNCHECKED_ICON),"ASCIImoji shortcodes",self)
-			self.set_autoasciimoji.triggered.connect(lambda state,s="autoasciimoji": self.toggleSetting(s))
-			autocompleteMenu.addAction(self.set_autoasciimoji)
-
-			if erk.config.AUTOCOMPLETE_ASCIIMOJI: self.set_autoasciimoji.setIcon(QIcon(CHECKED_ICON))
-
 			# Spellcheck submenu
 
 			spellcheckMenu = self.settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
@@ -550,24 +561,6 @@ class Erk(QMainWindow):
 				self.spell_es.setEnabled(False)
 				self.spell_de.setEnabled(False)
 
-			# Emoji submenu
-
-			emojiMenu = self.settingsMenu.addMenu(QIcon(EMOJI_ICON),"Emojis")
-
-			self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
-			self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
-			emojiMenu.addAction(self.set_emoji)
-
-			if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_asciimoji = QAction(QIcon(UNCHECKED_ICON),"Use ASCIImoji shortcodes",self)
-			self.set_asciimoji.triggered.connect(lambda state,s="asciimoji": self.toggleSetting(s))
-			emojiMenu.addAction(self.set_asciimoji)
-
-			if erk.config.USE_ASCIIMOJIS: self.set_asciimoji.setIcon(QIcon(CHECKED_ICON))
-
-			# Timestamp display submenu
-
 			timestampMenu = self.settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
 
 			self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
@@ -584,9 +577,15 @@ class Erk(QMainWindow):
 
 			# Entry submenu
 
-			entryMenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input history")
+			entryMenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input")
 
-			self.set_history = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+			self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
+			self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
+			entryMenu.addAction(self.set_emoji)
+
+			if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_history = QAction(QIcon(UNCHECKED_ICON),"Track input history",self)
 			self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
 			entryMenu.addAction(self.set_history)
 
@@ -602,23 +601,25 @@ class Erk(QMainWindow):
 
 			self.settingsMenu.addSeparator()
 
-			self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Private messages in new chats",self)
-			self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_privopen)
-
-			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
-			self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_autohostmask)
-
-			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
+			
 
 			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Automatically switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
 			self.settingsMenu.addAction(self.set_autoswitch)
 
 			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
+			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_ontop)
+
+			if erk.config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
+			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_full)
+
+			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
 
 			# Log menu
 
@@ -715,10 +716,6 @@ class Erk(QMainWindow):
 
 		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
-		self.helpMenu.addAction(helpLink)
-
-		helpLink = QAction(QIcon(LINK_ICON),"List of ASCIImoji shortcodes",self)
-		helpLink.triggered.connect(lambda state,u="http://asciimoji.com/": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
 		# End of menus
@@ -831,7 +828,6 @@ class Erk(QMainWindow):
 					enabled = True
 					entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
 
-				#entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
 				entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
 				m.addAction(entry)
 
@@ -960,18 +956,41 @@ class Erk(QMainWindow):
 
 			if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
 
-
 	def menuReloadMacros(self):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-	# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-	# 	entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-	# 	self.pluginMenu.addAction(entry)
+		# self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
+		# 	self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
+		# 	self.settingsMenu.addAction(self.set_full)
 
-	# 	if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+		# 	if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
+
+		if setting=="fullscreen":
+			if self.fullscreen:
+				self.fullscreen = False
+				self.showNormal()
+				self.set_full.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				self.fullscreen = True
+				self.showFullScreen()
+				self.set_full.setIcon(QIcon(CHECKED_ICON))
+			return
+
+		if setting=="ontop":
+			if erk.config.ALWAYS_ON_TOP:
+				erk.config.ALWAYS_ON_TOP = False
+				self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+				self.set_ontop.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.ALWAYS_ON_TOP = True
+				self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+				self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			self.show()
+			return
 
 		if setting=="plugindev":
 			if erk.config.DEVELOPER_MODE:
@@ -1138,16 +1157,6 @@ class Erk(QMainWindow):
 			erk.events.rerender_all()
 			return
 
-		if setting=="autoasciimoji":
-			if erk.config.AUTOCOMPLETE_ASCIIMOJI:
-				erk.config.AUTOCOMPLETE_ASCIIMOJI = False
-				self.set_autoasciimoji.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				erk.config.AUTOCOMPLETE_ASCIIMOJI = True
-				self.set_autoasciimoji.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
-			return
-
 		if setting=="autoemoji":
 			if erk.config.AUTOCOMPLETE_EMOJI:
 				erk.config.AUTOCOMPLETE_EMOJI = False
@@ -1155,18 +1164,6 @@ class Erk(QMainWindow):
 			else:
 				erk.config.AUTOCOMPLETE_EMOJI = True
 				self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
-			return
-
-		if setting=="asciimoji":
-			if erk.config.USE_ASCIIMOJIS:
-				erk.config.USE_ASCIIMOJIS = False
-				self.set_asciimoji.setIcon(QIcon(UNCHECKED_ICON))
-				self.set_autoasciimoji.setEnabled(False)
-			else:
-				erk.config.USE_ASCIIMOJIS = True
-				self.set_asciimoji.setIcon(QIcon(CHECKED_ICON))
-				self.set_autoasciimoji.setEnabled(True)
 			erk.config.save_settings()
 			return
 
@@ -1561,9 +1558,6 @@ class Erk(QMainWindow):
 								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: erk.events.close_private_window(client,name))
 								menu.addAction(entry)
 
-					# entry = QAction(QIcon(EXIT_ICON),CONNECTIONS_MENU_DISCONNECT,self)
-					# entry.triggered.connect(lambda state,id=item.erk_client.id,cmd='disconnect': self.connectionEntryClick(id,cmd))
-					# menu.addAction(entry)
 				else:
 					return True
 			else:
@@ -1581,7 +1575,6 @@ class Erk(QMainWindow):
 		return super(Erk, self).eventFilter(source, event)
 
 	def open_private_window(self,client,nickname):
-		#print("heh "+nickname)
 		erk.events.open_private_window(client,nickname)
 
 	def connectToIRCServer(self,info):

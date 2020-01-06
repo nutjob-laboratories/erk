@@ -101,9 +101,7 @@ def handle_macro_input(window,client,text):
 
 						if execute:
 							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
 
-							# client.msg(window.name,output,True)
 							client.msg(window.name,output)
 
 						else:
@@ -121,9 +119,7 @@ def handle_macro_input(window,client,text):
 
 						if execute:
 							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
 
-							# client.describe(window.name,output,True)
 							client.describe(window.name,output)
 
 						else:
@@ -140,9 +136,7 @@ def handle_macro_input(window,client,text):
 
 						if execute:
 							if erk.config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-							if erk.config.USE_ASCIIMOJIS: output = inject_asciiemojis(output)
 
-							# client.notice(window.name,output,True)
 							client.notice(window.name,output)
 
 						else:
@@ -217,9 +211,7 @@ def handle_channel_input(window,client,text):
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
-			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 
-			# client.describe(window.name,msg,True)
 			client.describe(window.name,msg)
 
 			return True
@@ -244,9 +236,7 @@ def handle_channel_input(window,client,text):
 	if handle_common_input(window,client,text): return
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
-	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
 
-	# client.msg(window.name,text,True)
 	client.msg(window.name,text)
 
 def handle_private_input(window,client,text):
@@ -261,9 +251,7 @@ def handle_private_input(window,client,text):
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
-			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 
-			# client.describe(window.name,msg,True)
 			client.describe(window.name,msg)
 
 			return True
@@ -275,9 +263,7 @@ def handle_private_input(window,client,text):
 	if handle_common_input(window,client,text): return True
 
 	if erk.config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
-	if erk.config.USE_ASCIIMOJIS: text = inject_asciiemojis(text)
 
-	# client.msg(window.name,text,True)
 	client.msg(window.name,text)
 
 def handle_console_input(window,client,text):
@@ -300,9 +286,7 @@ def handle_common_input(window,client,text):
 			msg = ' '.join(tokens)
 
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
-			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 
-			# client.notice(target,msg,True)
 			client.notice(target,msg)
 			return True
 
@@ -392,9 +376,7 @@ def handle_common_input(window,client,text):
 			msg = ' '.join(tokens)
 
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
-			if erk.config.USE_ASCIIMOJIS: msg = inject_asciiemojis(msg)
 
-			# client.msg(target,msg,True)
 			client.msg(target,msg)
 			return True
 

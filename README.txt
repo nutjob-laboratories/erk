@@ -31,12 +31,11 @@
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
 	* Right click on misspelled words for suggested spellings/words
-* [Emoji](https://en.wikipedia.org/wiki/Emoji) and [ASCIImoji](https://github.com/hpcodecraft/ASCIImoji) support
-	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
-	* Insert ASCIImois into chat by using shortcodes (such as `(bear)` ʕ·͡ᴥ·ʔ or `(hug)` (づ｡◕‿‿◕｡)づ)                                                                              |
+* [Emoji](https://en.wikipedia.org/wiki/Emoji) support
+	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)                                                                        |
 * Command/nickname auto-completion
 	* Type the first few letters of a command or nickname and hit the tab key
-	* Auto-complete works for emoji and ASCIImoji shortcodes, too
+	* Auto-complete works for emoji shortcodes, too
 * Optional profanity filter
 * Support for IRC color codes (and the option to turn them off)
 * A built-in list of over 80 IRC servers to connect to

@@ -991,63 +991,6 @@ class SpellTextEdit(QPlainTextEdit):
 
 			if self.toPlainText().strip()=='': return
 
-			# if self.parent.gui.autocomplete_macros:
-
-			# 	# Auto-complete macros
-			# 	if len(erk.macro.MACRO_LIST)>0:
-						
-			# 		cursor.select(QTextCursor.BlockUnderCursor)
-			# 		self.setTextCursor(cursor)
-			# 		if self.textCursor().hasSelection():
-			# 			text = self.textCursor().selectedText()
-
-			# 			for c in erk.macro.MACRO_LIST:
-			# 				cmd = c
-			# 				rep = erk.macro.MACRO_LIST[c]
-
-			# 				#if text in cmd:
-			# 				if fnmatch.fnmatch(cmd,f"{text}*"):
-			# 					cursor.beginEditBlock()
-			# 					cursor.insertText(rep)
-			# 					cursor.endEditBlock()
-			# 					return
-
-			# if self.parent.gui.autocomplete_commands:
-
-			# 	# Auto-complete commands
-			# 	cursor.select(QTextCursor.BlockUnderCursor)
-			# 	self.setTextCursor(cursor)
-			# 	if self.textCursor().hasSelection():
-			# 		text = self.textCursor().selectedText()
-
-			# 		self.COMMAND_LIST = {}
-
-			# 		if self.parent.is_console:
-			# 			self.COMMAND_LIST = CONSOLE_COMMANDS
-			# 		else:
-			# 			self.COMMAND_LIST = INPUT_COMMANDS
-
-			# 		# Inject /cnotice and /cprivmsg if supported
-			# 		if self.parent.gui.does_server_support_cnotice(self.parent.client):
-			# 			self.COMMAND_LIST[CNOTICE_COMMAND] = CNOTICE_COMMAND+" "
-
-			# 		if self.parent.gui.does_server_support_cprivmsg(self.parent.client):
-			# 			self.COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
-
-			# 		if self.parent.gui.does_server_support_knock(self.parent.client):
-			# 			self.COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
-
-			# 		for c in self.COMMAND_LIST:
-			# 			cmd = c
-			# 			rep = self.COMMAND_LIST[c]
-
-			# 			#if text in cmd:
-			# 			if fnmatch.fnmatch(cmd,f"{text}*"):
-			# 				cursor.beginEditBlock()
-			# 				cursor.insertText(rep)
-			# 				cursor.endEditBlock()
-			# 				return
-
 			if erk.config.AUTOCOMPLETE_COMMANDS:
 
 				# Auto-complete commands
@@ -1060,16 +1003,6 @@ class SpellTextEdit(QPlainTextEdit):
 
 					self.COMMAND_LIST.update(erk.macros.MACRO_COMMANDS)
 
-					# # Inject /cnotice and /cprivmsg if supported
-					# if self.parent.gui.does_server_support_cnotice(self.parent.client):
-					# 	self.COMMAND_LIST[CNOTICE_COMMAND] = CNOTICE_COMMAND+" "
-
-					# if self.parent.gui.does_server_support_cprivmsg(self.parent.client):
-					# 	self.COMMAND_LIST[CPRIVMSG_COMMAND] = CPRIVMSG_COMMAND+" "
-
-					# if self.parent.gui.does_server_support_knock(self.parent.client):
-					# 	self.COMMAND_LIST[KNOCK_COMMAND] = KNOCK_COMMAND+" "
-
 					for c in self.COMMAND_LIST:
 						cmd = c
 						rep = self.COMMAND_LIST[c]
@@ -1080,26 +1013,6 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.insertText(rep)
 							cursor.endEditBlock()
 							return
-
-			# if self.parent.gui.autocomplete_nicks:
-
-			# 	# Auto-complete nicks/channels
-			# 	cursor.select(QTextCursor.WordUnderCursor)
-			# 	self.setTextCursor(cursor)
-			# 	if self.textCursor().hasSelection():
-			# 		text = self.textCursor().selectedText()
-
-			# 		# Nicks
-			# 		chan_nicks = self.parent.nicks
-			# 		for nick in chan_nicks:
-			# 			# Skip client's nickname
-			# 			if nick==self.parent.client.nickname:
-			# 				continue
-			# 			if fnmatch.fnmatch(nick,f"{text}*"):
-			# 				cursor.beginEditBlock()
-			# 				cursor.insertText(f"{nick}")
-			# 				cursor.endEditBlock()
-			# 				return
 
 			if erk.config.AUTOCOMPLETE_NICKNAMES:
 				# Auto-complete nicks/channels
@@ -1119,79 +1032,6 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.insertText(f"{nick}")
 							cursor.endEditBlock()
 							return
-
-			# if self.parent.gui.use_asciimojis:
-
-			# 	if self.parent.gui.autocomplete_asciimojis:
-
-					# # Autocomplete ASCIImojis
-					# cursor.select(QTextCursor.WordUnderCursor)
-					# oldpos = cursor.position()
-					# cursor.select(QTextCursor.WordUnderCursor)
-					# newpos = cursor.selectionStart() - 1
-					# cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-					# cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-					# self.setTextCursor(cursor)
-					# if self.textCursor().hasSelection():
-					# 	text = self.textCursor().selectedText()
-
-					# 	for c in self.parent.gui.ASCIIMOJI_AUTOCOMPLETE:
-					# 		if fnmatch.fnmatch(c,f"{text}*"):
-					# 			cursor.beginEditBlock()
-					# 			cursor.insertText(c)
-					# 			cursor.endEditBlock()
-					# 			return
-
-				if erk.config.AUTOCOMPLETE_ASCIIMOJI and erk.config.USE_ASCIIMOJIS:
-
-					# Autocomplete ASCIImojis
-					cursor.select(QTextCursor.WordUnderCursor)
-					oldpos = cursor.position()
-					cursor.select(QTextCursor.WordUnderCursor)
-					newpos = cursor.selectionStart() - 1
-					cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-					cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-					self.setTextCursor(cursor)
-					if self.textCursor().hasSelection():
-						text = self.textCursor().selectedText()
-
-						for c in ASCIIMOJI_AUTOCOMPLETE:
-							if fnmatch.fnmatch(c,f"{text}*"):
-								cursor.beginEditBlock()
-								cursor.insertText(c)
-								cursor.endEditBlock()
-								return
-
-			# if self.parent.gui.use_emojis:
-
-			# 	if self.parent.gui.autocomplete_emojis:
-
-					# # Autocomplete emojis
-					# cursor.select(QTextCursor.WordUnderCursor)
-					# oldpos = cursor.position()
-					# cursor.select(QTextCursor.WordUnderCursor)
-					# newpos = cursor.selectionStart() - 1
-					# cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-					# cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-					# self.setTextCursor(cursor)
-					# if self.textCursor().hasSelection():
-					# 	text = self.textCursor().selectedText()
-
-					# 	for c in self.parent.gui.EMOJI_AUTOCOMPLETE:
-
-					# 		# Case sensitive
-					# 		if fnmatch.fnmatchcase(c,f"{text}*"):
-					# 			cursor.beginEditBlock()
-					# 			cursor.insertText(c)
-					# 			cursor.endEditBlock()
-					# 			return
-
-					# 		# Case insensitive
-					# 		if fnmatch.fnmatch(c,f"{text}*"):
-					# 			cursor.beginEditBlock()
-					# 			cursor.insertText(c)
-					# 			cursor.endEditBlock()
-					# 			return
 
 				if erk.config.AUTOCOMPLETE_EMOJI and erk.config.USE_EMOJIS:
 

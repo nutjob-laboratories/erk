@@ -85,7 +85,7 @@ devgroup = parser.add_argument_group('Plugin development')
 devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
-devgroup.add_argument("--new", help="Create a new plugin and open it for editing", action="store_true")
+devgroup.add_argument("--new", help="Create a new plugin and open it in the editor", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 

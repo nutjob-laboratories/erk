@@ -67,9 +67,7 @@ AUTOCOMPLETE_NICKNAMES = True
 AUTOCOMPLETE_COMMANDS = True
 SPELLCHECK_IGNORE_NICKS = True
 USE_EMOJIS = True
-USE_ASCIIMOJIS = True
 AUTOCOMPLETE_EMOJI = True
-AUTOCOMPLETE_ASCIIMOJI = True
 FILTER_PROFANITY = False
 PLAIN_USER_LISTS = False
 DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
@@ -90,11 +88,11 @@ DEVELOPER_MODE = False
 USE_SPACES_FOR_INDENT = True
 NUMBER_OF_SPACES_FOR_INDENT = 2
 EDITOR_WORD_WRAP = False
+ALWAYS_ON_TOP = False
 
 def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
-
 		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
 		"number_of_indent_spaces": NUMBER_OF_SPACES_FOR_INDENT,
 		"editor_word_wrap": EDITOR_WORD_WRAP,
@@ -124,9 +122,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"autocomplete_commands": AUTOCOMPLETE_COMMANDS,
 		"spellcheck_ignore_nicknames": SPELLCHECK_IGNORE_NICKS,
 		"use_emoji_shortcodes": USE_EMOJIS,
-		"use_asciimoji_shortcodes": USE_ASCIIMOJIS,
 		"autocomplete_emoji": AUTOCOMPLETE_EMOJI,
-		"autocomplete_asciimoji": AUTOCOMPLETE_ASCIIMOJI,
 		"filter_profanity": FILTER_PROFANITY,
 		"text_only_channel_user_lists": PLAIN_USER_LISTS,
 		"display_channel_status": DISPLAY_CHANNEL_STATUS_NICK_DISPLAY,
@@ -144,6 +140,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"enable_plugins": PLUGINS_ENABLED,
 		"enable_macros": MACROS_ENABLED,
 		"plugin_developement_mode": DEVELOPER_MODE,
+		"always_on_top": ALWAYS_ON_TOP,
 	}
 
 	with open(filename, "w") as write_data:
@@ -176,9 +173,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_COMMANDS
 	global SPELLCHECK_IGNORE_NICKS
 	global USE_EMOJIS
-	global USE_ASCIIMOJIS
 	global AUTOCOMPLETE_EMOJI
-	global AUTOCOMPLETE_ASCIIMOJI
 	global FILTER_PROFANITY
 	global PLAIN_USER_LISTS
 	global DISPLAY_CHANNEL_STATUS_NICK_DISPLAY
@@ -199,6 +194,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global USE_SPACES_FOR_INDENT
 	global NUMBER_OF_SPACES_FOR_INDENT
 	global EDITOR_WORD_WRAP
+	global ALWAYS_ON_TOP
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -234,9 +230,7 @@ def load_settings(filename=SETTINGS_FILE):
 			AUTOCOMPLETE_COMMANDS = data["autocomplete_commands"]
 			SPELLCHECK_IGNORE_NICKS = data["spellcheck_ignore_nicknames"]
 			USE_EMOJIS = data["use_emoji_shortcodes"]
-			USE_ASCIIMOJIS = data["use_asciimoji_shortcodes"]
 			AUTOCOMPLETE_EMOJI = data["autocomplete_emoji"]
-			AUTOCOMPLETE_ASCIIMOJI = data["autocomplete_asciimoji"]
 			FILTER_PROFANITY = data["filter_profanity"]
 			PLAIN_USER_LISTS = data["text_only_channel_user_lists"]
 			DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = data["display_channel_status"]
@@ -254,6 +248,7 @@ def load_settings(filename=SETTINGS_FILE):
 			PLUGINS_ENABLED = data["enable_plugins"]
 			MACROS_ENABLED = data["enable_macros"]
 			DEVELOPER_MODE = data["plugin_developement_mode"]
+			ALWAYS_ON_TOP = data["always_on_top"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

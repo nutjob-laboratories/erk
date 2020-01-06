@@ -61,9 +61,8 @@ SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
 
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 BACKUP_STYLE_FILE = os.path.join(DATA_DIRECTORY, "text.css")
-ASCIIEMOJI_LIST = os.path.join(DATA_DIRECTORY, "asciiemoji.json")
+
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
-ASCIIMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "asciimoji.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
@@ -73,11 +72,6 @@ PLUGIN_TEMPLATE = ''
 f = open(PLUGIN_TEMPLATE_FILE,"r")
 PLUGIN_TEMPLATE = f.read()
 f.close()
-
-# Read in the ascii emoji list
-ASCIIEMOJIS = {}
-with open(ASCIIEMOJI_LIST, "r",encoding="utf-8") as read_emojis:
-	ASCIIEMOJIS = json.load(read_emojis)
 
 # Load in the profanity data file
 f = open(PROFANITY_LIST,"r")
@@ -111,22 +105,6 @@ def filterProfanityFromText(text,punc=True):
 		clean.append(word)
 	return ' '.join(clean)
 
-def inject_asciiemojis(data):
-	for key in ASCIIEMOJIS:
-		for word in ASCIIEMOJIS[key]["words"]:
-			data = data.replace("("+word+")",ASCIIEMOJIS[key]["ascii"])
-	return data
-
-def load_asciimoji_autocomplete():
-	ASCIIMOJI_AUTOCOMPLETE = []
-	with open(ASCIIMOJI_AUTOCOMPLETE_FILE) as fp:
-		line = fp.readline()
-		while line:
-			e = line.strip()
-			ASCIIMOJI_AUTOCOMPLETE.append(e)
-			line = fp.readline()
-	return ASCIIMOJI_AUTOCOMPLETE
-
 def load_emoji_autocomplete():
 	EMOJI_AUTOCOMPLETE = []
 	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE,mode="r",encoding="latin-1") as fp:
@@ -143,7 +121,6 @@ def load_emoji_autocomplete():
 			line = fp.readline()
 	return EMOJI_AUTOCOMPLETE
 
-ASCIIMOJI_AUTOCOMPLETE = load_asciimoji_autocomplete()
 EMOJI_AUTOCOMPLETE = load_emoji_autocomplete()
 
 def get_text_format_settings(filename=STYLE_FILE):

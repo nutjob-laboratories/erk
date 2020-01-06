@@ -1,3 +1,9 @@
+Version 0.703
+	* ASCIImoji support has been removed
+	* Added an option to set the app window always on top
+	* Moved some settings in the settings menu
+	* Added an option to display app full screen
+
 Version 0.702
 	* Plugin loading is now handled in plugins.py
 	* Plugins are only loaded once
