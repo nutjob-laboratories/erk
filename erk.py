@@ -32,6 +32,8 @@
 import argparse
 import string
 import shutil
+import sys
+import os
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -76,14 +78,13 @@ congroup.add_argument( "--ssl", help=f"Use SSL to connect to IRC", action="store
 congroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnection", action="store_true")
 congroup.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
 congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
-
-
-congroup.add_argument( "-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
+congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 
 devgroup = parser.add_argument_group('Plugin development')
 
-devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
+devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
+devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -92,7 +93,6 @@ disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_
 disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menus", action="store_true")
 disgroup.add_argument( "-N","--nomenu", help=f"Disable main menu", action="store_true")
 disgroup.add_argument( "-D","--noconnect", help=f"Disable connection commands", action="store_true")
-
 disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
 
 args = parser.parse_args()
@@ -116,6 +116,30 @@ if __name__ == '__main__':
 		app.setFont(font)
 
 		EDITOR = EditorDialog(None,None,app)
+		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		EDITOR.show()
+
+	elif args.edit:
+
+		file = args.edit
+		if not os.path.isfile(file):
+			print("\""+file+"\" doesn't exist. Please use --editor to create a new file.")
+			sys.exit(1)
+
+		erk.config.load_settings()
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		EDITOR = EditorDialog(None,file,app)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 

@@ -321,7 +321,7 @@ class Window(QMainWindow):
 
 		if self.filename:
 			if os.path.isfile(self.filename):
-				x = open(self.filename,mode="r")
+				x = open(self.filename,mode="r",encoding="latin-1")
 				source_code = str(x.read())
 				x.close()
 				self.editor.setPlainText(source_code)
