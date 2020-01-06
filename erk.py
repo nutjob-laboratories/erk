@@ -45,11 +45,13 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk.dialogs import ComboDialog
+from erk.dialogs import ComboDialog,EditorDialog
 from erk.main import Erk
 from erk.files import *
 from erk.objects import *
 from erk.strings import *
+import erk.config
+from erk.common import *
 
 parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
@@ -81,12 +83,15 @@ congroup.add_argument( "-l","--last", help=f"Automatically connect to the last s
 devgroup = parser.add_argument_group('Plugin development')
 
 devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton", metavar="NAME", default='')
+devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
 disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
 disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menus", action="store_true")
+disgroup.add_argument( "-N","--nomenu", help=f"Disable main menu", action="store_true")
+
 disgroup.add_argument( "-n","--noconnect", help=f"Don't ask for a server to connect to on start", action="store_true")
 
 args = parser.parse_args()
@@ -95,119 +100,139 @@ if __name__ == '__main__':
 
 	app = QApplication([])
 
-	if args.generate!='':
-		safe_name = args.generate
-		for c in string.punctuation:
-			safe_name=safe_name.replace(c,"")
-		safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
+	if args.editor:
+		erk.config.load_settings()
 
-		ERK_MODULE_DIRECTORY = os.path.join(sys.path[0], "erk")
-		DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
-		PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
-
-		print("Creating plugin package "+safe_name+"...")
-		os.mkdir(safe_name)
-		shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(safe_name, "package.png"))
-		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(safe_name, "plugin.png"))
-		shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.py"), os.path.join(safe_name, "plugin.py"))
-		shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(safe_name, "package.txt"))
-
-		f = open(os.path.join(safe_name, "package.txt"),"r")
-		ptxt = f.read()
-		f.close()
-
-		ptxt = ptxt.replace("!PLUGIN_FULL_NAME!",args.generate)
-
-		f = open(os.path.join(safe_name, "package.txt"),"w")
-		f.write(ptxt)
-		f.close()
-
-		f = open(os.path.join(safe_name, "plugin.py"),"r")
-		ppy = f.read()
-		f.close()
-
-		ppy = ppy.replace("!PLUGIN_FULL_NAME!",args.generate)
-		ppy = ppy.replace("!_PLUGIN_NAME!",safe_name)
-
-		f = open(os.path.join(safe_name, "plugin.py"),"w")
-		f.write(ppy)
-		f.close()
-
-		print("Done!")
-
-		sys.exit(0)
-
-	if args.server:
-		if args.password=='':
-			pword = None
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
 		else:
-			pword = args.password
-		chans = []
-		if args.channel:
-			for c in args.channel:
-				p = c.split(':')
-				if len(p)==2:
-					chans.append(p)
-				else:
-					chans.append( [c,''] )
-		u = get_user()
-		i = ConnectInfo(
-				args.server,
-				args.port,
-				pword,
-				args.ssl,
-				u["nickname"],
-				u["alternate"],
-				u["username"],
-				u["realname"],
-				args.reconnect,
-				chans
-			)
-		GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings)
-		GUI.show()
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		EDITOR = EditorDialog(None,None,app)
+		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		EDITOR.show()
+
 	else:
 
-		if args.noconnect:
-			GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings)
-			GUI.show()
-		elif args.last:
-			u = get_user()
-			if u["last_password"] == '':
+		if args.generate!='':
+			safe_name = args.generate
+			for c in string.punctuation:
+				safe_name=safe_name.replace(c,"")
+			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
+
+			ERK_MODULE_DIRECTORY = os.path.join(sys.path[0], "erk")
+			DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
+			PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
+
+			print("Creating plugin package "+safe_name+"...")
+			os.mkdir(safe_name)
+			shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(safe_name, "package.png"))
+			shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(safe_name, "plugin.png"))
+			shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.py"), os.path.join(safe_name, "plugin.py"))
+			shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(safe_name, "package.txt"))
+
+			f = open(os.path.join(safe_name, "package.txt"),"r")
+			ptxt = f.read()
+			f.close()
+
+			ptxt = ptxt.replace("!PLUGIN_FULL_NAME!",args.generate)
+
+			f = open(os.path.join(safe_name, "package.txt"),"w")
+			f.write(ptxt)
+			f.close()
+
+			f = open(os.path.join(safe_name, "plugin.py"),"r")
+			ppy = f.read()
+			f.close()
+
+			ppy = ppy.replace("!PLUGIN_FULL_NAME!",args.generate)
+			ppy = ppy.replace("!_PLUGIN_NAME!",safe_name)
+
+			f = open(os.path.join(safe_name, "plugin.py"),"w")
+			f.write(ppy)
+			f.close()
+
+			print("Done!")
+
+			sys.exit(0)
+
+		if args.server:
+			if args.password=='':
 				pword = None
 			else:
-				pword = u["last_password"]
-			if u["autojoin"]:
-				c = u["channels"]
-			else:
-				c = []
+				pword = args.password
+			chans = []
 			if args.channel:
-				for ch in args.channel:
-					p = ch.split(':')
+				for c in args.channel:
+					p = c.split(':')
 					if len(p)==2:
-						c.append(p)
+						chans.append(p)
 					else:
-						c.append( [ch,''] )
+						chans.append( [c,''] )
+			u = get_user()
 			i = ConnectInfo(
-					u["last_server"],
-					int(u["last_port"]),
+					args.server,
+					args.port,
 					pword,
-					u["ssl"],
+					args.ssl,
 					u["nickname"],
 					u["alternate"],
 					u["username"],
 					u["realname"],
-					u["reconnect"],
-					c
+					args.reconnect,
+					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
 			GUI.show()
 		else:
-			info = ComboDialog()
-			if info!=None:
-				GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings)
+
+			if args.noconnect:
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+				GUI.show()
+			elif args.last:
+				u = get_user()
+				if u["last_password"] == '':
+					pword = None
+				else:
+					pword = u["last_password"]
+				if u["autojoin"]:
+					c = u["channels"]
+				else:
+					c = []
+				if args.channel:
+					for ch in args.channel:
+						p = ch.split(':')
+						if len(p)==2:
+							c.append(p)
+						else:
+							c.append( [ch,''] )
+				i = ConnectInfo(
+						u["last_server"],
+						int(u["last_port"]),
+						pword,
+						u["ssl"],
+						u["nickname"],
+						u["alternate"],
+						u["username"],
+						u["realname"],
+						u["reconnect"],
+						c
+					)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
 				GUI.show()
 			else:
-				app.quit()
+				info = ComboDialog()
+				if info!=None:
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+					GUI.show()
+				else:
+					app.quit()
 
 
 	reactor.run()

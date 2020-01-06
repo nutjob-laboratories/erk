@@ -67,8 +67,8 @@ def UninstallDialog():
 	if not info: return None
 	return info
 
-def EditorDialog(obj=None,filename=None):
-	x = Editor.Window(filename,obj)
+def EditorDialog(obj=None,filename=None,app=None):
+	x = Editor.Window(filename,obj,app)
 	return x
 
 def MacroDialog(obj,filename=None):

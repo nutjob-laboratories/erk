@@ -30,6 +30,10 @@ class Window(QMainWindow):
 	def closeEvent(self, event):
 		if self.changed:
 			self.doExitSave(self.filename)
+
+		if self.app!=None:
+			self.app.quit()
+
 		event.accept()
 		self.close()
 
@@ -269,11 +273,12 @@ class Window(QMainWindow):
 				zf.close()
 
 
-	def __init__(self,filename=None,obj=None,parent=None):
+	def __init__(self,filename=None,obj=None,app=None,parent=None):
 		super(Window, self).__init__(parent)
 
 		self.filename = filename
 		self.gui = obj
+		self.app = app
 
 		self.changed = False
 		self.findWindow = None

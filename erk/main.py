@@ -98,7 +98,7 @@ class Erk(QMainWindow):
 		if self.current_client:
 			erk.events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
-			self.disconnect.setEnabled(False)
+			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
 	def pageChange(self,index):
 
@@ -108,15 +108,15 @@ class Erk(QMainWindow):
 
 		if hasattr(window,"client"):
 			self.current_client = window.client
-			self.disconnect.setEnabled(True)
+			if not self.block_toolbar: self.disconnect.setEnabled(True)
 		else:
 			self.current_client = None
-			self.disconnect.setEnabled(False)
+			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
-				self.disconnect.setEnabled(False)
+				if not self.block_toolbar: self.disconnect.setEnabled(False)
 			else:
 				self.setWindowTitle(window.name)
 
@@ -148,11 +148,12 @@ class Erk(QMainWindow):
 		self.connection_display.clearSelection()
 
 	def start_spinner(self):
-		self.spinner.start()
+		if not self.block_toolbar: self.spinner.start()
 
 	def stop_spinner(self):
-		self.spinner.stop()
-		self.corner_widget.setIcon(QIcon(self.toolbar_icon))
+		if not self.block_toolbar:
+			self.spinner.stop()
+			self.corner_widget.setIcon(QIcon(self.toolbar_icon))
 
 	def registered(self,client):
 		clean = []
@@ -168,7 +169,7 @@ class Erk(QMainWindow):
 		if len(self.connecting)==0: self.stop_spinner()
 
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -188,6 +189,8 @@ class Erk(QMainWindow):
 		self.block_macros = block_macros
 
 		self.block_settings = block_settings
+
+		self.block_toolbar = block_toolbar
 
 		# Load application settings
 		erk.config.load_settings()
@@ -212,13 +215,15 @@ class Erk(QMainWindow):
 
 		self.current_page = None
 
-		self.toolbar = generate_menu_toolbar(self)
-		self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+		if not self.block_toolbar:
 
-		self.toolbar_icon = TOOLBAR_ICON
-		self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
-		self.spinner = QMovie(SPINNER_ANIMATION)
-		self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap())    ) )
+			self.toolbar = generate_menu_toolbar(self)
+			self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+
+			self.toolbar_icon = TOOLBAR_ICON
+			self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
+			self.spinner = QMovie(SPINNER_ANIMATION)
+			self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
 		# Plugins
 		if not self.block_plugins:
@@ -237,7 +242,9 @@ class Erk(QMainWindow):
 		self.macroMenu = QMenu()
 		self.pluginMenu = QMenu()
 
-		self.buildToolbar()
+		if not self.block_toolbar:
+
+			self.buildToolbar()
 		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 
