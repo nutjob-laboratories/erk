@@ -129,13 +129,13 @@ def load_asciimoji_autocomplete():
 
 def load_emoji_autocomplete():
 	EMOJI_AUTOCOMPLETE = []
-	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE) as fp:
+	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE,mode="r",encoding="latin-1") as fp:
 		line = fp.readline()
 		while line:
 			e = line.strip()
 			EMOJI_AUTOCOMPLETE.append(e)
 			line = fp.readline()
-	with open(EMOJI_AUTOCOMPLETE_FILE) as fp:
+	with open(EMOJI_AUTOCOMPLETE_FILE,mode="r",encoding="latin-1") as fp:
 		line = fp.readline()
 		while line:
 			e = line.strip()

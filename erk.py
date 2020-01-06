@@ -85,6 +85,7 @@ devgroup = parser.add_argument_group('Plugin development')
 devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
+devgroup.add_argument("--new", help="Create a new plugin and open it for editing", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -142,6 +143,25 @@ if __name__ == '__main__':
 		EDITOR = EditorDialog(None,file,app)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
+
+	elif args.new:
+		erk.config.load_settings()
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		EDITOR = EditorDialog(None,None,app)
+		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		EDITOR.show()
+		EDITOR.newPackage()
 
 	else:
 

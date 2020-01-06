@@ -40,6 +40,8 @@ Version 0.702
 	* Changed the flag for not asking for a server on connect to "--noask"
 	* All disabling commandline flags are now capital letters
 	* Added a commandline option to open a file in the code editor
+	* Bugfix (emoji autocomplete data is now loaded into memory in latin-1 encoding)
+	* Added a commandline option to create a new plugin and open it in the editor
 
 Version 0.701
 	* The application tool bar is now built (and rebuilt) programmatically
