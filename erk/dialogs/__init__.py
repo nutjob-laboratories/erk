@@ -56,16 +56,6 @@ def ErrorDialog(obj,errlist=None):
 	x.resize(400,250)
 	x.show()
 
-# import erk.dialogs.template as Template
-
-# def TemplateDialog(obj):
-	# x = Template.Dialog(obj)
-	# info = x.get_name_information(obj)
-# 	del x
-
-# 	if not info: return None
-# 	return info
-
 def UninstallDialog(obj):
 	x = Uninstall.Dialog(obj)
 	info = x.get_name_information(obj)

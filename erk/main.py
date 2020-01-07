@@ -616,6 +616,12 @@ class Erk(QMainWindow):
 
 			if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
+			self.set_seconds = QAction(QIcon(UNCHECKED_ICON),"Show seconds",self)
+			self.set_seconds.triggered.connect(lambda state,s="tsseconds": self.toggleSetting(s))
+			timestampMenu.addAction(self.set_seconds)
+
+			if erk.config.DISPLAY_TIMESTAMP_SECONDS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+
 			# Entry submenu
 
 			entryMenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input")
@@ -961,30 +967,9 @@ class Erk(QMainWindow):
 
 		self.display_load_errors()
 
-		# if len(self.plugins.errors())>0:
-		# 		print("Plugin load error(s)!")
-		# 		for l in self.plugins.errors():
-		# 			print(l)
-
-		# 		if erk.config.SHOW_LOAD_ERRORS:
-		# 			errs = self.plugins.errors()
-		# 			if len(errs)>1:
-		# 				title = "Errors loading plugins"
-		# 			else:
-		# 				title = "Error loading plugins"
-
-		# 			msg = QMessageBox()
-		# 			msg.setIcon(QMessageBox.Critical)
-		# 			msg.setText(title)
-		# 			msg.setInformativeText("\n".join(errs))
-		# 			msg.setWindowTitle("Load error")
-		# 			msg.exec_()
-
 		self.rebuildPluginMenu()
 
 	def rebuildMacroMenu(self):
-
-		#erk.macros.load_macros()
 
 		self.macroMenu.clear()
 
@@ -1030,13 +1015,18 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-		# entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
-		# 	entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-		# 	self.pluginMenu.addAction(entry)
-
-		# 	if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
-
 	def toggleSetting(self,setting):
+
+		if setting=="tsseconds":
+			if erk.config.DISPLAY_TIMESTAMP_SECONDS:
+				erk.config.DISPLAY_TIMESTAMP_SECONDS = False
+				self.set_seconds.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.DISPLAY_TIMESTAMP_SECONDS = True
+				self.set_seconds.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			erk.events.rerender_all()
+			return
 
 		if setting=="showplugerrors":
 			if erk.config.SHOW_LOAD_ERRORS:

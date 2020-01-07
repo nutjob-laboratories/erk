@@ -168,6 +168,9 @@ def render_message(message):
 		else:
 			tfs = '%I:%M'
 
+		if erk.config.DISPLAY_TIMESTAMP_SECONDS:
+			tfs = tfs + ':%S'
+
 		pretty_timestamp = datetime.fromtimestamp(message.timestamp).strftime(tfs)
 
 		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",STYLES["timestamp"])

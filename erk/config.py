@@ -89,8 +89,8 @@ USE_SPACES_FOR_INDENT = True
 NUMBER_OF_SPACES_FOR_INDENT = 2
 EDITOR_WORD_WRAP = False
 ALWAYS_ON_TOP = False
-
 SHOW_LOAD_ERRORS = True
+DISPLAY_TIMESTAMP_SECONDS = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -144,6 +144,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"plugin_developement_mode": DEVELOPER_MODE,
 		"always_on_top": ALWAYS_ON_TOP,
 		"show_plugin_load_error": SHOW_LOAD_ERRORS,
+		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
 	}
 
 	with open(filename, "w") as write_data:
@@ -199,6 +200,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global EDITOR_WORD_WRAP
 	global ALWAYS_ON_TOP
 	global SHOW_LOAD_ERRORS
+	global DISPLAY_TIMESTAMP_SECONDS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -254,6 +256,7 @@ def load_settings(filename=SETTINGS_FILE):
 			DEVELOPER_MODE = data["plugin_developement_mode"]
 			ALWAYS_ON_TOP = data["always_on_top"]
 			SHOW_LOAD_ERRORS = data["show_plugin_load_error"]
+			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist
