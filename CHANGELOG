@@ -11,6 +11,7 @@ Version 0.703
 	* Fixed toolbar spinner icon (static icon was slightly bigger than animated icon)
 	* New error reporting dialog for plugin load errors
 	* Added an option to display seconds in timestamps
+	* Added a new built-in plugin method: exec()
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

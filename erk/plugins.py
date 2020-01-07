@@ -12,6 +12,7 @@ from erk.objects import *
 from erk.strings import *
 from erk.events import *
 import erk.config
+from erk.input import handle_input
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -49,6 +50,22 @@ class ErkFunctions(object):
 	def __init__(self):
 		self._erk_client = None
 		self._erk_window_name = None
+
+	def exec(self,data):
+
+		if self._erk_client and self._erk_window_name:
+			if self._erk_window_name==SERVER_CONSOLE_NAME:
+				window = erk.events.fetch_console_window(self._erk_client)
+			else:
+				windows = erk.events.fetch_window_list(self._erk_client)
+				for w in windows:
+					if w.name==self._erk_window_name:
+						window = w
+
+		if not window: return False
+		
+		handle_input(window,self._erk_client,data)
+		return True
 
 	def info(self):
 		return APPLICATION_NAME+" "+APPLICATION_VERSION

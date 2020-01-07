@@ -66,6 +66,18 @@ PRIVATE_COMMANDS = {
 	"/me": "/me ",	
 }
 
+def handle_input(window,client,text):
+	if len(text.strip())==0: return
+
+	if handle_ui_input(window,client,text): return
+	
+	if window.type==erk.config.CHANNEL_WINDOW:
+		handle_channel_input(window,client,text)
+	elif window.type==erk.config.PRIVATE_WINDOW:
+		handle_private_input(window,client,text)
+	elif window.type==erk.config.SERVER_WINDOW:
+		handle_console_input(window,client,text)
+
 def handle_macro_input(window,client,text):
 
 	if client.gui.block_macros: return False
@@ -442,18 +454,6 @@ def handle_common_input(window,client,text):
 			return True
 
 	return False
-
-def handle_input(window,client,text):
-	if len(text.strip())==0: return
-
-	if handle_ui_input(window,client,text): return
-	
-	if window.type==erk.config.CHANNEL_WINDOW:
-		handle_channel_input(window,client,text)
-	elif window.type==erk.config.PRIVATE_WINDOW:
-		handle_private_input(window,client,text)
-	elif window.type==erk.config.SERVER_WINDOW:
-		handle_console_input(window,client,text)
 
 def handle_ui_input(window,client,text):
 
