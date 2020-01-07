@@ -52,7 +52,6 @@ class ErkFunctions(object):
 		self._erk_window_name = None
 
 	def exec(self,data):
-
 		if self._erk_client and self._erk_window_name:
 			if self._erk_window_name==SERVER_CONSOLE_NAME:
 				window = erk.events.fetch_console_window(self._erk_client)
