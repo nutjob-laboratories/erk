@@ -59,7 +59,8 @@ from erk.dialogs import(
 	AboutDialog,
 	MacroDialog,
 	EditorDialog,
-	UninstallDialog
+	UninstallDialog,
+	ErrorDialog
 	)
 
 from erk.irc import(
@@ -168,6 +169,24 @@ class Erk(QMainWindow):
 
 		if len(self.connecting)==0: self.stop_spinner()
 
+	def display_load_errors(self):
+		if len(self.plugins.errors())>0:
+			errs = self.plugins.errors()
+			if erk.config.SHOW_LOAD_ERRORS:
+				total_errors = {}
+				for e in errs:
+					if e.package in total_errors:
+						total_errors[e.package].append([e.classname,e.reason])
+					else:
+						total_errors[e.package] = []
+						total_errors[e.package].append([e.classname,e.reason])
+				
+				ErrorDialog(self,total_errors)
+			else:
+				for e in errs:
+					s = "Error loading package "+e.package+"!\n"
+					s = s + e.classname+": "+e.reason
+					print(s)
 
 	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,parent=None):
 		super(Erk, self).__init__(parent)
@@ -233,24 +252,32 @@ class Erk(QMainWindow):
 		# Plugins
 		if not self.block_plugins:
 			self.plugins = PluginCollection("plugins")
-			if len(self.plugins.errors())>0:
-				print("Plugin load error(s)!")
-				for l in self.plugins.errors():
-					print(l)
 
-				if erk.config.SHOW_LOAD_ERRORS:
-					errs = self.plugins.errors()
-					if len(errs)>1:
-						title = "Errors loading plugins"
-					else:
-						title = "Error loading plugins"
+		self.display_load_errors()
+			# if len(self.plugins.errors())>0:
+			# 	# print("Plugin load error(s)!")
+			# 	# for l in self.plugins.errors():
+			# 	# 	print(l)
 
-					msg = QMessageBox()
-					msg.setIcon(QMessageBox.Critical)
-					msg.setText(title)
-					msg.setInformativeText("\n".join(errs))
-					msg.setWindowTitle("Load error")
-					msg.exec_()
+			# 	if erk.config.SHOW_LOAD_ERRORS:
+			# 		errs = self.plugins.errors()
+			# 		if len(errs)>1:
+			# 			title = "Errors loading plugins"
+			# 		else:
+			# 			title = "Error loading plugins"
+
+			# 		out = []
+			# 		for e in errs:
+			# 			s = e.package+"."+e.classname+": "+e.reason
+			# 			out.append(s)
+
+			# 		msg = QMessageBox()
+			# 		msg.setIcon(QMessageBox.Critical)
+			# 		msg.setText(title)
+			# 		# msg.setInformativeText("\n".join(errs))
+			# 		msg.setInformativeText("\n".join(out))
+			# 		msg.setWindowTitle("Load error")
+			# 		msg.exec_()
 		#self.plugins.load()
 
 		# MENU TOOLBAR
@@ -932,24 +959,26 @@ class Erk(QMainWindow):
 		self.plugins.reset_errors()
 		self.plugins.reload_plugins(True)
 
-		if len(self.plugins.errors())>0:
-				print("Plugin load error(s)!")
-				for l in self.plugins.errors():
-					print(l)
+		self.display_load_errors()
 
-				if erk.config.SHOW_LOAD_ERRORS:
-					errs = self.plugins.errors()
-					if len(errs)>1:
-						title = "Errors loading plugins"
-					else:
-						title = "Error loading plugins"
+		# if len(self.plugins.errors())>0:
+		# 		print("Plugin load error(s)!")
+		# 		for l in self.plugins.errors():
+		# 			print(l)
 
-					msg = QMessageBox()
-					msg.setIcon(QMessageBox.Critical)
-					msg.setText(title)
-					msg.setInformativeText("\n".join(errs))
-					msg.setWindowTitle("Load error")
-					msg.exec_()
+		# 		if erk.config.SHOW_LOAD_ERRORS:
+		# 			errs = self.plugins.errors()
+		# 			if len(errs)>1:
+		# 				title = "Errors loading plugins"
+		# 			else:
+		# 				title = "Error loading plugins"
+
+		# 			msg = QMessageBox()
+		# 			msg.setIcon(QMessageBox.Critical)
+		# 			msg.setText(title)
+		# 			msg.setInformativeText("\n".join(errs))
+		# 			msg.setWindowTitle("Load error")
+		# 			msg.exec_()
 
 		self.rebuildPluginMenu()
 

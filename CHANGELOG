@@ -9,6 +9,7 @@ Version 0.703
 	* If the editor is started from the client, "failed" packages will now be marked in the export package dialog
 	* Changed some plugin error messages to be clearer
 	* Fixed toolbar spinner icon (static icon was slightly bigger than animated icon)
+	* New error reporting dialog for plugin load errors
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

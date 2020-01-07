@@ -37,6 +37,13 @@ def save_disabled(filename=DISABLED_FILE):
 
 DISABLED_PLUGINS = get_disabled()
 
+class PluginError():
+	def __init__(self,package,classname,file,reason):
+		self.package = package
+		self.classname = classname
+		self.file = file
+		self.reason = reason
+
 class ErkFunctions(object):
 
 	def __init__(self):
@@ -112,15 +119,23 @@ def check_for_attributes(p):
 
 	if hasattr(p,"description"):
 		if p.description==None:
-			errors.append(p.__file__+": \"description\" attribute is not set")
+			# errors.append(p.__file__+": \"description\" attribute is not set")
+			err = PluginError(p._package,p._class,p.__file__,"\"description\" attribute is not set")
+			errors.append(err)
 	else:
-		errors.append(p.__file__+': Missing \"description\" attribute')
+		#errors.append(p.__file__+': Missing \"description\" attribute')
+		err = PluginError(p._package,p._class,p.__file__,"Missing \"description\" attribute")
+		errors.append(err)
 
 	if hasattr(p,"name"):
 		if p.name==None:
-			errors.append(p.__file__+": \"name\" attribute is not set")
+			#errors.append(p.__file__+": \"name\" attribute is not set")
+			err = PluginError(p._package,p._class,p.__file__,"\"name\" attribute is not set")
+			errors.append(err)
 	else:
-		errors.append(p.__file__+': Missing \"name\" attribute')
+		#errors.append(p.__file__+': Missing \"name\" attribute')
+		err = PluginError(p._package,p._class,p.__file__,"Missing \"name\" attribute")
+		errors.append(err)
 
 	return errors
 
@@ -331,7 +346,9 @@ class PluginCollection(object):
 
 						# Check for methods
 						if not check_for_methods(plugin):
-							self.load_errors.append(plugin.__file__+": Missing valid entry points")
+							# self.load_errors.append(plugin.__file__+": Missing valid entry points")
+							err = PluginError(plugin._package,plugin._class,plugin.__file__,"Missing a valid entry point")
+							self.load_errors.append(err)
 							no_plugin_errors = False
 
 						# Check for attributes
@@ -343,12 +360,16 @@ class PluginCollection(object):
 						# Plugin name must be unique
 						for p in self.plugins:
 							if p.name == plugin.name:
-								self.load_errors.append(plugin.__file__+": A plugin named \""+plugin.name+"\" is already loaded")
+								#self.load_errors.append(plugin.__file__+": A plugin named \""+plugin.name+"\" is already loaded")
+								err = PluginError(plugin._package,plugin._class,plugin.__file__,"A plugin named "+plugin.name+" is already loaded")
+								self.load_errors.append(err)
 								no_plugin_errors = False
 
 						# Check for a malicious input method
 						if check_for_bad_input(plugin):
-							self.load_errors.append(plugin.__file__+": Malicious input method detected")
+							#self.load_errors.append(plugin.__file__+": Malicious input method detected")
+							err = PluginError(plugin._package,plugin._class,plugin.__file__,"Malicious input method detected")
+							self.load_errors.append(err)
 							no_plugin_errors = False
 
 						if no_plugin_errors:

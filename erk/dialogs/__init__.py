@@ -49,6 +49,13 @@ import erk.dialogs.editor as Editor
 
 import erk.dialogs.uninstall_package as Uninstall
 
+import erk.dialogs.error as Error
+
+def ErrorDialog(obj,errlist=None):
+	x = Error.Dialog(errlist,obj)
+	x.resize(400,250)
+	x.show()
+
 # import erk.dialogs.template as Template
 
 # def TemplateDialog(obj):
