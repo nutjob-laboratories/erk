@@ -112,13 +112,13 @@ def check_for_attributes(p):
 
 	if hasattr(p,"description"):
 		if p.description==None:
-			errors.append(p.__file__+": \"description\" attribute is set to the default")
+			errors.append(p.__file__+": \"description\" attribute is not set")
 	else:
 		errors.append(p.__file__+': Missing \"description\" attribute')
 
 	if hasattr(p,"name"):
 		if p.name==None:
-			errors.append(p.__file__+": \"name\" attribute is set to the default")
+			errors.append(p.__file__+": \"name\" attribute is not set")
 	else:
 		errors.append(p.__file__+': Missing \"name\" attribute')
 
@@ -250,6 +250,9 @@ class PluginCollection(object):
 	def errors(self):
 		return self.load_errors
 
+	def reset_errors(self):
+		self.load_errors = []
+
 	def reload_plugins(self,do_reload=False):
 		"""Reset the list of all plugins and initiate the walk over the main
 		provided plugin package to load all available plugins
@@ -257,6 +260,7 @@ class PluginCollection(object):
 		self.plugins = []
 		self.seen_paths = []
 		self.load_errors = []
+		self.failed_load = []
 		self.walk_package(self.plugin_package,do_reload)
 
 	def walk_package(self,package,do_reload=False):
@@ -347,7 +351,11 @@ class PluginCollection(object):
 							self.load_errors.append(plugin.__file__+": Malicious input method detected")
 							no_plugin_errors = False
 
-						if no_plugin_errors: self.plugins.append(plugin)
+						if no_plugin_errors:
+							self.plugins.append(plugin)
+						else:
+							self.failed_load.append(plugin.__file__)
+							self.failed_load.append(plugin.name)
 
 				self.load()
 

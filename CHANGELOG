@@ -3,6 +3,12 @@ Version 0.703
 	* Added an option to set the app window always on top
 	* Moved some settings in the settings menu
 	* Added an option to display app full screen
+	* Added an option to show (or suppress) plugin load errors
+	* The plugin uninstall dialog now shows plugins not loaded due to errors
+	* Reloading plugins now displays errors (if error reporting is turned on)
+	* If the editor is started from the client, "failed" packages will now be marked in the export package dialog
+	* Changed some plugin error messages to be clearer
+	* Fixed toolbar spinner icon (static icon was slightly bigger than animated icon)
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

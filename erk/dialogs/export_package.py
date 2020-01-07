@@ -57,9 +57,27 @@ class Dialog(QDialog):
 			if x.lower()=="__pycache__": continue
 			pack = os.path.join(PLUGIN_DIRECTORY, x)
 			if os.path.isdir(pack):
-				item = QListWidgetItem(x)
-				item.file = pack
-				self.packlist.addItem(item)
+
+				has_parent_gui = False
+				if hasattr(self.parent,"gui"):
+					if hasattr(self.parent.gui,"plugins"):
+						has_parent_gui= True
+
+				if has_parent_gui:
+					if x in self.parent.gui.plugins.failed_load:
+						item = QListWidgetItem(x+" (Error loading)")
+						item.setIcon(QIcon(ERROR_ICON))
+					else:
+						item = QListWidgetItem(x)
+						item.setIcon(QIcon(PACKAGE_ICON))
+					item.file = pack
+					self.packlist.addItem(item)
+				else:
+					item = QListWidgetItem(x)
+					item.file = pack
+					item.setIcon(QIcon(PACKAGE_ICON))
+					self.packlist.addItem(item)
+
 
 		self.packlist.setCurrentRow(0)
 

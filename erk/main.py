@@ -237,6 +237,20 @@ class Erk(QMainWindow):
 				print("Plugin load error(s)!")
 				for l in self.plugins.errors():
 					print(l)
+
+				if erk.config.SHOW_LOAD_ERRORS:
+					errs = self.plugins.errors()
+					if len(errs)>1:
+						title = "Errors loading plugins"
+					else:
+						title = "Error loading plugins"
+
+					msg = QMessageBox()
+					msg.setIcon(QMessageBox.Critical)
+					msg.setText(title)
+					msg.setInformativeText("\n".join(errs))
+					msg.setWindowTitle("Load error")
+					msg.exec_()
 		#self.plugins.load()
 
 		# MENU TOOLBAR
@@ -860,9 +874,15 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.menuReloadPlugins)
 			self.pluginMenu.addAction(entry)
 
+			entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
+			entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
+			self.pluginMenu.addAction(entry)
+
+			if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
+
 	
 	def menuUninstall(self):
-		pack = UninstallDialog()
+		pack = UninstallDialog(self)
 
 		if pack:
 			if os.path.isdir(pack):
@@ -909,7 +929,28 @@ class Erk(QMainWindow):
 		self.rebuildPluginMenu()
 
 	def menuReloadPlugins(self):
+		self.plugins.reset_errors()
 		self.plugins.reload_plugins(True)
+
+		if len(self.plugins.errors())>0:
+				print("Plugin load error(s)!")
+				for l in self.plugins.errors():
+					print(l)
+
+				if erk.config.SHOW_LOAD_ERRORS:
+					errs = self.plugins.errors()
+					if len(errs)>1:
+						title = "Errors loading plugins"
+					else:
+						title = "Error loading plugins"
+
+					msg = QMessageBox()
+					msg.setIcon(QMessageBox.Critical)
+					msg.setText(title)
+					msg.setInformativeText("\n".join(errs))
+					msg.setWindowTitle("Load error")
+					msg.exec_()
+
 		self.rebuildPluginMenu()
 
 	def rebuildMacroMenu(self):
@@ -960,13 +1001,22 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-		# self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
-		# 	self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
-		# 	self.settingsMenu.addAction(self.set_full)
+		# entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
+		# 	entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
+		# 	self.pluginMenu.addAction(entry)
 
-		# 	if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
+		# 	if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
+
+		if setting=="showplugerrors":
+			if erk.config.SHOW_LOAD_ERRORS:
+				erk.config.SHOW_LOAD_ERRORS = False
+			else:
+				erk.config.SHOW_LOAD_ERRORS = True
+			erk.config.save_settings()
+			self.rebuildPluginMenu()
+			return
 
 		if setting=="fullscreen":
 			if self.fullscreen:

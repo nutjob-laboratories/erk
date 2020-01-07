@@ -59,9 +59,9 @@ import erk.dialogs.uninstall_package as Uninstall
 # 	if not info: return None
 # 	return info
 
-def UninstallDialog():
-	x = Uninstall.Dialog()
-	info = x.get_name_information()
+def UninstallDialog(obj):
+	x = Uninstall.Dialog(obj)
+	info = x.get_name_information(obj)
 	del x
 
 	if not info: return None

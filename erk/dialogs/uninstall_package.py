@@ -8,6 +8,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.resources import *
+import erk.plugins
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -49,6 +50,7 @@ class Dialog(QDialog):
 		self.setWindowIcon(QIcon(UNINSTALL_ICON))
 
 		self.title = QLabel("Select a package or plugin to uninstall")
+		self.title.setAlignment(Qt.AlignCenter)
 
 		self.packlist = QListWidget(self)
 		self.packlist.setMaximumHeight(100)
@@ -57,16 +59,25 @@ class Dialog(QDialog):
 			if x.lower()=="__pycache__": continue
 			pack = os.path.join(PLUGIN_DIRECTORY, x)
 			if os.path.isdir(pack):
-				item = QListWidgetItem(x)
+				if x in parent.plugins.failed_load:
+					item = QListWidgetItem(x+" (Error loading)")
+					item.setIcon(QIcon(ERROR_ICON))
+				else:
+					item = QListWidgetItem(x)
+					item.setIcon(QIcon(PACKAGE_ICON))
 				item.file = pack
 				self.packlist.addItem(item)
 			if os.path.isfile(pack):
-				item = QListWidgetItem(x)
+				if pack in parent.plugins.failed_load:
+					item = QListWidgetItem(x+" (Error loading)")
+					item.setIcon(QIcon(ERROR_ICON))
+				else:
+					item = QListWidgetItem(x)
+					item.setIcon(QIcon(PLUGIN_ICON))
 				item.file = pack
 				self.packlist.addItem(item)
 
 		self.packlist.setCurrentRow(0)
-
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
