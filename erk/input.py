@@ -31,6 +31,7 @@
 
 #import erk.events
 import emoji
+import os
 
 from PyQt5.QtGui import *
 
@@ -458,6 +459,28 @@ def handle_common_input(window,client,text):
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/script' and len(tokens)==2:
+			tokens.pop(0)
+			file = tokens.pop(0)
+			if os.path.isfile(file):
+				s = open(file,"r")
+				script = s.read()
+				s.close()
+				for line in script.split("\n"):
+					handle_input(window,client,line)
+				return True
+			else:
+				msg = Message(ERROR_MESSAGE,'',"File \""+file+"\" not found")
+				window.writeText(msg,True)
+				return True
+		if tokens[0].lower()=='/script':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /script FILE")
+			window.writeText(msg,True)
+			return True
+
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/switch' and len(tokens)==2:

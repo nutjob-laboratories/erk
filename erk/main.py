@@ -787,13 +787,14 @@ class Erk(QMainWindow):
 		if not erk.config.PLUGINS_ENABLED:
 			self.plug_install.setEnabled(False)
 
+		if len(self.plugins.plugins)>0:
 
-		self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
-		self.plug_uninstall.triggered.connect(self.menuUninstall)
-		self.pluginMenu.addAction(self.plug_uninstall)
+			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
+			self.plug_uninstall.triggered.connect(self.menuUninstall)
+			self.pluginMenu.addAction(self.plug_uninstall)
 
-		if not erk.config.PLUGINS_ENABLED:
-			self.plug_uninstall.setEnabled(False)
+			if not erk.config.PLUGINS_ENABLED:
+				self.plug_uninstall.setEnabled(False)
 
 		self.pluginMenu.addSeparator()
 

@@ -12,6 +12,8 @@ Version 0.703
 	* New error reporting dialog for plugin load errors
 	* Added an option to display seconds in timestamps
 	* Added a new built-in plugin method: exec()
+	* The uninstall plugin menu option will only be shown if plugins are installed
+	* Added a new command: /script (executes input commands from a file, one command per line)
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py
