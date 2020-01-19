@@ -95,6 +95,9 @@ class Dialog(QDialog):
 				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text()    ]
 				user_history.append(entry)
 
+		# Save disabled plugins
+		disabled_plugins = self.user_info["disabled_plugins"]
+
 		# Save user info
 		user = {
 			"nickname": self.nick.text(),
@@ -110,6 +113,7 @@ class Dialog(QDialog):
 			"autojoin": self.AUTOJOIN_CHANNELS,
 			"history": user_history,
 			"save_history": self.SAVE_HISTORY,
+			"disabled_plugins": disabled_plugins,
 		}
 		save_user(user)
 

@@ -14,27 +14,23 @@ from erk.events import *
 import erk.config
 from erk.input import handle_input
 
+from erk.files import get_user,save_user
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 
-SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
-DISABLED_FILE = os.path.join(SETTINGS_DIRECTORY, "disabled.json")
-
 DISABLED_PLUGINS = []
 LOADED_PLUGINS = []
 
-def get_disabled(filename=DISABLED_FILE):
-	if os.path.isfile(filename):
-		with open(filename, "r") as read_disabled:
-			data = json.load(read_disabled)
-			return data
-	else:
-		return []
+def get_disabled():
+	udata = get_user()
+	return udata["disabled_plugins"]
 
-def save_disabled(filename=DISABLED_FILE):
-	with open(filename, "w") as write_data:
-		json.dump(DISABLED_PLUGINS, write_data, indent=4, sort_keys=True)
+def save_disabled():
+	udata = get_user()
+	udata["disabled_plugins"] = DISABLED_PLUGINS
+	save_user(udata)
 
 DISABLED_PLUGINS = get_disabled()
 

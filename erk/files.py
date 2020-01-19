@@ -163,6 +163,7 @@ def get_user(filename=USER_FILE):
 			"autojoin": False,
 			"history": [],
 			"save_history": False,
+			"disabled_plugins": [],
 		}
 		return si
 
