@@ -20,6 +20,7 @@ Version 0.703
 	* Disabling plugins hides the plugin menu
 	* Moved the "install plugin" menu entry to the main menu
 	* Moved the "uninstall plugin" to the bottom of the plugin menu
+	* Rearranged plugin menu (moved options to the top like the macro menu)
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

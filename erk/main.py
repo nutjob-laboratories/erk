@@ -797,6 +797,26 @@ class Erk(QMainWindow):
 		# if not erk.config.PLUGINS_ENABLED:
 		# 	self.plug_install.setEnabled(False)
 
+		if len(self.plugins.plugins)>0:
+
+			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
+			self.plug_uninstall.triggered.connect(self.menuUninstall)
+			self.pluginMenu.addAction(self.plug_uninstall)
+
+			if not erk.config.PLUGINS_ENABLED:
+				self.plug_uninstall.setEnabled(False)
+
+		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
+
+		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		self.pluginMenu.addSeparator()
+
 		plist = {}
 
 		for p in self.plugins.plugins:
@@ -879,26 +899,6 @@ class Erk(QMainWindow):
 				m.addAction(entry)
 
 				m.addSeparator()
-
-		self.pluginMenu.addSeparator()
-
-		if len(self.plugins.plugins)>0:
-
-			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
-			self.plug_uninstall.triggered.connect(self.menuUninstall)
-			self.pluginMenu.addAction(self.plug_uninstall)
-
-			if not erk.config.PLUGINS_ENABLED:
-				self.plug_uninstall.setEnabled(False)
-
-		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		self.pluginMenu.addAction(entry)
-
-		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
-
-		if not erk.config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
 
 		if erk.config.DEVELOPER_MODE:
 
