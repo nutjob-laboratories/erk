@@ -160,3 +160,5 @@ INSTALL_ICON = ":/gui-install.png"
 UNINSTALL_ICON = ":/gui-uninstall.png"
 
 ERROR_ICON = ":/gui-error.png"
+
+MENU_INSTALL_ICON = ":/install.png"

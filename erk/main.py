@@ -344,6 +344,16 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
 		self.mainMenu.addAction(entry)
 
+		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+		self.mainMenu.addAction(entry)
+
+		# self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
+		# self.plug_install.triggered.connect(self.menuInstall)
+		# self.pluginMenu.addAction(self.plug_install)
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
 		self.mainMenu.addSeparator()
 
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
@@ -646,8 +656,6 @@ class Erk(QMainWindow):
 
 			self.settingsMenu.addSeparator()
 
-			
-
 			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Automatically switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
 			self.settingsMenu.addAction(self.set_autoswitch)
@@ -782,23 +790,12 @@ class Erk(QMainWindow):
 
 		#self.pluginMenu.addSeparator()
 
-		self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
-		self.plug_install.triggered.connect(self.menuInstall)
-		self.pluginMenu.addAction(self.plug_install)
+		# self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
+		# self.plug_install.triggered.connect(self.menuInstall)
+		# self.pluginMenu.addAction(self.plug_install)
 
-		if not erk.config.PLUGINS_ENABLED:
-			self.plug_install.setEnabled(False)
-
-		if len(self.plugins.plugins)>0:
-
-			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
-			self.plug_uninstall.triggered.connect(self.menuUninstall)
-			self.pluginMenu.addAction(self.plug_uninstall)
-
-			if not erk.config.PLUGINS_ENABLED:
-				self.plug_uninstall.setEnabled(False)
-
-		self.pluginMenu.addSeparator()
+		# if not erk.config.PLUGINS_ENABLED:
+		# 	self.plug_install.setEnabled(False)
 
 		plist = {}
 
@@ -884,6 +881,15 @@ class Erk(QMainWindow):
 				m.addSeparator()
 
 		self.pluginMenu.addSeparator()
+
+		if len(self.plugins.plugins)>0:
+
+			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
+			self.plug_uninstall.triggered.connect(self.menuUninstall)
+			self.pluginMenu.addAction(self.plug_uninstall)
+
+			if not erk.config.PLUGINS_ENABLED:
+				self.plug_uninstall.setEnabled(False)
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
 		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))

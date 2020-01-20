@@ -18,6 +18,8 @@ Version 0.703
 	* Moved the plugin and macro toggles to the main menu
 	* Disabling macros hides the macro menu
 	* Disabling plugins hides the plugin menu
+	* Moved the "install plugin" menu entry to the main menu
+	* Moved the "uninstall plugin" to the bottom of the plugin menu
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py
