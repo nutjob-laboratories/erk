@@ -15,6 +15,9 @@ Version 0.703
 	* The uninstall plugin menu option will only be shown if plugins are installed
 	* Added a new command: /script (executes input commands from a file, one command per line)
 	* Moved the disabled plugin list to the user settings file (user.json)
+	* Moved the plugin and macro toggles to the main menu
+	* Disabling macros hides the macro menu
+	* Disabling plugins hides the plugin menu
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

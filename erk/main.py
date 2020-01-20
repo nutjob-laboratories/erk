@@ -205,7 +205,7 @@ class Erk(QMainWindow):
 
 		self.block_plugins = block_plugins
 
-		self.block_macros = block_macros
+		# self.block_macros = block_macros
 
 		self.block_settings = block_settings
 
@@ -215,6 +215,11 @@ class Erk(QMainWindow):
 
 		# Load application settings
 		erk.config.load_settings()
+
+		if not erk.config.MACROS_ENABLED:
+			self.block_macros = True
+		else:
+			self.block_macros = block_macros
 
 		self.setWindowTitle(APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ERK_ICON))
@@ -254,31 +259,6 @@ class Erk(QMainWindow):
 			self.plugins = PluginCollection("plugins")
 
 		self.display_load_errors()
-			# if len(self.plugins.errors())>0:
-			# 	# print("Plugin load error(s)!")
-			# 	# for l in self.plugins.errors():
-			# 	# 	print(l)
-
-			# 	if erk.config.SHOW_LOAD_ERRORS:
-			# 		errs = self.plugins.errors()
-			# 		if len(errs)>1:
-			# 			title = "Errors loading plugins"
-			# 		else:
-			# 			title = "Error loading plugins"
-
-			# 		out = []
-			# 		for e in errs:
-			# 			s = e.package+"."+e.classname+": "+e.reason
-			# 			out.append(s)
-
-			# 		msg = QMessageBox()
-			# 		msg.setIcon(QMessageBox.Critical)
-			# 		msg.setText(title)
-			# 		# msg.setInformativeText("\n".join(errs))
-			# 		msg.setInformativeText("\n".join(out))
-			# 		msg.setWindowTitle("Load error")
-			# 		msg.exec_()
-		#self.plugins.load()
 
 		# MENU TOOLBAR
 		self.mainMenu = QMenu()
@@ -357,6 +337,8 @@ class Erk(QMainWindow):
 
 		self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
 
+		self.mainMenu.clear()
+
 		add_toolbar_menu(self.toolbar,"IRC",self.mainMenu)
 
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
@@ -370,6 +352,21 @@ class Erk(QMainWindow):
 		self.disconnect.setEnabled(False)
 
 		self.mainMenu.addSeparator()
+
+		self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
+		self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
+		self.mainMenu.addAction(self.set_macroenable)
+
+		if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+		#if not self.block_macros: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+
+		entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
+		entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
+		self.mainMenu.addAction(entry)
+
+		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+
+		self.mainMenu.addSeparator()
 		
 		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
 		entry.triggered.connect(lambda state: restart_program())
@@ -380,6 +377,7 @@ class Erk(QMainWindow):
 		self.mainMenu.addAction(entry)
 
 		# settingsMenu = QMenu()
+		self.settingsMenu.clear()
 
 		if not self.block_settings:
 
@@ -671,6 +669,7 @@ class Erk(QMainWindow):
 			# Log menu
 
 			# logMenu = QMenu()
+			self.logMenu.clear()
 
 			add_toolbar_menu(self.toolbar,"Logs",self.logMenu)
 
@@ -725,6 +724,7 @@ class Erk(QMainWindow):
 		# Macro menu
 
 		# self.macroMenu = QMenu()
+		self.macroMenu.clear()
 
 		if not self.block_macros:
 			add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
@@ -732,6 +732,7 @@ class Erk(QMainWindow):
 			self.rebuildMacroMenu()
 
 		# Plugin menu
+		self.pluginMenu.clear()
 
 		if not self.block_plugins:
 
@@ -742,6 +743,7 @@ class Erk(QMainWindow):
 		# Help menu
 
 		# helpMenu = QMenu()
+		self.helpMenu.clear()
 
 		add_toolbar_menu(self.toolbar,"Help",self.helpMenu)
 
@@ -772,11 +774,11 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
-		entry = QAction(QIcon(UNCHECKED_ICON),"Plugins enabled",self)
-		entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
-		self.pluginMenu.addAction(entry)
+		# entry = QAction(QIcon(UNCHECKED_ICON),"Plugins enabled",self)
+		# entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
+		# self.pluginMenu.addAction(entry)
 
-		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+		# if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 
 		#self.pluginMenu.addSeparator()
 
@@ -974,13 +976,13 @@ class Erk(QMainWindow):
 
 		self.macroMenu.clear()
 
-		self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
-		self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-		self.macroMenu.addAction(self.set_macroenable)
+		# self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
+		# self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
+		# self.macroMenu.addAction(self.set_macroenable)
 
-		if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+		# if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 
-		self.macroMenu.addSeparator()
+		# self.macroMenu.addSeparator()
 
 		self.editmacro = QAction(QIcon(MACRO_ICON),"New macro",self)
 		self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
@@ -1071,24 +1073,50 @@ class Erk(QMainWindow):
 			self.rebuildPluginMenu()
 			return
 
+		# if setting=="enablemacros":
+		# 	if erk.config.MACROS_ENABLED:
+		# 		erk.config.MACROS_ENABLED = False
+		# 		self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		erk.config.MACROS_ENABLED = True
+		# 		self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+		# 	erk.config.save_settings()
+		# 	self.rebuildMacroMenu()
+		# 	return
+
 		if setting=="enablemacros":
 			if erk.config.MACROS_ENABLED:
 				erk.config.MACROS_ENABLED = False
-				self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
+				#self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
+				self.block_macros = True
 			else:
 				erk.config.MACROS_ENABLED = True
-				self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+				#self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+				self.block_macros = False
 			erk.config.save_settings()
 			self.rebuildMacroMenu()
+			self.buildToolbar()
 			return
+
+		# if setting=="pluginenable":
+		# 	if erk.config.PLUGINS_ENABLED:
+		# 		erk.config.PLUGINS_ENABLED = False
+		# 	else:
+		# 		erk.config.PLUGINS_ENABLED = True
+		# 	erk.config.save_settings()
+		# 	self.rebuildPluginMenu()
+		# 	return
 
 		if setting=="pluginenable":
 			if erk.config.PLUGINS_ENABLED:
 				erk.config.PLUGINS_ENABLED = False
+				self.block_plugins = True
 			else:
 				erk.config.PLUGINS_ENABLED = True
+				self.block_plugins = False
 			erk.config.save_settings()
 			self.rebuildPluginMenu()
+			self.buildToolbar()
 			return
 
 		if setting=="sysprefix":
