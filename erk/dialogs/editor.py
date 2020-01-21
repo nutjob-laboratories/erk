@@ -585,6 +585,9 @@ def format(color, style=''):
 		_format.setFontWeight(QFont.Bold)
 	if 'italic' in style:
 		_format.setFontItalic(True)
+	if 'bi' in style:
+		_format.setFontWeight(QFont.Bold)
+		_format.setFontItalic(True)
 
 	return _format
 
@@ -599,11 +602,20 @@ STYLES = {
 	'comment': format('darkGreen', 'italic'),
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
+
+	'erk': format('#0212b6','bi'),
 }
 
 class PythonHighlighter (QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.
 	"""
+
+	erk = [
+		'self.print','self.console','self.write','self.log',
+		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin'
+	]
+
+
 	# Python keywords
 	keywords = [
 		'and', 'assert', 'break', 'class', 'continue', 'def',
@@ -613,8 +625,8 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'raise', 'return', 'try', 'while', 'yield',
 		'None', 'True', 'False',
 		# Erk specific stuff
-		'self.print','self.console','self.write','self.log',
-		'Plugin'
+		# 'self.print','self.console','self.write','self.log',
+		# 'Plugin'
 	]
 
 	# Python operators
@@ -676,6 +688,10 @@ class PythonHighlighter (QSyntaxHighlighter):
 			(r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', 0, STYLES['numbers']),
 			(r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0, STYLES['numbers']),
 		]
+
+		rules += [(r'%s' % o, 0, STYLES['erk'])
+			for o in PythonHighlighter.erk]
+
 
 		# Build a QRegExp for each pattern
 		self.rules = [(QRegExp(pat), index, fmt)

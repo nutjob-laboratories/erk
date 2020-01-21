@@ -82,7 +82,6 @@ congroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnecti
 congroup.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
 congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
-
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 
 devgroup = parser.add_argument_group('Plugin development')

@@ -25,6 +25,7 @@ Version 0.703
 	* Install plugin menu entry is now hidden is plugins are disabled
 	* Moved the editor launcher to the main menu
 	* Added support for IRC URLs as a commandline option
+	* Plugin specific methods are now "highlighted" in the editor
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py
