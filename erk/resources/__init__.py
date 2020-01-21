@@ -162,3 +162,4 @@ UNINSTALL_ICON = ":/gui-uninstall.png"
 ERROR_ICON = ":/gui-error.png"
 
 MENU_INSTALL_ICON = ":/install.png"
+MENU_EDITOR_ICON = ":/editor.png"
