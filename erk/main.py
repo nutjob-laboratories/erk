@@ -205,7 +205,7 @@ class Erk(QMainWindow):
 
 		self.block_plugins = block_plugins
 
-		# self.block_macros = block_macros
+		self.block_macros = block_macros
 
 		self.block_settings = block_settings
 
@@ -216,10 +216,13 @@ class Erk(QMainWindow):
 		# Load application settings
 		erk.config.load_settings()
 
-		if not erk.config.MACROS_ENABLED:
-			self.block_macros = True
-		else:
-			self.block_macros = block_macros
+		if self.block_macros: erk.config.MACROS_ENABLED = False
+		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
+
+		#if not erk.config.MACROS_ENABLED:
+		#	self.block_macros = True
+		# else:
+		# 	self.block_macros = block_macros
 
 		self.setWindowTitle(APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ERK_ICON))
@@ -258,7 +261,7 @@ class Erk(QMainWindow):
 		if not self.block_plugins:
 			self.plugins = PluginCollection("plugins")
 
-		self.display_load_errors()
+			self.display_load_errors()
 
 		# MENU TOOLBAR
 		self.mainMenu = QMenu()
@@ -368,13 +371,14 @@ class Erk(QMainWindow):
 		self.mainMenu.addAction(self.set_macroenable)
 
 		if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-		#if not self.block_macros: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+		if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
 		entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
 		self.mainMenu.addAction(entry)
 
 		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+		if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
 
 		self.mainMenu.addSeparator()
 		
@@ -796,6 +800,10 @@ class Erk(QMainWindow):
 
 		# if not erk.config.PLUGINS_ENABLED:
 		# 	self.plug_install.setEnabled(False)
+
+		if not hasattr(self,"plugins"):
+			self.plugins = PluginCollection("plugins")
+			self.display_load_errors()
 
 		if len(self.plugins.plugins)>0:
 

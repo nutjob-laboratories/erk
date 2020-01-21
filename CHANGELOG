@@ -21,6 +21,7 @@ Version 0.703
 	* Moved the "install plugin" menu entry to the main menu
 	* Moved the "uninstall plugin" to the bottom of the plugin menu
 	* Rearranged plugin menu (moved options to the top like the macro menu)
+	* Bugfix: starting with macros or plugins disabled from the commandline will no longer cause "glitches"
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py
