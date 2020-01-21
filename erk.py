@@ -35,6 +35,9 @@ import shutil
 import sys
 import os
 
+import urllib.parse
+import posixpath
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -79,6 +82,8 @@ congroup.add_argument( "--reconnect", help=f"Reconnect to servers on disconnecti
 congroup.add_argument("-p","--password", type=str,help="Use server password to connect", metavar="PASSWORD", default='')
 congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
+
+congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 
 devgroup = parser.add_argument_group('Plugin development')
 
@@ -207,7 +212,41 @@ if __name__ == '__main__':
 
 			sys.exit(0)
 
-		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS= True
+		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS = True
+
+		if args.url!='':
+			u = urllib.parse.urlparse(args.url)
+			if u.scheme=='irc':
+				if u.password:
+					args.password = u.password
+				if u.hostname:
+					args.server = u.hostname
+				if u.port:
+					args.port = u.port
+				if u.path!='':
+					p = urllib.parse.unquote(u.path)
+					p = posixpath.normpath(p)
+					l = posixpath.split(p)
+					if len(l)>0:
+						if l[0]=='/':
+							if l[1]!='':
+								c = str(l[1])
+								if ',' in c:
+									channel = c.split(',')
+									if len(channel)==2:
+										if channel[0][:1]!='#': channel[0] = '#'+channel[0]
+										if args.channel:
+											args.channel.append([channel[0],channel[1]])
+										else:
+											args.channel = []
+											args.channel.append([channel[0],channel[1]])
+								else:
+									if c[1:]!='#': c = '#'+c
+									if args.channel:
+										args.channel.append([c,''])
+									else:
+										args.channel = []
+										args.channel.append([c,''])
 
 		if args.server:
 			if args.password=='':
@@ -217,11 +256,14 @@ if __name__ == '__main__':
 			chans = []
 			if args.channel:
 				for c in args.channel:
-					p = c.split(':')
-					if len(p)==2:
-						chans.append(p)
+					if type(c)==list:
+						chans.append(c)
 					else:
-						chans.append( [c,''] )
+						p = c.split(':')
+						if len(p)==2:
+							chans.append(p)
+						else:
+							chans.append( [c,''] )
 			u = get_user()
 			i = ConnectInfo(
 					args.server,

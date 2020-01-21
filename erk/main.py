@@ -348,21 +348,12 @@ class Erk(QMainWindow):
 		self.mainMenu.addAction(entry)
 
 		if not self.block_plugins:
+
+			self.mainMenu.addSeparator()
+			
 			entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 			self.mainMenu.addAction(entry)
 
-		# self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
-		# self.plug_install.triggered.connect(self.menuInstall)
-		# self.pluginMenu.addAction(self.plug_install)
-
-		if not erk.config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		# entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
-		# entry.triggered.connect(self.menuEditor)
-		# self.pluginMenu.addAction(entry)
-
-		if not self.block_plugins:
 			entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
 			self.mainMenu.addAction(entry)
 
