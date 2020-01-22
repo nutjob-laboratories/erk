@@ -29,6 +29,7 @@ Version 0.703
 	* Added auto-indentation to the plugin editor
 	* Bugfix: autoindent will now use tabs if the editor is set for tab indentation
 	* Added a utility to the editor to change indents from tabs to spaces and vice versa
+	* Added plugin framework credit to about dialog
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

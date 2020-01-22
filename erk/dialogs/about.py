@@ -99,6 +99,10 @@ class Dialog(QDialog):
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setOpenExternalLinks(True)
 
+		plug_credit = QLabel(f"<a href=\"https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/\"><small>Plugin framework</small></a><small> inspired by by </small><small>Guido Diepen</small>")
+		plug_credit.setAlignment(Qt.AlignCenter)
+		plug_credit.setOpenExternalLinks(True)
+
 		creditsBox = QGroupBox()
 		creditsBox.setAlignment(Qt.AlignHCenter)
 
@@ -107,6 +111,7 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(asciimoji_credit)
+		creditsLayout.addWidget(plug_credit)
 		creditsBox.setLayout(creditsLayout)
 
 		okButton = QPushButton("Ok")
