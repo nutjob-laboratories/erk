@@ -487,6 +487,8 @@ class Window(QMainWindow):
 
 		if not erk.config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
+		settingsMenu.addSeparator()
+
 		entry = QAction(QIcon(SPACES_ICON),"Convert tab indent to spaces",self)
 		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
 		settingsMenu.addAction(entry)
