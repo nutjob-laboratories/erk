@@ -4,6 +4,7 @@ import os
 import string
 import shutil
 import zipfile
+import re
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -300,6 +301,9 @@ class Window(QMainWindow):
 		# Wordwrap
 		self.wordwrap = erk.config.EDITOR_WORD_WRAP
 
+		# Autoindent
+		self.autoindent = erk.config.EDITOR_AUTO_INDENT
+
 		self.editor = QCodeEditor(self)
 		self.highlight = PythonHighlighter(self.editor.document())
 
@@ -309,6 +313,8 @@ class Window(QMainWindow):
 		self.editor.copyAvailable.connect(self.hasCopy)
 
 		self.setCentralWidget(self.editor)
+
+		self.editor.autoindent = self.autoindent
 
 		if self.wordwrap:
 			self.editor.setWordWrapMode(QTextOption.WordWrap)
@@ -437,6 +443,15 @@ class Window(QMainWindow):
 
 		#indentMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Indent")
 
+
+		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
+		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_autoindent)
+
+		if erk.config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
+
+
+
 		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
 		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_indent_spaces)
@@ -485,7 +500,26 @@ class Window(QMainWindow):
 
 		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
 
+
+	# self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
+	# 	self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
+	# 	settingsMenu.addAction(self.set_autoindent)
+
+	# 	if erk.config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
+
 	def toggleSetting(self,setting):
+
+		if setting=="autoindent":
+			if erk.config.EDITOR_AUTO_INDENT:
+				erk.config.EDITOR_AUTO_INDENT = False
+				self.editor.autoindent = False
+				self.set_autoindent.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EDITOR_AUTO_INDENT = True
+				self.editor.autoindent = True
+				self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="wordrap":
 			if erk.config.EDITOR_WORD_WRAP:
@@ -781,6 +815,8 @@ class QCodeEditor(QPlainTextEdit):
 		self.cursorPositionChanged.connect(self.highlightCurrentLine)
 		self.updateLineNumberAreaWidth(0)
 
+		self.autoindent = False
+
 	def keyPressEvent(self, event):
 		if event.key() == Qt.Key_Tab:
 			if self.parent.indentspace:
@@ -789,6 +825,23 @@ class QCodeEditor(QPlainTextEdit):
 				t = "\t"
 			self.insertPlainText(t)
 			return
+
+		elif event.key() == Qt.Key_Return:
+			if self.autoindent:
+				cursor = self.textCursor()
+				line_number = cursor.blockNumber()
+				d = self.document()
+				b = d.findBlockByLineNumber(line_number)
+				l = b.text()
+				indent = re.match(r"\s*",l).group()
+
+				if l[-1:]==':':
+					# indent another level
+					indent = indent + (" " * self.parent.tabsize)
+
+				super().keyPressEvent(event)
+				self.insertPlainText(indent)
+				return
 		
 		super().keyPressEvent(event)
 
