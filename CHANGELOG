@@ -27,6 +27,8 @@ Version 0.703
 	* Added support for IRC URLs as a commandline option
 	* Plugin specific methods are now "highlighted" in the editor
 	* Added auto-indentation to the plugin editor
+	* Bugfix: autoindent will now use tabs if the editor is set for tab indentation
+	* Added a utility to the editor to change indents from tabs to spaces and vice versa
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

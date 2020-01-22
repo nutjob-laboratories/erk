@@ -441,16 +441,11 @@ class Window(QMainWindow):
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
-		#indentMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Indent")
-
-
 		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
 		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_autoindent)
 
 		if erk.config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
-
-
 
 		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
 		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
@@ -492,6 +487,14 @@ class Window(QMainWindow):
 
 		if not erk.config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
+		entry = QAction(QIcon(SPACES_ICON),"Convert tab indent to spaces",self)
+		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
+		settingsMenu.addAction(entry)
+
+		entry = QAction(QIcon(TABS_ICON),"Convert space indent to tabs",self)
+		entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
+		settingsMenu.addAction(entry)
+
 		settingsMenu.addSeparator()
 
 		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
@@ -500,14 +503,15 @@ class Window(QMainWindow):
 
 		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
 
-
-	# self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
-	# 	self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
-	# 	settingsMenu.addAction(self.set_autoindent)
-
-	# 	if erk.config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
-
 	def toggleSetting(self,setting):
+
+		if setting=="converttotab":
+			self.convert_indent(' '*self.tabsize,"\t")
+			return
+
+		if setting=="converttospace":
+			self.convert_indent("\t",' '*self.tabsize)
+			return
 
 		if setting=="autoindent":
 			if erk.config.EDITOR_AUTO_INDENT:
@@ -606,6 +610,25 @@ class Window(QMainWindow):
 				self.set_indent_spaces.setIcon(QIcon(UNCHECKED_ICON))
 			self.indentspace = erk.config.USE_SPACES_FOR_INDENT
 			return
+
+	def convert_indent(self,oldindent,newindent):
+		# Save cursor position
+		cursor = self.editor.textCursor()
+		oldpos = cursor.position()
+
+		doc = self.editor.toPlainText()
+		out = []
+		for line in doc.split("\n"):
+			indent = re.match(r"\s*",line).group()
+			line = line.replace(oldindent,newindent)
+			out.append(line)
+		self.editor.clear()
+		self.editor.appendPlainText("\n".join(out))
+
+		# Move cursor to saved position
+		cursor.setPosition(oldpos,QTextCursor.MoveAnchor)
+		self.editor.setTextCursor(cursor)
+
 
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
@@ -837,7 +860,10 @@ class QCodeEditor(QPlainTextEdit):
 
 				if l[-1:]==':':
 					# indent another level
-					indent = indent + (" " * self.parent.tabsize)
+					if self.parent.indentspace:
+						indent = indent + (" " * self.parent.tabsize)
+					else:
+						indent = indent + "\t"
 
 				super().keyPressEvent(event)
 				self.insertPlainText(indent)

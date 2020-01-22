@@ -163,3 +163,6 @@ ERROR_ICON = ":/gui-error.png"
 
 MENU_INSTALL_ICON = ":/install.png"
 MENU_EDITOR_ICON = ":/editor.png"
+
+SPACES_ICON = ":/gui-spaces.png"
+TABS_ICON = ":/gui-tabs.png"
