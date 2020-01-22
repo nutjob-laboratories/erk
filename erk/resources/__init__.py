@@ -166,3 +166,6 @@ MENU_EDITOR_ICON = ":/editor.png"
 
 SPACES_ICON = ":/gui-spaces.png"
 TABS_ICON = ":/gui-tabs.png"
+
+SHOW_ICON = ":/gui-show.png"
+HIDE_ICON = ":/gui-hide.png"

@@ -219,10 +219,8 @@ class Erk(QMainWindow):
 		if self.block_macros: erk.config.MACROS_ENABLED = False
 		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
 
-		#if not erk.config.MACROS_ENABLED:
-		#	self.block_macros = True
-		# else:
-		# 	self.block_macros = block_macros
+		u = get_user()
+		self.ignore = u["ignore"]
 
 		self.setWindowTitle(APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ERK_ICON))
@@ -350,7 +348,7 @@ class Erk(QMainWindow):
 		if not self.block_plugins:
 
 			self.mainMenu.addSeparator()
-			
+
 			entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 			self.mainMenu.addAction(entry)
 

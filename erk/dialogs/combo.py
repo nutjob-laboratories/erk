@@ -98,6 +98,9 @@ class Dialog(QDialog):
 		# Save disabled plugins
 		disabled_plugins = self.user_info["disabled_plugins"]
 
+		# Save user ignores
+		ignored = self.user_info["ignore"]
+
 		# Save user info
 		user = {
 			"nickname": self.nick.text(),
@@ -114,6 +117,7 @@ class Dialog(QDialog):
 			"history": user_history,
 			"save_history": self.SAVE_HISTORY,
 			"disabled_plugins": disabled_plugins,
+			"ignore": ignored,
 		}
 		save_user(user)
 

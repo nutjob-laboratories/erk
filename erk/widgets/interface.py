@@ -721,6 +721,8 @@ class Window(QMainWindow):
 			user_is_owner = False
 			user_is_halfop = False
 
+			raw_user = None
+
 			for u in self.users:
 				p = u.split('!')
 				if len(p)==2:
@@ -756,6 +758,7 @@ class Window(QMainWindow):
 				else:
 					is_halfop = False
 				if nick==user:
+					raw_user = u
 					user_nick = nick
 					if hostmask:
 						user_hostmask = hostmask
@@ -789,6 +792,19 @@ class Window(QMainWindow):
 
 				if user_nick in self.hostmasks:
 					user_hostmask = self.hostmasks[user_nick]
+
+			is_ignored = False
+			for i in self.parent.ignore:
+				if user_hostmask:
+					if user_hostmask in i: is_ignored = True
+				if i==user_nick: is_ignored = True
+				if raw_user:
+					if i==raw_user: is_ignored = True
+
+			if user_nick==self.client.nickname:
+				this_is_me = True
+			else:
+				this_is_me = False
 
 			menu = QMenu(self)
 
@@ -861,6 +877,12 @@ class Window(QMainWindow):
 				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")
 				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),"Kick/Ban")
 
+			if not this_is_me:
+				if is_ignored:
+					actIgnore = menu.addAction(QIcon(SHOW_ICON),"Unignore")
+				else:
+					actIgnore = menu.addAction(QIcon(HIDE_ICON),"Ignore")
+
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),"WHOIS")
 
 			clipMenu = menu.addMenu(QIcon(CLIPBOARD_ICON),"Copy to clipboard")
@@ -868,6 +890,34 @@ class Window(QMainWindow):
 			if user_hostmask: actHostmask = clipMenu.addAction(QIcon(SERVER_ICON),"User's hostmask")
 
 			action = menu.exec_(self.userlist.mapToGlobal(event.pos()))
+
+			if not this_is_me:
+				if action == actIgnore:
+					if is_ignored:
+						clean = []
+						for i in self.parent.ignore:
+							if user_hostmask:
+								if user_hostmask in i: continue
+							if i==user_nick: continue
+							if raw_user:
+								if i==raw_user: continue
+							clean.append(i)
+						self.parent.ignore = clean
+						u = get_user()
+						u["ignore"] = clean
+						save_user(u)
+						return True
+					else:
+						if user_hostmask:
+							self.parent.ignore.append(user_hostmask)
+						elif raw_user:
+							self.parent.ignore.append(raw_user)
+						else:
+							self.parent.ignore.append(user_nick)
+						u = get_user()
+						u["ignore"] = self.parent.ignore
+						save_user(u)
+						return True
 
 			if action == actWhois:
 				self.client.sendLine("WHOIS "+user_nick)

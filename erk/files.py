@@ -164,6 +164,7 @@ def get_user(filename=USER_FILE):
 			"history": [],
 			"save_history": False,
 			"disabled_plugins": [],
+			"ignore": [],
 		}
 		return si
 

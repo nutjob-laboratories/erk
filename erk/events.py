@@ -30,6 +30,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from datetime import datetime
+import fnmatch
 
 from erk.resources import *
 from erk.files import *
@@ -854,8 +855,19 @@ def action_message(gui,client,target,user,message):
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
+		hostmask = p[1]
 	else:
 		nick = user
+		hostmask = None
+
+	ignore = False
+	for i in gui.ignore:
+		if i==nick: ignore = True
+		if i==user: ignore = True
+		if hostmask:
+			if hostmask in i: ignore = True
+
+	if ignore: return
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1057,6 +1069,23 @@ def notice_message(gui,client,target,user,message):
 		else:
 			user = client.server+":"+str(client.port)
 
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+		hostmask = p[1]
+	else:
+		nick = user
+		hostmask = None
+
+	ignore = False
+	for i in gui.ignore:
+		if i==nick: ignore = True
+		if i==user: ignore = True
+		if hostmask:
+			if hostmask in i: ignore = True
+
+	if ignore: return
+
 	window = fetch_channel_window(client,target)
 	if window:
 		window.writeText( Message(NOTICE_MESSAGE,user,message) )
@@ -1075,11 +1104,11 @@ def notice_message(gui,client,target,user,message):
 			build_connection_display(gui)
 		return
 
-	p = user.split('!')
-	if len(p)==2:
-		nick = p[0]
-	else:
-		nick = user
+	# p = user.split('!')
+	# if len(p)==2:
+	# 	nick = p[0]
+	# else:
+	# 	nick = user
 
 	window = fetch_private_window(client,nick)
 	if window:
@@ -1123,11 +1152,28 @@ def private_message(gui,client,user,message):
 		if client.gui.plugins.private(client,user,message): return
 
 	global UNSEEN
+	# p = user.split('!')
+	# if len(p)==2:
+	# 	nick = p[0]
+	# else:
+	# 	nick = user
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
+		hostmask = p[1]
 	else:
 		nick = user
+		hostmask = None
+
+	ignore = False
+	for i in gui.ignore:
+		if i==nick: ignore = True
+		if i==user: ignore = True
+		if hostmask:
+			if hostmask in i: ignore = True
+
+	if ignore: return
 	
 	msg = Message(CHAT_MESSAGE,user,message)
 
@@ -1207,6 +1253,23 @@ def public_message(gui,client,channel,user,message):
 
 	if not client.gui.block_plugins:
 		if client.gui.plugins.public(client,channel,user,message): return
+
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+		hostmask = p[1]
+	else:
+		nick = user
+		hostmask = None
+
+	ignore = False
+	for i in gui.ignore:
+		if i==nick: ignore = True
+		if i==user: ignore = True
+		if hostmask:
+			if hostmask in i: ignore = True
+
+	if ignore: return
 
 	#print(target+" "+user+": "+message)
 
