@@ -34,6 +34,7 @@ Version 0.703
 	* Changed the default indentation in the editor to be four spaces
 	* Updated the documentation plugin (included) to use the new default indentation
 	* Added a new built-in plugin method: uptime()
+	* Added optional plugin attributes to all "documentation" (example) plugins
 
 Version 0.702
 	* Plugin loading is now handled in plugins.py

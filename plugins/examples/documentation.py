@@ -25,6 +25,10 @@ class HelloWorld(Plugin):
 class Notes(Plugin):
     def __init__(self):
         self.name = "Note taking plugin"
+        self.author = "Dan Hetrick"
+        self.version = "1.0"
+        self.website = "https://github.com/nutjob-laboratories/erk"
+        self.source = "https://github.com/nutjob-laboratories/erk"
         self.description = "Example plugin for documentation"
         self.notes = []
 
