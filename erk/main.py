@@ -823,6 +823,21 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
+		if len(self.plugins.plugins)==0:
+			l1 = QLabel("&nbsp;<b>No plugins found</b>&nbsp;")
+			l1.setAlignment(Qt.AlignCenter)
+			entry = QWidgetAction(self)
+			entry.setDefaultWidget(l1)
+			self.pluginMenu.addAction(entry)
+
+			l1 = QLabel("&nbsp;<i>Install plugins in the main menu</i>&nbsp;")
+			l1.setAlignment(Qt.AlignCenter)
+			entry = QWidgetAction(self)
+			entry.setDefaultWidget(l1)
+			self.pluginMenu.addAction(entry)
+
+			return
+
 		plist = {}
 
 		for p in self.plugins.plugins:
