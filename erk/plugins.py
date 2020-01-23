@@ -47,6 +47,12 @@ class ErkFunctions(object):
 		self._erk_client = None
 		self._erk_window_name = None
 
+	def uptime(self):
+		if self._erk_client:
+			return self._erk_client.uptime
+		else:
+			return 0
+
 	def exec(self,data):
 		if self._erk_client and self._erk_window_name:
 			if self._erk_window_name==SERVER_CONSOLE_NAME:
