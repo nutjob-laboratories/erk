@@ -674,7 +674,6 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin'
 	]
 
-
 	# Python keywords
 	keywords = [
 		'and', 'assert', 'break', 'class', 'continue', 'def',
@@ -683,9 +682,6 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'is', 'lambda', 'not', 'or', 'pass', 'print',
 		'raise', 'return', 'try', 'while', 'yield',
 		'None', 'True', 'False',
-		# Erk specific stuff
-		# 'self.print','self.console','self.write','self.log',
-		# 'Plugin'
 	]
 
 	# Python operators
