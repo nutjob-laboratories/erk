@@ -169,3 +169,5 @@ TABS_ICON = ":/gui-tabs.png"
 
 SHOW_ICON = ":/gui-show.png"
 HIDE_ICON = ":/gui-hide.png"
+
+REPLACE_ICON = ":/gui-replace.png"

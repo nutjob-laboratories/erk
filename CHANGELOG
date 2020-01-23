@@ -1,5 +1,12 @@
 Version 0.800
 	* First initial 0.800 release
+	* Added a "find and replace" dialog to the editor
+	* Moved package/plugin specific menu entries to their own menu in the editor ("Tools")
+	* Moved indent conversion tools to the "Tools" menu
+	* Added a shortcut (Ctrl+Q) to the "Quit" menu entry in the editor
+	* Added an instance count to the editor's find/replace dialog
+	* Cleaned up and (mildly) revamped the find and find/replace dialogs
+	* Bugfix: find and find/replace will no longer register blank search terms
 
 Version 0.703
 	* ASCIImoji support has been removed

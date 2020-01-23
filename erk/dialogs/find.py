@@ -51,7 +51,10 @@ class Dialog(QMainWindow):
 			self.wholeWord = True
 
 	def doSearch(self):
-		self.status.setText(" ")
+		#self.icount.setText(" ")
+
+		sterm = self.find.text()
+		if len(sterm.strip())==0: return
 
 		if self.findCase:
 			if self.wholeWord:
@@ -61,16 +64,31 @@ class Dialog(QMainWindow):
 		else:
 			options = None
 
-		sterm = self.find.text()
+		
 		if options:
 			if not self.parent.editor.find(sterm,options):
-				self.status.setText(f"\"{sterm}\" not found.")
+				#self.status.setText(f"\"{sterm}\" not found.")
+				pass
 		else:
 			if not self.parent.editor.find(sterm):
-				self.status.setText(f"\"{sterm}\" not found.")
+				#self.status.setText(f"\"{sterm}\" not found.")
+				pass
+
+		# self.icount
+		f = self.parent.editor.toPlainText()
+		c = f.count(sterm)
+		if c>=1:
+			self.icount.setText("<small>"+str(c)+" matches</small>")
+			#self.icount.show()
+		else:
+			self.icount.setText("<small>No matches found</small>")
+			#self.icount.show()
 
 	def doSearchBack(self):
-		self.status.setText(" ")
+		#self.icount.setText(" ")
+
+		sterm = self.find.text()
+		if len(sterm.strip())==0: return
 		
 		if self.findCase:
 			if self.wholeWord:
@@ -80,10 +98,21 @@ class Dialog(QMainWindow):
 		else:
 			options = QTextDocument.FindBackward
 
-		sterm = self.find.text()
+		#sterm = self.find.text()
 
 		if not self.parent.editor.find(sterm,options):
-			self.status.setText(f"\"{sterm}\" not found.")
+			#self.status.setText(f"\"{sterm}\" not found.")
+			pass
+
+		f = self.parent.editor.toPlainText()
+		c = f.count(sterm)
+		if c>=1:
+			self.icount.setText("<small>"+str(c)+" matches</small>")
+			#self.icount.show()
+		else:
+			self.icount.setText("<small>No matches found</small>")
+			#self.icount.show()
+
 
 	def doClose(self):
 		pass
@@ -97,11 +126,24 @@ class Dialog(QMainWindow):
 	def setSubwindow(self,obj):
 		self.subWindow = obj
 
-	def __init__(self,parent=None,standalone=None):
+	def doReplace(self):
+		cursor = self.parent.editor.textCursor()
+		cursor.select(QTextCursor.BlockUnderCursor)
+		self.parent.editor.setTextCursor(cursor)
+		if self.parent.editor.textCursor().hasSelection():
+			text = self.parent.editor.textCursor().selectedText()
+			cursor.beginEditBlock()
+			reptext = text.replace(self.find.text(),self.replace.text())
+			cursor.insertText(reptext)
+			cursor.endEditBlock()
+			self.doSearch()
+		else:
+			print("no select")
+
+	def __init__(self,parent=None,replace=False):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
-		self.standalone = standalone
 
 		self.setWindowTitle("Find")
 		self.setWindowIcon(QIcon(WHOIS_ICON))
@@ -113,8 +155,25 @@ class Dialog(QMainWindow):
 
 		self.find = QLineEdit()
 
-		self.status = QLabel("")
-		self.status.setAlignment(Qt.AlignCenter)
+		if replace:
+			self.replace = QLineEdit()
+
+		# self.status = QLabel("")
+		# self.status.setAlignment(Qt.AlignCenter)
+
+		self.icount = QLabel("<small>Ready</small>")
+		self.icount.setAlignment(Qt.AlignCenter)
+		#self.icount.hide()
+
+		inputLayout = QVBoxLayout()
+		inputLayout.addWidget(self.find)
+		if replace:
+			inputLayout.addWidget(self.replace)
+		inputLayout.addWidget(self.icount)
+
+		inputBox = QGroupBox()
+		inputBox.setAlignment(Qt.AlignHCenter)
+		inputBox.setLayout(inputLayout)
 
 		self.caseSensitive = QCheckBox("Case sensitive",self)
 		self.caseSensitive.stateChanged.connect(self.clickCase)
@@ -126,11 +185,19 @@ class Dialog(QMainWindow):
 		settingsLayout.addWidget(self.caseSensitive)
 		settingsLayout.addWidget(self.wordWhole)
 
+		# settingsBox = QGroupBox()
+		# settingsBox.setAlignment(Qt.AlignHCenter)
+		# settingsBox.setLayout(settingsLayout)
+
 		doFind = QPushButton("Find Next")
 		doFind.clicked.connect(self.doSearch)
 
 		doBack = QPushButton("Find Previous")
 		doBack.clicked.connect(self.doSearchBack)
+
+		if replace:
+			doReplace = QPushButton("Replace")
+			doReplace.clicked.connect(self.doReplace)
 
 		doClose = QPushButton("Close")
 		doClose.clicked.connect(self.close)
@@ -138,12 +205,23 @@ class Dialog(QMainWindow):
 		buttonsLayout = QHBoxLayout()
 		buttonsLayout.addWidget(doFind)
 		buttonsLayout.addWidget(doBack)
+		if replace:
+			buttonsLayout.addWidget(doReplace)
+
+		# buttonBox = QGroupBox()
+		# buttonBox.setAlignment(Qt.AlignHCenter)
+		# buttonBox.setLayout(buttonsLayout)
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addWidget(self.find)
-		finalLayout.addWidget(self.status)
+		finalLayout.addWidget(inputBox)
+		# finalLayout.addWidget(self.find)
+		# if replace:
+		# 	finalLayout.addWidget(self.replace)
+		# finalLayout.addWidget(self.icount)
 		finalLayout.addLayout(settingsLayout)
+		#finalLayout.addWidget(settingsBox)
 		finalLayout.addLayout(buttonsLayout)
+		#finalLayout.addWidget(buttonBox)
 		finalLayout.addWidget(doClose)
 
 		x = QWidget()

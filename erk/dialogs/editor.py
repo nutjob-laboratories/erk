@@ -167,13 +167,65 @@ class Window(QMainWindow):
 	def doFind(self):
 
 		if self.findWindow != None:
-			self.findWindow.setWindowTitle(self.title)
-			self.findWindow.showNormal()
-			return
+			ftext = self.findWindow.find.text()
+			winpos = self.findWindow.pos()
+			if self.findWindow.icount!=' ':
+				icount = self.findWindow.icount.text()
+			else:
+				icount = None
+			self.findWindow.close()
+		else:
+			ftext = None
+			winpos = None
+			icount = None
 
-		self.findWindow = Find.Dialog(self)
+		self.findWindow = Find.Dialog(self,False)
 		if self.filename:
 			self.findWindow.setWindowTitle(self.title)
+		if ftext: self.findWindow.find.setText(ftext)
+
+		if winpos:
+			self.findWindow.move(winpos)
+
+		if icount:
+			self.findWindow.icount.setText(icount)
+			#self.findWindow.icount.show()
+		#else:
+			#self.findWindow.icount.hide()
+
+		self.findWindow.show()
+		return
+
+	def doFindReplace(self):
+
+		if self.findWindow != None:
+			ftext = self.findWindow.find.text()
+			winpos = self.findWindow.pos()
+			if self.findWindow.icount!=' ':
+				icount = self.findWindow.icount.text()
+			else:
+				icount = None
+			self.findWindow.close()
+		else:
+			ftext = None
+			winpos = None
+			icount = None
+
+		self.findWindow = Find.Dialog(self,True)
+		if self.filename:
+			self.findWindow.setWindowTitle(self.title)
+		if ftext: self.findWindow.find.setText(ftext)
+
+		if winpos:
+			self.findWindow.move(winpos)
+
+		if icount:
+			self.findWindow.icount.setText(icount)
+			#self.findWindow.icount.show()
+		#else:
+			#self.findWindow.icount.hide()
+
+
 		self.findWindow.show()
 		return
 
@@ -369,20 +421,6 @@ class Window(QMainWindow):
 
 		fileMenu = self.menubar.addMenu("File")
 
-		entry = MenuAction(self,PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
-		fileMenu.addAction(entry)
-
-		entry = MenuAction(self,ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
-		fileMenu.addAction(entry)
-
-		fileMenu.addSeparator()
-
-		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
-		entry.triggered.connect(self.menuTemplate)
-		fileMenu.addAction(entry)
-
-		fileMenu.addSeparator()
-
 		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
 		entry.triggered.connect(self.doNewFile)
 		entry.setShortcut("Ctrl+N")
@@ -407,14 +445,44 @@ class Window(QMainWindow):
 		fileMenu.addSeparator()
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
+		entry.setShortcut("Ctrl+Q")
 		entry.triggered.connect(self.close)
 		fileMenu.addAction(entry)
+
+		toolsMenu = self.menubar.addMenu("Tools")
+
+		entry = MenuAction(self,PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
+		toolsMenu.addAction(entry)
+
+		entry = MenuAction(self,ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
+		toolsMenu.addAction(entry)
+
+		toolsMenu.addSeparator()
+
+		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
+		entry.triggered.connect(self.menuTemplate)
+		toolsMenu.addAction(entry)
+
+		toolsMenu.addSeparator()
+
+		entry = QAction(QIcon(SPACES_ICON),"Convert indent to spaces",self)
+		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
+		toolsMenu.addAction(entry)
+
+		entry = QAction(QIcon(TABS_ICON),"Convert indent to tabs",self)
+		entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
+		toolsMenu.addAction(entry)
 
 		editMenu = self.menubar.addMenu("Edit")
 
 		mefind = QAction(QIcon(WHOIS_ICON),"Find",self)
 		mefind.triggered.connect(self.doFind)
 		mefind.setShortcut("Ctrl+F")
+		editMenu.addAction(mefind)
+
+		mefind = QAction(QIcon(REPLACE_ICON),"Find and replace",self)
+		mefind.triggered.connect(self.doFindReplace)
+		mefind.setShortcut("Ctrl+R")
 		editMenu.addAction(mefind)
 
 		editMenu.addSeparator()
@@ -519,15 +587,15 @@ class Window(QMainWindow):
 
 		settingsMenu.addSeparator()
 
-		entry = QAction(QIcon(SPACES_ICON),"Convert tab indent to spaces",self)
-		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
-		settingsMenu.addAction(entry)
+		# entry = QAction(QIcon(SPACES_ICON),"Convert tab indent to spaces",self)
+		# entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
+		# settingsMenu.addAction(entry)
 
-		entry = QAction(QIcon(TABS_ICON),"Convert space indent to tabs",self)
-		entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
-		settingsMenu.addAction(entry)
+		# entry = QAction(QIcon(TABS_ICON),"Convert space indent to tabs",self)
+		# entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
+		# settingsMenu.addAction(entry)
 
-		settingsMenu.addSeparator()
+		# settingsMenu.addSeparator()
 
 		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
