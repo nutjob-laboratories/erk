@@ -8,6 +8,7 @@ Version 0.800
 	* Cleaned up and (mildly) revamped the find and find/replace dialogs
 	* Bugfix: find and find/replace will no longer register blank search terms
 	* Labled find/replace inputs in the find and find/replace dialogs
+	* Editor font is now user selectable
 
 Version 0.703
 	* ASCIImoji support has been removed

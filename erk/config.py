@@ -91,8 +91,9 @@ EDITOR_WORD_WRAP = False
 ALWAYS_ON_TOP = False
 SHOW_LOAD_ERRORS = True
 DISPLAY_TIMESTAMP_SECONDS = False
-
 EDITOR_AUTO_INDENT = True
+
+EDITOR_FONT = ''
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -148,6 +149,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"show_plugin_load_error": SHOW_LOAD_ERRORS,
 		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
 		"editor_autoindent": EDITOR_AUTO_INDENT,
+		"editor_font": EDITOR_FONT,
 	}
 
 	with open(filename, "w") as write_data:
@@ -205,6 +207,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SHOW_LOAD_ERRORS
 	global DISPLAY_TIMESTAMP_SECONDS
 	global EDITOR_AUTO_INDENT
+	global EDITOR_FONT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -262,6 +265,8 @@ def load_settings(filename=SETTINGS_FILE):
 			SHOW_LOAD_ERRORS = data["show_plugin_load_error"]
 			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]
 			EDITOR_AUTO_INDENT = data["editor_autoindent"]
+
+			EDITOR_FONT = data["editor_font"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

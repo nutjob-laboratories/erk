@@ -394,6 +394,13 @@ class Window(QMainWindow):
 		self.editor.undoAvailable.connect(self.hasUndo)
 		self.editor.copyAvailable.connect(self.hasCopy)
 
+		if erk.config.EDITOR_FONT!='':
+			f = QFont()
+			f.fromString(erk.config.EDITOR_FONT)
+			self.font = f
+
+			self.editor.setFont(self.font)
+
 		self.setCentralWidget(self.editor)
 
 		self.editor.autoindent = self.autoindent
@@ -539,6 +546,20 @@ class Window(QMainWindow):
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
+		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
+		self.fontMenuEntry.triggered.connect(self.menuFont)
+		settingsMenu.addAction(self.fontMenuEntry)
+
+		f = self.editor.font()
+		fs = f.toString()
+		pfs = fs.split(',')
+		font_name = pfs[0]
+		font_size = pfs[1]
+
+		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
+		settingsMenu.addSeparator()
+
 		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
 		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_autoindent)
@@ -587,21 +608,26 @@ class Window(QMainWindow):
 
 		settingsMenu.addSeparator()
 
-		# entry = QAction(QIcon(SPACES_ICON),"Convert tab indent to spaces",self)
-		# entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
-		# settingsMenu.addAction(entry)
-
-		# entry = QAction(QIcon(TABS_ICON),"Convert space indent to tabs",self)
-		# entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
-		# settingsMenu.addAction(entry)
-
-		# settingsMenu.addSeparator()
-
 		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_wordwrap)
 
 		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
+
+	def menuFont(self):
+		font, ok = QFontDialog.getFont()
+		if ok:
+			erk.config.EDITOR_FONT = font.toString()
+			erk.config.save_settings()
+
+			self.font = font
+			self.editor.setFont(self.font)
+
+			pfs = erk.config.EDITOR_FONT.split(',')
+			font_name = pfs[0]
+			font_size = pfs[1]
+
+			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
 	def toggleSetting(self,setting):
 

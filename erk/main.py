@@ -420,8 +420,6 @@ class Erk(QMainWindow):
 
 			self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
-			# Channel display submenu
-
 			self.settingsMenu.addSeparator()
 
 			# Message display submenu
@@ -784,21 +782,6 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
-		# entry = QAction(QIcon(UNCHECKED_ICON),"Plugins enabled",self)
-		# entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
-		# self.pluginMenu.addAction(entry)
-
-		# if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
-
-		#self.pluginMenu.addSeparator()
-
-		# self.plug_install = QAction(QIcon(INSTALL_ICON),"Install plugin",self)
-		# self.plug_install.triggered.connect(self.menuInstall)
-		# self.pluginMenu.addAction(self.plug_install)
-
-		# if not erk.config.PLUGINS_ENABLED:
-		# 	self.plug_install.setEnabled(False)
-
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
 			self.display_load_errors()
@@ -925,10 +908,6 @@ class Erk(QMainWindow):
 
 			self.pluginMenu.addSeparator()
 
-			# entry = QAction(QIcon(EDITOR_ICON),"Editor",self)
-			# entry.triggered.connect(self.menuEditor)
-			# self.pluginMenu.addAction(entry)
-
 			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
 			self.pluginMenu.addAction(plugin_dir)
@@ -1002,14 +981,6 @@ class Erk(QMainWindow):
 	def rebuildMacroMenu(self):
 
 		self.macroMenu.clear()
-
-		# self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Macros enabled",self)
-		# self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-		# self.macroMenu.addAction(self.set_macroenable)
-
-		# if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-
-		# self.macroMenu.addSeparator()
 
 		self.editmacro = QAction(QIcon(MACRO_ICON),"New macro",self)
 		self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
