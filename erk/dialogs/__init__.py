@@ -46,10 +46,19 @@ import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
 import erk.dialogs.macro as Macro
 import erk.dialogs.editor as Editor
-
 import erk.dialogs.uninstall_package as Uninstall
 
+#import erk.dialogs.editor_input as EditorInput
+
 import erk.dialogs.error as Error
+
+# def EditorPrompt():
+# 	x = EditorInput.Dialog()
+# 	info = x.get_string_information()
+# 	del x
+
+# 	if not info: return None
+# 	return info
 
 def ErrorDialog(obj,errlist=None):
 	x = Error.Dialog(errlist,obj)

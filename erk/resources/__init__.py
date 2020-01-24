@@ -171,3 +171,7 @@ SHOW_ICON = ":/gui-show.png"
 HIDE_ICON = ":/gui-hide.png"
 
 REPLACE_ICON = ":/gui-replace.png"
+
+PRINT_ICON = ":/gui-print.png"
+CONSOLE_ICON = ":/gui-console.png"
+WINDOW_ICON = ":/gui-window.png"

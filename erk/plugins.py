@@ -123,7 +123,7 @@ class ErkFunctions(object):
 					msg = Message(PLUGIN_MESSAGE,'',text)
 					w.writeText(msg,True)
 
-	def log(self,text):
+	def log(self,name,text):
 		if self._erk_client:
 			windows = erk.events.fetch_window_list(self._erk_client)
 			for w in windows:

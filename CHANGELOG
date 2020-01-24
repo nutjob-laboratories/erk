@@ -9,6 +9,8 @@ Version 0.800
 	* Bugfix: find and find/replace will no longer register blank search terms
 	* Labled find/replace inputs in the find and find/replace dialogs
 	* Editor font is now user selectable
+	* Added plugin method generators to the editor's context menu
+	* Bugfix: uptime() is now displayed correctly in the editor
 
 Version 0.703
 	* ASCIImoji support has been removed

@@ -50,11 +50,21 @@ from erk.widgets import *
 
 import erk.dialogs.export_package as Export
 
+import erk.dialogs.editor_input as EditorInput
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
+
+def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
+	x = EditorInput.Dialog(title,prompt,twoinputs,twoprompt)
+	info = x.get_string_information(title,prompt,twoinputs,twoprompt)
+	del x
+
+	if not info: return None
+	return info
 
 class Window(QMainWindow):
 
@@ -404,6 +414,9 @@ class Window(QMainWindow):
 		self.setCentralWidget(self.editor)
 
 		self.editor.autoindent = self.autoindent
+
+		self.editor.setContextMenuPolicy(Qt.CustomContextMenu)
+		self.editor.customContextMenuRequested.connect(self.contextMenu)
 
 		if self.wordwrap:
 			self.editor.setWordWrapMode(QTextOption.WordWrap)
@@ -755,6 +768,101 @@ class Window(QMainWindow):
 		cursor.setPosition(oldpos,QTextCursor.MoveAnchor)
 		self.editor.setTextCursor(cursor)
 
+	def contextMenu(self,location):
+
+		menu = self.editor.createStandardContextMenu()
+
+		menu.addSeparator()
+
+		funcMenu = QMenu("Insert plugin method")
+		funcMenu.setIcon(QIcon(ERK_ICON))
+		menu.insertMenu(menu.actions()[0],funcMenu)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"info()",self)
+		entry.triggered.connect(lambda state,f="info": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"uptime()",self)
+		entry.triggered.connect(lambda state,f="uptime": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"exec()",self)
+		entry.triggered.connect(lambda state,f="exec": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		funcMenu.addSeparator()
+
+		entry = QAction(QIcon(PRINT_ICON),"print()",self)
+		entry.triggered.connect(lambda state,f="print": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(CONSOLE_ICON),"console()",self)
+		entry.triggered.connect(lambda state,f="console": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(WINDOW_ICON),"write()",self)
+		entry.triggered.connect(lambda state,f="write": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(WINDOW_ICON),"log()",self)
+		entry.triggered.connect(lambda state,f="log": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		# Finish menu
+
+		menu.insertSeparator(menu.actions()[1])
+
+		action = menu.exec_(self.editor.mapToGlobal(location))
+
+	def insertMethod(self,ctype):
+
+		if ctype=="log":
+			data = EditorPrompt("Write/Log to window","Target",True,"Text")
+			if data:
+				data[0] = data[0].replace('"','\\"')
+				data[1] = data[1].replace('"','\\"')
+				code = "self.log(\""+data[0]+"\",\""+data[1]+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="write":
+			data = EditorPrompt("Write to window","Target",True,"Text")
+			if data:
+				data[0] = data[0].replace('"','\\"')
+				data[1] = data[1].replace('"','\\"')
+				code = "self.write(\""+data[0]+"\",\""+data[1]+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="console":
+			data = EditorPrompt("Text to console print","Text")
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.console(\""+data+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="print":
+			data = EditorPrompt("Text to print","Text")
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.print(\""+data+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="exec":
+			data = EditorPrompt("Command to execute","Command")
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.exec(\""+data+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="info":
+			code = "erk_version = self.info()"
+
+			self.editor.insertPlainText(code)
+
+		if ctype=="uptime":
+			code = "connection_uptime = self.uptime()"
+
+			self.editor.insertPlainText(code)
+
 
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
@@ -794,7 +902,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 	"""
 
 	erk = [
-		'self.print','self.console','self.write','self.log',
+		'self.print','self.console','self.write','self.log','self.uptime',
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin'
 	]
 
