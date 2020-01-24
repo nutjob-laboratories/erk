@@ -51,7 +51,6 @@ class Dialog(QMainWindow):
 			self.wholeWord = True
 
 	def doSearch(self):
-		#self.icount.setText(" ")
 
 		sterm = self.find.text()
 		if len(sterm.strip())==0: return
@@ -67,25 +66,19 @@ class Dialog(QMainWindow):
 		
 		if options:
 			if not self.parent.editor.find(sterm,options):
-				#self.status.setText(f"\"{sterm}\" not found.")
 				pass
 		else:
 			if not self.parent.editor.find(sterm):
-				#self.status.setText(f"\"{sterm}\" not found.")
 				pass
 
-		# self.icount
 		f = self.parent.editor.toPlainText()
 		c = f.count(sterm)
 		if c>=1:
 			self.icount.setText("<small>"+str(c)+" matches</small>")
-			#self.icount.show()
 		else:
 			self.icount.setText("<small>No matches found</small>")
-			#self.icount.show()
 
 	def doSearchBack(self):
-		#self.icount.setText(" ")
 
 		sterm = self.find.text()
 		if len(sterm.strip())==0: return
@@ -98,21 +91,15 @@ class Dialog(QMainWindow):
 		else:
 			options = QTextDocument.FindBackward
 
-		#sterm = self.find.text()
-
 		if not self.parent.editor.find(sterm,options):
-			#self.status.setText(f"\"{sterm}\" not found.")
 			pass
 
 		f = self.parent.editor.toPlainText()
 		c = f.count(sterm)
 		if c>=1:
 			self.icount.setText("<small>"+str(c)+" matches</small>")
-			#self.icount.show()
 		else:
 			self.icount.setText("<small>No matches found</small>")
-			#self.icount.show()
-
 
 	def doClose(self):
 		pass
@@ -145,8 +132,12 @@ class Dialog(QMainWindow):
 
 		self.parent = parent
 
-		self.setWindowTitle("Find")
-		self.setWindowIcon(QIcon(WHOIS_ICON))
+		if replace:
+			self.setWindowTitle("Find and replace")
+			self.setWindowIcon(QIcon(REPLACE_ICON))
+		else:
+			self.setWindowTitle("Find")
+			self.setWindowIcon(QIcon(WHOIS_ICON))
 
 		self.subWindow = None
 
@@ -158,17 +149,16 @@ class Dialog(QMainWindow):
 		if replace:
 			self.replace = QLineEdit()
 
-		# self.status = QLabel("")
-		# self.status.setAlignment(Qt.AlignCenter)
-
 		self.icount = QLabel("<small>Ready</small>")
 		self.icount.setAlignment(Qt.AlignCenter)
-		#self.icount.hide()
+
+		findRepLayout = QFormLayout()
+		findRepLayout.addRow(QLabel("<b>Find</b>"), self.find)
+		if replace:
+			findRepLayout.addRow(QLabel("<b>Replace</b>"), self.replace)
 
 		inputLayout = QVBoxLayout()
-		inputLayout.addWidget(self.find)
-		if replace:
-			inputLayout.addWidget(self.replace)
+		inputLayout.addLayout(findRepLayout)
 		inputLayout.addWidget(self.icount)
 
 		inputBox = QGroupBox()
@@ -185,10 +175,6 @@ class Dialog(QMainWindow):
 		settingsLayout.addWidget(self.caseSensitive)
 		settingsLayout.addWidget(self.wordWhole)
 
-		# settingsBox = QGroupBox()
-		# settingsBox.setAlignment(Qt.AlignHCenter)
-		# settingsBox.setLayout(settingsLayout)
-
 		doFind = QPushButton("Find Next")
 		doFind.clicked.connect(self.doSearch)
 
@@ -199,7 +185,7 @@ class Dialog(QMainWindow):
 			doReplace = QPushButton("Replace")
 			doReplace.clicked.connect(self.doReplace)
 
-		doClose = QPushButton("Close")
+		doClose = QPushButton("Cancel")
 		doClose.clicked.connect(self.close)
 
 		buttonsLayout = QHBoxLayout()
@@ -208,20 +194,10 @@ class Dialog(QMainWindow):
 		if replace:
 			buttonsLayout.addWidget(doReplace)
 
-		# buttonBox = QGroupBox()
-		# buttonBox.setAlignment(Qt.AlignHCenter)
-		# buttonBox.setLayout(buttonsLayout)
-
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(inputBox)
-		# finalLayout.addWidget(self.find)
-		# if replace:
-		# 	finalLayout.addWidget(self.replace)
-		# finalLayout.addWidget(self.icount)
 		finalLayout.addLayout(settingsLayout)
-		#finalLayout.addWidget(settingsBox)
 		finalLayout.addLayout(buttonsLayout)
-		#finalLayout.addWidget(buttonBox)
 		finalLayout.addWidget(doClose)
 
 		x = QWidget()
