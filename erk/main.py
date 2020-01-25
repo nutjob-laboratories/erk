@@ -862,15 +862,29 @@ class Erk(QMainWindow):
 				if p.source:
 					args.append(f"<a href=\"{p.source}\">Source Code</a>")
 
+				max_length = 40
+				if len(p.description)>max_length:
+					if len(p.description)>=max_length+3:
+						offset = max_length-3
+					elif len(p.description)==max_length+2:
+						offset = max_length-2
+					elif len(p.description)==max_length+1:
+						offset = max_length-1
+					else:
+						offset = max_length
+					display_description = p.description[0:offset]+"..."
+				else:
+					display_description = p.description
+
 
 				if len(args)==3:
-					entry = Menu5Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+					entry = Menu5Action(self,icon,p.name+" "+PLUGIN_VERSION,display_description,*args,25)
 				elif len(args)==2:
-					entry = Menu4Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+					entry = Menu4Action(self,icon,p.name+" "+PLUGIN_VERSION,display_description,*args,25)
 				elif len(args)==1:
-					entry = Menu3Action(self,icon,p.name+" "+PLUGIN_VERSION,p.description,*args,25)
+					entry = Menu3Action(self,icon,p.name+" "+PLUGIN_VERSION,display_description,*args,25)
 				else:
-					entry = MenuNoAction(self,icon,p.name+" "+PLUGIN_VERSION,p.description,25)
+					entry = MenuNoAction(self,icon,p.name+" "+PLUGIN_VERSION,display_description,25)
 
 				m.addAction(entry)
 

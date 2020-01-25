@@ -15,6 +15,7 @@ Version 0.800
 	* Added a status bar to the editor displaying the current file name
 	* Added special plugin attributes to the syntax highlighter
 	* Changed the "font" menu icon
+	* Added a character limit (40 chars) to a plugin's description in the plugin menu
 
 Version 0.703
 	* ASCIImoji support has been removed
