@@ -11,6 +11,7 @@ Version 0.800
 	* Editor font is now user selectable
 	* Added plugin method generators to the editor's context menu
 	* Bugfix: uptime() is now displayed correctly in the editor
+	* Find/replace now displays count following case sensitive/insensitive rules
 
 Version 0.703
 	* ASCIImoji support has been removed

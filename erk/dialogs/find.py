@@ -72,7 +72,10 @@ class Dialog(QMainWindow):
 				pass
 
 		f = self.parent.editor.toPlainText()
-		c = f.count(sterm)
+		if self.findCase:
+			c = f.count(sterm)
+		else:
+			c = f.lower().count(sterm.lower())
 		if c>=1:
 			self.icount.setText("<small>"+str(c)+" matches</small>")
 		else:
@@ -95,7 +98,10 @@ class Dialog(QMainWindow):
 			pass
 
 		f = self.parent.editor.toPlainText()
-		c = f.count(sterm)
+		if self.findCase:
+			c = f.count(sterm)
+		else:
+			c = f.lower().count(sterm.lower())
 		if c>=1:
 			self.icount.setText("<small>"+str(c)+" matches</small>")
 		else:
@@ -155,7 +161,8 @@ class Dialog(QMainWindow):
 		findRepLayout = QFormLayout()
 		findRepLayout.addRow(QLabel("<b>Find</b>"), self.find)
 		if replace:
-			findRepLayout.addRow(QLabel("<b>Replace</b>"), self.replace)
+			self.repLabel = QLabel("<b>Replace</b>")
+			findRepLayout.addRow(self.repLabel, self.replace)
 
 		inputLayout = QVBoxLayout()
 		inputLayout.addLayout(findRepLayout)
@@ -189,11 +196,11 @@ class Dialog(QMainWindow):
 		doClose.clicked.connect(self.close)
 
 		buttonsLayout = QHBoxLayout()
-		buttonsLayout.addWidget(doFind)
 		buttonsLayout.addWidget(doBack)
 		if replace:
 			buttonsLayout.addWidget(doReplace)
-
+		buttonsLayout.addWidget(doFind)
+		
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(inputBox)
 		finalLayout.addLayout(settingsLayout)
