@@ -14,6 +14,7 @@ Version 0.800
 	* Find/replace now displays count following case sensitive/insensitive rules
 	* Added a status bar to the editor displaying the current file name
 	* Added special plugin attributes to the syntax highlighter
+	* Changed the "font" menu icon
 
 Version 0.703
 	* ASCIImoji support has been removed
