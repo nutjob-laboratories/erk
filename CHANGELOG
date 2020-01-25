@@ -12,6 +12,8 @@ Version 0.800
 	* Added plugin method generators to the editor's context menu
 	* Bugfix: uptime() is now displayed correctly in the editor
 	* Find/replace now displays count following case sensitive/insensitive rules
+	* Added a status bar to the editor displaying the current file name
+	* Added special plugin attributes to the syntax highlighter
 
 Version 0.703
 	* ASCIImoji support has been removed

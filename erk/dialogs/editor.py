@@ -89,6 +89,7 @@ class Window(QMainWindow):
 			self.doExitSave(self.filename)
 
 		self.filename = ''
+		self.status_file.setText('')
 		self.editor.clear()
 		self.title = "Editor"
 		self.setWindowTitle(self.title)
@@ -111,6 +112,7 @@ class Window(QMainWindow):
 			code.write(self.editor.toPlainText())
 			self.title = os.path.basename(fileName)
 			self.setWindowTitle(self.title)
+			self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
 			self.changed = False
 			self.menuSave.setEnabled(True)
 			if self.findWindow != None:
@@ -121,6 +123,7 @@ class Window(QMainWindow):
 		code.write(self.editor.toPlainText())
 		self.title = os.path.basename(self.filename)
 		self.setWindowTitle(self.title)
+		self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
 		self.changed = False
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle(self.title)
@@ -136,6 +139,7 @@ class Window(QMainWindow):
 			self.menuSave.setEnabled(True)
 			self.title = os.path.basename(fileName)
 			self.setWindowTitle(self.title)
+			self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
 			self.changed = False
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
@@ -322,6 +326,7 @@ class Window(QMainWindow):
 				# Load source into the editor
 				self.editor.setPlainText(t)
 				self.filename = os.path.join(outdir, "plugin.py")
+				self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
 				self.title = "plugin.py"
 				self.setWindowTitle(self.title)
@@ -627,6 +632,17 @@ class Window(QMainWindow):
 
 		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
 
+		self.status = self.statusBar()
+		self.status.setStyleSheet('QStatusBar::item {border: None;}')
+
+		self.status_file = QLabel("")
+		#self.status_file.setAlignment(Qt.AlignLeft)
+		self.status.addPermanentWidget(self.status_file,1)
+
+		if self.filename:
+			if os.path.isfile(self.filename):
+				self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
@@ -903,7 +919,8 @@ class PythonHighlighter (QSyntaxHighlighter):
 
 	erk = [
 		'self.print','self.console','self.write','self.log','self.uptime',
-		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin'
+		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
+		'self.name','self.description','self.version','self.website','self.source','self.author',
 	]
 
 	# Python keywords
