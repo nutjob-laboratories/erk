@@ -404,6 +404,8 @@ class Window(QMainWindow):
 		self.editor = QCodeEditor(self)
 		self.highlight = PythonHighlighter(self.editor.document())
 
+		self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
+
 		self.editor.textChanged.connect(self.docModified)
 		self.editor.redoAvailable.connect(self.hasRedo)
 		self.editor.undoAvailable.connect(self.hasUndo)
@@ -576,6 +578,29 @@ class Window(QMainWindow):
 
 		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
+		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
+		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_wordwrap)
+
+		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_statusbar = QAction(QIcon(UNCHECKED_ICON),"Status bar",self)
+		self.set_statusbar.triggered.connect(lambda state,s="statusbar": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_statusbar)
+
+		if erk.config.EDITOR_STATUS_BAR: self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
+
+
+
+		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
+		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_syntaxcolor)
+
+		if erk.config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
+
+
+
+
 		settingsMenu.addSeparator()
 
 		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
@@ -624,24 +649,17 @@ class Window(QMainWindow):
 
 		if not erk.config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
-		settingsMenu.addSeparator()
-
-		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
-		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_wordwrap)
-
-		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
-
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
 
 		self.status_file = QLabel("")
-		#self.status_file.setAlignment(Qt.AlignLeft)
 		self.status.addPermanentWidget(self.status_file,1)
 
 		if self.filename:
 			if os.path.isfile(self.filename):
 				self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+
+		if not erk.config.EDITOR_STATUS_BAR: self.status.hide()
 
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
@@ -659,6 +677,32 @@ class Window(QMainWindow):
 			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
 	def toggleSetting(self,setting):
+
+		if setting=="highlight":
+			if erk.config.EDITOR_SYNTAX_HIGHLIGHT:
+				erk.config.EDITOR_SYNTAX_HIGHLIGHT = False
+				self.status.hide()
+				self.set_syntaxcolor.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EDITOR_SYNTAX_HIGHLIGHT = True
+				self.status.show()
+				self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
+			self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
+			self.toggle_highlight()
+			erk.config.save_settings()
+			return
+
+		if setting=="statusbar":
+			if erk.config.EDITOR_STATUS_BAR:
+				erk.config.EDITOR_STATUS_BAR = False
+				self.status.hide()
+				self.set_statusbar.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EDITOR_STATUS_BAR = True
+				self.status.show()
+				self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="converttotab":
 			self.convert_indent(' '*self.tabsize,"\t")
@@ -765,6 +809,19 @@ class Window(QMainWindow):
 				self.set_indent_spaces.setIcon(QIcon(UNCHECKED_ICON))
 			self.indentspace = erk.config.USE_SPACES_FOR_INDENT
 			return
+
+	def toggle_highlight(self):
+		# Save cursor position
+		cursor = self.editor.textCursor()
+		oldpos = cursor.position()
+
+		doc = self.editor.toPlainText()
+		self.editor.clear()
+		self.editor.appendPlainText(doc)
+
+		# Move cursor to saved position
+		cursor.setPosition(oldpos,QTextCursor.MoveAnchor)
+		self.editor.setTextCursor(cursor)
 
 	def convert_indent(self,oldindent,newindent):
 		# Save cursor position
@@ -953,6 +1010,8 @@ class PythonHighlighter (QSyntaxHighlighter):
 	def __init__(self, document):
 		QSyntaxHighlighter.__init__(self, document)
 
+		self.do_highlight = True
+
 		# Multi-line strings (expression, flag, style)
 		# FIXME: The triple-quotes in these two lines will mess up the
 		# syntax highlighting from this point onward
@@ -1002,6 +1061,9 @@ class PythonHighlighter (QSyntaxHighlighter):
 			for (pat, index, fmt) in rules]
 
 	def highlightBlock(self, text):
+
+		if not self.do_highlight: return
+
 		"""Apply syntax highlighting to the given block of text.
 		"""
 		# Do other syntax formatting
