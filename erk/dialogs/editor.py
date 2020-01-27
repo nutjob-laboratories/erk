@@ -66,6 +66,20 @@ def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
 	if not info: return None
 	return info
 
+def getPackageName(filename):
+	dname = filename.replace(os.path.basename(filename),'')
+	dname = os.path.join(dname, "package.txt")
+
+	if os.path.isfile(dname):
+		script = open(dname,"r")
+		pname = script.read()
+		script.close()
+		return pname
+	else:
+		pname = os.path.basename(filename)
+		pname = os.path.splitext(pname)[0]
+		return pname
+
 class Window(QMainWindow):
 
 	def closeEvent(self, event):
@@ -89,6 +103,7 @@ class Window(QMainWindow):
 			self.doExitSave(self.filename)
 
 		self.filename = ''
+		self.sep_icon.hide()
 		self.status_file.setText('')
 		self.editor.clear()
 		self.title = "Editor"
@@ -97,6 +112,11 @@ class Window(QMainWindow):
 		self.menuSave.setEnabled(False)
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle("Find")
+
+		#self.status_package.setText("<b><small>Unknown package</small></b>")
+
+		self.package_icon.hide()
+		self.status_package.hide()
 
 	def doFileSaveAs(self):
 		options = QFileDialog.Options()
@@ -110,23 +130,47 @@ class Window(QMainWindow):
 			self.filename = fileName
 			code = open(fileName,"w")
 			code.write(self.editor.toPlainText())
+			code.close()
 			self.title = os.path.basename(fileName)
 			self.setWindowTitle(self.title)
-			self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+			self.sep_icon.show()
+			self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 			self.changed = False
 			self.menuSave.setEnabled(True)
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
 
+			pname = getPackageName(fileName)
+			if pname:
+				self.package_icon.show()
+				self.status_package.show()
+				self.status_package.setText("<b><small>"+pname+"</small></b>")
+			else:
+				#self.status_package.setText("<b><small>Unknown package</small></b>")
+				self.package_icon.hide()
+				self.status_package.hide()
+
 	def doFileSave(self):
 		code = open(self.filename,"w")
 		code.write(self.editor.toPlainText())
+		code.close()
 		self.title = os.path.basename(self.filename)
 		self.setWindowTitle(self.title)
-		self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+		self.sep_icon.show()
+		self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 		self.changed = False
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle(self.title)
+
+		pname = getPackageName(fileName)
+		if pname:
+			self.package_icon.show()
+			self.status_package.show()
+			self.status_package.setText("<b><small>"+pname+"</small></b>")
+		else:
+			#self.status_package.setText("<b><small>Unknown package</small></b>")
+			self.package_icon.hide()
+			self.status_package.hide()
 
 	def doFileOpen(self):
 		options = QFileDialog.Options()
@@ -135,14 +179,26 @@ class Window(QMainWindow):
 		if fileName:
 			script = open(fileName,"r")
 			self.editor.setPlainText(script.read())
+			script.close()
 			self.filename = fileName
 			self.menuSave.setEnabled(True)
 			self.title = os.path.basename(fileName)
 			self.setWindowTitle(self.title)
-			self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+			self.sep_icon.show()
+			self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 			self.changed = False
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
+
+			pname = getPackageName(fileName)
+			if pname:
+				self.package_icon.show()
+				self.status_package.show()
+				self.status_package.setText("<b><small>"+pname+"</small></b>")
+			else:
+				#self.status_package.setText("<b><small>Unknown package</small></b>")
+				self.package_icon.hide()
+				self.status_package.hide()
 
 	def doExitSave(self,default):
 		if not default: default = PLUGIN_DIRECTORY
@@ -313,6 +369,11 @@ class Window(QMainWindow):
 				f.write(info[0])
 				f.close()
 
+				self.status_package.setText(info[0])
+
+				self.package_icon.show()
+				self.status_package.show()
+
 				# Escape double quotes in description
 				info[1] = info[1].replace('"','\\"')
 
@@ -326,7 +387,8 @@ class Window(QMainWindow):
 				# Load source into the editor
 				self.editor.setPlainText(t)
 				self.filename = os.path.join(outdir, "plugin.py")
-				self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+				self.sep_icon.show()
+				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
 				self.title = "plugin.py"
 				self.setWindowTitle(self.title)
@@ -590,16 +652,11 @@ class Window(QMainWindow):
 
 		if erk.config.EDITOR_STATUS_BAR: self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
 
-
-
 		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
 		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_syntaxcolor)
 
 		if erk.config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
-
-
-
 
 		settingsMenu.addSeparator()
 
@@ -652,12 +709,42 @@ class Window(QMainWindow):
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
 
+		self.package_icon = QLabel(self)
+		pixmap = QPixmap(PACKAGE_ICON)
+		fm = QFontMetrics(self.editor.font())
+		pixmap = pixmap.scaled(fm.height()-1, fm.height()-1, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+		self.package_icon.setPixmap(pixmap)
+
+		self.status.addPermanentWidget(self.package_icon,0)
+
+		self.status_package = QLabel("<b><small>Unknown package</small></b>")
+		self.status.addPermanentWidget(self.status_package,0)
+
+		self.sep_icon = QLabel(self)
+		pixmap = QPixmap(VERTICAL_RULE_BACKGROUND)
+		fm = QFontMetrics(self.editor.font())
+		pixmap = pixmap.scaled(fm.height()-2, fm.height()-2, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+		self.sep_icon.setPixmap(pixmap)
+
+		self.status.addPermanentWidget(self.sep_icon,0)
+
+		self.package_icon.hide()
+		self.status_package.hide()
+		self.sep_icon.hide()
+
 		self.status_file = QLabel("")
 		self.status.addPermanentWidget(self.status_file,1)
 
 		if self.filename:
 			if os.path.isfile(self.filename):
-				self.status_file.setText("&nbsp;<i><small>"+self.filename+"</small></i>")
+				self.sep_icon.show()
+				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
+
+				pname = getPackageName(self.filename)
+				if pname:
+					self.package_icon.show()
+					self.status_package.show()
+					self.status_package.setText("<b><small>"+pname+"</small></b>")
 
 		if not erk.config.EDITOR_STATUS_BAR: self.status.hide()
 

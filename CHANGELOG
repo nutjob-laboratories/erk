@@ -18,6 +18,7 @@ Version 0.800
 	* Added a character limit (40 chars) to a plugin's description in the plugin menu
 	* Added an option to show/hide the status bar in the editor
 	* Added an option to toggle syntax highlighting in the editor
+	* Added a package name display to the status bar
 
 Version 0.703
 	* ASCIImoji support has been removed

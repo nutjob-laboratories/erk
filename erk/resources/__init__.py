@@ -175,3 +175,5 @@ REPLACE_ICON = ":/gui-replace.png"
 PRINT_ICON = ":/gui-print.png"
 CONSOLE_ICON = ":/gui-console.png"
 WINDOW_ICON = ":/gui-window.png"
+
+VERTICAL_RULE_BACKGROUND = ":/gui-vertical_rule.png"
