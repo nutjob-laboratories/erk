@@ -99,9 +99,17 @@ class Dialog(QDialog):
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setOpenExternalLinks(True)
 
-		plug_credit = QLabel(f"<a href=\"https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/\"><small>Plugin framework</small></a><small> inspired by by </small><small>Guido Diepen</small>")
+		plug_credit = QLabel(f"<a href=\"https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/\"><small>Plugin framework</small></a><small> inspired by </small><small>Guido Diepen</small>")
 		plug_credit.setAlignment(Qt.AlignCenter)
 		plug_credit.setOpenExternalLinks(True)
+
+		syn_credit = QLabel(f"<a href=\"https://wiki.python.org/moin/PyQt/Python%20syntax%20highlighting\"><small>Syntax highlighting from the Python Wiki</a></small>")
+		syn_credit.setAlignment(Qt.AlignCenter)
+		syn_credit.setOpenExternalLinks(True)
+
+		ce_credit = QLabel(f"<a href=\"https://stackoverflow.com/questions/40386194/create-text-area-textedit-with-line-number-in-pyqt\"><small>Code editor line numbers</a></small>")
+		ce_credit.setAlignment(Qt.AlignCenter)
+		ce_credit.setOpenExternalLinks(True)
 
 		creditsBox = QGroupBox()
 		creditsBox.setAlignment(Qt.AlignHCenter)
@@ -112,6 +120,8 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(asciimoji_credit)
 		creditsLayout.addWidget(plug_credit)
+		creditsLayout.addWidget(syn_credit)
+		creditsLayout.addWidget(ce_credit)
 		creditsBox.setLayout(creditsLayout)
 
 		okButton = QPushButton("Ok")

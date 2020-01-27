@@ -19,6 +19,7 @@ Version 0.800
 	* Added an option to show/hide the status bar in the editor
 	* Added an option to toggle syntax highlighting in the editor
 	* Added a package name display to the status bar
+	* Added more credits to the "about" dialog
 
 Version 0.703
 	* ASCIImoji support has been removed
