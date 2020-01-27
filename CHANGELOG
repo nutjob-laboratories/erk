@@ -20,6 +20,7 @@ Version 0.800
 	* Added an option to toggle syntax highlighting in the editor
 	* Added a package name display to the status bar
 	* Added more credits to the "about" dialog
+	* Removes ASCIImoji credit from the "about" dialog (as we don't use ASCIImojis anymore)
 
 Version 0.703
 	* ASCIImoji support has been removed

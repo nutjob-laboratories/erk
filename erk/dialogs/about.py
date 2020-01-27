@@ -91,10 +91,6 @@ class Dialog(QDialog):
 		emoji_credit.setAlignment(Qt.AlignCenter)
 		emoji_credit.setOpenExternalLinks(True)
 
-		asciimoji_credit = QLabel(f"<a href=\"https://github.com/hpcodecraft/ASCIImoji\"><small>ASCIImoji</small></a><small> by </small><a href=\"mailto:thesquidpeople@gmail.com\"><small>Volker Wieban</small></a>")
-		asciimoji_credit.setAlignment(Qt.AlignCenter)
-		asciimoji_credit.setOpenExternalLinks(True)
-
 		gnu_credit = QLabel(f"<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a>")
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setOpenExternalLinks(True)
@@ -118,7 +114,6 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(icons_credit)
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
-		creditsLayout.addWidget(asciimoji_credit)
 		creditsLayout.addWidget(plug_credit)
 		creditsLayout.addWidget(syn_credit)
 		creditsLayout.addWidget(ce_credit)
