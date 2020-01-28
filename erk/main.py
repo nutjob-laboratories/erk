@@ -60,7 +60,8 @@ from erk.dialogs import(
 	MacroDialog,
 	EditorDialog,
 	UninstallDialog,
-	ErrorDialog
+	ErrorDialog,
+	ExportLogDialog
 	)
 
 from erk.irc import(
@@ -312,6 +313,9 @@ class Erk(QMainWindow):
 		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b></small></p>")
 
 		self.starter.anchorClicked.connect(self.linkClicked)
+
+		# d = dumpLog('EFNet','#themaxx',"\t")
+		# print(d)
 
 		
 
@@ -729,6 +733,16 @@ class Erk(QMainWindow):
 
 			self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
 
+			self.logMenu.addSeparator()
+
+			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
+			entry.triggered.connect(self.menuExportLog)
+			self.logMenu.addAction(entry)
+
+			entry = QAction(QIcon(CSV_ICON),"Export log as CSV",self)
+			entry.triggered.connect(self.menuExportLogCSV)
+			self.logMenu.addAction(entry)
+
 		# Macro menu
 
 		# self.macroMenu = QMenu()
@@ -777,6 +791,34 @@ class Erk(QMainWindow):
 
 		# End of menus
 		end_toolbar_menu(self.toolbar)
+
+	def menuExportLogCSV(self):
+		d = ExportLogDialog(self)
+		if d:
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"CSV File (*.csv);;All Files (*)", options=options)
+			if fileName:
+				extension = os.path.splitext(fileName)[1]
+				if extension.lower()!='csv': fileName = fileName + ".csv"
+				dump = dumpLog(d,",")
+				code = open(fileName,mode="w",encoding="utf-8")
+				code.write(dump)
+				code.close()
+
+	def menuExportLog(self):
+		d = ExportLogDialog(self)
+		if d:
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
+			if fileName:
+				extension = os.path.splitext(fileName)[1]
+				if extension.lower()!='txt': fileName = fileName + ".txt"
+				dump = dumpLog(d," ")
+				code = open(fileName,mode="w",encoding="utf-8")
+				code.write(dump)
+				code.close()
 
 	def rebuildPluginMenu(self):
 

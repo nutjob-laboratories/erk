@@ -313,3 +313,21 @@ def readLog(network,name):
 	logs = loadLog(network,name)
 	logs = array_to_log(logs)
 	return logs
+
+# Loads an AoA from disk, converts it to a string
+def dumpLog(filename,delimiter):
+	if os.path.isfile(filename):
+		with open(filename, "r") as logentries:
+			logs = json.load(logentries)
+	#logs = loadLog(network,name)
+	if logs:
+		out = []
+		for l in logs:
+			l[2] = l[2].strip()
+			l[3] = l[3].strip()
+			if l[2]=='': l[2] = '***'
+			entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
+			out.append(entry)
+		return "\n".join(out)
+	else:
+		return ''

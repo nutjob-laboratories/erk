@@ -177,3 +177,6 @@ CONSOLE_ICON = ":/gui-console.png"
 WINDOW_ICON = ":/gui-window.png"
 
 VERTICAL_RULE_BACKGROUND = ":/gui-vertical_rule.png"
+
+EXPORT_ICON = ":/gui-export.png"
+CSV_ICON = ":/gui-export_csv.png"
