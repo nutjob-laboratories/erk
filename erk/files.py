@@ -315,7 +315,7 @@ def readLog(network,name):
 	return logs
 
 # Loads an AoA from disk, converts it to a string
-def dumpLog(filename,delimiter):
+def dumpLog(filename,delimiter,linedelim="\n"):
 	if os.path.isfile(filename):
 		with open(filename, "r") as logentries:
 			logs = json.load(logentries)
@@ -328,6 +328,6 @@ def dumpLog(filename,delimiter):
 			if l[2]=='': l[2] = '***'
 			entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
 			out.append(entry)
-		return "\n".join(out)
+		return linedelim.join(out)
 	else:
 		return ''

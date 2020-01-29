@@ -58,7 +58,7 @@ class Dialog(QDialog):
 
 		item = self.packlist.currentItem()
 		if item:
-			retval = item.file
+			retval = [item.file,self.delimiter,self.linedelim]
 		else:
 			msg = QMessageBox()
 			msg.setIcon(QMessageBox.Critical)
@@ -70,10 +70,33 @@ class Dialog(QDialog):
 
 		return retval
 
+	def setLine(self):
+
+		dtype = self.line.itemText(self.line.currentIndex())
+		if dtype=='Newline': self.linedelim = "\n"
+		if dtype=='CRLF': self.linedelim = "\r\n"
+		if dtype=='Tab': self.linedelim = "\t"
+		if dtype=='Comma': self.linedelim = ","
+		if dtype=='Pipe': self.linedelim = "|"
+
+	def setType(self):
+
+		dtype = self.type.itemText(self.type.currentIndex())
+		if dtype=='Space': self.delimiter = ' '
+		if dtype=='Double Space': self.delimiter = '  '
+		if dtype=='Tab': self.delimiter = "\t"
+		if dtype=='Comma': self.delimiter = ','
+		if dtype=='Colon': self.delimiter = ':'
+		if dtype=='Double Colon': self.delimiter = '::'
+		if dtype=='Pipe': self.delimiter = '|'
+		if dtype=='Double Pipe': self.delimiter = '||'
+
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.delimiter = "\t"
+		self.linedelim = "\n"
 
 		self.setWindowTitle("Export log")
 		self.setWindowIcon(QIcon(LOG_ICON))
@@ -96,34 +119,30 @@ class Dialog(QDialog):
 				#item.setIcon(QIcon(LOG_ICON))
 				self.packlist.addItem(item)
 
-		# for x in os.listdir(PLUGIN_DIRECTORY):
-			# if x.lower()=="__pycache__": continue
-			# pack = os.path.join(PLUGIN_DIRECTORY, x)
-			# if os.path.isdir(pack):
+		delimLayout = QFormLayout()
 
-		# 		has_parent_gui = False
-		# 		if hasattr(self.parent,"gui"):
-		# 			if hasattr(self.parent.gui,"plugins"):
-		# 				has_parent_gui= True
+		self.type = QComboBox(self)
+		self.type.activated.connect(self.setType)
+		self.type.addItem("Tab")
+		self.type.addItem("Space")
+		self.type.addItem("Double Space")
+		self.type.addItem("Comma")
+		self.type.addItem("Colon")
+		self.type.addItem("Double Colon")
+		self.type.addItem("Pipe")
+		self.type.addItem("Double Pipe")
 
-		# 		if has_parent_gui:
-		# 			if x in self.parent.gui.plugins.failed_load:
-		# 				item = QListWidgetItem(x+" (Error loading)")
-		# 				item.setIcon(QIcon(ERROR_ICON))
-		# 			else:
-		# 				item = QListWidgetItem(x)
-		# 				item.setIcon(QIcon(PACKAGE_ICON))
-		# 			item.file = pack
-		# 			self.packlist.addItem(item)
-		# 		else:
-		# 			item = QListWidgetItem(x)
-		# 			item.file = pack
-		# 			item.setIcon(QIcon(PACKAGE_ICON))
-		# 			self.packlist.addItem(item)
+		delimLayout.addRow(QLabel("<b>Field Delimiter</b>"), self.type)
 
+		self.line = QComboBox(self)
+		self.line.activated.connect(self.setLine)
+		self.line.addItem("Newline")
+		self.line.addItem("CRLF")
+		self.line.addItem("Tab")
+		self.line.addItem("Comma")
+		self.line.addItem("Pipe")
 
-		# self.packlist.setCurrentRow(0)
-
+		delimLayout.addRow(QLabel("<b>Entry Delimiter</b>"), self.line)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -136,6 +155,7 @@ class Dialog(QDialog):
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(self.title)
 		finalLayout.addWidget(self.packlist)
+		finalLayout.addLayout(delimLayout)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

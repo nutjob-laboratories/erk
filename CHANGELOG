@@ -22,6 +22,8 @@ Version 0.800
 	* Added more credits to the "about" dialog
 	* Removes ASCIImoji credit from the "about" dialog (as we don't use ASCIImojis anymore)
 	* Added options to export chat logs as both text and CSV
+	* Removed the option to export as CVS; added an option to select the delimiter in the export log dialog
+	* Added an option to select the entry delimiter in exported logs
 
 Version 0.703
 	* ASCIImoji support has been removed

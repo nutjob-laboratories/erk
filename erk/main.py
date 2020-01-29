@@ -739,10 +739,6 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.menuExportLog)
 			self.logMenu.addAction(entry)
 
-			entry = QAction(QIcon(CSV_ICON),"Export log as CSV",self)
-			entry.triggered.connect(self.menuExportLogCSV)
-			self.logMenu.addAction(entry)
-
 		# Macro menu
 
 		# self.macroMenu = QMenu()
@@ -792,30 +788,19 @@ class Erk(QMainWindow):
 		# End of menus
 		end_toolbar_menu(self.toolbar)
 
-	def menuExportLogCSV(self):
-		d = ExportLogDialog(self)
-		if d:
-			options = QFileDialog.Options()
-			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"CSV File (*.csv);;All Files (*)", options=options)
-			if fileName:
-				extension = os.path.splitext(fileName)[1]
-				if extension.lower()!='csv': fileName = fileName + ".csv"
-				dump = dumpLog(d,",")
-				code = open(fileName,mode="w",encoding="utf-8")
-				code.write(dump)
-				code.close()
-
 	def menuExportLog(self):
 		d = ExportLogDialog(self)
 		if d:
+			elog = d[0]
+			dlog = d[1]
+			llog = d[2]
 			options = QFileDialog.Options()
 			options |= QFileDialog.DontUseNativeDialog
 			fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
 			if fileName:
 				extension = os.path.splitext(fileName)[1]
 				if extension.lower()!='txt': fileName = fileName + ".txt"
-				dump = dumpLog(d," ")
+				dump = dumpLog(elog,dlog,llog)
 				code = open(fileName,mode="w",encoding="utf-8")
 				code.write(dump)
 				code.close()
