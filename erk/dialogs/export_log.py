@@ -129,12 +129,13 @@ class Dialog(QDialog):
 				if os.path.isfile(log):
 					p = os.path.basename(log).replace('.json','')
 					p = p.split('-')
-					netname = p[0]
-					channel = p[1]
+					if len(p)==2:
+						netname = p[0]
+						channel = p[1]
 
-					item = QListWidgetItem(channel+" ("+netname+")")
-					item.file = log
-					self.packlist.addItem(item)
+						item = QListWidgetItem(channel+" ("+netname+")")
+						item.file = log
+						self.packlist.addItem(item)
 
 		delimLayout = QFormLayout()
 

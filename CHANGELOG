@@ -26,6 +26,7 @@ Version 0.800
 	* Added an option to select the entry delimiter in exported logs
 	* Added an option to export logs as (simplified) JSON (all internal Erk data is stripped)
 	* Bugfix: only JSON files in the log directory are available for export now
+	* Bugfix: more criteria are applied to file names to find generated chat logs
 
 Version 0.703
 	* ASCIImoji support has been removed
