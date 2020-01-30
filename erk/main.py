@@ -794,16 +794,30 @@ class Erk(QMainWindow):
 			elog = d[0]
 			dlog = d[1]
 			llog = d[2]
-			options = QFileDialog.Options()
-			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
-			if fileName:
-				extension = os.path.splitext(fileName)[1]
-				if extension.lower()!='txt': fileName = fileName + ".txt"
-				dump = dumpLog(elog,dlog,llog)
-				code = open(fileName,mode="w",encoding="utf-8")
-				code.write(dump)
-				code.close()
+			do_json = d[3]
+			if not do_json:
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
+				if fileName:
+					extension = os.path.splitext(fileName)[1]
+					if extension.lower()!='txt': fileName = fileName + ".txt"
+					dump = dumpLog(elog,dlog,llog)
+					code = open(fileName,mode="w",encoding="utf-8")
+					code.write(dump)
+					code.close()
+			else:
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+				if fileName:
+					extension = os.path.splitext(fileName)[1]
+					if extension.lower()!='json': fileName = fileName + ".json"
+					#dump = dumpLog(elog,dlog,llog)
+					dump = dumpLogJson(elog)
+					code = open(fileName,mode="w",encoding="utf-8")
+					code.write(dump)
+					code.close()
 
 	def rebuildPluginMenu(self):
 

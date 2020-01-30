@@ -319,7 +319,6 @@ def dumpLog(filename,delimiter,linedelim="\n"):
 	if os.path.isfile(filename):
 		with open(filename, "r") as logentries:
 			logs = json.load(logentries)
-	#logs = loadLog(network,name)
 	if logs:
 		out = []
 		for l in logs:
@@ -329,5 +328,22 @@ def dumpLog(filename,delimiter,linedelim="\n"):
 			entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
 			out.append(entry)
 		return linedelim.join(out)
+	else:
+		return ''
+
+# Loads an AoA from disk, converts it to a JSON string
+def dumpLogJson(filename):
+	if os.path.isfile(filename):
+		with open(filename, "r") as logentries:
+			logs = json.load(logentries)
+	if logs:
+		out = []
+		for l in logs:
+			l[2] = l[2].strip()
+			l[3] = l[3].strip()
+			if l[2]=='': l[2] = '***'
+			entry = [ l[0],l[2],l[3] ]
+			out.append(entry)
+		return json.dumps(out, indent=4, sort_keys=True)
 	else:
 		return ''

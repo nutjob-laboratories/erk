@@ -24,6 +24,8 @@ Version 0.800
 	* Added options to export chat logs as both text and CSV
 	* Removed the option to export as CVS; added an option to select the delimiter in the export log dialog
 	* Added an option to select the entry delimiter in exported logs
+	* Added an option to export logs as (simplified) JSON (all internal Erk data is stripped)
+	* Bugfix: only JSON files in the log directory are available for export now
 
 Version 0.703
 	* ASCIImoji support has been removed

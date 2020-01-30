@@ -58,7 +58,7 @@ class Dialog(QDialog):
 
 		item = self.packlist.currentItem()
 		if item:
-			retval = [item.file,self.delimiter,self.linedelim]
+			retval = [item.file,self.delimiter,self.linedelim, self.do_json]
 		else:
 			msg = QMessageBox()
 			msg.setIcon(QMessageBox.Critical)
@@ -69,6 +69,21 @@ class Dialog(QDialog):
 			return None
 
 		return retval
+
+	def clickJson(self,state):
+		if state == Qt.Checked:
+			self.do_json = True
+			self.line.setEnabled(False)
+			self.type.setEnabled(False)
+			self.lineLabel.setEnabled(False)
+			self.typeLabel.setEnabled(False)
+		else:
+			self.do_json = False
+			self.line.setEnabled(True)
+			self.type.setEnabled(True)
+			self.lineLabel.setEnabled(True)
+			self.typeLabel.setEnabled(True)
+
 
 	def setLine(self):
 
@@ -98,6 +113,8 @@ class Dialog(QDialog):
 		self.delimiter = "\t"
 		self.linedelim = "\n"
 
+		self.do_json = False
+
 		self.setWindowTitle("Export log")
 		self.setWindowIcon(QIcon(LOG_ICON))
 
@@ -107,17 +124,17 @@ class Dialog(QDialog):
 		self.packlist.setMaximumHeight(100)
 
 		for x in os.listdir(LOG_DIRECTORY):
-			log = os.path.join(LOG_DIRECTORY, x)
-			if os.path.isfile(log):
-				p = os.path.basename(log).replace('.json','')
-				p = p.split('-')
-				netname = p[0]
-				channel = p[1]
+			if x.endswith(".json"):
+				log = os.path.join(LOG_DIRECTORY, x)
+				if os.path.isfile(log):
+					p = os.path.basename(log).replace('.json','')
+					p = p.split('-')
+					netname = p[0]
+					channel = p[1]
 
-				item = QListWidgetItem(channel+" ("+netname+")")
-				item.file = log
-				#item.setIcon(QIcon(LOG_ICON))
-				self.packlist.addItem(item)
+					item = QListWidgetItem(channel+" ("+netname+")")
+					item.file = log
+					self.packlist.addItem(item)
 
 		delimLayout = QFormLayout()
 
@@ -132,7 +149,8 @@ class Dialog(QDialog):
 		self.type.addItem("Pipe")
 		self.type.addItem("Double Pipe")
 
-		delimLayout.addRow(QLabel("<b>Field Delimiter</b>"), self.type)
+		self.typeLabel = QLabel("<b>Field Delimiter</b>")
+		delimLayout.addRow(self.typeLabel, self.type)
 
 		self.line = QComboBox(self)
 		self.line.activated.connect(self.setLine)
@@ -142,7 +160,13 @@ class Dialog(QDialog):
 		self.line.addItem("Comma")
 		self.line.addItem("Pipe")
 
-		delimLayout.addRow(QLabel("<b>Entry Delimiter</b>"), self.line)
+		self.lineLabel = QLabel("<b>Entry Delimiter</b>")
+		delimLayout.addRow(self.lineLabel, self.line)
+
+		self.json = QCheckBox(self)
+		self.json.stateChanged.connect(self.clickJson)
+
+		delimLayout.addRow(QLabel("<b>Export as JSON</b>"), self.json)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
