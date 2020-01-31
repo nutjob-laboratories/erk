@@ -27,6 +27,8 @@ Version 0.800
 	* Added an option to export logs as (simplified) JSON (all internal Erk data is stripped)
 	* Bugfix: only JSON files in the log directory are available for export now
 	* Bugfix: more criteria are applied to file names to find generated chat logs
+	* Made the export log dialog resizable
+	* Made the export log dialog a little "prettier"
 
 Version 0.703
 	* ASCIImoji support has been removed

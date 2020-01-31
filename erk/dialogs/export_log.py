@@ -118,10 +118,9 @@ class Dialog(QDialog):
 		self.setWindowTitle("Export log")
 		self.setWindowIcon(QIcon(LOG_ICON))
 
-		self.title = QLabel("Select a log to export")
+		self.title = QLabel("<b>Select a log to export</b>")
 
 		self.packlist = QListWidget(self)
-		self.packlist.setMaximumHeight(100)
 
 		for x in os.listdir(LOG_DIRECTORY):
 			if x.endswith(".json"):
@@ -164,23 +163,50 @@ class Dialog(QDialog):
 		self.lineLabel = QLabel("<b>Entry Delimiter</b>")
 		delimLayout.addRow(self.lineLabel, self.line)
 
-		self.json = QCheckBox(self)
-		self.json.stateChanged.connect(self.clickJson)
-
-		delimLayout.addRow(QLabel("<b>Export as JSON</b>"), self.json)
-
 		# Buttons
 		buttons = QDialogButtonBox(self)
 		buttons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 
-		buttons.button(QDialogButtonBox.Ok).setText("Export")
+		buttons.button(QDialogButtonBox.Ok).setText("Save")
+
+		titleLayout = QHBoxLayout()
+		titleLayout.addStretch()
+		titleLayout.addWidget(self.title)
+		titleLayout.addStretch()
+
+
+
+		self.formatBox = QGroupBox("Export settings")
+		self.formatBox.setAlignment(Qt.AlignHCenter)
+		self.formatBox.setLayout(delimLayout)
+
+		f = self.formatBox.font()
+		f.setBold(True)
+		self.formatBox.setFont(f)
+
+		self.json = QCheckBox("Export as JSON ",self)
+		self.json.stateChanged.connect(self.clickJson)
+		self.json.toggle()
+
+		f = self.json.font()
+		f.setBold(True)
+		self.json.setFont(f)
+
+		self.json.setLayoutDirection(Qt.RightToLeft)
+
+		#exjsonLoyout = QFormLayout()
+		#exjsonLoyout.addRow(QLabel("<b>Export as JSON</b>"), self.json)
+
+
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addWidget(self.title)
+		finalLayout.addLayout(titleLayout)
+		#finalLayout.addWidget(self.title)
 		finalLayout.addWidget(self.packlist)
-		finalLayout.addLayout(delimLayout)
+		finalLayout.addWidget(self.formatBox)
+		finalLayout.addWidget(self.json)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
