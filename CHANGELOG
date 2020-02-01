@@ -29,6 +29,7 @@ Version 0.800
 	* Bugfix: more criteria are applied to file names to find generated chat logs
 	* Made the export log dialog resizable
 	* Made the export log dialog a little "prettier"
+	* Added miscellaneous channel op options to the channel chat display's context menu
 
 Version 0.703
 	* ASCIImoji support has been removed

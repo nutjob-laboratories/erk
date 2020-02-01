@@ -226,6 +226,9 @@ class Window(QMainWindow):
 		self.chat.setFocusPolicy(Qt.NoFocus)
 		self.chat.anchorClicked.connect(self.linkClicked)
 
+		self.chat.setContextMenuPolicy(Qt.CustomContextMenu)
+		self.chat.customContextMenuRequested.connect(self.chatMenu)
+
 		if self.type==erk.config.CHANNEL_WINDOW:
 
 			self.topic = TopicEdit()
@@ -702,6 +705,68 @@ class Window(QMainWindow):
 			self.userlist.addItem(ui)
 
 		self.userlist.update()
+
+	def chatMenu(self,location):
+
+		menu = self.chat.createStandardContextMenu()
+
+		if self.operator:
+
+			if self.type==erk.config.CHANNEL_WINDOW:
+
+				opMenu = QMenu("Operator actions")
+				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
+				menu.insertMenu(menu.actions()[0],opMenu)
+
+				if "m" in self.modeson:
+					entry = QAction("Unmoderate channel",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"m",None,None))
+				else:
+					entry = QAction("Moderate channel",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"m",None,None))
+				opMenu.addAction(entry)
+
+				if "c" in self.modeson:
+					entry = QAction("Allow IRC colors",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"c",None,None))
+				else:
+					entry = QAction("Block IRC colors",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"c",None,None))
+				opMenu.addAction(entry)
+
+				if "i" in self.modeson:
+					entry = QAction("Allow uninvited users",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"i",None,None))
+				else:
+					entry = QAction("Make channel invite only",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"i",None,None))
+				opMenu.addAction(entry)
+
+				if "p" in self.modeson:
+					entry = QAction("Make channel public",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"p",None,None))
+				else:
+					entry = QAction("Make channel private",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"p",None,None))
+				opMenu.addAction(entry)
+
+				if "s" in self.modeson:
+					entry = QAction("Make channel unsecret",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"s",None,None))
+				else:
+					entry = QAction("Make channel secret",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"s",None,None))
+				opMenu.addAction(entry)
+
+				if "t" in self.modeson:
+					entry = QAction("Allow users to change topic",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"t",None,None))
+				else:
+					entry = QAction("Forbid non-ops from changing topic",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"t",None,None))
+				opMenu.addAction(entry)
+
+		action = menu.exec_(self.chat.mapToGlobal(location))
 
 	def eventFilter(self, source, event):
 
