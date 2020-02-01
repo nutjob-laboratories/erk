@@ -49,7 +49,17 @@ import erk.dialogs.editor as Editor
 import erk.dialogs.uninstall_package as Uninstall
 import erk.dialogs.export_log as ExportLog
 
+import erk.dialogs.key as Key
+
 import erk.dialogs.error as Error
+
+def KeyDialog():
+	x = Key.Dialog()
+	info = x.get_channel_information()
+	del x
+
+	if not info: return None
+	return info
 
 def ExportLogDialog(obj):
 	x = ExportLog.Dialog(obj)

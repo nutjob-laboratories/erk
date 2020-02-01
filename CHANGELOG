@@ -30,6 +30,8 @@ Version 0.800
 	* Made the export log dialog resizable
 	* Made the export log dialog a little "prettier"
 	* Added miscellaneous channel op options to the channel chat display's context menu
+	* Added an option (and dialog) to set a channel key to the chat display's context menu
+	* Added icons to the chat display context menu
 
 Version 0.703
 	* ASCIImoji support has been removed

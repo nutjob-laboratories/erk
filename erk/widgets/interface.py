@@ -48,6 +48,8 @@ import erk.format
 import erk.input
 import erk.macros
 
+from erk.dialogs import KeyDialog
+
 class Window(QMainWindow):
 
 	def closeEvent(self, event):
@@ -706,6 +708,12 @@ class Window(QMainWindow):
 
 		self.userlist.update()
 
+	def setChannelKey(self):
+		newkey = KeyDialog()
+		if newkey:
+			self.client.mode(self.name,True,"k",None,newkey)
+
+
 	def chatMenu(self,location):
 
 		menu = self.chat.createStandardContextMenu()
@@ -718,51 +726,60 @@ class Window(QMainWindow):
 				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 				menu.insertMenu(menu.actions()[0],opMenu)
 
+
+				if self.key!='' or "k" in self.modeson:
+					entry = QAction(QIcon(MINUS_ICON),"Remove channel key",self)
+					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"k",None,self.key))
+				else:
+					entry = QAction(QIcon(PLUS_ICON),"Set channel key",self)
+					entry.triggered.connect(self.setChannelKey)
+				opMenu.addAction(entry)
+
 				if "m" in self.modeson:
-					entry = QAction("Unmoderate channel",self)
+					entry = QAction(QIcon(MINUS_ICON),"Unmoderate channel",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"m",None,None))
 				else:
-					entry = QAction("Moderate channel",self)
+					entry = QAction(QIcon(PLUS_ICON),"Moderate channel",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"m",None,None))
 				opMenu.addAction(entry)
 
 				if "c" in self.modeson:
-					entry = QAction("Allow IRC colors",self)
+					entry = QAction(QIcon(MINUS_ICON),"Allow IRC colors",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"c",None,None))
 				else:
-					entry = QAction("Block IRC colors",self)
+					entry = QAction(QIcon(PLUS_ICON),"Block IRC colors",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"c",None,None))
 				opMenu.addAction(entry)
 
 				if "i" in self.modeson:
-					entry = QAction("Allow uninvited users",self)
+					entry = QAction(QIcon(MINUS_ICON),"Allow uninvited users",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"i",None,None))
 				else:
-					entry = QAction("Make channel invite only",self)
+					entry = QAction(QIcon(PLUS_ICON),"Make channel invite only",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"i",None,None))
 				opMenu.addAction(entry)
 
 				if "p" in self.modeson:
-					entry = QAction("Make channel public",self)
+					entry = QAction(QIcon(MINUS_ICON),"Make channel public",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"p",None,None))
 				else:
-					entry = QAction("Make channel private",self)
+					entry = QAction(QIcon(PLUS_ICON),"Make channel private",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"p",None,None))
 				opMenu.addAction(entry)
 
 				if "s" in self.modeson:
-					entry = QAction("Make channel unsecret",self)
+					entry = QAction(QIcon(MINUS_ICON),"Make channel unsecret",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"s",None,None))
 				else:
-					entry = QAction("Make channel secret",self)
+					entry = QAction(QIcon(PLUS_ICON),"Make channel secret",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"s",None,None))
 				opMenu.addAction(entry)
 
 				if "t" in self.modeson:
-					entry = QAction("Allow users to change topic",self)
+					entry = QAction(QIcon(MINUS_ICON),"Allow users to change topic",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"t",None,None))
 				else:
-					entry = QAction("Forbid non-ops from changing topic",self)
+					entry = QAction(QIcon(PLUS_ICON),"Forbid non-ops from changing topic",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,True,"t",None,None))
 				opMenu.addAction(entry)
 
