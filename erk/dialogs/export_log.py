@@ -77,13 +77,14 @@ class Dialog(QDialog):
 			self.type.setEnabled(False)
 			self.lineLabel.setEnabled(False)
 			self.typeLabel.setEnabled(False)
+			self.formatBox.setVisible(False)
 		else:
 			self.do_json = False
 			self.line.setEnabled(True)
 			self.type.setEnabled(True)
 			self.lineLabel.setEnabled(True)
 			self.typeLabel.setEnabled(True)
-
+			self.formatBox.setVisible(True)
 
 	def setLine(self):
 
@@ -176,15 +177,15 @@ class Dialog(QDialog):
 		titleLayout.addWidget(self.title)
 		titleLayout.addStretch()
 
-
-
-		self.formatBox = QGroupBox("Export settings")
+		self.formatBox = QGroupBox("Export as text")
 		self.formatBox.setAlignment(Qt.AlignHCenter)
 		self.formatBox.setLayout(delimLayout)
 
 		f = self.formatBox.font()
 		f.setBold(True)
 		self.formatBox.setFont(f)
+
+		self.formatBox.setVisible(False)
 
 		self.json = QCheckBox("Export as JSON ",self)
 		self.json.stateChanged.connect(self.clickJson)
@@ -196,17 +197,12 @@ class Dialog(QDialog):
 
 		self.json.setLayoutDirection(Qt.RightToLeft)
 
-		#exjsonLoyout = QFormLayout()
-		#exjsonLoyout.addRow(QLabel("<b>Export as JSON</b>"), self.json)
-
-
-
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(titleLayout)
-		#finalLayout.addWidget(self.title)
 		finalLayout.addWidget(self.packlist)
-		finalLayout.addWidget(self.formatBox)
 		finalLayout.addWidget(self.json)
+		finalLayout.addWidget(self.formatBox)
+		
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
