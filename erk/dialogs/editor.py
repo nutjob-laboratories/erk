@@ -46,7 +46,7 @@ from erk.files import PLUGIN_TEMPLATE
 import erk.dialogs.find as Find
 import erk.dialogs.template as Template
 import erk.config
-from erk.widgets import *
+from erk.widgets.action import MenuAction
 
 import erk.dialogs.export_package as Export
 

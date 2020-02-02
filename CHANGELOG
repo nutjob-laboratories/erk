@@ -34,6 +34,7 @@ Version 0.800
 	* Added icons to the chat display context menu
 	* Added an option to convert times from epoch to human readable in exported logs
 	* Changed human readable time format to be more like other IRC client log formats
+	* Bugfix: fixed import error preventing the editor from being used
 
 Version 0.703
 	* ASCIImoji support has been removed
