@@ -328,7 +328,7 @@ def dumpLog(filename,delimiter,linedelim="\n",epoch=True):
 			if l[2]=='': l[2] = '***'
 
 			if not epoch:
-				pretty_timestamp = datetime.fromtimestamp(l[0]).strftime('%m/%d/%Y %H:%M:%S')
+				pretty_timestamp = datetime.fromtimestamp(l[0]).strftime('%a, %d %b %Y %H:%M:%S')
 				entry = pretty_timestamp+delimiter+l[2]+delimiter+l[3]
 			else:
 				entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
@@ -349,7 +349,7 @@ def dumpLogJson(filename,epoch=True):
 			l[3] = l[3].strip()
 			if l[2]=='': l[2] = '*'
 			if not epoch:
-				l[0] = datetime.fromtimestamp(l[0]).strftime('%m/%d/%Y %H:%M:%S')
+				l[0] = datetime.fromtimestamp(l[0]).strftime('%a, %d %b %Y %H:%M:%S')
 			entry = [ l[0],l[2],l[3] ]
 			out.append(entry)
 		return json.dumps(out, indent=4, sort_keys=True)

@@ -33,6 +33,7 @@ Version 0.800
 	* Added an option (and dialog) to set a channel key to the chat display's context menu
 	* Added icons to the chat display context menu
 	* Added an option to convert times from epoch to human readable in exported logs
+	* Changed human readable time format to be more like other IRC client log formats
 
 Version 0.703
 	* ASCIImoji support has been removed
