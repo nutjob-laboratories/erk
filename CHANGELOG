@@ -32,6 +32,7 @@ Version 0.800
 	* Added miscellaneous channel op options to the channel chat display's context menu
 	* Added an option (and dialog) to set a channel key to the chat display's context menu
 	* Added icons to the chat display context menu
+	* Added an option to convert times from epoch to human readable in exported logs
 
 Version 0.703
 	* ASCIImoji support has been removed

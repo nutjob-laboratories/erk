@@ -36,6 +36,7 @@ import re
 from collections import defaultdict
 import string
 import random
+from datetime import datetime
 
 from erk.strings import *
 from erk.objects import *
@@ -315,7 +316,7 @@ def readLog(network,name):
 	return logs
 
 # Loads an AoA from disk, converts it to a string
-def dumpLog(filename,delimiter,linedelim="\n"):
+def dumpLog(filename,delimiter,linedelim="\n",epoch=True):
 	if os.path.isfile(filename):
 		with open(filename, "r") as logentries:
 			logs = json.load(logentries)
@@ -325,14 +326,19 @@ def dumpLog(filename,delimiter,linedelim="\n"):
 			l[2] = l[2].strip()
 			l[3] = l[3].strip()
 			if l[2]=='': l[2] = '***'
-			entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
+
+			if not epoch:
+				pretty_timestamp = datetime.fromtimestamp(l[0]).strftime('%m/%d/%Y %H:%M:%S')
+				entry = pretty_timestamp+delimiter+l[2]+delimiter+l[3]
+			else:
+				entry = str(l[0])+delimiter+l[2]+delimiter+l[3]
 			out.append(entry)
 		return linedelim.join(out)
 	else:
 		return ''
 
 # Loads an AoA from disk, converts it to a JSON string
-def dumpLogJson(filename):
+def dumpLogJson(filename,epoch=True):
 	if os.path.isfile(filename):
 		with open(filename, "r") as logentries:
 			logs = json.load(logentries)
@@ -341,7 +347,9 @@ def dumpLogJson(filename):
 		for l in logs:
 			l[2] = l[2].strip()
 			l[3] = l[3].strip()
-			if l[2]=='': l[2] = '***'
+			if l[2]=='': l[2] = '*'
+			if not epoch:
+				l[0] = datetime.fromtimestamp(l[0]).strftime('%m/%d/%Y %H:%M:%S')
 			entry = [ l[0],l[2],l[3] ]
 			out.append(entry)
 		return json.dumps(out, indent=4, sort_keys=True)

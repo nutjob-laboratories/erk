@@ -795,6 +795,7 @@ class Erk(QMainWindow):
 			dlog = d[1]
 			llog = d[2]
 			do_json = d[3]
+			do_epoch = d[4]
 			if not do_json:
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
@@ -802,7 +803,7 @@ class Erk(QMainWindow):
 				if fileName:
 					extension = os.path.splitext(fileName)[1]
 					if extension.lower()!='txt': fileName = fileName + ".txt"
-					dump = dumpLog(elog,dlog,llog)
+					dump = dumpLog(elog,dlog,llog,do_epoch)
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
 					code.close()
@@ -814,7 +815,7 @@ class Erk(QMainWindow):
 					extension = os.path.splitext(fileName)[1]
 					if extension.lower()!='json': fileName = fileName + ".json"
 					#dump = dumpLog(elog,dlog,llog)
-					dump = dumpLogJson(elog)
+					dump = dumpLogJson(elog,do_epoch)
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
 					code.close()

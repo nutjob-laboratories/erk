@@ -58,7 +58,7 @@ class Dialog(QDialog):
 
 		item = self.packlist.currentItem()
 		if item:
-			retval = [item.file,self.delimiter,self.linedelim, self.do_json]
+			retval = [item.file,self.delimiter,self.linedelim, self.do_json, self.epoch]
 		else:
 			msg = QMessageBox()
 			msg.setIcon(QMessageBox.Critical)
@@ -69,6 +69,12 @@ class Dialog(QDialog):
 			return None
 
 		return retval
+
+	def clickTime(self,state):
+		if state == Qt.Checked:
+			self.epoch = True
+		else:
+			self.epoch = False
 
 	def clickJson(self,state):
 		if state == Qt.Checked:
@@ -115,6 +121,7 @@ class Dialog(QDialog):
 		self.linedelim = "\n"
 
 		self.do_json = False
+		self.epoch = False
 
 		self.setWindowTitle("Export log")
 		self.setWindowIcon(QIcon(LOG_ICON))
@@ -197,12 +204,22 @@ class Dialog(QDialog):
 
 		self.json.setLayoutDirection(Qt.RightToLeft)
 
+		self.time = QCheckBox("Epoch format for date/time ",self)
+		self.time.stateChanged.connect(self.clickTime)
+		self.time.toggle()
+
+		f = self.time.font()
+		f.setBold(True)
+		self.time.setFont(f)
+
+		self.time.setLayoutDirection(Qt.RightToLeft)
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(titleLayout)
 		finalLayout.addWidget(self.packlist)
 		finalLayout.addWidget(self.json)
 		finalLayout.addWidget(self.formatBox)
-		
+		finalLayout.addWidget(self.time)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

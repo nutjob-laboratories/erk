@@ -726,7 +726,6 @@ class Window(QMainWindow):
 				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 				menu.insertMenu(menu.actions()[0],opMenu)
 
-
 				if self.key!='' or "k" in self.modeson:
 					entry = QAction(QIcon(MINUS_ICON),"Remove channel key",self)
 					entry.triggered.connect(lambda state: self.client.mode(self.name,False,"k",None,self.key))
