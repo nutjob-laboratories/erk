@@ -466,6 +466,7 @@ def open_private_window(client,target):
 	window = fetch_private_window(client,target)
 	if window:
 		client.gui.stack.setCurrentWidget(window)
+		window.input.setFocus()
 		return
 	else:
 
@@ -480,11 +481,15 @@ def open_private_window(client,target):
 		index = client.gui.stack.addWidget(newchan)
 		if erk.config.SWITCH_TO_NEW_WINDOWS:
 			client.gui.stack.setCurrentWidget(newchan)
+			newchan.input.setFocus()
 
 		PRIVATES.append( Window(index,newchan) )
 
 		# Update connection display
 		build_connection_display(client.gui)
+
+		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+			newchan.input.setFocus()
 
 		return newchan
 
@@ -898,6 +903,8 @@ def action_message(gui,client,target,user,message):
 
 				window = newchan
 
+				newchan.input.setFocus()
+
 				# Update connection display
 				build_connection_display(gui)
 			else:
@@ -990,6 +997,7 @@ def erk_joined_channel(gui,client,channel):
 	index = gui.stack.addWidget(newchan)
 	if erk.config.SWITCH_TO_NEW_WINDOWS:
 		gui.stack.setCurrentWidget(newchan)
+		newchan.input.setFocus()
 
 	#gui.setWindowTitle(channel)
 
@@ -1193,6 +1201,7 @@ def private_message(gui,client,user,message):
 			index = gui.stack.addWidget(newchan)
 			if erk.config.SWITCH_TO_NEW_WINDOWS:
 				gui.stack.setCurrentWidget(newchan)
+				newchan.input.setFocus()
 
 			#gui.setWindowTitle(nick)
 

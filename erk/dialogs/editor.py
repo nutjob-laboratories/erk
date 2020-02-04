@@ -84,7 +84,8 @@ class Window(QMainWindow):
 
 	def closeEvent(self, event):
 		if self.changed:
-			self.doExitSave(self.filename)
+			if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
+				self.doExitSave(self.filename)
 
 		if self.app!=None:
 			self.app.quit()
@@ -360,7 +361,6 @@ class Window(QMainWindow):
 				os.mkdir(outdir)
 				shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
 				shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
-				#shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(outdir, "package.txt"))
 
 				# Escape double quotes in non-safe name
 				info[0] = info[0].replace('"','\\"')
@@ -658,6 +658,12 @@ class Window(QMainWindow):
 
 		if erk.config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 
+		self.set_exitsave = QAction(QIcon(UNCHECKED_ICON),"Prompt for save on exit",self)
+		self.set_exitsave.triggered.connect(lambda state,s="exitsave": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_exitsave)
+
+		if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
+
 		settingsMenu.addSeparator()
 
 		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
@@ -764,6 +770,16 @@ class Window(QMainWindow):
 			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
 	def toggleSetting(self,setting):
+
+		if setting=="exitsave":
+			if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
+				erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = False
+				self.set_exitsave.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
+				self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="highlight":
 			if erk.config.EDITOR_SYNTAX_HIGHLIGHT:

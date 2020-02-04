@@ -96,6 +96,8 @@ EDITOR_FONT = ''
 EDITOR_STATUS_BAR = True
 EDITOR_SYNTAX_HIGHLIGHT = True
 
+EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
@@ -153,6 +155,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"editor_font": EDITOR_FONT,
 		"editor_status_bar": EDITOR_STATUS_BAR,
 		"editor_syntax_highlighting": EDITOR_SYNTAX_HIGHLIGHT,
+		"editor_prompt_for_save_on_exit": EDITOR_PROMPT_FOR_SAVE_ON_EXIT,
 	}
 
 	with open(filename, "w") as write_data:
@@ -213,6 +216,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global EDITOR_FONT
 	global EDITOR_STATUS_BAR
 	global EDITOR_SYNTAX_HIGHLIGHT
+	global EDITOR_PROMPT_FOR_SAVE_ON_EXIT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -273,6 +277,7 @@ def load_settings(filename=SETTINGS_FILE):
 			EDITOR_FONT = data["editor_font"]
 			EDITOR_STATUS_BAR = data["editor_status_bar"]
 			EDITOR_SYNTAX_HIGHLIGHT = data["editor_syntax_highlighting"]
+			EDITOR_PROMPT_FOR_SAVE_ON_EXIT = data["editor_prompt_for_save_on_exit"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

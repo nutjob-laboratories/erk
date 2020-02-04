@@ -63,7 +63,6 @@ class Window(QMainWindow):
 				saveLog(self.client.network,self.name,self.newLog)
 
 	def handleTopicInput(self):
-		#print(self.topic.text())
 		self.client.topic(self.name,self.topic.text())
 
 		# Move the cursor back to the input widget
@@ -139,6 +138,9 @@ class Window(QMainWindow):
 			self.chat.setSource(QUrl())
 			self.chat.moveCursor(QTextCursor.End)
 
+		# Move focus back to the input widget
+		self.input.setFocus()
+
 
 	def resizeEvent(self, event):
 
@@ -165,6 +167,9 @@ class Window(QMainWindow):
 
 			# Move the QSplitter handle to match the new widget sizes
 			self.horizontalSplitter.setSizes([self.chat.width(), self.userlist.width()])
+
+			# Move focus back to the input widget
+			self.input.setFocus()
 
 		return super(Window, self).resizeEvent(event)
 
@@ -235,8 +240,12 @@ class Window(QMainWindow):
 
 			self.topic = TopicEdit()
 			self.topic.returnPressed.connect(self.handleTopicInput)
-			self.topic.setStyleSheet("border: 0px; background-color: transparent;")
 			self.topic.setReadOnly(True)
+
+
+			col = self.parent.palette().color(QPalette.Background).name()
+			self.topic.setStyleSheet(f"border: 0px; background-color: {col};")
+
 
 			self.userlist = QListWidget(self)
 			self.userlist.setFocusPolicy(Qt.NoFocus)
@@ -543,6 +552,9 @@ class Window(QMainWindow):
 
 		self.newLog.append(message)
 
+		# Move focus back to the input widget
+		self.input.setFocus()
+
 	def rerender(self):
 		self.chat.clear()
 
@@ -551,6 +563,9 @@ class Window(QMainWindow):
 			self.chat.append(d)
 
 		self.chat.moveCursor(QTextCursor.End)
+
+		# Move focus back to the input widget
+		self.input.setFocus()
 
 	def rerender_userlist(self):
 		self.writeUserlist(self.users)
