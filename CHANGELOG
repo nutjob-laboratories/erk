@@ -38,6 +38,9 @@ Version 0.800
 	* Bugfix: channel topic display's context menu now displays correctly
 	* Bugfix: text input widget should now retain focus most of the time
 	* Added a setting to en/disable prompt for save on editor exit
+	* Editor status bar now displays if the current file is in a package or is standalone
+	* Changed the log icon
+	* Changed the plugin icon
 
 Version 0.703
 	* ASCIImoji support has been removed
