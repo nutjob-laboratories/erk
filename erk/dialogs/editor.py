@@ -143,16 +143,12 @@ class Window(QMainWindow):
 				self.findWindow.setWindowTitle(self.title)
 
 			pname = getPackageName(fileName)
-			# if pname:
 			if pname[1]:
 				self.package_icon.show()
 				self.status_package.show()
 				self.status_package.setText("<b><small>"+pname[0]+"</small></b>")
 				self.plugin_icon.hide()
 			else:
-				#self.status_package.setText("<b><small>Unknown package</small></b>")
-				# self.package_icon.hide()
-				# self.status_package.hide()
 				self.package_icon.hide()
 				self.status_package.show()
 				self.status_package.setText("<b><small>"+pname[0]+"</small></b>")
@@ -169,16 +165,6 @@ class Window(QMainWindow):
 		self.changed = False
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle(self.title)
-
-		# pname = getPackageName(fileName)
-		# if pname:
-		# 	self.package_icon.show()
-		# 	self.status_package.show()
-		# 	self.status_package.setText("<b><small>"+pname+"</small></b>")
-		# else:
-		# 	#self.status_package.setText("<b><small>Unknown package</small></b>")
-		# 	self.package_icon.hide()
-		# 	self.status_package.hide()
 
 		pname = getPackageName(self.filename)
 		if pname[1]:
@@ -209,16 +195,6 @@ class Window(QMainWindow):
 			self.changed = False
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
-
-			# pname = getPackageName(fileName)
-			# if pname:
-			# 	self.package_icon.show()
-			# 	self.status_package.show()
-			# 	self.status_package.setText("<b><small>"+pname+"</small></b>")
-			# else:
-			# 	#self.status_package.setText("<b><small>Unknown package</small></b>")
-			# 	self.package_icon.hide()
-			# 	self.status_package.hide()
 
 			pname = getPackageName(fileName)
 			if pname[1]:
@@ -291,9 +267,6 @@ class Window(QMainWindow):
 
 		if icount:
 			self.findWindow.icount.setText(icount)
-			#self.findWindow.icount.show()
-		#else:
-			#self.findWindow.icount.hide()
 
 		self.findWindow.show()
 		return
@@ -323,9 +296,6 @@ class Window(QMainWindow):
 
 		if icount:
 			self.findWindow.icount.setText(icount)
-			#self.findWindow.icount.show()
-		#else:
-			#self.findWindow.icount.hide()
 
 
 		self.findWindow.show()
@@ -787,12 +757,6 @@ class Window(QMainWindow):
 			if os.path.isfile(self.filename):
 				self.sep_icon.show()
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
-
-				# pname = getPackageName(self.filename)
-				# if pname:
-				# 	self.package_icon.show()
-				# 	self.status_package.show()
-				# 	self.status_package.setText("<b><small>"+pname+"</small></b>")
 
 				pname = getPackageName(self.filename)
 				if pname[1]:

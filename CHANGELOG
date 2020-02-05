@@ -42,6 +42,7 @@ Version 0.800
 	* Changed the log icon
 	* Changed the plugin icon
 	* Bugfix: when creating a new package in the editor, the package's name is now displayed correctly
+	* Bugfix: editor now uses the editor font if started from the commandline
 
 Version 0.703
 	* ASCIImoji support has been removed

@@ -109,13 +109,13 @@ if __name__ == '__main__':
 	if args.editor:
 		erk.config.load_settings()
 
-		if erk.config.DISPLAY_FONT=='':
+		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,9)
 		else:
 			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
+			f.fromString(erk.config.EDITOR_FONT)
 			font = f
 
 		app.setFont(font)
@@ -133,13 +133,13 @@ if __name__ == '__main__':
 
 		erk.config.load_settings()
 
-		if erk.config.DISPLAY_FONT=='':
+		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,9)
 		else:
 			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
+			f.fromString(erk.config.EDITOR_FONT)
 			font = f
 
 		app.setFont(font)
@@ -151,13 +151,13 @@ if __name__ == '__main__':
 	elif args.new:
 		erk.config.load_settings()
 
-		if erk.config.DISPLAY_FONT=='':
+		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,9)
 		else:
 			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
+			f.fromString(erk.config.EDITOR_FONT)
 			font = f
 
 		app.setFont(font)
