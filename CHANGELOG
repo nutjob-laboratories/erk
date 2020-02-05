@@ -41,6 +41,7 @@ Version 0.800
 	* Editor status bar now displays if the current file is in a package or is standalone
 	* Changed the log icon
 	* Changed the plugin icon
+	* Bugfix: when creating a new package in the editor, the package's name is now displayed correctly
 
 Version 0.703
 	* ASCIImoji support has been removed

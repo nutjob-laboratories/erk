@@ -400,7 +400,7 @@ class Window(QMainWindow):
 				f.write(info[0])
 				f.close()
 
-				self.status_package.setText(info[0])
+				self.status_package.setText("<b><small>"+info[0]+"</small></b>")
 
 				self.package_icon.show()
 				self.status_package.show()
