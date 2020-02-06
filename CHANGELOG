@@ -49,6 +49,9 @@ Version 0.800
 	* Moved "editor" and "install" menu entries back to the "plugins" menu
 	* Revamped the "macro" menu
 	* Made plugins and packages have different icons in the plugin menu
+	* Moved display settings to their own menu (named, funnily enough, "display")
+	* Moved en/disable macro and plugin options to the "settings" menu
+	* Tweaked menubar graphics
 
 Version 0.703
 	* ASCIImoji support has been removed

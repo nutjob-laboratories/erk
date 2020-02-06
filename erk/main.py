@@ -269,6 +269,8 @@ class Erk(QMainWindow):
 		self.macroMenu = QMenu()
 		self.pluginMenu = QMenu()
 
+		self.displayMenu = QMenu()
+
 		if not self.block_toolbar:
 
 			self.buildToolbar()
@@ -348,38 +350,12 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
 		self.mainMenu.addAction(entry)
 
-		# if not self.block_plugins:
-
-		# 	self.mainMenu.addSeparator()
-
-		# 	entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-		# 	self.mainMenu.addAction(entry)
-
-		# 	entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		# 	self.mainMenu.addAction(entry)
-
 		self.mainMenu.addSeparator()
 
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.disconnect.triggered.connect(self.disconnect_current)
 		self.mainMenu.addAction(self.disconnect)
 		self.disconnect.setEnabled(False)
-
-		self.mainMenu.addSeparator()
-
-		self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
-		self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-		self.mainMenu.addAction(self.set_macroenable)
-
-		if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-		if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
-
-		entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
-		entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
-		self.mainMenu.addAction(entry)
-
-		if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
-		if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
 
 		self.mainMenu.addSeparator()
 		
@@ -391,16 +367,15 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.close)
 		self.mainMenu.addAction(entry)
 
-		# settingsMenu = QMenu()
-		self.settingsMenu.clear()
+		self.displayMenu.clear()
 
 		if not self.block_settings:
 
-			add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
+			add_toolbar_menu(self.toolbar,"Display",self.displayMenu)
 
 			self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
 			self.fontMenuEntry.triggered.connect(self.menuFont)
-			self.settingsMenu.addAction(self.fontMenuEntry)
+			self.displayMenu.addAction(self.fontMenuEntry)
 
 			f = self.app.font()
 			fs = f.toString()
@@ -412,18 +387,37 @@ class Erk(QMainWindow):
 
 			entry = QAction(QIcon(FORMAT_ICON),"Colors",self)
 			entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
-			self.settingsMenu.addAction(entry)
+			self.displayMenu.addAction(entry)
 
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
-			self.settingsMenu.addAction(self.winsizeMenuEntry)
+			self.displayMenu.addAction(self.winsizeMenuEntry)
 
 			w = erk.config.DEFAULT_APP_WIDTH
 			h =  erk.config.DEFAULT_APP_HEIGHT
 
 			self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
-			self.settingsMenu.addSeparator()
+			self.displayMenu.addSeparator()
+
+			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
+			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
+			self.displayMenu.addAction(self.set_ontop)
+
+			if erk.config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
+			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
+			self.displayMenu.addAction(self.set_full)
+
+			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
+
+		# settingsMenu = QMenu()
+		self.settingsMenu.clear()
+
+		if not self.block_settings:
+
+			add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
 
 			# Message display submenu
 
@@ -665,17 +659,19 @@ class Erk(QMainWindow):
 
 			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
-			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_ontop)
+			self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
+			self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_macroenable)
 
-			if erk.config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+			if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+			if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 
-			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
-			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_full)
+			entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
+			entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
+			self.settingsMenu.addAction(entry)
 
-			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
+			if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+			if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
 
 			# Log menu
 

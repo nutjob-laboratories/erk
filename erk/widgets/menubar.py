@@ -45,6 +45,7 @@ toolbar_button_style = '''
 	QPushButton::open{
 		background-color: #a9a9a9;
 		color: white;
+		font: bold;
 	}
 '''
 
@@ -53,11 +54,13 @@ toolbar_button_style_hover = '''
 		border: 0px;
 		background-color: #a9a9a9;
 		color: black;
+		font: bold;
 	}
 	QPushButton::menu-indicator{width:0px;}
 	QPushButton::open{
 		background-color: #a9a9a9;
 		color: white;
+		font: bold;
 	}
 '''
 
@@ -83,7 +86,8 @@ def generate_menu_toolbar(self):
 
 	toolbar = QToolBar(self)
 	toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-	toolbar.setStyleSheet(''' QToolBar { spacing: 5px; } ''')
+	# toolbar.setStyleSheet(''' QToolBar { spacing: 5px; } ''')
+	toolbar.setStyleSheet(''' QToolBar { spacing: 8px; } ''')
 
 	f = toolbar.font()
 	fm = QFontMetrics(f)
