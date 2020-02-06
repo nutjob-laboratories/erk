@@ -955,7 +955,7 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
-		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options")
+		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
 
 		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 		m.addAction(entry)
@@ -1111,7 +1111,7 @@ class Erk(QMainWindow):
 
 			self.macroMenu.addSeparator()
 
-		m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options")
+		m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
 
 		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
 		m.addAction(entry)
