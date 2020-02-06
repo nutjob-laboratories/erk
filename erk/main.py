@@ -999,12 +999,28 @@ class Erk(QMainWindow):
 		# PLUGIN_DIRECTORY
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Open Plugin Package", None,"Zip File (*.zip);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", None,"Zip File (*.zip);;All Files (*)", options=options)
 		if fileName:
 			with ZipFile(fileName,'r') as zipObj:
 				zipObj.extractall(PLUGIN_DIRECTORY)
 			self.plugins.reload_plugins(True)
 			self.rebuildPluginMenu()
+
+	def menuInstallMacro(self):
+		# erk.macros.MACRO_DIRECTORY
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Macro", None,"JSON File (*.json);;All Files (*)", options=options)
+		if fileName:
+
+			mfile = os.path.basename(fileName)
+			outfile = os.path.join(erk.macros.MACRO_DIRECTORY, mfile)
+			
+			shutil.copy(fileName, outfile)
+
+			self.menuReloadMacros()
+			self.menuReloadPlugins()
+
 
 	def menuEditor(self):
 		x = EditorDialog(self)
@@ -1037,27 +1053,21 @@ class Erk(QMainWindow):
 
 		self.rebuildPluginMenu()
 
+	def create_new_macro(self):
+		MacroDialog(self)
+
+	def open_macro_dir(self):
+		os.startfile(erk.macros.MACRO_DIRECTORY)
+
 	def rebuildMacroMenu(self):
 
 		self.macroMenu.clear()
 
-		self.editmacro = QAction(QIcon(MACRO_ICON),"New macro",self)
-		self.editmacro.triggered.connect(lambda state,s=self: MacroDialog(s))
-		self.macroMenu.addAction(self.editmacro)
+		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
+		self.macroMenu.addAction(entry)
 
-		if not erk.config.MACROS_ENABLED: self.editmacro.setEnabled(False)
-
-		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
-
-		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macro directory",self)
-		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
+		if not erk.config.MACROS_ENABLED:
+			entry.setEnabled(False)
 
 		self.macroMenu.addSeparator()
 
@@ -1070,6 +1080,20 @@ class Erk(QMainWindow):
 			self.macroMenu.addAction(entry)
 
 			if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
+
+		self.macroMenu.addSeparator()
+
+		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
+
+		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macros",self)
+		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
+		self.macroMenu.addAction(ircMenu_Macro)
+
+		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
 	def menuReloadMacros(self):
 		erk.macros.load_macros()

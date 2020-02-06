@@ -47,6 +47,7 @@ Version 0.800
 	* Entries in the plugin menu now feature an "uninstall this plugin" entry
 	* Removed the "uninstall package dialog" and all menu trigger
 	* Moved "editor" and "install" menu entries back to the "plugins" menu
+	* Revamped the "macro" menu
 
 Version 0.703
 	* ASCIImoji support has been removed
