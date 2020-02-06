@@ -828,14 +828,14 @@ class Erk(QMainWindow):
 			self.display_load_errors()
 
 
-		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-		self.pluginMenu.addAction(entry)
+		# entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+		# self.pluginMenu.addAction(entry)
 
-		if not erk.config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+		# if not erk.config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
 
-		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		self.pluginMenu.addAction(entry)
+		# entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
+		# self.pluginMenu.addAction(entry)
 
 		self.pluginMenu.addSeparator()
 
@@ -965,9 +965,26 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
+		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options")
+
+		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+		m.addAction(entry)
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
+		m.addAction(entry)
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		m.addSeparator()
+
 		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
 		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		self.pluginMenu.addAction(entry)
+		# self.pluginMenu.addAction(entry)
+		m.addAction(entry)
 
 		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
@@ -976,9 +993,18 @@ class Erk(QMainWindow):
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
 		entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-		self.pluginMenu.addAction(entry)
+		#self.pluginMenu.addAction(entry)
+		m.addAction(entry)
 
 		if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
+		#self.pluginMenu.addAction(entry)
+		m.addAction(entry)
 
 		if not erk.config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
@@ -986,6 +1012,9 @@ class Erk(QMainWindow):
 		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
 		entry.triggered.connect(self.menuReloadPlugins)
 		self.pluginMenu.addAction(entry)
+
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
 
 	def uninstall_plugin(self,directory):
 		if os.path.isdir(directory):
@@ -1064,11 +1093,11 @@ class Erk(QMainWindow):
 
 		self.macroMenu.clear()
 
-		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
-		self.macroMenu.addAction(entry)
+		# entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
+		# self.macroMenu.addAction(entry)
 
-		if not erk.config.MACROS_ENABLED:
-			entry.setEnabled(False)
+		# if not erk.config.MACROS_ENABLED:
+		# 	entry.setEnabled(False)
 
 		self.macroMenu.addSeparator()
 
@@ -1084,9 +1113,20 @@ class Erk(QMainWindow):
 
 		self.macroMenu.addSeparator()
 
+		m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options")
+
+		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
+		m.addAction(entry)
+
+		if not erk.config.MACROS_ENABLED:
+			entry.setEnabled(False)
+
+		m.addSeparator()
+
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
-		self.macroMenu.addAction(ircMenu_Macro)
+		# self.macroMenu.addAction(ircMenu_Macro)
+		m.addAction(ircMenu_Macro)
 
 		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 

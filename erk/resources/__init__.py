@@ -180,3 +180,5 @@ WINDOW_ICON = ":/gui-window.png"
 VERTICAL_RULE_BACKGROUND = ":/gui-vertical_rule.png"
 
 EXPORT_ICON = ":/gui-export.png"
+
+OPTIONS_ICON = ":/gui-options.png"
