@@ -37,6 +37,27 @@ from PyQt5 import QtCore
 
 from erk.resources import *
 
+TEXT_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small>!TEXT!</small></center></td>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+def textSeparator(self,text):
+
+	tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
 class MenuLabel(QLabel):
 	clicked=pyqtSignal()
 
@@ -107,20 +128,6 @@ def Menu5Action(self,icon,title,description,description2,description3,descriptio
 	erkmenuAction.setDefaultWidget(erkmenuLabel)
 
 	erkmenuLabel.setOpenExternalLinks(True)
-
-# def Menu4Action(self,icon,title,description,description2,description3,icon_size):
-
-# 	erkmenuLabel = MenuLabel( menu4Html(icon,title,description,description2,description3,icon_size) )
-# 	erkmenuAction = QWidgetAction(self)
-# 	erkmenuAction.setDefaultWidget(erkmenuLabel)
-
-# 	return erkmenuAction
-
-# def Menu5Action(self,icon,title,description,description2,description3,description4,icon_size):
-
-# 	erkmenuLabel = MenuLabel( menu5Html(icon,title,description,description2,description3,description4,icon_size) )
-# 	erkmenuAction = QWidgetAction(self)
-# 	erkmenuAction.setDefaultWidget(erkmenuLabel)
 
 	return erkmenuAction
 

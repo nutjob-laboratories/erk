@@ -827,32 +827,22 @@ class Erk(QMainWindow):
 			self.plugins = PluginCollection("plugins")
 			self.display_load_errors()
 
-
-		# entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-		# self.pluginMenu.addAction(entry)
-
-		# if not erk.config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		# entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		# self.pluginMenu.addAction(entry)
-
 		self.pluginMenu.addSeparator()
 
 		if len(self.plugins.plugins)==0:
-			l1 = QLabel("&nbsp;<b>No plugins found</b>&nbsp;")
+
+			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;")
 			l1.setAlignment(Qt.AlignCenter)
 			entry = QWidgetAction(self)
 			entry.setDefaultWidget(l1)
 			self.pluginMenu.addAction(entry)
 
-			l1 = QLabel("&nbsp;<i>Install plugins in the main menu</i>&nbsp;")
-			l1.setAlignment(Qt.AlignCenter)
-			entry = QWidgetAction(self)
-			entry.setDefaultWidget(l1)
-			self.pluginMenu.addAction(entry)
+			self.pluginMenu.addSeparator()
 
-			return
+			#return
+		else:
+			s = textSeparator(self,"Installed plugins")
+			self.pluginMenu.addAction(s)
 
 		plist = {}
 
@@ -1093,25 +1083,33 @@ class Erk(QMainWindow):
 
 		self.macroMenu.clear()
 
-		# entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
-		# self.macroMenu.addAction(entry)
+		# self.macroMenu.addSeparator()
 
-		# if not erk.config.MACROS_ENABLED:
-		# 	entry.setEnabled(False)
+		if len(erk.macros.MACROS)>0:
 
-		self.macroMenu.addSeparator()
+			s = textSeparator(self,"Installed macros")
+			self.macroMenu.addAction(s)
 
-		for m in erk.macros.MACROS:
-			trigger = m["trigger"]
-			filename = m["filename"]
+			for m in erk.macros.MACROS:
+				trigger = m["trigger"]
+				filename = m["filename"]
 
-			entry = QAction(QIcon(MACRO_FILE_ICON),trigger,self)
-			entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
+				entry = QAction(QIcon(MACRO_FILE_ICON),trigger,self)
+				entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
+				self.macroMenu.addAction(entry)
+
+				if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
+
+			self.macroMenu.addSeparator()
+
+		else:
+			l1 = QLabel("<br>&nbsp;<b>No macros installed</b>&nbsp;")
+			l1.setAlignment(Qt.AlignCenter)
+			entry = QWidgetAction(self)
+			entry.setDefaultWidget(l1)
 			self.macroMenu.addAction(entry)
 
-			if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
-
-		self.macroMenu.addSeparator()
+			self.macroMenu.addSeparator()
 
 		m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options")
 
@@ -1125,7 +1123,6 @@ class Erk(QMainWindow):
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
-		# self.macroMenu.addAction(ircMenu_Macro)
 		m.addAction(ircMenu_Macro)
 
 		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
