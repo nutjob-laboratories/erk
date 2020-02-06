@@ -59,7 +59,6 @@ from erk.dialogs import(
 	AboutDialog,
 	MacroDialog,
 	EditorDialog,
-	UninstallDialog,
 	ErrorDialog,
 	ExportLogDialog
 	)
@@ -349,15 +348,15 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
 		self.mainMenu.addAction(entry)
 
-		if not self.block_plugins:
+		# if not self.block_plugins:
 
-			self.mainMenu.addSeparator()
+		# 	self.mainMenu.addSeparator()
 
-			entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-			self.mainMenu.addAction(entry)
+		# 	entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+		# 	self.mainMenu.addAction(entry)
 
-			entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-			self.mainMenu.addAction(entry)
+		# 	entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
+		# 	self.mainMenu.addAction(entry)
 
 		self.mainMenu.addSeparator()
 
@@ -828,23 +827,15 @@ class Erk(QMainWindow):
 			self.plugins = PluginCollection("plugins")
 			self.display_load_errors()
 
-		if len(self.plugins.plugins)>0:
 
-			self.plug_uninstall = QAction(QIcon(UNINSTALL_ICON),"Uninstall plugin",self)
-			self.plug_uninstall.triggered.connect(self.menuUninstall)
-			self.pluginMenu.addAction(self.plug_uninstall)
-
-			if not erk.config.PLUGINS_ENABLED:
-				self.plug_uninstall.setEnabled(False)
-
-		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 		self.pluginMenu.addAction(entry)
-
-		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
 		if not erk.config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
+
+		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
+		self.pluginMenu.addAction(entry)
 
 		self.pluginMenu.addSeparator()
 
@@ -876,6 +867,13 @@ class Erk(QMainWindow):
 		for pack in plist:
 
 			m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
+
+			for p in plist[pack]: plugdir = p._packdir
+			plugtype = "package"
+
+			if plugdir==PLUGIN_DIRECTORY:
+				plugdir = p.__file__
+				plugtype = "plugin"
 
 			if not erk.config.PLUGINS_ENABLED:
 				m.setEnabled(False)
@@ -960,37 +958,42 @@ class Erk(QMainWindow):
 
 				m.addSeparator()
 
-		if erk.config.DEVELOPER_MODE:
+			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall "+plugtype,self)
+			entry.triggered.connect(lambda state,f=plugdir: self.uninstall_plugin(f))
+			m.addAction(entry)
 
-			self.pluginMenu.addSeparator()
+		self.pluginMenu.addSeparator()
 
-			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-			self.pluginMenu.addAction(plugin_dir)
+		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
 
-			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-			entry.triggered.connect(self.menuReloadPlugins)
-			self.pluginMenu.addAction(entry)
+		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
-			entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
-			entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-			self.pluginMenu.addAction(entry)
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
 
-			if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
+		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
+		entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
+		self.pluginMenu.addAction(entry)
 
-	
-	def menuUninstall(self):
-		pack = UninstallDialog(self)
+		if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
 
-		if pack:
-			if os.path.isdir(pack):
-				shutil.rmtree(pack)
-			elif os.path.isfile(pack):
-				os.remove(pack)
+		if not erk.config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
 
-			self.plugins.reload_plugins(True)
-			self.rebuildPluginMenu()
+		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+		entry.triggered.connect(self.menuReloadPlugins)
+		self.pluginMenu.addAction(entry)
 
+	def uninstall_plugin(self,directory):
+		if os.path.isdir(directory):
+			shutil.rmtree(directory)
+		elif os.path.isfile(directory):
+			os.remove(directory)
+
+		self.plugins.reload_plugins(True)
+		self.rebuildPluginMenu()
 
 	def menuInstall(self):
 		# PLUGIN_DIRECTORY

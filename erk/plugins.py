@@ -368,6 +368,8 @@ class PluginCollection(object):
 
 				package_icon = os.path.join(mfile, "package.png")
 
+				package_directory = mfile
+
 				clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
 				for (_, c) in clsmembers:
 
@@ -380,6 +382,8 @@ class PluginCollection(object):
 						plugin.__file__ = inspect.getfile(c).replace(".pyc",".py")
 
 						plugin._packicon = package_icon
+
+						plugin._packdir = package_directory
 
 						if package_name:
 							plugin._package = package_name

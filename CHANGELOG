@@ -43,6 +43,10 @@ Version 0.800
 	* Changed the plugin icon
 	* Bugfix: when creating a new package in the editor, the package's name is now displayed correctly
 	* Bugfix: editor now uses the editor font if started from the commandline
+	* Separated the two different documentation plugins into two separate files
+	* Entries in the plugin menu now feature an "uninstall this plugin" entry
+	* Removed the "uninstall package dialog" and all menu trigger
+	* Moved "editor" and "install" menu entries back to the "plugins" menu
 
 Version 0.703
 	* ASCIImoji support has been removed

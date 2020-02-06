@@ -25,7 +25,8 @@ os.mkdir("./dist/plugins")
 os.mkdir("./dist/plugins/examples")
 
 shutil.copy("./plugins/examples/documentation.png", "./dist/plugins/examples/documentation.png")
-shutil.copy("./plugins/examples/documentation.py", "./dist/plugins/examples/documentation.py")
+shutil.copy("./plugins/examples/hello.py", "./dist/plugins/examples/hello.py")
+shutil.copy("./plugins/examples/notes.py", "./dist/plugins/examples/notes.py")
 shutil.copy("./plugins/examples/package.png", "./dist/plugins/examples/package.png")
 shutil.copy("./plugins/examples/package.txt", "./dist/plugins/examples/package.txt")
 

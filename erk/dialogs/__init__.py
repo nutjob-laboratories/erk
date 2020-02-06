@@ -46,7 +46,6 @@ import erk.dialogs.format as FormatText
 import erk.dialogs.about as About
 import erk.dialogs.macro as Macro
 import erk.dialogs.editor as Editor
-import erk.dialogs.uninstall_package as Uninstall
 import erk.dialogs.export_log as ExportLog
 
 import erk.dialogs.key as Key
@@ -73,14 +72,6 @@ def ErrorDialog(obj,errlist=None):
 	x = Error.Dialog(errlist,obj)
 	x.resize(400,250)
 	x.show()
-
-def UninstallDialog(obj):
-	x = Uninstall.Dialog(obj)
-	info = x.get_name_information(obj)
-	del x
-
-	if not info: return None
-	return info
 
 def EditorDialog(obj=None,filename=None,app=None):
 	x = Editor.Window(filename,obj,app)
