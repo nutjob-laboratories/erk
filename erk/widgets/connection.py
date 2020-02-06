@@ -35,6 +35,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from erk.strings import *
+from erk.files import *
 
 def clearQTreeWidget(tree):
 	iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
@@ -93,6 +94,9 @@ def buildConnectionDisplayWidget(self):
 
 	# connectionDisplay.setFeatures( QDockWidget.NoDockWidgetFeatures )
 	# connectionDisplay.setTitleBarWidget(QWidget())
+
+	STYLES = get_text_format_settings()
+	connectionTree.setStyleSheet(STYLES["all"])
 
 	return [connectionTree,connectionDisplay]
 

@@ -218,7 +218,8 @@ class Window(QMainWindow):
 
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
-		# self.history_buffer_max = erk.config.HISTORY_LENGTH
+
+		STYLES = get_text_format_settings()
 
 		self.userlist_width = 0
 
@@ -236,6 +237,8 @@ class Window(QMainWindow):
 		self.chat.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.chat.customContextMenuRequested.connect(self.chatMenu)
 
+		self.chat.setStyleSheet(STYLES["all"])
+
 		if self.type==erk.config.CHANNEL_WINDOW:
 
 			self.topic = TopicEdit()
@@ -251,6 +254,8 @@ class Window(QMainWindow):
 			self.userlist.setFocusPolicy(Qt.NoFocus)
 			self.userlist.itemDoubleClicked.connect(self._handleDoubleClick)
 			self.userlist.installEventFilter(self)
+
+			self.userlist.setStyleSheet(STYLES["all"])
 
 			# Make sure that user status icons are just a little
 			# bigger than the user entry text
@@ -270,6 +275,8 @@ class Window(QMainWindow):
 		self.input.returnPressed.connect(self.handleUserInput)
 		self.input.keyUp.connect(self.keyPressUp)
 		self.input.keyDown.connect(self.keyPressDown)
+
+		self.input.setStyleSheet(STYLES["all"])
 
 		# Text input widget should only be one line
 		fm = self.input.fontMetrics()
