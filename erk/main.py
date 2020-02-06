@@ -874,6 +874,7 @@ class Erk(QMainWindow):
 			if plugdir==PLUGIN_DIRECTORY:
 				plugdir = p.__file__
 				plugtype = "plugin"
+				m.setIcon(QIcon(PLUGIN_ICON))
 
 			if not erk.config.PLUGINS_ENABLED:
 				m.setEnabled(False)

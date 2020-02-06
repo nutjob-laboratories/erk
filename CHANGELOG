@@ -48,6 +48,7 @@ Version 0.800
 	* Removed the "uninstall package dialog" and all menu trigger
 	* Moved "editor" and "install" menu entries back to the "plugins" menu
 	* Revamped the "macro" menu
+	* Made plugins and packages have different icons in the plugin menu
 
 Version 0.703
 	* ASCIImoji support has been removed
