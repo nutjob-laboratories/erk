@@ -315,11 +315,6 @@ class Erk(QMainWindow):
 
 		self.starter.anchorClicked.connect(self.linkClicked)
 
-		# d = dumpLog('EFNet','#themaxx',"\t")
-		# print(d)
-
-		
-
 	def spellcheck_language(self,setting):
 
 		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(UNCHECKED_ICON))
