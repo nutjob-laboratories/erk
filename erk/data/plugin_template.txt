@@ -23,3 +23,6 @@ class !_PLUGIN_NAME_!(Plugin):
 
 !_INDENT_!def private(self,client,user,message):
 !_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def tick(self,client):
+!_INDENT_!!_INDENT_!pass

@@ -25,3 +25,6 @@ class !_PLUGIN_NAME!(Plugin):
 
 	def private(self,client,user,message):
 		pass
+
+	def tick(self,client):
+		pass
