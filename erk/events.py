@@ -1016,6 +1016,9 @@ def erk_joined_channel(gui,client,channel):
 	build_connection_display(gui)
 
 def uptime(gui,client,uptime):
+
+	if not client.gui.block_plugins:
+		client.gui.plugins.tick(client)
 	
 	gui.uptimers[client.id] = uptime
 

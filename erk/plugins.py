@@ -310,6 +310,17 @@ class PluginCollection(object):
 				p._erk_window_name = None
 				p.unload()
 
+	def tick(self,client):
+		if not erk.config.PLUGINS_ENABLED: return
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"tick"):
+				p._erk_client = client
+				p._erk_window_name = None
+				p.tick(client)
+				p._erk_client = None
+				p._erk_window_name = None
+
 	def errors(self):
 		return self.load_errors
 

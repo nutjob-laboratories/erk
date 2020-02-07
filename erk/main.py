@@ -268,7 +268,6 @@ class Erk(QMainWindow):
 		self.helpMenu = QMenu()
 		self.macroMenu = QMenu()
 		self.pluginMenu = QMenu()
-
 		self.displayMenu = QMenu()
 
 		if not self.block_toolbar:
