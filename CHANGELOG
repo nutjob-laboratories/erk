@@ -1,3 +1,6 @@
+Version 0.810
+	* Added docstrings to generated plugin skeletons
+
 Version 0.800
 	* First initial 0.800 release
 	* Added a "find and replace" dialog to the editor

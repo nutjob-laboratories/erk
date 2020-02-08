@@ -10,25 +10,82 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!self.source = None
 
 !_INDENT_!def load(self):
+!_INDENT_!!_INDENT_!"""Executed when the plugin is loaded.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def unload(self):
+!_INDENT_!!_INDENT_!"""Executed when the plugin is unloaded.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def input(self,client,name,text):
+!_INDENT_!!_INDENT_!"""Executed when the user inputs text.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!name -- The channel/username of the input that triggered the plugin
+!_INDENT_!!_INDENT_!text -- The user input
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def public(self,client,channel,user,message):
+!_INDENT_!!_INDENT_!"""Executed when the client receives a public message.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!channel -- The name of the channel that sent the message
+!_INDENT_!!_INDENT_!user -- The user who sent the message (in nickname!username@host format)
+!_INDENT_!!_INDENT_!message -- The message contents
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def private(self,client,user,message):
+!_INDENT_!!_INDENT_!"""Executed when the client receives a private message.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!user -- The user who sent the message (in nickname!username@host format)
+!_INDENT_!!_INDENT_!message -- The message contents
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def tick(self,client):
+!_INDENT_!!_INDENT_!"""Executes once per second.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def join(self,client,channel,user):
+!_INDENT_!!_INDENT_!"""Executed when the client receives a join notification.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!channel -- The channel the user joined
+!_INDENT_!!_INDENT_!user -- The user who joined the channel
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
 !_INDENT_!def part(self,client,channel,user):
+!_INDENT_!!_INDENT_!"""Executed when the client receives a part notification.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!channel -- The channel the user left
+!_INDENT_!!_INDENT_!user -- The user who left the channel
+!_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
