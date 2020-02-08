@@ -54,6 +54,8 @@ Version 0.800
 	* Tweaked menubar graphics
 	* Bugfix: background/foreground colors are now applied to widgets on startup (instead of being ignored)
 	* Added a command-line option to install a plugin
+	* Added part() and join() methods to to plugins
+	* Added tick() method to plugins
 
 Version 0.703
 	* ASCIImoji support has been removed

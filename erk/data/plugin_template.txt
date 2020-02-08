@@ -26,3 +26,9 @@ class !_PLUGIN_NAME_!(Plugin):
 
 !_INDENT_!def tick(self,client):
 !_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def join(self,client,channel,user):
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def part(self,client,channel,user):
+!_INDENT_!!_INDENT_!pass

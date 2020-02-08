@@ -28,3 +28,9 @@ class !_PLUGIN_NAME!(Plugin):
 
 	def tick(self,client):
 		pass
+
+	def join(self,client,channel,user):
+		pass
+
+	def part(self,client,channel,user):
+		pass

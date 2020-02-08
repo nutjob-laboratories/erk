@@ -1036,6 +1036,10 @@ def uptime(gui,client,uptime):
 				break
 
 def part(gui,client,user,channel):
+
+	if not client.gui.block_plugins:
+		client.gui.plugins.part(client,channel,user)
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1050,6 +1054,10 @@ def part(gui,client,user,channel):
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left "+channel) )
 
 def join(gui,client,user,channel):
+
+	if not client.gui.block_plugins:
+		client.gui.plugins.join(client,channel,user)
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1066,11 +1074,10 @@ def join(gui,client,user,channel):
 def motd(gui,client,motd):
 	
 	window = fetch_console_window(client)
-	#window.writeText( Message(SYSTEM_MESSAGE,'',"BEGIN MOTD") )
+
 	if window:
 		for line in motd:
 			window.writeText( Message(SYSTEM_MESSAGE,'',line) )
-	#window.writeText( Message(SYSTEM_MESSAGE,'',"END MOTD") )
 
 def notice_message(gui,client,target,user,message):
 

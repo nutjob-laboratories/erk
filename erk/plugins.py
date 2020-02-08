@@ -321,6 +321,28 @@ class PluginCollection(object):
 				p._erk_client = None
 				p._erk_window_name = None
 
+	def join(self,client,channel,user):
+		if not erk.config.PLUGINS_ENABLED: return
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"join"):
+				p._erk_client = client
+				p._erk_window_name = channel
+				p.join(client,channel,user)
+				p._erk_client = None
+				p._erk_window_name = None
+
+	def part(self,client,channel,user):
+		if not erk.config.PLUGINS_ENABLED: return
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"part"):
+				p._erk_client = client
+				p._erk_window_name = channel
+				p.part(client,channel,user)
+				p._erk_client = None
+				p._erk_window_name = None
+
 	def errors(self):
 		return self.load_errors
 
