@@ -14,7 +14,7 @@
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Erk connected to EFnet, EnterTheGame, and DALnet</b><br>
+	<b>Erk connected to EFnet</b><br>
 	<i>Click image to enlarge</i><br>
 </p>
 
@@ -51,6 +51,7 @@
 	* **Erk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
 		* Text editor with syntax highlighting
 		* Tools to create, package, and export plugin packages
+		* Create a basic plugin with two mouse clicks!
 	* [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) is included...no trying to figure out how to write a plugin from endless forum posts!
 	* Plugins can be found in the [official **Erk** plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 * An extensive set of command-line flags, allowing for _even more_ configuration options
