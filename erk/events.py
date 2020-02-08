@@ -125,7 +125,7 @@ def build_connection_display(gui,new_server=None):
 
 		parent = QTreeWidgetItem(root)
 		parent.setText(0,s[0])
-		parent.setIcon(0,QIcon(SERVER_ICON))
+		parent.setIcon(0,QIcon(CONNECTING_ICON))
 		parent.erk_client = s[1]
 		parent.erk_channel = False
 		parent.erk_widget = None

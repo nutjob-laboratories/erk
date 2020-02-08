@@ -86,8 +86,6 @@ AUTOCOMPLETE_ICON = ":/gui-autocomplete.png"
 
 DISCONNECT_ICON = ":/gui-disconnect.png"
 
-#EMOJI_ICON = ":/gui-emoji.png"
-
 HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
 
 MESSAGE_ICON = ":/gui-message.png"
@@ -182,3 +180,5 @@ VERTICAL_RULE_BACKGROUND = ":/gui-vertical_rule.png"
 EXPORT_ICON = ":/gui-export.png"
 
 OPTIONS_ICON = ":/gui-options.png"
+
+CONNECTING_ICON = ":/gui-connecting.png"
