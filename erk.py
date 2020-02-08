@@ -34,7 +34,7 @@ import string
 import shutil
 import sys
 import os
-
+from zipfile import ZipFile
 import urllib.parse
 import posixpath
 
@@ -57,6 +57,7 @@ from erk.objects import *
 from erk.strings import *
 import erk.config
 from erk.common import *
+from erk.plugins import PLUGIN_DIRECTORY
 
 parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
@@ -90,6 +91,7 @@ devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin s
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
 devgroup.add_argument("--new", help="Create a new plugin and open it in the editor", action="store_true")
+devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -106,7 +108,20 @@ if __name__ == '__main__':
 
 	app = QApplication([])
 
-	if args.editor:
+	if args.install:
+
+		file = args.install
+		if not os.path.isfile(file):
+			print("\""+file+"\" doesn't exist.")
+			sys.exit(1)
+
+		print("Installing plugin \""+file+"\"...")
+		with ZipFile(file,'r') as zipObj:
+			zipObj.extractall(PLUGIN_DIRECTORY)
+		print("Done!")
+		sys.exit(0)
+
+	elif args.editor:
 		erk.config.load_settings()
 
 		if erk.config.EDITOR_FONT=='':

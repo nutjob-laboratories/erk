@@ -53,6 +53,7 @@ Version 0.800
 	* Moved en/disable macro and plugin options to the "settings" menu
 	* Tweaked menubar graphics
 	* Bugfix: background/foreground colors are now applied to widgets on startup (instead of being ignored)
+	* Added a command-line option to install a plugin
 
 Version 0.703
 	* ASCIImoji support has been removed
