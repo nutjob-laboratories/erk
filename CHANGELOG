@@ -2,6 +2,8 @@ Version 0.810
 	* Added docstrings to generated plugin skeletons
 	* Changed the "connecting" icon in the connection display
 	* Changed the "network" icon in the connection display
+	* Changed the default package and plugin icons
+	* Added new, properly sized icons for editor menus
 
 Version 0.800
 	* First initial 0.800 release

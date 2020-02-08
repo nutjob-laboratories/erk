@@ -547,10 +547,10 @@ class Window(QMainWindow):
 
 		toolsMenu = self.menubar.addMenu("Tools")
 
-		entry = MenuAction(self,PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
+		entry = MenuAction(self,MENU_PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
 		toolsMenu.addAction(entry)
 
-		entry = MenuAction(self,ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
+		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
 		toolsMenu.addAction(entry)
 
 		toolsMenu.addSeparator()
