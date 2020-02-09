@@ -287,6 +287,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.last_tried_nickname = ''
 
+		self.registered = False
+
 		erk.events.disconnection(self.gui,self)
 
 		irc.IRCClient.connectionLost(self, reason)
@@ -440,6 +442,13 @@ class IRC_Connection(irc.IRCClient):
 		self.sendLine("NAMES "+channel)
 
 	def irc_ERR_NICKNAMEINUSE(self, prefix, params):
+
+		if self.registered:
+			# Since we're already registered, just
+			# let the user know that the desired nickname
+			# is already in use
+			erk.events.erk_nickname_in_use(self.gui,self,params[1])
+			return
 
 		oldnick = params[1]
 

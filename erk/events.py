@@ -961,6 +961,15 @@ def nick(gui,client,oldnick,newnick):
 	# Update connection display
 	build_connection_display(gui)
 
+def erk_nickname_in_use(gui,client,badnick):
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
 
 def erk_changed_nick(gui,client,newnick):
 
