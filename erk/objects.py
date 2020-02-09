@@ -82,3 +82,22 @@ class WhoisData:
 		self.server = 'Unknown'
 		self.channels = 'Unknown'
 		self.privs = 'is a normal user'
+
+HELP_HTML_TEMPLATE='''<table style="width: 100%" border="0">
+	<tbody>
+        <tr>
+          <td><center><b>Basic Commands</b></center></td>
+        </tr>
+        <tr>
+          <td>
+            <table style="width: 100%" border="0">
+              <tbody>
+                %_LIST_%
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>'''
+
+HELP_ENTRY='''<tr><td>%_USAGE_%&nbsp;</td><td><i>%_DESCRIPTION_%</i></td></tr>'''

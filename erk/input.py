@@ -57,6 +57,7 @@ COMMON_COMMANDS = {
 	"/ressl": "/ressl ",
 	"/send": "/send ",
 	"/invite": "/invite ",
+	"/help": "/help",
 }
 
 CHANNEL_COMMANDS = {
@@ -67,6 +68,36 @@ CHANNEL_COMMANDS = {
 PRIVATE_COMMANDS = {
 	"/me": "/me ",	
 }
+
+COMMAND_HELP = [
+	[ "<b>/msg</b> TARGET MESSAGE", "Sends a private message" ],
+	[ "<b>/me</b> MESSAGE", "Sends CTCP action message" ],
+	[ "<b>/notice</b> TARGET MESSAGE", "Sends a notice" ],
+	[ "<b>/join</b> CHANNEL [KEY]", "Joins a channel" ],
+	[ "<b>/part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
+	[ "<b>/invite</b> USER CHANNEL", "Sends a channel invite to a user" ],
+	[ "<b>/nick</b> NEW_NICKNAME", "Changes your nickname" ],
+	[ "<b>/away</b> [MESSAGE]", "Sets your status to \"away\"" ],
+	[ "<b>/back</b>", "Sets your status to \"back\"" ],
+	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
+	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+	#[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
+	[ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
+	#[ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
+	#[ "<b>/reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
+	#[ "<b>/ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
+	#[ "<b>/ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
+]
+
+hentries = []
+for e in COMMAND_HELP:
+	t = HELP_ENTRY
+	t = t.replace("%_USAGE_%",e[0])
+	t = t.replace("%_DESCRIPTION_%",e[1])
+	hentries.append(t)
+
+HELP_DISPLAY = HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentries))
 
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
@@ -297,6 +328,12 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/help':
+			msg = Message(PLUGIN_MESSAGE,'',HELP_DISPLAY)
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/invite' and len(tokens)==3:

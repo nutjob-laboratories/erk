@@ -10,6 +10,7 @@ Version 0.810
 	* Changed the connect icon
 	* Bugfix: user is notified if a nickname is used when using the /nick command (instead of trying to change to alternate nick)
 	* Added /invite command
+	* Added a /help command to display most basic commands
 
 Version 0.800
 	* First initial 0.800 release
