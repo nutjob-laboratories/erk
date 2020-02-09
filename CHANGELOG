@@ -4,6 +4,9 @@ Version 0.810
 	* Changed the "network" icon in the connection display
 	* Changed the default package and plugin icons
 	* Added new, properly sized icons for editor menus
+	* Added the name of the package/plugin to the uninstall menu entries
+	* Uninstalling a package or plugin now executes the unload() method before removal (if present)
+	* On uninstall, a package or plugin's unload() is not executed if the package/plugin was never loaded
 
 Version 0.800
 	* First initial 0.800 release

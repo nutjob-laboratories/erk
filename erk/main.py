@@ -939,8 +939,8 @@ class Erk(QMainWindow):
 
 				m.addSeparator()
 
-			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall "+plugtype,self)
-			entry.triggered.connect(lambda state,f=plugdir: self.uninstall_plugin(f))
+			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall \""+pack+"\"",self)
+			entry.triggered.connect(lambda state,f=plugdir,p=pack: self.uninstall_plugin(f,p))
 			m.addAction(entry)
 
 		self.pluginMenu.addSeparator()
@@ -996,7 +996,26 @@ class Erk(QMainWindow):
 		if not erk.config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-	def uninstall_plugin(self,directory):
+	def uninstall_plugin(self,directory,upack):
+
+		# Find the pack we're uninstalling
+		plist = {}
+
+		for p in self.plugins.plugins:
+
+			if p._package in plist:
+				plist[p._package].append(p)
+			else:
+				plist[p._package] = []
+				plist[p._package].append(p)
+
+		for pack in plist:
+			if pack==upack:
+				# Found it!
+				for p in plist[pack]:
+					# Execute unload()
+					self.plugins.uninstall_forceunload(p.name)
+
 		if os.path.isdir(directory):
 			shutil.rmtree(directory)
 		elif os.path.isfile(directory):

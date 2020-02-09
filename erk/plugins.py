@@ -291,6 +291,17 @@ class PluginCollection(object):
 					if p.name in LOADED_PLUGINS:
 						LOADED_PLUGINS.remove(p.name)
 
+	def uninstall_forceunload(self,name):
+		for p in self.plugins:
+			if not p.name in LOADED_PLUGINS: continue
+			if name==p.name:
+				if hasattr(p,"unload"):
+					p._erk_client = None
+					p._erk_window_name = None
+					p.unload()
+					if p.name in LOADED_PLUGINS:
+						LOADED_PLUGINS.remove(p.name)
+
 	def load(self):
 		if not erk.config.PLUGINS_ENABLED: return
 		for p in self.plugins:
