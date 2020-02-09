@@ -7,6 +7,7 @@ Version 0.810
 	* Added the name of the package/plugin to the uninstall menu entries
 	* Uninstalling a package or plugin now executes the unload() method before removal (if present)
 	* On uninstall, a package or plugin's unload() is not executed if the package/plugin was never loaded
+	* Changed the connect icon
 
 Version 0.800
 	* First initial 0.800 release

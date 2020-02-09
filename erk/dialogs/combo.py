@@ -221,7 +221,7 @@ class Dialog(QDialog):
 		self.SAVE_HISTORY = False
 
 		self.setWindowTitle(f"Connect")
-		self.setWindowIcon(QIcon(CHANNEL_ICON))
+		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
 		self.user_info = get_user()
 
