@@ -56,6 +56,7 @@ COMMON_COMMANDS = {
 	"/ssl": "/ssl ",
 	"/ressl": "/ressl ",
 	"/send": "/send ",
+	"/invite": "/invite ",
 }
 
 CHANNEL_COMMANDS = {
@@ -201,10 +202,15 @@ def handle_channel_input(window,client,text):
 
 	if not client.gui.block_plugins:
 		if client.gui.plugins.input(client,window.name,text): return True
-	# x = client.gui.plugins.input(client,window.name,text)
-	# print(x)
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/invite' and len(tokens)==2:
+			tokens.pop(0)
+			target = tokens.pop(0)
+			client.sendLine("INVITE "+target+" "+window.name)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/mode' and len(tokens)>=2:
@@ -291,6 +297,25 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/invite' and len(tokens)==3:
+			if tokens[2][:1]=='#' or tokens[2][:1]=='&' or tokens[2][:1]=='!' or tokens[2][:1]=='+':
+				# invite channel is a valid name
+				tokens.pop(0)
+				user = tokens.pop(0)
+				channel = tokens.pop(0)
+				client.sendLine("INVITE "+user+" "+channel)
+				return True
+			else:
+				msg = Message(ERROR_MESSAGE,'',tokens[2]+" is not a valid channel name")
+				window.writeText(msg,True)
+				return True
+
+		if tokens[0].lower()=='/invite':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER CHANNEL")
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/notice' and len(tokens)>=3:

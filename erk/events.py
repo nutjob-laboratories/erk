@@ -961,6 +961,19 @@ def nick(gui,client,oldnick,newnick):
 	# Update connection display
 	build_connection_display(gui)
 
+
+def erk_inviting(gui,client,target,channel):
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel) )
+
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel) )
+
+
+
 def erk_nickname_in_use(gui,client,badnick):
 
 	if gui.current_page:

@@ -788,6 +788,8 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.irc_inviting(self,user,channel)
 		#erk.events.writeInvitingActiveWindow(self.gui,self,user,channel)
 
+		erk.events.erk_inviting(self.gui,self,user,channel)
+
 		
 
 	def irc_RPL_LIST(self,prefix,params):

@@ -9,6 +9,7 @@ Version 0.810
 	* On uninstall, a package or plugin's unload() is not executed if the package/plugin was never loaded
 	* Changed the connect icon
 	* Bugfix: user is notified if a nickname is used when using the /nick command (instead of trying to change to alternate nick)
+	* Added /invite command
 
 Version 0.800
 	* First initial 0.800 release
