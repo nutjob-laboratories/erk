@@ -647,7 +647,15 @@ class Erk(QMainWindow):
 
 			self.settingsMenu.addSeparator()
 
-			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Automatically switch to new chats",self)
+
+			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
+			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_autoinvite)
+
+			if erk.config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
+
+
+			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
 			self.settingsMenu.addAction(self.set_autoswitch)
 
@@ -1147,6 +1155,16 @@ class Erk(QMainWindow):
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
+
+		if setting=="autoinvite":
+			if erk.config.JOIN_ON_INVITE:
+				erk.config.JOIN_ON_INVITE = False
+				self.set_autoinvite.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.JOIN_ON_INVITE = True
+				self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings()
+			return
 
 		if setting=="tsseconds":
 			if erk.config.DISPLAY_TIMESTAMP_SECONDS:

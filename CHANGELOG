@@ -11,6 +11,9 @@ Version 0.810
 	* Bugfix: user is notified if a nickname is used when using the /nick command (instead of trying to change to alternate nick)
 	* Added /invite command
 	* Added a /help command to display most basic commands
+	* Added invite notifications
+	* Added a new setting: autojoin on invite (turned off by default)
+	* Changed menu wording for autoswitching chats
 
 Version 0.800
 	* First initial 0.800 release

@@ -778,6 +778,7 @@ class IRC_Connection(irc.IRCClient):
 		# self.gui.irc_invited(self,prefix,target,channel)
 		#erk.events.writeInviteActiveWindow(self.gui,self,prefix,channel)
 
+		erk.events.erk_invited(self.gui,self,prefix,channel)
 		
 
 
