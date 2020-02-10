@@ -26,3 +26,4 @@ logs/freenode-#themaxx.json
 logs/MYNet-#blarp.json
 logs/MYNet-#cheese.json
 logs/MYNet-#flarp.json
+plugins/grab.py
