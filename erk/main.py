@@ -188,7 +188,7 @@ class Erk(QMainWindow):
 					s = s + e.classname+": "+e.reason
 					print(s)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -213,8 +213,10 @@ class Erk(QMainWindow):
 
 		self.fullscreen = False
 
+		self.configfile = configfile
+
 		# Load application settings
-		erk.config.load_settings()
+		erk.config.load_settings(configfile)
 
 		if self.block_macros: erk.config.MACROS_ENABLED = False
 		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
@@ -322,7 +324,7 @@ class Erk(QMainWindow):
 		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(UNCHECKED_ICON))
 
 		erk.config.SPELLCHECK_LANGUAGE = setting
-		erk.config.save_settings()
+		erk.config.save_settings(self.configfile)
 		erk.events.newspell_all(setting)
 
 		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
@@ -647,13 +649,11 @@ class Erk(QMainWindow):
 
 			self.settingsMenu.addSeparator()
 
-
 			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
 			self.settingsMenu.addAction(self.set_autoinvite)
 
 			if erk.config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
-
 
 			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
@@ -1060,14 +1060,14 @@ class Erk(QMainWindow):
 
 
 	def menuEditor(self):
-		x = EditorDialog(self)
+		x = EditorDialog(self,None,None,self.configfile)
 		w = erk.config.DEFAULT_APP_WIDTH
 		h = erk.config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
 		x.show()
 
 	def editPlugin(self,filename):
-		x = EditorDialog(self,filename)
+		x = EditorDialog(self,filename,None,self.configfile)
 		w = erk.config.DEFAULT_APP_WIDTH
 		h = erk.config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
@@ -1163,7 +1163,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.JOIN_ON_INVITE = True
 				self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="tsseconds":
@@ -1173,7 +1173,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_TIMESTAMP_SECONDS = True
 				self.set_seconds.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1182,7 +1182,7 @@ class Erk(QMainWindow):
 				erk.config.SHOW_LOAD_ERRORS = False
 			else:
 				erk.config.SHOW_LOAD_ERRORS = True
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			return
 
@@ -1206,7 +1206,7 @@ class Erk(QMainWindow):
 				erk.config.ALWAYS_ON_TOP = True
 				self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 				self.set_ontop.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.show()
 			return
 
@@ -1215,7 +1215,7 @@ class Erk(QMainWindow):
 				erk.config.DEVELOPER_MODE = False
 			else:
 				erk.config.DEVELOPER_MODE = True
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			return
 
@@ -1226,7 +1226,7 @@ class Erk(QMainWindow):
 		# 	else:
 		# 		erk.config.MACROS_ENABLED = True
 		# 		self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-		# 	erk.config.save_settings()
+		# 	erk.config.save_settings(self.configfile)
 		# 	self.rebuildMacroMenu()
 		# 	return
 
@@ -1239,7 +1239,7 @@ class Erk(QMainWindow):
 				erk.config.MACROS_ENABLED = True
 				#self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 				self.block_macros = False
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.rebuildMacroMenu()
 			self.buildToolbar()
 			return
@@ -1249,7 +1249,7 @@ class Erk(QMainWindow):
 		# 		erk.config.PLUGINS_ENABLED = False
 		# 	else:
 		# 		erk.config.PLUGINS_ENABLED = True
-		# 	erk.config.save_settings()
+		# 	erk.config.save_settings(self.configfile)
 		# 	self.rebuildPluginMenu()
 		# 	return
 
@@ -1260,7 +1260,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.PLUGINS_ENABLED = True
 				self.block_plugins = False
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			self.buildToolbar()
 			return
@@ -1272,7 +1272,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 				self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1283,7 +1283,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.SAVE_PRIVATE_LOGS = True
 				self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="privlogload":
@@ -1293,7 +1293,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.LOAD_PRIVATE_LOGS = True
 				self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="logresume":
@@ -1303,7 +1303,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_CHAT_RESUME_DATE_TIME = True
 				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="marklogend":
@@ -1313,7 +1313,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.MARK_END_OF_LOADED_LOG = True
 				self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="chanlogload":
@@ -1323,7 +1323,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.LOAD_CHANNEL_LOGS = True
 				self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="chanlogsave":
@@ -1333,7 +1333,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.SAVE_CHANNEL_LOGS = True
 				self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="history":
@@ -1343,7 +1343,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.TRACK_COMMAND_HISTORY = True
 				self.set_history.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.reset_history()
 			return
 
@@ -1354,7 +1354,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.EXPAND_SERVER_ON_CONNECT = True
 				self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="display_nick":
@@ -1364,7 +1364,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = True
 				self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_channel_nickname()
 			return
 
@@ -1375,7 +1375,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
 				self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_userlists()
 			return
 
@@ -1386,7 +1386,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.PLAIN_USER_LISTS = True
 				self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_userlists()
 			return
 
@@ -1397,7 +1397,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.FILTER_PROFANITY = True
 				self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1408,7 +1408,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.AUTOCOMPLETE_EMOJI = True
 				self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="emoji":
@@ -1420,7 +1420,7 @@ class Erk(QMainWindow):
 				erk.config.USE_EMOJIS = True
 				self.set_emoji.setIcon(QIcon(CHECKED_ICON))
 				self.set_autoemoji.setEnabled(True)
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="spellnicks":
@@ -1430,7 +1430,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.SPELLCHECK_IGNORE_NICKS = True
 				self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.toggle_nickspell()
 			erk.events.resetinput_all()
 			return
@@ -1442,7 +1442,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.AUTOCOMPLETE_COMMANDS = True
 				self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="autonick":
@@ -1452,7 +1452,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.AUTOCOMPLETE_NICKNAMES = True
 				self.set_autonick.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="autoswitch":
@@ -1462,7 +1462,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.SWITCH_TO_NEW_WINDOWS = True
 				self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="modes":
@@ -1472,7 +1472,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_CHANNEL_MODES = True
 				self.set_modes.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.toggle_channel_mode_display()
 			return
 
@@ -1493,7 +1493,7 @@ class Erk(QMainWindow):
 				self.set_uptime.setEnabled(True)
 				self.set_doubleclickswitch.setEnabled(True)
 				self.set_location.setEnabled(True)
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="float":
@@ -1522,7 +1522,7 @@ class Erk(QMainWindow):
 					QDockWidget.DockWidgetFloatable
 					)
 				self.connection_dock.setTitleBarWidget(None)
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.build_connection_display(self)
 			return
 
@@ -1533,7 +1533,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_CONNECTION_UPTIME = True
 				self.set_uptime.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.build_connection_display(self)
 			return
 
@@ -1552,7 +1552,7 @@ class Erk(QMainWindow):
 				self.removeDockWidget(self.connection_dock)
 				self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
 				self.connection_dock.show()
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			return
 
 		if setting=="spellcheck":
@@ -1570,7 +1570,7 @@ class Erk(QMainWindow):
 				self.spell_fr.setEnabled(True)
 				self.spell_es.setEnabled(True)
 				self.spell_de.setEnabled(True)
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.resetinput_all()
 			return
 
@@ -1581,7 +1581,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN = True
 				self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1592,7 +1592,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = True
 				self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1603,7 +1603,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DOUBLECLICK_SWITCH = True
 				self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1614,7 +1614,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.CONVERT_URLS_TO_LINKS = True
 				self.set_links.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1625,7 +1625,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_IRC_COLORS = True
 				self.set_color.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1636,7 +1636,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = True
 				self.set_24hr.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1647,7 +1647,7 @@ class Erk(QMainWindow):
 			else:
 				erk.config.DISPLAY_TIMESTAMP = True
 				self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
 
@@ -1672,14 +1672,14 @@ class Erk(QMainWindow):
 		info = LogSizeDialog()
 		if info!=None:
 			erk.config.LOG_LOAD_SIZE_MAX = info
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 	def menuHistoryLength(self):
 		info = HistorySizeDialog()
 		if info!=None:
 			erk.config.HISTORY_LENGTH = info
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
 
 	def menuCombo(self):
@@ -1691,7 +1691,7 @@ class Erk(QMainWindow):
 		font, ok = QFontDialog.getFont()
 		if ok:
 			erk.config.DISPLAY_FONT = font.toString()
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 
 			self.font = font
 			self.app.setFont(self.font)
@@ -1720,7 +1720,7 @@ class Erk(QMainWindow):
 		if info!=None:
 			erk.config.DEFAULT_APP_WIDTH = info[0]
 			erk.config.DEFAULT_APP_HEIGHT = info[1]
-			erk.config.save_settings()
+			erk.config.save_settings(self.configfile)
 			self.resize(info[0],info[1])
 
 			w = erk.config.DEFAULT_APP_WIDTH

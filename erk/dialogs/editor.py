@@ -434,15 +434,18 @@ class Window(QMainWindow):
 				zf.close()
 
 
-	def __init__(self,filename=None,obj=None,app=None,parent=None):
+	def __init__(self,filename=None,obj=None,app=None,config=None,parent=None):
 		super(Window, self).__init__(parent)
 
 		self.filename = filename
 		self.gui = obj
 		self.app = app
+		self.config = config
 
 		self.changed = False
 		self.findWindow = None
+
+		erk.config.load_settings(config)
 
 		if self.filename:
 			self.title = os.path.basename(self.filename)
@@ -782,7 +785,7 @@ class Window(QMainWindow):
 		font, ok = QFontDialog.getFont()
 		if ok:
 			erk.config.EDITOR_FONT = font.toString()
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 
 			self.font = font
 			self.editor.setFont(self.font)
@@ -802,7 +805,7 @@ class Window(QMainWindow):
 			else:
 				erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
 				self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			return
 
 		if setting=="highlight":
@@ -816,7 +819,7 @@ class Window(QMainWindow):
 				self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 			self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
 			self.toggle_highlight()
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			return
 
 		if setting=="statusbar":
@@ -828,7 +831,7 @@ class Window(QMainWindow):
 				erk.config.EDITOR_STATUS_BAR = True
 				self.status.show()
 				self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			return
 
 		if setting=="converttotab":
@@ -848,7 +851,7 @@ class Window(QMainWindow):
 				erk.config.EDITOR_AUTO_INDENT = True
 				self.editor.autoindent = True
 				self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			return
 
 		if setting=="wordrap":
@@ -864,12 +867,12 @@ class Window(QMainWindow):
 				self.editor.update()
 				self.update()
 				self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			return
 
 		if setting=="spaces_5":
 			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 5
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
@@ -880,7 +883,7 @@ class Window(QMainWindow):
 
 		if setting=="spaces_4":
 			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 4
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
@@ -891,7 +894,7 @@ class Window(QMainWindow):
 
 		if setting=="spaces_3":
 			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 3
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
@@ -902,7 +905,7 @@ class Window(QMainWindow):
 
 		if setting=="spaces_2":
 			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 2
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
@@ -913,7 +916,7 @@ class Window(QMainWindow):
 
 		if setting=="spaces_1":
 			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 1
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
@@ -929,7 +932,7 @@ class Window(QMainWindow):
 			else:
 				erk.config.USE_SPACES_FOR_INDENT = True
 				self.spacesMenu.setEnabled(True)
-			erk.config.save_settings()
+			erk.config.save_settings(self.config)
 			if erk.config.USE_SPACES_FOR_INDENT:
 				self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
 			else:

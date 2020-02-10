@@ -96,10 +96,11 @@ EDITOR_FONT = ''
 EDITOR_STATUS_BAR = True
 EDITOR_SYNTAX_HIGHLIGHT = True
 EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
-
 JOIN_ON_INVITE = False
 
 def save_settings(filename=SETTINGS_FILE):
+
+	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
@@ -164,6 +165,7 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def load_settings(filename=SETTINGS_FILE):
+	if filename==None: filename = SETTINGS_FILE
 	global HISTORY_LENGTH
 	global CHAT_WINDOW_WIDGET_SPACING
 	global GET_HOSTMASKS_ON_CHANNEL_JOIN

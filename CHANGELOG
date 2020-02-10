@@ -15,6 +15,7 @@ Version 0.810
 	* Added a new setting: autojoin on invite (turned off by default)
 	* Changed menu wording for autoswitching chats
 	* Made it so /invite in channel chat usage displays that the channel argument is optional
+	* Added a command-line option to load and use a user specified configuration file
 
 Version 0.800
 	* First initial 0.800 release

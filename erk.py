@@ -85,14 +85,6 @@ congroup.add_argument("-c","--channel", type=str,help="Join channel on connectio
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 
-devgroup = parser.add_argument_group('Plugin development')
-
-devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
-devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
-devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
-devgroup.add_argument("--new", help="Create a new plugin and open it in the editor", action="store_true")
-devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
-
 disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
@@ -101,6 +93,18 @@ disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menus", acti
 disgroup.add_argument( "-N","--nomenu", help=f"Disable main menu", action="store_true")
 disgroup.add_argument( "-D","--noconnect", help=f"Disable connection commands", action="store_true")
 disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
+
+devgroup = parser.add_argument_group('Plugin development')
+
+devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
+devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
+devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
+devgroup.add_argument("--new", help="Create a new plugin and open it in the editor", action="store_true")
+devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
+
+miscgroup = parser.add_argument_group('Miscellaneous')
+
+miscgroup.add_argument("--config", type=str,help="Use alternate configuration file", metavar="FILE", default=None)
 
 args = parser.parse_args()
 
@@ -122,7 +126,7 @@ if __name__ == '__main__':
 		sys.exit(0)
 
 	elif args.editor:
-		erk.config.load_settings()
+		erk.config.load_settings(args.config)
 
 		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
@@ -135,7 +139,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app)
+		EDITOR = EditorDialog(None,None,app,args.config)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -146,7 +150,7 @@ if __name__ == '__main__':
 			print("\""+file+"\" doesn't exist. Please use --editor to create a new file.")
 			sys.exit(1)
 
-		erk.config.load_settings()
+		erk.config.load_settings(args.config)
 
 		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
@@ -159,12 +163,12 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,file,app)
+		EDITOR = EditorDialog(None,file,app,args.config)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
 	elif args.new:
-		erk.config.load_settings()
+		erk.config.load_settings(args.config)
 
 		if erk.config.EDITOR_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
@@ -177,7 +181,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app)
+		EDITOR = EditorDialog(None,None,app,args.config)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 		EDITOR.newPackage()
@@ -291,12 +295,12 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
 			GUI.show()
 		else:
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
 				GUI.show()
 			elif args.last:
 				u = get_user()
@@ -327,12 +331,12 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
 				GUI.show()
 			else:
 				info = ComboDialog()
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
 					GUI.show()
 				else:
 					app.quit()
