@@ -429,7 +429,7 @@ class Erk(QMainWindow):
 			self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
 			messageMenu.addAction(self.set_links)
 
-			if erk.config.DISPLAY_IRC_COLORS: self.set_links.setIcon(QIcon(CHECKED_ICON))
+			if erk.config.CONVERT_URLS_TO_LINKS: self.set_links.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
 			self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))

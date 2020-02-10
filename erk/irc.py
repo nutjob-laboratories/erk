@@ -282,8 +282,11 @@ class IRC_Connection(irc.IRCClient):
 		# 	u["channels"] = self.kwargs["autojoin"]
 		# 	save_user(u)
 
-		self.uptimeTimer.stop()
-		self.uptime = 0
+		if hasattr(self,"uptimeTimer"):
+			self.uptimeTimer.stop()
+			self.uptime = 0
+		else:
+			print("Error connecting to server")
 
 		self.last_tried_nickname = ''
 

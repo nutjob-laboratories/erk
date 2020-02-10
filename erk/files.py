@@ -125,6 +125,7 @@ def load_emoji_autocomplete():
 EMOJI_AUTOCOMPLETE = load_emoji_autocomplete()
 
 def get_text_format_settings(filename=STYLE_FILE):
+	if filename==None: filename=STYLE_FILE
 	if os.path.isfile(filename):
 		data = read_style_file(filename)
 		return data
