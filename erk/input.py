@@ -242,6 +242,14 @@ def handle_channel_input(window,client,text):
 			target = tokens.pop(0)
 			client.sendLine("INVITE "+target+" "+window.name)
 			return True
+		if tokens[0].lower()=='/invite' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER [CHANNEL]")
+			window.writeText(msg,True)
+			return True
+		if tokens[0].lower()=='/invite' and len(tokens)>3:
+			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER [CHANNEL]")
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/mode' and len(tokens)>=2:
@@ -306,7 +314,7 @@ def handle_private_input(window,client,text):
 
 			return True
 		if tokens[0].lower()=='/me':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
+			msg = Message(ERROR_MESSAGE,'',"Usage: /me MESSAGE")
 			window.writeText(msg,True)
 			return True
 
