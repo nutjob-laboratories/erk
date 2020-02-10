@@ -112,6 +112,11 @@ if __name__ == '__main__':
 
 	app = QApplication([])
 
+	if args.config:
+		if not os.path.isfile(args.config):
+			print("\""+args.config+"\" doesn't exist.")
+			sys.exit(1)
+
 	if args.install:
 
 		file = args.install
