@@ -27,3 +27,6 @@ logs/MYNet-#blarp.json
 logs/MYNet-#cheese.json
 logs/MYNet-#flarp.json
 plugins/grab.py
+plugins/grab/grab.py
+plugins/grab/package.png
+plugins/grab/package.txt
