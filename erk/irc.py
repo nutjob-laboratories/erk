@@ -758,8 +758,8 @@ class IRC_Connection(irc.IRCClient):
 		
 
 	def irc_RPL_YOUREOPER(self, prefix, params):
-		# self.gui.irc_you_are_oper(self)
-		pass
+		
+		erk.events.erk_youre_oper(self.gui,self)
 
 	def irc_RPL_TIME(self, prefix, params):
 		t = params[2]
