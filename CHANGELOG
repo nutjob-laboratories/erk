@@ -20,6 +20,7 @@ Version 0.810
 	* Bugfix: an error on initial connect is now displayed to the user, rather than erroring out
 	* Bugfix: the client now exits if an altername config file passed as an argument doesn't exist
 	* Added operator notification
+	* Added an option to use an alternate text format configuration file
 
 Version 0.800
 	* First initial 0.800 release

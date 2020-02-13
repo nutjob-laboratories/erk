@@ -219,7 +219,8 @@ class Window(QMainWindow):
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
 
-		STYLES = get_text_format_settings()
+		# STYLES = get_text_format_settings()
+		STYLES = get_text_format_settings(self.parent.stylefile)
 
 		self.userlist_width = 0
 

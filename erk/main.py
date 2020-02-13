@@ -188,7 +188,7 @@ class Erk(QMainWindow):
 					s = s + e.classname+": "+e.reason
 					print(s)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -214,6 +214,8 @@ class Erk(QMainWindow):
 		self.fullscreen = False
 
 		self.configfile = configfile
+
+		self.stylefile = stylefile
 
 		# Load application settings
 		erk.config.load_settings(configfile)

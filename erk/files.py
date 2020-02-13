@@ -146,6 +146,7 @@ def get_network_list(filename=NETWORK_FILE):
 	return servlist
 
 def get_user(filename=USER_FILE):
+	if filename==None: filename=USER_FILE
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_user:
 			data = json.load(read_user)
@@ -171,6 +172,7 @@ def get_user(filename=USER_FILE):
 		return si
 
 def save_user(user,filename=USER_FILE):
+	if filename==None: filename=USER_FILE
 	with open(filename, "w") as write_data:
 		json.dump(user, write_data, indent=4, sort_keys=True)
 

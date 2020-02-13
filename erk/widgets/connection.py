@@ -95,7 +95,8 @@ def buildConnectionDisplayWidget(self):
 	# connectionDisplay.setFeatures( QDockWidget.NoDockWidgetFeatures )
 	# connectionDisplay.setTitleBarWidget(QWidget())
 
-	STYLES = get_text_format_settings()
+	# STYLES = get_text_format_settings()
+	STYLES = get_text_format_settings(self.stylefile)
 	connectionTree.setStyleSheet(STYLES["all"])
 
 	return [connectionTree,connectionDisplay]

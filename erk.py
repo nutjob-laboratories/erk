@@ -104,6 +104,7 @@ devgroup.add_argument("--new", help="Create a new plugin and open it in the edit
 miscgroup = parser.add_argument_group('Miscellaneous')
 
 miscgroup.add_argument("--config", type=str,help="Use alternate configuration file", metavar="FILE", default=None)
+miscgroup.add_argument("--format", type=str,help="Use alternate text format file", metavar="FILE", default=None)
 miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
 
 args = parser.parse_args()
@@ -115,6 +116,11 @@ if __name__ == '__main__':
 	if args.config:
 		if not os.path.isfile(args.config):
 			print("\""+args.config+"\" doesn't exist.")
+			sys.exit(1)
+
+	if args.format:
+		if not os.path.isfile(args.format):
+			print("\""+args.format+"\" doesn't exist.")
 			sys.exit(1)
 
 	if args.install:
@@ -300,12 +306,12 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
 			GUI.show()
 		else:
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
 				GUI.show()
 			elif args.last:
 				u = get_user()
@@ -336,12 +342,12 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
 				GUI.show()
 			else:
 				info = ComboDialog()
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
 					GUI.show()
 				else:
 					app.quit()

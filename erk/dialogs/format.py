@@ -83,7 +83,8 @@ class Dialog(QDialog):
 
 		self.parent.reload_all_text()
 
-		write_style_file(self.styles)
+		# write_style_file(self.styles)
+		write_style_file(self.styles,self.parent.stylefile)
 
 		self.close()
 
@@ -95,7 +96,8 @@ class Dialog(QDialog):
 		self.setWindowTitle("Colors")
 		self.setWindowIcon(QIcon(FORMAT_ICON))
 
-		self.styles = get_text_format_settings()
+		# self.styles = get_text_format_settings()
+		self.styles = get_text_format_settings(parent.stylefile)
 
 		# System message settings
 
