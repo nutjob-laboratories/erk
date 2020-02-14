@@ -1007,9 +1007,9 @@ class Window(QMainWindow):
 								if i==raw_user: continue
 							clean.append(i)
 						self.parent.ignore = clean
-						u = get_user()
+						u = get_user(self.parent.userfile)
 						u["ignore"] = clean
-						save_user(u)
+						save_user(u,self.parent.userfile)
 						return True
 					else:
 						if user_hostmask:
@@ -1018,9 +1018,9 @@ class Window(QMainWindow):
 							self.parent.ignore.append(raw_user)
 						else:
 							self.parent.ignore.append(user_nick)
-						u = get_user()
+						u = get_user(self.parent.userfile)
 						u["ignore"] = self.parent.ignore
-						save_user(u)
+						save_user(u,self.parent.userfile)
 						return True
 
 			if action == actWhois:

@@ -53,16 +53,16 @@ if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 DISABLED_PLUGINS = []
 LOADED_PLUGINS = []
 
-def get_disabled():
-	udata = get_user()
+def get_disabled(config):
+	udata = get_user(config)
 	return udata["disabled_plugins"]
 
-def save_disabled():
-	udata = get_user()
+def save_disabled(config):
+	udata = get_user(config)
 	udata["disabled_plugins"] = DISABLED_PLUGINS
-	save_user(udata)
+	save_user(udata,config)
 
-DISABLED_PLUGINS = get_disabled()
+DISABLED_PLUGINS = []
 
 class PluginError():
 	def __init__(self,package,classname,file,reason):

@@ -597,7 +597,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -615,7 +615,7 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -635,7 +635,7 @@ def handle_ui_input(window,client,text):
 
 			password =tokens.pop(0)
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -647,7 +647,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)
@@ -665,7 +665,7 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)
@@ -685,7 +685,7 @@ def handle_ui_input(window,client,text):
 
 			password =tokens.pop(0)
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)
@@ -697,7 +697,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -715,7 +715,7 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -735,7 +735,7 @@ def handle_ui_input(window,client,text):
 
 			password =tokens.pop(0)
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
 			window.doConnect(info)
@@ -747,7 +747,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)
@@ -765,7 +765,7 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)
@@ -785,7 +785,7 @@ def handle_ui_input(window,client,text):
 
 			password =tokens.pop(0)
 
-			user = get_user()
+			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
 			window.doConnect(info)

@@ -114,9 +114,9 @@ def WindowSizeDialog():
 	if not info: return None
 	return info
 
-def NickDialog(nick):
-	x = Nick.Dialog(nick)
-	info = x.get_nick_information(nick)
+def NickDialog(nick,obj):
+	x = Nick.Dialog(nick,obj)
+	info = x.get_nick_information(nick,obj)
 	del x
 
 	if not info: return None
@@ -130,9 +130,9 @@ def JoinDialog():
 	if not info: return None
 	return info
 
-def ComboDialog():
-	x = Combo.Dialog(SSL_AVAILABLE)
-	info = x.get_connect_information(SSL_AVAILABLE)
+def ComboDialog(userfile):
+	x = Combo.Dialog(SSL_AVAILABLE,userfile)
+	info = x.get_connect_information(SSL_AVAILABLE,userfile)
 	del x
 
 	if not info: return None

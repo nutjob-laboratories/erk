@@ -103,8 +103,9 @@ devgroup.add_argument("--new", help="Create a new plugin and open it in the edit
 
 miscgroup = parser.add_argument_group('Miscellaneous')
 
-miscgroup.add_argument("--config", type=str,help="Use alternate configuration file", metavar="FILE", default=None)
-miscgroup.add_argument("--format", type=str,help="Use alternate text format file", metavar="FILE", default=None)
+miscgroup.add_argument("--config", type=str,help="Use alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
+miscgroup.add_argument("--format", type=str,help="Use alternate text format file", metavar="FILE", default=STYLE_FILE)
+miscgroup.add_argument("--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
 
 args = parser.parse_args()
@@ -113,15 +114,26 @@ if __name__ == '__main__':
 
 	app = QApplication([])
 
+	# If the user has passed an alternate configuration file,
+	# and the file doesn't exist, create a new config file
+	# where the user indicated, with default values
+
 	if args.config:
 		if not os.path.isfile(args.config):
-			print("\""+args.config+"\" doesn't exist.")
-			sys.exit(1)
+			erk.config.load_settings(args.config)
+			print("\""+args.config+"\" created!")
 
 	if args.format:
 		if not os.path.isfile(args.format):
-			print("\""+args.format+"\" doesn't exist.")
-			sys.exit(1)
+			f = get_text_format_settings(None)
+			write_style_file(f,args.format)
+			print("\""+args.format+"\" created!")
+
+	if args.user:
+		if not os.path.isfile(args.user):
+			u = get_user(args.user)
+			save_user(u,args.user)
+			print("\""+args.user+"\" created!")
 
 	if args.install:
 
@@ -293,7 +305,7 @@ if __name__ == '__main__':
 							chans.append(p)
 						else:
 							chans.append( [c,''] )
-			u = get_user()
+			u = get_user(args.user)
 			i = ConnectInfo(
 					args.server,
 					args.port,
@@ -306,15 +318,15 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 			GUI.show()
 		else:
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 				GUI.show()
 			elif args.last:
-				u = get_user()
+				u = get_user(args.user)
 				if u["last_password"] == '':
 					pword = None
 				else:
@@ -342,12 +354,12 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 				GUI.show()
 			else:
-				info = ComboDialog()
+				info = ComboDialog(args.user)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 					GUI.show()
 				else:
 					app.quit()

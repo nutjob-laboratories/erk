@@ -53,9 +53,9 @@ class Dialog(QDialog):
 	def return_info(self):
 
 		if self.save_as_default:
-			user_info = get_user()
+			user_info = get_user(self.parent.userfile)
 			user_info["nickname"] = self.name.text()
-			save_user(user_info)
+			save_user(user_info,self.parent.userfile)
 
 		retval = self.name.text()
 

@@ -1452,7 +1452,7 @@ def server_options(gui,client,options):
 	window.writeText( Message(SYSTEM_MESSAGE,'', ", ".join(options)    ) )
 
 	if client.network:
-		user_info = get_user()
+		user_info = get_user(gui.userfile)
 		newhistory = []
 		change = False
 		for s in user_info["history"]:
@@ -1465,7 +1465,7 @@ def server_options(gui,client,options):
 
 		if change:
 			user_info["history"] = newhistory
-			save_user(user_info)
+			save_user(user_info,gui.userfile)
 
 	# Update connection display
 	build_connection_display(gui)

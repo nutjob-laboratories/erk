@@ -146,7 +146,7 @@ def get_network_list(filename=NETWORK_FILE):
 	return servlist
 
 def get_user(filename=USER_FILE):
-	if filename==None: filename=USER_FILE
+	#if filename==None: filename=USER_FILE
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_user:
 			data = json.load(read_user)

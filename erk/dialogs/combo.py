@@ -119,7 +119,7 @@ class Dialog(QDialog):
 			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
 		}
-		save_user(user)
+		save_user(user,self.userfile)
 
 		if self.AUTOJOIN_CHANNELS:
 			channels = self.autojoins
@@ -202,11 +202,12 @@ class Dialog(QDialog):
 			self.ssl.setCheckState(Qt.Unchecked)
 
 
-	def __init__(self,can_do_ssl,parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.can_do_ssl = can_do_ssl
 		self.parent = parent
+		self.userfile = userfile
 
 		self.autojoins = []
 
@@ -223,7 +224,7 @@ class Dialog(QDialog):
 		self.setWindowTitle(f"Connect")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
-		self.user_info = get_user()
+		self.user_info = get_user(self.userfile)
 
 		self.tabs = QTabWidget()
 		self.network_tab = QWidget()

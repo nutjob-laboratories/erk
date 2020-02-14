@@ -44,7 +44,7 @@ from erk.resources import *
 from erk.widgets import *
 from erk.files import *
 from erk.common import *
-from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY
+from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
 import erk.config
 import erk.events
 
@@ -188,7 +188,7 @@ class Erk(QMainWindow):
 					s = s + e.classname+": "+e.reason
 					print(s)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -216,6 +216,11 @@ class Erk(QMainWindow):
 		self.configfile = configfile
 
 		self.stylefile = stylefile
+
+		self.userfile = userfile
+
+		global DISABLED_PLUGINS
+		DISABLED_PLUGINS = get_disabled(self.userfile)
 
 		# Load application settings
 		erk.config.load_settings(configfile)
@@ -1080,7 +1085,7 @@ class Erk(QMainWindow):
 			DISABLED_PLUGINS.remove(name)
 		else:
 			DISABLED_PLUGINS.append(name)
-		save_disabled()
+		save_disabled(self.userfile)
 		self.plugins.load()
 		self.rebuildPluginMenu()
 
@@ -1685,7 +1690,7 @@ class Erk(QMainWindow):
 		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
 
 	def menuCombo(self):
-		info = ComboDialog()
+		info = ComboDialog(self.userfile)
 		if info!=None:
 			self.connectToIRCServer(info)
 
@@ -1713,7 +1718,7 @@ class Erk(QMainWindow):
 			client.join(channel,key)
 
 	def menuNick(self,client):
-		info = NickDialog(client.nickname)
+		info = NickDialog(client.nickname,self)
 		if info!=None:
 			client.setNick(info)
 
