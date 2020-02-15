@@ -59,6 +59,8 @@ import erk.config
 from erk.common import *
 from erk.plugins import PLUGIN_DIRECTORY
 
+# Handle commandline arguments
+
 parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
 	formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -71,7 +73,6 @@ An open source IRC client
 ''',
 	epilog=f'''Official {APPLICATION_NAME} source code repository
 https://github.com/nutjob-laboratories/erk''',
-	#add_help=False,
 )
 
 congroup = parser.add_argument_group('Connection')
@@ -135,8 +136,9 @@ if __name__ == '__main__':
 			save_user(u,args.user)
 			print("\""+args.user+"\" created!")
 
-	if args.install:
+	# Handle installing plugins
 
+	if args.install:
 		file = args.install
 		if not os.path.isfile(file):
 			print("\""+file+"\" doesn't exist.")
@@ -147,6 +149,8 @@ if __name__ == '__main__':
 			zipObj.extractall(PLUGIN_DIRECTORY)
 		print("Done!")
 		sys.exit(0)
+
+	# Handle launching the editor
 
 	elif args.editor:
 		erk.config.load_settings(args.config)
@@ -165,6 +169,8 @@ if __name__ == '__main__':
 		EDITOR = EditorDialog(None,None,app,args.config)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
+
+	# Handle opening a file in the editor
 
 	elif args.edit:
 
@@ -190,6 +196,8 @@ if __name__ == '__main__':
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
+	# Handle creating a new plugin and opening it in the editor
+
 	elif args.new:
 		erk.config.load_settings(args.config)
 
@@ -208,6 +216,8 @@ if __name__ == '__main__':
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 		EDITOR.newPackage()
+
+	# Handle creating a new package
 
 	else:
 
@@ -253,7 +263,11 @@ if __name__ == '__main__':
 
 			sys.exit(0)
 
+		# Handle disabling connect commands
+
 		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS = True
+
+		# Handle IRC URLs
 
 		if args.url!='':
 			u = urllib.parse.urlparse(args.url)
@@ -289,6 +303,8 @@ if __name__ == '__main__':
 										args.channel = []
 										args.channel.append([c,''])
 
+		# Handle connecting to a server if one has been provided
+
 		if args.server:
 			if args.password=='':
 				pword = None
@@ -322,9 +338,14 @@ if __name__ == '__main__':
 			GUI.show()
 		else:
 
+			# Handle launching without the connection dialog
+
 			if args.noask:
 				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 				GUI.show()
+
+			# Handle connecting to the last server
+
 			elif args.last:
 				u = get_user(args.user)
 				if u["last_password"] == '':
@@ -357,12 +378,14 @@ if __name__ == '__main__':
 				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 				GUI.show()
 			else:
+
+				# Launch normally, showing the connection dialog first
+
 				info = ComboDialog(args.user)
 				if info!=None:
 					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
 					GUI.show()
 				else:
 					app.quit()
-
 
 	reactor.run()
