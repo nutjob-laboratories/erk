@@ -87,6 +87,18 @@ To make things easier, Windows users can create a shortcut to **Erk** so all you
 
 # Frequently asked questions
 
+## Is _Ərk_ designed for multiple users?
+
+Not directly, as all its configuration files are stored in _Ərk_'s installation directory. However, there are three command-line options you can use to manage settings for different users:
+
+* `--config` : This tells _Ərk_ to use a user-specified file for most configuration options.
+* `--user` : This tells _Ərk_ to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
+* `--format` : This tells _Ərk_ to use a user-specified text display settings. This sets what colors and formatting is used to display text in the client.
+
+This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename passed to _Ərk_ is not found, _Ərk_ will create the file and fill it with default settings.
+
+More command-line settings can be viewed by executing _Ərk_ with the `--help` command-line flag.
+
 ## What does "erk" mean?
 
 The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when one of the users in the channel suggested "Erk", because "that's how you pronouce IRC". And thus **Erk** was born.
