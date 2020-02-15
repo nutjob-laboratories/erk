@@ -14,7 +14,7 @@
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Erk connected to EFnet</b><br>
+	<b>Ərk connected to EFnet</b><br>
 	<i>Click image to enlarge</i><br>
 </p>
 
