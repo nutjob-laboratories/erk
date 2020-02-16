@@ -38,6 +38,15 @@ class !_PLUGIN_NAME!(Plugin):
 		"""
 		pass
 
+	def connect(self,client):
+		"""Executes when the client registers with a server.
+
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		"""
+		pass
+
 	def public(self,client,channel,user,message):
 		"""Executed when the client receives a public message.
 

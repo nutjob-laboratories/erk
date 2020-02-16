@@ -1364,6 +1364,9 @@ def public_message(gui,client,channel,user,message):
 
 def registered(gui,client):
 
+	if not client.gui.block_plugins:
+		client.gui.plugins.connect(client)
+
 	gui.registered(client)
 
 	window = fetch_console_window(client)

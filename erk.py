@@ -104,9 +104,9 @@ devgroup.add_argument("--new", help="Create a new plugin and open it in the edit
 
 miscgroup = parser.add_argument_group('Miscellaneous')
 
-miscgroup.add_argument("--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
-miscgroup.add_argument("--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
-miscgroup.add_argument("--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
+miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
+miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
+miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
 
 args = parser.parse_args()

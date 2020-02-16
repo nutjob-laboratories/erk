@@ -36,6 +36,15 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
+!_INDENT_!def connect(self,client):
+!_INDENT_!!_INDENT_!"""Executes when the client registers with a server.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!"""
+!_INDENT_!!_INDENT_!pass
+
 !_INDENT_!def public(self,client,channel,user,message):
 !_INDENT_!!_INDENT_!"""Executed when the client receives a public message.
 !_INDENT_!!_INDENT_!

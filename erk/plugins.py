@@ -147,41 +147,22 @@ class Plugin(ErkFunctions):
 	website = None
 	source = None
 
-	# def input(self,client,name,text):
-	# 	pass
-
-	# def public(self,client,channel,user,message):
-	# 	pass
-
-	# def private(self,client,user,message):
-	# 	pass
-
-	# def load(self):
-	# 	pass
-
-	# def unload(self):
-	# 	pass
-
 def check_for_attributes(p):
 	errors = []
 
 	if hasattr(p,"description"):
 		if p.description==None:
-			# errors.append(p.__file__+": \"description\" attribute is not set")
 			err = PluginError(p._package,p._class,p.__file__,"\"description\" attribute is not set")
 			errors.append(err)
 	else:
-		#errors.append(p.__file__+': Missing \"description\" attribute')
 		err = PluginError(p._package,p._class,p.__file__,"Missing \"description\" attribute")
 		errors.append(err)
 
 	if hasattr(p,"name"):
 		if p.name==None:
-			#errors.append(p.__file__+": \"name\" attribute is not set")
 			err = PluginError(p._package,p._class,p.__file__,"\"name\" attribute is not set")
 			errors.append(err)
 	else:
-		#errors.append(p.__file__+': Missing \"name\" attribute')
 		err = PluginError(p._package,p._class,p.__file__,"Missing \"name\" attribute")
 		errors.append(err)
 
@@ -351,6 +332,17 @@ class PluginCollection(object):
 				p._erk_client = client
 				p._erk_window_name = channel
 				p.part(client,channel,user)
+				p._erk_client = None
+				p._erk_window_name = None
+
+	def connect(self,client):
+		if not erk.config.PLUGINS_ENABLED: return
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"connect"):
+				p._erk_client = client
+				p._erk_window_name = None
+				p.connect(client)
 				p._erk_client = None
 				p._erk_window_name = None
 
