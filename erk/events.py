@@ -297,6 +297,53 @@ def set_fonts_all(font):
 		c.widget.input.setFont(font)
 		c.widget.name_display.setFont(font)
 
+def kicked_channel_window(client,name):
+	global CHANNELS
+
+	clean = []
+	windex = 0
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				windex = client.gui.stack.indexOf(c.widget)
+				c.widget.close()
+				continue
+		clean.append(c)
+	CHANNELS = clean
+
+	if len(CHANNELS)>0:
+		w = None
+		for c in CHANNELS:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
+
+	if len(PRIVATES)>0:
+		w = None
+		for c in PRIVATES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
+
+	if len(CONSOLES)>0:
+		w = None
+		for c in CONSOLES:
+			if c.widget.client.id==client.id:
+				w = c.widget
+		if w:
+			client.gui.stack.setCurrentWidget(w)
+			build_connection_display(client.gui)
+			return
+
+	client.gui.stack.setCurrentWidget(client.gui.starter)
+	build_connection_display(client.gui)
+
 def close_channel_window(client,name,msg=None):
 	global CHANNELS
 

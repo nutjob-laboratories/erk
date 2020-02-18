@@ -487,12 +487,26 @@ class IRC_Connection(irc.IRCClient):
 		
 
 	def userKicked(self, kickee, channel, kicker, message):
-		# self.gui.irc_kick(self,kickee,channel,kicker,message)
-		pass
+		self.sendLine("NAMES "+channel)
+
+		msg = Message(SYSTEM_MESSAGE,'',kickee+" was kicked from "+channel+" by "+kicker+" ("+message+")")
+
+		win = erk.events.fetch_console_window(self)
+		if win:
+			win.writeText( msg )
+
+		win = erk.events.fetch_channel_window(self,channel)
+		if win:
+			win.writeText( msg )
+
 
 	def kickedFrom(self, channel, kicker, message):
-		# self.gui.irc_kicked(self,channel,kicker,message)
-		pass
+
+		erk.events.kicked_channel_window(self,channel)
+
+		win = erk.events.fetch_console_window(self)
+		if win:
+			win.writeText( Message(SYSTEM_MESSAGE,'',"You were kicked from "+channel+" by "+kicker+" ("+message+")") )
 
 	def irc_QUIT(self,prefix,params):
 		x = prefix.split('!')

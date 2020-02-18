@@ -22,6 +22,8 @@ Version 0.810
 	* Added an option to use an alternate text format configuration file
 	* Added an option to use an alternate user configuration file
 	* The client will create any missing config files from default if commandline alternates are used
+	* The client being kicked from a channel is now handled properly
+	* User kicks are not being handled properly
 
 Version 0.800
 	* First initial 0.800 release
