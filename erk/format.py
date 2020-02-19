@@ -106,6 +106,21 @@ def render_message(message):
 		# as HTML
 		msg_to_display = html.escape(msg_to_display)
 
+	if erk.config.CLICKABLE_CHANNELS:
+		if message.type!=SYSTEM_MESSAGE:
+			try:
+				d = []
+				for w in msg_to_display.split():
+					if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
+						o = "<a href=\""+w+"\" "
+						o = o + "style=\""+STYLES["hyperlink"]+"\">"+w+"</a>"
+						w = o
+
+					d.append(w)
+				msg_to_display = ' '.join(d)
+			except:
+				pass
+
 	if erk.config.CONVERT_URLS_TO_LINKS:
 		msg_to_display = inject_www_links(msg_to_display,STYLES["hyperlink"])
 
@@ -121,20 +136,7 @@ def render_message(message):
 		if message.type==SYSTEM_MESSAGE:
 			msg_to_display = "&diams; "+msg_to_display
 
-	if erk.config.CLICKABLE_CHANNELS:
-		if message.type!=SYSTEM_MESSAGE:
-			try:
-				d = []
-				for w in msg_to_display.split():
-					if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
-						w = "<a href=\""+w+"\">"+w+"</a>"
-					d.append(w)
-				msg_to_display = ' '.join(d)
-			except:
-				pass
-
-
-
+	
 	p = message.sender.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -224,6 +226,7 @@ def render_message(message):
 # URL LINKS
 
 def inject_www_links(txt,style):
+
 	urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', txt)
 	for u in urls:
 		u = re.sub('<[^<]+?>', '', u)
