@@ -58,7 +58,6 @@ COMMON_COMMANDS = {
 	"/send": "/send ",
 	"/invite": "/invite ",
 	"/help": "/help",
-	"/list": "/list",
 }
 
 CHANNEL_COMMANDS = {
@@ -337,30 +336,6 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
-
-
-
-
-
-	if len(tokens)>0:
-		if tokens[0].lower()=='/list' and len(tokens)==1:
-			client.sendLine("LIST")
-			return True
-
-		if tokens[0].lower()=='/list':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /list")
-			window.writeText(msg,True)
-			return True
-
-
-
-
-
-
-
-
-
-
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/help':

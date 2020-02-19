@@ -48,98 +48,6 @@ PRIVATES = []
 
 UNSEEN = []
 
-LISTS = []
-
-def close_list_window(client):
-	global LISTS
-
-	l = []
-	for w in LISTS:
-		if w.client.id==client.id:
-			w.close()
-			continue
-		l.append(w)
-
-	LISTS = l
-
-	if len(CHANNELS)>0:
-		w = None
-		for c in CHANNELS:
-			if c.widget.client.id==client.id:
-				w = c.widget
-		if w:
-			client.gui.stack.setCurrentWidget(w)
-			build_connection_display(client.gui)
-			return
-
-	if len(PRIVATES)>0:
-		w = None
-		for c in PRIVATES:
-			if c.widget.client.id==client.id:
-				w = c.widget
-		if w:
-			client.gui.stack.setCurrentWidget(w)
-			build_connection_display(client.gui)
-			return
-
-	if len(CONSOLES)>0:
-		w = None
-		for c in CONSOLES:
-			if c.widget.client.id==client.id:
-				w = c.widget
-		if w:
-			client.gui.stack.setCurrentWidget(w)
-			build_connection_display(client.gui)
-			return
-
-	client.gui.stack.setCurrentWidget(client.gui.starter)
-
-	build_connection_display(client.gui)
-
-def empty_list(client):
-	for w in LISTS:
-		if w.client.id==client.id:
-			w.empty_list()
-
-def clear_list(client):
-	for w in LISTS:
-		if w.client.id==client.id:
-			w.clear_list()
-
-def add_list_entry(client,channel,usercount,topic):
-	for w in LISTS:
-		if w.client.id==client.id:
-			w.add_channel(channel,usercount,topic)
-
-def display_list(client):
-	global LISTS
-
-	found = False
-	widget = None
-	for w in LISTS:
-		if w.client.id==client.id:
-			found = True
-			widget = w
-
-	if not found:
-		newchan = ChannelList(
-			client,
-			client.gui
-			)
-
-		index = client.gui.stack.addWidget(newchan)
-		if erk.config.SWITCH_TO_NEW_WINDOWS:
-			client.gui.stack.setCurrentWidget(newchan)
-
-		LISTS.append(newchan)
-
-		build_connection_display(client.gui)
-	else:
-		clear_list(client)
-		empty_list(client)
-		if widget:
-			client.gui.stack.setCurrentWidget(widget)
-
 def quit_all():
 	for c in CONNECTIONS:
 		c.quit()
@@ -224,7 +132,6 @@ def build_connection_display(gui,new_server=None):
 		parent.erk_name = None
 		parent.erk_server = True
 		parent.erk_console = False
-		parent.erk_list = False
 
 		if erk.config.DISPLAY_CONNECTION_UPTIME:
 			child = QTreeWidgetItem(parent)
@@ -236,20 +143,6 @@ def build_connection_display(gui,new_server=None):
 			child.erk_uptime = True
 			child.erk_client = s[1]
 			child.erk_console = False
-			child.erk_list = False
-
-		for w in LISTS:
-			if w.client.id==s[1].id:
-				child = QTreeWidgetItem(parent)
-				child.setText(0,"Channels")
-				child.setIcon(0,QIcon(LIST_ICON))
-				child.erk_client = s[1]
-				child.erk_channel = False
-				child.erk_widget = w
-				child.erk_name = None
-				child.erk_server = False
-				child.erk_console = False
-				child.erk_list = True
 
 		if s[1].id in expanded:
 			parent.setExpanded(True)
@@ -272,7 +165,6 @@ def build_connection_display(gui,new_server=None):
 						parent.erk_name = s[0]
 
 					parent.erk_console = True
-					parent.erk_list = False
 
 					if window_has_unseen(c.widget):
 						f = parent.font(0)
@@ -301,7 +193,6 @@ def build_connection_display(gui,new_server=None):
 			child.erk_widget = channel
 			child.erk_name = channel.name
 			child.erk_console = False
-			child.erk_list = False
 
 			if window_has_unseen(channel):
 				f = child.font(0)
@@ -699,15 +590,12 @@ def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
 
-	try:
-		args = list(args)
-		cleaned = []
-		for a in args:
-			if a == None: continue
-			cleaned.append(a)
-		args = cleaned
-	except:
-		pass
+	args = list(args)
+	cleaned = []
+	for a in args:
+		if a == None: continue
+		cleaned.append(a)
+	args = cleaned
 
 	p = user.split('!')
 	if len(p)==2:

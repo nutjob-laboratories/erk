@@ -228,7 +228,7 @@ class Erk(QMainWindow):
 		if self.block_macros: erk.config.MACROS_ENABLED = False
 		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
 
-		u = get_user(self.userfile)
+		u = get_user()
 		self.ignore = u["ignore"]
 
 		self.setWindowTitle(APPLICATION_NAME)
@@ -1800,10 +1800,6 @@ class Erk(QMainWindow):
 
 								entry = QAction(QIcon(EXIT_ICON),"Leave channel",self)
 								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: erk.events.close_channel_window(client,name))
-								menu.addAction(entry)
-							elif item.erk_list:
-								entry = QAction(QIcon(EXIT_ICON),"Close channel list",self)
-								entry.triggered.connect(lambda state,client=item.erk_client: erk.events.close_list_window(client))
 								menu.addAction(entry)
 							else:
 
