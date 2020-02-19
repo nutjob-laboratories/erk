@@ -121,6 +121,20 @@ def render_message(message):
 		if message.type==SYSTEM_MESSAGE:
 			msg_to_display = "&diams; "+msg_to_display
 
+	if erk.config.CLICKABLE_CHANNELS:
+		if message.type!=SYSTEM_MESSAGE:
+			try:
+				d = []
+				for w in msg_to_display.split():
+					if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
+						w = "<a href=\""+w+"\">"+w+"</a>"
+					d.append(w)
+				msg_to_display = ' '.join(d)
+			except:
+				pass
+
+
+
 	p = message.sender.split('!')
 	if len(p)==2:
 		nick = p[0]

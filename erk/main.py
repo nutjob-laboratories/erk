@@ -456,6 +456,16 @@ class Erk(QMainWindow):
 
 			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
 
+
+
+			self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
+			self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
+			messageMenu.addAction(self.set_chanlink)
+
+			if erk.config.CLICKABLE_CHANNELS: self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
+
+
+
 			# Channel display submenu
 
 			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
@@ -1161,7 +1171,26 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
+	# self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
+	# 		self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
+	# 		messageMenu.addAction(self.set_chanlink)
+
+	# 		if erk.config.CLICKABLE_CHANNELS: self.set_color.setIcon(QIcon(CHECKED_ICON))
+
 	def toggleSetting(self,setting):
+
+
+		if setting=="chanlink":
+			if erk.config.CLICKABLE_CHANNELS:
+				erk.config.CLICKABLE_CHANNELS = False
+				self.set_chanlink.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.CLICKABLE_CHANNELS = True
+				self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
+			return
+
 
 		if setting=="autoinvite":
 			if erk.config.JOIN_ON_INVITE:

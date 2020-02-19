@@ -24,6 +24,8 @@ Version 0.810
 	* The client will create any missing config files from default if commandline alternates are used
 	* The client being kicked from a channel is now handled properly
 	* User kicks are not being handled properly
+	* Channel names in chat messages are now converted to link (click on the channel name to join the channel)
+	* Added an option to turn channel links on and off
 
 Version 0.800
 	* First initial 0.800 release

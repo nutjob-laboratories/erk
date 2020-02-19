@@ -135,6 +135,11 @@ class Window(QMainWindow):
 			self.chat.moveCursor(QTextCursor.End)
 		else:
 			link = url.toString()
+
+			if erk.config.CLICKABLE_CHANNELS:
+				if link[:1]=='#' or link[:1]=='&' or link[:1]=='!' or link[:1]=='+':
+					self.client.join(link)
+
 			self.chat.setSource(QUrl())
 			self.chat.moveCursor(QTextCursor.End)
 
