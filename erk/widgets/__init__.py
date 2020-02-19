@@ -34,3 +34,5 @@ from .elements import *
 from .connection import *
 from .menubar import *
 from .action import MenuAction,MenuNoAction,Menu3Action,Menu4Action,Menu5Action,textSeparator
+
+from .list import Window as ChannelList

@@ -184,3 +184,5 @@ EXPORT_ICON = ":/gui-export.png"
 OPTIONS_ICON = ":/gui-options.png"
 
 CONNECTING_ICON = ":/gui-connecting.png"
+
+LIST_ICON = ":/gui-list.png"

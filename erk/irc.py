@@ -818,11 +818,15 @@ class IRC_Connection(irc.IRCClient):
 		topic = params[3]
 
 		# self.gui.irc_list(self,server,channel,usercount,topic)
+		erk.events.add_list_entry(self,channel,usercount,topic)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
 
 		# self.gui.irc_start_list(self,server)
+
+		erk.events.display_list(self)
+		
 
 		
 
