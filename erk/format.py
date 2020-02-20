@@ -111,8 +111,8 @@ def render_message(message):
 			try:
 				d = []
 				for w in msg_to_display.split():
-					if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
-						if len(w)>1:
+					if w!='&amp;' and w!='#' and w!='!' and w!='+':
+						if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
 							o = "<a href=\""+w+"\" "
 							o = o + "style=\""+STYLES["hyperlink"]+"\">"+w+"</a>"
 							w = o
