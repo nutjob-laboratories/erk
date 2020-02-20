@@ -27,6 +27,7 @@ Version 0.810
 	* Channel names in chat messages are now converted to link (click on the channel name to join the channel)
 	* Added an option to turn channel links on and off
 	* Bugfix: URL links would not display properly with some URLs
+	* Bugfix: instances of '&', '#', etc, on their own are no longer made into channel links
 
 Version 0.800
 	* First initial 0.800 release
