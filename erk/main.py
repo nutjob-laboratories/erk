@@ -47,6 +47,7 @@ from erk.common import *
 from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
 import erk.config
 import erk.events
+import erk.format
 
 from erk.dialogs import(
 	ComboDialog,
@@ -219,6 +220,8 @@ class Erk(QMainWindow):
 
 		self.userfile = userfile
 
+		erk.format.get_text_format_settings(self.stylefile)
+
 		global DISABLED_PLUGINS
 		DISABLED_PLUGINS = get_disabled(self.userfile)
 
@@ -228,7 +231,7 @@ class Erk(QMainWindow):
 		if self.block_macros: erk.config.MACROS_ENABLED = False
 		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
 
-		u = get_user()
+		u = get_user(self.userfile)
 		self.ignore = u["ignore"]
 
 		self.setWindowTitle(APPLICATION_NAME)
