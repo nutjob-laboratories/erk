@@ -29,6 +29,7 @@ Version 0.810
 	* Bugfix: URL links would not display properly with some URLs
 	* Bugfix: instances of '&', '#', etc, on their own are no longer made into channel links
 	* Bugfix: custom configuration file are now loaded consistantly
+	* Bugfix: no channel links for messages with " in them
 
 Version 0.800
 	* First initial 0.800 release

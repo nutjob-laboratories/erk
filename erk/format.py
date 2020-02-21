@@ -111,7 +111,7 @@ def render_message(message):
 			try:
 				d = []
 				for w in msg_to_display.split():
-					if w!='&amp;' and w!='#' and w!='!' and w!='+':
+					if w!='&amp;' and w!='#' and w!='!' and w!='+' and "&quot" not in w:
 						if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
 							o = "<a href=\""+w+"\" "
 							o = o + "style=\""+STYLES["hyperlink"]+"\">"+w+"</a>"
@@ -221,6 +221,9 @@ def render_message(message):
 		output = output.replace("!MESSAGE!",nick +" " +msg_to_display)
 	else:
 		output = output.replace("!MESSAGE!",msg_to_display)
+
+	if "Dude" in output:
+		print(output)
 
 	return output
 
