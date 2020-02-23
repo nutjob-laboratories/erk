@@ -289,6 +289,8 @@ class Dialog(QDialog):
 
 		self.built_in_server_list = get_network_list()
 
+		organized_list = []
+
 		if len(self.user_info["history"])>0:
 			# servers are in history
 			for s in self.user_info["history"]:
@@ -318,11 +320,35 @@ class Dialog(QDialog):
 						if s[1]==entry[1]:
 							visited = True
 
-			self.StoredData.append(entry)
 			if visited:
-				self.servers.addItem(QIcon(VISITED_ICON),entry[2] + " - " + entry[0])
+				organized_list.append([True,entry])
 			else:
-				self.servers.addItem(QIcon(UNVISITED_ICON),entry[2] + " - " + entry[0])
+				organized_list.append([False,entry])
+
+		# 	self.StoredData.append(entry)
+		# 	if visited:
+		# 		self.servers.addItem(QIcon(VISITED_ICON),entry[2] + " - " + entry[0])
+		# 	else:
+		# 		self.servers.addItem(QIcon(USERLIST_NORMAL_ICON),entry[2] + " - " + entry[0])
+
+		# self.StoredServer = self.servers.currentIndex()
+
+		vserver = []
+		nserver = []
+		for x in organized_list:
+			if x[0]:
+				vserver.append(x)
+			else:
+				nserver.append(x)
+		finallist = vserver + nserver
+		
+		for s in finallist:
+			if s[0]:
+				self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
+			else:
+				self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
+
+			self.StoredData.append(s[1])
 
 		self.StoredServer = self.servers.currentIndex()
 

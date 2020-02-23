@@ -33,6 +33,7 @@ Version 0.810
 	* New plugin event: notice() (triggered when the client receives a notice)
 	* Clarified some command-line flag text
 	* Changed the text format menu entry from "Colors" to "Text colors & formatting"
+	* Connection dialog now lists visited servers first in the server selection widget
 
 Version 0.800
 	* First initial 0.800 release
