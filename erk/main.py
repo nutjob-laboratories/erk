@@ -391,7 +391,7 @@ class Erk(QMainWindow):
 
 			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
-			entry = QAction(QIcon(FORMAT_ICON),"Colors",self)
+			entry = QAction(QIcon(FORMAT_ICON),"Text colors && formatting",self)
 			entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
 			self.displayMenu.addAction(entry)
 

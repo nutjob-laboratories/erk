@@ -97,10 +97,10 @@ disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect 
 
 devgroup = parser.add_argument_group('Plugin development')
 
-devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin skeleton in the current directory", metavar="NAME", default='')
+devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin package in the current directory", metavar="NAME", default='')
+devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the plugins directory", action="store_true")
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
-devgroup.add_argument("--new", help="Create a new plugin and open it in the editor", action="store_true")
 
 miscgroup = parser.add_argument_group('Miscellaneous')
 

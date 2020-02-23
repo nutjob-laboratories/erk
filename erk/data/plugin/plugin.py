@@ -70,6 +70,18 @@ class !_PLUGIN_NAME!(Plugin):
 		"""
 		pass
 
+	def notice(self,client,target,user,message):
+		"""Executed when the client receives a notice message.
+
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		target -- The user or channel the notice was sent to
+		user -- The user who sent the message (in nickname!username@host format)
+		message -- The message contents
+		"""
+		pass
+
 	def tick(self,client):
 		"""Executes once per second.
 

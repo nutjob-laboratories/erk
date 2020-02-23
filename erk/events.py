@@ -1172,6 +1172,9 @@ def motd(gui,client,motd):
 
 def notice_message(gui,client,target,user,message):
 
+	if not client.gui.block_plugins:
+		if client.gui.plugins.notice(client,target,user,message): return
+
 	if len(user.strip())==0:
 		if client.hostname:
 			user = client.hostname

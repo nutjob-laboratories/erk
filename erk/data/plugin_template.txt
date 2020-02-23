@@ -68,6 +68,18 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
 
+!_INDENT_!def notice(self,client,target,user,message):
+!_INDENT_!!_INDENT_!"""Executed when the client receives a notice message.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!target -- The user or channel the notice was sent to
+!_INDENT_!!_INDENT_!user -- The user who sent the message (in nickname!username@host format)
+!_INDENT_!!_INDENT_!message -- The message contents
+!_INDENT_!!_INDENT_!"""
+!_INDENT_!!_INDENT_!pass
+
 !_INDENT_!def tick(self,client):
 !_INDENT_!!_INDENT_!"""Executes once per second.
 !_INDENT_!!_INDENT_!
