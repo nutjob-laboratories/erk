@@ -94,6 +94,9 @@ class Erk(QMainWindow):
 	def closeEvent(self, event):
 		if not self.block_plugins:
 			self.plugins.unload()
+		erk.config.DEFAULT_APP_WIDTH = self.width()
+		erk.config.DEFAULT_APP_HEIGHT = self.height()
+		erk.config.save_settings(self.configfile)
 		self.app.quit()
 
 	def disconnect_current(self,msg=None):
@@ -395,14 +398,14 @@ class Erk(QMainWindow):
 			entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
 			self.displayMenu.addAction(entry)
 
-			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Window size",self)
+			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
 			self.displayMenu.addAction(self.winsizeMenuEntry)
 
 			w = erk.config.DEFAULT_APP_WIDTH
 			h =  erk.config.DEFAULT_APP_HEIGHT
 
-			self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
+			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
 			self.displayMenu.addSeparator()
 
@@ -1755,7 +1758,7 @@ class Erk(QMainWindow):
 			client.setNick(info)
 
 	def menuResize(self):
-		info = WindowSizeDialog()
+		info = WindowSizeDialog(self)
 		if info!=None:
 			erk.config.DEFAULT_APP_WIDTH = info[0]
 			erk.config.DEFAULT_APP_HEIGHT = info[1]
@@ -1765,7 +1768,7 @@ class Erk(QMainWindow):
 			w = erk.config.DEFAULT_APP_WIDTH
 			h =  erk.config.DEFAULT_APP_HEIGHT
 
-			self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
+			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
 	def eventFilter(self, source, event):
 

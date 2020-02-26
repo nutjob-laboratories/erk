@@ -106,9 +106,9 @@ def HistorySizeDialog():
 	if not info: return None
 	return info
 
-def WindowSizeDialog():
-	x = WindowSize.Dialog()
-	info = x.get_window_information()
+def WindowSizeDialog(obj):
+	x = WindowSize.Dialog(obj)
+	info = x.get_window_information(obj)
 	del x
 
 	if not info: return None

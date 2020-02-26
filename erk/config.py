@@ -97,8 +97,8 @@ EDITOR_STATUS_BAR = True
 EDITOR_SYNTAX_HIGHLIGHT = True
 EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
 JOIN_ON_INVITE = False
-
 CLICKABLE_CHANNELS = True
+CONNECTION_DISPLAY_WIDTH = None
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -162,6 +162,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"editor_prompt_for_save_on_exit": EDITOR_PROMPT_FOR_SAVE_ON_EXIT,
 		"automatically_join_on_invite": JOIN_ON_INVITE,
 		"create_links_for_channel_names": CLICKABLE_CHANNELS,
+		"connection_display_width": CONNECTION_DISPLAY_WIDTH,
 	}
 
 	with open(filename, "w") as write_data:
@@ -226,6 +227,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global EDITOR_PROMPT_FOR_SAVE_ON_EXIT
 	global JOIN_ON_INVITE
 	global CLICKABLE_CHANNELS
+	global CONNECTION_DISPLAY_WIDTH
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -289,6 +291,7 @@ def load_settings(filename=SETTINGS_FILE):
 			EDITOR_PROMPT_FOR_SAVE_ON_EXIT = data["editor_prompt_for_save_on_exit"]
 			JOIN_ON_INVITE = data["automatically_join_on_invite"]
 			CLICKABLE_CHANNELS = data["create_links_for_channel_names"]
+			CONNECTION_DISPLAY_WIDTH = data["connection_display_width"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist
