@@ -111,11 +111,11 @@ def render_message(message):
 			try:
 				d = []
 				for w in msg_to_display.split():
-					if w!='&amp;' and w!='#' and w!='!' and w!='+' and "&quot" not in w:
-						if w[:1]=='#' or w[:1]=='&' or w[:1]=='!' or w[:1]=='+':
-							o = "<a href=\""+w+"\" "
-							o = o + "style=\""+STYLES["hyperlink"]+"\">"+w+"</a>"
-							w = o
+					x = html.unescape(w)
+					if x[:1]=='#' or x[:1]=='&' or x[:1]=='!' or x[:1]=='+':
+						o = "<a href=\""+x+"\" "
+						o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
+						w = o
 
 					d.append(w)
 				msg_to_display = ' '.join(d)

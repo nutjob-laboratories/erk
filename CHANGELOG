@@ -34,6 +34,7 @@ Version 0.810
 	* Clarified some command-line flag text
 	* Changed the text format menu entry from "Colors" to "Text colors & formatting"
 	* Connection dialog now lists visited servers first in the server selection widget
+	* Bugfix: fixed some errors with detecting channel names in chat to convert into channel links
 
 Version 0.800
 	* First initial 0.800 release
