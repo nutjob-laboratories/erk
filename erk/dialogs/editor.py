@@ -811,11 +811,9 @@ class Window(QMainWindow):
 		if setting=="highlight":
 			if erk.config.EDITOR_SYNTAX_HIGHLIGHT:
 				erk.config.EDITOR_SYNTAX_HIGHLIGHT = False
-				self.status.hide()
 				self.set_syntaxcolor.setIcon(QIcon(UNCHECKED_ICON))
 			else:
 				erk.config.EDITOR_SYNTAX_HIGHLIGHT = True
-				self.status.show()
 				self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 			self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
 			self.toggle_highlight()

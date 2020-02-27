@@ -41,6 +41,7 @@ Version 0.810
 	* Window width and height is now "remembered" and restored on close and restart
 	* Changed "set initial window size" entry to "set window size" to reflect the new changes
 	* Changed the "set window size" dialog to use the app's current window size rather than stored values
+	* Bugfix: turning on/off syntax highlighting in the editor would also turn on/off the editor status bar
 
 Version 0.800
 	* First initial 0.800 release
