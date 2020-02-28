@@ -107,7 +107,7 @@ def render_message(message):
 		msg_to_display = html.escape(msg_to_display)
 
 	if erk.config.CLICKABLE_CHANNELS:
-		if message.type!=SYSTEM_MESSAGE:
+		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=SELF_MESSAGE and message.type!=PLUGIN_MESSAGE:
 			try:
 				d = []
 				for w in msg_to_display.split():

@@ -42,6 +42,8 @@ Version 0.810
 	* Changed "set initial window size" entry to "set window size" to reflect the new changes
 	* Changed the "set window size" dialog to use the app's current window size rather than stored values
 	* Bugfix: turning on/off syntax highlighting in the editor would also turn on/off the editor status bar
+	* Bugfix: channel links are not longer inserted into anything other than chat messages
+	* Changes to the help command (different command lists are shown to different windows)
 
 Version 0.800
 	* First initial 0.800 release

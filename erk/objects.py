@@ -86,7 +86,24 @@ class WhoisData:
 HELP_HTML_TEMPLATE='''<table style="width: 100%" border="0">
 	<tbody>
         <tr>
-          <td><center><b>Basic Commands</b></center></td>
+          <td><center><b>Common Commands</b></center></td>
+        </tr>
+        <tr>
+          <td>
+            <table style="width: 100%" border="0">
+              <tbody>
+                %_LIST_%
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>'''
+
+CHAT_HELP_HTML_TEMPLATE='''<table style="width: 100%" border="0">
+	<tbody>
+        <tr>
+          <td><center><b>Chat Commands</b></center></td>
         </tr>
         <tr>
           <td>
