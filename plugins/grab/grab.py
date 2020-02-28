@@ -35,7 +35,7 @@ class NicknameGrabber(Plugin):
                 self.active = True
                 return True
         
-        if len(tokens)>1 tokens[0].lower()=="/grab":
+        if len(tokens)>1 and tokens[0].lower()=="/grab":
             self.print("Usage: /grab NICKNAME")
             return True
 
