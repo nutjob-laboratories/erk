@@ -26,18 +26,16 @@ class NicknameGrabber(Plugin):
         self.target = None
 
     def input(self,client,name,text):
-        if text.lower()=="/grab":
-            self.print("Usage: /grab NICKNAME")
-            return True
         
         tokens = text.split()
+        
         if len(tokens)==2:
             if tokens[0].lower()=="/grab":
                 self.target = tokens[1]
                 self.active = True
                 return True
         
-        if len(tokens)>2 and text.lower()=="/grab":
+        if len(tokens)>1 tokens[0].lower()=="/grab":
             self.print("Usage: /grab NICKNAME")
             return True
 
