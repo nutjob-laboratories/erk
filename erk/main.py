@@ -192,6 +192,9 @@ class Erk(QMainWindow):
 					s = s + e.classname+": "+e.reason
 					print(s)
 
+	def resizeEvent(self, event):
+		self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
+
 	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -1176,12 +1179,6 @@ class Erk(QMainWindow):
 	def menuReloadMacros(self):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
-
-	# self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
-	# 		self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
-	# 		messageMenu.addAction(self.set_chanlink)
-
-	# 		if erk.config.CLICKABLE_CHANNELS: self.set_color.setIcon(QIcon(CHECKED_ICON))
 
 	def toggleSetting(self,setting):
 

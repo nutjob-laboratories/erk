@@ -44,6 +44,7 @@ Version 0.810
 	* Bugfix: turning on/off syntax highlighting in the editor would also turn on/off the editor status bar
 	* Bugfix: channel links are not longer inserted into anything other than chat messages
 	* Changes to the help command (different command lists are shown to different windows)
+	* The "set window size" menu entry now displays the current window size
 
 Version 0.800
 	* First initial 0.800 release

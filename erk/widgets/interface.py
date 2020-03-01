@@ -68,6 +68,9 @@ class Window(QMainWindow):
 		# Move the cursor back to the input widget
 		self.input.setFocus()
 
+	def inputFocus(self):
+		self.input.setFocus()
+
 	def handleUserInput(self):
 		user_input = self.input.text()
 		self.input.setText('')
