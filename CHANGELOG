@@ -50,6 +50,8 @@ Version 0.810
 	* Channel list is obtained on server connect (if the server has SAFELIST turned on), and is refreshed once an hour
 	* Changed "Channel Displays" menu entry name to "Chat Displays"
 	* Added an option to change the system message prefix from the GUI
+	* Created a new settings menu submenu ("Miscellaneous") and placed all un-menued settings in the settings menu in it
+	* Added a menu option to toggle auto channel list retrieval on/off
 
 Version 0.800
 	* First initial 0.800 release

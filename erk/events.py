@@ -48,6 +48,9 @@ PRIVATES = []
 
 UNSEEN = []
 
+def fetch_connections():
+	return CONNECTIONS
+
 def quit_all():
 	for c in CONNECTIONS:
 		c.quit()

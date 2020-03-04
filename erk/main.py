@@ -676,30 +676,44 @@ class Erk(QMainWindow):
 
 			# Miscellaneous settings
 
-			self.settingsMenu.addSeparator()
+			#self.settingsMenu.addSeparator()
+
+			miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
 
 			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_autoinvite)
+			miscMenu.addAction(self.set_autoinvite)
 
 			if erk.config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_autoswitch)
+			miscMenu.addAction(self.set_autoswitch)
 
 			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
 
+
+
+			self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
+			self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
+			miscMenu.addAction(self.set_fetchlist)
+
+			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
+
+
+
+			miscMenu.addSeparator()
+
 			self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
 			self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_macroenable)
+			miscMenu.addAction(self.set_macroenable)
 
 			if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 			if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 
 			entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
 			entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
-			self.settingsMenu.addAction(entry)
+			miscMenu.addAction(entry)
 
 			if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 			if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
@@ -1183,7 +1197,28 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
+	# self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
+	# 		self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
+	# 		miscMenu.addAction(self.set_fetchlist)
+
+	# 		if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
+
 	def toggleSetting(self,setting):
+
+		if setting=="autofetch":
+			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+				erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST = False
+				self.set_fetchlist.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST = True
+				self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
+
+				for c in erk.events.fetch_connections():
+					if c.last_fetch < c.uptime:
+						c.sendLine("LIST")
+
+			erk.config.save_settings(self.configfile)
+			return
 
 		if setting=="setsysprefix":
 			n = PrefixDialog()

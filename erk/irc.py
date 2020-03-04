@@ -237,6 +237,8 @@ class IRC_Connection(irc.IRCClient):
 		self.channels = []
 		self.channellist = []
 
+		self.last_fetch = 0
+
 		# END SERVER INFO
 
 		entry = [self.server,self.port]
@@ -265,6 +267,7 @@ class IRC_Connection(irc.IRCClient):
 		if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
 			if self.uptime % erk.config.CHANNEL_LIST_REFRESH_FREQUENCY==0:
 				self.sendLine("LIST")
+				self.last_fetch = self.uptime
 
 
 	def connectionMade(self):
