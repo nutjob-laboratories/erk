@@ -99,6 +99,10 @@ EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
 JOIN_ON_INVITE = False
 CLICKABLE_CHANNELS = True
 CONNECTION_DISPLAY_WIDTH = None
+SYSTEM_MESSAGE_PREFIX = "&diams;"
+
+CHANNEL_LIST_REFRESH_FREQUENCY = 3600
+AUTOMATICALLY_FETCH_CHANNEL_LIST = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -163,6 +167,9 @@ def save_settings(filename=SETTINGS_FILE):
 		"automatically_join_on_invite": JOIN_ON_INVITE,
 		"create_links_for_channel_names": CLICKABLE_CHANNELS,
 		"connection_display_width": CONNECTION_DISPLAY_WIDTH,
+		"channel_list_refresh_in_seconds": CHANNEL_LIST_REFRESH_FREQUENCY,
+		"system_message_prefix": SYSTEM_MESSAGE_PREFIX,
+		"automatically_fetch_channel_list": AUTOMATICALLY_FETCH_CHANNEL_LIST,
 	}
 
 	with open(filename, "w") as write_data:
@@ -228,6 +235,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global JOIN_ON_INVITE
 	global CLICKABLE_CHANNELS
 	global CONNECTION_DISPLAY_WIDTH
+	global CHANNEL_LIST_REFRESH_FREQUENCY
+	global SYSTEM_MESSAGE_PREFIX
+	global AUTOMATICALLY_FETCH_CHANNEL_LIST
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -292,6 +302,9 @@ def load_settings(filename=SETTINGS_FILE):
 			JOIN_ON_INVITE = data["automatically_join_on_invite"]
 			CLICKABLE_CHANNELS = data["create_links_for_channel_names"]
 			CONNECTION_DISPLAY_WIDTH = data["connection_display_width"]
+			CHANNEL_LIST_REFRESH_FREQUENCY = data["channel_list_refresh_in_seconds"]
+			SYSTEM_MESSAGE_PREFIX = data["system_message_prefix"]
+			AUTOMATICALLY_FETCH_CHANNEL_LIST = data["automatically_fetch_channel_list"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

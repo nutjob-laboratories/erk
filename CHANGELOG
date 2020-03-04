@@ -45,6 +45,11 @@ Version 0.810
 	* Bugfix: channel links are not longer inserted into anything other than chat messages
 	* Changes to the help command (different command lists are shown to different windows)
 	* The "set window size" menu entry now displays the current window size
+	* Channel links are now *only* created if the channel exists on the server
+	* User input can now create channel links
+	* Channel list is obtained on server connect (if the server has SAFELIST turned on), and is refreshed once an hour
+	* Changed "Channel Displays" menu entry name to "Chat Displays"
+	* Added an option to change the system message prefix from the GUI
 
 Version 0.800
 	* First initial 0.800 release

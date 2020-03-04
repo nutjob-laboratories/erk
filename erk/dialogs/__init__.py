@@ -52,6 +52,16 @@ import erk.dialogs.key as Key
 
 import erk.dialogs.error as Error
 
+import erk.dialogs.prefix as Prefix
+
+def PrefixDialog():
+	x = Prefix.Dialog()
+	info = x.get_system_information()
+	del x
+
+	if not info: return None
+	return info
+
 def KeyDialog():
 	x = Key.Dialog()
 	info = x.get_channel_information()

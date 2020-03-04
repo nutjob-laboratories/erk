@@ -58,7 +58,6 @@ NOTICE_MESSAGE = 5
 PRIVATE_MESSAGE = 6
 HORIZONTAL_RULE_MESSAGE = 7
 WHOIS_MESSAGE = 8
-
 PLUGIN_MESSAGE = 9
 
 class Message:
@@ -70,6 +69,12 @@ class Message:
 		self.type = mtype
 		self.sender = sender
 		self.contents = contents
+
+class ChannelInfo:
+	def __init__(self,name,count,topic):
+		self.name = name
+		self.count = count
+		self.topic = topic
 
 class WhoisData:
 	def __init__(self):

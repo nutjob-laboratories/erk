@@ -95,7 +95,7 @@ MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
 
-def render_message(message):
+def render_message(message,client=None):
 
 	msg_to_display = message.contents
 
@@ -107,15 +107,19 @@ def render_message(message):
 		msg_to_display = html.escape(msg_to_display)
 
 	if erk.config.CLICKABLE_CHANNELS:
-		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=SELF_MESSAGE and message.type!=PLUGIN_MESSAGE:
+		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE:
 			try:
 				d = []
 				for w in msg_to_display.split():
 					x = html.unescape(w)
 					if x[:1]=='#' or x[:1]=='&' or x[:1]=='!' or x[:1]=='+':
-						o = "<a href=\""+x+"\" "
-						o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
-						w = o
+						# Check to make sure the channel exists on the server; if the channel
+						# doesn't exist, the channel link will not be created
+						if client!=None:
+							if x in client.channels:
+								o = "<a href=\""+x+"\" "
+								o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
+								w = o
 
 					d.append(w)
 				msg_to_display = ' '.join(d)
@@ -135,7 +139,7 @@ def render_message(message):
 
 	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
 		if message.type==SYSTEM_MESSAGE:
-			msg_to_display = "&diams; "+msg_to_display
+			msg_to_display = erk.config.SYSTEM_MESSAGE_PREFIX+" "+msg_to_display
 
 	
 	p = message.sender.split('!')

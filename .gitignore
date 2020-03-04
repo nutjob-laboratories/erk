@@ -6,7 +6,5 @@ settings/settings.json
 logs/EFnet-#themaxx.json
 logs/MYNet-#themaxx.json
 *.odt#
-erk/__pycache__/format.cpython-37.pyc.87541784
-logs/EFNet-#erk.json
-logs/2600net-#themaxx.json
-logs/MYNet-#beef.json
+logs/MYNet-#quirc.json
+logs/EFnet-#erk.json

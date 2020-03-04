@@ -557,7 +557,7 @@ class Window(QMainWindow):
 
 	def writeText(self,message,do_not_save=False):
 
-		d = erk.format.render_message(message)
+		d = erk.format.render_message(message,self.client)
 
 		self.chat.append(d)
 		self.chat.moveCursor(QTextCursor.End)
@@ -575,7 +575,7 @@ class Window(QMainWindow):
 		self.chat.clear()
 
 		for line in self.log:
-			d = erk.format.render_message(line)
+			d = erk.format.render_message(line,self.client)
 			self.chat.append(d)
 
 		self.chat.moveCursor(QTextCursor.End)

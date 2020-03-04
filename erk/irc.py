@@ -232,6 +232,11 @@ class IRC_Connection(irc.IRCClient):
 		self.modes = 0
 		self.maxmodes = []
 
+		self.safelist = False
+
+		self.channels = []
+		self.channellist = []
+
 		# END SERVER INFO
 
 		entry = [self.server,self.port]
@@ -255,6 +260,11 @@ class IRC_Connection(irc.IRCClient):
 				if len(nick.strip())>0:
 					self.request_whois.append(nick)
 					self.sendLine("WHOIS "+nick)
+
+		# Refresh internal userlist
+		if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+			if self.uptime % erk.config.CHANNEL_LIST_REFRESH_FREQUENCY==0:
+				self.sendLine("LIST")
 
 
 	def connectionMade(self):
@@ -818,11 +828,19 @@ class IRC_Connection(irc.IRCClient):
 		topic = params[3]
 
 		# self.gui.irc_list(self,server,channel,usercount,topic)
+		#print(channel,usercount,topic)
+
+		self.channels.append(channel)
+		e = ChannelInfo(channel,usercount,topic)
+		self.channellist.append(e)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
 
 		# self.gui.irc_start_list(self,server)
+
+		self.channels = []
+		self.channellist= []
 
 		
 
@@ -1113,6 +1131,12 @@ class IRC_Connection(irc.IRCClient):
 		if len(supports)>0:
 			for s in supports:
 				self.supports.append(s)
+
+		if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+			if 'SAFELIST' in self.supports:
+				if not self.safelist:
+					self.safelist = True
+					self.sendLine("LIST")
 
 	# BEGIN SERVER OPTIONS
 

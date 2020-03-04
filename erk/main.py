@@ -61,7 +61,8 @@ from erk.dialogs import(
 	MacroDialog,
 	EditorDialog,
 	ErrorDialog,
-	ExportLogDialog
+	ExportLogDialog,
+	PrefixDialog
 	)
 
 from erk.irc import(
@@ -453,19 +454,11 @@ class Erk(QMainWindow):
 
 			if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
-			self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
-			messageMenu.addAction(self.set_sysprefix)
-
-			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-
 			self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Open new chat for private messages",self)
 			self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
 			messageMenu.addAction(self.set_privopen)
 
 			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-
-
 
 			self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
 			self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
@@ -473,11 +466,21 @@ class Erk(QMainWindow):
 
 			if erk.config.CLICKABLE_CHANNELS: self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
 
+			self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
+			self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
+			messageMenu.addAction(self.set_sysprefix)
 
+			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_prefix_char = QAction(QIcon(PREFIX_ICON),"Set system message prefix",self)
+			self.set_prefix_char.triggered.connect(lambda state,s="setsysprefix": self.toggleSetting(s))
+			messageMenu.addAction(self.set_prefix_char)
+
+			if not erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_prefix_char.setEnabled(False)
 
 			# Channel display submenu
 
-			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Channel displays")
+			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Chat displays")
 
 			self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
@@ -1182,6 +1185,15 @@ class Erk(QMainWindow):
 
 	def toggleSetting(self,setting):
 
+		if setting=="setsysprefix":
+			n = PrefixDialog()
+			if n:
+				if len(n.strip())>0:
+					erk.config.SYSTEM_MESSAGE_PREFIX = n
+					erk.config.save_settings(self.configfile)
+					erk.events.rerender_all()
+			return
+
 
 		if setting=="chanlink":
 			if erk.config.CLICKABLE_CHANNELS:
@@ -1308,9 +1320,11 @@ class Erk(QMainWindow):
 			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
 				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = False
 				self.set_sysprefix.setIcon(QIcon(UNCHECKED_ICON))
+				self.set_prefix_char.setEnabled(False)
 			else:
 				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 				self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+				self.set_prefix_char.setEnabled(True)
 			erk.config.save_settings(self.configfile)
 			erk.events.rerender_all()
 			return
