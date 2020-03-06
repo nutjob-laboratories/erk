@@ -698,7 +698,7 @@ class Erk(QMainWindow):
 			self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
 			miscMenu.addAction(self.set_fetchlist)
 
-			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
+			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
 
 
 

@@ -36,6 +36,7 @@ import random
 import string
 from collections import defaultdict
 import time
+import fnmatch
 
 from erk.resources import *
 from erk.files import *
@@ -238,6 +239,10 @@ class IRC_Connection(irc.IRCClient):
 		self.channellist = []
 
 		self.last_fetch = 0
+
+		self.list_requested = False
+		self.list_window = None
+		self.list_search = None
 
 		# END SERVER INFO
 
@@ -837,6 +842,26 @@ class IRC_Connection(irc.IRCClient):
 		e = ChannelInfo(channel,usercount,topic)
 		self.channellist.append(e)
 
+		# self.list_requested = False
+		# self.list_window = None
+
+		if self.list_requested:
+			
+			found = False
+			if self.list_search!=None:
+				if fnmatch.fnmatch(e.name,self.list_search): found = True
+				if fnmatch.fnmatch(e.topic,self.list_search): found = True
+
+			if self.list_search!=None:
+				if not found: return
+
+			if len(e.topic.strip())>0:
+				msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+			else:
+				msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+			self.list_window.writeText(msg,True)
+
+
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
 
@@ -845,12 +870,33 @@ class IRC_Connection(irc.IRCClient):
 		self.channels = []
 		self.channellist= []
 
+		self.last_fetch = self.uptime
+
+		if self.list_requested:
+			#msg = Message(PLUGIN_MESSAGE,'',"<b>BEGIN CHANNEL LIST</b>")
+			#self.list_window.writeText(msg,True)
+
+			msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+			self.list_window.writeText(msg,True)
+
+			if self.list_search!=None:
+				msg = Message(PLUGIN_MESSAGE,'',"Channels with <b><i>"+self.list_search+"</i></b> in the name or topic")
+				self.list_window.writeText(msg,True)
+
 		
 
 	def irc_RPL_LISTEND(self,prefix,params):
 		server = prefix
 
 		# self.gui.irc_end_list(self,server)
+
+		# if self.list_requested:
+		# 	msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+		# 	self.list_window.writeText(msg,True)
+
+		self.list_requested = False
+		self.list_window = None
+		self.list_search = None
 
 	def irc_RPL_TIME(self,prefix,params):
 

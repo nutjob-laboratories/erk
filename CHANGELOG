@@ -52,6 +52,8 @@ Version 0.810
 	* Added an option to change the system message prefix from the GUI
 	* Created a new settings menu submenu ("Miscellaneous") and placed all un-menued settings in the settings menu in it
 	* Added a menu option to toggle auto channel list retrieval on/off
+	* Added a channel list retrieval and display command, "/list"
+	* Added a command to refresh the cached channel list: "/refresh"
 
 Version 0.800
 	* First initial 0.800 release

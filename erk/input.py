@@ -32,6 +32,7 @@
 #import erk.events
 import emoji
 import os
+import fnmatch
 
 from PyQt5.QtGui import *
 
@@ -57,6 +58,8 @@ COMMON_COMMANDS = {
 	"/ressl": "/ressl ",
 	"/send": "/send ",
 	"/invite": "/invite ",
+	"/list": "/list",
+	"/refresh": "/refresh",
 	"/help": "/help",
 }
 
@@ -82,6 +85,8 @@ COMMAND_HELP = [
 	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
 	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
 	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
+	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
 	[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	[ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -103,6 +108,8 @@ CHAT_HELP = [
 	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
 	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
 	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
+	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
 	#[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	# [ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	# [ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -378,6 +385,70 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if len(tokens)==1 and tokens[0].lower()=='/refresh':
+			client.sendLine("LIST")
+			msg = Message(SYSTEM_MESSAGE,'',"Sent channel list request to the server")
+			window.writeText(msg,True)
+			return True
+		if tokens[0].lower()=='/refresh':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /refresh")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if len(tokens)==1 and tokens[0].lower()=='/list':
+			if len(client.channels)==0:
+				client.list_requested = True
+				client.list_window = window
+				client.sendLine("LIST")
+				return True
+			else:
+				msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+				window.writeText(msg,True)
+				for e in client.channellist:
+					if len(e.topic.strip())>0:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+					else:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+					window.writeText(msg,True)
+				# msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+				# window.writeText(msg,True)
+				return True
+
+		if len(tokens)>=2 and tokens[0].lower()=='/list':
+			tokens.pop(0)	# remove command
+			terms = ' '.join(tokens)
+			if len(client.channels)==0:
+				client.list_requested = True
+				client.list_window = window
+				client.list_search = terms
+				client.sendLine("LIST")
+				return True
+			else:
+				msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+				window.writeText(msg,True)
+				msg = Message(PLUGIN_MESSAGE,'',"Channels with <b><i>"+terms+"</i></b> in the name or topic")
+				window.writeText(msg,True)
+				for e in client.channellist:
+
+					found = False
+					if fnmatch.fnmatch(e.name,terms): found = True
+					if fnmatch.fnmatch(e.topic,terms): found = True
+					if not found: continue
+
+
+					if len(e.topic.strip())>0:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+					else:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+					window.writeText(msg,True)
+				# msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
+				# window.writeText(msg,True)
+				return True
+
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()=='/help':
