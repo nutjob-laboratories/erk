@@ -675,6 +675,52 @@ class Erk(QMainWindow):
 
 			self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
 
+			# Hide menu
+
+			hideMenu = self.settingsMenu.addMenu(QIcon(HIDE_ICON),"Hide Messages")
+
+			self.hide_mode = QAction(QIcon(UNCHECKED_ICON),"Mode",self)
+			self.hide_mode.triggered.connect(lambda state,s="hide_mode": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_mode)
+
+			if erk.config.HIDE_MODE_DISPLAY: self.hide_mode.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_topic = QAction(QIcon(UNCHECKED_ICON),"Topic",self)
+			self.hide_topic.triggered.connect(lambda state,s="hide_topic": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_topic)
+
+			if erk.config.HIDE_TOPIC_MESSAGE: self.hide_topic.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_quit = QAction(QIcon(UNCHECKED_ICON),"Quit",self)
+			self.hide_quit.triggered.connect(lambda state,s="hide_quit": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_quit)
+
+			if erk.config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_nick = QAction(QIcon(UNCHECKED_ICON),"Nick",self)
+			self.hide_nick.triggered.connect(lambda state,s="hide_nick": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_nick)
+
+			if erk.config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
+			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_invite)
+
+			if erk.config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_part = QAction(QIcon(UNCHECKED_ICON),"Part",self)
+			self.hide_part.triggered.connect(lambda state,s="hide_part": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_part)
+
+			if erk.config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_join = QAction(QIcon(UNCHECKED_ICON),"Join",self)
+			self.hide_join.triggered.connect(lambda state,s="hide_join": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_join)
+
+			if erk.config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
+
 			# Miscellaneous settings
 
 			#self.settingsMenu.addSeparator()
@@ -1203,13 +1249,77 @@ class Erk(QMainWindow):
 		erk.macros.load_macros()
 		self.rebuildMacroMenu()
 
-	# self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
-	# 		self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
-	# 		miscMenu.addAction(self.set_fetchlist)
-
-	# 		if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
-
 	def toggleSetting(self,setting):
+
+		if setting=="hide_join":
+			if erk.config.HIDE_JOIN_MESSAGE:
+				erk.config.HIDE_JOIN_MESSAGE = False
+				self.hide_join.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_JOIN_MESSAGE = True
+				self.hide_join.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_part":
+			if erk.config.HIDE_PART_MESSAGE:
+				erk.config.HIDE_PART_MESSAGE = False
+				self.hide_part.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_PART_MESSAGE = True
+				self.hide_part.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_invite":
+			if erk.config.HIDE_INVITE_MESSAGE:
+				erk.config.HIDE_INVITE_MESSAGE = False
+				self.hide_invite.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_INVITE_MESSAGE = True
+				self.hide_invite.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_nick":
+			if erk.config.HIDE_NICK_MESSAGE:
+				erk.config.HIDE_NICK_MESSAGE = False
+				self.hide_nick.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_NICK_MESSAGE = True
+				self.hide_nick.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_quit":
+			if erk.config.HIDE_QUIT_MESSAGE:
+				erk.config.HIDE_QUIT_MESSAGE = False
+				self.hide_quit.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_QUIT_MESSAGE = True
+				self.hide_quit.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_topic":
+			if erk.config.HIDE_TOPIC_MESSAGE:
+				erk.config.HIDE_TOPIC_MESSAGE = False
+				self.hide_topic.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_TOPIC_MESSAGE = True
+				self.hide_topic.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
+
+		if setting=="hide_mode":
+			if erk.config.HIDE_MODE_DISPLAY:
+				erk.config.HIDE_MODE_DISPLAY = False
+				self.hide_mode.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.HIDE_MODE_DISPLAY = True
+				self.hide_mode.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			return
 
 		if setting=="autofetch":
 			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:

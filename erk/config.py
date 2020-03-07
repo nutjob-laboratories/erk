@@ -101,9 +101,15 @@ CLICKABLE_CHANNELS = True
 CONNECTION_DISPLAY_WIDTH = None
 SYSTEM_MESSAGE_PREFIX = "&diams;"
 AUTOMATICALLY_FETCH_CHANNEL_LIST = True
-
 CHANNEL_LIST_REFRESH_FREQUENCY = 3600
 
+HIDE_MODE_DISPLAY = False
+HIDE_TOPIC_MESSAGE = False
+HIDE_QUIT_MESSAGE = False
+HIDE_NICK_MESSAGE = False
+HIDE_INVITE_MESSAGE = False
+HIDE_PART_MESSAGE = False
+HIDE_JOIN_MESSAGE = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -171,6 +177,13 @@ def save_settings(filename=SETTINGS_FILE):
 		"channel_list_refresh_in_seconds": CHANNEL_LIST_REFRESH_FREQUENCY,
 		"system_message_prefix": SYSTEM_MESSAGE_PREFIX,
 		"automatically_fetch_channel_list": AUTOMATICALLY_FETCH_CHANNEL_LIST,
+		"hide_mode_messages": HIDE_MODE_DISPLAY,
+		"hide_topic_messages": HIDE_TOPIC_MESSAGE,
+		"hide_quit_messages": HIDE_QUIT_MESSAGE,
+		"hide_nick_messages": HIDE_NICK_MESSAGE,
+		"hide_invite_messages": HIDE_INVITE_MESSAGE,
+		"hide_part_messages": HIDE_PART_MESSAGE,
+		"hide_join_messages": HIDE_JOIN_MESSAGE,
 	}
 
 	with open(filename, "w") as write_data:
@@ -239,6 +252,13 @@ def load_settings(filename=SETTINGS_FILE):
 	global CHANNEL_LIST_REFRESH_FREQUENCY
 	global SYSTEM_MESSAGE_PREFIX
 	global AUTOMATICALLY_FETCH_CHANNEL_LIST
+	global HIDE_MODE_DISPLAY
+	global HIDE_TOPIC_MESSAGE
+	global HIDE_QUIT_MESSAGE
+	global HIDE_NICK_MESSAGE
+	global HIDE_INVITE_MESSAGE
+	global HIDE_PART_MESSAGE
+	global HIDE_JOIN_MESSAGE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -306,6 +326,13 @@ def load_settings(filename=SETTINGS_FILE):
 			CHANNEL_LIST_REFRESH_FREQUENCY = data["channel_list_refresh_in_seconds"]
 			SYSTEM_MESSAGE_PREFIX = data["system_message_prefix"]
 			AUTOMATICALLY_FETCH_CHANNEL_LIST = data["automatically_fetch_channel_list"]
+			HIDE_MODE_DISPLAY = data["hide_mode_messages"]
+			HIDE_TOPIC_MESSAGE = data["hide_topic_messages"]
+			HIDE_QUIT_MESSAGE = data["hide_quit_messages"]
+			HIDE_NICK_MESSAGE = data["hide_nick_messages"]
+			HIDE_INVITE_MESSAGE = data["hide_invite_messages"]
+			HIDE_PART_MESSAGE = data["hide_part_messages"]
+			HIDE_JOIN_MESSAGE = data["hide_join_messages"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

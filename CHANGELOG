@@ -55,6 +55,7 @@ Version 0.810
 	* Added a channel list retrieval and display command, "/list"
 	* Added a command to refresh the cached channel list: "/refresh"
 	* Added an option to the GUI to set the auto channel list refresh time, in seconds
+	* Added options to hide mode, quit, invite, join, part, and nick messages to the GUI
 
 Version 0.800
 	* First initial 0.800 release
