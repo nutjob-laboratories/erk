@@ -1259,6 +1259,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_JOIN_MESSAGE = True
 				self.hide_join.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_part":
@@ -1269,6 +1270,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_PART_MESSAGE = True
 				self.hide_part.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_invite":
@@ -1279,6 +1281,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_INVITE_MESSAGE = True
 				self.hide_invite.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_nick":
@@ -1289,6 +1292,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_NICK_MESSAGE = True
 				self.hide_nick.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_quit":
@@ -1299,6 +1303,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_QUIT_MESSAGE = True
 				self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_topic":
@@ -1309,6 +1314,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_TOPIC_MESSAGE = True
 				self.hide_topic.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="hide_mode":
@@ -1319,6 +1325,7 @@ class Erk(QMainWindow):
 				erk.config.HIDE_MODE_DISPLAY = True
 				self.hide_mode.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
+			erk.events.rerender_all()
 			return
 
 		if setting=="autofetch":

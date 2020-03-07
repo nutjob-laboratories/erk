@@ -226,8 +226,37 @@ def render_message(message,client=None):
 	else:
 		output = output.replace("!MESSAGE!",msg_to_display)
 
-	if "Dude" in output:
-		print(output)
+
+	# Handle hidden system messages
+	if message.stype!=None:
+
+		if message.stype==TYPE_MODE:
+			if erk.config.HIDE_MODE_DISPLAY:
+				output = None
+
+		if message.stype==TYPE_TOPIC:
+			if erk.config.HIDE_TOPIC_MESSAGE:
+				output = None
+
+		if message.stype==TYPE_QUIT:
+			if erk.config.HIDE_QUIT_MESSAGE:
+				output = None
+
+		if message.stype==TYPE_NICK:
+			if erk.config.HIDE_NICK_MESSAGE:
+				output = None
+
+		if message.stype==TYPE_INVITE:
+			if erk.config.HIDE_INVITE_MESSAGE:
+				output = None
+
+		if message.stype==TYPE_PART:
+			if erk.config.HIDE_PART_MESSAGE:
+				output = None
+
+		if message.stype==TYPE_JOIN:
+			if erk.config.HIDE_JOIN_MESSAGE:
+				output = None
 
 	return output
 

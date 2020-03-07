@@ -559,8 +559,9 @@ class Window(QMainWindow):
 
 		d = erk.format.render_message(message,self.client)
 
-		self.chat.append(d)
-		self.chat.moveCursor(QTextCursor.End)
+		if d!=None:
+			self.chat.append(d)
+			self.chat.moveCursor(QTextCursor.End)
 
 		self.log.append(message)
 
@@ -576,6 +577,7 @@ class Window(QMainWindow):
 
 		for line in self.log:
 			d = erk.format.render_message(line,self.client)
+			if d==None: continue
 			self.chat.append(d)
 
 		self.chat.moveCursor(QTextCursor.End)

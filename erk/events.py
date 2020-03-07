@@ -606,13 +606,12 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 	if channel==client.nickname:
 		if mset:
-			msg = Message(SYSTEM_MESSAGE,'',"Mode +"+modes+" set on "+channel)
+			msg = Message(SYSTEM_MESSAGE,'',"Mode +"+modes+" set on "+channel,None,TYPE_MODE)
 		else:
-			msg = Message(SYSTEM_MESSAGE,'',"Mode -"+modes+" set on "+channel)
+			msg = Message(SYSTEM_MESSAGE,'',"Mode -"+modes+" set on "+channel,None,TYPE_MODE)
 		window = fetch_console_window(client)
 		if window:
-			if not erk.config.HIDE_MODE_DISPLAY:
-				window.writeText( msg )
+			window.writeText( msg )
 		return
 
 	reportadd = []
@@ -634,7 +633,7 @@ def mode(gui,client,channel,user,mset,modes,args):
 						window.modesoff = window.modesoff.replace('k','')
 					if not 'k' in window.modeson:
 						window.modeson = window.modeson +'k'
-					msg = Message(SYSTEM_MESSAGE,'',user+" set "+channel+"'s key to \""+n+"\"")
+					msg = Message(SYSTEM_MESSAGE,'',user+" set "+channel+"'s key to \""+n+"\"",None,TYPE_MODE)
 				else:
 					msg = None
 			else:
@@ -643,11 +642,10 @@ def mode(gui,client,channel,user,mset,modes,args):
 					window.modeson = window.modeson.replace('k','')
 				if not 'k' in window.modesoff:
 					window.modesoff = window.modesoff +'k'
-				msg = Message(SYSTEM_MESSAGE,'',user+" unset "+channel+"'s key")
+				msg = Message(SYSTEM_MESSAGE,'',user+" unset "+channel+"'s key",None,TYPE_MODE)
 
 			if msg:
-				if not erk.config.HIDE_MODE_DISPLAY:
-					window.writeText( msg )
+				window.writeText( msg )
 
 			# Update connection display
 			build_connection_display(gui)
@@ -661,18 +659,17 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} operator status to {n}")
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} operator status to {n}",None,TYPE_MODE)
 				else:
 					msg = None
 			else:
 				if n:
 					#msg = f"{user} took {channel} operator status from {n}"
-					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} operator status from {n}")
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} operator status from {n}",None,TYPE_MODE)
 				else:
 					msg = None
 			if msg:
-				if not erk.config.HIDE_MODE_DISPLAY:
-					window.writeText( msg )
+				window.writeText( msg )
 			continue
 
 		if m=="v":
@@ -682,18 +679,17 @@ def mode(gui,client,channel,user,mset,modes,args):
 				n = None
 			if mset:
 				if n:
-					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} voiced status to {n}")
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} voiced status to {n}",None,TYPE_MODE)
 				else:
 					msg = None
 			else:
 				if n:
 					#msg = f"{user} took {channel} operator status from {n}"
-					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} voiced status from {n}")
+					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} voiced status from {n}",None,TYPE_MODE)
 				else:
 					msg = None
 			if msg:
-				if not erk.config.HIDE_MODE_DISPLAY:
-					window.writeText( msg )
+				window.writeText( msg )
 			continue
 
 		if m=="c":
@@ -828,18 +824,16 @@ def mode(gui,client,channel,user,mset,modes,args):
 				if not m in window.modeson: window.modeson = window.modeson + m
 				if m in window.modesoff: window.modesoff.replace(m,'')
 
-			msg = Message(SYSTEM_MESSAGE,'',f"{user} set +{''.join(reportadd)} in {channel}")
-			if not erk.config.HIDE_MODE_DISPLAY:
-				window.writeText( msg )
+			msg = Message(SYSTEM_MESSAGE,'',f"{user} set +{''.join(reportadd)} in {channel}",None,TYPE_MODE)
+			window.writeText( msg )
 		else:
 
 			for m in reportremove:
 				if not m in window.modesoff: window.modesoff = window.modesoff + m
 				if m in window.modeson: window.modeson.replace(m,'')
 
-			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}")
-			if not erk.config.HIDE_MODE_DISPLAY:
-				window.writeText( msg )
+			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}",None,TYPE_MODE)
+			window.writeText( msg )
 
 	if erk.config.DISPLAY_CHANNEL_MODES:
 		# Change the channel's name display
@@ -887,8 +881,7 @@ def topic(gui,client,setter,channel,topic):
 	window = fetch_channel_window(client,channel)
 	if window:
 		window.setTopic(topic)
-		if not erk.config.HIDE_TOPIC_MESSAGE:
-			window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"") )
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"",None,TYPE_TOPIC) )
 
 	window = fetch_console_window(client)
 	if window:
@@ -904,15 +897,13 @@ def userlist(gui,client,channel,userlist):
 
 def quit(gui,client,nick,message):
 
-	if erk.config.HIDE_QUIT_MESSAGE: return
-
 	for channel in where_is_user(client,nick):
 		window = fetch_channel_window(client,channel)
 		if window:
 			if len(message)>0:
-				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC ("+message+")") )
+				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC ("+message+")",None,TYPE_QUIT) )
 			else:
-				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC") )
+				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC",None,TYPE_QUIT) )
 
 def action_message(gui,client,target,user,message):
 	global UNSEEN
@@ -1001,12 +992,11 @@ def action_message(gui,client,target,user,message):
 def nick(gui,client,oldnick,newnick):
 
 	channels = where_is_user(client,oldnick)
-	msg = Message(SYSTEM_MESSAGE,'',oldnick+" is now known as "+newnick)
+	msg = Message(SYSTEM_MESSAGE,'',oldnick+" is now known as "+newnick,None,TYPE_NICK)
 	for window in CHANNELS:
 		if window.widget.client.id==client.id:
 			if window.widget.name in channels:
-				if not erk.config.HIDE_NICK_MESSAGE:
-					window.widget.writeText(msg)
+				window.widget.writeText(msg)
 	
 	for window in PRIVATES:
 		if window.widget.client.id==client.id:
@@ -1026,8 +1016,7 @@ def erk_invited(gui,client,sender,channel):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
-			if not erk.config.HIDE_INVITE_MESSAGE:
-				gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel) )
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel,None,TYPE_INVITE) )
 
 	window = fetch_console_window(client)
 	if window:
@@ -1041,8 +1030,7 @@ def erk_inviting(gui,client,target,channel):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
-			if not erk.config.HIDE_INVITE_MESSAGE:
-				gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel) )
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel,None,TYPE_INVITE) )
 
 	window = fetch_console_window(client)
 	if window:
@@ -1154,8 +1142,7 @@ def part(gui,client,user,channel):
 
 	window = fetch_channel_window(client,channel)
 	if window:
-		if not erk.config.HIDE_PART_MESSAGE:
-			window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel") )
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel",None,TYPE_PART) )
 
 	window = fetch_console_window(client)
 	if window:
@@ -1174,8 +1161,7 @@ def join(gui,client,user,channel):
 
 	window = fetch_channel_window(client,channel)
 	if window:
-		if not erk.config.HIDE_JOIN_MESSAGE:
-			window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel") )
+		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel",None,TYPE_JOIN) )
 
 	window = fetch_console_window(client)
 	if window:

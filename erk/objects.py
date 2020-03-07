@@ -60,8 +60,16 @@ HORIZONTAL_RULE_MESSAGE = 7
 WHOIS_MESSAGE = 8
 PLUGIN_MESSAGE = 9
 
+TYPE_MODE = 0
+TYPE_TOPIC = 1
+TYPE_QUIT = 2
+TYPE_NICK = 3
+TYPE_INVITE = 4
+TYPE_PART = 5
+TYPE_JOIN = 6
+
 class Message:
-	def __init__(self,mtype,sender,contents,timestamp=None):
+	def __init__(self,mtype,sender,contents,timestamp=None,stype=None):
 		if timestamp:
 			self.timestamp = timestamp
 		else:
@@ -69,6 +77,7 @@ class Message:
 		self.type = mtype
 		self.sender = sender
 		self.contents = contents
+		self.stype = stype
 
 class ChannelInfo:
 	def __init__(self,name,count,topic):
