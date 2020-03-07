@@ -62,7 +62,8 @@ from erk.dialogs import(
 	EditorDialog,
 	ErrorDialog,
 	ExportLogDialog,
-	PrefixDialog
+	PrefixDialog,
+	ListTimeDialog
 	)
 
 from erk.irc import(
@@ -692,7 +693,7 @@ class Erk(QMainWindow):
 
 			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
 
-
+			miscMenu.addSeparator()
 
 			self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
 			self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
@@ -701,6 +702,11 @@ class Erk(QMainWindow):
 			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
 
 
+			self.fetch_time = QAction(QIcon(TIMESTAMP_ICON),"Set list refresh",self)
+			self.fetch_time.triggered.connect(self.menuSetListTime)
+			miscMenu.addAction(self.fetch_time)
+
+			self.fetch_time.setText("Set list refresh ("+str(erk.config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
 			miscMenu.addSeparator()
 
@@ -1762,6 +1768,13 @@ class Erk(QMainWindow):
 			erk.config.LOG_LOAD_SIZE_MAX = info
 			erk.config.save_settings(self.configfile)
 		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
+
+	def menuSetListTime(self):
+		info = ListTimeDialog()
+		if info!=None:
+			erk.config.CHANNEL_LIST_REFRESH_FREQUENCY = info
+			erk.config.save_settings(self.configfile)
+		self.fetch_time.setText("Set list refresh ("+str(erk.config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
 	def menuHistoryLength(self):
 		info = HistorySizeDialog()

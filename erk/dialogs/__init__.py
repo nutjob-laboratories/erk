@@ -54,6 +54,16 @@ import erk.dialogs.error as Error
 
 import erk.dialogs.prefix as Prefix
 
+import erk.dialogs.list_time as ListTime
+
+def ListTimeDialog():
+	x = ListTime.Dialog()
+	info = x.get_entry_information()
+	del x
+
+	if not info: return None
+	return info
+
 def PrefixDialog():
 	x = Prefix.Dialog()
 	info = x.get_system_information()
