@@ -96,25 +96,25 @@ disgroup.add_argument( "-N","--nomenu", help=f"Disable main menu", action="store
 disgroup.add_argument( "-D","--noconnect", help=f"Disable connection commands", action="store_true")
 disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
 
-devgroup = parser.add_argument_group('Plugin development')
+devgroup = parser.add_argument_group('Plugins')
 
 devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin package in the current directory", metavar="NAME", default='')
 devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the plugins directory", action="store_true")
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
+devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
 
 displaygroup = parser.add_argument_group('Display')
 
-displaygroup.add_argument("--fullscreen", help="Open in fullscreen mode", action="store_true")
-displaygroup.add_argument("--width", type=int,help="Set initial window width", default=erk.config.DEFAULT_APP_WIDTH, metavar="WIDTH")
-displaygroup.add_argument("--height", type=int,help="Set initial window height", default=erk.config.DEFAULT_APP_HEIGHT, metavar="HEIGHT")
-displaygroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
+displaygroup.add_argument("-f","--fullscreen", help="Open in fullscreen mode", action="store_true")
+displaygroup.add_argument("-W","--width", type=int,help="Set initial window width", default=erk.config.DEFAULT_APP_WIDTH, metavar="WIDTH")
+displaygroup.add_argument("-H","--height", type=int,help="Set initial window height", default=erk.config.DEFAULT_APP_HEIGHT, metavar="HEIGHT")
 
-miscgroup = parser.add_argument_group('Miscellaneous')
+miscgroup = parser.add_argument_group('Configuration')
 
 miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
-miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
+miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 
 
 args = parser.parse_args()
