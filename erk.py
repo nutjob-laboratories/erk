@@ -107,8 +107,8 @@ devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZI
 displaygroup = parser.add_argument_group('Display')
 
 displaygroup.add_argument("-f","--fullscreen", help="Open in fullscreen mode", action="store_true")
-displaygroup.add_argument("-W","--width", type=int,help="Set initial window width", default=erk.config.DEFAULT_APP_WIDTH, metavar="WIDTH")
-displaygroup.add_argument("-H","--height", type=int,help="Set initial window height", default=erk.config.DEFAULT_APP_HEIGHT, metavar="HEIGHT")
+displaygroup.add_argument("-W","--width", type=int,help="Set initial window width", default=None, metavar="WIDTH")
+displaygroup.add_argument("-H","--height", type=int,help="Set initial window height", default=None, metavar="HEIGHT")
 
 miscgroup = parser.add_argument_group('Configuration')
 

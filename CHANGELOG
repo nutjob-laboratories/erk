@@ -63,6 +63,7 @@ Version 0.810
 	* Added an additional command-line option category ("Display"), and moved appropriate command-line options to it
 	* Renamed command-line category "Miscellaneous" to "Configuration"
 	* Renamed command-line category "Plugin development" to "Plugins"
+	* Fixed a bug where the window width and height would not save to the configuration file
 
 Version 0.800
 	* First initial 0.800 release

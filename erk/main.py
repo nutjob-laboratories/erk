@@ -96,7 +96,7 @@ class Erk(QMainWindow):
 	def closeEvent(self, event):
 		if not self.block_plugins:
 			self.plugins.unload()
-		if not self.fullscreen:
+		if self.fullscreen==False:
 			erk.config.DEFAULT_APP_WIDTH = self.width()
 			erk.config.DEFAULT_APP_HEIGHT = self.height()
 			erk.config.save_settings(self.configfile)
@@ -238,6 +238,16 @@ class Erk(QMainWindow):
 		# Load application settings
 		erk.config.load_settings(configfile)
 
+		if width!=None:
+			appwidth = width
+		else:
+			appwidth = int(erk.config.DEFAULT_APP_WIDTH)
+
+		if height!=None:
+			appheight = height
+		else:
+			appheight = int(erk.config.DEFAULT_APP_HEIGHT)
+
 		if self.block_macros: erk.config.MACROS_ENABLED = False
 		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
 
@@ -319,16 +329,6 @@ class Erk(QMainWindow):
 			self.connection_dock.show()
 		else:
 			self.connection_dock.hide()
-
-		if width!=None:
-			appwidth = width
-		else:
-			appwidth = int(erk.config.DEFAULT_APP_WIDTH)
-
-		if height!=None:
-			appheight = height
-		else:
-			appheight = int(erk.config.DEFAULT_APP_WIDTH)
 
 		# self.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		self.resize(appwidth,appheight)
