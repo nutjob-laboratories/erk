@@ -70,9 +70,10 @@ parser = argparse.ArgumentParser(
 \___/|_| |_\_\\	|==============
 
 An open source IRC client
+https://github.com/nutjob-laboratories/erk
 ''',
-	epilog=f'''Official {APPLICATION_NAME} source code repository
-https://github.com/nutjob-laboratories/erk''',
+# 	epilog=f'''Official {APPLICATION_NAME} source code repository
+# https://github.com/nutjob-laboratories/erk''',
 )
 
 congroup = parser.add_argument_group('Connection')
@@ -102,13 +103,19 @@ devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the 
 devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
 devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
 
+displaygroup = parser.add_argument_group('Display')
+
+displaygroup.add_argument("--fullscreen", help="Open in fullscreen mode", action="store_true")
+displaygroup.add_argument("--width", type=int,help="Set initial window width", default=erk.config.DEFAULT_APP_WIDTH, metavar="WIDTH")
+displaygroup.add_argument("--height", type=int,help="Set initial window height", default=erk.config.DEFAULT_APP_HEIGHT, metavar="HEIGHT")
+displaygroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
+
 miscgroup = parser.add_argument_group('Miscellaneous')
 
 miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
-miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
-miscgroup.add_argument("--fullscreen", help="Open in fullscreen mode", action="store_true")
+
 
 args = parser.parse_args()
 
@@ -335,14 +342,14 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -376,7 +383,7 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 				GUI.show()
 			else:
 
@@ -384,7 +391,7 @@ if __name__ == '__main__':
 
 				info = ComboDialog(args.user)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 					GUI.show()
 				else:
 					app.quit()

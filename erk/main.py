@@ -199,7 +199,7 @@ class Erk(QMainWindow):
 		#self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
 		pass
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -320,7 +320,18 @@ class Erk(QMainWindow):
 		else:
 			self.connection_dock.hide()
 
-		self.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		if width!=None:
+			appwidth = width
+		else:
+			appwidth = int(erk.config.DEFAULT_APP_WIDTH)
+
+		if height!=None:
+			appheight = height
+		else:
+			appheight = int(erk.config.DEFAULT_APP_WIDTH)
+
+		# self.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		self.resize(appwidth,appheight)
 
 		if info:
 			self.connectToIRCServer(info)

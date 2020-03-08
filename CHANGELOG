@@ -59,6 +59,8 @@ Version 0.810
 	* Hidden system messages are still recorded, but hidden ("unhiding" the messages will cause them to reappear in the chat display)
 	* Added a command-line flag to launch in fullscreen
 	* Fullscreen mode now disables the "set window size" menu option
+	* Added command-line options to set window initial width and height
+	* Added an additional command-line option category ("Display"), and moved appropriate command-line options to it
 
 Version 0.800
 	* First initial 0.800 release
