@@ -694,13 +694,38 @@ class Erk(QMainWindow):
 
 			# Hide menu
 
-			hideMenu = self.settingsMenu.addMenu(QIcon(HIDE_ICON),"Hide Messages")
+			hideMenu = self.settingsMenu.addMenu(QIcon(HIDE_ICON),"Hide notifications")
+
+
+			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
+			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_invite)
+
+			if erk.config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_join = QAction(QIcon(UNCHECKED_ICON),"Join",self)
+			self.hide_join.triggered.connect(lambda state,s="hide_join": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_join)
+
+			if erk.config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_mode = QAction(QIcon(UNCHECKED_ICON),"Mode",self)
 			self.hide_mode.triggered.connect(lambda state,s="hide_mode": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_mode)
 
 			if erk.config.HIDE_MODE_DISPLAY: self.hide_mode.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_nick = QAction(QIcon(UNCHECKED_ICON),"Nick",self)
+			self.hide_nick.triggered.connect(lambda state,s="hide_nick": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_nick)
+
+			if erk.config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
+
+			self.hide_part = QAction(QIcon(UNCHECKED_ICON),"Part",self)
+			self.hide_part.triggered.connect(lambda state,s="hide_part": self.toggleSetting(s))
+			hideMenu.addAction(self.hide_part)
+
+			if erk.config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_topic = QAction(QIcon(UNCHECKED_ICON),"Topic",self)
 			self.hide_topic.triggered.connect(lambda state,s="hide_topic": self.toggleSetting(s))
@@ -713,30 +738,6 @@ class Erk(QMainWindow):
 			hideMenu.addAction(self.hide_quit)
 
 			if erk.config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_nick = QAction(QIcon(UNCHECKED_ICON),"Nick",self)
-			self.hide_nick.triggered.connect(lambda state,s="hide_nick": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_nick)
-
-			if erk.config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
-			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_invite)
-
-			if erk.config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_part = QAction(QIcon(UNCHECKED_ICON),"Part",self)
-			self.hide_part.triggered.connect(lambda state,s="hide_part": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_part)
-
-			if erk.config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_join = QAction(QIcon(UNCHECKED_ICON),"Join",self)
-			self.hide_join.triggered.connect(lambda state,s="hide_join": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_join)
-
-			if erk.config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
 
 			# Miscellaneous settings
 
