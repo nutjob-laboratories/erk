@@ -108,6 +108,7 @@ miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configur
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
+miscgroup.add_argument("--fullscreen", help="Open in fullscreen mode", action="store_true")
 
 args = parser.parse_args()
 
@@ -334,14 +335,14 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -375,7 +376,7 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
 				GUI.show()
 			else:
 
@@ -383,7 +384,7 @@ if __name__ == '__main__':
 
 				info = ComboDialog(args.user)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenu,args.config,args.format,args.user,args.fullscreen)
 					GUI.show()
 				else:
 					app.quit()

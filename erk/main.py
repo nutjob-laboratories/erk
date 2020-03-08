@@ -96,9 +96,10 @@ class Erk(QMainWindow):
 	def closeEvent(self, event):
 		if not self.block_plugins:
 			self.plugins.unload()
-		erk.config.DEFAULT_APP_WIDTH = self.width()
-		erk.config.DEFAULT_APP_HEIGHT = self.height()
-		erk.config.save_settings(self.configfile)
+		if not self.fullscreen:
+			erk.config.DEFAULT_APP_WIDTH = self.width()
+			erk.config.DEFAULT_APP_HEIGHT = self.height()
+			erk.config.save_settings(self.configfile)
 		self.app.quit()
 
 	def disconnect_current(self,msg=None):
@@ -195,9 +196,10 @@ class Erk(QMainWindow):
 					print(s)
 
 	def resizeEvent(self, event):
-		self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
+		#self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
+		pass
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -220,7 +222,7 @@ class Erk(QMainWindow):
 
 		self.block_toolbar = block_toolbar
 
-		self.fullscreen = False
+		self.fullscreen = fullscreen
 
 		self.configfile = configfile
 
@@ -334,6 +336,9 @@ class Erk(QMainWindow):
 
 		self.starter.anchorClicked.connect(self.linkClicked)
 
+		if self.fullscreen:
+			self.showFullScreen()
+
 	def spellcheck_language(self,setting):
 
 		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(UNCHECKED_ICON))
@@ -411,6 +416,7 @@ class Erk(QMainWindow):
 			h =  erk.config.DEFAULT_APP_HEIGHT
 
 			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
+			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
 
 			self.displayMenu.addSeparator()
 
@@ -1400,10 +1406,12 @@ class Erk(QMainWindow):
 				self.fullscreen = False
 				self.showNormal()
 				self.set_full.setIcon(QIcon(UNCHECKED_ICON))
+				self.winsizeMenuEntry.setEnabled(True)
 			else:
 				self.fullscreen = True
 				self.showFullScreen()
 				self.set_full.setIcon(QIcon(CHECKED_ICON))
+				self.winsizeMenuEntry.setEnabled(False)
 			return
 
 		if setting=="ontop":

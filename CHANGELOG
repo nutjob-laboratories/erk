@@ -57,6 +57,8 @@ Version 0.810
 	* Added an option to the GUI to set the auto channel list refresh time, in seconds
 	* Added options to hide mode, quit, invite, join, part, and nick messages to the GUI
 	* Hidden system messages are still recorded, but hidden ("unhiding" the messages will cause them to reappear in the chat display)
+	* Added a command-line flag to launch in fullscreen
+	* Fullscreen mode now disables the "set window size" menu option
 
 Version 0.800
 	* First initial 0.800 release
