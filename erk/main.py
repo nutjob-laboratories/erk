@@ -1448,17 +1448,6 @@ class Erk(QMainWindow):
 			self.rebuildPluginMenu()
 			return
 
-		# if setting=="enablemacros":
-		# 	if erk.config.MACROS_ENABLED:
-		# 		erk.config.MACROS_ENABLED = False
-		# 		self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
-		# 	else:
-		# 		erk.config.MACROS_ENABLED = True
-		# 		self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-		# 	erk.config.save_settings(self.configfile)
-		# 	self.rebuildMacroMenu()
-		# 	return
-
 		if setting=="enablemacros":
 			if erk.config.MACROS_ENABLED:
 				erk.config.MACROS_ENABLED = False
@@ -1472,15 +1461,6 @@ class Erk(QMainWindow):
 			self.rebuildMacroMenu()
 			self.buildToolbar()
 			return
-
-		# if setting=="pluginenable":
-		# 	if erk.config.PLUGINS_ENABLED:
-		# 		erk.config.PLUGINS_ENABLED = False
-		# 	else:
-		# 		erk.config.PLUGINS_ENABLED = True
-		# 	erk.config.save_settings(self.configfile)
-		# 	self.rebuildPluginMenu()
-		# 	return
 
 		if setting=="pluginenable":
 			if erk.config.PLUGINS_ENABLED:
