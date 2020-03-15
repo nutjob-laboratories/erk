@@ -534,6 +534,8 @@ class Window(QMainWindow):
 		self.topic.setText(topic)
 		self.topic.setCursorPosition(0)
 
+		self.parent.toggle_title()
+
 	def reset_input(self):
 		cursor = self.input.textCursor()
 		user_input = self.input.text()

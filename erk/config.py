@@ -102,7 +102,6 @@ CONNECTION_DISPLAY_WIDTH = None
 SYSTEM_MESSAGE_PREFIX = "&diams;"
 AUTOMATICALLY_FETCH_CHANNEL_LIST = True
 CHANNEL_LIST_REFRESH_FREQUENCY = 3600
-
 HIDE_MODE_DISPLAY = False
 HIDE_TOPIC_MESSAGE = False
 HIDE_QUIT_MESSAGE = False
@@ -110,6 +109,9 @@ HIDE_NICK_MESSAGE = False
 HIDE_INVITE_MESSAGE = False
 HIDE_PART_MESSAGE = False
 HIDE_JOIN_MESSAGE = False
+APP_TITLE_TO_CURRENT_CHAT = True
+
+APP_TITLE_SHOW_TOPIC = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -184,6 +186,8 @@ def save_settings(filename=SETTINGS_FILE):
 		"hide_invite_messages": HIDE_INVITE_MESSAGE,
 		"hide_part_messages": HIDE_PART_MESSAGE,
 		"hide_join_messages": HIDE_JOIN_MESSAGE,
+		"set_application_title_to_current_chat_name": APP_TITLE_TO_CURRENT_CHAT,
+		"show_channel_topic_in_title": APP_TITLE_SHOW_TOPIC,
 	}
 
 	with open(filename, "w") as write_data:
@@ -259,6 +263,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global HIDE_INVITE_MESSAGE
 	global HIDE_PART_MESSAGE
 	global HIDE_JOIN_MESSAGE
+	global APP_TITLE_TO_CURRENT_CHAT
+	global APP_TITLE_SHOW_TOPIC
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -333,6 +339,8 @@ def load_settings(filename=SETTINGS_FILE):
 			HIDE_INVITE_MESSAGE = data["hide_invite_messages"]
 			HIDE_PART_MESSAGE = data["hide_part_messages"]
 			HIDE_JOIN_MESSAGE = data["hide_join_messages"]
+			APP_TITLE_TO_CURRENT_CHAT = data["set_application_title_to_current_chat_name"]
+			APP_TITLE_SHOW_TOPIC = data["show_channel_topic_in_title"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

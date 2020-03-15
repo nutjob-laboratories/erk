@@ -108,6 +108,60 @@ class Erk(QMainWindow):
 			self.current_client = None
 			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
+	def toggle_title(self,item=None):
+
+		if item!=None:
+
+			topic = ''
+			if hasattr(item.erk_widget,"channel_topic"):
+				if len(item.erk_widget.channel_topic)>0:
+					topic = item.erk_widget.channel_topic
+			if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+
+			hasname = False
+			if hasattr(item,"erk_name"):
+				if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+					if item.erk_name:
+						hasname = True
+						if len(topic)>0:
+							self.setWindowTitle(item.erk_name+" - "+topic)
+						else:
+							self.setWindowTitle(item.erk_name)
+				elif erk.config.APP_TITLE_SHOW_TOPIC:
+					self.setWindowTitle(topic)
+				else:
+					self.setWindowTitle(APPLICATION_NAME)
+
+			if not erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				if not hasname and topic=='':
+					self.setWindowTitle(APPLICATION_NAME)
+
+			return
+
+		window = self.current_page
+
+		topic = ''
+		if hasattr(window,"channel_topic"):
+			if len(window.channel_topic)>0:
+				topic = window.channel_topic
+		if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+
+		if hasattr(window,"name"):
+			if window.name==MASTER_LOG_NAME:
+				pass
+			elif window.name==SERVER_CONSOLE_NAME:
+				self.setWindowTitle(APPLICATION_NAME)
+			else:
+				if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+					if len(topic)>0:
+						self.setWindowTitle(window.name+" - "+topic)
+					else:
+						self.setWindowTitle(window.name)
+				elif erk.config.APP_TITLE_SHOW_TOPIC:
+					self.setWindowTitle(topic)
+				else:
+					self.setWindowTitle(APPLICATION_NAME)
+
 	def pageChange(self,index):
 
 		window = self.stack.widget(index)
@@ -121,12 +175,20 @@ class Erk(QMainWindow):
 			self.current_client = None
 			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
+		# topic = ''
+		# if hasattr(window,"channel_topic"):
+		# 	if len(window.channel_topic)>0:
+		# 		topic = " - "+window.channel_topic
+
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
 				if not self.block_toolbar: self.disconnect.setEnabled(False)
-			else:
-				self.setWindowTitle(window.name)
+			# else:
+			# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+			# 		self.setWindowTitle(window.name+topic)
+			# 	else:
+			# 		self.setWindowTitle(APPLICATION_NAME)
 
 		if hasattr(window,"input"):
 			# Set focus to the input widget
@@ -135,14 +197,28 @@ class Erk(QMainWindow):
 		if hasattr(window,"client"): erk.events.clear_unseen(window)
 		erk.events.build_connection_display(self)
 
+		self.toggle_title()
+
 	def connectionNodeSingleClicked(self,item,column):
 		if erk.config.DOUBLECLICK_SWITCH: return
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
-				if hasattr(item,"erk_name"):
-					if item.erk_name:
-						self.setWindowTitle(item.erk_name)
+
+				# topic = ''
+				# if hasattr(item.erk_widget,"channel_topic"):
+				# 	if len(item.erk_widget.channel_topic)>0:
+				# 		topic = " - "+item.erk_widget.channel_topic
+				# if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+
+				# if hasattr(item,"erk_name"):
+				# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				# 		if item.erk_name:
+				# 			self.setWindowTitle(item.erk_name+topic)
+				# 	else:
+				# 		self.setWindowTitle(APPLICATION_NAME)
+				self.toggle_title(item)
+
 		self.connection_display.clearSelection()
 
 	def connectionNodeDoubleClicked(self,item):
@@ -150,10 +226,24 @@ class Erk(QMainWindow):
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
-				if hasattr(item,"erk_name"):
-					if item.erk_name:
-						self.setWindowTitle(item.erk_name)
+
+				# topic = ''
+				# if hasattr(item.erk_widget,"channel_topic"):
+				# 	if len(item.erk_widget.channel_topic)>0:
+				# 		topic = " - "+item.erk_widget.channel_topic
+				# if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+
+				# if hasattr(item,"erk_name"):
+				# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				# 		if item.erk_name:
+				# 			self.setWindowTitle(item.erk_name+topic)
+				# 	else:
+				# 		self.setWindowTitle(APPLICATION_NAME)
+				self.toggle_title(item)
+
 		self.connection_display.clearSelection()
+
+		#self.toggle_title()
 
 	def start_spinner(self):
 		if not self.block_toolbar: self.spinner.start()
@@ -745,6 +835,21 @@ class Erk(QMainWindow):
 
 			miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
 
+
+			self.set_titlename = QAction(QIcon(UNCHECKED_ICON),"Show chat name in title",self)
+			self.set_titlename.triggered.connect(lambda state,s="titlename": self.toggleSetting(s))
+			miscMenu.addAction(self.set_titlename)
+
+			if erk.config.APP_TITLE_TO_CURRENT_CHAT: self.set_titlename.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_titletopic = QAction(QIcon(UNCHECKED_ICON),"Show channel topic in title",self)
+			self.set_titletopic.triggered.connect(lambda state,s="titletopic": self.toggleSetting(s))
+			miscMenu.addAction(self.set_titletopic)
+
+			if erk.config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
+
+
+
 			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
 			miscMenu.addAction(self.set_autoinvite)
@@ -1268,6 +1373,28 @@ class Erk(QMainWindow):
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
+
+		if setting=="titletopic":
+			if erk.config.APP_TITLE_SHOW_TOPIC:
+				erk.config.APP_TITLE_SHOW_TOPIC = False
+				self.set_titletopic.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.APP_TITLE_SHOW_TOPIC = True
+				self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			self.toggle_title()
+			return
+
+		if setting=="titlename":
+			if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				erk.config.APP_TITLE_TO_CURRENT_CHAT = False
+				self.set_titlename.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				erk.config.APP_TITLE_TO_CURRENT_CHAT = True
+				self.set_titlename.setIcon(QIcon(CHECKED_ICON))
+			erk.config.save_settings(self.configfile)
+			self.toggle_title()
+			return
 
 		if setting=="hide_join":
 			if erk.config.HIDE_JOIN_MESSAGE:

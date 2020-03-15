@@ -64,6 +64,8 @@ Version 0.810
 	* Renamed command-line category "Miscellaneous" to "Configuration"
 	* Renamed command-line category "Plugin development" to "Plugins"
 	* Fixed a bug where the window width and height would not save to the configuration file
+	* Added an option to show the name of the current chat in the application title
+	* Added an option to show the current channel's topic in the application title
 
 Version 0.800
 	* First initial 0.800 release
