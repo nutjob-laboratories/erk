@@ -67,6 +67,8 @@ Version 0.810
 	* Added an option to show the name of the current chat in the application title
 	* Added an option to show the current channel's topic in the application title
 	* Added official repo/plugin repo to the help menu
+	* Added an option to toggle channel information widgets (name, modes, key, topic, etc) on and off
+	* Added the /topic command
 
 Version 0.800
 	* First initial 0.800 release

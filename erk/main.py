@@ -590,11 +590,26 @@ class Erk(QMainWindow):
 
 			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Chat displays")
 
+
+
+			self.set_topicdisplay = QAction(QIcon(UNCHECKED_ICON),"Display channel information bar",self)
+			self.set_topicdisplay.triggered.connect(lambda state,s="dtopic": self.toggleSetting(s))
+			channelMenu.addAction(self.set_topicdisplay)
+
+			if erk.config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
+
+
+
+
 			self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
 			channelMenu.addAction(self.set_modes)
 
 			if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
+
+
+			if not erk.config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
+
 
 			self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
 			self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
@@ -1381,6 +1396,19 @@ class Erk(QMainWindow):
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
+
+		if setting=="dtopic":
+			if erk.config.CHAT_DISPLAY_INFO_BAR:
+				erk.config.CHAT_DISPLAY_INFO_BAR = False
+				self.set_topicdisplay.setIcon(QIcon(UNCHECKED_ICON))
+				self.set_modes.setEnabled(False)
+			else:
+				erk.config.CHAT_DISPLAY_INFO_BAR = True
+				self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
+				self.set_modes.setEnabled(True)
+			erk.config.save_settings(self.configfile)
+			erk.events.toggle_name_topic_display()
+			return
 
 		if setting=="titletopic":
 			if erk.config.APP_TITLE_SHOW_TOPIC:

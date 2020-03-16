@@ -48,6 +48,10 @@ PRIVATES = []
 
 UNSEEN = []
 
+def toggle_name_topic_display():
+	for c in CHANNELS:
+		c.widget.refresh_name_topic_display()
+
 def fetch_connections():
 	return CONNECTIONS
 

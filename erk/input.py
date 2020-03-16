@@ -61,6 +61,7 @@ COMMON_COMMANDS = {
 	"/list": "/list",
 	"/refresh": "/refresh",
 	"/help": "/help",
+	"/topic": "/topic ",
 }
 
 CHANNEL_COMMANDS = {
@@ -74,7 +75,6 @@ PRIVATE_COMMANDS = {
 
 COMMAND_HELP = [
 	[ "<b>/msg</b> TARGET MESSAGE", "Sends a private message" ],
-	#[ "<b>/me</b> MESSAGE", "Sends CTCP action message" ],
 	[ "<b>/notice</b> TARGET MESSAGE", "Sends a notice" ],
 	[ "<b>/join</b> CHANNEL [KEY]", "Joins a channel" ],
 	[ "<b>/part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
@@ -84,6 +84,7 @@ COMMAND_HELP = [
 	[ "<b>/back</b>", "Sets your status to \"back\"" ],
 	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
 	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+	[ "<b>/topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
 	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
 	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
 	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
@@ -110,6 +111,7 @@ CHAT_HELP = [
 	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
 	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
 	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
+	[ "<b>/topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
 	#[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	# [ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	# [ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -274,6 +276,19 @@ def handle_channel_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
+		if tokens[0].lower()=='/topic' and len(tokens)>=2:
+			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
+				# channel has been passed as an argument
+				# Do not handle the command here, let the command get
+				# handled in handle_common_input()
+				pass
+			else:
+				tokens.pop(0)
+				data = ' '.join(tokens)
+				client.topic(window.name,data)
+				return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()=='/help':
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
@@ -385,6 +400,19 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()=='/topic' and len(tokens)>=2:
+			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
+				tokens.pop(0)
+				target = tokens.pop(0)
+				data = ' '.join(tokens)
+				client.topic(target,data)
+				return True
+		if tokens[0].lower()=='/topic':
+			msg = Message(ERROR_MESSAGE,'',"Usage: /topic CHANNEL NEW_TOPIC")
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if len(tokens)==1 and tokens[0].lower()=='/refresh':

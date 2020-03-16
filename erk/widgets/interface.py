@@ -195,6 +195,32 @@ class Window(QMainWindow):
 		if user==self.client.nickname: return
 		self.parent.open_private_window(self.client,user)
 
+	def refresh_name_topic_display(self):
+		# Toggle name display
+		# if not erk.config.CHAT_DISPLAY_NAME:
+		# 	self.key_display.hide()
+		# 	self.name_display.hide()
+
+		# if not erk.config.CHAT_DISPLAY_TOPIC:
+		# 	self.topic.hide()
+
+		if hasattr(self,"key_display"):
+			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+				self.key_display.hide()
+				self.name_display.hide()
+			else:
+				if len(self.key)==0:
+					self.key_display.hide()
+				else:
+					self.key_display.show()
+				self.name_display.show()
+
+		if hasattr(self,"topic"):
+			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+				self.topic.hide()
+			else:
+				self.topic.show()
+
 	def __init__(self,name,client,wtype,app,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -254,10 +280,8 @@ class Window(QMainWindow):
 			self.topic.returnPressed.connect(self.handleTopicInput)
 			self.topic.setReadOnly(True)
 
-
 			col = self.parent.palette().color(QPalette.Background).name()
 			self.topic.setStyleSheet(f"border: 0px; background-color: {col};")
-
 
 			self.userlist = QListWidget(self)
 			self.userlist.setFocusPolicy(Qt.NoFocus)
@@ -436,6 +460,15 @@ class Window(QMainWindow):
 			#finalLayout.addWidget(self.input)
 			finalLayout.addLayout(inputLayout)
 
+			# Toggle name display
+			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+				self.key_display.hide()
+				self.name_display.hide()
+
+			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+				self.topic.hide()
+
+
 		# Logs
 		load_log_from_disk = False
 
@@ -523,6 +556,9 @@ class Window(QMainWindow):
 		else:
 			self.key_display.show()
 
+		if not erk.config.CHAT_DISPLAY_INFO_BAR:
+			self.key_display.hide()
+
 	def nickDisplay(self,nick):
 		self.nick_display.setText(" <b>"+nick+"</b> ")
 
@@ -534,7 +570,7 @@ class Window(QMainWindow):
 		self.topic.setText(topic)
 		self.topic.setCursorPosition(0)
 
-		self.parent.toggle_title()
+		self.parent.refresh_application_title()
 
 	def reset_input(self):
 		cursor = self.input.textCursor()
