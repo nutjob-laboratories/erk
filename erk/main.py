@@ -108,7 +108,7 @@ class Erk(QMainWindow):
 			self.current_client = None
 			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
-	def toggle_title(self,item=None):
+	def refresh_application_title(self,item=None):
 
 		if item!=None:
 
@@ -197,7 +197,7 @@ class Erk(QMainWindow):
 		if hasattr(window,"client"): erk.events.clear_unseen(window)
 		erk.events.build_connection_display(self)
 
-		self.toggle_title()
+		self.refresh_application_title()
 
 	def connectionNodeSingleClicked(self,item,column):
 		if erk.config.DOUBLECLICK_SWITCH: return
@@ -217,7 +217,7 @@ class Erk(QMainWindow):
 				# 			self.setWindowTitle(item.erk_name+topic)
 				# 	else:
 				# 		self.setWindowTitle(APPLICATION_NAME)
-				self.toggle_title(item)
+				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
 
@@ -239,7 +239,7 @@ class Erk(QMainWindow):
 				# 			self.setWindowTitle(item.erk_name+topic)
 				# 	else:
 				# 		self.setWindowTitle(APPLICATION_NAME)
-				self.toggle_title(item)
+				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
 
@@ -984,6 +984,14 @@ class Erk(QMainWindow):
 		self.about.triggered.connect(self.menuAbout)
 		self.helpMenu.addAction(self.about)
 
+		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk plugin repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
 		self.helpMenu.addSeparator()
 
 		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
@@ -1382,7 +1390,7 @@ class Erk(QMainWindow):
 				erk.config.APP_TITLE_SHOW_TOPIC = True
 				self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
-			self.toggle_title()
+			self.refresh_application_title()
 			return
 
 		if setting=="titlename":
@@ -1393,7 +1401,7 @@ class Erk(QMainWindow):
 				erk.config.APP_TITLE_TO_CURRENT_CHAT = True
 				self.set_titlename.setIcon(QIcon(CHECKED_ICON))
 			erk.config.save_settings(self.configfile)
-			self.toggle_title()
+			self.refresh_application_title()
 			return
 
 		if setting=="hide_join":
