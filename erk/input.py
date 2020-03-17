@@ -42,82 +42,76 @@ import erk.config
 import erk.macros
 
 COMMON_COMMANDS = {
-	"/msg": "/msg ",
-	"/part": "/part ",
-	"/join": "/join ",
-	"/notice": "/notice ",
-	"/nick": "/nick ",
-	"/mode": "/mode ",
-	"/away": "/away ",
-	"/back": "/back",
-	"/oper": "/oper ",
-	"/switch": "/switch ",
-	"/connect": "/connect ",
-	"/reconnect": "/reconnect ",
-	"/ssl": "/ssl ",
-	"/ressl": "/ressl ",
-	"/send": "/send ",
-	"/invite": "/invite ",
-	"/list": "/list",
-	"/refresh": "/refresh",
-	"/help": "/help",
-	"/topic": "/topic ",
+	erk.config.INPUT_COMMAND_SYMBOL+"msg": erk.config.INPUT_COMMAND_SYMBOL+"msg ",
+	erk.config.INPUT_COMMAND_SYMBOL+"part": erk.config.INPUT_COMMAND_SYMBOL+"part ",
+	erk.config.INPUT_COMMAND_SYMBOL+"join": erk.config.INPUT_COMMAND_SYMBOL+"join ",
+	erk.config.INPUT_COMMAND_SYMBOL+"notice": erk.config.INPUT_COMMAND_SYMBOL+"notice ",
+	erk.config.INPUT_COMMAND_SYMBOL+"nick": erk.config.INPUT_COMMAND_SYMBOL+"nick ",
+	erk.config.INPUT_COMMAND_SYMBOL+"mode": erk.config.INPUT_COMMAND_SYMBOL+"mode ",
+	erk.config.INPUT_COMMAND_SYMBOL+"away": erk.config.INPUT_COMMAND_SYMBOL+"away ",
+	erk.config.INPUT_COMMAND_SYMBOL+"back": erk.config.INPUT_COMMAND_SYMBOL+"back",
+	erk.config.INPUT_COMMAND_SYMBOL+"oper": erk.config.INPUT_COMMAND_SYMBOL+"oper ",
+	erk.config.INPUT_COMMAND_SYMBOL+"switch": erk.config.INPUT_COMMAND_SYMBOL+"switch ",
+	erk.config.INPUT_COMMAND_SYMBOL+"connect": erk.config.INPUT_COMMAND_SYMBOL+"connect ",
+	erk.config.INPUT_COMMAND_SYMBOL+"reconnect": erk.config.INPUT_COMMAND_SYMBOL+"reconnect ",
+	erk.config.INPUT_COMMAND_SYMBOL+"ssl": erk.config.INPUT_COMMAND_SYMBOL+"ssl ",
+	erk.config.INPUT_COMMAND_SYMBOL+"ressl": erk.config.INPUT_COMMAND_SYMBOL+"ressl ",
+	erk.config.INPUT_COMMAND_SYMBOL+"send": erk.config.INPUT_COMMAND_SYMBOL+"send ",
+	erk.config.INPUT_COMMAND_SYMBOL+"invite": erk.config.INPUT_COMMAND_SYMBOL+"invite ",
+	erk.config.INPUT_COMMAND_SYMBOL+"list": erk.config.INPUT_COMMAND_SYMBOL+"list",
+	erk.config.INPUT_COMMAND_SYMBOL+"refresh": erk.config.INPUT_COMMAND_SYMBOL+"refresh",
+	erk.config.INPUT_COMMAND_SYMBOL+"help": erk.config.INPUT_COMMAND_SYMBOL+"help",
+	erk.config.INPUT_COMMAND_SYMBOL+"topic": erk.config.INPUT_COMMAND_SYMBOL+"topic ",
 }
 
 CHANNEL_COMMANDS = {
-	"/me": "/me ",	
-	"/part": "/part",
+	erk.config.INPUT_COMMAND_SYMBOL+"me": erk.config.INPUT_COMMAND_SYMBOL+"me ",	
+	erk.config.INPUT_COMMAND_SYMBOL+"part": erk.config.INPUT_COMMAND_SYMBOL+"part",
 }
 
 PRIVATE_COMMANDS = {
-	"/me": "/me ",	
+	erk.config.INPUT_COMMAND_SYMBOL+"me": erk.config.INPUT_COMMAND_SYMBOL+"me ",	
 }
 
 COMMAND_HELP = [
-	[ "<b>/msg</b> TARGET MESSAGE", "Sends a private message" ],
-	[ "<b>/notice</b> TARGET MESSAGE", "Sends a notice" ],
-	[ "<b>/join</b> CHANNEL [KEY]", "Joins a channel" ],
-	[ "<b>/part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
-	[ "<b>/invite</b> USER CHANNEL", "Sends a channel invite to a user" ],
-	[ "<b>/nick</b> NEW_NICKNAME", "Changes your nickname" ],
-	[ "<b>/away</b> [MESSAGE]", "Sets your status to \"away\"" ],
-	[ "<b>/back</b>", "Sets your status to \"back\"" ],
-	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
-	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
-	[ "<b>/topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
-	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
-	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
-	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
-	[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
-	[ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
-	[ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
-	[ "<b>/reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
-	[ "<b>/ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
-	[ "<b>/ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"invite</b> USER CHANNEL", "Sends a channel invite to a user" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
 ]
 
 CHAT_HELP = [
-	[ "<b>/msg</b> TARGET MESSAGE", "Sends a private message" ],
-	[ "<b>/me</b> MESSAGE", "Sends CTCP action message" ],
-	[ "<b>/notice</b> TARGET MESSAGE", "Sends a notice" ],
-	[ "<b>/join</b> CHANNEL [KEY]", "Joins a channel" ],
-	[ "<b>/part</b> [CHANNEL] [MESSAGE]", "Leaves a channel" ],
-	[ "<b>/invite</b> USER [CHANNEL]", "Sends a channel invite to a user" ],
-	[ "<b>/nick</b> NEW_NICKNAME", "Changes your nickname" ],
-	[ "<b>/away</b> [MESSAGE]", "Sets your status to \"away\"" ],
-	[ "<b>/back</b>", "Sets your status to \"back\"" ],
-	[ "<b>/mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
-	[ "<b>/oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
-	[ "<b>/send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
-	[ "<b>/list</b> [TERMS]", "Fetches a channel list from the server" ],
-	[ "<b>/refresh</b>", "Requests a new channel list from the server" ],
-	[ "<b>/topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
-	#[ "<b>/script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
-	# [ "<b>/switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
-	# [ "<b>/connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
-	# [ "<b>/reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
-	# [ "<b>/ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
-	# [ "<b>/ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"me</b> MESSAGE", "Sends CTCP action message" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"part</b> [CHANNEL] [MESSAGE]", "Leaves a channel" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"invite</b> USER [CHANNEL]", "Sends a channel invite to a user" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
+	[ "<b>"+erk.config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
 ]
 
 hentries = []
@@ -189,7 +183,7 @@ def handle_macro_input(window,client,text):
 							client.msg(window.name,output)
 
 						else:
-							window.input.setText("/msg "+output)
+							window.input.setText(erk.config.INPUT_COMMAND_SYMBOL+"msg "+output)
 							window.input.moveCursor(QTextCursor.End)
 						return True
 					else:
@@ -207,7 +201,7 @@ def handle_macro_input(window,client,text):
 							client.describe(window.name,output)
 
 						else:
-							window.input.setText("/me "+output)
+							window.input.setText(erk.config.INPUT_COMMAND_SYMBOL+"me "+output)
 							window.input.moveCursor(QTextCursor.End)
 						return True
 					else:
@@ -224,7 +218,7 @@ def handle_macro_input(window,client,text):
 							client.notice(window.name,output)
 
 						else:
-							window.input.setText("/notice "+output)
+							window.input.setText(erk.config.INPUT_COMMAND_SYMBOL+"notice "+output)
 							window.input.moveCursor(QTextCursor.End)
 						return True
 					else:
@@ -276,7 +270,7 @@ def handle_channel_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/topic' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'topic' and len(tokens)>=2:
 			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
 				# channel has been passed as an argument
 				# Do not handle the command here, let the command get
@@ -289,28 +283,28 @@ def handle_channel_input(window,client,text):
 				return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/help':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'help':
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/invite' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'invite' and len(tokens)==2:
 			tokens.pop(0)
 			target = tokens.pop(0)
 			client.sendLine("INVITE "+target+" "+window.name)
 			return True
-		if tokens[0].lower()=='/invite' and len(tokens)==1:
-			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER [CHANNEL]")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'invite' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"invite USER [CHANNEL]")
 			window.writeText(msg,True)
 			return True
-		if tokens[0].lower()=='/invite' and len(tokens)>3:
-			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER [CHANNEL]")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'invite' and len(tokens)>3:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"invite USER [CHANNEL]")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/mode' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'mode' and len(tokens)>=2:
 			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
 				# channel has been passed as an argument
 				# Do not handle the command here, let the command get
@@ -323,7 +317,7 @@ def handle_channel_input(window,client,text):
 				return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/me' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'me' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
@@ -331,17 +325,17 @@ def handle_channel_input(window,client,text):
 			client.describe(window.name,msg)
 
 			return True
-		if tokens[0].lower()=='/me':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /me [MESSAGE]")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'me':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"me [MESSAGE]")
 			window.writeText(msg,True)
 			return True
 
 	# Handle channel-specific cases of the /part command
 	if len(tokens)>0:
-		if tokens[0].lower()=='/part' and len(tokens)==1:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)==1:
 			window.leaveChannel(window.name)
 			return True
-		if tokens[0].lower()=='/part' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# channel has not been passed as an argument
 				tokens.pop(0)
@@ -363,13 +357,13 @@ def handle_private_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/help':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'help':
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/me' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'me' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			if erk.config.USE_EMOJIS: msg = emoji.emojize(msg,use_aliases=True)
@@ -377,8 +371,8 @@ def handle_private_input(window,client,text):
 			client.describe(window.name,msg)
 
 			return True
-		if tokens[0].lower()=='/me':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /me MESSAGE")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'me':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"me MESSAGE")
 			window.writeText(msg,True)
 			return True
 
@@ -402,31 +396,31 @@ def handle_common_input(window,client,text):
 	if handle_macro_input(window,client,text): return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/topic' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'topic' and len(tokens)>=2:
 			if tokens[1][:1]=='#' or tokens[1][:1]=='&' or tokens[1][:1]=='!' or tokens[1][:1]=='+':
 				tokens.pop(0)
 				target = tokens.pop(0)
 				data = ' '.join(tokens)
 				client.topic(target,data)
 				return True
-		if tokens[0].lower()=='/topic':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /topic CHANNEL NEW_TOPIC")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'topic':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"topic CHANNEL NEW_TOPIC")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if len(tokens)==1 and tokens[0].lower()=='/refresh':
+		if len(tokens)==1 and tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'refresh':
 			client.sendLine("LIST")
 			msg = Message(SYSTEM_MESSAGE,'',"Sent channel list request to the server")
 			window.writeText(msg,True)
 			return True
-		if tokens[0].lower()=='/refresh':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /refresh")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'refresh':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"refresh")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if len(tokens)==1 and tokens[0].lower()=='/list':
+		if len(tokens)==1 and tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'list':
 			if len(client.channels)==0:
 				client.list_requested = True
 				client.list_window = window
@@ -445,7 +439,7 @@ def handle_common_input(window,client,text):
 				# window.writeText(msg,True)
 				return True
 
-		if len(tokens)>=2 and tokens[0].lower()=='/list':
+		if len(tokens)>=2 and tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'list':
 			tokens.pop(0)	# remove command
 			terms = ' '.join(tokens)
 			if len(client.channels)==0:
@@ -479,13 +473,13 @@ def handle_common_input(window,client,text):
 
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/help':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'help':
 			msg = Message(PLUGIN_MESSAGE,'',HELP_DISPLAY)
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/invite' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'invite' and len(tokens)==3:
 			if tokens[2][:1]=='#' or tokens[2][:1]=='&' or tokens[2][:1]=='!' or tokens[2][:1]=='+':
 				# invite channel is a valid name
 				tokens.pop(0)
@@ -498,13 +492,13 @@ def handle_common_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-		if tokens[0].lower()=='/invite':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /invite USER CHANNEL")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'invite':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"invite USER CHANNEL")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/notice' and len(tokens)>=3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'notice' and len(tokens)>=3:
 			tokens.pop(0)
 			target = tokens.pop(0)
 			msg = ' '.join(tokens)
@@ -514,87 +508,87 @@ def handle_common_input(window,client,text):
 			client.notice(target,msg)
 			return True
 
-		if tokens[0].lower()=='/notice':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /notice TARGET MESSAGE")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'notice':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"notice TARGET MESSAGE")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/oper' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'oper' and len(tokens)==3:
 			tokens.pop(0)
 			username = tokens.pop(0)
 			password = tokens.pop(0)
 			client.sendLine("OPER "+username+" "+password)
 			return True
-		if tokens[0].lower()=='/oper':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /oper USERNAME PASSWORD")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'oper':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"oper USERNAME PASSWORD")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/back' and len(tokens)==1:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'back' and len(tokens)==1:
 			client.back()
 			return True
-		if tokens[0].lower()=='/back' and len(tokens)==1:
-			msg = Message(ERROR_MESSAGE,'',"Usage: /back")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'back' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"back")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/away' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'away' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			client.away(msg)
 			return True
-		if tokens[0].lower()=='/away' and len(tokens)==1:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'away' and len(tokens)==1:
 			client.away('busy')
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/mode' and len(tokens)>=3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'mode' and len(tokens)>=3:
 			tokens.pop(0)
 			data = ' '.join(tokens)
 			client.sendLine("MODE "+data)
 			return True
-		if tokens[0].lower()=='/mode':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /mode TARGET MODE [ARGUMENTS]")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'mode':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"mode TARGET MODE [ARGUMENTS]")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/send' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'send' and len(tokens)>=2:
 			tokens.pop(0)
 			data = ' '.join(tokens)
 			client.sendLine(data)
 			return True
-		if tokens[0].lower()=='/send':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /send MESSAGE")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'send':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"send MESSAGE")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/whois' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'whois' and len(tokens)==2:
 			tokens.pop(0)
 			target = tokens.pop(0)
 			client.sendLine("WHOIS "+target)
 			return True
-		if tokens[0].lower()=='/whois':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /whois NICKNAME [NICKNAME] ...")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'whois':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"whois NICKNAME [NICKNAME] ...")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/quit' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'quit' and len(tokens)>=2:
 			tokens.pop(0)
 			msg = ' '.join(tokens)
 			window.parent.disconnect_current(msg)
 			return True
-		if tokens[0].lower()=='/quit' and len(tokens)==1:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'quit' and len(tokens)==1:
 			window.parent.disconnect_current()
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/msg' and len(tokens)>=3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'msg' and len(tokens)>=3:
 			tokens.pop(0)
 			target = tokens.pop(0)
 			msg = ' '.join(tokens)
@@ -604,13 +598,13 @@ def handle_common_input(window,client,text):
 			client.msg(target,msg)
 			return True
 
-		if tokens[0].lower()=='/msg':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /msg TARGET MESSAGE")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'msg':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"msg TARGET MESSAGE")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/part' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)==2:
 			tokens.pop(0)
 			channel = tokens.pop(0)
 			if not channel in window.channelList():
@@ -619,10 +613,10 @@ def handle_common_input(window,client,text):
 				return True
 			window.leaveChannel(channel)
 			return True
-		if tokens[0].lower()=='/part' and len(tokens)>=2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# channel has not been passed as an argument
-				msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
+				msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"part CHANNEL [MESSAGE]")
 				window.writeText(msg,True)
 				return True
 			tokens.pop(0)
@@ -634,34 +628,34 @@ def handle_common_input(window,client,text):
 			partmsg = ' '.join(tokens)
 			window.leaveChannel(channel,partmsg)
 			return True
-		if tokens[0].lower()=='/part':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /part CHANNEL [MESSAGE]")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'part':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"part CHANNEL [MESSAGE]")
 			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/join' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'join' and len(tokens)==3:
 			tokens.pop(0)
 			channel = tokens.pop(0)
 			key = tokens.pop(0)
 			client.join(channel,key)
 			return True
-		if tokens[0].lower()=='/join' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'join' and len(tokens)==2:
 			tokens.pop(0)
 			channel = tokens.pop(0)
 			client.join(channel)
 			return True
-		if tokens[0].lower()=='/join':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'join':
 			window.doJoin(client)
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/nick' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'nick' and len(tokens)==2:
 			tokens.pop(0)
 			newnick = tokens.pop(0)
 			client.setNick(newnick)
 			return True
-		if tokens[0].lower()=='/nick':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'nick':
 			window.doNick(client)
 			return True
 
@@ -672,7 +666,7 @@ def handle_ui_input(window,client,text):
 	tokens = text.split()
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/script' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:
 			tokens.pop(0)
 			file = tokens.pop(0)
 			if os.path.isfile(file):
@@ -686,15 +680,15 @@ def handle_ui_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"File \""+file+"\" not found")
 				window.writeText(msg,True)
 				return True
-		if tokens[0].lower()=='/script':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /script FILE")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'script':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"script FILE")
 			window.writeText(msg,True)
 			return True
 
 
 
 	if len(tokens)>0:
-		if tokens[0].lower()=='/switch' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==2:
 			tokens.pop(0)
 			winname = tokens.pop(0)
 			channels = window.channelList()
@@ -721,8 +715,8 @@ def handle_ui_input(window,client,text):
 				return True
 			window.parent.stack.setCurrentWidget(swin)
 			return True
-		if tokens[0].lower()=='/switch':
-			msg = Message(ERROR_MESSAGE,'',"Usage: /switch CHAT_NAME")
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'switch':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+erk.config.INPUT_COMMAND_SYMBOL+"switch CHAT_NAME")
 			window.writeText(msg,True)
 			return True
 
@@ -734,7 +728,7 @@ def handle_ui_input(window,client,text):
 	# /ressl ...
 	if len(tokens)>0:
 
-		if tokens[0].lower()=='/connect' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'connect' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
@@ -744,7 +738,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/connect' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'connect' and len(tokens)==3:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -762,7 +756,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/connect' and len(tokens)==4:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'connect' and len(tokens)==4:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -784,7 +778,7 @@ def handle_ui_input(window,client,text):
 
 			# RECONNECT
 
-		if tokens[0].lower()=='/reconnect' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'reconnect' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
@@ -794,7 +788,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/reconnect' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'reconnect' and len(tokens)==3:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -812,7 +806,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/reconnect' and len(tokens)==4:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'reconnect' and len(tokens)==4:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -834,7 +828,7 @@ def handle_ui_input(window,client,text):
 
 			#ssl
 
-		if tokens[0].lower()=='/ssl' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ssl' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
@@ -844,7 +838,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/ssl' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ssl' and len(tokens)==3:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -862,7 +856,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/ssl' and len(tokens)==4:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ssl' and len(tokens)==4:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -884,7 +878,7 @@ def handle_ui_input(window,client,text):
 
 			#ressl
 
-		if tokens[0].lower()=='/ressl' and len(tokens)==2:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ressl' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = 6667
@@ -894,7 +888,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/ressl' and len(tokens)==3:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ressl' and len(tokens)==3:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -912,7 +906,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/ressl' and len(tokens)==4:
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ressl' and len(tokens)==4:
 			tokens.pop(0)
 			server = tokens.pop(0)
 			port = tokens.pop(0)
@@ -932,7 +926,7 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()=='/connect' or tokens[0].lower()=='/reconnect' or tokens[0].lower()=='/ssl' or tokens[0].lower()=='/ressl':
+		if tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'connect' or tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'reconnect' or tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ssl' or tokens[0].lower()==erk.config.INPUT_COMMAND_SYMBOL+'ressl':
 			window.connectDialog()
 			return True
 

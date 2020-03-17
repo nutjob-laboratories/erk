@@ -42,6 +42,8 @@ SAVE_JOINED_CHANNELS = False
 
 DISABLE_CONNECT_COMMANDS = False
 
+INPUT_COMMAND_SYMBOL = '/'
+
 # Settings changable in the UI
 HISTORY_LENGTH = 20
 DEFAULT_APP_WIDTH = 800
@@ -189,6 +191,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"set_application_title_to_current_chat_name": APP_TITLE_TO_CURRENT_CHAT,
 		"show_channel_topic_in_title": APP_TITLE_SHOW_TOPIC,
 		"chat_display_info_bar": CHAT_DISPLAY_INFO_BAR,
+		"input_command_symbol": INPUT_COMMAND_SYMBOL,
 	}
 
 	with open(filename, "w") as write_data:
@@ -267,6 +270,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global APP_TITLE_TO_CURRENT_CHAT
 	global APP_TITLE_SHOW_TOPIC
 	global CHAT_DISPLAY_INFO_BAR
+	global INPUT_COMMAND_SYMBOL
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -344,6 +348,7 @@ def load_settings(filename=SETTINGS_FILE):
 			APP_TITLE_TO_CURRENT_CHAT = data["set_application_title_to_current_chat_name"]
 			APP_TITLE_SHOW_TOPIC = data["show_channel_topic_in_title"]
 			CHAT_DISPLAY_INFO_BAR = data["chat_display_info_bar"]
+			INPUT_COMMAND_SYMBOL = data["input_command_symbol"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

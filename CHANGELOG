@@ -69,6 +69,7 @@ Version 0.810
 	* Added official repo/plugin repo to the help menu
 	* Added an option to toggle channel information widgets (name, modes, key, topic, etc) on and off
 	* Added the /topic command
+	* Added the input command symbol (/) to the configuration file and code
 
 Version 0.800
 	* First initial 0.800 release
