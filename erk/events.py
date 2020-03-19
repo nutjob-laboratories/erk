@@ -1296,7 +1296,7 @@ def private_message(gui,client,user,message):
 
 	if ignore: return
 	
-	msg = Message(CHAT_MESSAGE,user,message)
+	msg = Message(CHAT_MESSAGE,user,message,TYPE_PRIVATE)
 
 	window = fetch_private_window(client,nick)
 	if window:

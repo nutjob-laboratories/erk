@@ -85,7 +85,12 @@ toolbar_menu_style = '''
 def generate_menu_toolbar(self):
 
 	toolbar = QToolBar(self)
-	toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
+
+	# toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
+	toolbar.setAllowedAreas(Qt.TopToolBarArea)
+	#toolbar.setFloatable(False)
+	toolbar.setMovable(False)
+
 	# toolbar.setStyleSheet(''' QToolBar { spacing: 5px; } ''')
 	toolbar.setStyleSheet(''' QToolBar { spacing: 8px; } ''')
 

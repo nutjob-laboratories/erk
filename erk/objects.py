@@ -67,6 +67,7 @@ TYPE_NICK = 3
 TYPE_INVITE = 4
 TYPE_PART = 5
 TYPE_JOIN = 6
+TYPE_PRIVATE = 7
 
 class Message:
 	def __init__(self,mtype,sender,contents,timestamp=None,stype=None):
