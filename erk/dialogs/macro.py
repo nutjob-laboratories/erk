@@ -152,6 +152,8 @@ class Dialog(QDialog):
 		macroLayout.addRow(QLabel("<small><i><b>$network</b></i></small>"), QLabel("<small>The server's network</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$self</b></i></small>"), QLabel("<small>Your nickname</small>"))
 
+		macroLayout.addRow(QLabel(""))
+
 		macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
 
 		if self.filename:

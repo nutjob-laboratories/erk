@@ -16,8 +16,8 @@ class NicknameGrabber(Plugin):
         self.name = "Nickname Grabber"
         self.description = "Grabs a nickname"
         
-        self.author = None
-        self.version = None
+        self.author = "Dan Hetrick"
+        self.version = "1.0"
         self.website = None
         self.source = None
         
