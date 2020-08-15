@@ -30,8 +30,8 @@
           </td>
         </tr>
         <tr>
-          <td style="text-align: center; vertical-align: middle;">Click
-            to enlarge</td>
+          <td style="text-align: center; vertical-align: middle;"><p align="center">Click
+            to enlarge</p></td>
         </tr>
       </tbody>
     </table></center>
