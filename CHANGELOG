@@ -1,3 +1,8 @@
+Version 0.822
+	* First version with Linux support
+	* Fixed a bug where the connection display wouldn't update properly when the dock width changes
+	* Changed the default font to DejaVu Sans Mono
+
 Version 0.820
 	* The main menu bar is no longer movable/floatable
 

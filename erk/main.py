@@ -223,6 +223,7 @@ class Erk(QMainWindow):
 				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
+		events.build_connection_display(self)
 
 	def connectionNodeDoubleClicked(self,item):
 		if not config.DOUBLECLICK_SWITCH: return
@@ -245,6 +246,7 @@ class Erk(QMainWindow):
 				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
+		events.build_connection_display(self)
 
 		#self.toggle_title()
 
@@ -291,6 +293,9 @@ class Erk(QMainWindow):
 	def resizeEvent(self, event):
 		#self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
 		pass
+
+	def connectionDisplayResized(self):
+		events.build_connection_display(self)
 
 	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,parent=None):
 		super(Erk, self).__init__(parent)

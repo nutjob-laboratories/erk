@@ -51,6 +51,8 @@ from .. import macros
 
 from ..dialogs import KeyDialog
 
+from .. import events
+
 class Window(QMainWindow):
 
 	def closeEvent(self, event):
@@ -510,7 +512,7 @@ class Window(QMainWindow):
 	# BEGIN GUI METHODS
 
 	def rebuildConnection(self):
-		erk.events.build_connection_display(self.parent)
+		events.build_connection_display(self.parent)
 
 	def channelNickVisibility(self):
 		if config.DISPLAY_NICKNAME_ON_CHANNEL:
@@ -531,22 +533,22 @@ class Window(QMainWindow):
 		self.parent.menuJoin(client)
 
 	def newPrivate(self,target):
-		erk.events.open_private_window(self.client,target)
+		events.open_private_window(self.client,target)
 
 	def leaveChannel(self,channel,msg=None):
-		erk.events.close_channel_window(self.client,channel,msg)
+		events.close_channel_window(self.client,channel,msg)
 
 	def channelList(self):
-		return erk.events.fetch_channel_list(self.client)
+		return events.fetch_channel_list(self.client)
 
 	def privateList(self):
-		return erk.events.fetch_private_list(self.client)
+		return events.fetch_private_list(self.client)
 
 	def nameToChannel(self,channel):
-		return erk.events.name_to_channel(self.client,channel)
+		return events.name_to_channel(self.client,channel)
 
 	def nameToPrivate(self,channel):
-		return erk.events.name_to_private(self.client,channel)
+		return events.name_to_private(self.client,channel)
 
 	def setKey(self,key):
 		self.key = key
@@ -1225,7 +1227,7 @@ class SpellTextEdit(QPlainTextEdit):
 					text = self.textCursor().selectedText()
 
 					# Nicks
-					chan_nicks = erk.events.full_nick_list(self.parent.client)
+					chan_nicks = events.full_nick_list(self.parent.client)
 					for nick in chan_nicks:
 						# Skip client's nickname
 						if nick==self.parent.client.nickname:

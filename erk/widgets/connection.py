@@ -62,11 +62,14 @@ def buildConnectionDisplayWidget(self):
 
 		def __init__(self,parent=None):
 			self.started = True
+			self.parent = parent
 			super(LogWidget, self).__init__(parent)
 
 		def resizeEvent(self, newSize):
 			s = newSize.size()
 			config.CONNECTION_DISPLAY_WIDTH = s.width()
+
+			self.parent.connectionDisplayResized()
 
 		def sizeHint(self):
 			if self.started:
@@ -74,7 +77,7 @@ def buildConnectionDisplayWidget(self):
 				return QSize(fwidth, self.height())
 			return QSize(self.width(), self.height())
 			
-	connectionTree = LogWidget()
+	connectionTree = LogWidget(self)
 	connectionTree.headerItem().setText(0,"1")
 	connectionTree.header().setVisible(False)
 

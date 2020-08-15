@@ -36,7 +36,7 @@ ERK_ICON = ":/gui-erk.png"
 
 LOGO_IMAGE = ":/gui-logo.png"
 
-DEFAULT_FONT = ":/font-LiberationMono-Regular.ttf"
+DEFAULT_FONT = ":/font-DejaVuSansMono.ttf"
 
 USERLIST_OPERATOR_ICON		= ":/gui-ulist_op.png"
 USERLIST_VOICED_ICON		= ":/gui-ulist_voice.png"

@@ -33,10 +33,10 @@ from datetime import datetime
 import html
 from itertools import combinations
 
-from erk.files import *
-from erk.objects import *
-from erk.resources import *
-import erk.config
+from .files import *
+from .objects import *
+from .resources import *
+from . import config
 
 STYLES = get_text_format_settings()
 
@@ -106,7 +106,7 @@ def render_message(message,client=None):
 		# as HTML
 		msg_to_display = html.escape(msg_to_display)
 
-	if erk.config.CLICKABLE_CHANNELS:
+	if config.CLICKABLE_CHANNELS:
 		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE:
 			try:
 				d = []
@@ -126,20 +126,20 @@ def render_message(message,client=None):
 			except:
 				pass
 
-	if erk.config.CONVERT_URLS_TO_LINKS:
+	if config.CONVERT_URLS_TO_LINKS:
 		msg_to_display = inject_www_links(msg_to_display,STYLES["hyperlink"])
 
-	if erk.config.DISPLAY_IRC_COLORS:
+	if config.DISPLAY_IRC_COLORS:
 		if string_has_irc_formatting_codes(msg_to_display):
 			msg_to_display = convert_irc_color_to_html(msg_to_display)
 	else:
 		msg_to_display = strip_color(msg_to_display)
 
-	if erk.config.FILTER_PROFANITY: msg_to_display = filterProfanityFromText(msg_to_display)
+	if config.FILTER_PROFANITY: msg_to_display = filterProfanityFromText(msg_to_display)
 
-	if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
+	if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
 		if message.type==SYSTEM_MESSAGE:
-			msg_to_display = erk.config.SYSTEM_MESSAGE_PREFIX+" "+msg_to_display
+			msg_to_display = config.SYSTEM_MESSAGE_PREFIX+" "+msg_to_display
 
 	
 	p = message.sender.split('!')
@@ -182,14 +182,14 @@ def render_message(message,client=None):
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_STYLE_TEMPLATE)
 		output = output.replace("!MESSAGE_STYLE!",style)
 
-	if erk.config.DISPLAY_TIMESTAMP:
+	if config.DISPLAY_TIMESTAMP:
 
-		if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
+		if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
 			tfs = '%H:%M'
 		else:
 			tfs = '%I:%M'
 
-		if erk.config.DISPLAY_TIMESTAMP_SECONDS:
+		if config.DISPLAY_TIMESTAMP_SECONDS:
 			tfs = tfs + ':%S'
 
 		pretty_timestamp = datetime.fromtimestamp(message.timestamp).strftime(tfs)
@@ -214,7 +214,7 @@ def render_message(message,client=None):
 
 	# Pad nickname
 	if message.type!=ACTION_MESSAGE:
-		idl = erk.config.NICK_DISPLAY_WIDTH - len(nick)
+		idl = config.NICK_DISPLAY_WIDTH - len(nick)
 		if idl>0:
 			nick = ('&nbsp;'*idl)+nick
 
@@ -231,31 +231,31 @@ def render_message(message,client=None):
 	if message.stype!=None:
 
 		if message.stype==TYPE_MODE:
-			if erk.config.HIDE_MODE_DISPLAY:
+			if config.HIDE_MODE_DISPLAY:
 				output = None
 
 		if message.stype==TYPE_TOPIC:
-			if erk.config.HIDE_TOPIC_MESSAGE:
+			if config.HIDE_TOPIC_MESSAGE:
 				output = None
 
 		if message.stype==TYPE_QUIT:
-			if erk.config.HIDE_QUIT_MESSAGE:
+			if config.HIDE_QUIT_MESSAGE:
 				output = None
 
 		if message.stype==TYPE_NICK:
-			if erk.config.HIDE_NICK_MESSAGE:
+			if config.HIDE_NICK_MESSAGE:
 				output = None
 
 		if message.stype==TYPE_INVITE:
-			if erk.config.HIDE_INVITE_MESSAGE:
+			if config.HIDE_INVITE_MESSAGE:
 				output = None
 
 		if message.stype==TYPE_PART:
-			if erk.config.HIDE_PART_MESSAGE:
+			if config.HIDE_PART_MESSAGE:
 				output = None
 
 		if message.stype==TYPE_JOIN:
-			if erk.config.HIDE_JOIN_MESSAGE:
+			if config.HIDE_JOIN_MESSAGE:
 				output = None
 
 	return output
