@@ -112,7 +112,7 @@ No. I'm still adding features and tracking down and squashing bugs.
 
 Yes! Most basic functionality is done, and it's ready for most IRC stuff.
 
-## Does **Ərk** run on Windows? Does is run on Linux?
+## Does **Ərk** run on Windows? Does it run on Linux?
 
 **Ərk** runs on both Windows and Linux! It's being developed on Windows 10, but it's been tested (and runs great) on Debian, Ubuntu, and Mint Linux. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
 
