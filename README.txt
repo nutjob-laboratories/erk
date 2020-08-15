@@ -13,15 +13,28 @@
 # Screenshots
 
 <p align="center">
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Ərk connected to EFnet on Windows 10</b><br>
-	<i>Click image to enlarge</i><br>
-</p>
-
-<p align="center">
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
-	<b>Ərk connected to Undernet on Debian Linux</b><br>
-	<i>Click image to enlarge</i><br>
+<table style="width: 100%" border="0">
+      <tbody>
+        <tr>
+          <td>
+            <table style="width: 100%" border="0">
+              <tbody>
+                <tr>
+                  <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
+	<b>Ərk connected to EFnet on Windows 10</b></td>
+                  <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
+	<b>Ərk connected to Undernet on Debian Linux</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">Click
+            to enlarge</td>
+        </tr>
+      </tbody>
+    </table>
 </p>
 
 # Features
