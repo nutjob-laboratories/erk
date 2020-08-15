@@ -103,18 +103,6 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 
 # Frequently asked questions
 
-## Is **Ərk** designed for multiple users?
-
-Not directly, as all its configuration files are stored in **Ərk**'s installation directory. However, there are three command-line options you can use to manage settings for different users:
-
-* `--config` : This tells **Ərk** to use a user-specified file for most configuration options.
-* `--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
-* `--format` : This tells **Ərk** to use a user-specified text display settings file. This sets what colors and formatting is used to display text in the client.
-
-This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings.
-
-More command-line settings can be viewed by executing **Ərk** with the `--help` command-line flag.
-
 ## What does "erk" mean?
 
 The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when one of the users in the channel suggested "Erk", because "that's how you pronouce IRC". And thus **Ərk** was born.
@@ -148,3 +136,15 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 **Ərk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
 
 The other reason why I wrote **Ərk** is because I got tired of not understanding how the most popular clients did things. I wanted a client that you could configure to do _exactly_ what you wanted it to do, no more and no less. That's why **Ərk** has a ridiculous amount of configuration options. Do you want to run the client in full-screen mode, and remove the ability of users to change settings or connect to other servers (aka, "kiosk mode")? You can do that. Do you want to strip all the "pretty" off the client, and basically run it in "text only" mode? You can do that. Do you want **Ərk** to do nothing except what you tell it to do? You can do that. Almost everything in the client can be configured from within the GUI or with command-line flags.
+
+## Is **Ərk** designed for multiple users?
+
+Not directly, as all its configuration files are stored in **Ərk**'s installation directory. However, there are three command-line options you can use to manage settings for different users:
+
+* `--config` : This tells **Ərk** to use a user-specified file for most configuration options.
+* `--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
+* `--format` : This tells **Ərk** to use a user-specified text display settings file. This sets what colors and formatting is used to display text in the client.
+
+This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings.
+
+More command-line settings can be viewed by executing **Ərk** with the `--help` command-line flag.
