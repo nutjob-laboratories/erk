@@ -13,7 +13,7 @@
 # Screenshots
 
 <p align="center">
-<center><table style="width: 100%" border="0">
+<table style="width: 100%" border="0">
       <tbody>
         <tr>
           <td>
@@ -29,12 +29,8 @@
             </table>
           </td>
         </tr>
-        <tr>
-          <td style="text-align: center; vertical-align: middle;"><p align="center">Click
-            to enlarge</p></td>
-        </tr>
       </tbody>
-    </table></center>
+    </table>
 </p>
 
 # Features
