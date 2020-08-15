@@ -13,7 +13,7 @@
 # Screenshots
 
 <p align="center">
-<table style="width: 100%" border="0">
+<center><table style="width: 100%" border="0">
       <tbody>
         <tr>
           <td>
@@ -34,7 +34,7 @@
             to enlarge</td>
         </tr>
       </tbody>
-    </table>
+    </table></center>
 </p>
 
 # Features
