@@ -297,6 +297,10 @@ class Erk(QMainWindow):
 	def connectionDisplayResized(self):
 		events.build_connection_display(self)
 
+		# TODO: use total_uptime to set a time, say, 5 seconds in the future
+		# to save the connection_display width
+		self.do_connection_display_width_save = self.total_uptime + 5
+
 	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -309,6 +313,9 @@ class Erk(QMainWindow):
 		self.connecting = []
 
 		self.uptimers = {}
+
+		self.total_uptime = 0
+		self.do_connection_display_width_save = 0
 
 		self.current_client = None
 

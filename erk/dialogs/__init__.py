@@ -35,23 +35,6 @@ try:
 except ImportError:
 	SSL_AVAILABLE = False
 
-# import erk.dialogs.add_channel as AddChannelDialog
-# import erk.dialogs.combo as Combo
-# import erk.dialogs.join_channel as JoinChannel
-# import erk.dialogs.new_nick as Nick
-# import erk.dialogs.window_size as WindowSize
-# import erk.dialogs.history_size as HistorySize
-# import erk.dialogs.log_size as LogSize
-# import erk.dialogs.format as FormatText
-# import erk.dialogs.about as About
-# import erk.dialogs.macro as Macro
-# import erk.dialogs.editor as Editor
-# import erk.dialogs.export_log as ExportLog
-# import erk.dialogs.key as Key
-# import erk.dialogs.error as Error
-# import erk.dialogs.prefix as Prefix
-# import erk.dialogs.list_time as ListTime
-
 from .add_channel import Dialog as AddChannelDialog
 from .combo import Dialog as Combo
 from .join_channel import Dialog as JoinChannel

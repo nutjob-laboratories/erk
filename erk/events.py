@@ -1121,6 +1121,12 @@ def uptime(gui,client,uptime):
 		client.gui.plugins.tick(client)
 	
 	gui.uptimers[client.id] = uptime
+	gui.total_uptime = gui.total_uptime + 1
+
+	# config.save_settings(gui.configfile)
+	if gui.do_connection_display_width_save<=gui.total_uptime and gui.do_connection_display_width_save!=0:
+		config.save_settings(gui.configfile)
+		gui.do_connection_display_width_save = 0
 
 	if config.DISPLAY_CONNECTION_UPTIME:
 		iterator = QTreeWidgetItemIterator(gui.connection_display)
@@ -1495,6 +1501,7 @@ def disconnection(gui,client):
 		client.gui.stack.setCurrentWidget(w)
 	else:
 		client.gui.stack.setCurrentWidget(client.gui.starter)
+		client.gui.total_uptime = 0
 
 	# Update connection display
 	build_connection_display(gui)
