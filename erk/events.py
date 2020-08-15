@@ -1123,7 +1123,6 @@ def uptime(gui,client,uptime):
 	gui.uptimers[client.id] = uptime
 	gui.total_uptime = gui.total_uptime + 1
 
-	# config.save_settings(gui.configfile)
 	if gui.do_connection_display_width_save<=gui.total_uptime and gui.do_connection_display_width_save!=0:
 		config.save_settings(gui.configfile)
 		gui.do_connection_display_width_save = 0

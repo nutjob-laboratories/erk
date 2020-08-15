@@ -10,11 +10,17 @@
 
 **Ərk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 
-# Screenshot
+# Screenshots
 
 <p align="center">
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Ərk connected to EFnet</b><br>
+	<b>Ərk connected to EFnet on Windows 10</b><br>
+	<i>Click image to enlarge</i><br>
+</p>
+
+<p align="center">
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
+	<b>Ərk connected to Undernet on Debian Linux</b><br>
 	<i>Click image to enlarge</i><br>
 </p>
 
