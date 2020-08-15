@@ -34,7 +34,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
+from ..resources import *
 
 toolbar_button_style = '''
 	QPushButton {

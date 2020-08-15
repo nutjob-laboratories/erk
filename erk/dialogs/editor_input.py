@@ -34,8 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.strings import *
+from ..resources import *
+from ..strings import *
 
 class Dialog(QDialog):
 

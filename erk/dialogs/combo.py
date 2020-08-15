@@ -34,14 +34,14 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.objects import *
-from erk.files import *
-from erk.widgets import *
-from erk.strings import *
+from ..resources import *
+from ..objects import *
+from ..files import *
+from ..widgets import *
+from ..strings import *
 # import erk.config
 
-from erk.dialogs import AddChannelDialog
+from ..dialogs import AddChannelDialog
 
 
 class Dialog(QDialog):

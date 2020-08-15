@@ -34,13 +34,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.objects import *
-from erk.files import *
-from erk.widgets import *
-from erk.strings import *
+from ..resources import *
+from ..objects import *
+from ..files import *
+from ..widgets import *
+from ..strings import *
 
-import erk.macros
+from .. import macros
 
 class Dialog(QDialog):
 
@@ -72,13 +72,13 @@ class Dialog(QDialog):
 		}
 
 		if self.filename:
-			erk.macros.save_macro(macro,self.filename)
+			macros.save_macro(macro,self.filename)
 			self.parent.rebuildMacroMenu()
 			self.close()
 		else:
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save macro as...",erk.macros.MACRO_DIRECTORY,"JSON Files (*.json)")
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save macro as...",macros.MACRO_DIRECTORY,"JSON Files (*.json)")
 			if fileName:
-				erk.macros.save_macro(macro,fileName)
+				macros.save_macro(macro,fileName)
 				self.parent.rebuildMacroMenu()
 				self.close()
 
@@ -157,7 +157,7 @@ class Dialog(QDialog):
 		macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
 
 		if self.filename:
-			m = erk.macros.get_macro(self.filename)
+			m = macros.get_macro(self.filename)
 
 			if m:
 				self.setWindowTitle("Edit "+m["trigger"])

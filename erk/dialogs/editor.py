@@ -41,16 +41,22 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.files import PLUGIN_TEMPLATE
-import erk.dialogs.find as Find
-import erk.dialogs.template as Template
-import erk.config
-from erk.widgets.action import MenuAction
+from ..resources import *
+from ..files import PLUGIN_TEMPLATE
+# import erk.dialogs.find as Find
+# import erk.dialogs.template as Template
+from .. import config
+from ..widgets.action import MenuAction
 
-import erk.dialogs.export_package as Export
+#import erk.dialogs.export_package as Export
 
-import erk.dialogs.editor_input as EditorInput
+#import erk.dialogs.editor_input as EditorInput
+
+from .export_package import Dialog as Export
+from .editor_input import Dialog as EditorInput
+
+from .find import Dialog as Find
+from .template import Dialog as Template
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -59,7 +65,7 @@ DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 
 def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
-	x = EditorInput.Dialog(title,prompt,twoinputs,twoprompt)
+	x = EditorInput(title,prompt,twoinputs,twoprompt)
 	info = x.get_string_information(title,prompt,twoinputs,twoprompt)
 	del x
 
@@ -84,7 +90,7 @@ class Window(QMainWindow):
 
 	def closeEvent(self, event):
 		if self.changed:
-			if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
+			if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
 				self.doExitSave(self.filename)
 
 		if self.app!=None:
@@ -257,7 +263,7 @@ class Window(QMainWindow):
 			winpos = None
 			icount = None
 
-		self.findWindow = Find.Dialog(self,False)
+		self.findWindow = Find(self,False)
 		if self.filename:
 			self.findWindow.setWindowTitle(self.title)
 		if ftext: self.findWindow.find.setText(ftext)
@@ -286,7 +292,7 @@ class Window(QMainWindow):
 			winpos = None
 			icount = None
 
-		self.findWindow = Find.Dialog(self,True)
+		self.findWindow = Find(self,True)
 		if self.filename:
 			self.findWindow.setWindowTitle(self.title)
 		if ftext: self.findWindow.find.setText(ftext)
@@ -326,7 +332,7 @@ class Window(QMainWindow):
 		return out
 
 	def menuTemplate(self):
-		x = Template.Dialog("Insert",self)
+		x = Template("Insert",self)
 		info = x.get_name_information("Insert",self)
 
 		if info:
@@ -346,7 +352,7 @@ class Window(QMainWindow):
 			self.editor.insertPlainText(t)
 
 	def newPackage(self):
-		x = Template.Dialog("Create",self)
+		x = Template("Create",self)
 		info = x.get_name_information("Create",self)
 
 		if info:
@@ -408,7 +414,7 @@ class Window(QMainWindow):
 
 
 	def exportPackage(self):
-		x = Export.Dialog(self)
+		x = Export(self)
 		info = x.get_name_information(self)
 
 		if info:
@@ -434,18 +440,18 @@ class Window(QMainWindow):
 				zf.close()
 
 
-	def __init__(self,filename=None,obj=None,app=None,config=None,parent=None):
+	def __init__(self,filename=None,obj=None,app=None,econfig=None,parent=None):
 		super(Window, self).__init__(parent)
 
 		self.filename = filename
 		self.gui = obj
 		self.app = app
-		self.config = config
+		self.config = econfig
 
 		self.changed = False
 		self.findWindow = None
 
-		erk.config.load_settings(config)
+		config.load_settings(econfig)
 
 		if self.filename:
 			self.title = os.path.basename(self.filename)
@@ -456,30 +462,30 @@ class Window(QMainWindow):
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		# Use spaces for indent
-		self.indentspace = erk.config.USE_SPACES_FOR_INDENT
+		self.indentspace = config.USE_SPACES_FOR_INDENT
 
 		# Number of spaces for indent
-		self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+		self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 
 		# Wordwrap
-		self.wordwrap = erk.config.EDITOR_WORD_WRAP
+		self.wordwrap = config.EDITOR_WORD_WRAP
 
 		# Autoindent
-		self.autoindent = erk.config.EDITOR_AUTO_INDENT
+		self.autoindent = config.EDITOR_AUTO_INDENT
 
 		self.editor = QCodeEditor(self)
 		self.highlight = PythonHighlighter(self.editor.document())
 
-		self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
+		self.highlight.do_highlight = config.EDITOR_SYNTAX_HIGHLIGHT
 
 		self.editor.textChanged.connect(self.docModified)
 		self.editor.redoAvailable.connect(self.hasRedo)
 		self.editor.undoAvailable.connect(self.hasUndo)
 		self.editor.copyAvailable.connect(self.hasCopy)
 
-		if erk.config.EDITOR_FONT!='':
+		if config.EDITOR_FONT!='':
 			f = QFont()
-			f.fromString(erk.config.EDITOR_FONT)
+			f.fromString(config.EDITOR_FONT)
 			self.font = f
 
 			self.editor.setFont(self.font)
@@ -654,25 +660,25 @@ class Window(QMainWindow):
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_wordwrap)
 
-		if erk.config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
+		if config.EDITOR_WORD_WRAP: self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_statusbar = QAction(QIcon(UNCHECKED_ICON),"Status bar",self)
 		self.set_statusbar.triggered.connect(lambda state,s="statusbar": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_statusbar)
 
-		if erk.config.EDITOR_STATUS_BAR: self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
+		if config.EDITOR_STATUS_BAR: self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
 		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_syntaxcolor)
 
-		if erk.config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
+		if config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_exitsave = QAction(QIcon(UNCHECKED_ICON),"Prompt for save on exit",self)
 		self.set_exitsave.triggered.connect(lambda state,s="exitsave": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_exitsave)
 
-		if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
+		if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
 
 		settingsMenu.addSeparator()
 
@@ -680,13 +686,13 @@ class Window(QMainWindow):
 		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_autoindent)
 
-		if erk.config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
+		if config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
 
 		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
 		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_indent_spaces)
 
-		if erk.config.USE_SPACES_FOR_INDENT: self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
+		if config.USE_SPACES_FOR_INDENT: self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
 
 		self.spacesMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
 
@@ -720,7 +726,7 @@ class Window(QMainWindow):
 
 		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
 
-		if not erk.config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
+		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
@@ -779,18 +785,18 @@ class Window(QMainWindow):
 					self.status_package.setText("<b><small>"+pname[0]+"</small></b>")
 					self.plugin_icon.show()
 
-		if not erk.config.EDITOR_STATUS_BAR: self.status.hide()
+		if not config.EDITOR_STATUS_BAR: self.status.hide()
 
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
-			erk.config.EDITOR_FONT = font.toString()
-			erk.config.save_settings(self.config)
+			config.EDITOR_FONT = font.toString()
+			config.save_settings(self.config)
 
 			self.font = font
 			self.editor.setFont(self.font)
 
-			pfs = erk.config.EDITOR_FONT.split(',')
+			pfs = config.EDITOR_FONT.split(',')
 			font_name = pfs[0]
 			font_size = pfs[1]
 
@@ -799,37 +805,37 @@ class Window(QMainWindow):
 	def toggleSetting(self,setting):
 
 		if setting=="exitsave":
-			if erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
-				erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = False
+			if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT:
+				config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = False
 				self.set_exitsave.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
+				config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
 				self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.config)
+			config.save_settings(self.config)
 			return
 
 		if setting=="highlight":
-			if erk.config.EDITOR_SYNTAX_HIGHLIGHT:
-				erk.config.EDITOR_SYNTAX_HIGHLIGHT = False
+			if config.EDITOR_SYNTAX_HIGHLIGHT:
+				config.EDITOR_SYNTAX_HIGHLIGHT = False
 				self.set_syntaxcolor.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EDITOR_SYNTAX_HIGHLIGHT = True
+				config.EDITOR_SYNTAX_HIGHLIGHT = True
 				self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
-			self.highlight.do_highlight = erk.config.EDITOR_SYNTAX_HIGHLIGHT
+			self.highlight.do_highlight = config.EDITOR_SYNTAX_HIGHLIGHT
 			self.toggle_highlight()
-			erk.config.save_settings(self.config)
+			config.save_settings(self.config)
 			return
 
 		if setting=="statusbar":
-			if erk.config.EDITOR_STATUS_BAR:
-				erk.config.EDITOR_STATUS_BAR = False
+			if config.EDITOR_STATUS_BAR:
+				config.EDITOR_STATUS_BAR = False
 				self.status.hide()
 				self.set_statusbar.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EDITOR_STATUS_BAR = True
+				config.EDITOR_STATUS_BAR = True
 				self.status.show()
 				self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.config)
+			config.save_settings(self.config)
 			return
 
 		if setting=="converttotab":
@@ -841,101 +847,101 @@ class Window(QMainWindow):
 			return
 
 		if setting=="autoindent":
-			if erk.config.EDITOR_AUTO_INDENT:
-				erk.config.EDITOR_AUTO_INDENT = False
+			if config.EDITOR_AUTO_INDENT:
+				config.EDITOR_AUTO_INDENT = False
 				self.editor.autoindent = False
 				self.set_autoindent.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EDITOR_AUTO_INDENT = True
+				config.EDITOR_AUTO_INDENT = True
 				self.editor.autoindent = True
 				self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.config)
+			config.save_settings(self.config)
 			return
 
 		if setting=="wordrap":
-			if erk.config.EDITOR_WORD_WRAP:
-				erk.config.EDITOR_WORD_WRAP = False
+			if config.EDITOR_WORD_WRAP:
+				config.EDITOR_WORD_WRAP = False
 				self.editor.setWordWrapMode(QTextOption.NoWrap)
 				self.editor.update()
 				self.update()
 				self.set_wordwrap.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EDITOR_WORD_WRAP = True
+				config.EDITOR_WORD_WRAP = True
 				self.editor.setWordWrapMode(QTextOption.WordWrap)
 				self.editor.update()
 				self.update()
 				self.set_wordwrap.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.config)
+			config.save_settings(self.config)
 			return
 
 		if setting=="spaces_5":
-			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 5
-			erk.config.save_settings(self.config)
+			config.NUMBER_OF_SPACES_FOR_INDENT = 5
+			config.save_settings(self.config)
 			self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
-			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_4":
-			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 4
-			erk.config.save_settings(self.config)
+			config.NUMBER_OF_SPACES_FOR_INDENT = 4
+			config.save_settings(self.config)
 			self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
-			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_3":
-			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 3
-			erk.config.save_settings(self.config)
+			config.NUMBER_OF_SPACES_FOR_INDENT = 3
+			config.save_settings(self.config)
 			self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
-			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_2":
-			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 2
-			erk.config.save_settings(self.config)
+			config.NUMBER_OF_SPACES_FOR_INDENT = 2
+			config.save_settings(self.config)
 			self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
-			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_1":
-			erk.config.NUMBER_OF_SPACES_FOR_INDENT = 1
-			erk.config.save_settings(self.config)
+			config.NUMBER_OF_SPACES_FOR_INDENT = 1
+			config.save_settings(self.config)
 			self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
 			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
 			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
-			self.tabsize = erk.config.NUMBER_OF_SPACES_FOR_INDENT
+			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="indentspace":
-			if erk.config.USE_SPACES_FOR_INDENT:
-				erk.config.USE_SPACES_FOR_INDENT = False
+			if config.USE_SPACES_FOR_INDENT:
+				config.USE_SPACES_FOR_INDENT = False
 				self.spacesMenu.setEnabled(False)
 			else:
-				erk.config.USE_SPACES_FOR_INDENT = True
+				config.USE_SPACES_FOR_INDENT = True
 				self.spacesMenu.setEnabled(True)
-			erk.config.save_settings(self.config)
-			if erk.config.USE_SPACES_FOR_INDENT:
+			config.save_settings(self.config)
+			if config.USE_SPACES_FOR_INDENT:
 				self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
 			else:
 				self.set_indent_spaces.setIcon(QIcon(UNCHECKED_ICON))
-			self.indentspace = erk.config.USE_SPACES_FOR_INDENT
+			self.indentspace = config.USE_SPACES_FOR_INDENT
 			return
 
 	def toggle_highlight(self):

@@ -38,8 +38,8 @@ import string
 import random
 from datetime import datetime
 
-from erk.strings import *
-from erk.objects import *
+from .strings import *
+from .objects import *
 
 # Application directories
 INSTALL_DIRECTORY = sys.path[0]

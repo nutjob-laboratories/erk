@@ -34,9 +34,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.files import *
-import erk.format
+from ..resources import *
+from ..files import *
+from .. import textformat
 
 def get_style_attribute(style,setting):
 
@@ -68,7 +68,7 @@ class Dialog(QDialog):
 		event.accept()
 
 	def apply(self):
-		erk.format.STYLES = self.styles
+		textformat.STYLES = self.styles
 
 		self.parent.newStyle(self.styles["all"])
 
@@ -77,7 +77,7 @@ class Dialog(QDialog):
 		
 
 	def save(self):
-		erk.format.STYLES = self.styles
+		textformat.STYLES = self.styles
 
 		self.parent.newStyle(self.styles["all"])
 

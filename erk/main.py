@@ -40,16 +40,19 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.widgets import *
-from erk.files import *
-from erk.common import *
-from erk.plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
-import erk.config
-import erk.events
-import erk.format
+from .resources import *
+from .widgets import *
+from .files import *
+from .common import *
+from .plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
 
-from erk.dialogs import(
+from . import config
+from . import events
+from . import textformat
+
+from . import macros
+
+from .dialogs import(
 	ComboDialog,
 	JoinDialog,
 	NickDialog,
@@ -66,7 +69,7 @@ from erk.dialogs import(
 	ListTimeDialog
 	)
 
-from erk.irc import(
+from .irc import(
 	connect,
 	connectSSL,
 	reconnect,
@@ -81,30 +84,30 @@ class Erk(QMainWindow):
 	def changeEvent(self,event):
 		if event.type() == QEvent.WindowStateChange:
 			if event.oldState() and Qt.WindowMinimized:
-				erk.events.resize_font_fix()
+				events.resize_font_fix()
 			elif event.oldState() == Qt.WindowNoState:
-				erk.events.resize_font_fix()
+				events.resize_font_fix()
 			elif self.windowState() == Qt.WindowMaximized:
-				erk.events.resize_font_fix()
+				events.resize_font_fix()
 		
 		return QMainWindow.changeEvent(self, event)
 
 	def newStyle(self,style):
-		erk.events.apply_style(style)
+		events.apply_style(style)
 		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
 		if not self.block_plugins:
 			self.plugins.unload()
 		if self.fullscreen==False:
-			erk.config.DEFAULT_APP_WIDTH = self.width()
-			erk.config.DEFAULT_APP_HEIGHT = self.height()
-			erk.config.save_settings(self.configfile)
+			config.DEFAULT_APP_WIDTH = self.width()
+			config.DEFAULT_APP_HEIGHT = self.height()
+			config.save_settings(self.configfile)
 		self.app.quit()
 
 	def disconnect_current(self,msg=None):
 		if self.current_client:
-			erk.events.disconnect_from_server(self.current_client,msg)
+			events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
 			if not self.block_toolbar: self.disconnect.setEnabled(False)
 
@@ -116,23 +119,23 @@ class Erk(QMainWindow):
 			if hasattr(item.erk_widget,"channel_topic"):
 				if len(item.erk_widget.channel_topic)>0:
 					topic = item.erk_widget.channel_topic
-			if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+			if not config.APP_TITLE_SHOW_TOPIC: topic = ''
 
 			hasname = False
 			if hasattr(item,"erk_name"):
-				if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				if config.APP_TITLE_TO_CURRENT_CHAT:
 					if item.erk_name:
 						hasname = True
 						if len(topic)>0:
 							self.setWindowTitle(item.erk_name+" - "+topic)
 						else:
 							self.setWindowTitle(item.erk_name)
-				elif erk.config.APP_TITLE_SHOW_TOPIC:
+				elif config.APP_TITLE_SHOW_TOPIC:
 					self.setWindowTitle(topic)
 				else:
 					self.setWindowTitle(APPLICATION_NAME)
 
-			if not erk.config.APP_TITLE_TO_CURRENT_CHAT:
+			if not config.APP_TITLE_TO_CURRENT_CHAT:
 				if not hasname and topic=='':
 					self.setWindowTitle(APPLICATION_NAME)
 
@@ -144,7 +147,7 @@ class Erk(QMainWindow):
 		if hasattr(window,"channel_topic"):
 			if len(window.channel_topic)>0:
 				topic = window.channel_topic
-		if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+		if not config.APP_TITLE_SHOW_TOPIC: topic = ''
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
@@ -152,12 +155,12 @@ class Erk(QMainWindow):
 			elif window.name==SERVER_CONSOLE_NAME:
 				self.setWindowTitle(APPLICATION_NAME)
 			else:
-				if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				if config.APP_TITLE_TO_CURRENT_CHAT:
 					if len(topic)>0:
 						self.setWindowTitle(window.name+" - "+topic)
 					else:
 						self.setWindowTitle(window.name)
-				elif erk.config.APP_TITLE_SHOW_TOPIC:
+				elif config.APP_TITLE_SHOW_TOPIC:
 					self.setWindowTitle(topic)
 				else:
 					self.setWindowTitle(APPLICATION_NAME)
@@ -185,7 +188,7 @@ class Erk(QMainWindow):
 				self.current_client = None
 				if not self.block_toolbar: self.disconnect.setEnabled(False)
 			# else:
-			# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+			# 	if config.APP_TITLE_TO_CURRENT_CHAT:
 			# 		self.setWindowTitle(window.name+topic)
 			# 	else:
 			# 		self.setWindowTitle(APPLICATION_NAME)
@@ -194,13 +197,13 @@ class Erk(QMainWindow):
 			# Set focus to the input widget
 			window.input.setFocus()
 
-		if hasattr(window,"client"): erk.events.clear_unseen(window)
-		erk.events.build_connection_display(self)
+		if hasattr(window,"client"): events.clear_unseen(window)
+		events.build_connection_display(self)
 
 		self.refresh_application_title()
 
 	def connectionNodeSingleClicked(self,item,column):
-		if erk.config.DOUBLECLICK_SWITCH: return
+		if config.DOUBLECLICK_SWITCH: return
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
@@ -209,10 +212,10 @@ class Erk(QMainWindow):
 				# if hasattr(item.erk_widget,"channel_topic"):
 				# 	if len(item.erk_widget.channel_topic)>0:
 				# 		topic = " - "+item.erk_widget.channel_topic
-				# if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+				# if not config.APP_TITLE_SHOW_TOPIC: topic = ''
 
 				# if hasattr(item,"erk_name"):
-				# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				# 	if config.APP_TITLE_TO_CURRENT_CHAT:
 				# 		if item.erk_name:
 				# 			self.setWindowTitle(item.erk_name+topic)
 				# 	else:
@@ -222,7 +225,7 @@ class Erk(QMainWindow):
 		self.connection_display.clearSelection()
 
 	def connectionNodeDoubleClicked(self,item):
-		if not erk.config.DOUBLECLICK_SWITCH: return
+		if not config.DOUBLECLICK_SWITCH: return
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
@@ -231,10 +234,10 @@ class Erk(QMainWindow):
 				# if hasattr(item.erk_widget,"channel_topic"):
 				# 	if len(item.erk_widget.channel_topic)>0:
 				# 		topic = " - "+item.erk_widget.channel_topic
-				# if not erk.config.APP_TITLE_SHOW_TOPIC: topic = ''
+				# if not config.APP_TITLE_SHOW_TOPIC: topic = ''
 
 				# if hasattr(item,"erk_name"):
-				# 	if erk.config.APP_TITLE_TO_CURRENT_CHAT:
+				# 	if config.APP_TITLE_TO_CURRENT_CHAT:
 				# 		if item.erk_name:
 				# 			self.setWindowTitle(item.erk_name+topic)
 				# 	else:
@@ -269,7 +272,7 @@ class Erk(QMainWindow):
 	def display_load_errors(self):
 		if len(self.plugins.errors())>0:
 			errs = self.plugins.errors()
-			if erk.config.SHOW_LOAD_ERRORS:
+			if config.SHOW_LOAD_ERRORS:
 				total_errors = {}
 				for e in errs:
 					if e.package in total_errors:
@@ -320,26 +323,26 @@ class Erk(QMainWindow):
 
 		self.userfile = userfile
 
-		erk.format.get_text_format_settings(self.stylefile)
+		textformat.get_text_format_settings(self.stylefile)
 
 		global DISABLED_PLUGINS
 		DISABLED_PLUGINS = get_disabled(self.userfile)
 
 		# Load application settings
-		erk.config.load_settings(configfile)
+		config.load_settings(configfile)
 
 		if width!=None:
 			appwidth = width
 		else:
-			appwidth = int(erk.config.DEFAULT_APP_WIDTH)
+			appwidth = int(config.DEFAULT_APP_WIDTH)
 
 		if height!=None:
 			appheight = height
 		else:
-			appheight = int(erk.config.DEFAULT_APP_HEIGHT)
+			appheight = int(config.DEFAULT_APP_HEIGHT)
 
-		if self.block_macros: erk.config.MACROS_ENABLED = False
-		if self.block_plugins: erk.config.PLUGINS_ENABLED = False
+		if self.block_macros: config.MACROS_ENABLED = False
+		if self.block_plugins: config.PLUGINS_ENABLED = False
 
 		u = get_user(self.userfile)
 		self.ignore = u["ignore"]
@@ -347,18 +350,18 @@ class Erk(QMainWindow):
 		self.setWindowTitle(APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ERK_ICON))
 
-		if erk.config.DISPLAY_FONT=='':
+		if config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			self.font = QFont(_fontstr,9)
 		else:
 			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
+			f.fromString(config.DISPLAY_FONT)
 			self.font = f
 
 		self.app.setFont(self.font)
 
-		if erk.config.ALWAYS_ON_TOP:
+		if config.ALWAYS_ON_TOP:
 			self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 
 		self.stack = QStackedWidget(self)
@@ -398,12 +401,12 @@ class Erk(QMainWindow):
 		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 
-		if erk.config.CONNECTION_DISPLAY_LOCATION=="left":
+		if config.CONNECTION_DISPLAY_LOCATION=="left":
 			self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
-		elif erk.config.CONNECTION_DISPLAY_LOCATION=="right":
+		elif config.CONNECTION_DISPLAY_LOCATION=="right":
 			self.addDockWidget(Qt.RightDockWidgetArea,self.connection_dock)
 
-		if erk.config.CONNECTION_DISPLAY_MOVE:
+		if config.CONNECTION_DISPLAY_MOVE:
 			self.connection_dock.setFeatures(
 				QDockWidget.DockWidgetMovable |
 				QDockWidget.DockWidgetFloatable
@@ -415,12 +418,12 @@ class Erk(QMainWindow):
 
 		self.connection_display.installEventFilter(self)
 
-		if erk.config.CONNECTION_DISPLAY_VISIBLE:
+		if config.CONNECTION_DISPLAY_VISIBLE:
 			self.connection_dock.show()
 		else:
 			self.connection_dock.hide()
 
-		# self.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		# self.resize(int(config.DEFAULT_APP_WIDTH),int(config.DEFAULT_APP_HEIGHT))
 		self.resize(appwidth,appheight)
 
 		if info:
@@ -442,19 +445,19 @@ class Erk(QMainWindow):
 
 	def spellcheck_language(self,setting):
 
-		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(UNCHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(UNCHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(UNCHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(UNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(UNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(UNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(UNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(UNCHECKED_ICON))
 
-		erk.config.SPELLCHECK_LANGUAGE = setting
-		erk.config.save_settings(self.configfile)
-		erk.events.newspell_all(setting)
+		config.SPELLCHECK_LANGUAGE = setting
+		config.save_settings(self.configfile)
+		events.newspell_all(setting)
 
-		if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-		if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
 	def buildToolbar(self):
 		# mainMenu = QMenu()
@@ -513,8 +516,8 @@ class Erk(QMainWindow):
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
 			self.displayMenu.addAction(self.winsizeMenuEntry)
 
-			w = erk.config.DEFAULT_APP_WIDTH
-			h =  erk.config.DEFAULT_APP_HEIGHT
+			w = config.DEFAULT_APP_WIDTH
+			h =  config.DEFAULT_APP_HEIGHT
 
 			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
@@ -525,7 +528,7 @@ class Erk(QMainWindow):
 			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
 			self.displayMenu.addAction(self.set_ontop)
 
-			if erk.config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+			if config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
 			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
@@ -548,43 +551,43 @@ class Erk(QMainWindow):
 			self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
 			messageMenu.addAction(self.set_color)
 
-			if erk.config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_links = QAction(QIcon(UNCHECKED_ICON),"Convert URLs to links",self)
 			self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
 			messageMenu.addAction(self.set_links)
 
-			if erk.config.CONVERT_URLS_TO_LINKS: self.set_links.setIcon(QIcon(CHECKED_ICON))
+			if config.CONVERT_URLS_TO_LINKS: self.set_links.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
 			self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
 			messageMenu.addAction(self.set_profanity)
 
-			if erk.config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
+			if config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Open new chat for private messages",self)
 			self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
 			messageMenu.addAction(self.set_privopen)
 
-			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
+			if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
 			self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
 			messageMenu.addAction(self.set_chanlink)
 
-			if erk.config.CLICKABLE_CHANNELS: self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
+			if config.CLICKABLE_CHANNELS: self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
 			self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
 			messageMenu.addAction(self.set_sysprefix)
 
-			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
+			if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_prefix_char = QAction(QIcon(PREFIX_ICON),"Set system message prefix",self)
 			self.set_prefix_char.triggered.connect(lambda state,s="setsysprefix": self.toggleSetting(s))
 			messageMenu.addAction(self.set_prefix_char)
 
-			if not erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_prefix_char.setEnabled(False)
+			if not config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_prefix_char.setEnabled(False)
 
 			# Channel display submenu
 
@@ -596,7 +599,7 @@ class Erk(QMainWindow):
 			self.set_topicdisplay.triggered.connect(lambda state,s="dtopic": self.toggleSetting(s))
 			channelMenu.addAction(self.set_topicdisplay)
 
-			if erk.config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
+			if config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
 
 
 
@@ -605,35 +608,35 @@ class Erk(QMainWindow):
 			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
 			channelMenu.addAction(self.set_modes)
 
-			if erk.config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
 
 
-			if not erk.config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
+			if not config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
 
 
 			self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
 			self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
 			channelMenu.addAction(self.set_plainusers)
 
-			if erk.config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
+			if config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
 			self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
 			channelMenu.addAction(self.set_displaystatus)
 
-			if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_displaynick = QAction(QIcon(UNCHECKED_ICON),"Display nickname",self)
 			self.set_displaynick.triggered.connect(lambda state,s="display_nick": self.toggleSetting(s))
 			channelMenu.addAction(self.set_displaynick)
 
-			if erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
 			self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
 			channelMenu.addAction(self.set_autohostmask)
 
-			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
+			if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
 
 			# Connection display submenu
 
@@ -643,31 +646,31 @@ class Erk(QMainWindow):
 			self.set_cvisible.triggered.connect(lambda state,s="cvisible": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_cvisible)
 
-			if erk.config.CONNECTION_DISPLAY_VISIBLE: self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
+			if config.CONNECTION_DISPLAY_VISIBLE: self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_float = QAction(QIcon(UNCHECKED_ICON),"Floatable",self)
 			self.set_float.triggered.connect(lambda state,s="float": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_float)
 
-			if erk.config.CONNECTION_DISPLAY_MOVE: self.set_float.setIcon(QIcon(CHECKED_ICON))
+			if config.CONNECTION_DISPLAY_MOVE: self.set_float.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_uptime = QAction(QIcon(UNCHECKED_ICON),"Show uptimes",self)
 			self.set_uptime.triggered.connect(lambda state,s="uptime": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_uptime)
 
-			if erk.config.DISPLAY_CONNECTION_UPTIME: self.set_uptime.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_CONNECTION_UPTIME: self.set_uptime.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_doubleclickswitch = QAction(QIcon(UNCHECKED_ICON),"Double click to switch chats",self)
 			self.set_doubleclickswitch.triggered.connect(lambda state,s="dcswitch": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_doubleclickswitch)
 
-			if erk.config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
+			if config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_connectexpand = QAction(QIcon(UNCHECKED_ICON),"Expand server on connect",self)
 			self.set_connectexpand.triggered.connect(lambda state,s="connexpand": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_connectexpand)
 
-			if erk.config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
+			if config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
 
 			connectionDisplayMenu.addSeparator()
 
@@ -675,14 +678,14 @@ class Erk(QMainWindow):
 			self.set_location.triggered.connect(lambda state,s="location": self.toggleSetting(s))
 			connectionDisplayMenu.addAction(self.set_location)
 
-			if erk.config.CONNECTION_DISPLAY_LOCATION=="right":
+			if config.CONNECTION_DISPLAY_LOCATION=="right":
 				self.set_location.setText("Display on left")
 				self.set_location.setIcon(QIcon(LEFT_ICON))
 			else:
 				self.set_location.setText("Display on right")
 				self.set_location.setIcon(QIcon(RIGHT_ICON))
 
-			if not erk.config.CONNECTION_DISPLAY_VISIBLE:
+			if not config.CONNECTION_DISPLAY_VISIBLE:
 				self.set_float.setEnabled(False)
 				self.set_uptime.setEnabled(False)
 				self.set_doubleclickswitch.setEnabled(False)
@@ -696,19 +699,19 @@ class Erk(QMainWindow):
 			self.set_autonick.triggered.connect(lambda state,s="autonick": self.toggleSetting(s))
 			autocompleteMenu.addAction(self.set_autonick)
 
-			if erk.config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
+			if config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_autocmd = QAction(QIcon(UNCHECKED_ICON),"Commands",self)
 			self.set_autocmd.triggered.connect(lambda state,s="autocmd": self.toggleSetting(s))
 			autocompleteMenu.addAction(self.set_autocmd)
 
-			if erk.config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
+			if config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_autoemoji = QAction(QIcon(UNCHECKED_ICON),"Emoji shortcodes",self)
 			self.set_autoemoji.triggered.connect(lambda state,s="autoemoji": self.toggleSetting(s))
 			autocompleteMenu.addAction(self.set_autoemoji)
 
-			if erk.config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
+			if config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
 
 			# Spellcheck submenu
 
@@ -718,13 +721,13 @@ class Erk(QMainWindow):
 			self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
 			spellcheckMenu.addAction(self.set_spellcheck)
 
-			if erk.config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
 			self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
 			spellcheckMenu.addAction(self.set_spellnicks)
 
-			if erk.config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
 
 			spellcheckMenu.addSeparator()
 
@@ -744,12 +747,12 @@ class Erk(QMainWindow):
 			self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
 			spellcheckMenu.addAction(self.spell_de)
 
-			if erk.config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-			if erk.config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-			if erk.config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-			if erk.config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
 
-			if not erk.config.SPELLCHECK_INPUT:
+			if not config.SPELLCHECK_INPUT:
 				self.spell_en.setEnabled(False)
 				self.spell_fr.setEnabled(False)
 				self.spell_es.setEnabled(False)
@@ -761,19 +764,19 @@ class Erk(QMainWindow):
 			self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
 			timestampMenu.addAction(self.set_timestamps)
 
-			if erk.config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
 			self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
 			timestampMenu.addAction(self.set_24hr)
 
-			if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+			if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_seconds = QAction(QIcon(UNCHECKED_ICON),"Show seconds",self)
 			self.set_seconds.triggered.connect(lambda state,s="tsseconds": self.toggleSetting(s))
 			timestampMenu.addAction(self.set_seconds)
 
-			if erk.config.DISPLAY_TIMESTAMP_SECONDS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_TIMESTAMP_SECONDS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
 
 			# Entry submenu
 
@@ -783,19 +786,19 @@ class Erk(QMainWindow):
 			self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
 			entryMenu.addAction(self.set_emoji)
 
-			if erk.config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
+			if config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_history = QAction(QIcon(UNCHECKED_ICON),"Track input history",self)
 			self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
 			entryMenu.addAction(self.set_history)
 
-			if erk.config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
+			if config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
 
 			self.historySize = QAction(QIcon(HISTORY_LENGTH_ICON),"Set history length",self)
 			self.historySize.triggered.connect(self.menuHistoryLength)
 			entryMenu.addAction(self.historySize)
 
-			self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
+			self.historySize.setText("Set history length ("+str(config.HISTORY_LENGTH)+" lines)")
 
 			# Hide menu
 
@@ -806,43 +809,43 @@ class Erk(QMainWindow):
 			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_invite)
 
-			if erk.config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_join = QAction(QIcon(UNCHECKED_ICON),"Join",self)
 			self.hide_join.triggered.connect(lambda state,s="hide_join": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_join)
 
-			if erk.config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_mode = QAction(QIcon(UNCHECKED_ICON),"Mode",self)
 			self.hide_mode.triggered.connect(lambda state,s="hide_mode": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_mode)
 
-			if erk.config.HIDE_MODE_DISPLAY: self.hide_mode.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_MODE_DISPLAY: self.hide_mode.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_nick = QAction(QIcon(UNCHECKED_ICON),"Nick",self)
 			self.hide_nick.triggered.connect(lambda state,s="hide_nick": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_nick)
 
-			if erk.config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_part = QAction(QIcon(UNCHECKED_ICON),"Part",self)
 			self.hide_part.triggered.connect(lambda state,s="hide_part": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_part)
 
-			if erk.config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_topic = QAction(QIcon(UNCHECKED_ICON),"Topic",self)
 			self.hide_topic.triggered.connect(lambda state,s="hide_topic": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_topic)
 
-			if erk.config.HIDE_TOPIC_MESSAGE: self.hide_topic.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_TOPIC_MESSAGE: self.hide_topic.setIcon(QIcon(CHECKED_ICON))
 
 			self.hide_quit = QAction(QIcon(UNCHECKED_ICON),"Quit",self)
 			self.hide_quit.triggered.connect(lambda state,s="hide_quit": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_quit)
 
-			if erk.config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
+			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 
 			# Miscellaneous settings
 
@@ -855,13 +858,13 @@ class Erk(QMainWindow):
 			self.set_titlename.triggered.connect(lambda state,s="titlename": self.toggleSetting(s))
 			miscMenu.addAction(self.set_titlename)
 
-			if erk.config.APP_TITLE_TO_CURRENT_CHAT: self.set_titlename.setIcon(QIcon(CHECKED_ICON))
+			if config.APP_TITLE_TO_CURRENT_CHAT: self.set_titlename.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_titletopic = QAction(QIcon(UNCHECKED_ICON),"Show channel topic in title",self)
 			self.set_titletopic.triggered.connect(lambda state,s="titletopic": self.toggleSetting(s))
 			miscMenu.addAction(self.set_titletopic)
 
-			if erk.config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
+			if config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
 
 
 
@@ -869,13 +872,13 @@ class Erk(QMainWindow):
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
 			miscMenu.addAction(self.set_autoinvite)
 
-			if erk.config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
+			if config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Switch to new chats",self)
 			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
 			miscMenu.addAction(self.set_autoswitch)
 
-			if erk.config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
+			if config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
 
 			miscMenu.addSeparator()
 
@@ -883,14 +886,14 @@ class Erk(QMainWindow):
 			self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
 			miscMenu.addAction(self.set_fetchlist)
 
-			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
+			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
 
 
 			self.fetch_time = QAction(QIcon(TIMESTAMP_ICON),"Set list refresh",self)
 			self.fetch_time.triggered.connect(self.menuSetListTime)
 			miscMenu.addAction(self.fetch_time)
 
-			self.fetch_time.setText("Set list refresh ("+str(erk.config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
+			self.fetch_time.setText("Set list refresh ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
 			miscMenu.addSeparator()
 
@@ -898,14 +901,14 @@ class Erk(QMainWindow):
 			self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
 			miscMenu.addAction(self.set_macroenable)
 
-			if erk.config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
+			if config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 			if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 
 			entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
 			entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
 			miscMenu.addAction(entry)
 
-			if erk.config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
+			if config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 			if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
 
 			# Log menu
@@ -921,13 +924,13 @@ class Erk(QMainWindow):
 			self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
 			channelMenu.addAction(self.set_chanlogsave)
 
-			if erk.config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+			if config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
 			self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
 			channelMenu.addAction(self.set_chanlogload)
 
-			if erk.config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+			if config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
 
 			privateMenu = self.logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
 
@@ -935,13 +938,13 @@ class Erk(QMainWindow):
 			self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
 			privateMenu.addAction(self.set_privlogsave)
 
-			if erk.config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+			if config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
 			self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
 			privateMenu.addAction(self.set_privlogload)
 
-			if erk.config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+			if config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
 
 			self.logMenu.addSeparator()
 
@@ -949,19 +952,19 @@ class Erk(QMainWindow):
 			self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
 			self.logMenu.addAction(self.set_marklogend)
 
-			if erk.config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+			if config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
 
 			self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
 			self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
 			self.logMenu.addAction(self.set_logresume)
 
-			if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
 
 			self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
 			self.logSize.triggered.connect(self.menuLogSize)
 			self.logMenu.addAction(self.logSize)
 
-			self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
+			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 			self.logMenu.addSeparator()
 
@@ -1105,7 +1108,7 @@ class Erk(QMainWindow):
 				plugtype = "plugin"
 				m.setIcon(QIcon(PLUGIN_ICON))
 
-			if not erk.config.PLUGINS_ENABLED:
+			if not config.PLUGINS_ENABLED:
 				m.setEnabled(False)
 
 			for p in plist[pack]:
@@ -1158,7 +1161,7 @@ class Erk(QMainWindow):
 
 				m.addAction(entry)
 
-				if erk.config.DEVELOPER_MODE:
+				if config.DEVELOPER_MODE:
 
 					entry = QAction(QIcon(EDITOR_ICON),"Edit "+os.path.basename(p.__file__),self)
 					entry.triggered.connect(lambda state,f=p.__file__: self.editPlugin(f))
@@ -1199,13 +1202,13 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 		m.addAction(entry)
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
 		m.addAction(entry)
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 		m.addSeparator()
@@ -1215,9 +1218,9 @@ class Erk(QMainWindow):
 		# self.pluginMenu.addAction(entry)
 		m.addAction(entry)
 
-		if erk.config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+		if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
@@ -1225,9 +1228,9 @@ class Erk(QMainWindow):
 		#self.pluginMenu.addAction(entry)
 		m.addAction(entry)
 
-		if erk.config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
+		if config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
@@ -1235,14 +1238,14 @@ class Erk(QMainWindow):
 		#self.pluginMenu.addAction(entry)
 		m.addAction(entry)
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
 		entry.triggered.connect(self.menuReloadPlugins)
 		self.pluginMenu.addAction(entry)
 
-		if not erk.config.PLUGINS_ENABLED:
+		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
 	def uninstall_plugin(self,directory,upack):
@@ -1285,14 +1288,14 @@ class Erk(QMainWindow):
 			self.rebuildPluginMenu()
 
 	def menuInstallMacro(self):
-		# erk.macros.MACRO_DIRECTORY
+		# macros.MACRO_DIRECTORY
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
 		fileName, _ = QFileDialog.getOpenFileName(self,"Select Macro", None,"JSON File (*.json);;All Files (*)", options=options)
 		if fileName:
 
 			mfile = os.path.basename(fileName)
-			outfile = os.path.join(erk.macros.MACRO_DIRECTORY, mfile)
+			outfile = os.path.join(macros.MACRO_DIRECTORY, mfile)
 			
 			shutil.copy(fileName, outfile)
 
@@ -1302,15 +1305,15 @@ class Erk(QMainWindow):
 
 	def menuEditor(self):
 		x = EditorDialog(self,None,None,self.configfile)
-		w = erk.config.DEFAULT_APP_WIDTH
-		h = erk.config.DEFAULT_APP_HEIGHT
+		w = config.DEFAULT_APP_WIDTH
+		h = config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
 		x.show()
 
 	def editPlugin(self,filename):
 		x = EditorDialog(self,filename,None,self.configfile)
-		w = erk.config.DEFAULT_APP_WIDTH
-		h = erk.config.DEFAULT_APP_HEIGHT
+		w = config.DEFAULT_APP_WIDTH
+		h = config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
 		x.show()
 
@@ -1335,7 +1338,7 @@ class Erk(QMainWindow):
 		MacroDialog(self)
 
 	def open_macro_dir(self):
-		os.startfile(erk.macros.MACRO_DIRECTORY)
+		os.startfile(macros.MACRO_DIRECTORY)
 
 	def rebuildMacroMenu(self):
 
@@ -1343,12 +1346,12 @@ class Erk(QMainWindow):
 
 		# self.macroMenu.addSeparator()
 
-		if len(erk.macros.MACROS)>0:
+		if len(macros.MACROS)>0:
 
 			s = textSeparator(self,"Installed macros")
 			self.macroMenu.addAction(s)
 
-			for m in erk.macros.MACROS:
+			for m in macros.MACROS:
 				trigger = m["trigger"]
 				filename = m["filename"]
 
@@ -1356,7 +1359,7 @@ class Erk(QMainWindow):
 				entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
 				self.macroMenu.addAction(entry)
 
-				if not erk.config.MACROS_ENABLED: entry.setEnabled(False)
+				if not config.MACROS_ENABLED: entry.setEnabled(False)
 
 			self.macroMenu.addSeparator()
 
@@ -1374,205 +1377,205 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
 		m.addAction(entry)
 
-		if not erk.config.MACROS_ENABLED:
+		if not config.MACROS_ENABLED:
 			entry.setEnabled(False)
 
 		m.addSeparator()
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=erk.macros.MACRO_DIRECTORY: os.startfile(s))
+		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: os.startfile(s))
 		m.addAction(ircMenu_Macro)
 
-		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
+		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
 		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macros",self)
 		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
 		self.macroMenu.addAction(ircMenu_Macro)
 
-		if not erk.config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
+		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
 	def menuReloadMacros(self):
-		erk.macros.load_macros()
+		macros.load_macros()
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
 
 		if setting=="dtopic":
-			if erk.config.CHAT_DISPLAY_INFO_BAR:
-				erk.config.CHAT_DISPLAY_INFO_BAR = False
+			if config.CHAT_DISPLAY_INFO_BAR:
+				config.CHAT_DISPLAY_INFO_BAR = False
 				self.set_topicdisplay.setIcon(QIcon(UNCHECKED_ICON))
 				self.set_modes.setEnabled(False)
 			else:
-				erk.config.CHAT_DISPLAY_INFO_BAR = True
+				config.CHAT_DISPLAY_INFO_BAR = True
 				self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
 				self.set_modes.setEnabled(True)
-			erk.config.save_settings(self.configfile)
-			erk.events.toggle_name_topic_display()
+			config.save_settings(self.configfile)
+			events.toggle_name_topic_display()
 			return
 
 		if setting=="titletopic":
-			if erk.config.APP_TITLE_SHOW_TOPIC:
-				erk.config.APP_TITLE_SHOW_TOPIC = False
+			if config.APP_TITLE_SHOW_TOPIC:
+				config.APP_TITLE_SHOW_TOPIC = False
 				self.set_titletopic.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.APP_TITLE_SHOW_TOPIC = True
+				config.APP_TITLE_SHOW_TOPIC = True
 				self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			self.refresh_application_title()
 			return
 
 		if setting=="titlename":
-			if erk.config.APP_TITLE_TO_CURRENT_CHAT:
-				erk.config.APP_TITLE_TO_CURRENT_CHAT = False
+			if config.APP_TITLE_TO_CURRENT_CHAT:
+				config.APP_TITLE_TO_CURRENT_CHAT = False
 				self.set_titlename.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.APP_TITLE_TO_CURRENT_CHAT = True
+				config.APP_TITLE_TO_CURRENT_CHAT = True
 				self.set_titlename.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			self.refresh_application_title()
 			return
 
 		if setting=="hide_join":
-			if erk.config.HIDE_JOIN_MESSAGE:
-				erk.config.HIDE_JOIN_MESSAGE = False
+			if config.HIDE_JOIN_MESSAGE:
+				config.HIDE_JOIN_MESSAGE = False
 				self.hide_join.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_JOIN_MESSAGE = True
+				config.HIDE_JOIN_MESSAGE = True
 				self.hide_join.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_part":
-			if erk.config.HIDE_PART_MESSAGE:
-				erk.config.HIDE_PART_MESSAGE = False
+			if config.HIDE_PART_MESSAGE:
+				config.HIDE_PART_MESSAGE = False
 				self.hide_part.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_PART_MESSAGE = True
+				config.HIDE_PART_MESSAGE = True
 				self.hide_part.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_invite":
-			if erk.config.HIDE_INVITE_MESSAGE:
-				erk.config.HIDE_INVITE_MESSAGE = False
+			if config.HIDE_INVITE_MESSAGE:
+				config.HIDE_INVITE_MESSAGE = False
 				self.hide_invite.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_INVITE_MESSAGE = True
+				config.HIDE_INVITE_MESSAGE = True
 				self.hide_invite.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_nick":
-			if erk.config.HIDE_NICK_MESSAGE:
-				erk.config.HIDE_NICK_MESSAGE = False
+			if config.HIDE_NICK_MESSAGE:
+				config.HIDE_NICK_MESSAGE = False
 				self.hide_nick.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_NICK_MESSAGE = True
+				config.HIDE_NICK_MESSAGE = True
 				self.hide_nick.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_quit":
-			if erk.config.HIDE_QUIT_MESSAGE:
-				erk.config.HIDE_QUIT_MESSAGE = False
+			if config.HIDE_QUIT_MESSAGE:
+				config.HIDE_QUIT_MESSAGE = False
 				self.hide_quit.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_QUIT_MESSAGE = True
+				config.HIDE_QUIT_MESSAGE = True
 				self.hide_quit.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_topic":
-			if erk.config.HIDE_TOPIC_MESSAGE:
-				erk.config.HIDE_TOPIC_MESSAGE = False
+			if config.HIDE_TOPIC_MESSAGE:
+				config.HIDE_TOPIC_MESSAGE = False
 				self.hide_topic.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_TOPIC_MESSAGE = True
+				config.HIDE_TOPIC_MESSAGE = True
 				self.hide_topic.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="hide_mode":
-			if erk.config.HIDE_MODE_DISPLAY:
-				erk.config.HIDE_MODE_DISPLAY = False
+			if config.HIDE_MODE_DISPLAY:
+				config.HIDE_MODE_DISPLAY = False
 				self.hide_mode.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.HIDE_MODE_DISPLAY = True
+				config.HIDE_MODE_DISPLAY = True
 				self.hide_mode.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="autofetch":
-			if erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
-				erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST = False
+			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+				config.AUTOMATICALLY_FETCH_CHANNEL_LIST = False
 				self.set_fetchlist.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.AUTOMATICALLY_FETCH_CHANNEL_LIST = True
+				config.AUTOMATICALLY_FETCH_CHANNEL_LIST = True
 				self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
 
-				for c in erk.events.fetch_connections():
+				for c in events.fetch_connections():
 					if c.last_fetch < c.uptime:
 						c.sendLine("LIST")
 
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="setsysprefix":
 			n = PrefixDialog()
 			if n:
 				if len(n.strip())>0:
-					erk.config.SYSTEM_MESSAGE_PREFIX = n
-					erk.config.save_settings(self.configfile)
-					erk.events.rerender_all()
+					config.SYSTEM_MESSAGE_PREFIX = n
+					config.save_settings(self.configfile)
+					events.rerender_all()
 			return
 
 
 		if setting=="chanlink":
-			if erk.config.CLICKABLE_CHANNELS:
-				erk.config.CLICKABLE_CHANNELS = False
+			if config.CLICKABLE_CHANNELS:
+				config.CLICKABLE_CHANNELS = False
 				self.set_chanlink.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.CLICKABLE_CHANNELS = True
+				config.CLICKABLE_CHANNELS = True
 				self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 
 		if setting=="autoinvite":
-			if erk.config.JOIN_ON_INVITE:
-				erk.config.JOIN_ON_INVITE = False
+			if config.JOIN_ON_INVITE:
+				config.JOIN_ON_INVITE = False
 				self.set_autoinvite.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.JOIN_ON_INVITE = True
+				config.JOIN_ON_INVITE = True
 				self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="tsseconds":
-			if erk.config.DISPLAY_TIMESTAMP_SECONDS:
-				erk.config.DISPLAY_TIMESTAMP_SECONDS = False
+			if config.DISPLAY_TIMESTAMP_SECONDS:
+				config.DISPLAY_TIMESTAMP_SECONDS = False
 				self.set_seconds.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_TIMESTAMP_SECONDS = True
+				config.DISPLAY_TIMESTAMP_SECONDS = True
 				self.set_seconds.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="showplugerrors":
-			if erk.config.SHOW_LOAD_ERRORS:
-				erk.config.SHOW_LOAD_ERRORS = False
+			if config.SHOW_LOAD_ERRORS:
+				config.SHOW_LOAD_ERRORS = False
 			else:
-				erk.config.SHOW_LOAD_ERRORS = True
-			erk.config.save_settings(self.configfile)
+				config.SHOW_LOAD_ERRORS = True
+			config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			return
 
@@ -1590,269 +1593,269 @@ class Erk(QMainWindow):
 			return
 
 		if setting=="ontop":
-			if erk.config.ALWAYS_ON_TOP:
-				erk.config.ALWAYS_ON_TOP = False
+			if config.ALWAYS_ON_TOP:
+				config.ALWAYS_ON_TOP = False
 				self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
 				self.set_ontop.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.ALWAYS_ON_TOP = True
+				config.ALWAYS_ON_TOP = True
 				self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 				self.set_ontop.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			self.show()
 			return
 
 		if setting=="plugindev":
-			if erk.config.DEVELOPER_MODE:
-				erk.config.DEVELOPER_MODE = False
+			if config.DEVELOPER_MODE:
+				config.DEVELOPER_MODE = False
 			else:
-				erk.config.DEVELOPER_MODE = True
-			erk.config.save_settings(self.configfile)
+				config.DEVELOPER_MODE = True
+			config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			return
 
 		if setting=="enablemacros":
-			if erk.config.MACROS_ENABLED:
-				erk.config.MACROS_ENABLED = False
+			if config.MACROS_ENABLED:
+				config.MACROS_ENABLED = False
 				#self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 				self.block_macros = True
 			else:
-				erk.config.MACROS_ENABLED = True
+				config.MACROS_ENABLED = True
 				#self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 				self.block_macros = False
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			self.rebuildMacroMenu()
 			self.buildToolbar()
 			return
 
 		if setting=="pluginenable":
-			if erk.config.PLUGINS_ENABLED:
-				erk.config.PLUGINS_ENABLED = False
+			if config.PLUGINS_ENABLED:
+				config.PLUGINS_ENABLED = False
 				self.block_plugins = True
 			else:
-				erk.config.PLUGINS_ENABLED = True
+				config.PLUGINS_ENABLED = True
 				self.block_plugins = False
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			self.buildToolbar()
 			return
 
 		if setting=="sysprefix":
-			if erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
-				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = False
+			if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
+				config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = False
 				self.set_sysprefix.setIcon(QIcon(UNCHECKED_ICON))
 				self.set_prefix_char.setEnabled(False)
 			else:
-				erk.config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
+				config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 				self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
 				self.set_prefix_char.setEnabled(True)
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="privlogsave":
-			if erk.config.SAVE_PRIVATE_LOGS:
-				erk.config.SAVE_PRIVATE_LOGS = False
+			if config.SAVE_PRIVATE_LOGS:
+				config.SAVE_PRIVATE_LOGS = False
 				self.set_privlogsave.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.SAVE_PRIVATE_LOGS = True
+				config.SAVE_PRIVATE_LOGS = True
 				self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="privlogload":
-			if erk.config.LOAD_PRIVATE_LOGS:
-				erk.config.LOAD_PRIVATE_LOGS = False
+			if config.LOAD_PRIVATE_LOGS:
+				config.LOAD_PRIVATE_LOGS = False
 				self.set_privlogload.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.LOAD_PRIVATE_LOGS = True
+				config.LOAD_PRIVATE_LOGS = True
 				self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="logresume":
-			if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
-				erk.config.DISPLAY_CHAT_RESUME_DATE_TIME = False
+			if config.DISPLAY_CHAT_RESUME_DATE_TIME:
+				config.DISPLAY_CHAT_RESUME_DATE_TIME = False
 				self.set_logresume.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_CHAT_RESUME_DATE_TIME = True
+				config.DISPLAY_CHAT_RESUME_DATE_TIME = True
 				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="marklogend":
-			if erk.config.MARK_END_OF_LOADED_LOG:
-				erk.config.MARK_END_OF_LOADED_LOG = False
+			if config.MARK_END_OF_LOADED_LOG:
+				config.MARK_END_OF_LOADED_LOG = False
 				self.set_marklogend.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.MARK_END_OF_LOADED_LOG = True
+				config.MARK_END_OF_LOADED_LOG = True
 				self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="chanlogload":
-			if erk.config.LOAD_CHANNEL_LOGS:
-				erk.config.LOAD_CHANNEL_LOGS = False
+			if config.LOAD_CHANNEL_LOGS:
+				config.LOAD_CHANNEL_LOGS = False
 				self.set_chanlogload.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.LOAD_CHANNEL_LOGS = True
+				config.LOAD_CHANNEL_LOGS = True
 				self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="chanlogsave":
-			if erk.config.SAVE_CHANNEL_LOGS:
-				erk.config.SAVE_CHANNEL_LOGS = False
+			if config.SAVE_CHANNEL_LOGS:
+				config.SAVE_CHANNEL_LOGS = False
 				self.set_chanlogsave.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.SAVE_CHANNEL_LOGS = True
+				config.SAVE_CHANNEL_LOGS = True
 				self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="history":
-			if erk.config.TRACK_COMMAND_HISTORY:
-				erk.config.TRACK_COMMAND_HISTORY = False
+			if config.TRACK_COMMAND_HISTORY:
+				config.TRACK_COMMAND_HISTORY = False
 				self.set_history.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.TRACK_COMMAND_HISTORY = True
+				config.TRACK_COMMAND_HISTORY = True
 				self.set_history.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.reset_history()
+			config.save_settings(self.configfile)
+			events.reset_history()
 			return
 
 		if setting=="connexpand":
-			if erk.config.EXPAND_SERVER_ON_CONNECT:
-				erk.config.EXPAND_SERVER_ON_CONNECT = False
+			if config.EXPAND_SERVER_ON_CONNECT:
+				config.EXPAND_SERVER_ON_CONNECT = False
 				self.set_connectexpand.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.EXPAND_SERVER_ON_CONNECT = True
+				config.EXPAND_SERVER_ON_CONNECT = True
 				self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="display_nick":
-			if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
-				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = False
+			if config.DISPLAY_NICKNAME_ON_CHANNEL:
+				config.DISPLAY_NICKNAME_ON_CHANNEL = False
 				self.set_displaynick.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_NICKNAME_ON_CHANNEL = True
+				config.DISPLAY_NICKNAME_ON_CHANNEL = True
 				self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_channel_nickname()
+			config.save_settings(self.configfile)
+			events.rerender_channel_nickname()
 			return
 
 		if setting=="display_status":
-			if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
-				erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = False
+			if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
+				config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = False
 				self.set_displaystatus.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
+				config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
 				self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_userlists()
+			config.save_settings(self.configfile)
+			events.rerender_userlists()
 			return
 
 		if setting=="plainlists":
-			if erk.config.PLAIN_USER_LISTS:
-				erk.config.PLAIN_USER_LISTS = False
+			if config.PLAIN_USER_LISTS:
+				config.PLAIN_USER_LISTS = False
 				self.set_plainusers.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.PLAIN_USER_LISTS = True
+				config.PLAIN_USER_LISTS = True
 				self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_userlists()
+			config.save_settings(self.configfile)
+			events.rerender_userlists()
 			return
 
 		if setting=="profanity":
-			if erk.config.FILTER_PROFANITY:
-				erk.config.FILTER_PROFANITY = False
+			if config.FILTER_PROFANITY:
+				config.FILTER_PROFANITY = False
 				self.set_profanity.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.FILTER_PROFANITY = True
+				config.FILTER_PROFANITY = True
 				self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="autoemoji":
-			if erk.config.AUTOCOMPLETE_EMOJI:
-				erk.config.AUTOCOMPLETE_EMOJI = False
+			if config.AUTOCOMPLETE_EMOJI:
+				config.AUTOCOMPLETE_EMOJI = False
 				self.set_autoemoji.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.AUTOCOMPLETE_EMOJI = True
+				config.AUTOCOMPLETE_EMOJI = True
 				self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="emoji":
-			if erk.config.USE_EMOJIS:
-				erk.config.USE_EMOJIS = False
+			if config.USE_EMOJIS:
+				config.USE_EMOJIS = False
 				self.set_emoji.setIcon(QIcon(UNCHECKED_ICON))
 				self.set_autoemoji.setEnabled(False)
 			else:
-				erk.config.USE_EMOJIS = True
+				config.USE_EMOJIS = True
 				self.set_emoji.setIcon(QIcon(CHECKED_ICON))
 				self.set_autoemoji.setEnabled(True)
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="spellnicks":
-			if erk.config.SPELLCHECK_IGNORE_NICKS:
-				erk.config.SPELLCHECK_IGNORE_NICKS = False
+			if config.SPELLCHECK_IGNORE_NICKS:
+				config.SPELLCHECK_IGNORE_NICKS = False
 				self.set_spellnicks.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.SPELLCHECK_IGNORE_NICKS = True
+				config.SPELLCHECK_IGNORE_NICKS = True
 				self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.toggle_nickspell()
-			erk.events.resetinput_all()
+			config.save_settings(self.configfile)
+			events.toggle_nickspell()
+			events.resetinput_all()
 			return
 
 		if setting=="autocmd":
-			if erk.config.AUTOCOMPLETE_COMMANDS:
-				erk.config.AUTOCOMPLETE_COMMANDS = False
+			if config.AUTOCOMPLETE_COMMANDS:
+				config.AUTOCOMPLETE_COMMANDS = False
 				self.set_autocmd.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.AUTOCOMPLETE_COMMANDS = True
+				config.AUTOCOMPLETE_COMMANDS = True
 				self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="autonick":
-			if erk.config.AUTOCOMPLETE_NICKNAMES:
-				erk.config.AUTOCOMPLETE_NICKNAMES = False
+			if config.AUTOCOMPLETE_NICKNAMES:
+				config.AUTOCOMPLETE_NICKNAMES = False
 				self.set_autonick.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.AUTOCOMPLETE_NICKNAMES = True
+				config.AUTOCOMPLETE_NICKNAMES = True
 				self.set_autonick.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="autoswitch":
-			if erk.config.SWITCH_TO_NEW_WINDOWS:
-				erk.config.SWITCH_TO_NEW_WINDOWS = False
+			if config.SWITCH_TO_NEW_WINDOWS:
+				config.SWITCH_TO_NEW_WINDOWS = False
 				self.set_autoswitch.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.SWITCH_TO_NEW_WINDOWS = True
+				config.SWITCH_TO_NEW_WINDOWS = True
 				self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="modes":
-			if erk.config.DISPLAY_CHANNEL_MODES:
-				erk.config.DISPLAY_CHANNEL_MODES = False
+			if config.DISPLAY_CHANNEL_MODES:
+				config.DISPLAY_CHANNEL_MODES = False
 				self.set_modes.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_CHANNEL_MODES = True
+				config.DISPLAY_CHANNEL_MODES = True
 				self.set_modes.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.toggle_channel_mode_display()
+			config.save_settings(self.configfile)
+			events.toggle_channel_mode_display()
 			return
 
 		if setting=="cvisible":
-			if erk.config.CONNECTION_DISPLAY_VISIBLE:
-				erk.config.CONNECTION_DISPLAY_VISIBLE = False
+			if config.CONNECTION_DISPLAY_VISIBLE:
+				config.CONNECTION_DISPLAY_VISIBLE = False
 				self.set_cvisible.setIcon(QIcon(UNCHECKED_ICON))
 				self.connection_dock.hide()
 				self.set_float.setEnabled(False)
@@ -1860,24 +1863,24 @@ class Erk(QMainWindow):
 				self.set_doubleclickswitch.setEnabled(False)
 				self.set_location.setEnabled(False)
 			else:
-				erk.config.CONNECTION_DISPLAY_VISIBLE = True
+				config.CONNECTION_DISPLAY_VISIBLE = True
 				self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
 				self.connection_dock.show()
 				self.set_float.setEnabled(True)
 				self.set_uptime.setEnabled(True)
 				self.set_doubleclickswitch.setEnabled(True)
 				self.set_location.setEnabled(True)
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="float":
-			if erk.config.CONNECTION_DISPLAY_MOVE:
-				erk.config.CONNECTION_DISPLAY_MOVE = False
+			if config.CONNECTION_DISPLAY_MOVE:
+				config.CONNECTION_DISPLAY_MOVE = False
 				self.set_float.setIcon(QIcon(UNCHECKED_ICON))
 
 				self.connection_dock.hide()
 				self.connection_dock.setFloating(False)
-				if erk.config.CONNECTION_DISPLAY_LOCATION=="left":
+				if config.CONNECTION_DISPLAY_LOCATION=="left":
 					self.removeDockWidget(self.connection_dock)
 					self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
 					self.connection_dock.show()
@@ -1887,142 +1890,142 @@ class Erk(QMainWindow):
 					self.connection_dock.show()
 				self.connection_dock.setFeatures( QDockWidget.NoDockWidgetFeatures )
 				self.connection_dock.setTitleBarWidget(QWidget())
-				erk.events.resize_font_fix()
+				events.resize_font_fix()
 			else:
-				erk.config.CONNECTION_DISPLAY_MOVE = True
+				config.CONNECTION_DISPLAY_MOVE = True
 				self.set_float.setIcon(QIcon(CHECKED_ICON))
 				self.connection_dock.setFeatures(
 					QDockWidget.DockWidgetMovable |
 					QDockWidget.DockWidgetFloatable
 					)
 				self.connection_dock.setTitleBarWidget(None)
-			erk.config.save_settings(self.configfile)
-			erk.events.build_connection_display(self)
+			config.save_settings(self.configfile)
+			events.build_connection_display(self)
 			return
 
 		if setting=="uptime":
-			if erk.config.DISPLAY_CONNECTION_UPTIME:
-				erk.config.DISPLAY_CONNECTION_UPTIME = False
+			if config.DISPLAY_CONNECTION_UPTIME:
+				config.DISPLAY_CONNECTION_UPTIME = False
 				self.set_uptime.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_CONNECTION_UPTIME = True
+				config.DISPLAY_CONNECTION_UPTIME = True
 				self.set_uptime.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.build_connection_display(self)
+			config.save_settings(self.configfile)
+			events.build_connection_display(self)
 			return
 
 		if setting=="location":
-			if erk.config.CONNECTION_DISPLAY_LOCATION=="left":
-				erk.config.CONNECTION_DISPLAY_LOCATION = "right"
+			if config.CONNECTION_DISPLAY_LOCATION=="left":
+				config.CONNECTION_DISPLAY_LOCATION = "right"
 				self.set_location.setIcon(QIcon(LEFT_ICON))
 				self.set_location.setText("Display on left")
 				self.removeDockWidget(self.connection_dock)
 				self.addDockWidget(Qt.RightDockWidgetArea,self.connection_dock)
 				self.connection_dock.show()
 			else:
-				erk.config.CONNECTION_DISPLAY_LOCATION = "left"
+				config.CONNECTION_DISPLAY_LOCATION = "left"
 				self.set_location.setIcon(QIcon(RIGHT_ICON))
 				self.set_location.setText("Display on right")
 				self.removeDockWidget(self.connection_dock)
 				self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
 				self.connection_dock.show()
-			erk.config.save_settings(self.configfile)
+			config.save_settings(self.configfile)
 			return
 
 		if setting=="spellcheck":
-			if erk.config.SPELLCHECK_INPUT:
-				erk.config.SPELLCHECK_INPUT = False
+			if config.SPELLCHECK_INPUT:
+				config.SPELLCHECK_INPUT = False
 				self.set_spellcheck.setIcon(QIcon(UNCHECKED_ICON))
 				self.spell_en.setEnabled(False)
 				self.spell_fr.setEnabled(False)
 				self.spell_es.setEnabled(False)
 				self.spell_de.setEnabled(False)
 			else:
-				erk.config.SPELLCHECK_INPUT = True
+				config.SPELLCHECK_INPUT = True
 				self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
 				self.spell_en.setEnabled(True)
 				self.spell_fr.setEnabled(True)
 				self.spell_es.setEnabled(True)
 				self.spell_de.setEnabled(True)
-			erk.config.save_settings(self.configfile)
-			erk.events.resetinput_all()
+			config.save_settings(self.configfile)
+			events.resetinput_all()
 			return
 
 		if setting=="autohostmask":
-			if erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
-				erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN = False
+			if config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
+				config.GET_HOSTMASKS_ON_CHANNEL_JOIN = False
 				self.set_autohostmask.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.GET_HOSTMASKS_ON_CHANNEL_JOIN = True
+				config.GET_HOSTMASKS_ON_CHANNEL_JOIN = True
 				self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="privopen":
-			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
-				erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = False
+			if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+				config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = False
 				self.set_privopen.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = True
+				config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = True
 				self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="dcswitch":
-			if erk.config.DOUBLECLICK_SWITCH:
-				erk.config.DOUBLECLICK_SWITCH = False
+			if config.DOUBLECLICK_SWITCH:
+				config.DOUBLECLICK_SWITCH = False
 				self.set_doubleclickswitch.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DOUBLECLICK_SWITCH = True
+				config.DOUBLECLICK_SWITCH = True
 				self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="links":
-			if erk.config.CONVERT_URLS_TO_LINKS:
-				erk.config.CONVERT_URLS_TO_LINKS = False
+			if config.CONVERT_URLS_TO_LINKS:
+				config.CONVERT_URLS_TO_LINKS = False
 				self.set_links.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.CONVERT_URLS_TO_LINKS = True
+				config.CONVERT_URLS_TO_LINKS = True
 				self.set_links.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="color":
-			if erk.config.DISPLAY_IRC_COLORS:
-				erk.config.DISPLAY_IRC_COLORS = False
+			if config.DISPLAY_IRC_COLORS:
+				config.DISPLAY_IRC_COLORS = False
 				self.set_color.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_IRC_COLORS = True
+				config.DISPLAY_IRC_COLORS = True
 				self.set_color.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="24hr":
-			if erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
-				erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = False
+			if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
+				config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = False
 				self.set_24hr.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = True
+				config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = True
 				self.set_24hr.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 		if setting=="timestamp":
-			if erk.config.DISPLAY_TIMESTAMP:
-				erk.config.DISPLAY_TIMESTAMP = False
+			if config.DISPLAY_TIMESTAMP:
+				config.DISPLAY_TIMESTAMP = False
 				self.set_timestamps.setIcon(QIcon(UNCHECKED_ICON))
 			else:
-				erk.config.DISPLAY_TIMESTAMP = True
+				config.DISPLAY_TIMESTAMP = True
 				self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
-			erk.config.save_settings(self.configfile)
-			erk.events.rerender_all()
+			config.save_settings(self.configfile)
+			events.rerender_all()
 			return
 
 	def linkClicked(self,url):
@@ -2040,28 +2043,28 @@ class Erk(QMainWindow):
 		self.about_dialog = AboutDialog()
 
 	def reload_all_text(self):
-		erk.events.rerender_all()
+		events.rerender_all()
 
 	def menuLogSize(self):
 		info = LogSizeDialog()
 		if info!=None:
-			erk.config.LOG_LOAD_SIZE_MAX = info
-			erk.config.save_settings(self.configfile)
-		self.logSize.setText("Set log display size ("+str(erk.config.LOG_LOAD_SIZE_MAX)+" lines)")
+			config.LOG_LOAD_SIZE_MAX = info
+			config.save_settings(self.configfile)
+		self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 	def menuSetListTime(self):
 		info = ListTimeDialog()
 		if info!=None:
-			erk.config.CHANNEL_LIST_REFRESH_FREQUENCY = info
-			erk.config.save_settings(self.configfile)
-		self.fetch_time.setText("Set list refresh ("+str(erk.config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
+			config.CHANNEL_LIST_REFRESH_FREQUENCY = info
+			config.save_settings(self.configfile)
+		self.fetch_time.setText("Set list refresh ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
 	def menuHistoryLength(self):
 		info = HistorySizeDialog()
 		if info!=None:
-			erk.config.HISTORY_LENGTH = info
-			erk.config.save_settings(self.configfile)
-		self.historySize.setText("Set history length ("+str(erk.config.HISTORY_LENGTH)+" lines)")
+			config.HISTORY_LENGTH = info
+			config.save_settings(self.configfile)
+		self.historySize.setText("Set history length ("+str(config.HISTORY_LENGTH)+" lines)")
 
 	def menuCombo(self):
 		info = ComboDialog(self.userfile)
@@ -2071,14 +2074,14 @@ class Erk(QMainWindow):
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
 		if ok:
-			erk.config.DISPLAY_FONT = font.toString()
-			erk.config.save_settings(self.configfile)
+			config.DISPLAY_FONT = font.toString()
+			config.save_settings(self.configfile)
 
 			self.font = font
 			self.app.setFont(self.font)
-			erk.events.set_fonts_all(self.font)
+			events.set_fonts_all(self.font)
 
-			pfs = erk.config.DISPLAY_FONT.split(',')
+			pfs = config.DISPLAY_FONT.split(',')
 			font_name = pfs[0]
 			font_size = pfs[1]
 
@@ -2099,13 +2102,13 @@ class Erk(QMainWindow):
 	def menuResize(self):
 		info = WindowSizeDialog(self)
 		if info!=None:
-			erk.config.DEFAULT_APP_WIDTH = info[0]
-			erk.config.DEFAULT_APP_HEIGHT = info[1]
-			erk.config.save_settings(self.configfile)
+			config.DEFAULT_APP_WIDTH = info[0]
+			config.DEFAULT_APP_HEIGHT = info[1]
+			config.save_settings(self.configfile)
 			self.resize(info[0],info[1])
 
-			w = erk.config.DEFAULT_APP_WIDTH
-			h =  erk.config.DEFAULT_APP_HEIGHT
+			w = config.DEFAULT_APP_WIDTH
+			h =  config.DEFAULT_APP_HEIGHT
 
 			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 
@@ -2165,7 +2168,7 @@ class Erk(QMainWindow):
 							menu.addSeparator()
 
 							entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-							entry.triggered.connect(lambda state,client=item.erk_client: erk.events.disconnect_from_server(client))
+							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
 							menu.addAction(entry)
 						else:
 							if item.erk_channel:
@@ -2173,14 +2176,14 @@ class Erk(QMainWindow):
 								channel = item.text(0)
 
 								entry = QAction(QIcon(EXIT_ICON),"Leave channel",self)
-								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: erk.events.close_channel_window(client,name))
+								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: events.close_channel_window(client,name))
 								menu.addAction(entry)
 							else:
 
 								channel = item.text(0)
 
 								entry = QAction(QIcon(EXIT_ICON),"Close private chat",self)
-								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: erk.events.close_private_window(client,name))
+								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: events.close_private_window(client,name))
 								menu.addAction(entry)
 
 				else:
@@ -2200,7 +2203,7 @@ class Erk(QMainWindow):
 		return super(Erk, self).eventFilter(source, event)
 
 	def open_private_window(self,client,nickname):
-		erk.events.open_private_window(client,nickname)
+		events.open_private_window(client,nickname)
 
 	def connectToIRCServer(self,info):
 		if info.ssl:

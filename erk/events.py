@@ -32,14 +32,16 @@
 from datetime import datetime
 import fnmatch
 
-from erk.resources import *
-from erk.files import *
-from erk.widgets import *
-from erk.objects import *
-from erk.strings import *
-from erk.common import *
-import erk.config
-import erk.format
+from .resources import *
+from .files import *
+from .widgets import *
+from .objects import *
+from .strings import *
+from .common import *
+
+from . import config
+
+#import erk.format
 
 CHANNELS = []
 CONNECTIONS = []
@@ -81,7 +83,7 @@ def build_connection_display(gui,new_server=None):
 	# are still expanded when we rewrite the display
 	expanded = []
 
-	if erk.config.EXPAND_SERVER_ON_CONNECT:
+	if config.EXPAND_SERVER_ON_CONNECT:
 		if new_server: expanded.append(new_server.id)
 
 	iterator = QTreeWidgetItemIterator(gui.connection_display)
@@ -140,7 +142,7 @@ def build_connection_display(gui,new_server=None):
 		parent.erk_server = True
 		parent.erk_console = False
 
-		if erk.config.DISPLAY_CONNECTION_UPTIME:
+		if config.DISPLAY_CONNECTION_UPTIME:
 			child = QTreeWidgetItem(parent)
 			if s[1].id in gui.uptimers:
 				child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
@@ -190,10 +192,10 @@ def build_connection_display(gui,new_server=None):
 		for channel in s[2]:
 			child = QTreeWidgetItem(parent)
 			child.setText(0,channel.name)
-			if channel.type==erk.config.CHANNEL_WINDOW:
+			if channel.type==config.CHANNEL_WINDOW:
 				child.erk_channel = True
 				child.setIcon(0,QIcon(CHANNEL_ICON))
-			elif channel.type==erk.config.PRIVATE_WINDOW:
+			elif channel.type==config.PRIVATE_WINDOW:
 				child.setIcon(0,QIcon(NICK_ICON))
 				child.erk_channel = False
 			child.erk_client = s[1]
@@ -527,13 +529,13 @@ def open_private_window(client,target):
 		newchan = Chat(
 			target,
 			client,
-			erk.config.PRIVATE_WINDOW,
+			config.PRIVATE_WINDOW,
 			client.gui.app,
 			client.gui
 			)
 
 		index = client.gui.stack.addWidget(newchan)
-		if erk.config.SWITCH_TO_NEW_WINDOWS:
+		if config.SWITCH_TO_NEW_WINDOWS:
 			client.gui.stack.setCurrentWidget(newchan)
 			newchan.input.setFocus()
 
@@ -542,7 +544,7 @@ def open_private_window(client,target):
 		# Update connection display
 		build_connection_display(client.gui)
 
-		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
 			newchan.input.setFocus()
 
 		return newchan
@@ -839,7 +841,7 @@ def mode(gui,client,channel,user,mset,modes,args):
 			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}",None,TYPE_MODE)
 			window.writeText( msg )
 
-	if erk.config.DISPLAY_CHANNEL_MODES:
+	if config.DISPLAY_CHANNEL_MODES:
 		# Change the channel's name display
 		if len(window.modeson)>0:
 			window.name_display.setText("<b>"+window.name+"</b> <i>+"+window.modeson+"</i>")
@@ -848,7 +850,7 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 def toggle_channel_mode_display():
 	for window in CHANNELS:
-		if erk.config.DISPLAY_CHANNEL_MODES:
+		if config.DISPLAY_CHANNEL_MODES:
 			if len(window.widget.modeson)>0:
 				window.widget.name_display.setText("<b>"+window.widget.name+"</b> <i>+"+window.widget.modeson+"</i>")
 			else:
@@ -936,17 +938,17 @@ def action_message(gui,client,target,user,message):
 		if window:
 			window.writeText( Message(ACTION_MESSAGE,user,message) )
 		else:
-			if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+			if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
 				newchan = Chat(
 					nick,
 					client,
-					erk.config.PRIVATE_WINDOW,
+					config.PRIVATE_WINDOW,
 					gui.app,
 					gui
 					)
 
 				index = gui.stack.addWidget(newchan)
-				if erk.config.SWITCH_TO_NEW_WINDOWS:
+				if config.SWITCH_TO_NEW_WINDOWS:
 					gui.stack.setCurrentWidget(newchan)
 
 				#gui.setWindowTitle(nick)
@@ -1026,7 +1028,7 @@ def erk_invited(gui,client,sender,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel) )
 
-	if erk.config.JOIN_ON_INVITE:
+	if config.JOIN_ON_INVITE:
 		client.join(channel)
 
 
@@ -1087,13 +1089,13 @@ def erk_joined_channel(gui,client,channel):
 	newchan = Chat(
 		channel,
 		client,
-		erk.config.CHANNEL_WINDOW,
+		config.CHANNEL_WINDOW,
 		gui.app,
 		gui
 		)
 
 	index = gui.stack.addWidget(newchan)
-	if erk.config.SWITCH_TO_NEW_WINDOWS:
+	if config.SWITCH_TO_NEW_WINDOWS:
 		gui.stack.setCurrentWidget(newchan)
 		newchan.input.setFocus()
 
@@ -1120,7 +1122,7 @@ def uptime(gui,client,uptime):
 	
 	gui.uptimers[client.id] = uptime
 
-	if erk.config.DISPLAY_CONNECTION_UPTIME:
+	if config.DISPLAY_CONNECTION_UPTIME:
 		iterator = QTreeWidgetItemIterator(gui.connection_display)
 		while True:
 			item = iterator.value()
@@ -1302,17 +1304,17 @@ def private_message(gui,client,user,message):
 	if window:
 		window.writeText(msg)
 	else:
-		if erk.config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
+		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
 			newchan = Chat(
 				nick,
 				client,
-				erk.config.PRIVATE_WINDOW,
+				config.PRIVATE_WINDOW,
 				gui.app,
 				gui
 				)
 
 			index = gui.stack.addWidget(newchan)
-			if erk.config.SWITCH_TO_NEW_WINDOWS:
+			if config.SWITCH_TO_NEW_WINDOWS:
 				gui.stack.setCurrentWidget(newchan)
 				newchan.input.setFocus()
 
@@ -1541,14 +1543,14 @@ def startup(gui,client):
 	newconsole = Chat(
 		SERVER_CONSOLE_NAME,
 		client,
-		erk.config.SERVER_WINDOW,
+		config.SERVER_WINDOW,
 		gui.app,
 		gui
 		)
 
 	index = gui.stack.addWidget(newconsole)
 
-	if erk.config.SWITCH_TO_NEW_WINDOWS:
+	if config.SWITCH_TO_NEW_WINDOWS:
 		gui.stack.setCurrentWidget(newconsole)
 
 	if client.hostname:

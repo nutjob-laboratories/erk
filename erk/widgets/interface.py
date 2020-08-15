@@ -40,26 +40,27 @@ from PyQt5 import QtCore
 
 from spellchecker import SpellChecker
 
-from erk.files import *
-from erk.resources import *
-from erk.objects import *
-import erk.config
-import erk.format
-import erk.input
-import erk.macros
+from ..files import *
+from ..resources import *
+from ..objects import *
 
-from erk.dialogs import KeyDialog
+from .. import config
+from .. import textformat
+from .. import userinput
+from .. import macros
+
+from ..dialogs import KeyDialog
 
 class Window(QMainWindow):
 
 	def closeEvent(self, event):
 		# Logs
-		if self.type==erk.config.CHANNEL_WINDOW:
-			if erk.config.SAVE_CHANNEL_LOGS:
+		if self.type==config.CHANNEL_WINDOW:
+			if config.SAVE_CHANNEL_LOGS:
 				saveLog(self.client.network,self.name,self.newLog)
 
-		if self.type==erk.config.PRIVATE_WINDOW:
-			if erk.config.SAVE_PRIVATE_LOGS:
+		if self.type==config.PRIVATE_WINDOW:
+			if config.SAVE_PRIVATE_LOGS:
 				saveLog(self.client.network,self.name,self.newLog)
 
 	def handleTopicInput(self):
@@ -79,7 +80,7 @@ class Window(QMainWindow):
 		# BEGIN COMMAND HISTORY MANAGEMENT
 		# ================================
 
-		if erk.config.TRACK_COMMAND_HISTORY:
+		if config.TRACK_COMMAND_HISTORY:
 			# Remove blank entries from history
 			clean = []
 			for c in self.history_buffer:
@@ -93,7 +94,7 @@ class Window(QMainWindow):
 
 			# If history is larger than it's supposed to be,
 			# remove the last entry
-			if len(self.history_buffer)>erk.config.HISTORY_LENGTH:
+			if len(self.history_buffer)>config.HISTORY_LENGTH:
 				self.history_buffer.pop()
 
 			# "Zero" the history buffer pointer
@@ -111,10 +112,10 @@ class Window(QMainWindow):
 		# END COMMAND HISTORY MANAGEMENT
 		# ==============================
 
-		erk.input.handle_input(self,self.client,user_input)
+		userinput.handle_input(self,self.client,user_input)
 
 	def keyPressDown(self):
-		if erk.config.TRACK_COMMAND_HISTORY:
+		if config.TRACK_COMMAND_HISTORY:
 			if len(self.history_buffer) <= 1: return
 			self.history_buffer_pointer = self.history_buffer_pointer - 1
 			if self.history_buffer_pointer < 0:
@@ -123,7 +124,7 @@ class Window(QMainWindow):
 			self.input.moveCursor(QTextCursor.End)
 
 	def keyPressUp(self):
-		if erk.config.TRACK_COMMAND_HISTORY:
+		if config.TRACK_COMMAND_HISTORY:
 			if len(self.history_buffer) <= 1: return
 			self.history_buffer_pointer = self.history_buffer_pointer + 1
 			if len(self.history_buffer) - 1 < self.history_buffer_pointer:
@@ -139,7 +140,7 @@ class Window(QMainWindow):
 		else:
 			link = url.toString()
 
-			if erk.config.CLICKABLE_CHANNELS:
+			if config.CLICKABLE_CHANNELS:
 				if link[:1]=='#' or link[:1]=='&' or link[:1]=='!' or link[:1]=='+':
 					self.client.join(link)
 
@@ -152,7 +153,7 @@ class Window(QMainWindow):
 
 	def resizeEvent(self, event):
 
-		if self.type==erk.config.CHANNEL_WINDOW:
+		if self.type==config.CHANNEL_WINDOW:
        
 			# QSplitter dynamically changes widget sizes on a resize
 			# event; this makes the userlist widget get wider or less wide
@@ -160,7 +161,7 @@ class Window(QMainWindow):
 			# the userlist maintains the same width during resize events
 
 			# Calculate the width of the chat display widget
-			chat_width = self.width() - self.userlist_width - (erk.config.CHAT_WINDOW_WIDGET_SPACING * 3)
+			chat_width = self.width() - self.userlist_width - (config.CHAT_WINDOW_WIDGET_SPACING * 3)
 
 			# Resize the userlist widget with the width value saved in
 			# the splitter resize event
@@ -197,15 +198,15 @@ class Window(QMainWindow):
 
 	def refresh_name_topic_display(self):
 		# Toggle name display
-		# if not erk.config.CHAT_DISPLAY_NAME:
+		# if not config.CHAT_DISPLAY_NAME:
 		# 	self.key_display.hide()
 		# 	self.name_display.hide()
 
-		# if not erk.config.CHAT_DISPLAY_TOPIC:
+		# if not config.CHAT_DISPLAY_TOPIC:
 		# 	self.topic.hide()
 
 		if hasattr(self,"key_display"):
-			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.key_display.hide()
 				self.name_display.hide()
 			else:
@@ -216,7 +217,7 @@ class Window(QMainWindow):
 				self.name_display.show()
 
 		if hasattr(self,"topic"):
-			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.topic.hide()
 			else:
 				self.topic.show()
@@ -248,7 +249,7 @@ class Window(QMainWindow):
 		self.admin = False
 		self.halfop = False
 
-		self.language = erk.config.SPELLCHECK_LANGUAGE
+		self.language = config.SPELLCHECK_LANGUAGE
 
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
@@ -260,10 +261,10 @@ class Window(QMainWindow):
 
 		self.commands = {}
 
-		if self.type==erk.config.CHANNEL_WINDOW: self.commands.update(erk.input.CHANNEL_COMMANDS)
-		if self.type==erk.config.PRIVATE_WINDOW: self.commands.update(erk.input.PRIVATE_COMMANDS)
+		if self.type==config.CHANNEL_WINDOW: self.commands.update(userinput.CHANNEL_COMMANDS)
+		if self.type==config.PRIVATE_WINDOW: self.commands.update(userinput.PRIVATE_COMMANDS)
 
-		self.commands.update(erk.input.COMMON_COMMANDS)
+		self.commands.update(userinput.COMMON_COMMANDS)
 
 		self.chat = QTextBrowser(self)
 		self.chat.setFocusPolicy(Qt.NoFocus)
@@ -274,7 +275,7 @@ class Window(QMainWindow):
 
 		self.chat.setStyleSheet(STYLES["all"])
 
-		if self.type==erk.config.CHANNEL_WINDOW:
+		if self.type==config.CHANNEL_WINDOW:
 
 			self.topic = TopicEdit()
 			self.topic.returnPressed.connect(self.handleTopicInput)
@@ -320,7 +321,7 @@ class Window(QMainWindow):
 
 		self.input.changeLanguage(self.language)
 
-		if self.type==erk.config.SERVER_WINDOW:
+		if self.type==config.SERVER_WINDOW:
 			self.name_display = QLabel("<b>Server</b>")
 		else:
 			self.name_display = QLabel("<b>"+self.name+"</b>")
@@ -328,15 +329,15 @@ class Window(QMainWindow):
 		# self.name_display = QLabel("<b>"+self.name+"</b>")
 		self.name_display.setStyleSheet("border: 1px solid black; padding: 2px;")
 
-		if self.type!=erk.config.CHANNEL_WINDOW:
+		if self.type!=config.CHANNEL_WINDOW:
 
 			nameLayout = QHBoxLayout()
 			nameLayout.addWidget(self.name_display)
 			nameLayout.addStretch()
 
 			finalLayout = QVBoxLayout()
-			finalLayout.setSpacing(erk.config.CHAT_WINDOW_WIDGET_SPACING)
-			finalLayout.setContentsMargins(erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING)
+			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
+			finalLayout.setContentsMargins(config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.addLayout(nameLayout)
 			finalLayout.addWidget(self.chat)
 			finalLayout.addWidget(self.input)
@@ -417,7 +418,7 @@ class Window(QMainWindow):
 
 			self.nick_display = QLabel(" <b>"+self.client.nickname+"</b> ")
 
-			if not erk.config.DISPLAY_NICKNAME_ON_CHANNEL: self.nick_display.hide()
+			if not config.DISPLAY_NICKNAME_ON_CHANNEL: self.nick_display.hide()
 
 			nicknameLayout = QHBoxLayout()
 			nicknameLayout.addWidget(self.op_icon)
@@ -452,8 +453,8 @@ class Window(QMainWindow):
 			topicLayout.addWidget(self.topic)
 
 			finalLayout = QVBoxLayout()
-			finalLayout.setSpacing(erk.config.CHAT_WINDOW_WIDGET_SPACING)
-			finalLayout.setContentsMargins(erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING,erk.config.CHAT_WINDOW_WIDGET_SPACING)
+			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
+			finalLayout.setContentsMargins(config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING)
 			#finalLayout.addWidget(self.topic)
 			finalLayout.addLayout(topicLayout)
 			finalLayout.addWidget(self.horizontalSplitter)
@@ -461,36 +462,36 @@ class Window(QMainWindow):
 			finalLayout.addLayout(inputLayout)
 
 			# Toggle name display
-			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.key_display.hide()
 				self.name_display.hide()
 
-			if not erk.config.CHAT_DISPLAY_INFO_BAR:
+			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.topic.hide()
 
 
 		# Logs
 		load_log_from_disk = False
 
-		if self.type==erk.config.CHANNEL_WINDOW:
-			if erk.config.LOAD_CHANNEL_LOGS:
+		if self.type==config.CHANNEL_WINDOW:
+			if config.LOAD_CHANNEL_LOGS:
 				load_log_from_disk = True
 
-		if self.type==erk.config.PRIVATE_WINDOW:
-			if erk.config.LOAD_PRIVATE_LOGS:
+		if self.type==config.PRIVATE_WINDOW:
+			if config.LOAD_PRIVATE_LOGS:
 				load_log_from_disk = True
 
 		if load_log_from_disk:
 			loadLog = readLog(self.client.network,self.name)
-			if len(loadLog)>erk.config.LOG_LOAD_SIZE_MAX:
-				loadLog = trimLog(loadLog,erk.config.LOG_LOAD_SIZE_MAX)
+			if len(loadLog)>config.LOG_LOAD_SIZE_MAX:
+				loadLog = trimLog(loadLog,config.LOG_LOAD_SIZE_MAX)
 
 			if len(loadLog)>0:
 				self.log = loadLog + self.log
-				if erk.config.MARK_END_OF_LOADED_LOG:
+				if config.MARK_END_OF_LOADED_LOG:
 					self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
 
-				if erk.config.DISPLAY_CHAT_RESUME_DATE_TIME:
+				if config.DISPLAY_CHAT_RESUME_DATE_TIME:
 					t = datetime.timestamp(datetime.now())
 					pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
 					m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
@@ -512,7 +513,7 @@ class Window(QMainWindow):
 		erk.events.build_connection_display(self.parent)
 
 	def channelNickVisibility(self):
-		if erk.config.DISPLAY_NICKNAME_ON_CHANNEL:
+		if config.DISPLAY_NICKNAME_ON_CHANNEL:
 			self.nick_display.show()
 		else:
 			self.nick_display.hide()
@@ -556,7 +557,7 @@ class Window(QMainWindow):
 		else:
 			self.key_display.show()
 
-		if not erk.config.CHAT_DISPLAY_INFO_BAR:
+		if not config.CHAT_DISPLAY_INFO_BAR:
 			self.key_display.hide()
 
 	def nickDisplay(self,nick):
@@ -595,7 +596,7 @@ class Window(QMainWindow):
 
 	def writeText(self,message,do_not_save=False):
 
-		d = erk.format.render_message(message,self.client)
+		d = textformat.render_message(message,self.client)
 
 		if d!=None:
 			self.chat.append(d)
@@ -614,7 +615,7 @@ class Window(QMainWindow):
 		self.chat.clear()
 
 		for line in self.log:
-			d = erk.format.render_message(line,self.client)
+			d = textformat.render_message(line,self.client)
 			if d==None: continue
 			self.chat.append(d)
 
@@ -660,7 +661,7 @@ class Window(QMainWindow):
 				hostmask = None
 
 			#if self.plain_user_lists:
-			if erk.config.PLAIN_USER_LISTS:
+			if config.PLAIN_USER_LISTS:
 				if '@' in nickname:
 					ops.append(nickname)
 					if nickname==self.client.nickname: self.operator = True
@@ -701,7 +702,7 @@ class Window(QMainWindow):
 		self.nicks = owners + admins + halfops + ops + voiced + normal
 
 		# Display nick status, if necessary
-		if erk.config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
+		if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
 
 			self.op_icon.hide()
 			self.voice_icon.hide()
@@ -738,42 +739,42 @@ class Window(QMainWindow):
 		# Add owners
 		for u in owners:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OWNER_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OWNER_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add admins
 		for u in admins:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_ADMIN_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_ADMIN_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add ops
 		for u in ops:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OPERATOR_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add halfops
 		for u in halfops:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_HALFOP_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_HALFOP_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add voiced
 		for u in voiced:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_VOICED_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_VOICED_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
 		# Add normal
 		for u in normal:
 			ui = QListWidgetItem()
-			if not erk.config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_NORMAL_ICON))
+			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_NORMAL_ICON))
 			ui.setText(u)
 			self.userlist.addItem(ui)
 
@@ -791,7 +792,7 @@ class Window(QMainWindow):
 
 		if self.operator:
 
-			if self.type==erk.config.CHANNEL_WINDOW:
+			if self.type==config.CHANNEL_WINDOW:
 
 				opMenu = QMenu("Operator actions")
 				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
@@ -1193,7 +1194,7 @@ class SpellTextEdit(QPlainTextEdit):
 
 			if self.toPlainText().strip()=='': return
 
-			if erk.config.AUTOCOMPLETE_COMMANDS:
+			if config.AUTOCOMPLETE_COMMANDS:
 
 				# Auto-complete commands
 				cursor.select(QTextCursor.BlockUnderCursor)
@@ -1203,7 +1204,7 @@ class SpellTextEdit(QPlainTextEdit):
 
 					self.COMMAND_LIST = self.parent.commands
 
-					self.COMMAND_LIST.update(erk.macros.MACRO_COMMANDS)
+					self.COMMAND_LIST.update(macros.MACRO_COMMANDS)
 
 					for c in self.COMMAND_LIST:
 						cmd = c
@@ -1216,7 +1217,7 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.endEditBlock()
 							return
 
-			if erk.config.AUTOCOMPLETE_NICKNAMES:
+			if config.AUTOCOMPLETE_NICKNAMES:
 				# Auto-complete nicks/channels
 				cursor.select(QTextCursor.WordUnderCursor)
 				self.setTextCursor(cursor)
@@ -1235,7 +1236,7 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.endEditBlock()
 							return
 
-				if erk.config.AUTOCOMPLETE_EMOJI and erk.config.USE_EMOJIS:
+				if config.AUTOCOMPLETE_EMOJI and config.USE_EMOJIS:
 
 					# Autocomplete emojis
 					cursor.select(QTextCursor.WordUnderCursor)
@@ -1277,7 +1278,7 @@ class SpellTextEdit(QPlainTextEdit):
 		self.setPlainText(text)
 
 	def addNicks(self,nicks):
-		if erk.config.SPELLCHECK_IGNORE_NICKS:
+		if config.SPELLCHECK_IGNORE_NICKS:
 			if len(self.nicks)>0:
 				self.dict.word_frequency.remove_words(self.nicks)
 			self.nicks = nicks.copy()
@@ -1301,7 +1302,7 @@ class SpellTextEdit(QPlainTextEdit):
 
 	def contextMenuEvent(self, event):
 
-		if not erk.config.SPELLCHECK_INPUT:
+		if not config.SPELLCHECK_INPUT:
 			return super().contextMenuEvent(event)
 
 		popup_menu = self.createStandardContextMenu()
@@ -1364,7 +1365,7 @@ class Highlighter(QSyntaxHighlighter):
 
 		# if not self.parent.gui.spellcheck:
 		# 	return
-		if not erk.config.SPELLCHECK_INPUT:
+		if not config.SPELLCHECK_INPUT:
 			return
 
 		format = QTextCharFormat()

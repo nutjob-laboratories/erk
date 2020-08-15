@@ -34,8 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-import erk.config
+from ..resources import *
+from .. import config
 
 class Dialog(QDialog):
 
@@ -67,7 +67,7 @@ class Dialog(QDialog):
 		#self.widthLabel = QLabel("Width")
 		self.width = QSpinBox()
 		self.width.setRange(1,10000)
-		self.width.setValue(erk.config.CHANNEL_LIST_REFRESH_FREQUENCY)
+		self.width.setValue(config.CHANNEL_LIST_REFRESH_FREQUENCY)
 		#widthLayout.addWidget(self.widthLabel)
 		#widthLayout.addStretch()
 		widthLayout.addWidget(self.width)

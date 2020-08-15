@@ -34,7 +34,7 @@ import sys
 import glob
 import json
 import re
-from erk.strings import *
+from .strings import *
 
 INSTALL_DIRECTORY = sys.path[0]
 MACRO_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "macros")

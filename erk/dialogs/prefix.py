@@ -34,9 +34,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-from erk.strings import *
-import erk.config
+from ..resources import *
+from ..strings import *
+from .. import config
 
 class Dialog(QDialog):
 
@@ -66,7 +66,7 @@ class Dialog(QDialog):
 
 		keyLayout = QHBoxLayout()
 		self.keyLabel = QLabel("<b>Prefix</b>")
-		self.key = QLineEdit(erk.config.SYSTEM_MESSAGE_PREFIX)
+		self.key = QLineEdit(config.SYSTEM_MESSAGE_PREFIX)
 		keyLayout.addWidget(self.keyLabel)
 		keyLayout.addStretch()
 		keyLayout.addWidget(self.key)

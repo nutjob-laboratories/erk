@@ -35,29 +35,42 @@ try:
 except ImportError:
 	SSL_AVAILABLE = False
 
-import erk.dialogs.add_channel as AddChannelDialog
-import erk.dialogs.combo as Combo
-import erk.dialogs.join_channel as JoinChannel
-import erk.dialogs.new_nick as Nick
-import erk.dialogs.window_size as WindowSize
-import erk.dialogs.history_size as HistorySize
-import erk.dialogs.log_size as LogSize
-import erk.dialogs.format as FormatText
-import erk.dialogs.about as About
-import erk.dialogs.macro as Macro
-import erk.dialogs.editor as Editor
-import erk.dialogs.export_log as ExportLog
+# import erk.dialogs.add_channel as AddChannelDialog
+# import erk.dialogs.combo as Combo
+# import erk.dialogs.join_channel as JoinChannel
+# import erk.dialogs.new_nick as Nick
+# import erk.dialogs.window_size as WindowSize
+# import erk.dialogs.history_size as HistorySize
+# import erk.dialogs.log_size as LogSize
+# import erk.dialogs.format as FormatText
+# import erk.dialogs.about as About
+# import erk.dialogs.macro as Macro
+# import erk.dialogs.editor as Editor
+# import erk.dialogs.export_log as ExportLog
+# import erk.dialogs.key as Key
+# import erk.dialogs.error as Error
+# import erk.dialogs.prefix as Prefix
+# import erk.dialogs.list_time as ListTime
 
-import erk.dialogs.key as Key
-
-import erk.dialogs.error as Error
-
-import erk.dialogs.prefix as Prefix
-
-import erk.dialogs.list_time as ListTime
+from .add_channel import Dialog as AddChannelDialog
+from .combo import Dialog as Combo
+from .join_channel import Dialog as JoinChannel
+from .new_nick import Dialog as Nick
+from .window_size import Dialog as WindowSize
+from .history_size import Dialog as HistorySize
+from .log_size import Dialog as LogSize
+from .format import Dialog as FormatText
+from .about import Dialog as About
+from .macro import Dialog as Macro
+from .editor import Window as Editor
+from .export_log import Dialog as ExportLog
+from .key import Dialog as Key
+from .error import Dialog as Error
+from .prefix import Dialog as Prefix
+from .list_time import Dialog as ListTime
 
 def ListTimeDialog():
-	x = ListTime.Dialog()
+	x = ListTime()
 	info = x.get_entry_information()
 	del x
 
@@ -65,7 +78,7 @@ def ListTimeDialog():
 	return info
 
 def PrefixDialog():
-	x = Prefix.Dialog()
+	x = Prefix()
 	info = x.get_system_information()
 	del x
 
@@ -73,7 +86,7 @@ def PrefixDialog():
 	return info
 
 def KeyDialog():
-	x = Key.Dialog()
+	x = Key()
 	info = x.get_channel_information()
 	del x
 
@@ -81,7 +94,7 @@ def KeyDialog():
 	return info
 
 def ExportLogDialog(obj):
-	x = ExportLog.Dialog(obj)
+	x = ExportLog(obj)
 	info = x.get_name_information(obj)
 	del x
 
@@ -89,29 +102,29 @@ def ExportLogDialog(obj):
 	return info
 
 def ErrorDialog(obj,errlist=None):
-	x = Error.Dialog(errlist,obj)
+	x = Error(errlist,obj)
 	x.resize(400,250)
 	x.show()
 
 def EditorDialog(obj=None,filename=None,app=None,config=None):
-	x = Editor.Window(filename,obj,app,config)
+	x = Editor(filename,obj,app,config)
 	return x
 
 def MacroDialog(obj,filename=None):
-	x = Macro.Dialog(filename,obj)
+	x = Macro(filename,obj)
 	x.show()
 
 def AboutDialog():
-	x = About.Dialog()
+	x = About()
 	x.show()
 	return x
 
 def FormatTextDialog(obj):
-	x = FormatText.Dialog(obj)
+	x = FormatText(obj)
 	x.show()
 
 def LogSizeDialog():
-	x = LogSize.Dialog()
+	x = LogSize()
 	info = x.get_entry_information()
 	del x
 
@@ -119,7 +132,7 @@ def LogSizeDialog():
 	return info
 
 def HistorySizeDialog():
-	x = HistorySize.Dialog()
+	x = HistorySize()
 	info = x.get_entry_information()
 	del x
 
@@ -127,7 +140,7 @@ def HistorySizeDialog():
 	return info
 
 def WindowSizeDialog(obj):
-	x = WindowSize.Dialog(obj)
+	x = WindowSize(obj)
 	info = x.get_window_information(obj)
 	del x
 
@@ -135,7 +148,7 @@ def WindowSizeDialog(obj):
 	return info
 
 def NickDialog(nick,obj):
-	x = Nick.Dialog(nick,obj)
+	x = Nick(nick,obj)
 	info = x.get_nick_information(nick,obj)
 	del x
 
@@ -143,7 +156,7 @@ def NickDialog(nick,obj):
 	return info
 
 def JoinDialog():
-	x = JoinChannel.Dialog()
+	x = JoinChannel()
 	info = x.get_channel_information()
 	del x
 
@@ -151,7 +164,7 @@ def JoinDialog():
 	return info
 
 def ComboDialog(userfile):
-	x = Combo.Dialog(SSL_AVAILABLE,userfile)
+	x = Combo(SSL_AVAILABLE,userfile)
 	info = x.get_connect_information(SSL_AVAILABLE,userfile)
 	del x
 

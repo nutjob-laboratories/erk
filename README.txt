@@ -24,6 +24,7 @@
 	* **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
 	* **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
 	* Just plain ol' fashioned IRC
+* Runs on Windows and Linux
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * An extensive set of configuration options
@@ -103,6 +104,18 @@ More command-line settings can be viewed by executing **Ərk** with the `--help`
 
 The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when one of the users in the channel suggested "Erk", because "that's how you pronouce IRC". And thus **Ərk** was born.
 
+## Is **Ərk** completed?
+
+No. I'm still adding features and tracking down and squashing bugs.
+
+## Can I use **Ərk** to chat on IRC?
+
+Yes! Most basic functionality is done, and it's ready for most IRC stuff.
+
+## Does **Ərk** run on Windows? Does is run on Linux?
+
+**Ərk** runs on both Windows and Linux! It's being developed on Windows 10, but it's been tested (and runs great) on Debian, Ubuntu, and Mint Linux. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
+
 ## Another IRC client? Why not use HexChat?
 
 HexChat is, well, aging. The last I heard, there was nobody maintaining the source. I wanted a new IRC client written in a modern, accessible language; I wanted a client that was *not* written in C or C++. I wanted a pretty, attractive client that looks like it was written in the last decade. And, moreover, I wanted a client written for the desktop; I didn't want one that runs in a web browser, or on a smartphone, or in "the cloud". I wanted a client that was open source (both free as in beer and free as in speech).  I wanted a client that ran fast, consumed resources commensurate with the task of a text-only chat protocol.  I wanted a client that wasn't limited to just text;  a client that can send and display emojis.
@@ -120,12 +133,3 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 **Ərk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
 
 The other reason why I wrote **Ərk** is because I got tired of not understanding how the most popular clients did things. I wanted a client that you could configure to do _exactly_ what you wanted it to do, no more and no less. That's why **Ərk** has a ridiculous amount of configuration options. Do you want to run the client in full-screen mode, and remove the ability of users to change settings or connect to other servers (aka, "kiosk mode")? You can do that. Do you want to strip all the "pretty" off the client, and basically run it in "text only" mode? You can do that. Do you want **Ərk** to do nothing except what you tell it to do? You can do that. Almost everything in the client can be configured from within the GUI or with command-line flags.
-
-## Is **Ərk** completed?
-
-No. I'm still adding features and tracking down and squashing bugs.
-
-## Can I use **Ərk** to chat on IRC?
-
-Yes! Most basic functionality is done, and it's ready for most IRC stuff.
-

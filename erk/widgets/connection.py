@@ -34,9 +34,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.strings import *
-from erk.files import *
-import erk.config
+from ..strings import *
+from ..files import *
+from .. import config
 
 def clearQTreeWidget(tree):
 	iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
@@ -55,8 +55,8 @@ def buildConnectionDisplayWidget(self):
 	fheight = fm.height() + 8
 	fwidth = fm.width('X') * 25
 
-	if erk.config.CONNECTION_DISPLAY_WIDTH:
-		fwidth = erk.config.CONNECTION_DISPLAY_WIDTH
+	if config.CONNECTION_DISPLAY_WIDTH:
+		fwidth = config.CONNECTION_DISPLAY_WIDTH
 
 	class LogWidget(QTreeWidget):
 
@@ -66,7 +66,7 @@ def buildConnectionDisplayWidget(self):
 
 		def resizeEvent(self, newSize):
 			s = newSize.size()
-			erk.config.CONNECTION_DISPLAY_WIDTH = s.width()
+			config.CONNECTION_DISPLAY_WIDTH = s.width()
 
 		def sizeHint(self):
 			if self.started:

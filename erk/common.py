@@ -32,8 +32,8 @@
 import os
 import sys
 
-from erk.resources import *
-from erk.strings import*
+from .resources import *
+from .strings import*
 
 def restart_program():
 	python = sys.executable

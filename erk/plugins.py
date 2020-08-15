@@ -38,13 +38,13 @@ import pkgutil
 import imp
 import json
 
-from erk.objects import *
-from erk.strings import *
-from erk.events import *
-import erk.config
-from erk.input import handle_input
+from .objects import *
+from .strings import *
+from .events import *
+from . import config
+from .userinput import handle_input
 
-from erk.files import get_user,save_user
+from .files import get_user,save_user
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -212,7 +212,7 @@ class PluginCollection(object):
 		self.reload_plugins()
 
 	def private(self,client,user,text):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		p = user.split('!')
 		if len(p)==2:
 			name = p[0]
@@ -228,7 +228,7 @@ class PluginCollection(object):
 				p._erk_window_name = None
 
 	def public(self,client,channel,user,text):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"public"):
@@ -239,7 +239,7 @@ class PluginCollection(object):
 				p._erk_window_name = None
 
 	def input(self,client,name,text):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"input"):
@@ -284,7 +284,7 @@ class PluginCollection(object):
 						LOADED_PLUGINS.remove(p.name)
 
 	def load(self):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if p.name in LOADED_PLUGINS: continue
@@ -303,7 +303,7 @@ class PluginCollection(object):
 				p.unload()
 
 	def tick(self,client):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"tick"):
@@ -314,7 +314,7 @@ class PluginCollection(object):
 				p._erk_window_name = None
 
 	def join(self,client,channel,user):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"join"):
@@ -325,7 +325,7 @@ class PluginCollection(object):
 				p._erk_window_name = None
 
 	def part(self,client,channel,user):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"part"):
@@ -336,7 +336,7 @@ class PluginCollection(object):
 				p._erk_window_name = None
 
 	def connect(self,client):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"connect"):
@@ -349,7 +349,7 @@ class PluginCollection(object):
 
 
 	def notice(self,client,target,user,text):
-		if not erk.config.PLUGINS_ENABLED: return
+		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
 			if p.name in DISABLED_PLUGINS: continue
 			if hasattr(p,"notice"):

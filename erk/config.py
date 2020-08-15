@@ -31,7 +31,7 @@
 
 import os
 import json
-from erk.files import SETTINGS_FILE
+from .files import SETTINGS_FILE
 
 SERVER_WINDOW = 1
 CHANNEL_WINDOW = 2

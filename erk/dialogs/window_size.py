@@ -34,8 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from erk.resources import *
-import erk.config
+from ..resources import *
+from .. import config
 
 class Dialog(QDialog):
 
@@ -67,7 +67,7 @@ class Dialog(QDialog):
 		self.widthLabel = QLabel("Width")
 		self.width = QSpinBox()
 		self.width.setRange(100,2000)
-		#self.width.setValue(erk.config.DEFAULT_APP_WIDTH)
+		#self.width.setValue(config.DEFAULT_APP_WIDTH)
 		self.width.setValue(self.parent.width())
 		widthLayout.addWidget(self.widthLabel)
 		#widthLayout.addStretch()
@@ -78,7 +78,7 @@ class Dialog(QDialog):
 		self.heightLabel = QLabel("Height")
 		self.height = QSpinBox()
 		self.height.setRange(100,2000)
-		# self.height.setValue(erk.config.DEFAULT_APP_HEIGHT)
+		# self.height.setValue(config.DEFAULT_APP_HEIGHT)
 		self.height.setValue(self.parent.height())
 		heightLayout.addWidget(self.heightLabel)
 		#heightLayout.addStretch()
