@@ -109,7 +109,7 @@ class Dialog(QDialog):
 		ce_credit.setAlignment(Qt.AlignCenter)
 		ce_credit.setOpenExternalLinks(True)
 
-		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + platform.release().strip() +"</i></small>")
+		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</i></small>")
 		platform_credit.setAlignment(Qt.AlignCenter)
 
 		creditsBox = QGroupBox()

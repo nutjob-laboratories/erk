@@ -5,6 +5,7 @@ Version 0.822
 	* Connection display width is now saved automatically when it is changed (rather than on exit)
 	* Added a platform notification to the about dialog
 	* Moved the GNU license link to the top (after the app name) in the about dialog
+	* Running under linux will no longer display menu options to open specific directories
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

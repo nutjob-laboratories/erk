@@ -35,6 +35,7 @@ import string
 import shutil
 import zipfile
 import re
+import platform
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -543,11 +544,12 @@ class Window(QMainWindow):
 
 		fileMenu.addSeparator()
 
-		plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-		fileMenu.addAction(plugin_dir)
+		if platform.system().lower()=='windows':
+			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
+			fileMenu.addAction(plugin_dir)
 
-		fileMenu.addSeparator()
+			fileMenu.addSeparator()
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
 		entry.setShortcut("Ctrl+Q")
