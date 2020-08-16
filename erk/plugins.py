@@ -46,6 +46,8 @@ from .userinput import handle_input
 
 from .files import get_user,save_user
 
+from . import events
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
@@ -86,9 +88,9 @@ class ErkFunctions(object):
 	def exec(self,data):
 		if self._erk_client and self._erk_window_name:
 			if self._erk_window_name==SERVER_CONSOLE_NAME:
-				window = erk.events.fetch_console_window(self._erk_client)
+				window = events.fetch_console_window(self._erk_client)
 			else:
-				windows = erk.events.fetch_window_list(self._erk_client)
+				windows = events.fetch_window_list(self._erk_client)
 				for w in windows:
 					if w.name==self._erk_window_name:
 						window = w
@@ -110,14 +112,14 @@ class ErkFunctions(object):
 
 	def console(self,text):
 		if self._erk_client:
-			window = erk.events.fetch_console_window(self._erk_client)
+			window = events.fetch_console_window(self._erk_client)
 			if window:
 				msg = Message(PLUGIN_MESSAGE,'',text)
 				window.writeText(msg,True)
 
 	def write(self,name,text):
 		if self._erk_client:
-			windows = erk.events.fetch_window_list(self._erk_client)
+			windows = events.fetch_window_list(self._erk_client)
 			for w in windows:
 				if w.name==name:
 					msg = Message(PLUGIN_MESSAGE,'',text)
@@ -125,7 +127,7 @@ class ErkFunctions(object):
 
 	def log(self,name,text):
 		if self._erk_client:
-			windows = erk.events.fetch_window_list(self._erk_client)
+			windows = events.fetch_window_list(self._erk_client)
 			for w in windows:
 				if w.name==name:
 					msg = Message(PLUGIN_MESSAGE,'',text)

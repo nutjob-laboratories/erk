@@ -49,7 +49,6 @@ from .plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRE
 from . import config
 from . import events
 from . import textformat
-
 from . import macros
 
 from .dialogs import(
