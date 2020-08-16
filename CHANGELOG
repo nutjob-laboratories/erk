@@ -7,6 +7,7 @@ Version 0.822
 	* Moved the GNU license link to the top (after the app name) in the about dialog
 	* "Open X directory" now uses QDesktopServices to open directories in a file manager in a cross platform way
 	* Fixed a bug with running plugins cross-platform
+	* Changed "Server options" menu entry to "Server settings"
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

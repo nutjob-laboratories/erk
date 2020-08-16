@@ -2294,7 +2294,7 @@ def buildServerSettingsMenu(self,client):
 
 	#self.config.clear()
 
-	optionsMenu = QMenu("Server options")
+	optionsMenu = QMenu("Server settings")
 
 	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channels"+f":</b> {maxchannels}",self)
 	e = QWidgetAction(self)
