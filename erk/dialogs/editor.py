@@ -35,7 +35,6 @@ import string
 import shutil
 import zipfile
 import re
-import platform
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -44,18 +43,10 @@ from PyQt5 import QtCore
 
 from ..resources import *
 from ..files import PLUGIN_TEMPLATE
-# import erk.dialogs.find as Find
-# import erk.dialogs.template as Template
 from .. import config
 from ..widgets.action import MenuAction
-
-#import erk.dialogs.export_package as Export
-
-#import erk.dialogs.editor_input as EditorInput
-
 from .export_package import Dialog as Export
 from .editor_input import Dialog as EditorInput
-
 from .find import Dialog as Find
 from .template import Dialog as Template
 
@@ -544,12 +535,11 @@ class Window(QMainWindow):
 
 		fileMenu.addSeparator()
 
-		if platform.system().lower()=='windows':
-			plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-			plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-			fileMenu.addAction(plugin_dir)
+		plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		fileMenu.addAction(plugin_dir)
 
-			fileMenu.addSeparator()
+		fileMenu.addSeparator()
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
 		entry.setShortcut("Ctrl+Q")

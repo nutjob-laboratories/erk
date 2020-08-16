@@ -34,7 +34,6 @@ import os
 from itertools import combinations_with_replacement
 from zipfile import ZipFile
 import shutil
-import platform
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -1244,10 +1243,9 @@ class Erk(QMainWindow):
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-		if platform.system().lower()=='windows':
-			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-			entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: os.startfile(s))
-			m.addAction(entry)
+		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		m.addAction(entry)
 
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
@@ -1393,10 +1391,10 @@ class Erk(QMainWindow):
 
 		m.addSeparator()
 
-		if platform.system().lower()=='windows':
-			ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
-			ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: os.startfile(s))
-			m.addAction(ircMenu_Macro)
+		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
+		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+
+		m.addAction(ircMenu_Macro)
 
 		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
