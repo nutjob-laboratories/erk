@@ -38,10 +38,7 @@ from .widgets import *
 from .objects import *
 from .strings import *
 from .common import *
-
 from . import config
-
-#import erk.format
 
 CHANNELS = []
 CONNECTIONS = []

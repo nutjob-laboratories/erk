@@ -69,11 +69,9 @@ parser = argparse.ArgumentParser(
 / _  | '_| / /	| {APPLICATION_NAME} {APPLICATION_VERSION}
 \___/|_| |_\_\\	|==============
 
-An open source IRC client
+An open source, cross-platform IRC client
 https://github.com/nutjob-laboratories/erk
 ''',
-# 	epilog=f'''Official {APPLICATION_NAME} source code repository
-# https://github.com/nutjob-laboratories/erk''',
 )
 
 congroup = parser.add_argument_group('Connection')

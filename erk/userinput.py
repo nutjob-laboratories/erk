@@ -38,7 +38,6 @@ from PyQt5.QtGui import *
 
 from .objects import *
 from .files import *
-
 from . import config
 from . import macros
 

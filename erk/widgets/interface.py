@@ -43,14 +43,11 @@ from spellchecker import SpellChecker
 from ..files import *
 from ..resources import *
 from ..objects import *
-
 from .. import config
 from .. import textformat
 from .. import userinput
 from .. import macros
-
 from ..dialogs import KeyDialog
-
 from .. import events
 
 class Window(QMainWindow):

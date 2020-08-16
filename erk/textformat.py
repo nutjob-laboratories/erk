@@ -36,7 +36,6 @@ from itertools import combinations
 from .files import *
 from .objects import *
 from .resources import *
-
 from . import config
 
 STYLES = get_text_format_settings()

@@ -38,10 +38,6 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from ..resources import *
-# import erk.plugins
-
-# INSTALL_DIRECTORY = sys.path[0]
-# PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 
 class Dialog(QDialog):
 

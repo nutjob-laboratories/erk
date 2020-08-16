@@ -43,9 +43,7 @@ from .strings import *
 from .events import *
 from . import config
 from .userinput import handle_input
-
 from .files import get_user,save_user
-
 from . import events
 
 INSTALL_DIRECTORY = sys.path[0]

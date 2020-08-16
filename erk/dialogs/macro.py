@@ -39,7 +39,6 @@ from ..objects import *
 from ..files import *
 from ..widgets import *
 from ..strings import *
-
 from .. import macros
 
 class Dialog(QDialog):

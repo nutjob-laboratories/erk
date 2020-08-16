@@ -45,7 +45,6 @@ from .widgets import *
 from .files import *
 from .common import *
 from .plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
-
 from . import config
 from . import events
 from . import textformat

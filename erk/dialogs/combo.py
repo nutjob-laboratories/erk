@@ -39,10 +39,7 @@ from ..objects import *
 from ..files import *
 from ..widgets import *
 from ..strings import *
-# import erk.config
-
 from ..dialogs import AddChannelDialog
-
 
 class Dialog(QDialog):
 

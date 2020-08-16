@@ -42,7 +42,6 @@ from .resources import *
 from .files import *
 from .strings import *
 from .objects import *
-
 from . import config
 from . import events
 
