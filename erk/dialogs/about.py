@@ -34,6 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+import platform
+
 from ..resources import *
 from ..strings import *
 
@@ -107,6 +109,9 @@ class Dialog(QDialog):
 		ce_credit.setAlignment(Qt.AlignCenter)
 		ce_credit.setOpenExternalLinks(True)
 
+		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + platform.release().strip() +"</i></small>")
+		platform_credit.setAlignment(Qt.AlignCenter)
+
 		creditsBox = QGroupBox()
 		creditsBox.setAlignment(Qt.AlignHCenter)
 
@@ -125,8 +130,9 @@ class Dialog(QDialog):
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(titleLayout)
 		finalLayout.addWidget(tech_credit)
-		finalLayout.addWidget(creditsBox)
 		finalLayout.addWidget(gnu_credit)
+		finalLayout.addWidget(creditsBox)
+		finalLayout.addWidget(platform_credit)
 		finalLayout.addWidget(okButton)
 
 		self.setWindowFlags(self.windowFlags()
