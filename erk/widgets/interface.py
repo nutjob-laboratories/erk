@@ -253,6 +253,10 @@ class Window(QMainWindow):
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
 
+		# self.timestamp = datetime.timestamp(datetime.now())
+		# cdate = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
+		self.current_date = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y')
+
 		# STYLES = get_text_format_settings()
 		STYLES = get_text_format_settings(self.parent.stylefile)
 
@@ -598,6 +602,17 @@ class Window(QMainWindow):
 		d = textformat.render_message(message,self.client)
 
 		if d!=None:
+
+			cdate = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y')
+			if cdate!=self.current_date:
+				self.current_date = cdate
+				# there's a new date; create a new date separator
+				if self.type==config.CHANNEL_WINDOW:
+					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
+						m = Message(DATE_MESSAGE,'',cdate)
+						d2 = textformat.render_message(m,self.client)
+						self.chat.append(d2)
+
 			self.chat.append(d)
 			self.chat.moveCursor(QTextCursor.End)
 
@@ -613,9 +628,26 @@ class Window(QMainWindow):
 	def rerender(self):
 		self.chat.clear()
 
+		# pretty_timestamp = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
+
+		date = None
 		for line in self.log:
+			if date==None: date = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
 			d = textformat.render_message(line,self.client)
 			if d==None: continue
+
+			cdate = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
+			if cdate!=date:
+				date = cdate
+
+				# Now, date contains a "new" date; this is so that chats can be separated
+				# by day/date (so you know what day a chat occured on)
+				if self.type==config.CHANNEL_WINDOW:
+					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
+						m = Message(DATE_MESSAGE,'',cdate)
+						d2 = textformat.render_message(m,self.client)
+						self.chat.append(d2)
+
 			self.chat.append(d)
 
 		self.chat.moveCursor(QTextCursor.End)

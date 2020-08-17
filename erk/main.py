@@ -555,6 +555,12 @@ class Erk(QMainWindow):
 
 			messageMenu = self.settingsMenu.addMenu(QIcon(MESSAGE_ICON),"Messages")
 
+			self.set_chatdate = QAction(QIcon(UNCHECKED_ICON),"Show dates in channel chat",self)
+			self.set_chatdate.triggered.connect(lambda state,s="chatdate": self.toggleSetting(s))
+			messageMenu.addAction(self.set_chatdate)
+
+			if config.DISPLAY_DATES_IN_CHANNEL_CHAT: self.set_chatdate.setIcon(QIcon(CHECKED_ICON))
+
 			self.set_color = QAction(QIcon(UNCHECKED_ICON),"Display IRC colors",self)
 			self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
 			messageMenu.addAction(self.set_color)
@@ -1407,6 +1413,17 @@ class Erk(QMainWindow):
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
+
+		if setting=="chatdate":
+			if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
+				config.DISPLAY_DATES_IN_CHANNEL_CHAT = False
+				self.set_chatdate.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				config.DISPLAY_DATES_IN_CHANNEL_CHAT = True
+				self.set_chatdate.setIcon(QIcon(CHECKED_ICON))
+			config.save_settings(self.configfile)
+			events.rerender_all()
+			return
 
 		if setting=="dtopic":
 			if config.CHAT_DISPLAY_INFO_BAR:

@@ -94,6 +94,18 @@ SYSTEM_TEMPLATE = f"""
 MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><div style="!MESSAGE_STYLE!">!MESSAGE!</div></td>"""
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
+DATE_MESSAGE_TEMPLATE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small>!MESSAGE!</small></center></td>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
 
 def render_message(message,client=None):
 
@@ -174,6 +186,9 @@ def render_message(message,client=None):
 		style = STYLES["message"]
 	elif message.type==PLUGIN_MESSAGE:
 		output = SYSTEM_TEMPLATE
+		style = STYLES["message"]
+	elif message.type==DATE_MESSAGE:
+		output = DATE_MESSAGE_TEMPLATE
 		style = STYLES["message"]
 
 	if style=="":

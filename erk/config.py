@@ -114,6 +114,7 @@ HIDE_JOIN_MESSAGE = False
 APP_TITLE_TO_CURRENT_CHAT = True
 APP_TITLE_SHOW_TOPIC = False
 CHAT_DISPLAY_INFO_BAR = True
+DISPLAY_DATES_IN_CHANNEL_CHAT = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -192,6 +193,7 @@ def save_settings(filename=SETTINGS_FILE):
 		"show_channel_topic_in_title": APP_TITLE_SHOW_TOPIC,
 		"chat_display_info_bar": CHAT_DISPLAY_INFO_BAR,
 		"input_command_symbol": INPUT_COMMAND_SYMBOL,
+		"display_dates_in_channel_chat": DISPLAY_DATES_IN_CHANNEL_CHAT,
 	}
 
 	with open(filename, "w") as write_data:
@@ -271,6 +273,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global APP_TITLE_SHOW_TOPIC
 	global CHAT_DISPLAY_INFO_BAR
 	global INPUT_COMMAND_SYMBOL
+	global DISPLAY_DATES_IN_CHANNEL_CHAT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -349,6 +352,7 @@ def load_settings(filename=SETTINGS_FILE):
 			APP_TITLE_SHOW_TOPIC = data["show_channel_topic_in_title"]
 			CHAT_DISPLAY_INFO_BAR = data["chat_display_info_bar"]
 			INPUT_COMMAND_SYMBOL = data["input_command_symbol"]
+			DISPLAY_DATES_IN_CHANNEL_CHAT = data["display_dates_in_channel_chat"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist
