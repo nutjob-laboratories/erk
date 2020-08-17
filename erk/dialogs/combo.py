@@ -541,7 +541,8 @@ class Dialog(QDialog):
 		self.setLayout(finalLayout)
 
 	def buttonAdd(self):
-		x = AddChannelDialog.Dialog()
+		#x = AddChannelDialog.Dialog()
+		x = AddChannelDialog()
 		e = x.get_channel_information()
 
 		if not e: return
