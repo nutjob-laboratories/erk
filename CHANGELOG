@@ -9,6 +9,7 @@ Version 0.822
 	* Fixed a bug with running plugins cross-platform
 	* Changed "Server options" menu entry to "Server settings"
 	* Added an option to show dates in channel chat
+	* Changed the option to mark resume chat to false by default
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
