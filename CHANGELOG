@@ -10,6 +10,8 @@ Version 0.822
 	* Changed "Server options" menu entry to "Server settings"
 	* Added an option to show dates in channel chat
 	* Changed the option to mark resume chat to false by default
+	* Added a "radio button" style graphic to menus
+	* Fixed a bug where the "show timestamp seconds" menu entry was displaying wrong status
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

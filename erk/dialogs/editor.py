@@ -688,35 +688,73 @@ class Window(QMainWindow):
 
 		self.spacesMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
 
-		self.set_spaces_1 = QAction(QIcon(UNCHECKED_ICON),"One",self)
+		# self.set_spaces_1 = QAction(QIcon(UNCHECKED_ICON),"One",self)
+		# self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
+		# self.spacesMenu.addAction(self.set_spaces_1)
+
+		# if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
+
+		# self.set_spaces_2 = QAction(QIcon(UNCHECKED_ICON),"Two",self)
+		# self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
+		# self.spacesMenu.addAction(self.set_spaces_2)
+
+		# if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
+
+		# self.set_spaces_3 = QAction(QIcon(UNCHECKED_ICON),"Three",self)
+		# self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
+		# self.spacesMenu.addAction(self.set_spaces_3)
+
+		# if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
+
+		# self.set_spaces_4 = QAction(QIcon(UNCHECKED_ICON),"Four",self)
+		# self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
+		# self.spacesMenu.addAction(self.set_spaces_4)
+
+		# if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
+
+		# self.set_spaces_5 = QAction(QIcon(UNCHECKED_ICON),"Five",self)
+		# self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
+		# self.spacesMenu.addAction(self.set_spaces_5)
+
+		# if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
+
+
+
+
+
+		self.set_spaces_1 = QAction(QIcon(RUNCHECKED_ICON),"One",self)
 		self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_1)
 
-		if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
+		if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(RCHECKED_ICON))
 
-		self.set_spaces_2 = QAction(QIcon(UNCHECKED_ICON),"Two",self)
+		self.set_spaces_2 = QAction(QIcon(RUNCHECKED_ICON),"Two",self)
 		self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_2)
 
-		if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
+		if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(RCHECKED_ICON))
 
-		self.set_spaces_3 = QAction(QIcon(UNCHECKED_ICON),"Three",self)
+		self.set_spaces_3 = QAction(QIcon(RUNCHECKED_ICON),"Three",self)
 		self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_3)
 
-		if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
+		if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(RCHECKED_ICON))
 
-		self.set_spaces_4 = QAction(QIcon(UNCHECKED_ICON),"Four",self)
+		self.set_spaces_4 = QAction(QIcon(RUNCHECKED_ICON),"Four",self)
 		self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_4)
 
-		if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
+		if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(RCHECKED_ICON))
 
-		self.set_spaces_5 = QAction(QIcon(UNCHECKED_ICON),"Five",self)
+		self.set_spaces_5 = QAction(QIcon(RUNCHECKED_ICON),"Five",self)
 		self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_5)
 
-		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
+		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(RCHECKED_ICON))
+
+
+
+
 
 		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
@@ -869,55 +907,55 @@ class Window(QMainWindow):
 		if setting=="spaces_5":
 			config.NUMBER_OF_SPACES_FOR_INDENT = 5
 			config.save_settings(self.config)
-			self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
-			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(RCHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(RUNCHECKED_ICON))
 			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_4":
 			config.NUMBER_OF_SPACES_FOR_INDENT = 4
 			config.save_settings(self.config)
-			self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
-			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(RCHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(RUNCHECKED_ICON))
 			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_3":
 			config.NUMBER_OF_SPACES_FOR_INDENT = 3
 			config.save_settings(self.config)
-			self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
-			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(RCHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(RUNCHECKED_ICON))
 			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_2":
 			config.NUMBER_OF_SPACES_FOR_INDENT = 2
 			config.save_settings(self.config)
-			self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
-			self.set_spaces_1.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(RCHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(RUNCHECKED_ICON))
 			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 
 		if setting=="spaces_1":
 			config.NUMBER_OF_SPACES_FOR_INDENT = 1
 			config.save_settings(self.config)
-			self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
-			self.set_spaces_2.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_3.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_4.setIcon(QIcon(UNCHECKED_ICON))
-			self.set_spaces_5.setIcon(QIcon(UNCHECKED_ICON))
+			self.set_spaces_1.setIcon(QIcon(RCHECKED_ICON))
+			self.set_spaces_2.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_3.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_4.setIcon(QIcon(RUNCHECKED_ICON))
+			self.set_spaces_5.setIcon(QIcon(RUNCHECKED_ICON))
 			self.tabsize = config.NUMBER_OF_SPACES_FOR_INDENT
 			return
 

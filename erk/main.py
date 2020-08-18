@@ -453,19 +453,19 @@ class Erk(QMainWindow):
 
 	def spellcheck_language(self,setting):
 
-		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(UNCHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(UNCHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(UNCHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(UNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RUNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(RUNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(RUNCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(RUNCHECKED_ICON))
 
 		config.SPELLCHECK_LANGUAGE = setting
 		config.save_settings(self.configfile)
 		events.newspell_all(setting)
 
-		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(RCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(RCHECKED_ICON))
+		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(RCHECKED_ICON))
 
 	def buildToolbar(self):
 		# mainMenu = QMenu()
@@ -745,26 +745,26 @@ class Erk(QMainWindow):
 
 			spellcheckMenu.addSeparator()
 
-			self.spell_en = QAction(QIcon(UNCHECKED_ICON),"English",self)
+			self.spell_en = QAction(QIcon(RUNCHECKED_ICON),"English",self)
 			self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
 			spellcheckMenu.addAction(self.spell_en)
 
-			self.spell_fr = QAction(QIcon(UNCHECKED_ICON),"French",self)
+			self.spell_fr = QAction(QIcon(RUNCHECKED_ICON),"French",self)
 			self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
 			spellcheckMenu.addAction(self.spell_fr)
 
-			self.spell_es = QAction(QIcon(UNCHECKED_ICON),"Spanish",self)
+			self.spell_es = QAction(QIcon(RUNCHECKED_ICON),"Spanish",self)
 			self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
 			spellcheckMenu.addAction(self.spell_es)
 
-			self.spell_de = QAction(QIcon(UNCHECKED_ICON),"German",self)
+			self.spell_de = QAction(QIcon(RUNCHECKED_ICON),"German",self)
 			self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
 			spellcheckMenu.addAction(self.spell_de)
 
-			if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(CHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(CHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(CHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(CHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RCHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(RCHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(RCHECKED_ICON))
+			if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(RCHECKED_ICON))
 
 			if not config.SPELLCHECK_INPUT:
 				self.spell_en.setEnabled(False)
@@ -790,7 +790,7 @@ class Erk(QMainWindow):
 			self.set_seconds.triggered.connect(lambda state,s="tsseconds": self.toggleSetting(s))
 			timestampMenu.addAction(self.set_seconds)
 
-			if config.DISPLAY_TIMESTAMP_SECONDS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
+			if config.DISPLAY_TIMESTAMP_SECONDS: self.set_seconds.setIcon(QIcon(CHECKED_ICON))
 
 			# Entry submenu
 

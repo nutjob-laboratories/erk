@@ -51,6 +51,9 @@ MENU_MACRO_ICON = ":/macro.png"
 MENU_PACKAGE_ICON = ":/package.png"
 MENU_ARCHIVE_ICON = ":/archive.png"
 
+RCHECKED_ICON = ":/gui-rchecked.png"
+RUNCHECKED_ICON = ":/gui-runchecked.png"
+
 SERVER_ICON = ":/gui-server.png"
 CHANNEL_ICON = ":/gui-channel.png"
 EXIT_ICON = ":/gui-exit.png"
