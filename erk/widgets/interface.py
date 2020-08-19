@@ -632,7 +632,14 @@ class Window(QMainWindow):
 
 		date = None
 		for line in self.log:
-			if date==None: date = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
+			if date==None:
+				date = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
+				if self.type==config.CHANNEL_WINDOW:
+					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
+						m = Message(DATE_MESSAGE,'',date)
+						d2 = textformat.render_message(m,self.client)
+						self.chat.append(d2)
+
 			d = textformat.render_message(line,self.client)
 			if d==None: continue
 
