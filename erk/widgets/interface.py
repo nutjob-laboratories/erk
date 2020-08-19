@@ -628,8 +628,6 @@ class Window(QMainWindow):
 	def rerender(self):
 		self.chat.clear()
 
-		# pretty_timestamp = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
-
 		date = None
 		for line in self.log:
 			if date==None:
