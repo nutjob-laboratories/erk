@@ -18,6 +18,7 @@ Version 0.822
 	* Added an error notification for IRC server connections that fail to be established
 	* Added an error notification for lost IRC server connections (only when the option to reconnect is disabled)
 	* Added a new built-in method to the Plugin object: userinput
+	* Added documentation for the userinput() method to the documentation
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

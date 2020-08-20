@@ -41,8 +41,8 @@ from ..resources import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_input_information(title,text,parent=None):
-		dialog = Dialog(title,text,parent)
+	def get_input_information(title,text,icon,parent=None):
+		dialog = Dialog(title,text,icon,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -56,7 +56,7 @@ class Dialog(QDialog):
 
 		return retval
 
-	def __init__(self,title,text,parent=None):
+	def __init__(self,title,text,icon,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
@@ -64,7 +64,13 @@ class Dialog(QDialog):
 		self.text = text
 
 		self.setWindowTitle(self.title)
-		self.setWindowIcon(QIcon(ERK_ICON))
+		if icon!=None:
+			self.setWindowIcon(QIcon(icon))
+		else:
+			self.setWindowIcon(QIcon(ERK_ICON))
+
+		# print(self.parent._icon)
+		#print(self.parent)
 
 		nameLayout = QHBoxLayout()
 		self.nameLabel = QLabel(self.text)

@@ -152,7 +152,10 @@ class Plugin(ErkFunctions):
 	source = None
 
 	def userinput(self,text):
-		return PluginInputDialog(self.name,text)
+		if hasattr(self,"_icon"):
+			return PluginInputDialog(self.name,text,self._icon)
+		else:
+			return PluginInputDialog(self.name,text,None)
 
 def check_for_attributes(p):
 	errors = []

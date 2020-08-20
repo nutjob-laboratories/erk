@@ -54,9 +54,9 @@ from .list_time import Dialog as ListTime
 
 from .plugin_input import Dialog as PluginInput
 
-def PluginInputDialog(title,text):
-	x = PluginInput(title,text)
-	info = x.get_input_information(title,text)
+def PluginInputDialog(title,text,icon,obj=None):
+	x = PluginInput(title,text,icon,obj)
+	info = x.get_input_information(title,text,icon,obj)
 	del x
 
 	if not info: return None
