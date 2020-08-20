@@ -50,8 +50,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-from PyQt5.QtCore import *
-
 from twisted.internet import reactor, protocol
 
 try:
