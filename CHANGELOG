@@ -15,6 +15,8 @@ Version 0.822
 	* Removed the "nomenu", "nosettings", and "noconnect" commandline options
 	* Changed the "-A"|"--noask" commandline option to "-N"|"--noask"
 	* The toolbar has been disabled on the OSX platform, and uses a normal QMenuBar on any platform besides Windows and Linux
+	* Added an error notification for IRC server connections that fail to be established
+	* Added an error notification for lost IRC server connections (only when the option to reconnect is disabled)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
