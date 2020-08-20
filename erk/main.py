@@ -188,21 +188,11 @@ class Erk(QMainWindow):
 			if not self.block_toolbar: self.disconnect.setEnabled(False)
 			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR: self.disconnect.setEnabled(False)
 
-		# topic = ''
-		# if hasattr(window,"channel_topic"):
-		# 	if len(window.channel_topic)>0:
-		# 		topic = " - "+window.channel_topic
-
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
 				if not self.block_toolbar: self.disconnect.setEnabled(False)
 				if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR: self.disconnect.setEnabled(False)
-			# else:
-			# 	if config.APP_TITLE_TO_CURRENT_CHAT:
-			# 		self.setWindowTitle(window.name+topic)
-			# 	else:
-			# 		self.setWindowTitle(APPLICATION_NAME)
 
 		if hasattr(window,"input"):
 			# Set focus to the input widget
@@ -218,19 +208,6 @@ class Erk(QMainWindow):
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
-
-				# topic = ''
-				# if hasattr(item.erk_widget,"channel_topic"):
-				# 	if len(item.erk_widget.channel_topic)>0:
-				# 		topic = " - "+item.erk_widget.channel_topic
-				# if not config.APP_TITLE_SHOW_TOPIC: topic = ''
-
-				# if hasattr(item,"erk_name"):
-				# 	if config.APP_TITLE_TO_CURRENT_CHAT:
-				# 		if item.erk_name:
-				# 			self.setWindowTitle(item.erk_name+topic)
-				# 	else:
-				# 		self.setWindowTitle(APPLICATION_NAME)
 				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
@@ -241,19 +218,6 @@ class Erk(QMainWindow):
 		if hasattr(item,"erk_widget"):
 			if item.erk_widget:
 				self.stack.setCurrentWidget(item.erk_widget)
-
-				# topic = ''
-				# if hasattr(item.erk_widget,"channel_topic"):
-				# 	if len(item.erk_widget.channel_topic)>0:
-				# 		topic = " - "+item.erk_widget.channel_topic
-				# if not config.APP_TITLE_SHOW_TOPIC: topic = ''
-
-				# if hasattr(item,"erk_name"):
-				# 	if config.APP_TITLE_TO_CURRENT_CHAT:
-				# 		if item.erk_name:
-				# 			self.setWindowTitle(item.erk_name+topic)
-				# 	else:
-				# 		self.setWindowTitle(APPLICATION_NAME)
 				self.refresh_application_title(item)
 
 		self.connection_display.clearSelection()
@@ -540,7 +504,6 @@ class Erk(QMainWindow):
 			w = config.DEFAULT_APP_WIDTH
 			h =  config.DEFAULT_APP_HEIGHT
 
-			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
 
 			display_menu.addSeparator()
@@ -556,8 +519,6 @@ class Erk(QMainWindow):
 			display_menu.addAction(self.set_full)
 
 			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
-
-		# settingsMenu = QMenu()
 
 		if not self.block_settings:
 
@@ -619,16 +580,11 @@ class Erk(QMainWindow):
 
 			channelMenu = settings_menu.addMenu(QIcon(CHANNEL_ICON),"Chat displays")
 
-
-
 			self.set_topicdisplay = QAction(QIcon(UNCHECKED_ICON),"Display channel information bar",self)
 			self.set_topicdisplay.triggered.connect(lambda state,s="dtopic": self.toggleSetting(s))
 			channelMenu.addAction(self.set_topicdisplay)
 
 			if config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
-
-
-
 
 			self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
@@ -636,9 +592,7 @@ class Erk(QMainWindow):
 
 			if config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
 
-
 			if not config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
-
 
 			self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
 			self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
@@ -830,7 +784,6 @@ class Erk(QMainWindow):
 
 			hideMenu = settings_menu.addMenu(QIcon(HIDE_ICON),"Hide notifications")
 
-
 			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
 			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_invite)
@@ -875,10 +828,7 @@ class Erk(QMainWindow):
 
 			# Miscellaneous settings
 
-			#self.settingsMenu.addSeparator()
-
 			miscMenu = settings_menu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
-
 
 			self.set_titlename = QAction(QIcon(UNCHECKED_ICON),"Show chat name in title",self)
 			self.set_titlename.triggered.connect(lambda state,s="titlename": self.toggleSetting(s))
@@ -891,8 +841,6 @@ class Erk(QMainWindow):
 			miscMenu.addAction(self.set_titletopic)
 
 			if config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
-
-
 
 			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
@@ -913,7 +861,6 @@ class Erk(QMainWindow):
 			miscMenu.addAction(self.set_fetchlist)
 
 			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
-
 
 			self.fetch_time = QAction(QIcon(TIMESTAMP_ICON),"Set list refresh",self)
 			self.fetch_time.triggered.connect(self.menuSetListTime)
@@ -938,8 +885,6 @@ class Erk(QMainWindow):
 			if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
 
 			# Log menu
-
-			# logMenu = QMenu()
 
 			logs_menu = self.menubar.addMenu("Logs")
 
@@ -999,17 +944,12 @@ class Erk(QMainWindow):
 
 		# Macro menu
 
-		# self.macroMenu = QMenu()
-		#self.macroMenu.clear()
-
-
 		if not self.block_macros:
 			self.macroMenu = self.menubar.addMenu("Macros")
 
 			self.rebuildMacroMenu()
 
 		# Plugin menu
-		#self.pluginMenu.clear()
 
 		if not self.block_plugins:
 
@@ -1018,9 +958,6 @@ class Erk(QMainWindow):
 			self.rebuildPluginMenu()
 
 		# Help menu
-
-		# helpMenu = QMenu()
-		#self.helpMenu.clear()
 
 		help_menu = self.menubar.addMenu("Help")
 
@@ -1053,9 +990,7 @@ class Erk(QMainWindow):
 		help_menu.addAction(helpLink)
 
 
-
 	def buildToolbar(self):
-		# mainMenu = QMenu()
 
 		self.toolbar.clear()
 
@@ -1114,7 +1049,6 @@ class Erk(QMainWindow):
 			w = config.DEFAULT_APP_WIDTH
 			h =  config.DEFAULT_APP_HEIGHT
 
-			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
 			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
 
 			self.displayMenu.addSeparator()
@@ -1131,7 +1065,6 @@ class Erk(QMainWindow):
 
 			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
 
-		# settingsMenu = QMenu()
 		self.settingsMenu.clear()
 
 		if not self.block_settings:
@@ -1194,16 +1127,11 @@ class Erk(QMainWindow):
 
 			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Chat displays")
 
-
-
 			self.set_topicdisplay = QAction(QIcon(UNCHECKED_ICON),"Display channel information bar",self)
 			self.set_topicdisplay.triggered.connect(lambda state,s="dtopic": self.toggleSetting(s))
 			channelMenu.addAction(self.set_topicdisplay)
 
 			if config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
-
-
-
 
 			self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
 			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
@@ -1211,9 +1139,7 @@ class Erk(QMainWindow):
 
 			if config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
 
-
 			if not config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
-
 
 			self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
 			self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
@@ -1405,7 +1331,6 @@ class Erk(QMainWindow):
 
 			hideMenu = self.settingsMenu.addMenu(QIcon(HIDE_ICON),"Hide notifications")
 
-
 			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
 			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
 			hideMenu.addAction(self.hide_invite)
@@ -1450,10 +1375,7 @@ class Erk(QMainWindow):
 
 			# Miscellaneous settings
 
-			#self.settingsMenu.addSeparator()
-
 			miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
-
 
 			self.set_titlename = QAction(QIcon(UNCHECKED_ICON),"Show chat name in title",self)
 			self.set_titlename.triggered.connect(lambda state,s="titlename": self.toggleSetting(s))
@@ -1466,8 +1388,6 @@ class Erk(QMainWindow):
 			miscMenu.addAction(self.set_titletopic)
 
 			if config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
-
-
 
 			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
 			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
@@ -1488,7 +1408,6 @@ class Erk(QMainWindow):
 			miscMenu.addAction(self.set_fetchlist)
 
 			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
-
 
 			self.fetch_time = QAction(QIcon(TIMESTAMP_ICON),"Set list refresh",self)
 			self.fetch_time.triggered.connect(self.menuSetListTime)
@@ -1514,7 +1433,6 @@ class Erk(QMainWindow):
 
 			# Log menu
 
-			# logMenu = QMenu()
 			self.logMenu.clear()
 
 			add_toolbar_menu(self.toolbar,"Logs",self.logMenu)
@@ -1575,7 +1493,6 @@ class Erk(QMainWindow):
 
 		# Macro menu
 
-		# self.macroMenu = QMenu()
 		self.macroMenu.clear()
 
 		if not self.block_macros:
@@ -1594,7 +1511,6 @@ class Erk(QMainWindow):
 
 		# Help menu
 
-		# helpMenu = QMenu()
 		self.helpMenu.clear()
 
 		add_toolbar_menu(self.toolbar,"Help",self.helpMenu)
@@ -1656,7 +1572,6 @@ class Erk(QMainWindow):
 				if fileName:
 					extension = os.path.splitext(fileName)[1]
 					if extension.lower()!='json': fileName = fileName + ".json"
-					#dump = dumpLog(elog,dlog,llog)
 					dump = dumpLogJson(elog,do_epoch)
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
@@ -1679,10 +1594,7 @@ class Erk(QMainWindow):
 			entry = QWidgetAction(self)
 			entry.setDefaultWidget(l1)
 			self.pluginMenu.addAction(entry)
-
 			self.pluginMenu.addSeparator()
-
-			#return
 		else:
 			s = textSeparator(self,"Installed plugins")
 			self.pluginMenu.addAction(s)
@@ -1816,7 +1728,6 @@ class Erk(QMainWindow):
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
 		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		# self.pluginMenu.addAction(entry)
 		m.addAction(entry)
 
 		if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
@@ -1826,7 +1737,6 @@ class Erk(QMainWindow):
 
 		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
 		entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-		#self.pluginMenu.addAction(entry)
 		m.addAction(entry)
 
 		if config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
@@ -1943,8 +1853,6 @@ class Erk(QMainWindow):
 	def rebuildMacroMenu(self):
 
 		self.macroMenu.clear()
-
-		# self.macroMenu.addSeparator()
 
 		if len(macros.MACROS)>0:
 
@@ -2229,11 +2137,9 @@ class Erk(QMainWindow):
 		if setting=="enablemacros":
 			if config.MACROS_ENABLED:
 				config.MACROS_ENABLED = False
-				#self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
 				self.block_macros = True
 			else:
 				config.MACROS_ENABLED = True
-				#self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
 				self.block_macros = False
 			config.save_settings(self.configfile)
 			self.rebuildMacroMenu()
@@ -2728,8 +2634,6 @@ class Erk(QMainWindow):
 			w = config.DEFAULT_APP_WIDTH
 			h =  config.DEFAULT_APP_HEIGHT
 
-			#self.winsizeMenuEntry.setText(f"Window size ({w} X {h})")
-
 	def eventFilter(self, source, event):
 
 		# User List Menu
@@ -2743,7 +2647,6 @@ class Erk(QMainWindow):
 					if hasattr(item,"erk_channel"):
 						menu = QMenu(self)
 
-						#if item.text(0)==SERVER_CONSOLE_NAME:
 						if item.erk_console:
 
 							entryLabel = QLabel(f"&nbsp;<big><b>"+item.erk_client.server+":"+str(item.erk_client.port)+"</b></big>",self)
@@ -2759,7 +2662,6 @@ class Erk(QMainWindow):
 
 							menu.addSeparator()
 
-							# get_network_url(net)
 							if item.erk_client.network:
 								link = get_network_url(item.erk_client.network)
 								if link:
@@ -2814,9 +2716,6 @@ class Erk(QMainWindow):
 			self.connection_display.clearSelection()
 
 			return True
-
-
-
 
 		return super(Erk, self).eventFilter(source, event)
 
@@ -2901,8 +2800,6 @@ def buildServerSettingsMenu(self,client):
 	cmds = client.cmds # list
 	casemapping = client.casemapping
 	maxmodes = client.maxmodes
-
-	#self.config.clear()
 
 	optionsMenu = QMenu("Server settings")
 
