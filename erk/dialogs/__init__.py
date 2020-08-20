@@ -52,6 +52,16 @@ from .error import Dialog as Error
 from .prefix import Dialog as Prefix
 from .list_time import Dialog as ListTime
 
+from .plugin_input import Dialog as PluginInput
+
+def PluginInputDialog(title,text):
+	x = PluginInput(title,text)
+	info = x.get_input_information(title,text)
+	del x
+
+	if not info: return None
+	return info
+
 def ListTimeDialog():
 	x = ListTime()
 	info = x.get_entry_information()

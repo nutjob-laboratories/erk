@@ -46,6 +46,10 @@ from .userinput import handle_input
 from .files import get_user,save_user
 from . import events
 
+from .dialogs import(
+	PluginInputDialog
+	)
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
@@ -146,6 +150,9 @@ class Plugin(ErkFunctions):
 
 	website = None
 	source = None
+
+	def userinput(self,text):
+		return PluginInputDialog(self.name,text)
 
 def check_for_attributes(p):
 	errors = []
