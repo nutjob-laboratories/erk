@@ -2736,7 +2736,8 @@ class Erk(QMainWindow):
 					ssl=info.ssl,
 					gui=self,
 					reconnect=True,
-					autojoin=info.autojoin
+					autojoin=info.autojoin,
+					failreconnect=info.failreconnect,
 				)
 			else:
 				connectSSL(
@@ -2750,7 +2751,8 @@ class Erk(QMainWindow):
 					ssl=info.ssl,
 					gui=self,
 					reconnect=False,
-					autojoin=info.autojoin
+					autojoin=info.autojoin,
+					failreconnect=info.failreconnect,
 				)
 		else:
 			if info.reconnect:
@@ -2765,7 +2767,8 @@ class Erk(QMainWindow):
 					ssl=info.ssl,
 					gui=self,
 					reconnect=True,
-					autojoin=info.autojoin
+					autojoin=info.autojoin,
+					failreconnect=info.failreconnect,
 				)
 			else:
 				connect(
@@ -2779,7 +2782,8 @@ class Erk(QMainWindow):
 					ssl=info.ssl,
 					gui=self,
 					reconnect=False,
-					autojoin=info.autojoin
+					autojoin=info.autojoin,
+					failreconnect=info.failreconnect,
 				)
 
 # SERVER SETTINGS MENU

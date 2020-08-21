@@ -19,6 +19,8 @@ Version 0.822
 	* Added an error notification for lost IRC server connections (only when the option to reconnect is disabled)
 	* Added a new built-in method to the Plugin object: userinput
 	* Added documentation for the userinput() method to the documentation
+	* Added a new option to the connect dialog: reconnect on failed connection (only active if "reconnect" option is turned on)
+	* User file is now patched with new option ("failreconnect") if the option is missing
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

@@ -1229,6 +1229,9 @@ def objectconfig(obj,**kwargs):
 		if key=="autojoin":
 			obj.autojoin = value
 
+		if key=="failreconnect":
+			obj.failreconnect = value
+
 class IRC_Connection_Factory(protocol.ClientFactory):
 	def __init__(self,**kwargs):
 		self.kwargs = kwargs
@@ -1319,6 +1322,9 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
 		msg.setWindowTitle("Connection failed")
 		msg.exec_()
+
+		if self.kwargs["failreconnect"]:
+			protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
 class UptimeHeartbeat(QThread):
 

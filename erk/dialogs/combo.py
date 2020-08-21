@@ -115,6 +115,7 @@ class Dialog(QDialog):
 			"save_history": self.SAVE_HISTORY,
 			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
+			"failreconnect": self.FAIL_RECONNECT,
 		}
 		save_user(user,self.userfile)
 
@@ -123,7 +124,7 @@ class Dialog(QDialog):
 		else:
 			channels = []
 
-		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels)
+		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT)
 
 		return retval
 
@@ -142,14 +143,22 @@ class Dialog(QDialog):
 	def clickReconnect(self,state):
 		if state == Qt.Checked:
 			self.RECONNECT = True
+			self.failrecon.setEnabled(True)
 		else:
 			self.RECONNECT = False
+			self.failrecon.setEnabled(False)
 
 	def clickChannels(self,state):
 		if state == Qt.Checked:
 			self.AUTOJOIN_CHANNELS = True
 		else:
 			self.AUTOJOIN_CHANNELS = False
+
+	def clickFailrecon(self,state):
+		if state == Qt.Checked:
+			self.FAIL_RECONNECT = True
+		else:
+			self.FAIL_RECONNECT = False
 
 	def setServer(self):
 
@@ -217,6 +226,7 @@ class Dialog(QDialog):
 		self.RECONNECT = False
 		self.AUTOJOIN_CHANNELS = False
 		self.SAVE_HISTORY = False
+		self.FAIL_RECONNECT = True
 
 		self.setWindowTitle(f"Connect")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
@@ -406,11 +416,19 @@ class Dialog(QDialog):
 		self.reconnect = QCheckBox("Reconnect on disconnection",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
+		self.failrecon = QCheckBox("Reconnect on failure",self)
+		self.failrecon.stateChanged.connect(self.clickFailrecon)
+
+		if self.user_info["failreconnect"]:
+			self.failrecon.toggle()
+
 		if self.user_info["ssl"]:
 			self.ssl.toggle()
 
 		if self.user_info["reconnect"]:
 			self.reconnect.toggle()
+		else:
+			self.failrecon.setEnabled(False)
 
 		if not self.can_do_ssl:
 			self.DIALOG_CONNECT_VIA_SSL = False
@@ -522,6 +540,7 @@ class Dialog(QDialog):
 		vLayout.addWidget(self.tabs)
 
 		vLayout.addWidget(self.reconnect)
+		vLayout.addWidget(self.failrecon)
 		vLayout.addWidget(self.do_autojoin)
 		vLayout.addWidget(self.history)
 

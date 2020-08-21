@@ -145,11 +145,17 @@ def get_network_list(filename=NETWORK_FILE):
 			line = fp.readline()
 	return servlist
 
+def patch_user(data):
+	if 'failreconnect' not in data:
+		data['failreconnect'] = True
+	return data
+
 def get_user(filename=USER_FILE):
 	#if filename==None: filename=USER_FILE
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_user:
 			data = json.load(read_user)
+			data = patch_user(data)
 			return data
 	else:
 		si = {
@@ -168,6 +174,7 @@ def get_user(filename=USER_FILE):
 			"save_history": False,
 			"disabled_plugins": [],
 			"ignore": [],
+			'failreconnect': True,
 		}
 		return si
 
