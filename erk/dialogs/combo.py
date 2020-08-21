@@ -539,10 +539,24 @@ class Dialog(QDialog):
 		#vLayout.addWidget(servBox)
 		vLayout.addWidget(self.tabs)
 
-		vLayout.addWidget(self.reconnect)
-		vLayout.addWidget(self.failrecon)
-		vLayout.addWidget(self.do_autojoin)
-		vLayout.addWidget(self.history)
+		# vLayout.addWidget(self.reconnect)
+		# vLayout.addWidget(self.failrecon)
+		# vLayout.addWidget(self.do_autojoin)
+		# vLayout.addWidget(self.history)
+
+		c1 = QVBoxLayout()
+		c1.addWidget(self.reconnect)
+		c1.addWidget(self.failrecon)
+
+		c2 = QVBoxLayout()
+		c2.addWidget(self.do_autojoin)
+		c2.addWidget(self.history)
+
+		hOpts = QHBoxLayout()
+		hOpts.addLayout(c1)
+		hOpts.addLayout(c2)
+
+		vLayout.addLayout(hOpts)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
