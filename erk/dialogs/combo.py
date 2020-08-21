@@ -228,7 +228,7 @@ class Dialog(QDialog):
 		self.SAVE_HISTORY = False
 		self.FAIL_RECONNECT = True
 
-		self.setWindowTitle(f"Connect")
+		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
 		self.user_info = get_user(self.userfile)
