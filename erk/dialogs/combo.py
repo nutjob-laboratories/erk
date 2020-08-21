@@ -413,7 +413,7 @@ class Dialog(QDialog):
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
 		self.ssl.stateChanged.connect(self.clickSSL)
 
-		self.reconnect = QCheckBox("Reconnect on disconnection",self)
+		self.reconnect = QCheckBox("Automatic reconnect",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
 		self.failrecon = QCheckBox("Reconnect on failure",self)
