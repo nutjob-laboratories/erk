@@ -22,6 +22,7 @@ Version 0.822
 	* Added a new option to the connect dialog: reconnect on failed connection (only active if "reconnect" option is turned on)
 	* User file is now patched with new option ("failreconnect") if the option is missing
 	* Rearranged the options on the connection dialog (now in two columns of two options each)
+	* Bugfix: single channel IDs (&,#, etc) with no other text would have links created for them in channel chat
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

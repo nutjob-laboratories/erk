@@ -128,7 +128,7 @@ def render_message(message,client=None):
 						# Check to make sure the channel exists on the server; if the channel
 						# doesn't exist, the channel link will not be created
 						if client!=None:
-							if x in client.channels:
+							if x in client.channels and len(x)>1:
 								o = "<a href=\""+x+"\" "
 								o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
 								w = o
