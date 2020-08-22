@@ -870,6 +870,24 @@ class Erk(QMainWindow):
 
 			miscMenu.addSeparator()
 
+
+
+			self.set_lostdialog = QAction(QIcon(UNCHECKED_ICON),"Display lost connection errors",self)
+			self.set_lostdialog.triggered.connect(lambda state,s="enablelost": self.toggleSetting(s))
+			miscMenu.addAction(self.set_lostdialog)
+
+			if config.SHOW_CONNECTION_LOST_ERROR: self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
+
+			
+			self.set_faildialog = QAction(QIcon(UNCHECKED_ICON),"Display failed connection errors",self)
+			self.set_faildialog.triggered.connect(lambda state,s="enablefail": self.toggleSetting(s))
+			miscMenu.addAction(self.set_faildialog)
+
+			if config.SHOW_CONNECTION_FAIL_ERROR: self.set_faildialog.setIcon(QIcon(CHECKED_ICON))
+
+			miscMenu.addSeparator()
+
+
 			self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
 			self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
 			miscMenu.addAction(self.set_macroenable)
@@ -1417,6 +1435,21 @@ class Erk(QMainWindow):
 
 			miscMenu.addSeparator()
 
+			self.set_lostdialog = QAction(QIcon(UNCHECKED_ICON),"Display lost connection errors",self)
+			self.set_lostdialog.triggered.connect(lambda state,s="enablelost": self.toggleSetting(s))
+			miscMenu.addAction(self.set_lostdialog)
+
+			if config.SHOW_CONNECTION_LOST_ERROR: self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
+
+			
+			self.set_faildialog = QAction(QIcon(UNCHECKED_ICON),"Display failed connection errors",self)
+			self.set_faildialog.triggered.connect(lambda state,s="enablefail": self.toggleSetting(s))
+			miscMenu.addAction(self.set_faildialog)
+
+			if config.SHOW_CONNECTION_FAIL_ERROR: self.set_faildialog.setIcon(QIcon(CHECKED_ICON))
+
+			miscMenu.addSeparator()
+
 			self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
 			self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
 			miscMenu.addAction(self.set_macroenable)
@@ -1908,6 +1941,26 @@ class Erk(QMainWindow):
 		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
+
+		if setting=="enablefail":
+			if config.SHOW_CONNECTION_FAIL_ERROR:
+				config.SHOW_CONNECTION_FAIL_ERROR = False
+				self.set_faildialog.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				config.SHOW_CONNECTION_FAIL_ERROR = True
+				self.set_faildialog.setIcon(QIcon(CHECKED_ICON))
+			config.save_settings(self.configfile)
+			return
+
+		if setting=="enablelost":
+			if config.SHOW_CONNECTION_LOST_ERROR:
+				config.SHOW_CONNECTION_LOST_ERROR = False
+				self.set_lostdialog.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				config.SHOW_CONNECTION_LOST_ERROR = True
+				self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
+			config.save_settings(self.configfile)
+			return
 
 		if setting=="chatdate":
 			if config.DISPLAY_DATES_IN_CHANNEL_CHAT:

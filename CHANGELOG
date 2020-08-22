@@ -25,6 +25,7 @@ Version 0.822
 	* Bugfix: single channel IDs (&,#, etc) with no other text would have links created for them in channel chat
 	* Added two new settings: one to toggle showing dialogs for connection lost, and one to toggle showing dialogs for connection failed
 	* New settings are patched into existing settings files
+	* Added connection/lost dialog toggle options to the "Settings" menu
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
