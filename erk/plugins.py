@@ -157,6 +157,12 @@ class Plugin(ErkFunctions):
 		else:
 			return PluginInputDialog(self.name,text,None)
 
+	def msgbox(self,text):
+		self._erk_msg_box_improbable_name_msg = QMessageBox()
+		self._erk_msg_box_improbable_name_msg.setText(text)
+		self._erk_msg_box_improbable_name_msg.setWindowTitle(self.name)
+		self._erk_msg_box_improbable_name_msg.show()
+
 def check_for_attributes(p):
 	errors = []
 

@@ -27,6 +27,8 @@ Version 0.822
 	* New settings are patched into existing settings files
 	* Added connection/lost dialog toggle options to the "Settings" menu
 	* New "splash" logo graphics
+	* Bugfix: -l commandline flag now works properly
+	* New plugin method: msgbox()
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
