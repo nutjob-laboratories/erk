@@ -26,6 +26,7 @@ Version 0.822
 	* Added two new settings: one to toggle showing dialogs for connection lost, and one to toggle showing dialogs for connection failed
 	* New settings are patched into existing settings files
 	* Added connection/lost dialog toggle options to the "Settings" menu
+	* New "splash" logo graphics
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
