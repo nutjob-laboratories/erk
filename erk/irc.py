@@ -1254,12 +1254,13 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# TODO: Dialog that notifies the user that the connection
 		# to the server was lost
 
-		msg = QMessageBox()
-		msg.setIcon(QMessageBox.Critical)
-		msg.setText("Connection to IRC server lost")
-		msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-		msg.setWindowTitle("Connection lost")
-		msg.exec_()
+		if config.SHOW_CONNECTION_LOST_ERROR:
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Connection to IRC server lost")
+			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			msg.setWindowTitle("Connection lost")
+			msg.exec_()
 
 	def clientConnectionFailed(self, connector, reason):
 
@@ -1274,12 +1275,13 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# TODO: Dialog that notifies the user that the connection
 		# to the server failed to establish
 
-		msg = QMessageBox()
-		msg.setIcon(QMessageBox.Critical)
-		msg.setText("Connection to IRC server failed")
-		msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-		msg.setWindowTitle("Connection failed")
-		msg.exec_()
+		if config.SHOW_CONNECTION_FAIL_ERROR:
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Connection to IRC server failed")
+			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			msg.setWindowTitle("Connection failed")
+			msg.exec_()
 
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
@@ -1301,6 +1303,14 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 				pass
 			return
 
+		if config.SHOW_CONNECTION_LOST_ERROR:
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Connection to IRC server lost")
+			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			msg.setWindowTitle("Connection lost")
+			msg.exec_()
+
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 	def clientConnectionFailed(self, connector, reason):
@@ -1316,12 +1326,13 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		# TODO: Dialog that notifies the user that the connection
 		# to the server failed to establish
 
-		msg = QMessageBox()
-		msg.setIcon(QMessageBox.Critical)
-		msg.setText("Connection to IRC server failed")
-		msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-		msg.setWindowTitle("Connection failed")
-		msg.exec_()
+		if config.SHOW_CONNECTION_FAIL_ERROR:
+			msg = QMessageBox()
+			msg.setIcon(QMessageBox.Critical)
+			msg.setText("Connection to IRC server failed")
+			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			msg.setWindowTitle("Connection failed")
+			msg.exec_()
 
 		if self.kwargs["failreconnect"]:
 			protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)

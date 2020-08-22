@@ -116,6 +116,9 @@ APP_TITLE_SHOW_TOPIC = False
 CHAT_DISPLAY_INFO_BAR = True
 DISPLAY_DATES_IN_CHANNEL_CHAT = True
 
+SHOW_CONNECTION_LOST_ERROR = True
+SHOW_CONNECTION_FAIL_ERROR = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
@@ -194,10 +197,21 @@ def save_settings(filename=SETTINGS_FILE):
 		"chat_display_info_bar": CHAT_DISPLAY_INFO_BAR,
 		"input_command_symbol": INPUT_COMMAND_SYMBOL,
 		"display_dates_in_channel_chat": DISPLAY_DATES_IN_CHANNEL_CHAT,
+		"show_connection_lost_dialog": SHOW_CONNECTION_LOST_ERROR,
+		"show_connection_fail_dialog": SHOW_CONNECTION_FAIL_ERROR,
 	}
 
 	with open(filename, "w") as write_data:
 		json.dump(settings, write_data, indent=4, sort_keys=True)
+
+def patch_settings(data):
+	if not "show_connection_lost_dialog" in data:
+		data["show_connection_lost_dialog"] = SHOW_CONNECTION_LOST_ERROR
+
+	if not "show_connection_fail_dialog" in data:
+		data["show_connection_fail_dialog"] = SHOW_CONNECTION_FAIL_ERROR
+
+	return data
 
 def load_settings(filename=SETTINGS_FILE):
 	if filename==None: filename = SETTINGS_FILE
@@ -274,11 +288,18 @@ def load_settings(filename=SETTINGS_FILE):
 	global CHAT_DISPLAY_INFO_BAR
 	global INPUT_COMMAND_SYMBOL
 	global DISPLAY_DATES_IN_CHANNEL_CHAT
+	global SHOW_CONNECTION_LOST_ERROR
+	global SHOW_CONNECTION_FAIL_ERROR
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_settings:
 			data = json.load(read_settings)
+
+			data = patch_settings(data)
+
+			SHOW_CONNECTION_LOST_ERROR = data["show_connection_lost_dialog"]
+			SHOW_CONNECTION_FAIL_ERROR = data["show_connection_fail_dialog"]
 
 			USE_SPACES_FOR_INDENT = data["use_spaces_for_indent"]
 			NUMBER_OF_SPACES_FOR_INDENT = data["number_of_indent_spaces"]
