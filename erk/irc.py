@@ -50,6 +50,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from .dialogs import(
+	NeterrorDialog
+	)
+
 from twisted.internet import reactor, protocol
 
 try:
@@ -287,6 +291,11 @@ class IRC_Connection(irc.IRCClient):
 		# self.uptimeTimer = UptimeHeartbeat()
 		# self.uptimeTimer.beat.connect(self.uptime_beat)
 		# self.uptimeTimer.start()
+
+		try:
+			self._erk_net_connection_lost.close()
+		except:
+			pass
 
 		events.connection(self.gui,self)
 
@@ -1255,12 +1264,9 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# to the server was lost
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			msg = QMessageBox()
-			msg.setIcon(QMessageBox.Critical)
-			msg.setText("Connection to IRC server lost")
-			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			msg.setWindowTitle("Connection lost")
-			msg.exec_()
+			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			self._erk_net_connection_lost.server = self.kwargs["server"]
+			self._erk_net_connection_lost.port = self.kwargs["port"]
 
 	def clientConnectionFailed(self, connector, reason):
 
@@ -1276,12 +1282,9 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			msg = QMessageBox()
-			msg.setIcon(QMessageBox.Critical)
-			msg.setText("Connection to IRC server failed")
-			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			msg.setWindowTitle("Connection failed")
-			msg.exec_()
+			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			self._erk_net_connection_lost.server = self.kwargs["server"]
+			self._erk_net_connection_lost.port = self.kwargs["port"]
 
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
@@ -1304,12 +1307,9 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			msg = QMessageBox()
-			msg.setIcon(QMessageBox.Critical)
-			msg.setText("Connection to IRC server lost")
-			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			msg.setWindowTitle("Connection lost")
-			msg.exec_()
+			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			self._erk_net_connection_lost.server = self.kwargs["server"]
+			self._erk_net_connection_lost.port = self.kwargs["port"]
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
@@ -1327,12 +1327,9 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			msg = QMessageBox()
-			msg.setIcon(QMessageBox.Critical)
-			msg.setText("Connection to IRC server failed")
-			msg.setDetailedText(f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			msg.setWindowTitle("Connection failed")
-			msg.exec_()
+			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			self._erk_net_connection_lost.server = self.kwargs["server"]
+			self._erk_net_connection_lost.port = self.kwargs["port"]
 
 		if self.kwargs["failreconnect"]:
 			protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)

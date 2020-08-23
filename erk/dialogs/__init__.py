@@ -51,8 +51,14 @@ from .key import Dialog as Key
 from .error import Dialog as Error
 from .prefix import Dialog as Prefix
 from .list_time import Dialog as ListTime
-
 from .plugin_input import Dialog as PluginInput
+
+from .neterror import Dialog as Neterror
+
+def NeterrorDialog(title,text):
+	x = Neterror(title,text)
+	x.show()
+	return x
 
 def PluginInputDialog(title,text,icon,obj=None):
 	x = PluginInput(title,text,icon,obj)

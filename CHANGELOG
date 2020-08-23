@@ -31,6 +31,7 @@ Version 0.822
 	* New plugin method: msgbox()
 	* Streamlined toolbar/menubar generation; all done in one function now, no duplicate code
 	* Tweak to the new splash logo
+	* Network error dialogs are no longer modal
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
