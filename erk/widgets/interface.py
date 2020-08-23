@@ -1350,12 +1350,13 @@ class SpellTextEdit(QPlainTextEdit):
 
 		# Check if the selected word is misspelled and offer spelling
 		# suggestions if it is.
+		counter = 0
 		if self.textCursor().hasSelection():
 			text = self.textCursor().selectedText()
 
 			misspelled = self.dict.unknown([text])
 			if len(misspelled)>0:
-				counter = 0
+				
 				for word in self.dict.candidates(text):
 					action = SpellAction(word, popup_menu)
 					action.correct.connect(self.correctWord)
@@ -1364,7 +1365,97 @@ class SpellTextEdit(QPlainTextEdit):
 				if counter != 0:
 					popup_menu.insertSeparator(popup_menu.actions()[counter])
 
+		popup_menu.insertSeparator(popup_menu.actions()[counter])
+		counter = counter + 1
+
+		text = self.textCursor().selectedText()
+		if len(text)>0:
+
+			# tformat = QAction(QIcon(UNCHECKED_ICON),"Insert bold",self)
+			# tformat.triggered.connect(self.insertBold)
+			# popup_menu.insertAction(popup_menu.actions()[counter],tformat)
+			# counter = counter + 1
+
+			colorMenu = QMenu("Colors")
+			colorMenu.setIcon(QIcon(FORMAT_ICON))
+			popup_menu.insertMenu(popup_menu.actions()[counter],colorMenu)
+			counter = counter + 1
+
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor(s))
+			colorMenu.addAction(entry)
+
+			popup_menu.insertSeparator(popup_menu.actions()[counter])
+			counter = counter + 1
+
 		popup_menu.exec_(event.globalPos())
+
+	# def insertBold(self):
+
+	# 	cursor = self.textCursor()
+	# 	text = self.textCursor().selectedText()
+
+	# 	cursor.insertText("\x02"+text+"\x0F")
+
+	def insertColor(self,color):
+
+		cursor = self.textCursor()
+
+		text = self.textCursor().selectedText()
+
+		cursor.insertText("\x03"+color+text+"\x0F")
 
 	def correctWord(self, word):
 		'''
