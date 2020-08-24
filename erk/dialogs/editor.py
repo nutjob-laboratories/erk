@@ -1341,6 +1341,23 @@ class QCodeEditor(QPlainTextEdit):
 				super().keyPressEvent(event)
 				self.insertPlainText(indent)
 				return
+
+		elif event.key() == Qt.Key_Backspace:
+			if self.autoindent:
+				cursor = self.textCursor()
+				line_number = cursor.blockNumber()
+				d = self.document()
+				b = d.findBlockByLineNumber(line_number)
+				l = b.text()
+
+				if l.isspace() and len(l)>0:
+					if self.parent.indentspace:
+						for x in range(self.parent.tabsize):
+							super().keyPressEvent(event)
+						return
+
+			super().keyPressEvent(event)
+			return
 		
 		super().keyPressEvent(event)
 

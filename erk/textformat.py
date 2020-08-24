@@ -100,7 +100,7 @@ DATE_MESSAGE_TEMPLATE = f'''
 		<tr>
 			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
 			</td>
-			<td><center><small>!MESSAGE!</small></center></td>
+			<td><center><small><b>!MESSAGE!</b></small></center></td>
 			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
 			</td>
 		</tr>
