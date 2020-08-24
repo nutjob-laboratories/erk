@@ -123,6 +123,10 @@ class Erk(QMainWindow):
 
 	def refresh_application_title(self,item=None):
 
+		# Fix for no connection
+		if hasattr(self.current_page,"nothing_is_connected"):
+			self.setWindowTitle(APPLICATION_NAME)
+
 		if item!=None:
 
 			topic = ''
@@ -174,10 +178,6 @@ class Erk(QMainWindow):
 					self.setWindowTitle(topic)
 				else:
 					self.setWindowTitle(APPLICATION_NAME)
-
-		# Fix for no connection
-		if hasattr(window,"nothing_is_connected"):
-			self.setWindowTitle(APPLICATION_NAME)
 
 	def pageChange(self,index):
 
