@@ -83,6 +83,8 @@ USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = False
 if platform.system()!="Windows" and platform.system()!="Linux":
 	USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
 
+DO_NOT_DISPLAY_MENUS_OR_TOOLBAR = False
+
 class Erk(QMainWindow):
 
 	# Occasionally, when restoring the main window, chat windows' text display
@@ -116,7 +118,8 @@ class Erk(QMainWindow):
 		if self.current_client:
 			events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
-			self.disconnect.setEnabled(False)
+			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
+				self.disconnect.setEnabled(False)
 
 	def refresh_application_title(self,item=None):
 
@@ -180,15 +183,15 @@ class Erk(QMainWindow):
 
 		if hasattr(window,"client"):
 			self.current_client = window.client
-			self.disconnect.setEnabled(True)
+			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: self.disconnect.setEnabled(True)
 		else:
 			self.current_client = None
-			self.disconnect.setEnabled(False)
+			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:self.disconnect.setEnabled(False)
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
-				self.disconnect.setEnabled(False)
+				if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: self.disconnect.setEnabled(False)
 
 		if hasattr(window,"input"):
 			# Set focus to the input widget
@@ -222,9 +225,11 @@ class Erk(QMainWindow):
 		#self.toggle_title()
 
 	def start_spinner(self):
+		if DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: return
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR: self.spinner.start()
 
 	def stop_spinner(self):
+		if DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: return
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 			self.spinner.stop()
 			self.corner_widget.setIcon(QIcon(self.toolbar_icon))
@@ -351,25 +356,30 @@ class Erk(QMainWindow):
 
 		self.current_page = None
 
-		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-			self.menubar = self.menuBar()
-		else:
-			self.toolbar = generate_menu_toolbar(self)
-			self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+		if self.block_toolbar:
+			global DO_NOT_DISPLAY_MENUS_OR_TOOLBAR
+			DO_NOT_DISPLAY_MENUS_OR_TOOLBAR = True
 
-			self.toolbar_icon = TOOLBAR_ICON
-			self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
-			self.spinner = QMovie(SPINNER_ANIMATION)
-			self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+		if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
+			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+				self.menubar = self.menuBar()
+			else:
+				self.toolbar = generate_menu_toolbar(self)
+				self.addToolBar(Qt.TopToolBarArea,self.toolbar)
 
-			# MENU TOOLBAR
-			self.mainMenu = QMenu()
-			self.settingsMenu = QMenu()
-			self.logMenu = QMenu()
-			self.helpMenu = QMenu()
-			self.macroMenu = QMenu()
-			self.pluginMenu = QMenu()
-			self.displayMenu = QMenu()
+				self.toolbar_icon = TOOLBAR_ICON
+				self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
+				self.spinner = QMovie(SPINNER_ANIMATION)
+				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+
+				# MENU TOOLBAR
+				self.mainMenu = QMenu()
+				self.settingsMenu = QMenu()
+				self.logMenu = QMenu()
+				self.helpMenu = QMenu()
+				self.macroMenu = QMenu()
+				self.pluginMenu = QMenu()
+				self.displayMenu = QMenu()
 
 		# Plugins
 		if not self.block_plugins:
@@ -377,7 +387,8 @@ class Erk(QMainWindow):
 
 			self.display_load_errors()
 
-		self.buildMenuInterface()
+		if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
+			self.buildMenuInterface()
 		
 		self.connection_display, self.connection_dock = buildConnectionDisplayWidget(self)
 

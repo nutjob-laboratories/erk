@@ -89,7 +89,10 @@ disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
 disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
-disgroup.add_argument( "-N","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
+disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
+disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menu(s)", action="store_true")
+disgroup.add_argument( "-X","--nomenus", help=f"Disable all menus", action="store_true")
+disgroup.add_argument( "-N","--noconnect", help=f"Disable connection commands", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
 
@@ -268,7 +271,7 @@ if __name__ == '__main__':
 
 		# Handle disabling connect commands
 
-		if False: erk.config.DISABLE_CONNECT_COMMANDS = True
+		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS = True
 
 		# Handle IRC URLs
 
@@ -338,14 +341,14 @@ if __name__ == '__main__':
 					chans,
 					u["failreconnect"],
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,False,False,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,False,False,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -380,7 +383,7 @@ if __name__ == '__main__':
 						c,
 						u["failreconnect"],
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,False,False,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 				GUI.show()
 			else:
 
@@ -388,7 +391,7 @@ if __name__ == '__main__':
 
 				info = ComboDialog(args.user)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,False,False,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
 					GUI.show()
 				else:
 					app.quit()
