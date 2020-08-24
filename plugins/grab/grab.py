@@ -29,14 +29,16 @@ class NicknameGrabber(Plugin):
         
         tokens = text.split()
         
-        if len(tokens)==2:
+        if len(tokens)==1:
             if tokens[0].lower()=="/grab":
-                self.target = tokens[1]
-                self.active = True
+                self.target = self.userinput("Nickname to grab")
+                if self.target!=None:
+                    self.print("Grabbing nickname "+self.target)
+                    self.active = True
                 return True
         
         if len(tokens)>1 and tokens[0].lower()=="/grab":
-            self.print("Usage: /grab NICKNAME")
+            self.print("Usage: /grab")
             return True
 
     def tick(self,client):
