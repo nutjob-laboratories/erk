@@ -175,6 +175,10 @@ class Erk(QMainWindow):
 				else:
 					self.setWindowTitle(APPLICATION_NAME)
 
+		# Fix for no connection
+		if hasattr(window,"nothing_is_connected"):
+			self.setWindowTitle(APPLICATION_NAME)
+
 	def pageChange(self,index):
 
 		window = self.stack.widget(index)
@@ -428,6 +432,8 @@ class Erk(QMainWindow):
 		self.starter.setStyleSheet(css)
 
 		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b></small></p>")
+
+		self.starter.nothing_is_connected = True
 
 		self.starter.anchorClicked.connect(self.linkClicked)
 

@@ -35,6 +35,7 @@ Version 0.822
 	* New addition to text input context menu: IRC colors
 	* Tweaked the hex color codes used by the IRC color renderer to be closer to other IRC clients
 	* Restored nosettings, nomenus, and noconnect commandline options
+	* Bugfix: application window name is now reset properly if there are no active connections
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
