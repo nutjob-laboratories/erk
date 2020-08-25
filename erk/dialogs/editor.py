@@ -109,6 +109,7 @@ class Window(QMainWindow):
 		self.setWindowTitle(self.title)
 		self.changed = False
 		self.menuSave.setEnabled(False)
+		self.toolbarSave.setEnabled(False)
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle("Find")
 
@@ -137,6 +138,7 @@ class Window(QMainWindow):
 			self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 			self.changed = False
 			self.menuSave.setEnabled(True)
+			self.toolbarSave.setEnabled(True)
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
 
@@ -186,6 +188,7 @@ class Window(QMainWindow):
 			script.close()
 			self.filename = fileName
 			self.menuSave.setEnabled(True)
+			self.toolbarSave.setEnabled(True)
 			self.title = os.path.basename(fileName)
 			self.setWindowTitle(self.title)
 			self.sep_icon.show()
@@ -389,6 +392,7 @@ class Window(QMainWindow):
 				self.sep_icon.show()
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
+				self.toolbarSave.setEnabled(True)
 				self.title = "plugin.py"
 				self.setWindowTitle(self.title)
 				self.changed = False
@@ -688,40 +692,6 @@ class Window(QMainWindow):
 
 		self.spacesMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
 
-		# self.set_spaces_1 = QAction(QIcon(UNCHECKED_ICON),"One",self)
-		# self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
-		# self.spacesMenu.addAction(self.set_spaces_1)
-
-		# if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(CHECKED_ICON))
-
-		# self.set_spaces_2 = QAction(QIcon(UNCHECKED_ICON),"Two",self)
-		# self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
-		# self.spacesMenu.addAction(self.set_spaces_2)
-
-		# if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(CHECKED_ICON))
-
-		# self.set_spaces_3 = QAction(QIcon(UNCHECKED_ICON),"Three",self)
-		# self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
-		# self.spacesMenu.addAction(self.set_spaces_3)
-
-		# if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(CHECKED_ICON))
-
-		# self.set_spaces_4 = QAction(QIcon(UNCHECKED_ICON),"Four",self)
-		# self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
-		# self.spacesMenu.addAction(self.set_spaces_4)
-
-		# if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(CHECKED_ICON))
-
-		# self.set_spaces_5 = QAction(QIcon(UNCHECKED_ICON),"Five",self)
-		# self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
-		# self.spacesMenu.addAction(self.set_spaces_5)
-
-		# if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(CHECKED_ICON))
-
-
-
-
-
 		self.set_spaces_1 = QAction(QIcon(RUNCHECKED_ICON),"One",self)
 		self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
 		self.spacesMenu.addAction(self.set_spaces_1)
@@ -751,10 +721,6 @@ class Window(QMainWindow):
 		self.spacesMenu.addAction(self.set_spaces_5)
 
 		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(RCHECKED_ICON))
-
-
-
-
 
 		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
@@ -816,6 +782,55 @@ class Window(QMainWindow):
 					self.plugin_icon.show()
 
 		if not config.EDITOR_STATUS_BAR: self.status.hide()
+
+		self.toolbar = QToolBar()
+		self.addToolBar(self.toolbar)
+
+		self.toolbar.setIconSize(QSize(16,16))
+		self.toolbar.setMovable(False)
+
+		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
+		entry.triggered.connect(self.doNewFile)
+		self.toolbar.addAction(entry)
+
+		entry = QAction(QIcon(OPENFILE_ICON),"Open file",self)
+		entry.triggered.connect(self.doFileOpen)
+		self.toolbar.addAction(entry)
+
+		self.toolbarSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
+		self.toolbarSave.triggered.connect(self.doFileSave)
+		self.toolbarSave.setShortcut("Ctrl+S")
+		self.toolbar.addAction(self.toolbarSave)
+		if not self.filename:
+			self.toolbarSave.setEnabled(False)
+
+		entry = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
+		entry.triggered.connect(self.doFileSaveAs)
+		self.toolbar.addAction(entry)
+
+		self.toolbar.addSeparator()
+
+		entry = QAction(QIcon(MENU_PACKAGE_ICON),"Create a new plugin package",self)
+		entry.triggered.connect(self.newPackage)
+		self.toolbar.addAction(entry)
+
+		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
+		entry.triggered.connect(self.menuTemplate)
+		self.toolbar.addAction(entry)
+
+		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.toolbar.addAction(entry)
+
+		self.toolbar.addSeparator()
+
+		entry = QAction(QIcon(WHOIS_ICON),"Find",self)
+		entry.triggered.connect(self.doFind)
+		self.toolbar.addAction(entry)
+
+		entry = QAction(QIcon(REPLACE_ICON),"Find and replace",self)
+		entry.triggered.connect(self.doFindReplace)
+		self.toolbar.addAction(entry)
 
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()

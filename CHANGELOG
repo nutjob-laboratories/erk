@@ -39,6 +39,7 @@ Version 0.822
 	* The backspace in the editor now follows the settings for indentation
 	* Updated the editor syntax highlighting to recognize the new built-in methods
 	* Bugfix: failed/lost connection notification dialog should close/hide on reconnection
+	* Added a toolbar with common functions to the editor
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
