@@ -1142,6 +1142,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'self.print','self.console','self.write','self.log','self.uptime',
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
+		'self.userinput','self.msgbox',
 	]
 
 	# Python keywords
