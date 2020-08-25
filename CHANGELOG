@@ -38,6 +38,7 @@ Version 0.822
 	* Bugfix: application window name is now reset properly if there are no active connections
 	* The backspace in the editor now follows the settings for indentation
 	* Updated the editor syntax highlighting to recognize the new built-in methods
+	* Bugfix: failed/lost connection notification dialog should close/hide on reconnection
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

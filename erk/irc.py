@@ -321,6 +321,11 @@ class IRC_Connection(irc.IRCClient):
 
 		self.registered = False
 
+		try:
+			self._erk_net_connection_lost.close()
+		except:
+			pass
+
 		events.disconnection(self.gui,self)
 
 		irc.IRCClient.connectionLost(self, reason)
