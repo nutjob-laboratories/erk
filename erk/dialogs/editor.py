@@ -102,6 +102,7 @@ class Window(QMainWindow):
 			self.doExitSave(self.filename)
 
 		self.filename = ''
+		self.package_dir = None
 		self.sep_icon.hide()
 		self.status_file.setText('')
 		self.editor.clear()
@@ -129,6 +130,7 @@ class Window(QMainWindow):
 			else:
 				fileName = fileName + '.py'
 			self.filename = fileName
+			self.package_dir = os.path.dirname(self.filename)
 			code = open(fileName,"w")
 			code.write(self.editor.toPlainText())
 			code.close()
@@ -187,6 +189,7 @@ class Window(QMainWindow):
 			self.editor.setPlainText(script.read())
 			script.close()
 			self.filename = fileName
+			self.package_dir = os.path.dirname(self.filename)
 			self.menuSave.setEnabled(True)
 			self.toolbarSave.setEnabled(True)
 			self.title = os.path.basename(fileName)
@@ -220,6 +223,7 @@ class Window(QMainWindow):
 			else:
 				fileName = fileName + '.py'
 			self.filename = fileName
+			self.package_dir = os.path.dirname(self.filename)
 			code = open(fileName,"w")
 			code.write(self.editor.toPlainText())
 
@@ -389,6 +393,7 @@ class Window(QMainWindow):
 				# Load source into the editor
 				self.editor.setPlainText(t)
 				self.filename = os.path.join(outdir, "plugin.py")
+				self.package_dir = os.path.dirname(self.filename)
 				self.sep_icon.show()
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
@@ -447,10 +452,13 @@ class Window(QMainWindow):
 		self.changed = False
 		self.findWindow = None
 
+		self.package_dir = None
+
 		config.load_settings(econfig)
 
 		if self.filename:
 			self.title = os.path.basename(self.filename)
+			self.package_dir = os.path.dirname(self.filename)
 			self.setWindowTitle(self.title)
 		else:
 			self.setWindowTitle("Editor")
@@ -766,6 +774,7 @@ class Window(QMainWindow):
 
 		if self.filename:
 			if os.path.isfile(self.filename):
+				self.package_dir = os.path.dirname(self.filename)
 				self.sep_icon.show()
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 
@@ -819,7 +828,7 @@ class Window(QMainWindow):
 		self.toolbar.addAction(entry)
 
 		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		entry.triggered.connect(self.openPDir)
 		self.toolbar.addAction(entry)
 
 		self.toolbar.addSeparator()
@@ -831,6 +840,12 @@ class Window(QMainWindow):
 		entry = QAction(QIcon(REPLACE_ICON),"Find and replace",self)
 		entry.triggered.connect(self.doFindReplace)
 		self.toolbar.addAction(entry)
+
+	def openPDir(self):
+		if self.package_dir!=None:
+			QDesktopServices.openUrl(QUrl("file:"+self.package_dir))
+		else:
+			QDesktopServices.openUrl(QUrl("file:"+PLUGIN_DIRECTORY))
 
 	def menuFont(self):
 		font, ok = QFontDialog.getFont()
