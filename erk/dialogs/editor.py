@@ -55,6 +55,8 @@ PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
+DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
+DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
 def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
 	x = EditorInput(title,prompt,twoinputs,twoprompt)
@@ -551,6 +553,10 @@ class Window(QMainWindow):
 		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
 		fileMenu.addAction(plugin_dir)
 
+		entry = QAction(QIcon(PDF_ICON),"Read plugin documentation",self)
+		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		fileMenu.addAction(entry)
+
 		fileMenu.addSeparator()
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
@@ -797,6 +803,12 @@ class Window(QMainWindow):
 
 		self.toolbar.setIconSize(QSize(16,16))
 		self.toolbar.setMovable(False)
+
+		entry = QAction(QIcon(PDF_ICON),"Read plugin documentation",self)
+		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.toolbar.addAction(entry)
+
+		self.toolbar.addSeparator()
 
 		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
 		entry.triggered.connect(self.doNewFile)

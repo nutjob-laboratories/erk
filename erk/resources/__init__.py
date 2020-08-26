@@ -51,6 +51,8 @@ MENU_MACRO_ICON = ":/macro.png"
 MENU_PACKAGE_ICON = ":/package.png"
 MENU_ARCHIVE_ICON = ":/archive.png"
 
+PDF_ICON = ":/gui-pdf.png"
+
 RCHECKED_ICON = ":/gui-rchecked.png"
 RUNCHECKED_ICON = ":/gui-runchecked.png"
 
