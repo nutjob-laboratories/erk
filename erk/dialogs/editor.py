@@ -1057,6 +1057,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="exec": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(LAMBDA_ICON),"userinput()",self)
+		entry.triggered.connect(lambda state,f="userinput": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		funcMenu.addSeparator()
 
 		entry = QAction(QIcon(PRINT_ICON),"print()",self)
@@ -1075,6 +1079,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="log": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(WINDOW_ICON),"msgbox()",self)
+		entry.triggered.connect(lambda state,f="msgbox": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		# Finish menu
 
 		menu.insertSeparator(menu.actions()[1])
@@ -1082,6 +1090,21 @@ class Window(QMainWindow):
 		action = menu.exec_(self.editor.mapToGlobal(location))
 
 	def insertMethod(self,ctype):
+
+		if ctype=="userinput":
+			data = EditorPrompt("Get user input","Variable name",True,"Text prompt")
+			if data:
+				data[0] = data[0].replace('"','\\"')
+				data[1] = data[1].replace('"','\\"')
+				code = data[0]+" = self.userinput(\""+data[1]+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="msgbox":
+			data = EditorPrompt("Message box text","Text")
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.msgbox(\""+data+"\")"
+				self.editor.insertPlainText(code)
 
 		if ctype=="log":
 			data = EditorPrompt("Write/Log to window","Target",True,"Text")

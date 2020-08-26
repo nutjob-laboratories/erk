@@ -41,6 +41,7 @@ Version 0.822
 	* Bugfix: failed/lost connection notification dialog should close/hide on reconnection
 	* Added a toolbar with common functions to the editor
 	* Altered the "open plugin directory" function in the editor to open the plugin directory of the plugin currently being worked on, if known
+	* Added msgbox() and userinput() to the editor's context menu code generator
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
