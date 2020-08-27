@@ -293,7 +293,7 @@ class IRC_Connection(irc.IRCClient):
 		# self.uptimeTimer.start()
 
 		try:
-			self._erk_net_connection_lost.close()
+			self.gui._erk_net_connection_lost.close()
 		except:
 			pass
 
@@ -322,7 +322,7 @@ class IRC_Connection(irc.IRCClient):
 		self.registered = False
 
 		try:
-			self._erk_net_connection_lost.close()
+			self.gui._erk_net_connection_lost.close()
 		except:
 			pass
 
@@ -1269,9 +1269,9 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# to the server was lost
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			self._erk_net_connection_lost.server = self.kwargs["server"]
-			self._erk_net_connection_lost.port = self.kwargs["port"]
+			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 	def clientConnectionFailed(self, connector, reason):
 
@@ -1287,9 +1287,9 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			self._erk_net_connection_lost.server = self.kwargs["server"]
-			self._erk_net_connection_lost.port = self.kwargs["port"]
+			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
@@ -1312,9 +1312,9 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			self._erk_net_connection_lost.server = self.kwargs["server"]
-			self._erk_net_connection_lost.port = self.kwargs["port"]
+			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
@@ -1332,9 +1332,9 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			self._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			self._erk_net_connection_lost.server = self.kwargs["server"]
-			self._erk_net_connection_lost.port = self.kwargs["port"]
+			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 		if self.kwargs["failreconnect"]:
 			protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
