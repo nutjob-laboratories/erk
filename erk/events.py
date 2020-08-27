@@ -47,6 +47,18 @@ PRIVATES = []
 
 UNSEEN = []
 
+def received_whowas(gui,client,nickname,replies):
+	
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+
+			for e in replies:
+				username = e[0]
+				host = e[1]
+				realname = e[2]
+
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,nickname, "WHOWAS: "+username+"@"+host+": \x02"+realname+"\x0F"), True )
+
 def received_time(gui,client,server,time):
 	
 	if gui.current_page:
@@ -871,11 +883,11 @@ def received_whois(gui,client,whoisdata):
 	
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
-			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x1D"+whoisdata.username+"@"+whoisdata.host+"\x0F: \x02"+whoisdata.realname+"\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, whoisdata.username+"@"+whoisdata.host+": \x02"+whoisdata.realname+"\x0F"), True )
 			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.server+"\x0F"), True )
 			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.channels+"\x0F"), True )
-			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Signed on:\x0F \x1D"+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')+"\x0F"), True )
-			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Idle:\x0F \x1D"+whoisdata.idle+" seconds\x0F"), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Signed on:\x0F "+datetime.fromtimestamp(int(whoisdata.signon)).strftime('%m/%d/%Y, %H:%M:%S')), True )
+			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02Idle:\x0F "+whoisdata.idle+" seconds"), True )
 			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.privs+"\x0F"), True )
 
 def topic(gui,client,setter,channel,topic):

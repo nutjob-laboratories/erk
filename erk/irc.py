@@ -177,6 +177,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.whois = {}
 
+		self.whowas = {}
+
 		self.is_away = False
 
 		self.uptime = 0
@@ -636,8 +638,21 @@ class IRC_Connection(irc.IRCClient):
 		host = params[3]
 		realname = params[5]
 
+		if nick in self.whowas:
+			entry = [username,host,realname]
+			self.whowas[nick].append(entry)
+		else:
+			self.whowas[nick] = []
+			entry = [username,host,realname]
+			self.whowas[nick].append(entry)
+
 	def irc_RPL_ENDOFWHOWAS(self, prefix, params):
 		nick = params[1]
+
+		if nick in self.whowas:
+			replies = self.whowas[nick]
+			del self.whowas[nick]
+			events.received_whowas(self.gui,self,nick,replies)
 
 	def irc_RPL_WHOREPLY(self, prefix, params):
 		channel = params[1]
@@ -709,9 +724,6 @@ class IRC_Connection(irc.IRCClient):
 	def irc_RPL_YOUREOPER(self, prefix, params):
 		
 		events.erk_youre_oper(self.gui,self)
-
-	def irc_RPL_TIME(self, prefix, params):
-		t = params[2]
 
 	def irc_INVITE(self,prefix,params):
 		p = prefix.split("!")

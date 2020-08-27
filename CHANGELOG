@@ -47,6 +47,8 @@ Version 0.822
 	* The editor's "open plugin directory" option will open the directory of the plugin being edited, or the regular directory if no file is saved
 	* Added a list of banned users to the connection display right click context menu for channels
 	* Added /time command
+	* Cleaned up WHOIS response display
+	* Added /whowas command
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
