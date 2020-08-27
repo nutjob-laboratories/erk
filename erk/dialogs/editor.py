@@ -558,7 +558,6 @@ class Window(QMainWindow):
 		fileMenu.addSeparator()
 
 		self.menuOpenPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		#self.menuOpenPlugin.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.menuOpenPlugin.triggered.connect(self.openPDir)
 		fileMenu.addAction(self.menuOpenPlugin)
 

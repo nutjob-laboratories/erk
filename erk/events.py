@@ -1538,7 +1538,10 @@ def server_options(gui,client,options):
 	build_connection_display(gui)
 
 def banlist(gui,client,channel,banlist):
-	pass
+	
+	window = fetch_channel_window(client,channel)
+	if window:
+		window.banlist = banlist
 
 def startup(gui,client):
 	global CONSOLES

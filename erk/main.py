@@ -2207,6 +2207,15 @@ class Erk(QMainWindow):
 
 								channel = item.text(0)
 
+								if len(item.erk_widget.banlist)>0:
+
+									bannedmenu = QMenu("Banned users",self)
+									bannedmenu.setIcon(QIcon(BAN_ICON))
+									for c in item.erk_widget.banlist:
+										e = QAction(F"{c[0]}", self) 
+										bannedmenu.addAction(e)
+									menu.addMenu(bannedmenu)
+
 								entry = QAction(QIcon(EXIT_ICON),"Leave channel",self)
 								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: events.close_channel_window(client,name))
 								menu.addAction(entry)

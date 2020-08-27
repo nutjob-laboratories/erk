@@ -248,6 +248,8 @@ class Window(QMainWindow):
 		self.admin = False
 		self.halfop = False
 
+		self.banlist = []
+
 		self.language = config.SPELLCHECK_LANGUAGE
 
 		self.history_buffer = ['']
