@@ -49,6 +49,8 @@ Version 0.822
 	* Added /time command
 	* Cleaned up WHOIS response display
 	* Added /whowas command
+	* Added /whois command to autocomplete list and help
+	* Bugfix: /whois now can take multiple nicknames
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

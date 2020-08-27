@@ -63,6 +63,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"help": config.INPUT_COMMAND_SYMBOL+"help",
 	config.INPUT_COMMAND_SYMBOL+"topic": config.INPUT_COMMAND_SYMBOL+"topic ",
 	config.INPUT_COMMAND_SYMBOL+"time": config.INPUT_COMMAND_SYMBOL+"time",
+	config.INPUT_COMMAND_SYMBOL+"whois": config.INPUT_COMMAND_SYMBOL+"whois ",
 	config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
 }
 
@@ -92,6 +93,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -118,6 +120,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 ]
 
 hentries = []
@@ -619,9 +622,9 @@ def handle_common_input(window,client,text):
 			return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'whois' and len(tokens)==2:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'whois' and len(tokens)>=2:
 			tokens.pop(0)
-			target = tokens.pop(0)
+			target = " ".join(tokens)
 			client.sendLine("WHOIS "+target)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'whois':
