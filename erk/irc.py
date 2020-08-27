@@ -790,6 +790,8 @@ class IRC_Connection(irc.IRCClient):
 		server = params[1]
 		time = params[2]
 
+		events.received_time(self.gui,self,params[1],params[2])
+
 	def irc_RPL_USERHOST(self,prefix,params):
 		data = params[1]
 

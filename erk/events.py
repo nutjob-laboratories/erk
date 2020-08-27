@@ -47,6 +47,12 @@ PRIVATES = []
 
 UNSEEN = []
 
+def received_time(gui,client,server,time):
+	
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',server+" time: "+time  ) )
+
 def toggle_name_topic_display():
 	for c in CHANNELS:
 		c.widget.refresh_name_topic_display()

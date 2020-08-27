@@ -62,6 +62,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"refresh": config.INPUT_COMMAND_SYMBOL+"refresh",
 	config.INPUT_COMMAND_SYMBOL+"help": config.INPUT_COMMAND_SYMBOL+"help",
 	config.INPUT_COMMAND_SYMBOL+"topic": config.INPUT_COMMAND_SYMBOL+"topic ",
+	config.INPUT_COMMAND_SYMBOL+"time": config.INPUT_COMMAND_SYMBOL+"time",
 }
 
 CHANNEL_COMMANDS = {
@@ -88,6 +89,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -112,6 +114,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
 ]
 
 hentries = []
@@ -394,6 +397,23 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'time' and len(tokens)==2:
+			# invite channel is a valid name
+			tokens.pop(0)
+			server = tokens.pop(0)
+			client.sendLine("TIME "+server)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'time' and len(tokens)==1:
+			client.sendLine("TIME")
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'time' and len(tokens)>2:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"time [SERVER]")
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'topic' and len(tokens)>=2:
