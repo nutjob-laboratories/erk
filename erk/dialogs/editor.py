@@ -105,6 +105,8 @@ class Window(QMainWindow):
 
 		self.filename = ''
 		self.package_dir = None
+		self.openPlugin.setText("Open plugin directory")
+		self.menuOpenPlugin.setText("Open plugin directory")
 		self.sep_icon.hide()
 		self.status_file.setText('')
 		self.editor.clear()
@@ -147,6 +149,8 @@ class Window(QMainWindow):
 				self.findWindow.setWindowTitle(self.title)
 
 			pname = getPackageName(fileName)
+			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
+			self.menuOpenPlugin.setText("Open \""+pname[0]+"\" directory")
 			if pname[1]:
 				self.package_icon.show()
 				self.status_package.show()
@@ -203,6 +207,8 @@ class Window(QMainWindow):
 				self.findWindow.setWindowTitle(self.title)
 
 			pname = getPackageName(fileName)
+			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
+			self.menuOpenPlugin.setText("Open \""+pname[0]+"\" directory")
 			if pname[1]:
 				self.package_icon.show()
 				self.status_package.show()
@@ -396,6 +402,8 @@ class Window(QMainWindow):
 				self.editor.setPlainText(t)
 				self.filename = os.path.join(outdir, "plugin.py")
 				self.package_dir = os.path.dirname(self.filename)
+				self.openPlugin.setText("Open \""+info[0]+"\" directory")
+				self.menuOpenPlugin.setText("Open \""+info[0]+"\" directory")
 				self.sep_icon.show()
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
@@ -549,9 +557,10 @@ class Window(QMainWindow):
 
 		fileMenu.addSeparator()
 
-		plugin_dir = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		plugin_dir.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-		fileMenu.addAction(plugin_dir)
+		self.menuOpenPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		#self.menuOpenPlugin.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.menuOpenPlugin.triggered.connect(self.openPDir)
+		fileMenu.addAction(self.menuOpenPlugin)
 
 		entry = QAction(QIcon(PDF_ICON),"Read plugin documentation",self)
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
@@ -839,9 +848,14 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.menuTemplate)
 		self.toolbar.addAction(entry)
 
-		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		entry.triggered.connect(self.openPDir)
-		self.toolbar.addAction(entry)
+		self.openPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		self.openPlugin.triggered.connect(self.openPDir)
+		self.toolbar.addAction(self.openPlugin)
+
+		if self.filename:
+			pname = getPackageName(self.filename)
+			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
+			self.menuOpenPlugin.setText("Open \""+pname[0]+"\" directory")
 
 		self.toolbar.addSeparator()
 

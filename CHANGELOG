@@ -44,6 +44,7 @@ Version 0.822
 	* Added msgbox() and userinput() to the editor's context menu code generator
 	* Added menu (and toolbar) entries to read plugin documentation to the editor
 	* Bugfix: failed/lost connection dialogs are now properly closed when reconnection occurs
+	* The editor's "open plugin directory" option will open the directory of the plugin being edited, or the regular directory if no file is saved
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
