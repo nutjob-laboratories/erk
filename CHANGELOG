@@ -51,6 +51,7 @@ Version 0.822
 	* Added /whowas command
 	* Added /whois command to autocomplete list and help
 	* Bugfix: /whois now can take multiple nicknames
+	* Added /version command
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

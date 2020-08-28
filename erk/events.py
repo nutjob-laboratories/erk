@@ -47,6 +47,12 @@ PRIVATES = []
 
 UNSEEN = []
 
+def received_version(gui,client,server,version):
+	
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',server+" version: "+version  ) )
+
 def received_whowas(gui,client,nickname,replies):
 	
 	if gui.current_page:

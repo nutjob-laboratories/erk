@@ -669,6 +669,8 @@ class IRC_Connection(irc.IRCClient):
 		sversion = params[1]
 		server = params[2]
 
+		events.received_version(self.gui,self,server,sversion)
+
 	def irc_RPL_CHANNELMODEIS(self, prefix, params):
 		params.pop(0)
 		channel = params.pop(0)

@@ -65,6 +65,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"time": config.INPUT_COMMAND_SYMBOL+"time",
 	config.INPUT_COMMAND_SYMBOL+"whois": config.INPUT_COMMAND_SYMBOL+"whois ",
 	config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
+	config.INPUT_COMMAND_SYMBOL+"version": config.INPUT_COMMAND_SYMBOL+"version",
 }
 
 CHANNEL_COMMANDS = {
@@ -92,6 +93,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
@@ -119,6 +121,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 ]
@@ -403,6 +406,22 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'version' and len(tokens)==2:
+			tokens.pop(0)
+			server = tokens.pop(0)
+			client.sendLine("VERSION "+server)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'version' and len(tokens)==1:
+			client.sendLine("VERSION")
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'version' and len(tokens)>2:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"version [SERVER]")
+			window.writeText(msg,True)
+			return True
 
 
 
