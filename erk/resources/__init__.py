@@ -50,6 +50,7 @@ MENU_EDITOR_ICON = ":/editor.png"
 MENU_MACRO_ICON = ":/macro.png"
 MENU_PACKAGE_ICON = ":/package.png"
 MENU_ARCHIVE_ICON = ":/archive.png"
+MENU_INSERT_ICON = ":/insert.png"
 
 PDF_ICON = ":/gui-pdf.png"
 

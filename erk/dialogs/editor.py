@@ -50,6 +50,8 @@ from .editor_input import Dialog as EditorInput
 from .find import Dialog as Find
 from .template import Dialog as Template
 
+from ..strings import*
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -572,30 +574,6 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.close)
 		fileMenu.addAction(entry)
 
-		toolsMenu = self.menubar.addMenu("Tools")
-
-		entry = MenuAction(self,MENU_PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
-		toolsMenu.addAction(entry)
-
-		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
-		toolsMenu.addAction(entry)
-
-		toolsMenu.addSeparator()
-
-		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
-		entry.triggered.connect(self.menuTemplate)
-		toolsMenu.addAction(entry)
-
-		toolsMenu.addSeparator()
-
-		entry = QAction(QIcon(SPACES_ICON),"Convert indent to spaces",self)
-		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
-		toolsMenu.addAction(entry)
-
-		entry = QAction(QIcon(TABS_ICON),"Convert indent to tabs",self)
-		entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
-		toolsMenu.addAction(entry)
-
 		editMenu = self.menubar.addMenu("Edit")
 
 		mefind = QAction(QIcon(WHOIS_ICON),"Find",self)
@@ -660,6 +638,82 @@ class Window(QMainWindow):
 		entry.setShortcut("Ctrl+-")
 		editMenu.addAction(entry)
 
+		toolsMenu = self.menubar.addMenu("Tools")
+
+		entry = MenuAction(self,MENU_PACKAGE_ICON,"New package","Create a new plugin package",25,self.newPackage)
+		toolsMenu.addAction(entry)
+
+		entry = MenuAction(self,MENU_INSERT_ICON,"Insert template","Insert plugin template code",25,self.menuTemplate)
+		toolsMenu.addAction(entry)
+
+		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
+		toolsMenu.addAction(entry)
+
+		toolsMenu.addSeparator()
+
+		if self.gui!=None:
+			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+			entry.triggered.connect(self.reloadPlugins)
+			toolsMenu.addAction(entry)
+
+		indentMenu = self.menubar.addMenu("Indent")
+
+		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
+		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
+		indentMenu.addAction(self.set_autoindent)
+
+		if config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
+
+		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
+		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
+		indentMenu.addAction(self.set_indent_spaces)
+
+		if config.USE_SPACES_FOR_INDENT: self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
+
+		self.spacesMenu = indentMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
+
+		self.set_spaces_1 = QAction(QIcon(RUNCHECKED_ICON),"One",self)
+		self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_1)
+
+		if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(RCHECKED_ICON))
+
+		self.set_spaces_2 = QAction(QIcon(RUNCHECKED_ICON),"Two",self)
+		self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_2)
+
+		if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(RCHECKED_ICON))
+
+		self.set_spaces_3 = QAction(QIcon(RUNCHECKED_ICON),"Three",self)
+		self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_3)
+
+		if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(RCHECKED_ICON))
+
+		self.set_spaces_4 = QAction(QIcon(RUNCHECKED_ICON),"Four",self)
+		self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_4)
+
+		if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(RCHECKED_ICON))
+
+		self.set_spaces_5 = QAction(QIcon(RUNCHECKED_ICON),"Five",self)
+		self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
+		self.spacesMenu.addAction(self.set_spaces_5)
+
+		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(RCHECKED_ICON))
+
+		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
+
+		indentMenu.addSeparator()
+
+		entry = QAction(QIcon(SPACES_ICON),"Convert indent to spaces",self)
+		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
+		indentMenu.addAction(entry)
+
+		entry = QAction(QIcon(TABS_ICON),"Convert indent to tabs",self)
+		entry.triggered.connect(lambda state,s="converttotab": self.toggleSetting(s))
+		indentMenu.addAction(entry)
+
 		settingsMenu = self.menubar.addMenu("Settings")
 
 		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
@@ -697,54 +751,6 @@ class Window(QMainWindow):
 		settingsMenu.addAction(self.set_exitsave)
 
 		if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
-
-		settingsMenu.addSeparator()
-
-		self.set_autoindent = QAction(QIcon(UNCHECKED_ICON),"Auto-indent",self)
-		self.set_autoindent.triggered.connect(lambda state,s="autoindent": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_autoindent)
-
-		if config.EDITOR_AUTO_INDENT: self.set_autoindent.setIcon(QIcon(CHECKED_ICON))
-
-		self.set_indent_spaces = QAction(QIcon(UNCHECKED_ICON),"Use spaces for indent",self)
-		self.set_indent_spaces.triggered.connect(lambda state,s="indentspace": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_indent_spaces)
-
-		if config.USE_SPACES_FOR_INDENT: self.set_indent_spaces.setIcon(QIcon(CHECKED_ICON))
-
-		self.spacesMenu = settingsMenu.addMenu(QIcon(INDENT_ICON),"Number of spaces to indent")
-
-		self.set_spaces_1 = QAction(QIcon(RUNCHECKED_ICON),"One",self)
-		self.set_spaces_1.triggered.connect(lambda state,s="spaces_1": self.toggleSetting(s))
-		self.spacesMenu.addAction(self.set_spaces_1)
-
-		if self.tabsize==1: self.set_spaces_1.setIcon(QIcon(RCHECKED_ICON))
-
-		self.set_spaces_2 = QAction(QIcon(RUNCHECKED_ICON),"Two",self)
-		self.set_spaces_2.triggered.connect(lambda state,s="spaces_2": self.toggleSetting(s))
-		self.spacesMenu.addAction(self.set_spaces_2)
-
-		if self.tabsize==2: self.set_spaces_2.setIcon(QIcon(RCHECKED_ICON))
-
-		self.set_spaces_3 = QAction(QIcon(RUNCHECKED_ICON),"Three",self)
-		self.set_spaces_3.triggered.connect(lambda state,s="spaces_3": self.toggleSetting(s))
-		self.spacesMenu.addAction(self.set_spaces_3)
-
-		if self.tabsize==3: self.set_spaces_3.setIcon(QIcon(RCHECKED_ICON))
-
-		self.set_spaces_4 = QAction(QIcon(RUNCHECKED_ICON),"Four",self)
-		self.set_spaces_4.triggered.connect(lambda state,s="spaces_4": self.toggleSetting(s))
-		self.spacesMenu.addAction(self.set_spaces_4)
-
-		if self.tabsize==4: self.set_spaces_4.setIcon(QIcon(RCHECKED_ICON))
-
-		self.set_spaces_5 = QAction(QIcon(RUNCHECKED_ICON),"Five",self)
-		self.set_spaces_5.triggered.connect(lambda state,s="spaces_5": self.toggleSetting(s))
-		self.spacesMenu.addAction(self.set_spaces_5)
-
-		if self.tabsize==5: self.set_spaces_5.setIcon(QIcon(RCHECKED_ICON))
-
-		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
@@ -865,6 +871,14 @@ class Window(QMainWindow):
 		entry = QAction(QIcon(REPLACE_ICON),"Find and replace",self)
 		entry.triggered.connect(self.doFindReplace)
 		self.toolbar.addAction(entry)
+
+	def reloadPlugins(self):
+		self.gui.plugins.reset_errors()
+		self.gui.plugins.reload_plugins(True)
+
+		self.gui.display_load_errors()
+
+		self.gui.rebuildPluginMenu()
 
 	def openPDir(self):
 		if self.package_dir!=None:

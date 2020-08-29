@@ -53,6 +53,8 @@ Version 0.822
 	* Bugfix: /whois now can take multiple nicknames
 	* Added /version command
 	* Added /who command
+	* Moved indention settings to the their own menu in the editor
+	* Shuffled around menu locations in the editor to conform closer to other apps
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
