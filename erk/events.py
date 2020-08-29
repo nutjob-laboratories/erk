@@ -47,6 +47,21 @@ PRIVATES = []
 
 UNSEEN = []
 
+# self.who[nick].append([channel,username,host,server])
+
+def received_who(gui,client,nickname,replies):
+	
+	if gui.current_page:
+		if hasattr(gui.current_page,"writeText"):
+
+			for e in replies:
+				username = e[1]
+				host = e[2]
+				server = e[3]
+				channel = e[0]
+
+				gui.current_page.writeText( Message(WHOIS_MESSAGE,nickname, "WHO: "+username+"@"+host+": \x02"+server+", "+channel+"\x0F"), True )
+
 def received_version(gui,client,server,version):
 	
 	if gui.current_page:

@@ -66,6 +66,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"whois": config.INPUT_COMMAND_SYMBOL+"whois ",
 	config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
 	config.INPUT_COMMAND_SYMBOL+"version": config.INPUT_COMMAND_SYMBOL+"version",
+	config.INPUT_COMMAND_SYMBOL+"who": config.INPUT_COMMAND_SYMBOL+"who ",
 }
 
 CHANNEL_COMMANDS = {
@@ -96,6 +97,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -124,6 +126,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 ]
 
 hentries = []
@@ -406,6 +409,19 @@ def handle_common_input(window,client,text):
 	tokens = text.split()
 
 	if handle_macro_input(window,client,text): return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'who' and len(tokens)==2:
+			tokens.pop(0)
+			nick = tokens.pop(0)
+			client.sendLine("WHO "+nick)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'who':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"who USER")
+			window.writeText(msg,True)
+			return True
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'version' and len(tokens)==2:

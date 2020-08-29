@@ -179,6 +179,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.whowas = {}
 
+		self.who = {}
+
 		self.is_away = False
 
 		self.uptime = 0
@@ -662,8 +664,20 @@ class IRC_Connection(irc.IRCClient):
 		nick = params[5]
 		hr = params[7].split(' ')
 
+		if nick in self.who:
+			self.who[nick].append([channel,username,host,server])
+		else:
+			self.who[nick] = []
+			self.who[nick].append([channel,username,host,server])
+
+
 	def irc_RPL_ENDOFWHO(self, prefix, params):
 		nick = params[1]
+
+		if nick in self.who:
+			replies = self.who[nick]
+			del self.who[nick]
+			events.received_who(self.gui,self,nick,replies)
 
 	def irc_RPL_VERSION(self, prefix, params):
 		sversion = params[1]
