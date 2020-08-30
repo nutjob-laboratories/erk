@@ -255,11 +255,8 @@ class Window(QMainWindow):
 		self.history_buffer = ['']
 		self.history_buffer_pointer = 0
 
-		# self.timestamp = datetime.timestamp(datetime.now())
-		# cdate = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
 		self.current_date = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y')
 
-		# STYLES = get_text_format_settings()
 		STYLES = get_text_format_settings(self.parent.stylefile)
 
 		self.userlist_width = 0
@@ -331,7 +328,6 @@ class Window(QMainWindow):
 		else:
 			self.name_display = QLabel("<b>"+self.name+"</b>")
 
-		# self.name_display = QLabel("<b>"+self.name+"</b>")
 		self.name_display.setStyleSheet("border: 1px solid black; padding: 2px;")
 
 		if self.type!=config.CHANNEL_WINDOW:
@@ -360,8 +356,6 @@ class Window(QMainWindow):
 			# Set the starting width of the userlist
 			self.userlist.resize(ulwidth,self.height())
 			self.userlist_width = ulwidth
-
-			# self.show_status_in_nick_display
 
 			self.user_icon = QLabel()
 			pixmap = QPixmap(NICK_ICON)
@@ -435,11 +429,8 @@ class Window(QMainWindow):
 			nicknameLayout.setAlignment(Qt.AlignVCenter)
 
 			inputLayout = QHBoxLayout()
-			# inputLayout.addWidget(self.nick_display)
 			inputLayout.addLayout(nicknameLayout)
 			inputLayout.addWidget(self.input)
-
-			#inputLayout.setAlignment(Qt.AlignVCenter)
 
 			self.key_display = QLabel(self)
 			pixmap = QPixmap(KEY_ICON)
@@ -452,7 +443,6 @@ class Window(QMainWindow):
 			self.key_display.hide()
 
 			topicLayout = QHBoxLayout()
-			# self.name_display = QLabel(" <b>"+self.name+"</b> ")
 			topicLayout.addWidget(self.key_display)
 			topicLayout.addWidget(self.name_display)
 			topicLayout.addWidget(self.topic)
@@ -460,10 +450,8 @@ class Window(QMainWindow):
 			finalLayout = QVBoxLayout()
 			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.setContentsMargins(config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING)
-			#finalLayout.addWidget(self.topic)
 			finalLayout.addLayout(topicLayout)
 			finalLayout.addWidget(self.horizontalSplitter)
-			#finalLayout.addWidget(self.input)
 			finalLayout.addLayout(inputLayout)
 
 			# Toggle name display
@@ -473,7 +461,6 @@ class Window(QMainWindow):
 
 			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.topic.hide()
-
 
 		# Logs
 		load_log_from_disk = False
@@ -504,13 +491,9 @@ class Window(QMainWindow):
 
 				self.rerender()
 
-
 		interface = QWidget()
 		interface.setLayout(finalLayout)
 		self.setCentralWidget(interface)
-
-		# self.show()
-		# self.input.setFocus()
 
 	# BEGIN GUI METHODS
 

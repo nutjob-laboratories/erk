@@ -1156,9 +1156,6 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 				pass
 			return
 
-		# TODO: Dialog that notifies the user that the connection
-		# to the server was lost
-
 		if config.SHOW_CONNECTION_LOST_ERROR:
 			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
 			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
@@ -1173,9 +1170,6 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 			except:
 				pass
 			return
-
-		# TODO: Dialog that notifies the user that the connection
-		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
 			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
@@ -1218,9 +1212,6 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			except:
 				pass
 			return
-
-		# TODO: Dialog that notifies the user that the connection
-		# to the server failed to establish
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
 			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
