@@ -621,22 +621,22 @@ class Window(QMainWindow):
 		editMenu.addAction(self.menuCopy)
 		self.menuCopy.setEnabled(False)
 
-		entry = QAction(QIcon(CLIPBOARD_ICON),"Paste",self)
-		entry.triggered.connect(self.editor.paste)
-		entry.setShortcut("Ctrl+V")
-		editMenu.addAction(entry)
+		self.menuPaste = QAction(QIcon(CLIPBOARD_ICON),"Paste",self)
+		self.menuPaste.triggered.connect(self.editor.paste)
+		self.menuPaste.setShortcut("Ctrl+V")
+		editMenu.addAction(self.menuPaste)
 
 		editMenu.addSeparator()
 
-		entry = QAction(QIcon(PLUS_ICON),"Zoom in",self)
-		entry.triggered.connect(self.editor.zoomIn)
-		entry.setShortcut("Ctrl++")
-		editMenu.addAction(entry)
+		self.menuZoomIn = QAction(QIcon(PLUS_ICON),"Zoom in",self)
+		self.menuZoomIn.triggered.connect(self.editor.zoomIn)
+		self.menuZoomIn.setShortcut("Ctrl++")
+		editMenu.addAction(self.menuZoomIn)
 
-		entry = QAction(QIcon(MINUS_ICON),"Zoom out",self)
-		entry.triggered.connect(self.editor.zoomOut)
-		entry.setShortcut("Ctrl+-")
-		editMenu.addAction(entry)
+		self.menuZoomOut = QAction(QIcon(MINUS_ICON),"Zoom out",self)
+		self.menuZoomOut.triggered.connect(self.editor.zoomOut)
+		self.menuZoomOut.setShortcut("Ctrl+-")
+		editMenu.addAction(self.menuZoomOut)
 
 		toolsMenu = self.menubar.addMenu("Tools")
 
@@ -818,9 +818,22 @@ class Window(QMainWindow):
 		self.toolbar.setIconSize(QSize(16,16))
 		self.toolbar.setMovable(False)
 
-		entry = QAction(QIcon(PDF_ICON),"Read plugin documentation",self)
-		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		entry = QAction(QIcon(MENU_PACKAGE_ICON),"Create a new plugin package",self)
+		entry.triggered.connect(self.newPackage)
 		self.toolbar.addAction(entry)
+
+		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
+		entry.triggered.connect(self.menuTemplate)
+		self.toolbar.addAction(entry)
+
+		self.openPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		self.openPlugin.triggered.connect(self.openPDir)
+		self.toolbar.addAction(self.openPlugin)
+
+		if self.filename:
+			pname = getPackageName(self.filename)
+			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
+			self.menuOpenPlugin.setText("Open \""+pname[0]+"\" directory")
 
 		self.toolbar.addSeparator()
 
@@ -845,25 +858,6 @@ class Window(QMainWindow):
 
 		self.toolbar.addSeparator()
 
-		entry = QAction(QIcon(MENU_PACKAGE_ICON),"Create a new plugin package",self)
-		entry.triggered.connect(self.newPackage)
-		self.toolbar.addAction(entry)
-
-		entry = QAction(QIcon(INSERT_ICON),"Insert plugin template",self)
-		entry.triggered.connect(self.menuTemplate)
-		self.toolbar.addAction(entry)
-
-		self.openPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		self.openPlugin.triggered.connect(self.openPDir)
-		self.toolbar.addAction(self.openPlugin)
-
-		if self.filename:
-			pname = getPackageName(self.filename)
-			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
-			self.menuOpenPlugin.setText("Open \""+pname[0]+"\" directory")
-
-		self.toolbar.addSeparator()
-
 		entry = QAction(QIcon(WHOIS_ICON),"Find",self)
 		entry.triggered.connect(self.doFind)
 		self.toolbar.addAction(entry)
@@ -871,6 +865,24 @@ class Window(QMainWindow):
 		entry = QAction(QIcon(REPLACE_ICON),"Find and replace",self)
 		entry.triggered.connect(self.doFindReplace)
 		self.toolbar.addAction(entry)
+
+
+		self.toolbar.addAction(self.menuUndo)
+		self.toolbar.addAction(self.menuRedo)
+
+		self.toolbar.addAction(self.menuCut)
+		self.toolbar.addAction(self.menuCopy)
+
+		self.toolbar.addAction(self.menuPaste)
+
+		spacer = QWidget()
+		spacer.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+		self.toolbar.addWidget(spacer)
+
+		entry = QAction(QIcon(PDF_ICON),"Read plugin documentation",self)
+		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.toolbar.addAction(entry)
+
 
 	def reloadPlugins(self):
 		self.gui.plugins.reset_errors()

@@ -55,6 +55,8 @@ Version 0.822
 	* Added /who command
 	* Moved indention settings to the their own menu in the editor
 	* Shuffled around menu locations in the editor to conform closer to other apps
+	* Tweaked the editor toolbar and added some new functionality
+	* Moved documentation button on the editor toolbar to the far right
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
