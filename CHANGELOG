@@ -57,6 +57,7 @@ Version 0.822
 	* Shuffled around menu locations in the editor to conform closer to other apps
 	* Tweaked the editor toolbar and added some new functionality
 	* Moved documentation button on the editor toolbar to the far right
+	* Bugfix: text input widget is given focus when the app window becomes active
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

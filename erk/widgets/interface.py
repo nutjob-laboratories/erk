@@ -495,6 +495,8 @@ class Window(QMainWindow):
 		interface.setLayout(finalLayout)
 		self.setCentralWidget(interface)
 
+		self.input.setFocus()
+
 	# BEGIN GUI METHODS
 
 	def rebuildConnection(self):
@@ -1356,11 +1358,6 @@ class SpellTextEdit(QPlainTextEdit):
 		text = self.textCursor().selectedText()
 		if len(text)>0:
 
-			# tformat = QAction(QIcon(UNCHECKED_ICON),"Insert bold",self)
-			# tformat.triggered.connect(self.insertBold)
-			# popup_menu.insertAction(popup_menu.actions()[counter],tformat)
-			# counter = counter + 1
-
 			colorMenu = QMenu("Colors")
 			colorMenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],colorMenu)
@@ -1427,13 +1424,6 @@ class SpellTextEdit(QPlainTextEdit):
 
 		popup_menu.exec_(event.globalPos())
 
-	# def insertBold(self):
-
-	# 	cursor = self.textCursor()
-	# 	text = self.textCursor().selectedText()
-
-	# 	cursor.insertText("\x02"+text+"\x0F")
-
 	def insertColor(self,color):
 
 		cursor = self.textCursor()
@@ -1475,8 +1465,6 @@ class Highlighter(QSyntaxHighlighter):
 		if not self.dict:
 			return
 
-		# if not self.parent.gui.spellcheck:
-		# 	return
 		if not config.SPELLCHECK_INPUT:
 			return
 

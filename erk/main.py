@@ -98,6 +98,12 @@ class Erk(QMainWindow):
 				events.resize_font_fix()
 			elif self.windowState() == Qt.WindowMaximized:
 				events.resize_font_fix()
+
+		if event.type() == QEvent.ActivationChange and self.isActiveWindow():
+			if self.current_page:
+				if hasattr(self.current_page,"input"):
+					if hasattr(self.current_page.input,"setFocus"):
+						self.current_page.input.setFocus()
 		
 		return QMainWindow.changeEvent(self, event)
 
