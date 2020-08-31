@@ -58,6 +58,7 @@ Version 0.822
 	* Tweaked the editor toolbar and added some new functionality
 	* Moved documentation button on the editor toolbar to the far right
 	* Bugfix: text input widget is given focus when the app window becomes active
+	* Bugfix: save file keyboard shortcut now works properly in the editor
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

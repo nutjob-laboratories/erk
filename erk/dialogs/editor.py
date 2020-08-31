@@ -847,7 +847,6 @@ class Window(QMainWindow):
 
 		self.toolbarSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
 		self.toolbarSave.triggered.connect(self.doFileSave)
-		self.toolbarSave.setShortcut("Ctrl+S")
 		self.toolbar.addAction(self.toolbarSave)
 		if not self.filename:
 			self.toolbarSave.setEnabled(False)

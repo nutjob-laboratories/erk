@@ -20,3 +20,6 @@ logs/EFNet-internut_.json
 logs/EFnet-SirBlond.json
 logs/2600net-#themaxx.json
 logs/EFNet-#linux.json
+plugins/dice/package.png
+plugins/dice/plugin.py
+plugins/dice/package.txt
