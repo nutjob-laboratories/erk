@@ -113,6 +113,7 @@ class Erk(QMainWindow):
 		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
+		self.erk_is_quitting = True
 		if not self.block_plugins:
 			self.plugins.unload()
 		if self.fullscreen==False:
@@ -293,6 +294,8 @@ class Erk(QMainWindow):
 		self.parent = parent
 
 		self.editor = None
+
+		self.erk_is_quitting = False
 
 		self.quitting = []
 		self.connecting = []

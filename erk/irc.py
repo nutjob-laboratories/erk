@@ -1150,6 +1150,8 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 
 		show_dialog = True
 
+		if self.kwargs["gui"].erk_is_quitting: show_dialog = False
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
 			show_dialog = False
@@ -1168,6 +1170,8 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 	def clientConnectionFailed(self, connector, reason):
 
 		show_dialog = True
+
+		if self.kwargs["gui"].erk_is_quitting: show_dialog = False
 
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
@@ -1198,6 +1202,8 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 
 		show_dialog = True
 
+		if self.kwargs["gui"].erk_is_quitting: show_dialog = False
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
 			show_dialog = False
@@ -1218,6 +1224,8 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 	def clientConnectionFailed(self, connector, reason):
 
 		show_dialog = True
+
+		if self.kwargs["gui"].erk_is_quitting: show_dialog = False
 
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
