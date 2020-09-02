@@ -61,6 +61,7 @@ Version 0.822
 	* Bugfix: save file keyboard shortcut now works properly in the editor
 	* Added a dialog to the "install plugin" menu option (the dialog lists what plugins are going to be installed, and can be canceled)
 	* Re-arranged the pluugin menu to put "install" and "options" at the top, and the plugin list at the bottom
+	* Bugfix: lost/fail connection dialog would flash on exit/disconnect
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

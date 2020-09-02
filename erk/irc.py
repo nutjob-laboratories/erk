@@ -1148,8 +1148,11 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 
 	def clientConnectionLost(self, connector, reason):
 
+		show_dialog = True
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
+			show_dialog = False
 			try:
 				self.kwargs["gui"].quitting.remove(cid)
 			except:
@@ -1157,14 +1160,18 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
-			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
+			if show_dialog:
+				self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+				self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+				self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 	def clientConnectionFailed(self, connector, reason):
 
+		show_dialog = True
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
+			show_dialog = False
 			try:
 				self.kwargs["gui"].quitting.remove(cid)
 			except:
@@ -1172,9 +1179,10 @@ class IRC_Connection_Factory(protocol.ClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
-			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
+			if show_dialog:
+				self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+				self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+				self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 
 class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
@@ -1188,8 +1196,11 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 
 	def clientConnectionLost(self, connector, reason):
 
+		show_dialog = True
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
+			show_dialog = False
 			try:
 				self.kwargs["gui"].quitting.remove(cid)
 			except:
@@ -1197,16 +1208,20 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_LOST_ERROR:
-			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
-			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
-			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
+			if show_dialog:
+				self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection lost",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} was lost.')
+				self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+				self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 		protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 	def clientConnectionFailed(self, connector, reason):
 
+		show_dialog = True
+
 		cid = self.kwargs["server"]+str(self.kwargs["port"])
 		if cid in self.kwargs["gui"].quitting:
+			show_dialog = False
 			try:
 				self.kwargs["gui"].quitting.remove(cid)
 			except:
@@ -1214,9 +1229,10 @@ class IRC_ReConnection_Factory(protocol.ReconnectingClientFactory):
 			return
 
 		if config.SHOW_CONNECTION_FAIL_ERROR:
-			self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
-			self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
-			self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
+			if show_dialog:
+				self.kwargs["gui"]._erk_net_connection_lost = NeterrorDialog("Connection failed",f'Connection to {self.kwargs["server"]}:{str(self.kwargs["port"])} could not be established.')
+				self.kwargs["gui"]._erk_net_connection_lost.server = self.kwargs["server"]
+				self.kwargs["gui"]._erk_net_connection_lost.port = self.kwargs["port"]
 
 		if self.kwargs["failreconnect"]:
 			protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
