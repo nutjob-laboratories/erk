@@ -59,6 +59,8 @@ Version 0.822
 	* Moved documentation button on the editor toolbar to the far right
 	* Bugfix: text input widget is given focus when the app window becomes active
 	* Bugfix: save file keyboard shortcut now works properly in the editor
+	* Added a dialog to the "install plugin" menu option (the dialog lists what plugins are going to be installed, and can be canceled)
+	* Re-arranged the pluugin menu to put "install" and "options" at the top, and the plugin list at the bottom
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

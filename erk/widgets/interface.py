@@ -307,6 +307,8 @@ class Window(QMainWindow):
 			# Save userlist width
 			self.userlist_width = self.userlist.width()
 
+			#if not config.DISPLAY_USER_LIST: self.userlist.hide()
+
 		self.input = SpellTextEdit(self)
 		self.input.returnPressed.connect(self.handleUserInput)
 		self.input.keyUp.connect(self.keyPressUp)

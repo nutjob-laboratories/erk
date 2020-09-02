@@ -65,7 +65,8 @@ from .dialogs import(
 	ErrorDialog,
 	ExportLogDialog,
 	PrefixDialog,
-	ListTimeDialog
+	ListTimeDialog,
+	InstallDialog
 	)
 
 from .irc import(
@@ -1085,20 +1086,70 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
+		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+		self.pluginMenu.addAction(entry)
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
+
+		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
+		m.addAction(entry)
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		m.addSeparator()
+
+		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		m.addAction(entry)
+
+		if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
+		entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
+		m.addAction(entry)
+
+		if config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		m.addAction(entry)
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
+		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+		entry.triggered.connect(self.menuReloadPlugins)
+		m.addAction(entry)
+
+		if not config.PLUGINS_ENABLED:
+			entry.setEnabled(False)
+
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
 			self.display_load_errors()
 
-		self.pluginMenu.addSeparator()
+		#self.pluginMenu.addSeparator()
 
 		if len(self.plugins.plugins)==0:
 
-			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;")
+			self.pluginMenu.addSeparator()
+
+			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;<br>")
 			l1.setAlignment(Qt.AlignCenter)
 			entry = QWidgetAction(self)
 			entry.setDefaultWidget(l1)
 			self.pluginMenu.addAction(entry)
-			self.pluginMenu.addSeparator()
+			
 		else:
 			s = textSeparator(self,"Installed plugins")
 			self.pluginMenu.addAction(s)
@@ -1214,53 +1265,7 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
-		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
-
-		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-		m.addAction(entry)
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		m.addAction(entry)
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		m.addSeparator()
-
-		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		m.addAction(entry)
-
-		if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
-		entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-		m.addAction(entry)
-
-		if config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-		m.addAction(entry)
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
-
-		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-		entry.triggered.connect(self.menuReloadPlugins)
-		self.pluginMenu.addAction(entry)
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+		
 
 	def uninstall_plugin(self,directory,upack):
 
@@ -1296,10 +1301,14 @@ class Erk(QMainWindow):
 		options |= QFileDialog.DontUseNativeDialog
 		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", None,"Zip File (*.zip);;All Files (*)", options=options)
 		if fileName:
-			with ZipFile(fileName,'r') as zipObj:
-				zipObj.extractall(PLUGIN_DIRECTORY)
-			self.plugins.reload_plugins(True)
-			self.rebuildPluginMenu()
+
+			x = InstallDialog(fileName)
+			if x:
+				with ZipFile(fileName,'r') as zipObj:
+					zipObj.extractall(PLUGIN_DIRECTORY)
+				self.plugins.reload_plugins(True)
+				self.display_load_errors()
+				self.rebuildPluginMenu()
 
 	def menuInstallMacro(self):
 		# macros.MACRO_DIRECTORY

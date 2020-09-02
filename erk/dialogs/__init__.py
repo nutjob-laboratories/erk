@@ -55,6 +55,16 @@ from .plugin_input import Dialog as PluginInput
 
 from .neterror import Dialog as Neterror
 
+from .install import Dialog as Installer
+
+def InstallDialog(file):
+	x = Installer(file)
+	info = x.get_install_information(file)
+	del x
+
+	if not info: return None
+	return info
+
 def NeterrorDialog(title,text):
 	x = Neterror(title,text)
 	x.show()
