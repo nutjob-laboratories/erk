@@ -307,7 +307,7 @@ class Window(QMainWindow):
 			# Save userlist width
 			self.userlist_width = self.userlist.width()
 
-			#if not config.DISPLAY_USER_LIST: self.userlist.hide()
+			if not config.DISPLAY_USER_LIST: self.userlist.hide()
 
 		self.input = SpellTextEdit(self)
 		self.input.returnPressed.connect(self.handleUserInput)
@@ -554,6 +554,12 @@ class Window(QMainWindow):
 
 	def nickDisplay(self,nick):
 		self.nick_display.setText(" <b>"+nick+"</b> ")
+
+	def toggleUserlist(self):
+		if config.DISPLAY_USER_LIST: 
+			self.userlist.show()
+		else:
+			self.userlist.hide()
 
 	def setTopic(self,topic):
 

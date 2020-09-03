@@ -65,6 +65,8 @@ Version 0.822
 	* Added a little label to the connection dialog that notifies whether a server has been connected to before
 	* Added IRC network website URLs to the connection dialog
 	* Made the connection dialog a bit "prettier"
+	* Bugfix: font file set in the config file is now loaded/used for the initial launch connection dialog
+	* Added a setting to toggle channel userlists on/off
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

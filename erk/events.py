@@ -47,7 +47,9 @@ PRIVATES = []
 
 UNSEEN = []
 
-# self.who[nick].append([channel,username,host,server])
+def toggle_userlist():
+	for c in CHANNELS:
+		c.widget.toggleUserlist()
 
 def received_who(gui,client,nickname,replies):
 	

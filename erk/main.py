@@ -631,6 +631,13 @@ class Erk(QMainWindow):
 
 			if config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
 
+			self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Show user lists",self)
+			self.set_showusers.triggered.connect(lambda state,s="showusers": self.toggleSetting(s))
+			channelMenu.addAction(self.set_showusers)
+
+			if config.DISPLAY_USER_LIST: self.set_showusers.setIcon(QIcon(CHECKED_ICON))
+
+
 			self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
 			self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
 			channelMenu.addAction(self.set_displaystatus)
@@ -1422,7 +1429,24 @@ class Erk(QMainWindow):
 		macros.load_macros()
 		self.rebuildMacroMenu()
 
+		# self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Show user lists",self)
+		# 	self.set_showusers.triggered.connect(lambda state,s="showusers": self.toggleSetting(s))
+		# 	channelMenu.addAction(self.set_showusers)
+
+		# 	if config.DISPLAY_USER_LIST: self.set_showusers.setIcon(QIcon(CHECKED_ICON))
+
 	def toggleSetting(self,setting):
+
+		if setting=="showusers":
+			if config.DISPLAY_USER_LIST:
+				config.DISPLAY_USER_LIST = False
+				self.set_showusers.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				config.DISPLAY_USER_LIST = True
+				self.set_showusers.setIcon(QIcon(CHECKED_ICON))
+			config.save_settings(self.configfile)
+			events.toggle_userlist()
+			return
 
 		if setting=="enablefail":
 			if config.SHOW_CONNECTION_FAIL_ERROR:

@@ -543,7 +543,7 @@ class Dialog(QDialog):
 
 		# CHANNELS TAB
 
-		self.do_autojoin = QCheckBox("Automatically join channels",self)
+		self.do_autojoin = QCheckBox("Auto-join channels",self)
 		self.do_autojoin.stateChanged.connect(self.clickChannels)
 
 		if self.user_info["autojoin"]:

@@ -117,6 +117,8 @@ miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text for
 
 args = parser.parse_args()
 
+loaded_config_file = False
+
 if __name__ == '__main__':
 
 	app = QApplication([])
@@ -128,6 +130,7 @@ if __name__ == '__main__':
 	if args.config:
 		if not os.path.isfile(args.config):
 			erk.config.load_settings(args.config)
+			loaded_config_file = True
 			print("\""+args.config+"\" created!")
 
 	if args.format:
@@ -268,6 +271,20 @@ if __name__ == '__main__':
 			print("Done!")
 
 			sys.exit(0)
+
+		if not loaded_config_file:
+			erk.config.load_settings(args.config)
+
+		if erk.config.EDITOR_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.EDITOR_FONT)
+			font = f
+
+		app.setFont(font)
 
 		# Handle disabling connect commands
 

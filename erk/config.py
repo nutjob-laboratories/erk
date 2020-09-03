@@ -117,8 +117,7 @@ CHAT_DISPLAY_INFO_BAR = True
 DISPLAY_DATES_IN_CHANNEL_CHAT = True
 SHOW_CONNECTION_LOST_ERROR = True
 SHOW_CONNECTION_FAIL_ERROR = True
-
-#DISPLAY_USER_LIST = True
+DISPLAY_USER_LIST = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -200,12 +199,16 @@ def save_settings(filename=SETTINGS_FILE):
 		"display_dates_in_channel_chat": DISPLAY_DATES_IN_CHANNEL_CHAT,
 		"show_connection_lost_dialog": SHOW_CONNECTION_LOST_ERROR,
 		"show_connection_fail_dialog": SHOW_CONNECTION_FAIL_ERROR,
+		"display_user_lists": DISPLAY_USER_LIST,
 	}
 
 	with open(filename, "w") as write_data:
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+	if not "display_user_lists" in data:
+		data["display_user_lists"] = DISPLAY_USER_LIST
+
 	if not "show_connection_lost_dialog" in data:
 		data["show_connection_lost_dialog"] = SHOW_CONNECTION_LOST_ERROR
 
@@ -291,6 +294,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global DISPLAY_DATES_IN_CHANNEL_CHAT
 	global SHOW_CONNECTION_LOST_ERROR
 	global SHOW_CONNECTION_FAIL_ERROR
+	global DISPLAY_USER_LIST
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -375,6 +379,7 @@ def load_settings(filename=SETTINGS_FILE):
 			CHAT_DISPLAY_INFO_BAR = data["chat_display_info_bar"]
 			INPUT_COMMAND_SYMBOL = data["input_command_symbol"]
 			DISPLAY_DATES_IN_CHANNEL_CHAT = data["display_dates_in_channel_chat"]
+			DISPLAY_USER_LIST = data["display_user_lists"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist
