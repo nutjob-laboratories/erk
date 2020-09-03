@@ -428,7 +428,6 @@ class Erk(QMainWindow):
 		else:
 			self.connection_dock.hide()
 
-		# self.resize(int(config.DEFAULT_APP_WIDTH),int(config.DEFAULT_APP_HEIGHT))
 		self.resize(appwidth,appheight)
 
 		if info:
@@ -1592,7 +1591,6 @@ class Erk(QMainWindow):
 					events.rerender_all()
 			return
 
-
 		if setting=="chanlink":
 			if config.CLICKABLE_CHANNELS:
 				config.CLICKABLE_CHANNELS = False
@@ -1603,7 +1601,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			events.rerender_all()
 			return
-
 
 		if setting=="autoinvite":
 			if config.JOIN_ON_INVITE:

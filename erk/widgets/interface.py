@@ -737,7 +737,6 @@ class Window(QMainWindow):
 
 			if self.operator: self.op_icon.show()
 			if self.voiced: self.voice_icon.show()
-
 			if self.owner: self.owner_icon.show()
 			if self.admin: self.admin_icon.show()
 			if self.halfop: self.halfop_icon.show()

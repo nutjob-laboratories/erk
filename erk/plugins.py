@@ -362,8 +362,6 @@ class PluginCollection(object):
 				p._erk_client = None
 				p._erk_window_name = None
 
-
-
 	def notice(self,client,target,user,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
@@ -374,8 +372,6 @@ class PluginCollection(object):
 				p.notice(client,target,user,text)
 				p._erk_client = None
 				p._erk_window_name = None
-
-
 
 	def errors(self):
 		return self.load_errors

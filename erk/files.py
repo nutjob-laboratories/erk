@@ -85,10 +85,6 @@ PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
 
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 
-def install_plugins(file):
-	with ZipFile(file,'r') as zipObj:
-		zipObj.extractall(PLUGIN_DIRECTORY)
-
 # Opens up a zip file containing plugins, and reads the
 # package.txt from each included plugin, and returns an
 # array containing the plugin(s) info
