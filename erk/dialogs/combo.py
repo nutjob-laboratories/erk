@@ -270,6 +270,8 @@ class Dialog(QDialog):
 		self.tabs.addTab(self.user_tab,"User")
 		self.tabs.addTab(self.channels_tab,"Channels")
 
+		self.tabs.setStyleSheet("QTabWidget::tab-bar { alignment: center; font: bold; }")
+
 		f = self.tabs.font()
 		f.setBold(True)
 		self.tabs.setFont(f)
@@ -280,7 +282,7 @@ class Dialog(QDialog):
 		self.entryType = QLabel("")
 		self.connType = QLabel("")
 		self.netType = QLabel("")
-		self.description = QLabel("<big>Select an IRC server</big>")
+		self.description = QLabel("<big><b>Select an IRC server</b></big>")
 		self.description.setAlignment(Qt.AlignCenter)
 
 		self.visitbeforeType = QLabel("<small>&nbsp;</small>")
@@ -313,6 +315,7 @@ class Dialog(QDialog):
 		self.servers = QComboBox(self)
 		self.servers.activated.connect(self.setServer)
 
+		self.servers.setStyleSheet("QComboBox { font: bold; }")
 
 		if self.user_info["ssl"]:
 			dussl = "ssl"
@@ -365,14 +368,6 @@ class Dialog(QDialog):
 			else:
 				organized_list.append([False,entry])
 
-		# 	self.StoredData.append(entry)
-		# 	if visited:
-		# 		self.servers.addItem(QIcon(VISITED_ICON),entry[2] + " - " + entry[0])
-		# 	else:
-		# 		self.servers.addItem(QIcon(USERLIST_NORMAL_ICON),entry[2] + " - " + entry[0])
-
-		# self.StoredServer = self.servers.currentIndex()
-
 		vserver = []
 		nserver = []
 		for x in organized_list:
@@ -396,7 +391,6 @@ class Dialog(QDialog):
 
 		if len(self.user_info["last_server"])>0:
 			if self.StoredData[self.StoredServer][2]=="Last server":
-				# self.netType.setText("<big><b>Last server</b></big>")
 				self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
 			else:
 				self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
@@ -414,7 +408,6 @@ class Dialog(QDialog):
 			else:
 				self.networkURL.setText(f"<small>&nbsp;</small>")
 		else:
-			# self.netType.setText("<big><b>Choose an IRC server to connect to</b></big>")
 			self.netType.setText("")
 
 
@@ -450,12 +443,23 @@ class Dialog(QDialog):
 		self.password = QLineEdit(self.user_info["last_password"])
 		self.password.setEchoMode(QLineEdit.Password)
 
-		serverLayout.addRow(QLabel("Host"), self.host)
-		serverLayout.addRow(QLabel("Port"), self.port)
-		serverLayout.addRow(QLabel("Password"), self.password)
+		hostl = QLabel("Host")
+		f = hostl.font()
+		f.setBold(True)
+		hostl.setFont(f)
+		serverLayout.addRow(hostl, self.host)
+
+		portl = QLabel("Port")
+		portl.setFont(f)
+		serverLayout.addRow(portl, self.port)
+
+		passl = QLabel("Password")
+		passl.setFont(f)
+		serverLayout.addRow(passl, self.password)
 
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
 		self.ssl.stateChanged.connect(self.clickSSL)
+		self.ssl.setFont(f)
 
 		self.reconnect = QCheckBox("Automatic reconnect",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
@@ -506,10 +510,24 @@ class Dialog(QDialog):
 		self.username = QLineEdit(self.user_info["username"])
 		self.realname = QLineEdit(self.user_info["realname"])
 
-		userLayout.addRow(QLabel("Nickname"), self.nick)
-		userLayout.addRow(QLabel("Alternate"), self.alternative)
-		userLayout.addRow(QLabel("Username"), self.username)
-		userLayout.addRow(QLabel("Real name"), self.realname)
+		nickl = QLabel("Nickname")
+		f = nickl.font()
+		f.setBold(True)
+		nickl.setFont(f)
+
+		altl = QLabel("Alternate")
+		altl.setFont(f)
+
+		usrl = QLabel("Username")
+		usrl.setFont(f)
+
+		reall = QLabel("Real name")
+		reall.setFont(f)
+
+		userLayout.addRow(nickl, self.nick)
+		userLayout.addRow(altl, self.alternative)
+		userLayout.addRow(usrl, self.username)
+		userLayout.addRow(reall, self.realname)
 
 		userTabLayout = QVBoxLayout()
 		userTabLayout.addStretch()
@@ -579,14 +597,7 @@ class Dialog(QDialog):
 		# USER INFO END
 
 		vLayout = QVBoxLayout()
-		#vLayout.addWidget(nickBox)
-		#vLayout.addWidget(servBox)
 		vLayout.addWidget(self.tabs)
-
-		# vLayout.addWidget(self.reconnect)
-		# vLayout.addWidget(self.failrecon)
-		# vLayout.addWidget(self.do_autojoin)
-		# vLayout.addWidget(self.history)
 
 		c1 = QVBoxLayout()
 		c1.addWidget(self.reconnect)
