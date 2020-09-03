@@ -40,6 +40,7 @@ from ..files import *
 from ..widgets import *
 from ..strings import *
 from ..dialogs import AddChannelDialog
+from ..common import *
 
 class Dialog(QDialog):
 
@@ -179,6 +180,29 @@ class Dialog(QDialog):
 		else:
 			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
 
+		neturl = get_network_url(self.StoredData[self.StoredServer][2])
+		if neturl:
+			self.networkURL.setText(f"<small><a href=\"{neturl}\">{neturl}</a></small>")
+		else:
+			self.networkURL.setText(f"<small>&nbsp;</small>")
+
+		visited = False
+		for ent in self.prevVisit:
+			if ent[0]==self.StoredData[self.StoredServer][0]:
+				if ent[1]==self.StoredData[self.StoredServer][1]:
+					if ent[2]==self.StoredData[self.StoredServer][2]:
+						if ent[3]==self.StoredData[self.StoredServer][3]:
+							visited = True
+
+		if visited:
+			self.visitbeforeType.setText("<small>Connected to previously</small>")
+		else:
+			self.visitbeforeType.setText("<small>&nbsp;</small>")
+
+		if self.StoredData[self.StoredServer][2]=="Last server":
+			self.visitbeforeType.setText("<small>Last server connection</small>")
+
+
 		# Fill in the server info
 		h = self.StoredData[self.StoredServer]
 		if "ssl" in h[3]:
@@ -220,6 +244,8 @@ class Dialog(QDialog):
 		self.StoredServer = 0
 		self.StoredData = []
 
+		self.prevVisit = []
+
 		self.placeholder = False
 
 		self.DIALOG_CONNECT_VIA_SSL = False
@@ -256,6 +282,13 @@ class Dialog(QDialog):
 		self.netType = QLabel("")
 		self.description = QLabel("<big>Select an IRC server</big>")
 		self.description.setAlignment(Qt.AlignCenter)
+
+		self.visitbeforeType = QLabel("<small>&nbsp;</small>")
+		self.visitbeforeType.setAlignment(Qt.AlignRight)
+
+		self.networkURL = QLabel("<small>&nbsp;</small>")
+		self.networkURL.setAlignment(Qt.AlignCenter)
+		self.networkURL.setOpenExternalLinks(True)
 
 		f = self.connType.font()
 		f.setBold(False)
@@ -351,6 +384,7 @@ class Dialog(QDialog):
 		
 		for s in finallist:
 			if s[0]:
+				self.prevVisit.append(s[1])
 				self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
 			else:
 				self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
@@ -371,6 +405,14 @@ class Dialog(QDialog):
 				self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
 			else:
 				self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+
+			self.visitbeforeType.setText("<small>Last server connection</small>")
+
+			neturl = get_network_url(self.StoredData[self.StoredServer][2])
+			if neturl:
+				self.networkURL.setText(f"<small><a href=\"{neturl}\">{neturl}</a></small>")
+			else:
+				self.networkURL.setText(f"<small>&nbsp;</small>")
 		else:
 			# self.netType.setText("<big><b>Choose an IRC server to connect to</b></big>")
 			self.netType.setText("")
@@ -390,7 +432,9 @@ class Dialog(QDialog):
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
+		fstoreLayout.addWidget(self.networkURL)
 		fstoreLayout.addLayout(etLayout)
+		fstoreLayout.addWidget(self.visitbeforeType)
 		fstoreLayout.addStretch()
 
 		self.network_tab.setLayout(fstoreLayout)

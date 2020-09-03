@@ -62,6 +62,8 @@ Version 0.822
 	* Added a dialog to the "install plugin" menu option (the dialog lists what plugins are going to be installed, and can be canceled)
 	* Re-arranged the pluugin menu to put "install" and "options" at the top, and the plugin list at the bottom
 	* Bugfix: lost/fail connection dialog would flash on exit/disconnect
+	* Added a little label to the connection dialog that notifies whether a server has been connected to before
+	* Added IRC network website URLs to the connection dialog
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
