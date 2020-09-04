@@ -631,7 +631,7 @@ class Erk(QMainWindow):
 
 			if config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Show user lists",self)
+			self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Display user lists",self)
 			self.set_showusers.triggered.connect(lambda state,s="showusers": self.toggleSetting(s))
 			channelMenu.addAction(self.set_showusers)
 
