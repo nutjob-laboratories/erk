@@ -96,11 +96,12 @@ class Dialog(QDialog):
 
 			self.newfont = font
 
-			pfs = config.DISPLAY_FONT.split(',')
+			f = font.toString()
+			pfs = f.split(',')
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"New font: ({font_name}, {font_size} pt)")
+			self.fontLabel.setText(f"New font: {font_name}, {font_size} pt")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -549,7 +550,7 @@ class Dialog(QDialog):
 	def save(self):
 
 		if self.newfont!=None:
-			config.DISPLAY_FONT = newfont.toString()
+			config.DISPLAY_FONT = self.newfont.toString()
 			self.parent.app.setFont(self.newfont)
 			events.set_fonts_all(self.newfont)
 
