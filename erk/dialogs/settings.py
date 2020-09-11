@@ -42,6 +42,7 @@ from .. import events
 from .prefix import Dialog as Prefix
 from .history_size import Dialog as HistorySize
 from .format import Dialog as FormatText
+from .list_time import Dialog as ListTime
 
 class Dialog(QDialog):
 
@@ -107,6 +108,15 @@ class Dialog(QDialog):
 		x = FormatText(self.parent)
 		x.show()
 
+	def setListRefresh(self):
+		x = ListTime()
+		info = x.get_entry_information()
+		del x
+
+		if not info: return None
+		self.configRefresh = info
+		self.refreshButton.setText("Set channel list refresh rate\n ("+str(self.configRefresh)+" seconds)")
+
 	def __init__(self,configfile=USER_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
 
@@ -116,6 +126,7 @@ class Dialog(QDialog):
 		self.newfont = None
 
 		self.systemPrefix = config.SYSTEM_MESSAGE_PREFIX
+		self.configRefresh = config.CHANNEL_LIST_REFRESH_FREQUENCY
 
 		self.do_rerender = False
 
@@ -269,6 +280,13 @@ class Dialog(QDialog):
 		self.displayNickname = QCheckBox("Display nickname",self)
 		if config.DISPLAY_NICKNAME_ON_CHANNEL: self.displayNickname.setChecked(True)
 
+		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
+		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
+		self.fetchMisc.stateChanged.connect(self.setRerender)
+
+		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
+		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.channelInfo)
 		cpLayout.addWidget(self.channelModes)
@@ -276,6 +294,8 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.displayUserlists)
 		cpLayout.addWidget(self.displayStatus)
 		cpLayout.addWidget(self.displayNickname)
+		cpLayout.addWidget(self.fetchMisc)
+		cpLayout.addWidget(self.joinMisc)
 		cpLayout.addStretch()
 
 		self.channelPage.setLayout(cpLayout)
@@ -479,7 +499,63 @@ class Dialog(QDialog):
 
 		self.inputPage.setLayout(cpLayout)
 
+		# Features settings
+
+		self.featuresPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setText("Plugins & Macros")
+		entry.widget = self.featuresPage
+		entry.setIcon(QIcon(MACRO_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.featuresPage)
+
+		self.macroFeatures = QCheckBox("Enable macros",self)
+		if config.MACROS_ENABLED: self.macroFeatures.setChecked(True)
+
+		self.pluginFeatures = QCheckBox("Enable plugins",self)
+		if config.PLUGINS_ENABLED: self.pluginFeatures.setChecked(True)
+
+		self.pluginErrors = QCheckBox("Show plugin load errors",self)
+		if config.SHOW_LOAD_ERRORS: self.pluginErrors.setChecked(True)
+
+		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.macroFeatures)
+		cpLayout.addWidget(self.pluginFeatures)
+		cpLayout.addWidget(self.pluginErrors)
+		cpLayout.addStretch()
+
+		self.featuresPage.setLayout(cpLayout)
+
+		# Net errors settings
+
+		# self.errorsPage = QWidget()
+
+		# entry = QListWidgetItem()
+		# entry.setText("Network errors")
+		# entry.widget = self.errorsPage
+		# entry.setIcon(QIcon(ERROR_ICON))
+		# self.selector.addItem(entry)
+
+		# self.stack.addWidget(self.errorsPage)
+
+		# self.lostErrors = QCheckBox("Show connection lost errors",self)
+		# if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
+
+		# self.failErrors = QCheckBox("Show connection fail errors",self)
+		# if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
+
+		# cpLayout = QVBoxLayout()
+		# cpLayout.addWidget(self.lostErrors)
+		# cpLayout.addWidget(self.failErrors)
+		# cpLayout.addStretch()
+
+		# self.errorsPage.setLayout(cpLayout)
+
 		# Miscellaneous settings
+
+		self.initial_fetch_list = config.AUTOMATICALLY_FETCH_CHANNEL_LIST
 
 		self.miscPage = QWidget()
 
@@ -497,22 +573,43 @@ class Dialog(QDialog):
 		self.topicMisc = QCheckBox("Show channel topic in title",self)
 		if config.APP_TITLE_SHOW_TOPIC: self.topicMisc.setChecked(True)
 
-		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
-		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
+		# self.joinMisc = QCheckBox("Auto-join on channel invite",self)
+		# if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
 		self.switchMisc = QCheckBox("Auto-switch to new chats",self)
 		if config.SWITCH_TO_NEW_WINDOWS: self.switchMisc.setChecked(True)
 
-		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
-		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
-		self.fetchMisc.stateChanged.connect(self.setRerender)
+		# self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
+		# if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
+		# self.fetchMisc.stateChanged.connect(self.setRerender)
+
+		self.listMisc = QCheckBox("Fetch channel list on connect",self)
+		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.listMisc.setChecked(True)
+
+		self.refreshButton = QPushButton("Set channel list refresh rate\n ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
+		self.refreshButton.clicked.connect(self.setListRefresh)
+		self.refreshButton.setAutoDefault(False)
+
+		self.lostErrors = QCheckBox("Show connection lost errors",self)
+		if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
+
+		self.failErrors = QCheckBox("Show connection fail errors",self)
+		if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
+
+		hsLayout = QHBoxLayout()
+		hsLayout.addWidget(self.refreshButton)
+		hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.lostErrors)
+		cpLayout.addWidget(self.failErrors)
 		cpLayout.addWidget(self.nametitleMisc)
 		cpLayout.addWidget(self.topicMisc)
-		cpLayout.addWidget(self.joinMisc)
+		#cpLayout.addWidget(self.joinMisc)
 		cpLayout.addWidget(self.switchMisc)
-		cpLayout.addWidget(self.fetchMisc)
+		#cpLayout.addWidget(self.fetchMisc)
+		cpLayout.addWidget(self.listMisc)
+		cpLayout.addLayout(hsLayout)
 		cpLayout.addStretch()
 
 		self.miscPage.setLayout(cpLayout)
@@ -548,6 +645,35 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SHOW_CONNECTION_FAIL_ERROR = self.failErrors.isChecked()
+		config.SHOW_CONNECTION_LOST_ERROR = self.lostErrors.isChecked()
+
+		config.SHOW_LOAD_ERRORS = self.pluginErrors.isChecked()
+
+		config.PLUGINS_ENABLED = self.pluginFeatures.isChecked()
+		if config.PLUGINS_ENABLED:
+			self.parent.block_plugins = False
+		else:
+			self.parent.block_plugins = True
+		self.parent.rebuildPluginMenu()
+
+		config.MACROS_ENABLED = self.macroFeatures.isChecked()
+		if config.MACROS_ENABLED:
+			self.parent.block_macros = False
+		else:
+			self.parent.block_macros = True
+		self.parent.rebuildMacroMenu()
+
+		config.CHANNEL_LIST_REFRESH_FREQUENCY = self.configRefresh
+
+		config.AUTOMATICALLY_FETCH_CHANNEL_LIST = self.listMisc.isChecked()
+
+		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST!=self.initial_fetch_list:
+			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+				for c in events.fetch_connections():
+					if c.last_fetch < c.uptime:
+						c.sendLine("LIST")
 
 		if self.newfont!=None:
 			config.DISPLAY_FONT = self.newfont.toString()
@@ -611,6 +737,7 @@ class Dialog(QDialog):
 
 		if self.do_rerender: events.rerender_all()
 
+		self.parent.buildMenuInterface()
 		events.toggle_name_topic_display()
 		events.toggle_channel_mode_display()
 		events.rerender_userlists()
