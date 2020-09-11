@@ -66,7 +66,8 @@ from .dialogs import(
 	ExportLogDialog,
 	PrefixDialog,
 	ListTimeDialog,
-	InstallDialog
+	InstallDialog,
+	SettingsDialog
 	)
 
 from .irc import(
@@ -287,6 +288,9 @@ class Erk(QMainWindow):
 
 		self.do_connection_display_width_save = self.total_uptime + 5
 
+	def showSettingsDialog(self):
+		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
+
 	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,parent=None):
 		super(Erk, self).__init__(parent)
 
@@ -393,7 +397,7 @@ class Erk(QMainWindow):
 				self.helpMenu = QMenu()
 				self.macroMenu = QMenu()
 				self.pluginMenu = QMenu()
-				self.displayMenu = QMenu()
+				#self.displayMenu = QMenu()
 
 		# Plugins
 		if not self.block_plugins:
@@ -503,320 +507,16 @@ class Erk(QMainWindow):
 		if not self.block_settings:
 
 			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-				self.displayMenu = self.menubar.addMenu("Display")
-			else:
-				self.displayMenu.clear()
-				add_toolbar_menu(self.toolbar,"Display",self.displayMenu)
-
-			self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
-			self.fontMenuEntry.triggered.connect(self.menuFont)
-			self.displayMenu.addAction(self.fontMenuEntry)
-
-			f = self.app.font()
-			fs = f.toString()
-			pfs = fs.split(',')
-			font_name = pfs[0]
-			font_size = pfs[1]
-
-			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
-
-			entry = QAction(QIcon(FORMAT_ICON),"Text colors && formatting",self)
-			entry.triggered.connect(lambda state,s=self: FormatTextDialog(s))
-			self.displayMenu.addAction(entry)
-
-			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set window size",self)
-			self.winsizeMenuEntry.triggered.connect(self.menuResize)
-			self.displayMenu.addAction(self.winsizeMenuEntry)
-
-			w = config.DEFAULT_APP_WIDTH
-			h =  config.DEFAULT_APP_HEIGHT
-
-			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
-
-			self.displayMenu.addSeparator()
-
-			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
-			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
-			self.displayMenu.addAction(self.set_ontop)
-
-			if config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
-			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
-			self.displayMenu.addAction(self.set_full)
-
-			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
-
-		if not self.block_settings:
-
-			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 				self.settingsMenu = self.menubar.addMenu("Settings")
 			else:
 				self.settingsMenu.clear()
 				add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
 
-			# Message display submenu
-
-			messageMenu = self.settingsMenu.addMenu(QIcon(MESSAGE_ICON),"Messages")
-
-			self.set_chatdate = QAction(QIcon(UNCHECKED_ICON),"Show dates in channel chat",self)
-			self.set_chatdate.triggered.connect(lambda state,s="chatdate": self.toggleSetting(s))
-			messageMenu.addAction(self.set_chatdate)
-
-			if config.DISPLAY_DATES_IN_CHANNEL_CHAT: self.set_chatdate.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_color = QAction(QIcon(UNCHECKED_ICON),"Display IRC colors",self)
-			self.set_color.triggered.connect(lambda state,s="color": self.toggleSetting(s))
-			messageMenu.addAction(self.set_color)
-
-			if config.DISPLAY_IRC_COLORS: self.set_color.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_links = QAction(QIcon(UNCHECKED_ICON),"Convert URLs to links",self)
-			self.set_links.triggered.connect(lambda state,s="links": self.toggleSetting(s))
-			messageMenu.addAction(self.set_links)
-
-			if config.CONVERT_URLS_TO_LINKS: self.set_links.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_profanity = QAction(QIcon(UNCHECKED_ICON),"Hide profanity",self)
-			self.set_profanity.triggered.connect(lambda state,s="profanity": self.toggleSetting(s))
-			messageMenu.addAction(self.set_profanity)
-
-			if config.FILTER_PROFANITY: self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_privopen = QAction(QIcon(UNCHECKED_ICON),"Open new chat for private messages",self)
-			self.set_privopen.triggered.connect(lambda state,s="privopen": self.toggleSetting(s))
-			messageMenu.addAction(self.set_privopen)
-
-			if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_chanlink = QAction(QIcon(UNCHECKED_ICON),"Convert channel names to links",self)
-			self.set_chanlink.triggered.connect(lambda state,s="chanlink": self.toggleSetting(s))
-			messageMenu.addAction(self.set_chanlink)
-
-			if config.CLICKABLE_CHANNELS: self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_sysprefix = QAction(QIcon(UNCHECKED_ICON),"Add prefix to system messages",self)
-			self.set_sysprefix.triggered.connect(lambda state,s="sysprefix": self.toggleSetting(s))
-			messageMenu.addAction(self.set_sysprefix)
-
-			if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_prefix_char = QAction(QIcon(PREFIX_ICON),"Set system message prefix",self)
-			self.set_prefix_char.triggered.connect(lambda state,s="setsysprefix": self.toggleSetting(s))
-			messageMenu.addAction(self.set_prefix_char)
-
-			if not config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.set_prefix_char.setEnabled(False)
-
-			# Channel display submenu
-
-			channelMenu = self.settingsMenu.addMenu(QIcon(CHANNEL_ICON),"Chat displays")
-
-			self.set_topicdisplay = QAction(QIcon(UNCHECKED_ICON),"Display channel information bar",self)
-			self.set_topicdisplay.triggered.connect(lambda state,s="dtopic": self.toggleSetting(s))
-			channelMenu.addAction(self.set_topicdisplay)
-
-			if config.CHAT_DISPLAY_INFO_BAR: self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_modes = QAction(QIcon(UNCHECKED_ICON),"Display channel modes",self)
-			self.set_modes.triggered.connect(lambda state,s="modes": self.toggleSetting(s))
-			channelMenu.addAction(self.set_modes)
-
-			if config.DISPLAY_CHANNEL_MODES: self.set_modes.setIcon(QIcon(CHECKED_ICON))
-
-			if not config.CHAT_DISPLAY_INFO_BAR: self.set_modes.setEnabled(False)
-
-			self.set_plainusers = QAction(QIcon(UNCHECKED_ICON),"Text-only user lists",self)
-			self.set_plainusers.triggered.connect(lambda state,s="plainlists": self.toggleSetting(s))
-			channelMenu.addAction(self.set_plainusers)
-
-			if config.PLAIN_USER_LISTS: self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Display user lists",self)
-			self.set_showusers.triggered.connect(lambda state,s="showusers": self.toggleSetting(s))
-			channelMenu.addAction(self.set_showusers)
-
-			if config.DISPLAY_USER_LIST: self.set_showusers.setIcon(QIcon(CHECKED_ICON))
-
-
-			self.set_displaystatus = QAction(QIcon(UNCHECKED_ICON),"Display status",self)
-			self.set_displaystatus.triggered.connect(lambda state,s="display_status": self.toggleSetting(s))
-			channelMenu.addAction(self.set_displaystatus)
-
-			if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_displaynick = QAction(QIcon(UNCHECKED_ICON),"Display nickname",self)
-			self.set_displaynick.triggered.connect(lambda state,s="display_nick": self.toggleSetting(s))
-			channelMenu.addAction(self.set_displaynick)
-
-			if config.DISPLAY_NICKNAME_ON_CHANNEL: self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autohostmask = QAction(QIcon(UNCHECKED_ICON),"Get hostmasks on channel join",self)
-			self.set_autohostmask.triggered.connect(lambda state,s="autohostmask": self.toggleSetting(s))
-			channelMenu.addAction(self.set_autohostmask)
-
-			if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
-
-			# Connection display submenu
-
-			connectionDisplayMenu = self.settingsMenu.addMenu(QIcon(CONNECTION_DISPLAY_ICON),"Connection display")
-
-			self.set_cvisible = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-			self.set_cvisible.triggered.connect(lambda state,s="cvisible": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_cvisible)
-
-			if config.CONNECTION_DISPLAY_VISIBLE: self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_float = QAction(QIcon(UNCHECKED_ICON),"Floatable",self)
-			self.set_float.triggered.connect(lambda state,s="float": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_float)
-
-			if config.CONNECTION_DISPLAY_MOVE: self.set_float.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_uptime = QAction(QIcon(UNCHECKED_ICON),"Show uptimes",self)
-			self.set_uptime.triggered.connect(lambda state,s="uptime": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_uptime)
-
-			if config.DISPLAY_CONNECTION_UPTIME: self.set_uptime.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_doubleclickswitch = QAction(QIcon(UNCHECKED_ICON),"Double click to switch chats",self)
-			self.set_doubleclickswitch.triggered.connect(lambda state,s="dcswitch": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_doubleclickswitch)
-
-			if config.DOUBLECLICK_SWITCH: self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_connectexpand = QAction(QIcon(UNCHECKED_ICON),"Expand server on connect",self)
-			self.set_connectexpand.triggered.connect(lambda state,s="connexpand": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_connectexpand)
-
-			if config.EXPAND_SERVER_ON_CONNECT: self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
-
-			connectionDisplayMenu.addSeparator()
-
-			self.set_location = QAction(QIcon(RIGHT_ICON),"Display on left",self)
-			self.set_location.triggered.connect(lambda state,s="location": self.toggleSetting(s))
-			connectionDisplayMenu.addAction(self.set_location)
-
-			if config.CONNECTION_DISPLAY_LOCATION=="right":
-				self.set_location.setText("Display on left")
-				self.set_location.setIcon(QIcon(LEFT_ICON))
-			else:
-				self.set_location.setText("Display on right")
-				self.set_location.setIcon(QIcon(RIGHT_ICON))
-
-			if not config.CONNECTION_DISPLAY_VISIBLE:
-				self.set_float.setEnabled(False)
-				self.set_uptime.setEnabled(False)
-				self.set_doubleclickswitch.setEnabled(False)
-				self.set_location.setEnabled(False)
-
-			# Autocomplete submenu
-
-			autocompleteMenu = self.settingsMenu.addMenu(QIcon(AUTOCOMPLETE_ICON),"Autocomplete")
-
-			self.set_autonick = QAction(QIcon(UNCHECKED_ICON),"Nicknames",self)
-			self.set_autonick.triggered.connect(lambda state,s="autonick": self.toggleSetting(s))
-			autocompleteMenu.addAction(self.set_autonick)
-
-			if config.AUTOCOMPLETE_NICKNAMES: self.set_autonick.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autocmd = QAction(QIcon(UNCHECKED_ICON),"Commands",self)
-			self.set_autocmd.triggered.connect(lambda state,s="autocmd": self.toggleSetting(s))
-			autocompleteMenu.addAction(self.set_autocmd)
-
-			if config.AUTOCOMPLETE_COMMANDS: self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autoemoji = QAction(QIcon(UNCHECKED_ICON),"Emoji shortcodes",self)
-			self.set_autoemoji.triggered.connect(lambda state,s="autoemoji": self.toggleSetting(s))
-			autocompleteMenu.addAction(self.set_autoemoji)
-
-			if config.AUTOCOMPLETE_EMOJI: self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-
-			# Spellcheck submenu
-
-			spellcheckMenu = self.settingsMenu.addMenu(QIcon(SPELLCHECK_ICON),"Spellcheck")
-
-			self.set_spellcheck = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-			self.set_spellcheck.triggered.connect(lambda state,s="spellcheck": self.toggleSetting(s))
-			spellcheckMenu.addAction(self.set_spellcheck)
-
-			if config.SPELLCHECK_INPUT: self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_spellnicks = QAction(QIcon(UNCHECKED_ICON),"Ignore nicknames",self)
-			self.set_spellnicks.triggered.connect(lambda state,s="spellnicks": self.toggleSetting(s))
-			spellcheckMenu.addAction(self.set_spellnicks)
-
-			if config.SPELLCHECK_IGNORE_NICKS: self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-
-			spellcheckMenu.addSeparator()
-
-			self.spell_en = QAction(QIcon(RUNCHECKED_ICON),"English",self)
-			self.spell_en.triggered.connect(lambda state,s="en": self.spellcheck_language(s))
-			spellcheckMenu.addAction(self.spell_en)
-
-			self.spell_fr = QAction(QIcon(RUNCHECKED_ICON),"French",self)
-			self.spell_fr.triggered.connect(lambda state,s="fr": self.spellcheck_language(s))
-			spellcheckMenu.addAction(self.spell_fr)
-
-			self.spell_es = QAction(QIcon(RUNCHECKED_ICON),"Spanish",self)
-			self.spell_es.triggered.connect(lambda state,s="es": self.spellcheck_language(s))
-			spellcheckMenu.addAction(self.spell_es)
-
-			self.spell_de = QAction(QIcon(RUNCHECKED_ICON),"German",self)
-			self.spell_de.triggered.connect(lambda state,s="de": self.spellcheck_language(s))
-			spellcheckMenu.addAction(self.spell_de)
-
-			if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RCHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="fr": self.spell_fr.setIcon(QIcon(RCHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="es": self.spell_es.setIcon(QIcon(RCHECKED_ICON))
-			if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(RCHECKED_ICON))
-
-			if not config.SPELLCHECK_INPUT:
-				self.spell_en.setEnabled(False)
-				self.spell_fr.setEnabled(False)
-				self.spell_es.setEnabled(False)
-				self.spell_de.setEnabled(False)
-
-			timestampMenu = self.settingsMenu.addMenu(QIcon(TIMESTAMP_ICON),"Timestamps")
-
-			self.set_timestamps = QAction(QIcon(UNCHECKED_ICON),"Display",self)
-			self.set_timestamps.triggered.connect(lambda state,s="timestamp": self.toggleSetting(s))
-			timestampMenu.addAction(self.set_timestamps)
-
-			if config.DISPLAY_TIMESTAMP: self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_24hr = QAction(QIcon(UNCHECKED_ICON),"Use 24hr clock",self)
-			self.set_24hr.triggered.connect(lambda state,s="24hr": self.toggleSetting(s))
-			timestampMenu.addAction(self.set_24hr)
-
-			if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.set_24hr.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_seconds = QAction(QIcon(UNCHECKED_ICON),"Show seconds",self)
-			self.set_seconds.triggered.connect(lambda state,s="tsseconds": self.toggleSetting(s))
-			timestampMenu.addAction(self.set_seconds)
-
-			if config.DISPLAY_TIMESTAMP_SECONDS: self.set_seconds.setIcon(QIcon(CHECKED_ICON))
-
-			# Entry submenu
-
-			entryMenu = self.settingsMenu.addMenu(QIcon(ENTRY_ICON),"Input")
-
-			self.set_emoji = QAction(QIcon(UNCHECKED_ICON),"Use emoji shortcodes",self)
-			self.set_emoji.triggered.connect(lambda state,s="emoji": self.toggleSetting(s))
-			entryMenu.addAction(self.set_emoji)
-
-			if config.USE_EMOJIS: self.set_emoji.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_history = QAction(QIcon(UNCHECKED_ICON),"Track input history",self)
-			self.set_history.triggered.connect(lambda state,s="history": self.toggleSetting(s))
-			entryMenu.addAction(self.set_history)
-
-			if config.TRACK_COMMAND_HISTORY: self.set_history.setIcon(QIcon(CHECKED_ICON))
-
-			self.historySize = QAction(QIcon(HISTORY_LENGTH_ICON),"Set history length",self)
-			self.historySize.triggered.connect(self.menuHistoryLength)
-			entryMenu.addAction(self.historySize)
-
-			self.historySize.setText("Set history length ("+str(config.HISTORY_LENGTH)+" lines)")
+			entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+			entry.triggered.connect(self.showSettingsDialog)
+			self.settingsMenu.addAction(entry)
+
+			self.settingsMenu.addSeparator()
 
 			# Hide menu
 
@@ -866,33 +566,7 @@ class Erk(QMainWindow):
 
 			# Miscellaneous settings
 
-			miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Miscellaneous")
-
-			self.set_titlename = QAction(QIcon(UNCHECKED_ICON),"Show chat name in title",self)
-			self.set_titlename.triggered.connect(lambda state,s="titlename": self.toggleSetting(s))
-			miscMenu.addAction(self.set_titlename)
-
-			if config.APP_TITLE_TO_CURRENT_CHAT: self.set_titlename.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_titletopic = QAction(QIcon(UNCHECKED_ICON),"Show channel topic in title",self)
-			self.set_titletopic.triggered.connect(lambda state,s="titletopic": self.toggleSetting(s))
-			miscMenu.addAction(self.set_titletopic)
-
-			if config.APP_TITLE_SHOW_TOPIC: self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autoinvite = QAction(QIcon(UNCHECKED_ICON),"Join on channel invite",self)
-			self.set_autoinvite.triggered.connect(lambda state,s="autoinvite": self.toggleSetting(s))
-			miscMenu.addAction(self.set_autoinvite)
-
-			if config.JOIN_ON_INVITE: self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_autoswitch = QAction(QIcon(UNCHECKED_ICON),"Switch to new chats",self)
-			self.set_autoswitch.triggered.connect(lambda state,s="autoswitch": self.toggleSetting(s))
-			miscMenu.addAction(self.set_autoswitch)
-
-			if config.SWITCH_TO_NEW_WINDOWS: self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
-
-			miscMenu.addSeparator()
+			miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Features")
 
 			self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
 			self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
@@ -936,6 +610,29 @@ class Erk(QMainWindow):
 
 			if config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
 			if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
+
+			self.settingsMenu.addSeparator()
+
+			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
+			self.winsizeMenuEntry.triggered.connect(self.menuResize)
+			self.settingsMenu.addAction(self.winsizeMenuEntry)
+
+			w = config.DEFAULT_APP_WIDTH
+			h =  config.DEFAULT_APP_HEIGHT
+
+			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
+
+			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
+			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_ontop)
+
+			if config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
+
+			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
+			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
+			self.settingsMenu.addAction(self.set_full)
+
+			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
 
 			# Log menu
 
@@ -1429,24 +1126,7 @@ class Erk(QMainWindow):
 		macros.load_macros()
 		self.rebuildMacroMenu()
 
-		# self.set_showusers = QAction(QIcon(UNCHECKED_ICON),"Show user lists",self)
-		# 	self.set_showusers.triggered.connect(lambda state,s="showusers": self.toggleSetting(s))
-		# 	channelMenu.addAction(self.set_showusers)
-
-		# 	if config.DISPLAY_USER_LIST: self.set_showusers.setIcon(QIcon(CHECKED_ICON))
-
 	def toggleSetting(self,setting):
-
-		if setting=="showusers":
-			if config.DISPLAY_USER_LIST:
-				config.DISPLAY_USER_LIST = False
-				self.set_showusers.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_USER_LIST = True
-				self.set_showusers.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.toggle_userlist()
-			return
 
 		if setting=="enablefail":
 			if config.SHOW_CONNECTION_FAIL_ERROR:
@@ -1466,52 +1146,6 @@ class Erk(QMainWindow):
 				config.SHOW_CONNECTION_LOST_ERROR = True
 				self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
 			config.save_settings(self.configfile)
-			return
-
-		if setting=="chatdate":
-			if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
-				config.DISPLAY_DATES_IN_CHANNEL_CHAT = False
-				self.set_chatdate.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_DATES_IN_CHANNEL_CHAT = True
-				self.set_chatdate.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="dtopic":
-			if config.CHAT_DISPLAY_INFO_BAR:
-				config.CHAT_DISPLAY_INFO_BAR = False
-				self.set_topicdisplay.setIcon(QIcon(UNCHECKED_ICON))
-				self.set_modes.setEnabled(False)
-			else:
-				config.CHAT_DISPLAY_INFO_BAR = True
-				self.set_topicdisplay.setIcon(QIcon(CHECKED_ICON))
-				self.set_modes.setEnabled(True)
-			config.save_settings(self.configfile)
-			events.toggle_name_topic_display()
-			return
-
-		if setting=="titletopic":
-			if config.APP_TITLE_SHOW_TOPIC:
-				config.APP_TITLE_SHOW_TOPIC = False
-				self.set_titletopic.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.APP_TITLE_SHOW_TOPIC = True
-				self.set_titletopic.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			self.refresh_application_title()
-			return
-
-		if setting=="titlename":
-			if config.APP_TITLE_TO_CURRENT_CHAT:
-				config.APP_TITLE_TO_CURRENT_CHAT = False
-				self.set_titlename.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.APP_TITLE_TO_CURRENT_CHAT = True
-				self.set_titlename.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			self.refresh_application_title()
 			return
 
 		if setting=="hide_join":
@@ -1606,47 +1240,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			return
 
-		if setting=="setsysprefix":
-			n = PrefixDialog()
-			if n:
-				if len(n.strip())>0:
-					config.SYSTEM_MESSAGE_PREFIX = n
-					config.save_settings(self.configfile)
-					events.rerender_all()
-			return
-
-		if setting=="chanlink":
-			if config.CLICKABLE_CHANNELS:
-				config.CLICKABLE_CHANNELS = False
-				self.set_chanlink.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.CLICKABLE_CHANNELS = True
-				self.set_chanlink.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="autoinvite":
-			if config.JOIN_ON_INVITE:
-				config.JOIN_ON_INVITE = False
-				self.set_autoinvite.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.JOIN_ON_INVITE = True
-				self.set_autoinvite.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="tsseconds":
-			if config.DISPLAY_TIMESTAMP_SECONDS:
-				config.DISPLAY_TIMESTAMP_SECONDS = False
-				self.set_seconds.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_TIMESTAMP_SECONDS = True
-				self.set_seconds.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
 		if setting=="showplugerrors":
 			if config.SHOW_LOAD_ERRORS:
 				config.SHOW_LOAD_ERRORS = False
@@ -1715,19 +1308,6 @@ class Erk(QMainWindow):
 			self.buildMenuInterface()
 			return
 
-		if setting=="sysprefix":
-			if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
-				config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = False
-				self.set_sysprefix.setIcon(QIcon(UNCHECKED_ICON))
-				self.set_prefix_char.setEnabled(False)
-			else:
-				config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
-				self.set_sysprefix.setIcon(QIcon(CHECKED_ICON))
-				self.set_prefix_char.setEnabled(True)
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
 		if setting=="privlogsave":
 			if config.SAVE_PRIVATE_LOGS:
 				config.SAVE_PRIVATE_LOGS = False
@@ -1788,321 +1368,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			return
 
-		if setting=="history":
-			if config.TRACK_COMMAND_HISTORY:
-				config.TRACK_COMMAND_HISTORY = False
-				self.set_history.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.TRACK_COMMAND_HISTORY = True
-				self.set_history.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.reset_history()
-			return
-
-		if setting=="connexpand":
-			if config.EXPAND_SERVER_ON_CONNECT:
-				config.EXPAND_SERVER_ON_CONNECT = False
-				self.set_connectexpand.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.EXPAND_SERVER_ON_CONNECT = True
-				self.set_connectexpand.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="display_nick":
-			if config.DISPLAY_NICKNAME_ON_CHANNEL:
-				config.DISPLAY_NICKNAME_ON_CHANNEL = False
-				self.set_displaynick.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_NICKNAME_ON_CHANNEL = True
-				self.set_displaynick.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_channel_nickname()
-			return
-
-		if setting=="display_status":
-			if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY:
-				config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = False
-				self.set_displaystatus.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = True
-				self.set_displaystatus.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_userlists()
-			return
-
-		if setting=="plainlists":
-			if config.PLAIN_USER_LISTS:
-				config.PLAIN_USER_LISTS = False
-				self.set_plainusers.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.PLAIN_USER_LISTS = True
-				self.set_plainusers.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_userlists()
-			return
-
-		if setting=="profanity":
-			if config.FILTER_PROFANITY:
-				config.FILTER_PROFANITY = False
-				self.set_profanity.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.FILTER_PROFANITY = True
-				self.set_profanity.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="autoemoji":
-			if config.AUTOCOMPLETE_EMOJI:
-				config.AUTOCOMPLETE_EMOJI = False
-				self.set_autoemoji.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.AUTOCOMPLETE_EMOJI = True
-				self.set_autoemoji.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="emoji":
-			if config.USE_EMOJIS:
-				config.USE_EMOJIS = False
-				self.set_emoji.setIcon(QIcon(UNCHECKED_ICON))
-				self.set_autoemoji.setEnabled(False)
-			else:
-				config.USE_EMOJIS = True
-				self.set_emoji.setIcon(QIcon(CHECKED_ICON))
-				self.set_autoemoji.setEnabled(True)
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="spellnicks":
-			if config.SPELLCHECK_IGNORE_NICKS:
-				config.SPELLCHECK_IGNORE_NICKS = False
-				self.set_spellnicks.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.SPELLCHECK_IGNORE_NICKS = True
-				self.set_spellnicks.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.toggle_nickspell()
-			events.resetinput_all()
-			return
-
-		if setting=="autocmd":
-			if config.AUTOCOMPLETE_COMMANDS:
-				config.AUTOCOMPLETE_COMMANDS = False
-				self.set_autocmd.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.AUTOCOMPLETE_COMMANDS = True
-				self.set_autocmd.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="autonick":
-			if config.AUTOCOMPLETE_NICKNAMES:
-				config.AUTOCOMPLETE_NICKNAMES = False
-				self.set_autonick.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.AUTOCOMPLETE_NICKNAMES = True
-				self.set_autonick.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="autoswitch":
-			if config.SWITCH_TO_NEW_WINDOWS:
-				config.SWITCH_TO_NEW_WINDOWS = False
-				self.set_autoswitch.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.SWITCH_TO_NEW_WINDOWS = True
-				self.set_autoswitch.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="modes":
-			if config.DISPLAY_CHANNEL_MODES:
-				config.DISPLAY_CHANNEL_MODES = False
-				self.set_modes.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_CHANNEL_MODES = True
-				self.set_modes.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.toggle_channel_mode_display()
-			return
-
-		if setting=="cvisible":
-			if config.CONNECTION_DISPLAY_VISIBLE:
-				config.CONNECTION_DISPLAY_VISIBLE = False
-				self.set_cvisible.setIcon(QIcon(UNCHECKED_ICON))
-				self.connection_dock.hide()
-				self.set_float.setEnabled(False)
-				self.set_uptime.setEnabled(False)
-				self.set_doubleclickswitch.setEnabled(False)
-				self.set_location.setEnabled(False)
-			else:
-				config.CONNECTION_DISPLAY_VISIBLE = True
-				self.set_cvisible.setIcon(QIcon(CHECKED_ICON))
-				self.connection_dock.show()
-				self.set_float.setEnabled(True)
-				self.set_uptime.setEnabled(True)
-				self.set_doubleclickswitch.setEnabled(True)
-				self.set_location.setEnabled(True)
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="float":
-			if config.CONNECTION_DISPLAY_MOVE:
-				config.CONNECTION_DISPLAY_MOVE = False
-				self.set_float.setIcon(QIcon(UNCHECKED_ICON))
-
-				self.connection_dock.hide()
-				self.connection_dock.setFloating(False)
-				if config.CONNECTION_DISPLAY_LOCATION=="left":
-					self.removeDockWidget(self.connection_dock)
-					self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
-					self.connection_dock.show()
-				else:
-					self.removeDockWidget(self.connection_dock)
-					self.addDockWidget(Qt.RightDockWidgetArea,self.connection_dock)
-					self.connection_dock.show()
-				self.connection_dock.setFeatures( QDockWidget.NoDockWidgetFeatures )
-				self.connection_dock.setTitleBarWidget(QWidget())
-				events.resize_font_fix()
-			else:
-				config.CONNECTION_DISPLAY_MOVE = True
-				self.set_float.setIcon(QIcon(CHECKED_ICON))
-				self.connection_dock.setFeatures(
-					QDockWidget.DockWidgetMovable |
-					QDockWidget.DockWidgetFloatable
-					)
-				self.connection_dock.setTitleBarWidget(None)
-			config.save_settings(self.configfile)
-			events.build_connection_display(self)
-			return
-
-		if setting=="uptime":
-			if config.DISPLAY_CONNECTION_UPTIME:
-				config.DISPLAY_CONNECTION_UPTIME = False
-				self.set_uptime.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_CONNECTION_UPTIME = True
-				self.set_uptime.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.build_connection_display(self)
-			return
-
-		if setting=="location":
-			if config.CONNECTION_DISPLAY_LOCATION=="left":
-				config.CONNECTION_DISPLAY_LOCATION = "right"
-				self.set_location.setIcon(QIcon(LEFT_ICON))
-				self.set_location.setText("Display on left")
-				self.removeDockWidget(self.connection_dock)
-				self.addDockWidget(Qt.RightDockWidgetArea,self.connection_dock)
-				self.connection_dock.show()
-			else:
-				config.CONNECTION_DISPLAY_LOCATION = "left"
-				self.set_location.setIcon(QIcon(RIGHT_ICON))
-				self.set_location.setText("Display on right")
-				self.removeDockWidget(self.connection_dock)
-				self.addDockWidget(Qt.LeftDockWidgetArea,self.connection_dock)
-				self.connection_dock.show()
-			config.save_settings(self.configfile)
-			return
-
-		if setting=="spellcheck":
-			if config.SPELLCHECK_INPUT:
-				config.SPELLCHECK_INPUT = False
-				self.set_spellcheck.setIcon(QIcon(UNCHECKED_ICON))
-				self.spell_en.setEnabled(False)
-				self.spell_fr.setEnabled(False)
-				self.spell_es.setEnabled(False)
-				self.spell_de.setEnabled(False)
-			else:
-				config.SPELLCHECK_INPUT = True
-				self.set_spellcheck.setIcon(QIcon(CHECKED_ICON))
-				self.spell_en.setEnabled(True)
-				self.spell_fr.setEnabled(True)
-				self.spell_es.setEnabled(True)
-				self.spell_de.setEnabled(True)
-			config.save_settings(self.configfile)
-			events.resetinput_all()
-			return
-
-		if setting=="autohostmask":
-			if config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
-				config.GET_HOSTMASKS_ON_CHANNEL_JOIN = False
-				self.set_autohostmask.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.GET_HOSTMASKS_ON_CHANNEL_JOIN = True
-				self.set_autohostmask.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="privopen":
-			if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
-				config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = False
-				self.set_privopen.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS = True
-				self.set_privopen.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="dcswitch":
-			if config.DOUBLECLICK_SWITCH:
-				config.DOUBLECLICK_SWITCH = False
-				self.set_doubleclickswitch.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DOUBLECLICK_SWITCH = True
-				self.set_doubleclickswitch.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="links":
-			if config.CONVERT_URLS_TO_LINKS:
-				config.CONVERT_URLS_TO_LINKS = False
-				self.set_links.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.CONVERT_URLS_TO_LINKS = True
-				self.set_links.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="color":
-			if config.DISPLAY_IRC_COLORS:
-				config.DISPLAY_IRC_COLORS = False
-				self.set_color.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_IRC_COLORS = True
-				self.set_color.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="24hr":
-			if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
-				config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = False
-				self.set_24hr.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS = True
-				self.set_24hr.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="timestamp":
-			if config.DISPLAY_TIMESTAMP:
-				config.DISPLAY_TIMESTAMP = False
-				self.set_timestamps.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_TIMESTAMP = True
-				self.set_timestamps.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
 	def linkClicked(self,url):
 		if url.host():
 			QDesktopServices.openUrl(url)
@@ -2134,33 +1399,10 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 		self.fetch_time.setText("Set list refresh ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
-	def menuHistoryLength(self):
-		info = HistorySizeDialog()
-		if info!=None:
-			config.HISTORY_LENGTH = info
-			config.save_settings(self.configfile)
-		self.historySize.setText("Set history length ("+str(config.HISTORY_LENGTH)+" lines)")
-
 	def menuCombo(self):
 		info = ComboDialog(self.userfile)
 		if info!=None:
 			self.connectToIRCServer(info)
-
-	def menuFont(self):
-		font, ok = QFontDialog.getFont()
-		if ok:
-			config.DISPLAY_FONT = font.toString()
-			config.save_settings(self.configfile)
-
-			self.font = font
-			self.app.setFont(self.font)
-			events.set_fonts_all(self.font)
-
-			pfs = config.DISPLAY_FONT.split(',')
-			font_name = pfs[0]
-			font_size = pfs[1]
-
-			self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
 	def menuJoin(self,client):
 		info = JoinDialog()

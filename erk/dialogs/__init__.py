@@ -57,6 +57,13 @@ from .neterror import Dialog as Neterror
 
 from .install import Dialog as Installer
 
+from .settings import Dialog as Settings
+
+def SettingsDialog(configfile,obj):
+	x = Settings(configfile,obj)
+	x.show()
+	return x
+
 def InstallDialog(file):
 	x = Installer(file)
 	info = x.get_install_information(file)

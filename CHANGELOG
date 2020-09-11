@@ -67,6 +67,8 @@ Version 0.822
 	* Made the connection dialog a bit "prettier"
 	* Bugfix: font file set in the config file is now loaded/used for the initial launch connection dialog
 	* Added a setting to toggle channel userlists on/off
+	* Moved the "get hostmasks" option to the "Miscellaneous" settings menu
+	* Major overhaul of the settings menu, with a new "Preferences" dialog
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

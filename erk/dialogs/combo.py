@@ -270,7 +270,9 @@ class Dialog(QDialog):
 		self.tabs.addTab(self.user_tab,"User")
 		self.tabs.addTab(self.channels_tab,"Channels")
 
-		self.tabs.setStyleSheet("QTabWidget::tab-bar { alignment: center; font: bold; }")
+		self.tabs.setStyleSheet("""
+			QTabWidget::tab-bar { alignment: center; font: bold; }
+			""")
 
 		f = self.tabs.font()
 		f.setBold(True)
