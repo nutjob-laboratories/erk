@@ -564,53 +564,6 @@ class Erk(QMainWindow):
 
 			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 
-			# Miscellaneous settings
-
-			#miscMenu = self.settingsMenu.addMenu(QIcon(MISC_ICON),"Features")
-
-			# self.set_fetchlist = QAction(QIcon(UNCHECKED_ICON),"Retrieve channel list on connect",self)
-			# self.set_fetchlist.triggered.connect(lambda state,s="autofetch": self.toggleSetting(s))
-			# miscMenu.addAction(self.set_fetchlist)
-
-			# if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
-
-			# self.fetch_time = QAction(QIcon(TIMESTAMP_ICON),"Set list refresh",self)
-			# self.fetch_time.triggered.connect(self.menuSetListTime)
-			# miscMenu.addAction(self.fetch_time)
-
-			# self.fetch_time.setText("Set list refresh ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
-
-			# miscMenu.addSeparator()
-
-			# self.set_lostdialog = QAction(QIcon(UNCHECKED_ICON),"Display lost connection errors",self)
-			# self.set_lostdialog.triggered.connect(lambda state,s="enablelost": self.toggleSetting(s))
-			# miscMenu.addAction(self.set_lostdialog)
-
-			# if config.SHOW_CONNECTION_LOST_ERROR: self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
-
-			
-			# self.set_faildialog = QAction(QIcon(UNCHECKED_ICON),"Display failed connection errors",self)
-			# self.set_faildialog.triggered.connect(lambda state,s="enablefail": self.toggleSetting(s))
-			# miscMenu.addAction(self.set_faildialog)
-
-			# if config.SHOW_CONNECTION_FAIL_ERROR: self.set_faildialog.setIcon(QIcon(CHECKED_ICON))
-
-			# miscMenu.addSeparator()
-
-			# self.set_macroenable = QAction(QIcon(UNCHECKED_ICON),"Enable macros",self)
-			# self.set_macroenable.triggered.connect(lambda state,s="enablemacros": self.toggleSetting(s))
-			# miscMenu.addAction(self.set_macroenable)
-
-			# if config.MACROS_ENABLED: self.set_macroenable.setIcon(QIcon(CHECKED_ICON))
-			# if self.block_macros: self.set_macroenable.setIcon(QIcon(UNCHECKED_ICON))
-
-			# entry = QAction(QIcon(UNCHECKED_ICON),"Enable plugins",self)
-			# entry.triggered.connect(lambda state,s="pluginenable": self.toggleSetting(s))
-			# miscMenu.addAction(entry)
-
-			# if config.PLUGINS_ENABLED: entry.setIcon(QIcon(CHECKED_ICON))
-			# if self.block_plugins: entry.setIcon(QIcon(UNCHECKED_ICON))
-
 			self.settingsMenu.addSeparator()
 
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
@@ -817,15 +770,6 @@ class Erk(QMainWindow):
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-		# entry = QAction(QIcon(UNCHECKED_ICON),"Show plugin load errors",self)
-		# entry.triggered.connect(lambda state,s="showplugerrors": self.toggleSetting(s))
-		# m.addAction(entry)
-
-		# if config.SHOW_LOAD_ERRORS: entry.setIcon(QIcon(CHECKED_ICON))
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
 		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
 		m.addAction(entry)
@@ -843,8 +787,6 @@ class Erk(QMainWindow):
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
 			self.display_load_errors()
-
-		#self.pluginMenu.addSeparator()
 
 		if len(self.plugins.plugins)==0:
 
@@ -1128,26 +1070,6 @@ class Erk(QMainWindow):
 
 	def toggleSetting(self,setting):
 
-		# if setting=="enablefail":
-		# 	if config.SHOW_CONNECTION_FAIL_ERROR:
-		# 		config.SHOW_CONNECTION_FAIL_ERROR = False
-		# 		self.set_faildialog.setIcon(QIcon(UNCHECKED_ICON))
-		# 	else:
-		# 		config.SHOW_CONNECTION_FAIL_ERROR = True
-		# 		self.set_faildialog.setIcon(QIcon(CHECKED_ICON))
-		# 	config.save_settings(self.configfile)
-		# 	return
-
-		# if setting=="enablelost":
-		# 	if config.SHOW_CONNECTION_LOST_ERROR:
-		# 		config.SHOW_CONNECTION_LOST_ERROR = False
-		# 		self.set_lostdialog.setIcon(QIcon(UNCHECKED_ICON))
-		# 	else:
-		# 		config.SHOW_CONNECTION_LOST_ERROR = True
-		# 		self.set_lostdialog.setIcon(QIcon(CHECKED_ICON))
-		# 	config.save_settings(self.configfile)
-		# 	return
-
 		if setting=="hide_join":
 			if config.HIDE_JOIN_MESSAGE:
 				config.HIDE_JOIN_MESSAGE = False
@@ -1225,30 +1147,6 @@ class Erk(QMainWindow):
 			events.rerender_all()
 			return
 
-		# if setting=="autofetch":
-		# 	if config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
-		# 		config.AUTOMATICALLY_FETCH_CHANNEL_LIST = False
-		# 		self.set_fetchlist.setIcon(QIcon(UNCHECKED_ICON))
-		# 	else:
-		# 		config.AUTOMATICALLY_FETCH_CHANNEL_LIST = True
-		# 		self.set_fetchlist.setIcon(QIcon(CHECKED_ICON))
-
-		# 		for c in events.fetch_connections():
-		# 			if c.last_fetch < c.uptime:
-		# 				c.sendLine("LIST")
-
-		# 	config.save_settings(self.configfile)
-		# 	return
-
-		# if setting=="showplugerrors":
-		# 	if config.SHOW_LOAD_ERRORS:
-		# 		config.SHOW_LOAD_ERRORS = False
-		# 	else:
-		# 		config.SHOW_LOAD_ERRORS = True
-		# 	config.save_settings(self.configfile)
-		# 	self.rebuildPluginMenu()
-		# 	return
-
 		if setting=="fullscreen":
 			if self.fullscreen:
 				self.fullscreen = False
@@ -1283,30 +1181,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			self.rebuildPluginMenu()
 			return
-
-		# if setting=="enablemacros":
-		# 	if config.MACROS_ENABLED:
-		# 		config.MACROS_ENABLED = False
-		# 		self.block_macros = True
-		# 	else:
-		# 		config.MACROS_ENABLED = True
-		# 		self.block_macros = False
-		# 	config.save_settings(self.configfile)
-		# 	self.rebuildMacroMenu()
-		# 	self.buildMenuInterface()
-		# 	return
-
-		# if setting=="pluginenable":
-		# 	if config.PLUGINS_ENABLED:
-		# 		config.PLUGINS_ENABLED = False
-		# 		self.block_plugins = True
-		# 	else:
-		# 		config.PLUGINS_ENABLED = True
-		# 		self.block_plugins = False
-		# 	config.save_settings(self.configfile)
-		# 	self.rebuildPluginMenu()
-		# 	self.buildMenuInterface()
-		# 	return
 
 		if setting=="privlogsave":
 			if config.SAVE_PRIVATE_LOGS:
@@ -1391,13 +1265,6 @@ class Erk(QMainWindow):
 			config.LOG_LOAD_SIZE_MAX = info
 			config.save_settings(self.configfile)
 		self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
-
-	# def menuSetListTime(self):
-	# 	info = ListTimeDialog()
-	# 	if info!=None:
-	# 		config.CHANNEL_LIST_REFRESH_FREQUENCY = info
-	# 		config.save_settings(self.configfile)
-	# 	self.fetch_time.setText("Set list refresh ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
 
 	def menuCombo(self):
 		info = ComboDialog(self.userfile)

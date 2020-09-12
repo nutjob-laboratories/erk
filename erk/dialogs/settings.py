@@ -418,13 +418,21 @@ class Dialog(QDialog):
 		if config.SPELLCHECK_LANGUAGE=="es": self.spanishSC.setChecked(True)
 		if config.SPELLCHECK_LANGUAGE=="de": self.germanSC.setChecked(True)
 
+		langLayout = QFormLayout()
+		langLayout.addRow(self.englishSC, self.frenchSC)
+		langLayout.addRow(self.spanishSC, self.germanSC)
+
+		langBox = QGroupBox("Spellcheck Language",self)
+		langBox.setLayout(langLayout)
+
+		lLayout = QHBoxLayout()
+		lLayout.addWidget(langBox)
+		lLayout.addStretch()
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.enabledSpellcheck)
 		cpLayout.addWidget(self.nickSpellcheck)
-		cpLayout.addWidget(self.englishSC)
-		cpLayout.addWidget(self.frenchSC)
-		cpLayout.addWidget(self.spanishSC)
-		cpLayout.addWidget(self.germanSC)
+		cpLayout.addLayout(lLayout)
 		cpLayout.addStretch()
 
 		self.spellcheckPage.setLayout(cpLayout)
