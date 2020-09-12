@@ -426,12 +426,14 @@ class Dialog(QDialog):
 		langBox.setLayout(langLayout)
 
 		lLayout = QHBoxLayout()
+		lLayout.addStretch()
 		lLayout.addWidget(langBox)
 		lLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.enabledSpellcheck)
 		cpLayout.addWidget(self.nickSpellcheck)
+		cpLayout.addStretch()
 		cpLayout.addLayout(lLayout)
 		cpLayout.addStretch()
 
