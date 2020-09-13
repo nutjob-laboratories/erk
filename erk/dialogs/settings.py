@@ -327,18 +327,21 @@ class Dialog(QDialog):
 		self.expandConnection = QCheckBox("Expand server node on connection",self)
 		if config.EXPAND_SERVER_ON_CONNECT: self.expandConnection.setChecked(True)
 
-		self.leftConnection = QCheckBox("Display on left",self)
-		self.leftConnection.stateChanged.connect(self.connectionclickLeft)
+		self.leftRadio = QRadioButton("Left")
+		self.rightRadio = QRadioButton("Right")
 
-		self.rightConnection = QCheckBox("Display on right",self)
-		self.rightConnection.stateChanged.connect(self.connectionclickRight)
+		if config.CONNECTION_DISPLAY_LOCATION=="left": self.leftRadio.setChecked(True)
+		if config.CONNECTION_DISPLAY_LOCATION=="right": self.rightRadio.setChecked(True)
 
-		if config.CONNECTION_DISPLAY_LOCATION=='left': self.leftConnection.setChecked(True)
-		if config.CONNECTION_DISPLAY_LOCATION=='right': self.rightConnection.setChecked(True)
+		cgbLayout = QHBoxLayout()
+		cgbLayout.addStretch()
+		cgbLayout.addWidget(self.leftRadio)
+		cgbLayout.addWidget(self.rightRadio)
+		cgbLayout.addStretch()
 
-		rcLayout = QHBoxLayout()
-		rcLayout.addWidget(self.leftConnection)
-		rcLayout.addWidget(self.rightConnection)
+		clLayout = QGroupBox("Connection display location",self)
+		clLayout.setLayout(cgbLayout)
+
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.enableConnection)
@@ -346,7 +349,8 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
 		cpLayout.addWidget(self.expandConnection)
-		cpLayout.addLayout(rcLayout)
+		cpLayout.addStretch()
+		cpLayout.addWidget(clLayout)
 		cpLayout.addStretch()
 
 		self.connectionPage.setLayout(cpLayout)
@@ -538,31 +542,6 @@ class Dialog(QDialog):
 
 		self.featuresPage.setLayout(cpLayout)
 
-		# Net errors settings
-
-		# self.errorsPage = QWidget()
-
-		# entry = QListWidgetItem()
-		# entry.setText("Network errors")
-		# entry.widget = self.errorsPage
-		# entry.setIcon(QIcon(ERROR_ICON))
-		# self.selector.addItem(entry)
-
-		# self.stack.addWidget(self.errorsPage)
-
-		# self.lostErrors = QCheckBox("Show connection lost errors",self)
-		# if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
-
-		# self.failErrors = QCheckBox("Show connection fail errors",self)
-		# if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
-
-		# cpLayout = QVBoxLayout()
-		# cpLayout.addWidget(self.lostErrors)
-		# cpLayout.addWidget(self.failErrors)
-		# cpLayout.addStretch()
-
-		# self.errorsPage.setLayout(cpLayout)
-
 		# Miscellaneous settings
 
 		self.initial_fetch_list = config.AUTOMATICALLY_FETCH_CHANNEL_LIST
@@ -583,15 +562,8 @@ class Dialog(QDialog):
 		self.topicMisc = QCheckBox("Show channel topic in title",self)
 		if config.APP_TITLE_SHOW_TOPIC: self.topicMisc.setChecked(True)
 
-		# self.joinMisc = QCheckBox("Auto-join on channel invite",self)
-		# if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
-
 		self.switchMisc = QCheckBox("Auto-switch to new chats",self)
 		if config.SWITCH_TO_NEW_WINDOWS: self.switchMisc.setChecked(True)
-
-		# self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
-		# if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
-		# self.fetchMisc.stateChanged.connect(self.setRerender)
 
 		self.listMisc = QCheckBox("Fetch channel list on connect",self)
 		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.listMisc.setChecked(True)
@@ -718,7 +690,7 @@ class Dialog(QDialog):
 		config.AUTOCOMPLETE_COMMANDS = self.cmdComplete.isChecked()
 		config.AUTOCOMPLETE_NICKNAMES = self.nickComplete.isChecked()
 
-		if self.leftConnection.isChecked():
+		if self.leftRadio.isChecked():
 			config.CONNECTION_DISPLAY_LOCATION = 'left'
 		else:
 			config.CONNECTION_DISPLAY_LOCATION = 'right'
