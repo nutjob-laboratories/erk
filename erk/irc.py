@@ -435,7 +435,9 @@ class IRC_Connection(irc.IRCClient):
 			events.erk_changed_nick(self.gui,self,self.alternate)
 			return
 
-		self.last_tried_nickname = self.last_tried_nickname + "_"
+		rannum = random.randrange(1,99)
+
+		self.last_tried_nickname = self.last_tried_nickname + str(rannum)
 		self.setNick(self.last_tried_nickname)
 		events.erk_changed_nick(self.gui,self,self.last_tried_nickname)
 
