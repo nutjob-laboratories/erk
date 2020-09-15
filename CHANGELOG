@@ -70,6 +70,7 @@ Version 0.822
 	* Moved the "get hostmasks" option to the "Miscellaneous" settings menu
 	* Major overhaul of the settings menu, with a new "Preferences" dialog
 	* Bugfix: a number is added to the end of the user nick if both the normal and alternate nicks are taken; different numbers are appended until one is not in use
+	* Changed the in-app name of the program to "erk", due to not all fonts being able to display the schwa by default
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
