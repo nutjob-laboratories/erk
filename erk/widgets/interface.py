@@ -113,6 +113,9 @@ class Window(QMainWindow):
 
 		userinput.handle_input(self,self.client,user_input)
 
+		# Move chat display to the bottom
+		self.chat.moveCursor(QTextCursor.End)
+
 	def keyPressDown(self):
 		if config.TRACK_COMMAND_HISTORY:
 			if len(self.history_buffer) <= 1: return
@@ -133,18 +136,25 @@ class Window(QMainWindow):
 
 	def linkClicked(self,url):
 		if url.host():
+
+			sb = self.chat.verticalScrollBar()
+			og_value = sb.value()
+
 			QDesktopServices.openUrl(url)
 			self.chat.setSource(QUrl())
-			self.chat.moveCursor(QTextCursor.End)
+			sb.setValue(og_value)
 		else:
 			link = url.toString()
+
+			sb = self.chat.verticalScrollBar()
+			og_value = sb.value()
 
 			if config.CLICKABLE_CHANNELS:
 				if link[:1]=='#' or link[:1]=='&' or link[:1]=='!' or link[:1]=='+':
 					self.client.join(link)
 
 			self.chat.setSource(QUrl())
-			self.chat.moveCursor(QTextCursor.End)
+			sb.setValue(og_value)
 
 		# Move focus back to the input widget
 		self.input.setFocus()
@@ -609,7 +619,11 @@ class Window(QMainWindow):
 						self.chat.append(d2)
 
 			self.chat.append(d)
-			self.chat.moveCursor(QTextCursor.End)
+
+			if self.type==config.SERVER_WINDOW: self.chat.moveCursor(QTextCursor.End)
+
+			self.do_move_to_bottom()
+
 
 		self.log.append(message)
 
@@ -620,7 +634,19 @@ class Window(QMainWindow):
 		# Move focus back to the input widget
 		self.input.setFocus()
 
+	def do_move_to_bottom(self):
+
+		fm = QFontMetrics(self.chat.font())
+		fheight = fm.height() * 2
+		sb = self.chat.verticalScrollBar()
+		is_at_bottom = False
+		if sb.value()>=sb.maximum()-fheight: is_at_bottom = True
+
+		if is_at_bottom:
+			self.chat.moveCursor(QTextCursor.End)
+
 	def rerender(self):
+
 		self.chat.clear()
 
 		date = None

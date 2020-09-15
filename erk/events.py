@@ -1146,6 +1146,7 @@ def erk_joined_channel(gui,client,channel):
 	CHANNELS.append( Window(index,newchan) )
 
 	newchan.writeText( Message(SYSTEM_MESSAGE,'',"Joined "+channel) )
+	newchan.chat.moveCursor(QTextCursor.End)
 
 	# Set focus to the input widget
 	newchan.input.setFocus()
