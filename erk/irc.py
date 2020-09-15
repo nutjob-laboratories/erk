@@ -104,6 +104,12 @@ class IRC_Connection(irc.IRCClient):
 
 	heartbeatInterval = 120
 
+	def ctcpUnknownQuery(self, user, channel, tag, data):
+
+		events.received_unknown_ctcp_message(self.gui,self,user,channel,tag,data)
+
+		return irc.IRCClient.ctcpUnknownQuery(self, user, channel, tag, data)
+
 	def irc_RPL_AWAY(self,prefix,params):
 		user = params[1]
 		msg = params[2]
@@ -269,8 +275,8 @@ class IRC_Connection(irc.IRCClient):
 		if hasattr(self,"uptimeTimer"):
 			self.uptimeTimer.stop()
 			self.uptime = 0
-		else:
-			print("Error connecting to server")
+		# else:
+		# 	print("Error connecting to server")
 
 		self.last_tried_nickname = ''
 

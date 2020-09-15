@@ -47,6 +47,10 @@ PRIVATES = []
 
 UNSEEN = []
 
+def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
+	if not client.gui.block_plugins:
+		if client.gui.plugins.ctcp(client,user,channel,tag,message): return
+
 def toggle_userlist():
 	for c in CHANNELS:
 		c.widget.toggleUserlist()

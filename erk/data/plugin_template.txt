@@ -110,3 +110,16 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!user -- The user who left the channel
 !_INDENT_!!_INDENT_!"""
 !_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def ctcp(self,client,user,channel,tag,message):
+!_INDENT_!!_INDENT_!"""Executed when the client receives an unrecognized CTCP message.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!user -- The user who sent the message
+!_INDENT_!!_INDENT_!channel -- The channel the user sent it from
+!_INDENT_!!_INDENT_!tag -- The message's tag
+!_INDENT_!!_INDENT_!message -- The message contents
+!_INDENT_!!_INDENT_!"""
+!_INDENT_!!_INDENT_!pass

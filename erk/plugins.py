@@ -227,6 +227,26 @@ class PluginCollection(object):
 		self.plugin_package = plugin_package
 		self.reload_plugins()
 
+	# BEGIN CTCP EVENTS
+
+	def ctcp(self,client,user,channel,tag,message):
+		if not config.PLUGINS_ENABLED: return
+		p = user.split('!')
+		if len(p)==2:
+			name = p[0]
+		else:
+			name = user
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"ctcp"):
+				p._erk_client = client
+				p._erk_window_name = name
+				p.ctcp(client,user,channel,tag,message)
+				p._erk_client = None
+				p._erk_window_name = None
+
+	# END CTCP EVENTS
+
 	def private(self,client,user,text):
 		if not config.PLUGINS_ENABLED: return
 		p = user.split('!')

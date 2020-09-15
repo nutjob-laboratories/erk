@@ -71,6 +71,7 @@ Version 0.822
 	* Major overhaul of the settings menu, with a new "Preferences" dialog
 	* Bugfix: a number is added to the end of the user nick if both the normal and alternate nicks are taken; different numbers are appended until one is not in use
 	* Changed the in-app name of the program to "erk", due to not all fonts being able to display the schwa by default
+	* Added a new event method for plugins: ctcp() (triggered when the client receives an unknown CTCP message)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
