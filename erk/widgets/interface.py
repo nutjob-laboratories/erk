@@ -337,7 +337,9 @@ class Window(QMainWindow):
 		self.input.changeLanguage(self.language)
 
 		if self.type==config.SERVER_WINDOW:
-			self.name_display = QLabel("<b>Server</b>")
+			ip = self.client.kwargs["server"]
+			port = str(self.client.kwargs["port"])
+			self.name_display = QLabel("<b>"+ip+":"+port+"</b>")
 		else:
 			self.name_display = QLabel("<b>"+self.name+"</b>")
 
