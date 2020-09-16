@@ -1580,6 +1580,8 @@ def server_options(gui,client,options):
 			user_info["history"] = newhistory
 			save_user(user_info,gui.userfile)
 
+	window.update_server_name()
+
 	# Update connection display
 	build_connection_display(gui)
 

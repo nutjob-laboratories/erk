@@ -52,6 +52,14 @@ from .. import events
 
 class Window(QMainWindow):
 
+	def update_server_name(self):
+		if self.client.hostname:
+			self.name_display.setText("<b>"+self.client.hostname+"</b>")
+		else:
+			ip = self.client.kwargs["server"]
+			port = str(self.client.kwargs["port"])
+			self.name_display.setText("<b>"+ip+":"+port+"</b>")
+
 	def closeEvent(self, event):
 		# Logs
 		if self.type==config.CHANNEL_WINDOW:
@@ -206,13 +214,6 @@ class Window(QMainWindow):
 		self.parent.open_private_window(self.client,user)
 
 	def refresh_name_topic_display(self):
-		# Toggle name display
-		# if not config.CHAT_DISPLAY_NAME:
-		# 	self.key_display.hide()
-		# 	self.name_display.hide()
-
-		# if not config.CHAT_DISPLAY_TOPIC:
-		# 	self.topic.hide()
 
 		if hasattr(self,"key_display"):
 			if not config.CHAT_DISPLAY_INFO_BAR:
@@ -620,7 +621,7 @@ class Window(QMainWindow):
 
 			self.chat.append(d)
 
-			if self.type==config.SERVER_WINDOW: self.chat.moveCursor(QTextCursor.End)
+			#if self.type==config.SERVER_WINDOW: self.chat.moveCursor(QTextCursor.End)
 
 			self.do_move_to_bottom()
 

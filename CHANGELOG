@@ -74,6 +74,7 @@ Version 0.822
 	* Added a new event method for plugins: ctcp() (triggered when the client receives an unknown CTCP message)
 	* Better cursor management (main chat only scrolls to the bottom if the user enters text or it is already at the bottom)
 	* Cursor no longer scrolls to the bottom when a link is clicked
+	* Server windows now have the server's hostname (or IP/port) as a title, instead of "Server"
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
