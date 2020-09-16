@@ -77,6 +77,7 @@ Version 0.822
 	* Server windows now have the server's hostname (or IP/port) as a title, instead of "Server"
 	* Server windows pre-registration now feature the IP/port as a title, instead of "Server"
 	* Bugfix: channel topic entry widget now resets to the current channel topic when it loses focus
+	* Changed the editor icon
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
