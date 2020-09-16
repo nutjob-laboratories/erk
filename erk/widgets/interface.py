@@ -290,7 +290,7 @@ class Window(QMainWindow):
 
 		if self.type==config.CHANNEL_WINDOW:
 
-			self.topic = TopicEdit()
+			self.topic = TopicEdit(self)
 			self.topic.returnPressed.connect(self.handleTopicInput)
 			self.topic.setReadOnly(True)
 
@@ -1204,6 +1204,7 @@ class TopicEdit(QLineEdit):
 	def __init__(self, parent=None):
 		super(QLineEdit, self).__init__(parent)
 		self.readyToEdit = True
+		self.parent = parent
 
 	def mousePressEvent(self, e, Parent=None):
 		super(QLineEdit, self).mousePressEvent(e) #required to deselect on 2e click
@@ -1214,6 +1215,7 @@ class TopicEdit(QLineEdit):
 
 	def focusOutEvent(self, e):
 		super(QLineEdit, self).focusOutEvent(e) #required to remove cursor on focusOut
+		self.setText(self.parent.channel_topic)
 		self.deselect()
 		self.readyToEdit = True
 		self.setReadOnly(True)
