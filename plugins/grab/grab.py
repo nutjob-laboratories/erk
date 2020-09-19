@@ -38,7 +38,7 @@ class NicknameGrabber(Plugin):
                 return True
         
         if len(tokens)>1 and tokens[0].lower()=="/grab":
-            self.print("Usage: /grab")
+            self.sysmsg("Usage: /grab")
             return True
 
     def tick(self,client):
