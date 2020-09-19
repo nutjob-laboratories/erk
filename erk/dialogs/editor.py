@@ -652,7 +652,7 @@ class Window(QMainWindow):
 		toolsMenu.addSeparator()
 
 		if self.gui!=None:
-			entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+			entry = QAction(QIcon(RESTART_ICON),"Load new plugins into client",self)
 			entry.triggered.connect(self.reloadPlugins)
 			toolsMenu.addAction(entry)
 

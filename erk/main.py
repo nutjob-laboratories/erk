@@ -751,38 +751,38 @@ class Erk(QMainWindow):
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-		m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
-
 		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		m.addAction(entry)
+		self.pluginMenu.addAction(entry)
 
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-		m.addSeparator()
+		# m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
 
-		entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		m.addAction(entry)
+		# m.addSeparator()
 
-		if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+		# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		# entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		# m.addAction(entry)
 
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+		# if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
 
-		entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-		m.addAction(entry)
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
 
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+		# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# m.addAction(entry)
 
-		entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-		entry.triggered.connect(self.menuReloadPlugins)
-		m.addAction(entry)
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
 
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+		# entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+		# entry.triggered.connect(self.menuReloadPlugins)
+		# m.addAction(entry)
+
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
 
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
@@ -912,6 +912,49 @@ class Erk(QMainWindow):
 			m.addAction(entry)
 
 		self.pluginMenu.addSeparator()
+
+		# m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
+
+		# m.addSeparator()
+
+		# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
+		# entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
+		# m.addAction(entry)
+
+		# if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
+
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
+
+		if config.DEVELOPER_MODE:
+
+			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+			entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+			self.pluginMenu.addAction(entry)
+
+			if not config.PLUGINS_ENABLED:
+				entry.setEnabled(False)
+
+			entry = QAction(QIcon(RESTART_ICON),"Load new plugins",self)
+			entry.triggered.connect(self.menuReloadPlugins)
+			self.pluginMenu.addAction(entry)
+
+			if not config.PLUGINS_ENABLED:
+				entry.setEnabled(False)
+
+		# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+		# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# m.addAction(entry)
+
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
+
+		# entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
+		# entry.triggered.connect(self.menuReloadPlugins)
+		# m.addAction(entry)
+
+		# if not config.PLUGINS_ENABLED:
+		# 	entry.setEnabled(False)
 
 		
 
@@ -1173,14 +1216,14 @@ class Erk(QMainWindow):
 			self.show()
 			return
 
-		if setting=="plugindev":
-			if config.DEVELOPER_MODE:
-				config.DEVELOPER_MODE = False
-			else:
-				config.DEVELOPER_MODE = True
-			config.save_settings(self.configfile)
-			self.rebuildPluginMenu()
-			return
+		# if setting=="plugindev":
+		# 	if config.DEVELOPER_MODE:
+		# 		config.DEVELOPER_MODE = False
+		# 	else:
+		# 		config.DEVELOPER_MODE = True
+		# 	config.save_settings(self.configfile)
+		# 	self.rebuildPluginMenu()
+		# 	return
 
 		if setting=="privlogsave":
 			if config.SAVE_PRIVATE_LOGS:

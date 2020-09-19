@@ -80,6 +80,9 @@ Version 0.822
 	* Changed the editor icon
 	* Bugfix: the log() plugin method was not saving printed messages to the log (it has been fixed, and is working properly now)
 	* Added a new plugin method: sysmsg() (writes a system message to the current window)
+	* Moved the "plugin development mode" setting to the "Preferences" dialog
+	* Re-arranged the plugin menu
+	* Renamed "Reload plugins" menu entry to "Load new plugins" (which is more accurate)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

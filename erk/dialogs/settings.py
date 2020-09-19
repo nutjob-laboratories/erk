@@ -534,10 +534,14 @@ class Dialog(QDialog):
 		self.pluginErrors = QCheckBox("Show plugin load errors",self)
 		if config.SHOW_LOAD_ERRORS: self.pluginErrors.setChecked(True)
 
+		self.pluginDevmode = QCheckBox("Plugin development mode",self)
+		if config.DEVELOPER_MODE: self.pluginDevmode.setChecked(True)
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.macroFeatures)
 		cpLayout.addWidget(self.pluginFeatures)
 		cpLayout.addWidget(self.pluginErrors)
+		cpLayout.addWidget(self.pluginDevmode)
 		cpLayout.addStretch()
 
 		self.featuresPage.setLayout(cpLayout)
@@ -627,6 +631,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.DEVELOPER_MODE = self.pluginDevmode.isChecked()
 
 		config.SHOW_CONNECTION_FAIL_ERROR = self.failErrors.isChecked()
 		config.SHOW_CONNECTION_LOST_ERROR = self.lostErrors.isChecked()
