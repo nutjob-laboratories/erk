@@ -135,6 +135,14 @@ class ErkFunctions(object):
 					msg = Message(PLUGIN_MESSAGE,'',text)
 					w.writeText(msg,False)
 
+	def sysmsg(self,text):
+		if self._erk_client and self._erk_window_name:
+			windows = events.fetch_window_list(self._erk_client)
+			for w in windows:
+				if w.name==self._erk_window_name:
+					msg = Message(PLUGIN_SYSTEM_MESSAGE,'',text)
+					w.writeText(msg,True)
+
 
 
 

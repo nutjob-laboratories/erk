@@ -1121,6 +1121,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="console": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(PRINT_ICON),"sysmsg()",self)
+		entry.triggered.connect(lambda state,f="sysmsg": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		entry = QAction(QIcon(WINDOW_ICON),"write()",self)
 		entry.triggered.connect(lambda state,f="write": self.insertMethod(f))
 		funcMenu.addAction(entry)
@@ -1203,6 +1207,13 @@ class Window(QMainWindow):
 
 			self.editor.insertPlainText(code)
 
+		if ctype=="sysmsg":
+			data = EditorPrompt("Text to print","Text")
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.sysmsg(\""+data+"\")"
+				self.editor.insertPlainText(code)
+
 
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
@@ -1245,7 +1256,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'self.print','self.console','self.write','self.log','self.uptime',
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
-		'self.userinput','self.msgbox',
+		'self.userinput','self.msgbox','self.sysmsg',
 	]
 
 	# Python keywords

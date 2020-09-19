@@ -119,7 +119,7 @@ def render_message(message,client=None):
 		msg_to_display = html.escape(msg_to_display)
 
 	if config.CLICKABLE_CHANNELS:
-		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE:
+		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE and message.type!=PLUGIN_SYSTEM_MESSAGE:
 			try:
 				d = []
 				for w in msg_to_display.split():
@@ -151,6 +151,10 @@ def render_message(message,client=None):
 
 	if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
 		if message.type==SYSTEM_MESSAGE:
+			msg_to_display = config.SYSTEM_MESSAGE_PREFIX+" "+msg_to_display
+
+	if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL:
+		if message.type==PLUGIN_SYSTEM_MESSAGE:
 			msg_to_display = config.SYSTEM_MESSAGE_PREFIX+" "+msg_to_display
 
 	
@@ -190,6 +194,9 @@ def render_message(message,client=None):
 	elif message.type==DATE_MESSAGE:
 		output = DATE_MESSAGE_TEMPLATE
 		style = STYLES["message"]
+	elif message.type==PLUGIN_SYSTEM_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = STYLES["system"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
