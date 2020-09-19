@@ -133,7 +133,7 @@ class ErkFunctions(object):
 			for w in windows:
 				if w.name==name:
 					msg = Message(PLUGIN_MESSAGE,'',text)
-					w.writeText(msg,True)
+					w.writeText(msg,False)
 
 
 
