@@ -150,14 +150,21 @@ CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentrie
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
-	if handle_ui_input(window,client,text): return
+	if handle_ui_input(window,client,text):
+		window.input.setFocus()
+		return
 	
 	if window.type==config.CHANNEL_WINDOW:
 		handle_channel_input(window,client,text)
+		window.input.setFocus()
 	elif window.type==config.PRIVATE_WINDOW:
 		handle_private_input(window,client,text)
+		window.input.setFocus()
 	elif window.type==config.SERVER_WINDOW:
 		handle_console_input(window,client,text)
+		window.input.setFocus()
+
+	window.input.setFocus()
 
 def handle_macro_input(window,client,text):
 
@@ -774,8 +781,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"script FILE")
 			window.writeText(msg,True)
 			return True
-
-
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==2:

@@ -124,6 +124,8 @@ class Window(QMainWindow):
 		# Move chat display to the bottom
 		self.chat.moveCursor(QTextCursor.End)
 
+		self.input.setFocus()
+
 	def keyPressDown(self):
 		if config.TRACK_COMMAND_HISTORY:
 			if len(self.history_buffer) <= 1: return

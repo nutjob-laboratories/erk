@@ -84,6 +84,7 @@ Version 0.822
 	* Re-arranged the plugin menu
 	* Renamed "Reload plugins" menu entry to "Load new plugins" (which is more accurate)
 	* Bugfix: channel links now appear in WHOIS responses when the user has op or voice in a channel
+	* Bugfix: text input widget is given (back) focus after entering a command
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
