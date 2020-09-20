@@ -83,6 +83,7 @@ Version 0.822
 	* Moved the "plugin development mode" setting to the "Preferences" dialog
 	* Re-arranged the plugin menu
 	* Renamed "Reload plugins" menu entry to "Load new plugins" (which is more accurate)
+	* Bugfix: channel links now appear in WHOIS responses when the user has op or voice in a channel
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

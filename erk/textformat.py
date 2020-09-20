@@ -133,6 +133,15 @@ def render_message(message,client=None):
 								o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
 								w = o
 
+					if x[:1]=='+' or x[:1]=='@':
+						y = x[1:]
+						if y[:1]=='#' or y[:1]=='&' or y[:1]=='!' or y[:1]=='+':
+							if client!=None:
+								if y in client.channels and len(y)>1:
+									o = "<a href=\""+y+"\" "
+									o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
+									w = o
+
 					d.append(w)
 				msg_to_display = ' '.join(d)
 			except:
