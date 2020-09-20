@@ -829,7 +829,7 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -847,7 +847,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -867,7 +867,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -879,7 +879,7 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True)
 			window.doConnect(info)
 			return True
 
@@ -897,7 +897,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True)
 			window.doConnect(info)
 			return True
 
@@ -929,7 +929,7 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -947,7 +947,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -967,7 +967,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[])
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False)
 			window.doConnect(info)
 			return True
 
@@ -979,7 +979,7 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True)
 			window.doConnect(info)
 			return True
 
@@ -997,7 +997,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True)
 			window.doConnect(info)
 			return True
 
@@ -1017,7 +1017,7 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[])
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True)
 			window.doConnect(info)
 			return True
 
