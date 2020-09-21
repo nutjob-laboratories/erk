@@ -91,10 +91,23 @@ class Dialog(QDialog):
 		self.output_type = "privmsg"
 		self.do_execute = False
 
+		self.tabs = QTabWidget()
+		self.main_tab = QWidget()
+		self.doc_tab = QWidget()
+
+		self.tabs.addTab(self.main_tab,"Macro")
+		self.tabs.addTab(self.doc_tab,"Help")
+
 		macroLayout = QFormLayout()
 
 		self.trigger = QLineEdit()
 		self.output = QLineEdit()
+
+		fm = QFontMetrics(self.font())
+		outw = fm.width('X')*30
+
+		self.output.setMaxLength(1000)
+		self.output.setFixedWidth(outw)
 
 		self.argc = QSpinBox()
 		self.argc.setRange(0,100)
@@ -110,27 +123,74 @@ class Dialog(QDialog):
 		self.execute = QCheckBox(self)
 		self.execute.stateChanged.connect(self.clickExecute)
 
-		macroLayout.addRow(QLabel("<small>The word that will \"trigger\" the macro</small>"))
+		# macroLayout.addRow(QLabel("<small>The word that will \"trigger\" the macro</small>"))
 
-		macroLayout.addRow(QLabel("<b>Trigger</b>"), self.trigger)
+		# macroLayout.addRow(QLabel("<b>Trigger</b>"), self.trigger)
 
-		macroLayout.addRow(QLabel("<small>How many arguments the macro will accept</small>"))
+		# macroLayout.addRow(QLabel("<small>How many arguments the macro will accept</small>"))
 
-		macroLayout.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
+		# macroLayout.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
 
 		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>notice</b></i> to send the macro as a notice; set to <i><b>command</b></i> to interpret the macro as a command</small>")
 
 		typeDesc.setWordWrap(True)
-		macroLayout.addRow(typeDesc)
+		# macroLayout.addRow(typeDesc)
 
-		macroLayout.addRow(QLabel("<b>Macro type</b>"), self.type)
+		# macroLayout.addRow(QLabel("<b>Macro type</b>"), self.type)
 
 		exeDesc = QLabel("<small>If set to execute immediately, the macro will be processed immediately; if not, the macro's output will be inserted into the window's text entry</small>")
 
 		exeDesc.setWordWrap(True)
-		macroLayout.addRow(exeDesc)
+		# macroLayout.addRow(exeDesc)
 
-		macroLayout.addRow(QLabel("<b>Execute immediately</b>"), self.execute)
+		# macroLayout.addRow(QLabel("<b>Execute immediately</b>"), self.execute)
+
+
+		triggerEntry = QFormLayout()
+		triggerEntry.addRow(QLabel("<small>The word that will \"trigger\" the macro</small>"))
+		triggerEntry.addRow(QLabel("<b>Trigger</b>"), self.trigger)
+
+		triggerBox = QGroupBox()
+		triggerBox.setAlignment(Qt.AlignHCenter)
+		triggerBox.setLayout(triggerEntry)
+
+		argEntry = QFormLayout()
+		argEntry.addRow(QLabel("<small>How many arguments the macro will accept</small>"))
+		argEntry.addRow(QLabel("<b>Number of arguments</b>"), self.argc)
+
+		argBox = QGroupBox()
+		argBox.setAlignment(Qt.AlignHCenter)
+		argBox.setLayout(argEntry)
+
+		typeEntry = QFormLayout()
+		typeEntry.addRow(typeDesc)
+		typeEntry.addRow(QLabel("<b>Macro type</b>"), self.type)
+
+		typeBox = QGroupBox()
+		typeBox.setAlignment(Qt.AlignHCenter)
+		typeBox.setLayout(typeEntry)
+
+		exeEntry = QFormLayout()
+		exeEntry.addRow(exeDesc)
+		exeEntry.addRow(QLabel("<b>Execute immediately</b>"), self.execute)
+
+		exeBox = QGroupBox()
+		exeBox.setAlignment(Qt.AlignHCenter)
+		exeBox.setLayout(exeEntry)
+
+		oLayout = QHBoxLayout()
+		#oLayout.addStretch()
+		oLayout.addWidget(QLabel("<b>Output</b>&nbsp;"))
+		oLayout.addWidget(self.output)
+
+		pageOne = QFormLayout()
+		pageOne.addRow(triggerBox,argBox)
+		pageOne.addRow(typeBox,exeBox)
+		#pageOne.addRow(QLabel("<b>Output</b>"), self.output)
+		pageOne.addItem(oLayout)
+
+		self.main_tab.setLayout(pageOne)
+
 
 		outDesc = QLabel("<small>Macro arguments will be interpolated into the output. Use <i><b>$</b></i> to insert arguments; the first <i><b>$</b></i> will be replaced with the first macro argument, and so on. To insert an actual \"$\" symbol into the output, use \"$$\".</small>")
 		outDesc.setWordWrap(True)
@@ -151,9 +211,13 @@ class Dialog(QDialog):
 		macroLayout.addRow(QLabel("<small><i><b>$network</b></i></small>"), QLabel("<small>The server's network</small>"))
 		macroLayout.addRow(QLabel("<small><i><b>$self</b></i></small>"), QLabel("<small>Your nickname</small>"))
 
-		macroLayout.addRow(QLabel(""))
+		#macroLayout.addRow(QLabel(""))
+		self.doc_tab.setLayout(macroLayout)
 
-		macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
+		# macroLayout.addRow(QLabel("<b>Output</b>"), self.output)
+
+		vLayout = QVBoxLayout()
+		vLayout.addWidget(self.tabs)
 
 		if self.filename:
 			m = macros.get_macro(self.filename)
@@ -187,7 +251,8 @@ class Dialog(QDialog):
 		buttons.rejected.connect(self.close)
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(macroLayout)
+		# finalLayout.addLayout(macroLayout)
+		finalLayout.addLayout(vLayout)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

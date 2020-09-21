@@ -922,19 +922,6 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.addSeparator()
 
-		# m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
-
-		# m.addSeparator()
-
-		# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		# entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		# m.addAction(entry)
-
-		# if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
 		if config.DEVELOPER_MODE:
 
 			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
@@ -950,22 +937,6 @@ class Erk(QMainWindow):
 
 			if not config.PLUGINS_ENABLED:
 				entry.setEnabled(False)
-
-		# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-		# m.addAction(entry)
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		# entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-		# entry.triggered.connect(self.menuReloadPlugins)
-		# m.addAction(entry)
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		
 
 	def uninstall_plugin(self,directory,upack):
 
@@ -1067,6 +1038,12 @@ class Erk(QMainWindow):
 
 		self.macroMenu.clear()
 
+		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
+		self.macroMenu.addAction(entry)
+
+		if not config.MACROS_ENABLED:
+			entry.setEnabled(False)
+
 		if len(macros.MACROS)>0:
 
 			s = textSeparator(self,"Installed macros")
@@ -1093,20 +1070,20 @@ class Erk(QMainWindow):
 
 			self.macroMenu.addSeparator()
 
-		m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
+		#m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
 
-		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
-		m.addAction(entry)
+		# entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
+		# m.addAction(entry)
 
-		if not config.MACROS_ENABLED:
-			entry.setEnabled(False)
+		# if not config.MACROS_ENABLED:
+		# 	entry.setEnabled(False)
 
-		m.addSeparator()
+		#m.addSeparator()
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
 
-		m.addAction(ircMenu_Macro)
+		self.macroMenu.addAction(ircMenu_Macro)
 
 		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
 
