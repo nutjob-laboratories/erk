@@ -1541,15 +1541,15 @@ class Erk(QMainWindow):
 
 					user_info["history"] = user_history
 
-				user_info["last_server"] = info.server
-				user_info["last_port"] = str(info.port)
-				user_info["last_password"] = cpass
-				if using_ssl:
-					user_info["ssl"] = True
-				else:
-					user_info["ssl"] = False
+			user_info["last_server"] = info.server
+			user_info["last_port"] = str(info.port)
+			user_info["last_password"] = cpass
+			if using_ssl:
+				user_info["ssl"] = True
+			else:
+				user_info["ssl"] = False
 
-				save_user(user_info,self.userfile)
+			save_user(user_info,self.userfile)
 
 # SERVER SETTINGS MENU
 
