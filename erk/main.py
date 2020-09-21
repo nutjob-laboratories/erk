@@ -1070,16 +1070,6 @@ class Erk(QMainWindow):
 
 			self.macroMenu.addSeparator()
 
-		#m = self.macroMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
-
-		# entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
-		# m.addAction(entry)
-
-		# if not config.MACROS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		#m.addSeparator()
-
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
 
@@ -1201,15 +1191,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			self.show()
 			return
-
-		# if setting=="plugindev":
-		# 	if config.DEVELOPER_MODE:
-		# 		config.DEVELOPER_MODE = False
-		# 	else:
-		# 		config.DEVELOPER_MODE = True
-		# 	config.save_settings(self.configfile)
-		# 	self.rebuildPluginMenu()
-		# 	return
 
 		if setting=="privlogsave":
 			if config.SAVE_PRIVATE_LOGS:
