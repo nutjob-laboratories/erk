@@ -70,6 +70,8 @@ from .dialogs import(
 	SettingsDialog
 	)
 
+from .dialogs.export_package import Dialog as ExportPackageDialog
+
 from .irc import(
 	connect,
 	connectSSL,
@@ -741,6 +743,32 @@ class Erk(QMainWindow):
 					code.write(dump)
 					code.close()
 
+	def exportPackage(self):
+		x = ExportPackageDialog(self)
+		info = x.get_name_information(self)
+
+		if info:
+			options = QFileDialog.Options()
+			options |= QFileDialog.DontUseNativeDialog
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+			if fileName:
+				if '.zip' in fileName:
+					pass
+				else:
+					fileName = fileName + '.zip'
+				zf = zipfile.ZipFile(fileName, "w")
+				for dirname, subdirs, files in os.walk(info):
+					pname = os.path.basename(info)
+					for fname in files:
+						if "__pycache__" in fname: continue
+						filename, file_extension = os.path.splitext(fname)
+						if file_extension.lower()==".pyc": continue
+						sfile = os.path.join(dirname,fname)
+						bname = os.path.basename(sfile)
+
+						zf.write(sfile,pname+"\\"+bname)
+				zf.close()
+
 	def rebuildPluginMenu(self):
 
 		self.pluginMenu.clear()
@@ -751,38 +779,17 @@ class Erk(QMainWindow):
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
+		self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export","Export an installed plugin",25,self.exportPackage)
+		self.pluginMenu.addAction(self.expPackMenu)
+
+		if not config.PLUGINS_ENABLED:
+			self.expPackMenu.setEnabled(False)
+
 		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
 		self.pluginMenu.addAction(entry)
 
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
-
-		# m = self.pluginMenu.addMenu(QIcon(OPTIONS_ICON),"Options && tools")
-
-		# m.addSeparator()
-
-		# entry = QAction(QIcon(UNCHECKED_ICON),"Development mode",self)
-		# entry.triggered.connect(lambda state,s="plugindev": self.toggleSetting(s))
-		# m.addAction(entry)
-
-		# if config.DEVELOPER_MODE: entry.setIcon(QIcon(CHECKED_ICON))
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-		# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-		# m.addAction(entry)
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
-
-		# entry = QAction(QIcon(RESTART_ICON),"Reload plugins",self)
-		# entry.triggered.connect(self.menuReloadPlugins)
-		# m.addAction(entry)
-
-		# if not config.PLUGINS_ENABLED:
-		# 	entry.setEnabled(False)
 
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
@@ -797,6 +804,8 @@ class Erk(QMainWindow):
 			entry = QWidgetAction(self)
 			entry.setDefaultWidget(l1)
 			self.pluginMenu.addAction(entry)
+
+			self.expPackMenu.setVisible(False)
 			
 		else:
 			s = textSeparator(self,"Installed plugins")
