@@ -442,11 +442,12 @@ class Erk(QMainWindow):
 		self.starter = QTextBrowser(self)
 		self.starter.name = MASTER_LOG_NAME
 		self.stack.addWidget(self.starter)
+		self.starter.anchorClicked.connect(self.linkClicked)
 
 		css =  "QTextBrowser { background-image: url(" + LOGO_IMAGE + "); background-attachment: fixed; background-repeat: no-repeat; background-position: center middle; }"
 		self.starter.setStyleSheet(css)
 
-		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b></small></p>")
+		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b><br><a href=\""+OFFICIAL_REPOSITORY+"\">"+OFFICIAL_REPOSITORY+"</a>&nbsp;&nbsp;</small></p>")
 
 		self.starter.nothing_is_connected = True
 
