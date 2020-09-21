@@ -127,8 +127,8 @@ class Erk(QMainWindow):
 		if self.current_client:
 			events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
-			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-				self.disconnect.setEnabled(False)
+			# if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
+			# 	self.disconnect.setEnabled(False)
 
 	def refresh_application_title(self,item=None):
 

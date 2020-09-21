@@ -87,6 +87,7 @@ Version 0.822
 	* Bugfix: text input widget is given (back) focus after entering a command
 	* Server connections made via command (/connect, /reconnect, /ssl, and /ressl) are now saved to the history and "last connected server"
 	* Bugfix: connections are now *always* saved in the "last connected" role regardless of whether the option to save connection history is turned on or off
+	* Bugfix: diconnection menu entry was being disabled improperly
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
