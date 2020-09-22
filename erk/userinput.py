@@ -99,7 +99,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat (use \"list\" to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],

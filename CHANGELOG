@@ -93,6 +93,7 @@ Version 0.822
 	* Redesigned the "macro" menu
 	* Minor change to the in-app Erk logo
 	* Added a link to the official repository on the "home page"
+	* Added documentation to the /switch command
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
