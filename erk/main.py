@@ -1477,12 +1477,11 @@ class Erk(QMainWindow):
 		# Save connect attempts to the user history
 		if actual_connect_attempt:
 			user_info = get_user(self.userfile)
+			if info.password:
+				cpass = info.password
+			else:
+				cpass = ""
 			if user_info["save_history"]:
-
-				if info.password:
-					cpass = info.password
-				else:
-					cpass = ""
 
 				user_history = user_info["history"]
 

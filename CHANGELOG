@@ -94,6 +94,7 @@ Version 0.822
 	* Minor change to the in-app Erk logo
 	* Added a link to the official repository on the "home page"
 	* Added documentation to the /switch command
+	* Bugfix: wouldn't start/run correctly if "save history" was not turned on
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
