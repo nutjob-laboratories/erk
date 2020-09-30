@@ -108,6 +108,10 @@ class Erk(QMainWindow):
 				if hasattr(self.current_page,"input"):
 					if hasattr(self.current_page.input,"setFocus"):
 						self.current_page.input.setFocus()
+
+				events.clear_unseen(self.current_page)
+				events.build_connection_display(self)
+
 		
 		return QMainWindow.changeEvent(self, event)
 
