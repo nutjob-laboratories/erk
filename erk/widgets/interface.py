@@ -514,6 +514,8 @@ class Window(QMainWindow):
 
 		self.input.setFocus()
 
+		self.chat.moveCursor(QTextCursor.End)
+
 	# BEGIN GUI METHODS
 
 	def rebuildConnection(self):
