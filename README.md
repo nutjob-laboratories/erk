@@ -6,7 +6,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.822.127**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.822.128**.
 
 **Ərk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
 

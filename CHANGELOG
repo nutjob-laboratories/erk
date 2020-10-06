@@ -98,6 +98,7 @@ Version 0.822
 	* Bugfix: connection display doesn't show "unseen" messages on the currently displayed window
 	* Bugfix: chat display now starts at the bottom at the start of a session, like it's supposed to
 	* Logs now autosave every 5 minutes (if autosaving is turned on)
+	* Bugfix: user input did not always move the chat scrollbar all the way to the bottom when initially connecting
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

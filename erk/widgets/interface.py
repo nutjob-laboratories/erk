@@ -136,7 +136,8 @@ class Window(QMainWindow):
 		userinput.handle_input(self,self.client,user_input)
 
 		# Move chat display to the bottom
-		self.chat.moveCursor(QTextCursor.End)
+		sb = self.chat.verticalScrollBar()
+		sb.setValue(sb.maximum())
 
 		self.input.setFocus()
 
