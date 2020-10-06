@@ -667,7 +667,7 @@ class Window(QMainWindow):
 		if sb.value()>=sb.maximum()-fheight: is_at_bottom = True
 
 		if is_at_bottom:
-			self.chat.moveCursor(QTextCursor.End)
+			sb.setValue(sb.maximum())
 
 	def rerender(self):
 
