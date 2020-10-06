@@ -1183,6 +1183,27 @@ def uptime(gui,client,uptime):
 			else:
 				break
 
+	# Update chat window log_timers
+	if len(CHANNELS)>0:
+		w = None
+		for c in CHANNELS:
+			w = c.widget
+			w.log_counter = w.log_counter + 1
+			if w.log_counter >= config.AUTOSAVE_LOG_TIME:
+				w.do_log_save()
+				w.log_counter = 0
+			
+
+	if len(PRIVATES)>0:
+		w = None
+		for c in PRIVATES:
+			w = c.widget
+			w.log_counter = w.log_counter + 1
+			if w.log_counter >= config.AUTOSAVE_LOG_TIME:
+				w.do_log_save()
+				w.log_counter = 0
+			
+
 def part(gui,client,user,channel):
 
 	if not client.gui.block_plugins:

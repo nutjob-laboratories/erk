@@ -97,6 +97,7 @@ Version 0.822
 	* Bugfix: wouldn't start/run correctly if "save history" was not turned on
 	* Bugfix: connection display doesn't show "unseen" messages on the currently displayed window
 	* Bugfix: chat display now starts at the bottom at the start of a session, like it's supposed to
+	* Logs now autosave every 5 minutes (if autosaving is turned on)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

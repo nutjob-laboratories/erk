@@ -118,12 +118,16 @@ DISPLAY_DATES_IN_CHANNEL_CHAT = True
 SHOW_CONNECTION_LOST_ERROR = True
 SHOW_CONNECTION_FAIL_ERROR = True
 DISPLAY_USER_LIST = True
+AUTOSAVE_LOGS = True
+AUTOSAVE_LOG_TIME = 300
 
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+		"autosave_logs": AUTOSAVE_LOGS,
+		"autosave_log_interval_in_seconds": AUTOSAVE_LOG_TIME,
 		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
 		"number_of_indent_spaces": NUMBER_OF_SPACES_FOR_INDENT,
 		"editor_word_wrap": EDITOR_WORD_WRAP,
@@ -215,10 +219,18 @@ def patch_settings(data):
 	if not "show_connection_fail_dialog" in data:
 		data["show_connection_fail_dialog"] = SHOW_CONNECTION_FAIL_ERROR
 
+	if not "autosave_logs" in data:
+		data["autosave_logs"] = AUTOSAVE_LOGS
+
+	if not "autosave_log_interval_in_seconds" in data:
+		data["autosave_log_interval_in_seconds"] = AUTOSAVE_LOG_TIME
+
 	return data
 
 def load_settings(filename=SETTINGS_FILE):
 	if filename==None: filename = SETTINGS_FILE
+	global AUTOSAVE_LOGS
+	global AUTOSAVE_LOG_TIME
 	global HISTORY_LENGTH
 	global CHAT_WINDOW_WIDGET_SPACING
 	global GET_HOSTMASKS_ON_CHANNEL_JOIN
@@ -380,6 +392,8 @@ def load_settings(filename=SETTINGS_FILE):
 			INPUT_COMMAND_SYMBOL = data["input_command_symbol"]
 			DISPLAY_DATES_IN_CHANNEL_CHAT = data["display_dates_in_channel_chat"]
 			DISPLAY_USER_LIST = data["display_user_lists"]
+			AUTOSAVE_LOGS = data["autosave_logs"]
+			AUTOSAVE_LOG_TIME = data["autosave_log_interval_in_seconds"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

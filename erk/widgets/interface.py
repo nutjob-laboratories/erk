@@ -60,6 +60,20 @@ class Window(QMainWindow):
 			port = str(self.client.kwargs["port"])
 			self.name_display.setText("<b>"+ip+":"+port+"</b>")
 
+	def do_log_save(self):
+		if config.AUTOSAVE_LOGS:
+			if self.type==config.CHANNEL_WINDOW:
+				if config.SAVE_CHANNEL_LOGS:
+					if len(self.newLog)>0:
+						saveLog(self.client.network,self.name,self.newLog)
+						self.newLog = []
+
+			if self.type==config.PRIVATE_WINDOW:
+				if config.SAVE_PRIVATE_LOGS:
+					if len(self.newLog)>0:
+						saveLog(self.client.network,self.name,self.newLog)
+						self.newLog = []
+
 	def closeEvent(self, event):
 		# Logs
 		if self.type==config.CHANNEL_WINDOW:
@@ -245,6 +259,8 @@ class Window(QMainWindow):
 
 		self.log = []
 		self.newLog = []
+
+		self.log_counter = 0
 
 		self.channel_topic = ''
 
