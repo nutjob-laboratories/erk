@@ -67,7 +67,8 @@ from .dialogs import(
 	PrefixDialog,
 	ListTimeDialog,
 	InstallDialog,
-	SettingsDialog
+	SettingsDialog,
+	AutosaveDialog
 	)
 
 from .dialogs.export_package import Dialog as ExportPackageDialog
@@ -648,6 +649,10 @@ class Erk(QMainWindow):
 
 			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
+			self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
+			self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
+			self.logMenu.addAction(self.set_autosave)
+
 			self.logMenu.addSeparator()
 
 			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
@@ -1223,6 +1228,14 @@ class Erk(QMainWindow):
 				config.DISPLAY_CHAT_RESUME_DATE_TIME = True
 				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
 			config.save_settings(self.configfile)
+			return
+
+		if setting=="autosave_freq":
+			f = AutosaveDialog()
+			if f:
+				config.AUTOSAVE_LOG_TIME = f
+				self.set_autosave.setText("Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)")
+				config.save_settings(self.configfile)
 			return
 
 		if setting=="marklogend":

@@ -52,12 +52,18 @@ from .error import Dialog as Error
 from .prefix import Dialog as Prefix
 from .list_time import Dialog as ListTime
 from .plugin_input import Dialog as PluginInput
-
 from .neterror import Dialog as Neterror
-
 from .install import Dialog as Installer
-
 from .settings import Dialog as Settings
+from .autosave_freq import Dialog as Autosave
+
+def AutosaveDialog():
+	x = Autosave()
+	info = x.get_entry_information()
+	del x
+
+	if not info: return None
+	return info
 
 def SettingsDialog(configfile,obj):
 	x = Settings(configfile,obj)
