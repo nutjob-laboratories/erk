@@ -65,14 +65,16 @@ class Window(QMainWindow):
 			if self.type==config.CHANNEL_WINDOW:
 				if config.SAVE_CHANNEL_LOGS:
 					if len(self.newLog)>0:
-						saveLog(self.client.network,self.name,self.newLog)
-						self.newLog = []
+						if len(self.newLog)>=config.AUTOSAVE_CACHE_SIZE:
+							saveLog(self.client.network,self.name,self.newLog)
+							self.newLog = []
 
 			if self.type==config.PRIVATE_WINDOW:
 				if config.SAVE_PRIVATE_LOGS:
 					if len(self.newLog)>0:
-						saveLog(self.client.network,self.name,self.newLog)
-						self.newLog = []
+						if len(self.newLog)>=config.AUTOSAVE_CACHE_SIZE:
+							saveLog(self.client.network,self.name,self.newLog)
+							self.newLog = []
 
 	def closeEvent(self, event):
 		# Logs

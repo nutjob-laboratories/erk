@@ -121,11 +121,14 @@ DISPLAY_USER_LIST = True
 AUTOSAVE_LOGS = True
 AUTOSAVE_LOG_TIME = 300
 
+AUTOSAVE_CACHE_SIZE = 10
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+		"autosave_cache_minimum_size": AUTOSAVE_CACHE_SIZE,
 		"autosave_logs": AUTOSAVE_LOGS,
 		"autosave_log_interval_in_seconds": AUTOSAVE_LOG_TIME,
 		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
@@ -225,10 +228,14 @@ def patch_settings(data):
 	if not "autosave_log_interval_in_seconds" in data:
 		data["autosave_log_interval_in_seconds"] = AUTOSAVE_LOG_TIME
 
+	if not "autosave_cache_minimum_size" in data:
+		data["autosave_cache_minimum_size"] = AUTOSAVE_CACHE_SIZE
+
 	return data
 
 def load_settings(filename=SETTINGS_FILE):
 	if filename==None: filename = SETTINGS_FILE
+	global AUTOSAVE_CACHE_SIZE
 	global AUTOSAVE_LOGS
 	global AUTOSAVE_LOG_TIME
 	global HISTORY_LENGTH
@@ -394,6 +401,7 @@ def load_settings(filename=SETTINGS_FILE):
 			DISPLAY_USER_LIST = data["display_user_lists"]
 			AUTOSAVE_LOGS = data["autosave_logs"]
 			AUTOSAVE_LOG_TIME = data["autosave_log_interval_in_seconds"]
+			AUTOSAVE_CACHE_SIZE = data["autosave_cache_minimum_size"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist
