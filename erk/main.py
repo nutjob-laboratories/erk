@@ -629,6 +629,17 @@ class Erk(QMainWindow):
 
 			if config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
 
+			self.set_doautolog = QAction(QIcon(UNCHECKED_ICON),"Autosave logs while running",self)
+			self.set_doautolog.triggered.connect(lambda state,s="autosave_toggle": self.toggleSetting(s))
+			self.logMenu.addAction(self.set_doautolog)
+
+			if config.AUTOSAVE_LOGS: self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
+
+
+			self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
+			self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
+			self.logMenu.addAction(self.set_autosave)
+
 			self.logMenu.addSeparator()
 
 			self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
@@ -648,10 +659,6 @@ class Erk(QMainWindow):
 			self.logMenu.addAction(self.logSize)
 
 			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
-
-			self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
-			self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
-			self.logMenu.addAction(self.set_autosave)
 
 			self.logMenu.addSeparator()
 
@@ -1227,6 +1234,16 @@ class Erk(QMainWindow):
 			else:
 				config.DISPLAY_CHAT_RESUME_DATE_TIME = True
 				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+			config.save_settings(self.configfile)
+			return
+
+		if setting=="autosave_toggle":
+			if config.AUTOSAVE_LOGS:
+				config.AUTOSAVE_LOGS = False
+				self.set_doautolog.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				config.AUTOSAVE_LOGS = True
+				self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
 			config.save_settings(self.configfile)
 			return
 

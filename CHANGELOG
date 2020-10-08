@@ -101,6 +101,7 @@ Version 0.822
 	* Bugfix: user input did not always move the chat scrollbar all the way to the bottom when initially connecting
 	* Added a minimum cache size to log autosave (autosave will not occur unless there's a minimum number of lines to save)
 	* Set an option to change the autosave frequency to the "Log" menu
+	* Added an option to toggle runtime log autosave off/on
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
