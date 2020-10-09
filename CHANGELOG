@@ -102,6 +102,7 @@ Version 0.822
 	* Added a minimum cache size to log autosave (autosave will not occur unless there's a minimum number of lines to save)
 	* Set an option to change the autosave frequency to the "Log" menu
 	* Added an option to toggle runtime log autosave off/on
+	* Disabled the "autosave runtime" toggle and the option to set the autosave frequency if log saving is turned off
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

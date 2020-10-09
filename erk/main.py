@@ -635,10 +635,16 @@ class Erk(QMainWindow):
 
 			if config.AUTOSAVE_LOGS: self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
 
+			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+				self.set_doautolog.setEnabled(False)
+
 
 			self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
 			self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
 			self.logMenu.addAction(self.set_autosave)
+
+			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+				self.set_autosave.setEnabled(False)
 
 			self.logMenu.addSeparator()
 
@@ -1211,9 +1217,18 @@ class Erk(QMainWindow):
 			if config.SAVE_PRIVATE_LOGS:
 				config.SAVE_PRIVATE_LOGS = False
 				self.set_privlogsave.setIcon(QIcon(UNCHECKED_ICON))
+
+				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+					self.set_doautolog.setEnabled(False)
+
+				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+					self.set_autosave.setEnabled(False)
+
 			else:
 				config.SAVE_PRIVATE_LOGS = True
 				self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+				self.set_doautolog.setEnabled(True)
+				self.set_autosave.setEnabled(True)
 			config.save_settings(self.configfile)
 			return
 
@@ -1279,9 +1294,17 @@ class Erk(QMainWindow):
 			if config.SAVE_CHANNEL_LOGS:
 				config.SAVE_CHANNEL_LOGS = False
 				self.set_chanlogsave.setIcon(QIcon(UNCHECKED_ICON))
+
+				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+					self.set_doautolog.setEnabled(False)
+
+				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+					self.set_autosave.setEnabled(False)
 			else:
 				config.SAVE_CHANNEL_LOGS = True
 				self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+				self.set_doautolog.setEnabled(True)
+				self.set_autosave.setEnabled(True)
 			config.save_settings(self.configfile)
 			return
 
