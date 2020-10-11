@@ -1083,11 +1083,9 @@ def nick(gui,client,oldnick,newnick):
 
 def erk_invited(gui,client,sender,channel):
 
-	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel,None,TYPE_INVITE) )
-			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
@@ -1096,50 +1094,48 @@ def erk_invited(gui,client,sender,channel):
 	if config.JOIN_ON_INVITE:
 		client.join(channel)
 
-	if input_page!=None: input_page.input.setFocus()
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 
 def erk_inviting(gui,client,target,channel):
 
-	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel,None,TYPE_INVITE) )
-			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel) )
 
-	if input_page!=None: input_page.input.setFocus()
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def erk_nickname_in_use(gui,client,badnick):
 
-	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
-			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
 
-	if input_page!=None: input_page.input.setFocus()
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def erk_youre_oper(gui,client):
 
-	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )
-			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )
 
-	if input_page!=None: input_page.input.setFocus()
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def erk_changed_nick(gui,client,newnick):
 
