@@ -626,6 +626,9 @@ def received_error(gui,client,error):
 	if window:
 		window.writeText( Message(ERROR_MESSAGE,'',error) )
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def user_away(gui,client,user,msg):
 	# print(user +" "+ msg)
 
@@ -636,6 +639,9 @@ def user_away(gui,client,user,msg):
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',user+" is away ("+msg+")") )
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def mode(gui,client,channel,user,mset,modes,args):
 	
@@ -865,6 +871,9 @@ def mode(gui,client,channel,user,mset,modes,args):
 		else:
 			reportremove.append(m)
 
+		if gui.current_page:
+			if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 	if len(reportadd)>0 or len(reportremove)>0:
 		if mset:
 
@@ -935,6 +944,9 @@ def topic(gui,client,setter,channel,topic):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic in "+channel+" to \""+topic+"\"") )
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def userlist(gui,client,channel,userlist):
 
 	# Update connection display
@@ -952,6 +964,9 @@ def quit(gui,client,nick,message):
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC ("+message+")",None,TYPE_QUIT) )
 			else:
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC",None,TYPE_QUIT) )
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def action_message(gui,client,target,user,message):
 	global UNSEEN
@@ -1037,6 +1052,9 @@ def action_message(gui,client,target,user,message):
 		# Update connection display
 		build_connection_display(gui)
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def nick(gui,client,oldnick,newnick):
 
 	channels = where_is_user(client,oldnick)
@@ -1059,12 +1077,17 @@ def nick(gui,client,oldnick,newnick):
 	# Update connection display
 	build_connection_display(gui)
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 
 def erk_invited(gui,client,sender,channel):
 
+	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel,None,TYPE_INVITE) )
+			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
@@ -1073,42 +1096,58 @@ def erk_invited(gui,client,sender,channel):
 	if config.JOIN_ON_INVITE:
 		client.join(channel)
 
+	if input_page!=None: input_page.input.setFocus()
+
 
 def erk_inviting(gui,client,target,channel):
 
+	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel,None,TYPE_INVITE) )
+			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"You've invited "+target+" to "+channel) )
 
+	if input_page!=None: input_page.input.setFocus()
+
 def erk_nickname_in_use(gui,client,badnick):
 
+	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
+			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"Nickname \""+badnick+"\" is already in use") )
 
+	if input_page!=None: input_page.input.setFocus()
+
 def erk_youre_oper(gui,client):
 
+	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )
+			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )
 
+	if input_page!=None: input_page.input.setFocus()
+
 def erk_changed_nick(gui,client,newnick):
 
+	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
+			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
@@ -1119,11 +1158,16 @@ def erk_changed_nick(gui,client,newnick):
 		if window.widget.client.id==client.id:
 			window.widget.nickDisplay(newnick)
 
+	if input_page!=None: input_page.input.setFocus()
+
 def erk_left_channel(gui,client,channel):
 	
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"You left "+channel) )
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
@@ -1157,6 +1201,9 @@ def erk_joined_channel(gui,client,channel):
 
 	# Update connection display
 	build_connection_display(gui)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def uptime(gui,client,uptime):
 
@@ -1223,6 +1270,9 @@ def part(gui,client,user,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left "+channel) )
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def join(gui,client,user,channel):
 
 	if not client.gui.block_plugins:
@@ -1242,6 +1292,9 @@ def join(gui,client,user,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined "+channel) )
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def motd(gui,client,motd):
 	
 	window = fetch_console_window(client)
@@ -1249,6 +1302,9 @@ def motd(gui,client,motd):
 	if window:
 		for line in motd:
 			window.writeText( Message(SYSTEM_MESSAGE,'',line) )
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def notice_message(gui,client,target,user,message):
 
@@ -1337,6 +1393,9 @@ def notice_message(gui,client,target,user,message):
 
 			# Update connection display
 			build_connection_display(gui)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def private_message(gui,client,user,message):
 
@@ -1442,6 +1501,9 @@ def private_message(gui,client,user,message):
 		# Update connection display
 		build_connection_display(gui)
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def public_message(gui,client,channel,user,message):
 
 	if not client.gui.block_plugins:
@@ -1492,6 +1554,9 @@ def public_message(gui,client,channel,user,message):
 			# Update connection display
 			build_connection_display(gui)
 
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
 def registered(gui,client):
 
 	if not client.gui.block_plugins:
@@ -1504,6 +1569,9 @@ def registered(gui,client):
 	
 	# Update connection display
 	build_connection_display(gui)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def disconnect_from_server(client,msg=None):
 
@@ -1578,6 +1646,9 @@ def connection(gui,client):
 
 	# Update connection display
 	build_connection_display(gui,client)
+
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def server_options(gui,client,options):
 	
