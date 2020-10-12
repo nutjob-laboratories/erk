@@ -104,6 +104,7 @@ Version 0.822
 	* Added an option to toggle runtime log autosave off/on
 	* Disabled the "autosave runtime" toggle and the option to set the autosave frequency if log saving is turned off
 	* Bugfix: text input widget would lose focus when certain types of messages were displayed; input focus is now maintained
+	* Bugfix: "unseen" marker in the connection display would not trigger is a CTCP action message was sent to a chat that was not the current chat
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

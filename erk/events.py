@@ -1041,7 +1041,7 @@ def action_message(gui,client,target,user,message):
 
 	posted_to_current = False
 	if gui.current_page:
-		if gui.current_page.name==nick:
+		if gui.current_page.name==target:
 			if gui.current_page.client.id==client.id:
 				posted_to_current = True
 
