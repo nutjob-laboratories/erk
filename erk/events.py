@@ -40,6 +40,8 @@ from .strings import *
 from .common import *
 from . import config
 
+from . import textformat
+
 CHANNELS = []
 CONNECTIONS = []
 CONSOLES = []
@@ -113,13 +115,32 @@ def clear_unseen(window):
 		clean.append(w)
 	UNSEEN = clean
 
-def window_has_unseen(window):
+def window_has_unseen(window,gui):
+
+	# Never mark the current window as having unseen messages
+	if gui.current_page:
+		if gui.current_page.client.id==window.client.id:
+			if gui.current_page.name==window.name:
+				return False
+
 	for w in UNSEEN:
 		if w.client.id==window.client.id:
 			if w.name==window.name: return True
 	return False
 
 def build_connection_display(gui,new_server=None):
+
+	# get error color from the text formatting
+	# use red if one is not found
+	unseen_color = "#FF0000"
+	for key in textformat.STYLES:
+		if key=='error':
+			for e in textformat.STYLES[key].split(';'):
+				l = e.strip()
+				l2 = l.split(':')
+				if len(l2)==2:
+					if l2[0].lower()=='color':
+						unseen_color = l2[1].strip()
 
 	# Make a list of expanded server nodes, and make sure they
 	# are still expanded when we rewrite the display
@@ -217,7 +238,7 @@ def build_connection_display(gui,new_server=None):
 
 					parent.erk_console = True
 
-					if window_has_unseen(c.widget):
+					if window_has_unseen(c.widget,gui):
 						f = parent.font(0)
 						f.setItalic(True)
 						parent.setFont(0,f)
@@ -245,10 +266,11 @@ def build_connection_display(gui,new_server=None):
 			child.erk_name = channel.name
 			child.erk_console = False
 
-			if window_has_unseen(channel):
-				f = child.font(0)
-				f.setItalic(True)
-				child.setFont(0,f)
+			if window_has_unseen(channel,gui):
+				# f = child.font(0)
+				# f.setItalic(True)
+				# child.setFont(0,f)
+				child.setForeground(0,QBrush(QColor(unseen_color))) 
 
 			if gui.current_page:
 				if hasattr(gui.current_page,"name"):
@@ -883,6 +905,9 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 			msg = Message(SYSTEM_MESSAGE,'',f"{user} set +{''.join(reportadd)} in {channel}",None,TYPE_MODE)
 			window.writeText( msg )
+
+			if not window_has_unseen(window,gui):
+				UNSEEN.append(window)
 		else:
 
 			for m in reportremove:
@@ -891,6 +916,9 @@ def mode(gui,client,channel,user,mset,modes,args):
 
 			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}",None,TYPE_MODE)
 			window.writeText( msg )
+
+			if not window_has_unseen(window,gui):
+				UNSEEN.append(window)
 
 	if config.DISPLAY_CHANNEL_MODES:
 		# Change the channel's name display
@@ -940,6 +968,9 @@ def topic(gui,client,setter,channel,topic):
 		window.setTopic(topic)
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"",None,TYPE_TOPIC) )
 
+		if not window_has_unseen(window,gui):
+			UNSEEN.append(window)
+
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic in "+channel+" to \""+topic+"\"") )
@@ -964,6 +995,9 @@ def quit(gui,client,nick,message):
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC ("+message+")",None,TYPE_QUIT) )
 			else:
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC",None,TYPE_QUIT) )
+
+		if not window_has_unseen(window,gui):
+			UNSEEN.append(window)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1046,7 +1080,7 @@ def action_message(gui,client,target,user,message):
 				posted_to_current = True
 
 	if not posted_to_current:
-		if not window_has_unseen(window):
+		if not window_has_unseen(window,gui):
 			UNSEEN.append(window)
 
 		# Update connection display
@@ -1139,11 +1173,9 @@ def erk_youre_oper(gui,client):
 
 def erk_changed_nick(gui,client,newnick):
 
-	input_page = None
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
-			input_page = gui.current_page
 
 	window = fetch_console_window(client)
 	if window:
@@ -1154,7 +1186,8 @@ def erk_changed_nick(gui,client,newnick):
 		if window.widget.client.id==client.id:
 			window.widget.nickDisplay(newnick)
 
-	if input_page!=None: input_page.input.setFocus()
+	if gui.current_page:
+		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def erk_left_channel(gui,client,channel):
 	
@@ -1262,6 +1295,9 @@ def part(gui,client,user,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel",None,TYPE_PART) )
 
+	if not window_has_unseen(window,gui):
+		UNSEEN.append(window)
+
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left "+channel) )
@@ -1283,6 +1319,9 @@ def join(gui,client,user,channel):
 	window = fetch_channel_window(client,channel)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel",None,TYPE_JOIN) )
+
+	if not window_has_unseen(window,gui):
+		UNSEEN.append(window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1341,18 +1380,13 @@ def notice_message(gui,client,target,user,message):
 					posted_to_current = True
 
 		if not posted_to_current:
-			if not window_has_unseen(window):
+			if not window_has_unseen(window,gui):
 				UNSEEN.append(window)
 
 			# Update connection display
 			build_connection_display(gui)
 		return
 
-	# p = user.split('!')
-	# if len(p)==2:
-	# 	nick = p[0]
-	# else:
-	# 	nick = user
 
 	window = fetch_private_window(client,nick)
 	if window:
@@ -1365,7 +1399,7 @@ def notice_message(gui,client,target,user,message):
 					posted_to_current = True
 
 		if not posted_to_current:
-			if not window_has_unseen(window):
+			if not window_has_unseen(window,gui):
 				UNSEEN.append(window)
 
 			# Update connection display
@@ -1384,7 +1418,7 @@ def notice_message(gui,client,target,user,message):
 					posted_to_current = True
 
 		if not posted_to_current:
-			if not window_has_unseen(window):
+			if not window_has_unseen(window,gui):
 				UNSEEN.append(window)
 
 			# Update connection display
@@ -1399,11 +1433,6 @@ def private_message(gui,client,user,message):
 		if client.gui.plugins.private(client,user,message): return
 
 	global UNSEEN
-	# p = user.split('!')
-	# if len(p)==2:
-	# 	nick = p[0]
-	# else:
-	# 	nick = user
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1521,8 +1550,6 @@ def public_message(gui,client,channel,user,message):
 			if hostmask in i: ignore = True
 
 	if ignore: return
-
-	#print(target+" "+user+": "+message)
 
 	msg = Message(CHAT_MESSAGE,user,message)
 

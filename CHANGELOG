@@ -105,6 +105,9 @@ Version 0.822
 	* Disabled the "autosave runtime" toggle and the option to set the autosave frequency if log saving is turned off
 	* Bugfix: text input widget would lose focus when certain types of messages were displayed; input focus is now maintained
 	* Bugfix: "unseen" marker in the connection display would not trigger is a CTCP action message was sent to a chat that was not the current chat
+	* Bugfix: "unseen" marker is now never triggered for the current window
+	* Chats with "unseen" messages are now marked with the same color used for error text, rather than with italics
+	* More events trigger the "unseen" marker: join, part, mode, quit, nick
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
