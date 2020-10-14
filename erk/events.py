@@ -49,6 +49,8 @@ PRIVATES = []
 
 UNSEEN = []
 
+TRIGGERED = []
+
 def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
 	if not client.gui.block_plugins:
 		if client.gui.plugins.ctcp(client,user,channel,tag,message): return
@@ -107,6 +109,7 @@ def quit_all():
 
 def clear_unseen(window):
 	global UNSEEN
+	global TRIGGERED
 	clean = []
 	for w in UNSEEN:
 		if w.client.id==window.client.id:
@@ -114,6 +117,14 @@ def clear_unseen(window):
 				continue
 		clean.append(w)
 	UNSEEN = clean
+
+	clean = []
+	for w in TRIGGERED:
+		if w.client.id==window.client.id:
+			if w.name==window.name:
+				continue
+		clean.append(w)
+	TRIGGERED = clean
 
 def window_has_unseen(window,gui):
 
@@ -128,11 +139,33 @@ def window_has_unseen(window,gui):
 			if w.name==window.name: return True
 	return False
 
+class UnseenWidgetItem(QTreeWidgetItem):
+	@property
+	def animation(self):
+		if not hasattr(self, "_animation"):
+			self._animation = QVariantAnimation()
+			self._animation.valueChanged.connect(self._on_value_changed)
+		return self._animation
+
+	def _on_value_changed(self, color):
+		for i in range(self.columnCount()):
+			# self.setBackground(i, color)
+			self.setForeground(i, color)
+
+def animation_triggered(window):
+	for w in TRIGGERED:
+		if w.client.id==window.client.id:
+			if w.name==window.name: return True
+	return False
+
 def build_connection_display(gui,new_server=None):
+
+	global TRIGGERED
 
 	# get error color from the text formatting
 	# use red if one is not found
 	unseen_color = "#FF0000"
+	unseen_back = "#000000"
 	for key in textformat.STYLES:
 		if key=='error':
 			for e in textformat.STYLES[key].split(';'):
@@ -141,6 +174,13 @@ def build_connection_display(gui,new_server=None):
 				if len(l2)==2:
 					if l2[0].lower()=='color':
 						unseen_color = l2[1].strip()
+		if key=='all':
+			for e in textformat.STYLES[key].split(';'):
+				l = e.strip()
+				l2 = l.split(':')
+				if len(l2)==2:
+					if l2[0].lower()=='color':
+						unseen_back = l2[1].strip()
 
 	# Make a list of expanded server nodes, and make sure they
 	# are still expanded when we rewrite the display
@@ -253,7 +293,25 @@ def build_connection_display(gui,new_server=None):
 									parent.setFont(0,f)
 
 		for channel in s[2]:
-			child = QTreeWidgetItem(parent)
+			if config.UNSEEN_MESSAGE_ANIMATION:
+				# UnseenWidgetItem
+				if window_has_unseen(channel,gui):
+					child = UnseenWidgetItem(parent)
+					if not animation_triggered(channel):
+						child.animation.setStartValue(QColor(unseen_back))
+						child.animation.setEndValue(QColor(unseen_color))
+						child.animation.setDuration(config.UNSEEN_ANIMATION_LENGTH)
+						child.animation.start()
+						TRIGGERED.append(channel)
+					else:
+						child.setForeground(0,QBrush(QColor(unseen_color))) 
+				else:
+					child = QTreeWidgetItem(parent)
+			else:
+				child = QTreeWidgetItem(parent)
+
+
+			# child = QTreeWidgetItem(parent)
 			child.setText(0,channel.name)
 			if channel.type==config.CHANNEL_WINDOW:
 				child.erk_channel = True
@@ -266,11 +324,12 @@ def build_connection_display(gui,new_server=None):
 			child.erk_name = channel.name
 			child.erk_console = False
 
-			if window_has_unseen(channel,gui):
-				# f = child.font(0)
-				# f.setItalic(True)
-				# child.setFont(0,f)
-				child.setForeground(0,QBrush(QColor(unseen_color))) 
+			# if window_has_unseen(channel,gui):
+			# 	if animation_triggered(channel):
+			# 		# f = child.font(0)
+			# 		# f.setBold(True)
+			# 		# child.setFont(0,f)
+			# 		child.setForeground(0,QBrush(QColor(unseen_color))) 
 
 			if gui.current_page:
 				if hasattr(gui.current_page,"name"):
