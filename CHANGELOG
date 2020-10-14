@@ -109,6 +109,7 @@ Version 0.822
 	* Chats with "unseen" messages are now marked with the same color used for error text, rather than with italics
 	* More events trigger the "unseen" marker: join, part, mode, quit, nick
 	* Added a neat new animation for the "unseen" marker; it will slowly (over 500 milliseconds) turn into the "error" color
+	* "Unseen" marker now uses the "system" color for the animation
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

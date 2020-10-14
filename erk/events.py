@@ -162,12 +162,12 @@ def build_connection_display(gui,new_server=None):
 
 	global TRIGGERED
 
-	# get error color from the text formatting
-	# use red if one is not found
-	unseen_color = "#FF0000"
+	# get system color from the text formatting
+	# use orange if one is not found
+	unseen_color = "#FF8C00"
 	unseen_back = "#000000"
 	for key in textformat.STYLES:
-		if key=='error':
+		if key==config.UNSEEN_ANIMATION_COLOR:
 			for e in textformat.STYLES[key].split(';'):
 				l = e.strip()
 				l2 = l.split(':')
