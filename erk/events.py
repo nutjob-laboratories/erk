@@ -139,13 +139,17 @@ def window_has_unseen(window,gui):
 			if w.name==window.name: return True
 	return False
 
-class UnseenWidgetItem(QTreeWidgetItem):
+class PulseQTreeWidgetItem(QTreeWidgetItem):
 	@property
 	def animation(self):
 		if not hasattr(self, "_animation"):
 			self._animation = QVariantAnimation()
 			self._animation.valueChanged.connect(self._on_value_changed)
+			#self._animation.setLoopCount(-1)	# Loop forever
 		return self._animation
+
+	def loop_this_animation(self):
+		self._animation.setLoopCount(-1)
 
 	def _on_value_changed(self, color):
 		for i in range(self.columnCount()):
@@ -166,6 +170,7 @@ def build_connection_display(gui,new_server=None):
 	# use orange if one is not found
 	unseen_color = "#FF8C00"
 	unseen_back = "#000000"
+	connect_color = "#006400"
 	for key in textformat.STYLES:
 		if key==config.UNSEEN_ANIMATION_COLOR:
 			for e in textformat.STYLES[key].split(';'):
@@ -181,6 +186,14 @@ def build_connection_display(gui,new_server=None):
 				if len(l2)==2:
 					if l2[0].lower()=='color':
 						unseen_back = l2[1].strip()
+
+		if key==config.CONNECTION_ANIMATION_COLOR:
+			for e in textformat.STYLES[key].split(';'):
+				l = e.strip()
+				l2 = l.split(':')
+				if len(l2)==2:
+					if l2[0].lower()=='color':
+						connect_color = l2[1].strip()
 
 	# Make a list of expanded server nodes, and make sure they
 	# are still expanded when we rewrite the display
@@ -235,7 +248,18 @@ def build_connection_display(gui,new_server=None):
 
 	for s in servers:
 
-		parent = QTreeWidgetItem(root)
+		if s[0] == "Connecting...":
+			if config.CONNECTION_MESSAGE_ANIMATION:
+				parent = PulseQTreeWidgetItem(root)
+				parent.animation.setStartValue(QColor(unseen_back))
+				parent.animation.setEndValue(QColor(connect_color))
+				parent.animation.setDuration(config.CONNECTION_ANIMATION_LENGTH)
+				parent.loop_this_animation()
+				parent.animation.start()
+			else:
+				parent = QTreeWidgetItem(root)
+		else:
+			parent = QTreeWidgetItem(root)
 		parent.setText(0,s[0])
 		parent.setIcon(0,QIcon(CONNECTING_ICON))
 		parent.erk_client = s[1]
@@ -294,9 +318,9 @@ def build_connection_display(gui,new_server=None):
 
 		for channel in s[2]:
 			if config.UNSEEN_MESSAGE_ANIMATION:
-				# UnseenWidgetItem
+				# PulseQTreeWidgetItem
 				if window_has_unseen(channel,gui):
-					child = UnseenWidgetItem(parent)
+					child = PulseQTreeWidgetItem(parent)
 					if not animation_triggered(channel):
 						child.animation.setStartValue(QColor(unseen_back))
 						child.animation.setEndValue(QColor(unseen_color))
