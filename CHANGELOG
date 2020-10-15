@@ -111,6 +111,7 @@ Version 0.822
 	* Added a neat new animation for the "unseen" marker; it will slowly (over 500 milliseconds) turn into the "error" color
 	* "Unseen" marker now uses the "system" color for the animation
 	* Added a small color animation to the "Connecting..." notification on the connection display
+	* The server uptime no longer displays while the connection process is still ongoing
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

@@ -269,16 +269,17 @@ def build_connection_display(gui,new_server=None):
 		parent.erk_server = True
 		parent.erk_console = False
 
-		if config.DISPLAY_CONNECTION_UPTIME:
-			child = QTreeWidgetItem(parent)
-			if s[1].id in gui.uptimers:
-				child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
-			else:
-				child.setText(0,"00:00:00")
-			child.setIcon(0,QIcon(UPTIME_ICON))
-			child.erk_uptime = True
-			child.erk_client = s[1]
-			child.erk_console = False
+		if s[0]!="Connecting...":
+			if config.DISPLAY_CONNECTION_UPTIME:
+				child = QTreeWidgetItem(parent)
+				if s[1].id in gui.uptimers:
+					child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
+				else:
+					child.setText(0,"00:00:00")
+				child.setIcon(0,QIcon(UPTIME_ICON))
+				child.erk_uptime = True
+				child.erk_client = s[1]
+				child.erk_console = False
 
 		if s[1].id in expanded:
 			parent.setExpanded(True)
