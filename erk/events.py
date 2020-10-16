@@ -260,7 +260,10 @@ def build_connection_display(gui,new_server=None):
 				parent = QTreeWidgetItem(root)
 		else:
 			parent = QTreeWidgetItem(root)
-		parent.setText(0,s[0])
+
+		# parent.setText(0,s[0])
+		parent.setText(0,s[1].server)
+
 		parent.setIcon(0,QIcon(CONNECTING_ICON))
 		parent.erk_client = s[1]
 		parent.erk_channel = False
@@ -299,7 +302,8 @@ def build_connection_display(gui,new_server=None):
 							parent.setText(0,c.widget.client.network)
 						parent.setIcon(0,QIcon(NETWORK_ICON))
 					else:
-						parent.erk_name = s[0]
+						# parent.erk_name = s[0]
+						parent.erk_name = s[1].server
 
 					parent.erk_console = True
 
@@ -335,8 +339,6 @@ def build_connection_display(gui,new_server=None):
 			else:
 				child = QTreeWidgetItem(parent)
 
-
-			# child = QTreeWidgetItem(parent)
 			child.setText(0,channel.name)
 			if channel.type==config.CHANNEL_WINDOW:
 				child.erk_channel = True
@@ -348,13 +350,6 @@ def build_connection_display(gui,new_server=None):
 			child.erk_widget = channel
 			child.erk_name = channel.name
 			child.erk_console = False
-
-			# if window_has_unseen(channel,gui):
-			# 	if animation_triggered(channel):
-			# 		# f = child.font(0)
-			# 		# f.setBold(True)
-			# 		# child.setFont(0,f)
-			# 		child.setForeground(0,QBrush(QColor(unseen_color))) 
 
 			if gui.current_page:
 				if hasattr(gui.current_page,"name"):

@@ -112,6 +112,7 @@ Version 0.822
 	* "Unseen" marker now uses the "system" color for the animation
 	* Added a small color animation to the "Connecting..." notification on the connection display
 	* The server uptime no longer displays while the connection process is still ongoing
+	* Connection display now shows the name of the server's IP/host rather than "Connecting..." while connecting
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
