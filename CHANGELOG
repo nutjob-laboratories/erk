@@ -113,6 +113,7 @@ Version 0.822
 	* Added a small color animation to the "Connecting..." notification on the connection display
 	* The server uptime no longer displays while the connection process is still ongoing
 	* Connection display now shows the name of the server's IP/host rather than "Connecting..." while connecting
+	* Moved schwa "spinner" to the far right of the menu toolbar, just like the ol' Netscape :-)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

@@ -391,9 +391,6 @@ class Erk(QMainWindow):
 				self.addToolBar(Qt.TopToolBarArea,self.toolbar)
 
 				self.toolbar_icon = TOOLBAR_ICON
-				self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
-				self.spinner = QMovie(SPINNER_ANIMATION)
-				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
 				# MENU TOOLBAR
 				self.mainMenu = QMenu()
@@ -486,7 +483,7 @@ class Erk(QMainWindow):
 		else:
 
 			self.toolbar.clear()
-			self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
+			add_toolbar_spacer(self.toolbar)
 			self.mainMenu.clear()
 			add_toolbar_menu(self.toolbar,"IRC",self.mainMenu)
 
@@ -731,7 +728,12 @@ class Erk(QMainWindow):
 		self.helpMenu.addAction(helpLink)
 
 		# End of menus
-		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR: end_toolbar_menu(self.toolbar)
+		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+
+			add_toolbar_stretch(self.toolbar)
+			self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
+			self.spinner = QMovie(SPINNER_ANIMATION)
+			self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
 	def menuExportLog(self):
 		d = ExportLogDialog(self)

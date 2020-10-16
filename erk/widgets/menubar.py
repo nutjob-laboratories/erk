@@ -120,8 +120,13 @@ def add_toolbar_menu(toolbar,name,menu):
 	toolMenuButton.setMenu(menu)
 	toolbar.addWidget(toolMenuButton)
 
-def end_toolbar_menu(toolbar):
+def add_toolbar_spacer(toolbar):
 	toolbar.addWidget(QLabel(' '))
+
+def add_toolbar_stretch(toolbar):
+	s = QWidget()
+	s.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
+	toolbar.addWidget(s)
 
 def add_toolbar_image(toolbar,icon):
 
