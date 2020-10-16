@@ -128,13 +128,18 @@ UNSEEN_ANIMATION_COLOR = 'system'
 
 CONNECTION_MESSAGE_ANIMATION = True
 CONNECTION_ANIMATION_LENGTH = 1000
-CONNECTION_ANIMATION_COLOR = 'error'
+CONNECTION_ANIMATION_COLOR = 'system'
+
+SCHWA_ANIMATION = True
 
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+		"schwa_corner_animation": SCHWA_ANIMATION,
+		"animate_unseen_messages_in_connection_display": UNSEEN_MESSAGE_ANIMATION,
+		"animate_connecting_messages_in_connection_display": CONNECTION_MESSAGE_ANIMATION,
 		"autosave_cache_minimum_size": AUTOSAVE_CACHE_SIZE,
 		"autosave_logs": AUTOSAVE_LOGS,
 		"autosave_log_interval_in_seconds": AUTOSAVE_LOG_TIME,
@@ -238,10 +243,22 @@ def patch_settings(data):
 	if not "autosave_cache_minimum_size" in data:
 		data["autosave_cache_minimum_size"] = AUTOSAVE_CACHE_SIZE
 
+	if not "schwa_corner_animation" in data:
+		data["schwa_corner_animation"] = SCHWA_ANIMATION
+
+	if not "animate_unseen_messages_in_connection_display" in data:
+		data["animate_unseen_messages_in_connection_display"] = UNSEEN_MESSAGE_ANIMATION
+
+	if not "animate_connecting_messages_in_connection_display" in data:
+		data["animate_connecting_messages_in_connection_display"] = CONNECTION_MESSAGE_ANIMATION
+
 	return data
 
 def load_settings(filename=SETTINGS_FILE):
 	if filename==None: filename = SETTINGS_FILE
+	global SCHWA_ANIMATION
+	global UNSEEN_MESSAGE_ANIMATION
+	global CONNECTION_MESSAGE_ANIMATION
 	global AUTOSAVE_CACHE_SIZE
 	global AUTOSAVE_LOGS
 	global AUTOSAVE_LOG_TIME
@@ -409,6 +426,10 @@ def load_settings(filename=SETTINGS_FILE):
 			AUTOSAVE_LOGS = data["autosave_logs"]
 			AUTOSAVE_LOG_TIME = data["autosave_log_interval_in_seconds"]
 			AUTOSAVE_CACHE_SIZE = data["autosave_cache_minimum_size"]
+			SCHWA_ANIMATION =  data["schwa_corner_animation"]
+			UNSEEN_MESSAGE_ANIMATION =  data["animate_unseen_messages_in_connection_display"]
+			CONNECTION_MESSAGE_ANIMATION =  data["animate_connecting_messages_in_connection_display"]
+
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

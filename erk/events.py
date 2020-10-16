@@ -264,6 +264,10 @@ def build_connection_display(gui,new_server=None):
 		# parent.setText(0,s[0])
 		parent.setText(0,s[1].server)
 
+		if not config.CONNECTION_MESSAGE_ANIMATION:
+			if s[0] == "Connecting...":
+				parent.setForeground(0,QBrush(QColor(connect_color))) 
+
 		parent.setIcon(0,QIcon(CONNECTING_ICON))
 		parent.erk_client = s[1]
 		parent.erk_channel = False
@@ -350,6 +354,10 @@ def build_connection_display(gui,new_server=None):
 			child.erk_widget = channel
 			child.erk_name = channel.name
 			child.erk_console = False
+
+			if not config.UNSEEN_MESSAGE_ANIMATION:
+				if window_has_unseen(channel,gui):
+					child.setForeground(0,QBrush(QColor(unseen_color))) 
 
 			if gui.current_page:
 				if hasattr(gui.current_page,"name"):

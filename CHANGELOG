@@ -114,6 +114,10 @@ Version 0.822
 	* The server uptime no longer displays while the connection process is still ongoing
 	* Connection display now shows the name of the server's IP/host rather than "Connecting..." while connecting
 	* Moved schwa "spinner" to the far right of the menu toolbar, just like the ol' Netscape :-)
+	* Bugfix: if "unseen" animations were turned off, windows with unseen messages would not be marked
+	* Bugfix: is "connecting" text animation is turned off, connecting text now changes color without the animation
+	* "Connecting" text animation now uses the "system" color
+	* Added options to turn off the connection display animations, and the corner schwa animation, to the config file
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

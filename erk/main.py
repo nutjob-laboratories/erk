@@ -243,10 +243,12 @@ class Erk(QMainWindow):
 		#self.toggle_title()
 
 	def start_spinner(self):
+		if not config.SCHWA_ANIMATION: return
 		if DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: return
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR: self.spinner.start()
 
 	def stop_spinner(self):
+		if not config.SCHWA_ANIMATION: return
 		if DO_NOT_DISPLAY_MENUS_OR_TOOLBAR: return
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 			self.spinner.stop()
@@ -730,10 +732,11 @@ class Erk(QMainWindow):
 		# End of menus
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 
-			add_toolbar_stretch(self.toolbar)
-			self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
-			self.spinner = QMovie(SPINNER_ANIMATION)
-			self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+			if config.SCHWA_ANIMATION:
+				add_toolbar_stretch(self.toolbar)
+				self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
+				self.spinner = QMovie(SPINNER_ANIMATION)
+				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
 	def menuExportLog(self):
 		d = ExportLogDialog(self)
