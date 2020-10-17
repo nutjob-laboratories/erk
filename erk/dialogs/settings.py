@@ -172,6 +172,9 @@ class Dialog(QDialog):
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
+		self.showSchwa = QCheckBox("Netscape-esque schwa animation",self)
+		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
+
 		pbLayout = QHBoxLayout()
 		pbLayout.addWidget(fontButton)
 		pbLayout.addStretch()
@@ -184,6 +187,7 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.fontLabel)
 		mpLayout.addLayout(pbLayout)
 		mpLayout.addLayout(pb2Layout)
+		mpLayout.addWidget(self.showSchwa)
 		mpLayout.addStretch()
 
 		self.displayPage.setLayout(mpLayout)
@@ -327,6 +331,12 @@ class Dialog(QDialog):
 		self.expandConnection = QCheckBox("Expand server node on connection",self)
 		if config.EXPAND_SERVER_ON_CONNECT: self.expandConnection.setChecked(True)
 
+		self.unseenConnection = QCheckBox("Animate unseen message notification",self)
+		if config.UNSEEN_MESSAGE_ANIMATION: self.unseenConnection.setChecked(True)
+
+		self.animateConnection = QCheckBox("Animate connection notification",self)
+		if config.CONNECTION_MESSAGE_ANIMATION: self.animateConnection.setChecked(True)
+
 		self.leftRadio = QRadioButton("Left")
 		self.rightRadio = QRadioButton("Right")
 
@@ -342,16 +352,21 @@ class Dialog(QDialog):
 		clLayout = QGroupBox("Connection display location",self)
 		clLayout.setLayout(cgbLayout)
 
+		efLayout = QHBoxLayout()
+		efLayout.addStretch()
+		efLayout.addWidget(self.enableConnection)
+		efLayout.addStretch()
+		efLayout.addWidget(self.floatConnection)
+		efLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.enableConnection)
-		cpLayout.addWidget(self.floatConnection)
+		cpLayout.addLayout(efLayout)
+		cpLayout.addWidget(clLayout)
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
 		cpLayout.addWidget(self.expandConnection)
-		cpLayout.addStretch()
-		cpLayout.addWidget(clLayout)
-		cpLayout.addStretch()
+		cpLayout.addWidget(self.unseenConnection)
+		cpLayout.addWidget(self.animateConnection)
 
 		self.connectionPage.setLayout(cpLayout)
 
@@ -593,7 +608,9 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.topicMisc)
 		#cpLayout.addWidget(self.joinMisc)
 		cpLayout.addWidget(self.switchMisc)
-		#cpLayout.addWidget(self.fetchMisc)
+
+		#cpLayout.addWidget(self.showSchwa)
+
 		cpLayout.addWidget(self.listMisc)
 		cpLayout.addLayout(hsLayout)
 		cpLayout.addStretch()
@@ -631,6 +648,11 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SCHWA_ANIMATION = self.showSchwa.isChecked()
+
+		config.UNSEEN_MESSAGE_ANIMATION = self.unseenConnection.isChecked()
+		config.CONNECTION_MESSAGE_ANIMATION = self.animateConnection.isChecked()
 
 		config.DEVELOPER_MODE = self.pluginDevmode.isChecked()
 

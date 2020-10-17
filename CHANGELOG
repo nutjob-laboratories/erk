@@ -118,6 +118,7 @@ Version 0.822
 	* Bugfix: is "connecting" text animation is turned off, connecting text now changes color without the animation
 	* "Connecting" text animation now uses the "system" color
 	* Added options to turn off the connection display animations, and the corner schwa animation, to the config file
+	* Added animation options to the preferences dialog
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
