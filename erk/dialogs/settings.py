@@ -137,7 +137,7 @@ class Dialog(QDialog):
 		self.stack = QStackedWidget(self)
 
 		fm = QFontMetrics(self.font())
-		fwidth = fm.width('X') * 23
+		fwidth = fm.width('X') * 27
 		self.selector.setMaximumWidth(fwidth)
 
 		self.selector.itemClicked.connect(self.selectorClick)
@@ -147,6 +147,7 @@ class Dialog(QDialog):
 		self.displayPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Display")
 		entry.widget = self.displayPage
 		entry.setIcon(QIcon(FONT_ICON))
@@ -197,6 +198,7 @@ class Dialog(QDialog):
 		self.messagesPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Messages")
 		entry.widget = self.messagesPage
 		entry.setIcon(QIcon(MESSAGE_ICON))
@@ -259,6 +261,7 @@ class Dialog(QDialog):
 		self.channelPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Channels")
 		entry.widget = self.channelPage
 		entry.setIcon(QIcon(CHANNEL_ICON))
@@ -309,6 +312,7 @@ class Dialog(QDialog):
 		self.connectionPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Connection display")
 		entry.widget = self.connectionPage
 		entry.setIcon(QIcon(CONNECTION_DISPLAY_ICON))
@@ -375,6 +379,7 @@ class Dialog(QDialog):
 		self.autocompletePage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Autocomplete")
 		entry.widget = self.autocompletePage
 		entry.setIcon(QIcon(AUTOCOMPLETE_ICON))
@@ -406,6 +411,7 @@ class Dialog(QDialog):
 		self.spellcheckPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Spellcheck")
 		entry.widget = self.spellcheckPage
 		entry.setIcon(QIcon(SPELLCHECK_ICON))
@@ -463,6 +469,7 @@ class Dialog(QDialog):
 		self.timestampPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Timestamps")
 		entry.widget = self.timestampPage
 		entry.setIcon(QIcon(TIMESTAMP_ICON))
@@ -498,6 +505,7 @@ class Dialog(QDialog):
 		self.historySize = None
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Text input")
 		entry.widget = self.inputPage
 		entry.setIcon(QIcon(ENTRY_ICON))
@@ -533,6 +541,7 @@ class Dialog(QDialog):
 		self.featuresPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Plugins & Macros")
 		entry.widget = self.featuresPage
 		entry.setIcon(QIcon(MACRO_ICON))
@@ -568,6 +577,7 @@ class Dialog(QDialog):
 		self.miscPage = QWidget()
 
 		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Miscellaneous")
 		entry.widget = self.miscPage
 		entry.setIcon(QIcon(MISC_ICON))
