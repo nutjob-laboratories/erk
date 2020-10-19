@@ -1554,33 +1554,42 @@ class Erk(QMainWindow):
 			else:
 				cpass = ""
 				
-			# if user_info["save_history"]:
+			if user_info["save_history"]:
+
+				#print(info.dialog)
+
+				# Only make a save attemp if we're not using
+				# the combo dialog to connect
+				if not info.dialog:
+					user_history = user_info["history"]
+					
+
 
 			# 	user_history = user_info["history"]
 
 			# 	# make sure server isn't in the built-in list
 			# 	inlist = False
 
-			# 	# make sure server isn't in history
-			# 	inhistory = False
-			# 	for s in user_history:
-			# 		if s[0]==info.server:
-			# 			if s[1]==info.port:
-			# 				inhistory = True
+					# make sure server isn't in history
+					inhistory = False
+					for s in user_history:
+						if s[0]==info.server:
+							if s[1]==str(info.port):
+								inhistory = True
 
 			# 	# if inlist==False and inhistory==False:
-			# 	if inhistory==False:
+					if inhistory==False:
 
-			# 		if using_ssl:
-			# 			ussl = "ssl"
-			# 		else:
-			# 			ussl = "normal"
+						if using_ssl:
+							ussl = "ssl"
+						else:
+							ussl = "normal"
 
 
-			# 		entry = [ info.server,str(info.port),UNKNOWN_NETWORK,ussl,cpass ]
-			# 		user_history.append(entry)
+						entry = [ info.server,str(info.port),UNKNOWN_NETWORK,ussl,cpass ]
+						user_history.append(entry)
 
-			# 		user_info["history"] = user_history
+						user_info["history"] = user_history
 
 			user_info["last_server"] = info.server
 			user_info["last_port"] = str(info.port)

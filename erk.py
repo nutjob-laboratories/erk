@@ -362,6 +362,7 @@ if __name__ == '__main__':
 					args.reconnect,
 					chans,
 					u["failreconnect"],
+					False,
 				)
 			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 			GUI.show()
@@ -404,6 +405,7 @@ if __name__ == '__main__':
 						u["reconnect"],
 						c,
 						u["failreconnect"],
+						False,
 					)
 				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 				GUI.show()
