@@ -66,25 +66,25 @@ class Window(QMainWindow):
 				if config.SAVE_CHANNEL_LOGS:
 					if len(self.newLog)>0:
 						if len(self.newLog)>=config.AUTOSAVE_CACHE_SIZE:
-							saveLog(self.client.network,self.name,self.newLog)
+							saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 							self.newLog = []
 
 			if self.type==config.PRIVATE_WINDOW:
 				if config.SAVE_PRIVATE_LOGS:
 					if len(self.newLog)>0:
 						if len(self.newLog)>=config.AUTOSAVE_CACHE_SIZE:
-							saveLog(self.client.network,self.name,self.newLog)
+							saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 							self.newLog = []
 
 	def closeEvent(self, event):
 		# Logs
 		if self.type==config.CHANNEL_WINDOW:
 			if config.SAVE_CHANNEL_LOGS:
-				saveLog(self.client.network,self.name,self.newLog)
+				saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 
 		if self.type==config.PRIVATE_WINDOW:
 			if config.SAVE_PRIVATE_LOGS:
-				saveLog(self.client.network,self.name,self.newLog)
+				saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 
 	def handleTopicInput(self):
 		self.client.topic(self.name,self.topic.text())
@@ -510,7 +510,7 @@ class Window(QMainWindow):
 				load_log_from_disk = True
 
 		if load_log_from_disk:
-			loadLog = readLog(self.client.network,self.name)
+			loadLog = readLog(self.client.network,self.name,self.parent.logdir)
 			if len(loadLog)>config.LOG_LOAD_SIZE_MAX:
 				loadLog = trimLog(loadLog,config.LOG_LOAD_SIZE_MAX)
 

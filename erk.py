@@ -113,6 +113,7 @@ miscgroup = parser.add_argument_group('Configuration')
 miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
+miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
 
 
 args = parser.parse_args()
@@ -144,6 +145,10 @@ if __name__ == '__main__':
 			u = get_user(args.user)
 			save_user(u,args.user)
 			print("\""+args.user+"\" created!")
+
+	if args.logs:
+		if not os.path.isdir(args.logs):
+			os.mkdir(args.logs)
 
 	# Handle installing plugins
 
@@ -358,14 +363,14 @@ if __name__ == '__main__':
 					chans,
 					u["failreconnect"],
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -400,7 +405,7 @@ if __name__ == '__main__':
 						c,
 						u["failreconnect"],
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 				GUI.show()
 			else:
 
@@ -408,7 +413,7 @@ if __name__ == '__main__':
 
 				info = ComboDialog(args.user)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
 					GUI.show()
 				else:
 					app.quit()

@@ -235,6 +235,14 @@ def build_connection_display(gui,new_server=None):
 
 	root = gui.connection_display.invisibleRootItem()
 
+	# # Set main status bar
+	# slist = []
+	# for e in servers:
+	# 	if e[0]=="Connecting...": continue
+	# 	slist.append(e[0]+" ("+e[1].nickname+")")
+	# if len(slist)>0:
+	# 	gui.set_status(f"{', '.join(slist)}")
+
 	# BEGIN STARTER DISPLAY
 
 	if len(CONSOLES)>0 or len(CHANNELS)>0 or len(PRIVATES)>0:
@@ -243,6 +251,7 @@ def build_connection_display(gui,new_server=None):
 
 	else:
 		gui.connection_dock.hide()
+		#gui.set_status("&nbsp;")
 
 	# END STARTER DISPLAY
 

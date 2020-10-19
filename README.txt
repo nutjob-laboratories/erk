@@ -144,7 +144,8 @@ Not directly, as all its configuration files are stored in **Ərk**'s installati
 * `--config` : This tells **Ərk** to use a user-specified file for most configuration options.
 * `--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
 * `--format` : This tells **Ərk** to use a user-specified text display settings file. This sets what colors and formatting is used to display text in the client.
+* `--logs` : This tells **Ərk** to use a user-specified directory for log loading and storage.
 
-This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings.
+This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to used for logs.
 
 More command-line settings can be viewed by executing **Ərk** with the `--help` command-line flag.

@@ -298,7 +298,7 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -333,6 +333,8 @@ class Erk(QMainWindow):
 		self.stylefile = stylefile
 
 		self.userfile = userfile
+
+		self.logdir = logdir
 
 		textformat.get_text_format_settings(self.stylefile)
 
@@ -438,6 +440,13 @@ class Erk(QMainWindow):
 
 		self.resize(appwidth,appheight)
 
+		# # Status bar
+		# self.status = self.statusBar()
+		# self.status.setStyleSheet('QStatusBar::item {border: None;}')
+
+		# self.status_msg = QLabel("<i><small>&nbsp;</small></i>")
+		# self.status.addPermanentWidget(self.status_msg,0)
+
 		if info:
 			self.connectToIRCServer(info)
 
@@ -457,6 +466,9 @@ class Erk(QMainWindow):
 
 		if self.fullscreen:
 			self.showFullScreen()
+
+	# def set_status(self,msg):
+	# 	self.status_msg.setText(f"<i><small>{msg}</small></i>")
 
 	def spellcheck_language(self,setting):
 
@@ -1541,32 +1553,34 @@ class Erk(QMainWindow):
 				cpass = info.password
 			else:
 				cpass = ""
-			if user_info["save_history"]:
+				
+			# if user_info["save_history"]:
 
-				user_history = user_info["history"]
+			# 	user_history = user_info["history"]
 
-				# make sure server isn't in the built-in list
-				inlist = False
+			# 	# make sure server isn't in the built-in list
+			# 	inlist = False
 
-				# make sure server isn't in history
-				inhistory = False
-				for s in user_history:
-					if s[0]==info.server:
-						if s[1]==info.port:
-							inhistory = True
+			# 	# make sure server isn't in history
+			# 	inhistory = False
+			# 	for s in user_history:
+			# 		if s[0]==info.server:
+			# 			if s[1]==info.port:
+			# 				inhistory = True
 
-				if inlist==False and inhistory==False:
+			# 	# if inlist==False and inhistory==False:
+			# 	if inhistory==False:
 
-					if using_ssl:
-						ussl = "ssl"
-					else:
-						ussl = "normal"
+			# 		if using_ssl:
+			# 			ussl = "ssl"
+			# 		else:
+			# 			ussl = "normal"
 
 
-					entry = [ info.server,str(info.port),UNKNOWN_NETWORK,ussl,cpass ]
-					user_history.append(entry)
+			# 		entry = [ info.server,str(info.port),UNKNOWN_NETWORK,ussl,cpass ]
+			# 		user_history.append(entry)
 
-					user_info["history"] = user_history
+			# 		user_info["history"] = user_history
 
 			user_info["last_server"] = info.server
 			user_info["last_port"] = str(info.port)

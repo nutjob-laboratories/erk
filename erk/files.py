@@ -314,13 +314,13 @@ def encodeLogName(network,name=None):
 # Takes an array of Message() objects, converts it to
 # an AoA, and appens the AoA to a file containing
 # AoAs on disk
-def saveLog(network,name,logs):
+def saveLog(network,name,logs,logdir=LOG_DIRECTORY):
 	f = encodeLogName(network,name)
-	logfile = os.path.join(LOG_DIRECTORY,f)
+	logfile = os.path.join(logdir,f)
 
 	logs = log_to_array(logs)
 
-	slog = loadLog(network,name)
+	slog = loadLog(network,name,logdir)
 	for e in logs:
 		slog.append(e)
 
@@ -328,9 +328,9 @@ def saveLog(network,name,logs):
 		json.dump(slog, writelog, indent=4, sort_keys=True)
 
 # Loads an AoA from disk and returns it
-def loadLog(network,name):
+def loadLog(network,name,logdir=LOG_DIRECTORY):
 	f = encodeLogName(network,name)
-	logfile = os.path.join(LOG_DIRECTORY,f)
+	logfile = os.path.join(logdir,f)
 
 	if os.path.isfile(logfile):
 		with open(logfile, "r") as logentries:
@@ -341,8 +341,8 @@ def loadLog(network,name):
 
 # Loads an AoA from disk, converts it to an arroy
 # of Message() objects, and returns it
-def readLog(network,name):
-	logs = loadLog(network,name)
+def readLog(network,name,logdir):
+	logs = loadLog(network,name,logdir)
 	logs = array_to_log(logs)
 	return logs
 

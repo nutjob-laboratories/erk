@@ -121,6 +121,8 @@ Version 0.822
 	* Added animation options to the preferences dialog
 	* Bugfix: preferences dialog looked pretty bad under linux; this has been fixed
 	* Section entries in the preferences widget now look a little better
+	* Added an option to set an alternate directory for log storage/loading
+	* Bugfix: entries to user history were repeating, causing the user settings file to grow unexpectedly. Connections triggered through commands are no longer saved to the history.
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
