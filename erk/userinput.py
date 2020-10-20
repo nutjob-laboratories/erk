@@ -67,6 +67,8 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
 	config.INPUT_COMMAND_SYMBOL+"version": config.INPUT_COMMAND_SYMBOL+"version",
 	config.INPUT_COMMAND_SYMBOL+"who": config.INPUT_COMMAND_SYMBOL+"who ",
+	config.INPUT_COMMAND_SYMBOL+"exit": config.INPUT_COMMAND_SYMBOL+"exit",
+	config.INPUT_COMMAND_SYMBOL+"quit": config.INPUT_COMMAND_SYMBOL+"quit",
 }
 
 CHANNEL_COMMANDS = {
@@ -104,6 +106,8 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 ]
 
 CHAT_HELP = [
@@ -127,6 +131,8 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 ]
 
 hentries = []
@@ -761,6 +767,16 @@ def handle_common_input(window,client,text):
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'exit' and len(tokens)==1:
+			window.parent.close()
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'exit' and len(tokens)!=1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"exit")
+			window.writeText(msg,True)
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:

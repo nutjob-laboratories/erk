@@ -124,6 +124,8 @@ Version 0.822
 	* Added an option to set an alternate directory for log storage/loading
 	* Bugfix: entries to user history were repeating, causing the user settings file to grow unexpectedly. Connections triggered through commands are no longer saved to the history.
 	* Bugfix: connections triggered through commands are, once again, added to the user history. Bugs causing repetition of entries has been fixed.
+	* Added the "/quit" command to the autocompletion and help engines.
+	* Added a new command: "/exit", which exits the application.
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable
