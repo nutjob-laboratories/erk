@@ -149,3 +149,21 @@ Not directly, as all its configuration files are stored in **Ərk**'s installati
 This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to be used for logs.
 
 More command-line settings can be viewed by executing **Ərk** with the `--help` command-line flag.
+
+For an example of how to implement this for multiple users, let's assume we have two users, named Alice and Bob. They're both running **Ərk** on the same computer (which runs Windows), and want to keep their settings and logs separate. **Ərk**, in this example, is installed in "C:\Erk". First, we create a directory for Alice; we'll put it in the root directory of the "C" drive. We'll name Alice's directory "Alice_Erk":
+
+	mkdir C:\Alice_Erk
+
+Now, let's make a directory for Bob:
+
+	mkdir C:\Bob_Erk
+
+We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
+
+	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --format C:\Alice_Erk\text.css --logs C:\Alice_Erk\logs
+
+Similarly, Bob's batch file looks like this:
+
+	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.css --logs C:\Bob_Erk\logs
+
+Alice and Bob can now use **Ərk** with their own customized settings!
