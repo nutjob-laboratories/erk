@@ -126,6 +126,7 @@ Version 0.822
 	* Bugfix: connections triggered through commands are, once again, added to the user history. Bugs causing repetition of entries has been fixed.
 	* Added the "/quit" command to the autocompletion and help engines.
 	* Added a new command: "/exit", which exits the application.
+	* Changed how the "/switch" command functions; calling it without an argument lists all available chats
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

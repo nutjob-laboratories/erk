@@ -101,7 +101,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> CHANNEL|USER", "Switches to a different, open chat (use \"list\" to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
@@ -131,6 +131,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 ]
@@ -805,11 +806,11 @@ def handle_ui_input(window,client,text):
 			channels = window.channelList()
 			privates = window.privateList()
 
-			if winname.lower()=="list":
-				dl = channels + privates
-				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
-				window.writeText(msg,True)
-				return True
+			# if winname.lower()=="list":
+			# 	dl = channels + privates
+			# 	msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+			# 	window.writeText(msg,True)
+			# 	return True
 
 			if not winname in channels:
 				if not winname in privates:
@@ -826,8 +827,18 @@ def handle_ui_input(window,client,text):
 				return True
 			window.parent.stack.setCurrentWidget(swin)
 			return True
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==1:
+			# msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch CHAT_NAME")
+			# window.writeText(msg,True)
+			channels = window.channelList()
+			privates = window.privateList()
+			dl = channels + privates
+			msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+			window.writeText(msg,True)
+			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch':
-			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch CHAT_NAME")
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch [CHAT_NAME]")
+			window.writeText(msg,True)
 			window.writeText(msg,True)
 			return True
 
