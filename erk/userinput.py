@@ -29,7 +29,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#import erk.events
 import emoji
 import os
 import fnmatch
@@ -436,7 +435,6 @@ def handle_common_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
-
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'version' and len(tokens)==2:
 			tokens.pop(0)
@@ -452,8 +450,6 @@ def handle_common_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"version [SERVER]")
 			window.writeText(msg,True)
 			return True
-
-
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'whowas' and len(tokens)==4:
@@ -481,7 +477,6 @@ def handle_common_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"whowas [NICKNAME] [COUNT] [SERVER]")
 			window.writeText(msg,True)
 			return True
-
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'time' and len(tokens)==2:
@@ -539,8 +534,6 @@ def handle_common_input(window,client,text):
 					else:
 						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
 					window.writeText(msg,True)
-				# msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
-				# window.writeText(msg,True)
 				return True
 
 		if len(tokens)>=2 and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'list':
@@ -564,14 +557,11 @@ def handle_common_input(window,client,text):
 					if fnmatch.fnmatch(e.topic,terms): found = True
 					if not found: continue
 
-
 					if len(e.topic.strip())>0:
 						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
 					else:
 						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
 					window.writeText(msg,True)
-				# msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
-				# window.writeText(msg,True)
 				return True
 
 
@@ -805,13 +795,6 @@ def handle_ui_input(window,client,text):
 			winname = tokens.pop(0)
 			channels = window.channelList()
 			privates = window.privateList()
-
-			# if winname.lower()=="list":
-			# 	dl = channels + privates
-			# 	msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
-			# 	window.writeText(msg,True)
-			# 	return True
-
 			if not winname in channels:
 				if not winname in privates:
 					msg = Message(ERROR_MESSAGE,'',"No chat named \""+winname+"\" found")
@@ -828,8 +811,6 @@ def handle_ui_input(window,client,text):
 			window.parent.stack.setCurrentWidget(swin)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==1:
-			# msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch CHAT_NAME")
-			# window.writeText(msg,True)
 			channels = window.channelList()
 			privates = window.privateList()
 			dl = channels + privates
