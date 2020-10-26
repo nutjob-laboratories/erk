@@ -549,6 +549,9 @@ class Window(QMainWindow):
 	def connectDialog(self):
 		self.parent.menuCombo()
 
+	def connectDialogCmd(self,do_ssl,do_reconnect):
+		self.parent.menuComboCmd(do_ssl,do_reconnect)
+
 	def doConnect(self,info):
 		self.parent.connectToIRCServer(info)
 

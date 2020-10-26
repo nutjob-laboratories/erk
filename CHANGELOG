@@ -127,6 +127,7 @@ Version 0.822
 	* Added the "/quit" command to the autocompletion and help engines.
 	* Added a new command: "/exit", which exits the application.
 	* Changed how the "/switch" command functions; calling it without an argument lists all available chats
+	* Using the "/connect", "/reconnect", "/ssl", and "/ressl" commands without arguments will now tick off appropriate options in the connection dialog (depending on the command used)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

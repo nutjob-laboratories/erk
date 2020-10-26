@@ -45,8 +45,8 @@ from ..common import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_connect_information(can_do_ssl,parent=None):
-		dialog = Dialog(can_do_ssl,parent)
+	def get_connect_information(can_do_ssl,userfile,do_ssl=None,do_reconnect=None,parent=None):
+		dialog = Dialog(can_do_ssl,userfile,do_ssl,do_reconnect,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -232,7 +232,7 @@ class Dialog(QDialog):
 			self.ssl.setCheckState(Qt.Unchecked)
 
 
-	def __init__(self,can_do_ssl,userfile=USER_FILE,parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.can_do_ssl = can_do_ssl
@@ -475,10 +475,22 @@ class Dialog(QDialog):
 		if self.user_info["ssl"]:
 			self.ssl.toggle()
 
+		# Connect commands
+		if do_ssl!=None:
+			if do_ssl:
+				if not self.user_info["ssl"]:
+					self.ssl.toggle()
+
 		if self.user_info["reconnect"]:
 			self.reconnect.toggle()
 		else:
 			self.failrecon.setEnabled(False)
+
+		# Connect command
+		if do_reconnect!=None:
+			if do_reconnect:
+				if not self.user_info["reconnect"]:
+					self.reconnect.toggle()
 
 		if not self.can_do_ssl:
 			self.DIALOG_CONNECT_VIA_SSL = False

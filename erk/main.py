@@ -68,7 +68,8 @@ from .dialogs import(
 	ListTimeDialog,
 	InstallDialog,
 	SettingsDialog,
-	AutosaveDialog
+	AutosaveDialog,
+	ComboDialogCmd,
 	)
 
 from .dialogs.export_package import Dialog as ExportPackageDialog
@@ -1351,6 +1352,11 @@ class Erk(QMainWindow):
 
 	def menuCombo(self):
 		info = ComboDialog(self.userfile)
+		if info!=None:
+			self.connectToIRCServer(info)
+
+	def menuComboCmd(self,do_ssl=None,do_reconnect=None):
+		info = ComboDialogCmd(self.userfile,do_ssl,do_reconnect)
 		if info!=None:
 			self.connectToIRCServer(info)
 

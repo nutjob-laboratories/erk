@@ -193,4 +193,10 @@ def ComboDialog(userfile):
 	if not info: return None
 	return info
 
+def ComboDialogCmd(userfile,do_ssl=None,do_reconnect=None):
+	x = Combo(SSL_AVAILABLE,userfile,do_ssl,do_reconnect)
+	info = x.get_connect_information(SSL_AVAILABLE,userfile,do_ssl,do_reconnect)
+	del x
 
+	if not info: return None
+	return info

@@ -1029,8 +1029,20 @@ def handle_ui_input(window,client,text):
 			window.doConnect(info)
 			return True
 
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connect' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'reconnect' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ssl' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ressl':
-			window.connectDialog()
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connect':
+			window.connectDialogCmd(None,None)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'reconnect':
+			window.connectDialogCmd(None,True)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ssl':
+			window.connectDialogCmd(True,None)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ressl':
+			window.connectDialogCmd(True,True)
 			return True
 
 	return False
