@@ -68,6 +68,8 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"who": config.INPUT_COMMAND_SYMBOL+"who ",
 	config.INPUT_COMMAND_SYMBOL+"exit": config.INPUT_COMMAND_SYMBOL+"exit",
 	config.INPUT_COMMAND_SYMBOL+"quit": config.INPUT_COMMAND_SYMBOL+"quit",
+	config.INPUT_COMMAND_SYMBOL+"settings": config.INPUT_COMMAND_SYMBOL+"settings",
+	config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
 }
 
 CHANNEL_COMMANDS = {
@@ -104,6 +106,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
@@ -131,6 +134,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 ]
@@ -758,6 +762,16 @@ def handle_common_input(window,client,text):
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'preferences' and len(tokens)==1:
+			window.prefDialog()
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'settings' and len(tokens)==1:
+			window.prefDialog()
+			return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'exit' and len(tokens)==1:
