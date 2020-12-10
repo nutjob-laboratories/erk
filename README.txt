@@ -89,6 +89,8 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10.
 
+To run properly on Linux, the latest version of all required software is recommended.  If you are running Debian or Debian-variant (such as Mint, Ubuntu, Xubuntu, etc) **you must install PyQt5, Twisted, and qt5reactor from pip! If you install these from the standard repo Ərk will not function!**
+
 # Install
 
 First, make sure that all the requirements are installed. Next, [download **Ərk**](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip). Extract the zipfile to a directory of your choice using your favorite archive/zip program. Open a command prompt, navigate to the directory you extracted **Ərk** to, and type:
