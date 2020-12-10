@@ -68,7 +68,13 @@ TIMESTAMP_ICON = ":/gui-timestamp.png"
 SPELLCHECK_ICON = ":/gui-spellcheck.png"
 FONT_ICON = ":/gui-font.png"
 SPINNER_ANIMATION = ":/gui-spinner.gif"
+
+LIGHT_SPINNER_ANIMATION = ":/gui-light_spinner.gif"
+
 TOOLBAR_ICON = ":/gui-toolbar.png"
+
+LIGHT_TOOLBAR_ICON = ":/gui-light_toolbar.png"
+
 CONNECT_MENU_ICON = ":/connect.png"
 UPTIME_ICON = ":/gui-uptime.png"
 LEFT_ICON = ":/gui-left.png"

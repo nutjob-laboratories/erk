@@ -132,6 +132,7 @@ Version 0.822
 	* Changed the custom menubar widgets to use the host os' color palette
 	* Ported Windows-centric development tools to Linux
 	* Fixed a minor cosmetic issue on the "Preferences" dialog
+	* Toolbar spinner will darken (for "light" color windows) or lighten (for "dark" colored windows)
 
 Version 0.820
 	* The main menu bar is no longer movable/floatable

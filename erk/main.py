@@ -337,6 +337,19 @@ class Erk(QMainWindow):
 
 		self.logdir = logdir
 
+
+		# Determine if window color is dark or light
+		mbcolor = self.palette().color(QPalette.Window).name()
+		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+		luma = luma*100
+
+		if luma>=40:
+			self.is_light_colored = True
+		else:
+			self.is_light_colored = False
+
+
 		textformat.get_text_format_settings(self.stylefile)
 
 		global DISABLED_PLUGINS
@@ -395,7 +408,10 @@ class Erk(QMainWindow):
 				self.toolbar = generate_menu_toolbar(self)
 				self.addToolBar(Qt.TopToolBarArea,self.toolbar)
 
-				self.toolbar_icon = TOOLBAR_ICON
+				if self.is_light_colored:
+					self.toolbar_icon = TOOLBAR_ICON
+				else:
+					self.toolbar_icon = LIGHT_TOOLBAR_ICON
 
 				# MENU TOOLBAR
 				self.mainMenu = QMenu()
@@ -748,7 +764,15 @@ class Erk(QMainWindow):
 			if config.SCHWA_ANIMATION:
 				add_toolbar_stretch(self.toolbar)
 				self.corner_widget = add_toolbar_image(self.toolbar,self.toolbar_icon)
-				self.spinner = QMovie(SPINNER_ANIMATION)
+
+				if self.is_light_colored:
+					ANIM = SPINNER_ANIMATION
+				else:
+					ANIM = LIGHT_SPINNER_ANIMATION
+
+				#self.spinner = QMovie(SPINNER_ANIMATION)
+				self.spinner = QMovie(ANIM)
+
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
 	def menuExportLog(self):
