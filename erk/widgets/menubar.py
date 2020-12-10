@@ -36,15 +36,61 @@ from PyQt5 import QtCore
 
 from ..resources import *
 
+# toolbar_button_style = '''
+# 	QPushButton {
+# 		border: 0px;
+# 		color: black;
+# 	}
+# 	QPushButton::menu-indicator{width:0px;}
+# 	QPushButton::open{
+# 		background-color: #a9a9a9;
+# 		color: white;
+# 		font: bold;
+# 	}
+# '''
+
+# toolbar_button_style_hover = '''
+# 	QPushButton {
+# 		border: 0px;
+# 		background-color: #a9a9a9;
+# 		color: black;
+# 		font: bold;
+# 	}
+# 	QPushButton::menu-indicator{width:0px;}
+# 	QPushButton::open{
+# 		background-color: #a9a9a9;
+# 		color: white;
+# 		font: bold;
+# 	}
+# '''
+
+# toolbar_menu_style = '''
+# 	QMenu {
+# 		margin: 2px;
+# 	}
+# 	QMenu::item:selected {
+# 		background-color: #a9a9a9;
+# 		color: white;
+# 	}
+# 	QMenu::item {
+# 		background-color: transparent;
+# 		color: black;
+# 	}
+# 	QMenu::item:disabled {
+# 		background-color: transparent;
+# 		color: grey;
+# 	}
+# '''
+
 toolbar_button_style = '''
 	QPushButton {
 		border: 0px;
-		color: black;
+		color: $FOREGROUND;
 	}
 	QPushButton::menu-indicator{width:0px;}
 	QPushButton::open{
-		background-color: #a9a9a9;
-		color: white;
+		background-color: $BACKGROUND;
+		color: $FOREGROUND;
 		font: bold;
 	}
 '''
@@ -52,14 +98,14 @@ toolbar_button_style = '''
 toolbar_button_style_hover = '''
 	QPushButton {
 		border: 0px;
-		background-color: #a9a9a9;
-		color: black;
+		background-color: $BACKGROUND;
+		color: $FOREGROUND;
 		font: bold;
 	}
 	QPushButton::menu-indicator{width:0px;}
 	QPushButton::open{
-		background-color: #a9a9a9;
-		color: white;
+		background-color: $HIGH;
+		color: $LOW;
 		font: bold;
 	}
 '''
@@ -69,12 +115,12 @@ toolbar_menu_style = '''
 		margin: 2px;
 	}
 	QMenu::item:selected {
-		background-color: #a9a9a9;
-		color: white;
+		background-color: $HIGH;
+		color: $LOW;
 	}
 	QMenu::item {
 		background-color: transparent;
-		color: black;
+		color: $FOREGROUND;
 	}
 	QMenu::item:disabled {
 		background-color: transparent;
@@ -85,6 +131,32 @@ toolbar_menu_style = '''
 def generate_menu_toolbar(self):
 
 	toolbar = QToolBar(self)
+
+	# Match menu colors to the host's desktop palette
+	mbcolor = self.palette().color(QPalette.Window).name()
+	mfcolor = self.palette().color(QPalette.WindowText).name()
+	mhigh = self.palette().color(QPalette.Highlight).name()
+	mlow = self.palette().color(QPalette.HighlightedText).name()
+
+	global toolbar_button_style
+	toolbar_button_style = toolbar_button_style.replace('$FOREGROUND',mfcolor)
+	toolbar_button_style = toolbar_button_style.replace('$BACKGROUND',mbcolor)
+	toolbar_button_style = toolbar_button_style.replace('$LOW',mlow)
+	toolbar_button_style = toolbar_button_style.replace('$HIGH',mhigh)
+
+	global toolbar_button_style_hover
+	toolbar_button_style_hover = toolbar_button_style_hover.replace('$FOREGROUND',mfcolor)
+	toolbar_button_style_hover = toolbar_button_style_hover.replace('$BACKGROUND',mbcolor)
+	toolbar_button_style_hover = toolbar_button_style_hover.replace('$LOW',mlow)
+	toolbar_button_style_hover = toolbar_button_style_hover.replace('$HIGH',mhigh)
+
+	global toolbar_menu_style
+	toolbar_menu_style = toolbar_menu_style.replace('$FOREGROUND',mfcolor)
+	toolbar_menu_style = toolbar_menu_style.replace('$BACKGROUND',mbcolor)
+	toolbar_menu_style = toolbar_menu_style.replace('$LOW',mlow)
+	toolbar_menu_style = toolbar_menu_style.replace('$HIGH',mhigh)
+
+	#print(mbcolor,mfcolor)
 
 	# toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
 	toolbar.setAllowedAreas(Qt.TopToolBarArea)

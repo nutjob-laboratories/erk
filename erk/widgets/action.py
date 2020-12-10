@@ -76,9 +76,9 @@ class MenuLabel(QLabel):
 			col = self.palette().highlightedText().color().name()
 			highlight_text = QColor(col).name()
 			
-			# self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
+			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
 
-			self.setStyleSheet(f"background-color: #a9a9a9; color: white;")
+			#self.setStyleSheet(f"background-color: #a9a9a9; color: white;")
 
 			return True
 		elif event.type() == QEvent.Leave:

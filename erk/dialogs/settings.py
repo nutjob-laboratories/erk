@@ -313,7 +313,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Connection display")
+		entry.setText("Connections")
 		entry.widget = self.connectionPage
 		entry.setIcon(QIcon(CONNECTION_DISPLAY_ICON))
 		self.selector.addItem(entry)
