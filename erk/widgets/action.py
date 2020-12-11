@@ -50,9 +50,28 @@ TEXT_SEPARATOR = f'''
 	</tbody>
 </table>'''
 
+LIGHT_TEXT_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small>!TEXT!</small></center></td>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
 def textSeparator(self,text):
 
-	tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	if self.is_light_colored:
+		gsep = TEXT_SEPARATOR
+	else:
+		gsep = LIGHT_TEXT_SEPARATOR
+		
+	# tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsLabel = QLabel( gsep.replace("!TEXT!",text) )
 	tsAction = QWidgetAction(self)
 	tsAction.setDefaultWidget(tsLabel)
 

@@ -44,6 +44,7 @@ USERLIST_HALFOP_ICON 		= ":/gui-ulist_halfop.png"
 USERLIST_NORMAL_ICON		= ":/gui-chanuser.png"
 
 HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
+LIGHT_HORIZONTAL_RULE_BACKGROUND = ":/gui-light_horizontal_rule.png"
 
 MENU_INSTALL_ICON = ":/install.png"
 MENU_EDITOR_ICON = ":/editor.png"

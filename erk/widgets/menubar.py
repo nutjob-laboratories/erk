@@ -36,52 +36,6 @@ from PyQt5 import QtCore
 
 from ..resources import *
 
-# toolbar_button_style = '''
-# 	QPushButton {
-# 		border: 0px;
-# 		color: black;
-# 	}
-# 	QPushButton::menu-indicator{width:0px;}
-# 	QPushButton::open{
-# 		background-color: #a9a9a9;
-# 		color: white;
-# 		font: bold;
-# 	}
-# '''
-
-# toolbar_button_style_hover = '''
-# 	QPushButton {
-# 		border: 0px;
-# 		background-color: #a9a9a9;
-# 		color: black;
-# 		font: bold;
-# 	}
-# 	QPushButton::menu-indicator{width:0px;}
-# 	QPushButton::open{
-# 		background-color: #a9a9a9;
-# 		color: white;
-# 		font: bold;
-# 	}
-# '''
-
-# toolbar_menu_style = '''
-# 	QMenu {
-# 		margin: 2px;
-# 	}
-# 	QMenu::item:selected {
-# 		background-color: #a9a9a9;
-# 		color: white;
-# 	}
-# 	QMenu::item {
-# 		background-color: transparent;
-# 		color: black;
-# 	}
-# 	QMenu::item:disabled {
-# 		background-color: transparent;
-# 		color: grey;
-# 	}
-# '''
-
 toolbar_button_style = '''
 	QPushButton {
 		border: 0px;
