@@ -67,6 +67,65 @@ HORIZONTAL_RULE = f'''
 	</tbody>
 </table>'''
 
+DATE_MESSAGE_TEMPLATE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small><b>!MESSAGE!</b></small></center></td>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+LIGHT_HORIZONTAL_RULE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+LIGHT_DATE_MESSAGE_TEMPLATE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+			<td><center><small><b>!MESSAGE!</b></small></center></td>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+# HORIZONTAL_RULE = f'''
+# <table width="100%" border="0">
+# 	<tbody>
+# 		<tr>
+# 			<td style="background-image: url($SEP); background-repeat: repeat-x;">&nbsp;
+# 			</td>
+# 		</tr>
+# 	</tbody>
+# </table>'''
+
+# DATE_MESSAGE_TEMPLATE = f'''
+# <table width="100%" border="0">
+# 	<tbody>
+# 		<tr>
+# 			<td style="background-image: url($SEP)); background-repeat: repeat-x;">&nbsp;
+# 			</td>
+# 			<td><center><small><b>!MESSAGE!</b></small></center></td>
+# 			<td style="background-image: url($SEP)); background-repeat: repeat-x;">&nbsp;
+# 			</td>
+# 		</tr>
+# 	</tbody>
+# </table>'''
+
 TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;"><div style="!TIMESTAMP_STYLE!">[!TIME!]</div></td><td style="font-size:small;">&nbsp;</td>"""
 
 MESSAGE_TEMPLATE = f"""
@@ -94,18 +153,6 @@ SYSTEM_TEMPLATE = f"""
 MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><div style="!MESSAGE_STYLE!">!MESSAGE!</div></td>"""
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
-DATE_MESSAGE_TEMPLATE = f'''
-<table width="100%" border="0">
-	<tbody>
-		<tr>
-			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
-			</td>
-			<td><center><small><b>!MESSAGE!</b></small></center></td>
-			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
-			</td>
-		</tr>
-	</tbody>
-</table>'''
 
 def render_message(message,client=None):
 
@@ -193,7 +240,36 @@ def render_message(message,client=None):
 		output = MESSAGE_TEMPLATE
 		style = STYLES["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
-		output = HORIZONTAL_RULE
+
+		x = STYLES["all"]
+		bg = None
+		is_light = True
+		x = x.strip()
+		for e in x.split(';'):
+			y = e.split(':')
+			if len(y)==2:
+				c = y[0].strip()
+				if c.lower()=='background-color':
+					bg = y[1].strip()
+
+		if bg!=None:
+			c = tuple(int(bg[i:i + 2], 16) / 255. for i in (1, 3, 5))
+			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+			luma = luma*100
+
+			if luma>=40:
+				is_light = True
+			else:
+				is_light = False
+
+
+		if is_light:
+			output = HORIZONTAL_RULE
+		else:
+			output = LIGHT_HORIZONTAL_RULE
+
+
+		#output = HORIZONTAL_RULE
 		style = STYLES["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
@@ -202,7 +278,35 @@ def render_message(message,client=None):
 		output = SYSTEM_TEMPLATE
 		style = STYLES["message"]
 	elif message.type==DATE_MESSAGE:
-		output = DATE_MESSAGE_TEMPLATE
+
+		x = STYLES["all"]
+		bg = None
+		is_light = True
+		x = x.strip()
+		for e in x.split(';'):
+			y = e.split(':')
+			if len(y)==2:
+				c = y[0].strip()
+				if c.lower()=='background-color':
+					bg = y[1].strip()
+
+		if bg!=None:
+			c = tuple(int(bg[i:i + 2], 16) / 255. for i in (1, 3, 5))
+			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+			luma = luma*100
+
+			if luma>=40:
+				is_light = True
+			else:
+				is_light = False
+
+
+		if is_light:
+			output = DATE_MESSAGE_TEMPLATE
+		else:
+			output = LIGHT_DATE_MESSAGE_TEMPLATE
+
+		#output = DATE_MESSAGE_TEMPLATE
 		style = STYLES["message"]
 	elif message.type==PLUGIN_SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE

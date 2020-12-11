@@ -1,6 +1,7 @@
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
 	* Menu separators now darken and lighten as above
+	* Chat separators now darken or lighten depending on the text display's background color
 
 Version 0.822
 	* First version with Linux support
