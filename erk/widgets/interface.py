@@ -50,6 +50,8 @@ from .. import macros
 from ..dialogs import KeyDialog
 from .. import events
 
+from .action import *
+
 class Window(QMainWindow):
 
 	def update_server_name(self):
@@ -1099,7 +1101,8 @@ class Window(QMainWindow):
 			tsAction.setDefaultWidget(u)
 			menu.addAction(tsAction)
 
-			menu.addSeparator()
+			#menu.addSeparator()
+			insertNoTextSeparator(self.parent,menu)
 
 			if self.operator:
 
@@ -1112,7 +1115,8 @@ class Window(QMainWindow):
 					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),"Take voiced status")
 					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),"Give voiced status")
 
-				opMenu.addSeparator()
+				#opMenu.addSeparator()
+				insertNoTextSeparator(self.parent,opMenu)
 
 				actKick = opMenu.addAction(QIcon(KICK_ICON),"Kick")
 				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")

@@ -521,14 +521,16 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
 		self.mainMenu.addAction(entry)
 
-		self.mainMenu.addSeparator()
+		#self.mainMenu.addSeparator()
+		insertNoTextSeparator(self,self.mainMenu)
 
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.disconnect.triggered.connect(self.disconnect_current)
 		self.mainMenu.addAction(self.disconnect)
 		self.disconnect.setEnabled(False)
 
-		self.mainMenu.addSeparator()
+		#self.mainMenu.addSeparator()
+		insertNoTextSeparator(self,self.mainMenu)
 		
 		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
 		entry.triggered.connect(lambda state: restart_program())
@@ -550,7 +552,8 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
-			self.settingsMenu.addSeparator()
+			#self.settingsMenu.addSeparator()
+			insertNoTextSeparator(self,self.settingsMenu)
 
 			# Hide menu
 
@@ -598,7 +601,8 @@ class Erk(QMainWindow):
 
 			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 
-			self.settingsMenu.addSeparator()
+			#self.settingsMenu.addSeparator()
+			insertNoTextSeparator(self,self.settingsMenu)
 
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
@@ -674,7 +678,8 @@ class Erk(QMainWindow):
 			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
 				self.set_autosave.setEnabled(False)
 
-			self.logMenu.addSeparator()
+			#self.logMenu.addSeparator()
+			insertNoTextSeparator(self,self.logMenu)
 
 			self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
 			self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
@@ -694,7 +699,8 @@ class Erk(QMainWindow):
 
 			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
-			self.logMenu.addSeparator()
+			#self.logMenu.addSeparator()
+			insertNoTextSeparator(self,self.logMenu)
 
 			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
 			entry.triggered.connect(self.menuExportLog)
@@ -742,7 +748,8 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		self.helpMenu.addSeparator()
+		#self.helpMenu.addSeparator()
+		insertNoTextSeparator(self,self.helpMenu)
 
 		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
 		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
@@ -752,7 +759,8 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		self.helpMenu.addSeparator()
+		#self.helpMenu.addSeparator()
+		insertNoTextSeparator(self,self.helpMenu)
 
 		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
@@ -860,7 +868,8 @@ class Erk(QMainWindow):
 
 		if len(self.plugins.plugins)==0:
 
-			self.pluginMenu.addSeparator()
+			#self.pluginMenu.addSeparator()
+			insertNoTextSeparator(self,self.pluginMenu)
 
 			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;<br>")
 			l1.setAlignment(Qt.AlignCenter)
@@ -977,13 +986,15 @@ class Erk(QMainWindow):
 				entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
 				m.addAction(entry)
 
-				m.addSeparator()
+				#m.addSeparator()
+				insertNoTextSeparator(self,m)
 
 			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall \""+pack+"\"",self)
 			entry.triggered.connect(lambda state,f=plugdir,p=pack: self.uninstall_plugin(f,p))
 			m.addAction(entry)
 
-		self.pluginMenu.addSeparator()
+		#self.pluginMenu.addSeparator()
+		insertNoTextSeparator(self,self.pluginMenu)
 
 		if config.DEVELOPER_MODE:
 
@@ -1122,7 +1133,8 @@ class Erk(QMainWindow):
 
 				if not config.MACROS_ENABLED: entry.setEnabled(False)
 
-			self.macroMenu.addSeparator()
+			#self.macroMenu.addSeparator()
+			insertNoTextSeparator(self,self.macroMenu)
 
 		else:
 			l1 = QLabel("<br>&nbsp;<b>No macros installed</b>&nbsp;")
@@ -1131,7 +1143,8 @@ class Erk(QMainWindow):
 			entry.setDefaultWidget(l1)
 			self.macroMenu.addAction(entry)
 
-			self.macroMenu.addSeparator()
+			#self.macroMenu.addSeparator()
+			insertNoTextSeparator(self,self.macroMenu)
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
@@ -1433,7 +1446,8 @@ class Erk(QMainWindow):
 								entry.setDefaultWidget(entryLabel)
 								menu.addAction(entry)
 
-							menu.addSeparator()
+							#menu.addSeparator()
+							insertNoTextSeparator(self,menu)
 
 							if item.erk_client.network:
 								link = get_network_url(item.erk_client.network)
@@ -1448,7 +1462,8 @@ class Erk(QMainWindow):
 
 							menu.addMenu(settingsMenu)
 
-							menu.addSeparator()
+							#menu.addSeparator()
+							insertNoTextSeparator(self,menu)
 
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuNick(client))
@@ -1458,7 +1473,8 @@ class Erk(QMainWindow):
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuJoin(client))
 							menu.addAction(entry)
 
-							menu.addSeparator()
+							#menu.addSeparator()
+							insertNoTextSeparator(self,menu)
 
 							entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
@@ -1681,7 +1697,8 @@ def buildServerSettingsMenu(self,client):
 	e.setDefaultWidget(el)
 	optionsMenu.addAction(e)
 
-	optionsMenu.addSeparator()
+	#optionsMenu.addSeparator()
+	insertNoTextSeparator(self,optionsMenu)
 
 	maxmodesmenu = QMenu("Maximum modes",self)
 	for c in maxmodes:

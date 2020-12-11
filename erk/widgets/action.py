@@ -63,6 +63,40 @@ LIGHT_TEXT_SEPARATOR = f'''
 	</tbody>
 </table>'''
 
+E_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+LIGHT_E_SEPARATOR = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+def insertNoTextSeparator(self,menu):
+
+	if self.is_light_colored:
+		gsep = E_SEPARATOR
+	else:
+		gsep = LIGHT_E_SEPARATOR
+		
+	# tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsLabel = QLabel( gsep )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	menu.addAction(tsAction)
+
 def textSeparator(self,text):
 
 	if self.is_light_colored:
