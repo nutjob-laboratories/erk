@@ -23,7 +23,7 @@
                   <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
 	<b>Ərk connected to EFnet on Windows 10</b></td>
                   <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
-	<b>Ərk connected to Undernet on Debian Linux</b></td>
+	<b>Ərk connected to EFnet on Linux Mint</b></td>
                 </tr>
               </tbody>
             </table>

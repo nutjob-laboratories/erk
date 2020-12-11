@@ -8,8 +8,8 @@ timestamp {
 }
 
 username {
+	color: #3358ff;
 	font-weight: bold;
-	color: #0000FF;
 }
 
 message {
@@ -22,30 +22,30 @@ system {
 }
 
 self {
+	color: #ff4c10;
 	font-weight: bold;
-	color: #FF0000;
 }
 
 action {
+	color: #009900;
 	font-style: italic;
 	font-weight: bold;
-	color: #006400;
 }
 
 notice {
+	color: #b300b3;
 	font-weight: bold;
-	color: #800080;
 }
 
 hyperlink {
-	text-decoration: underline;
+	color: #0c79ff;
 	font-weight: bold;
-	color: #0000FF;
+	text-decoration: underline;
 }
 
 all {
-	background-color: #FFFFFF;
-	color: #000000;
+	color: #ffffff;
+	background-color: #444444;
 }
 
 error {
