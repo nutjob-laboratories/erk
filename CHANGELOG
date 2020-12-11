@@ -1,3 +1,6 @@
+Version 0.830
+	* 
+
 Version 0.822
 	* First version with Linux support
 	* Fixed a bug where the connection display wouldn't update properly when the dock width changes
