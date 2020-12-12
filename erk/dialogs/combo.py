@@ -633,6 +633,8 @@ class Dialog(QDialog):
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 
+		buttons.button(QDialogButtonBox.Ok).setText("Connect")
+
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(vLayout)
 		finalLayout.addWidget(buttons)

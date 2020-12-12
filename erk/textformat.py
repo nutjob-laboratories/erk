@@ -154,6 +154,32 @@ MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
 
+IS_BACKGROUND_LIGHT = None
+
+def test_if_background_is_light(style):
+
+	bg = None
+	style = style.strip()
+	for e in style.split(';'):
+		y = e.split(':')
+		if len(y)==2:
+			c = y[0].strip()
+			if c.lower()=='background-color':
+				bg = y[1].strip()
+
+	if bg!=None:
+		c = tuple(int(bg[i:i + 2], 16) / 255. for i in (1, 3, 5))
+		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+		luma = luma*100
+
+		global IS_BACKGROUND_LIGHT
+		if luma>=40:
+			IS_BACKGROUND_LIGHT = True
+		else:
+			IS_BACKGROUND_LIGHT = False
+
+
+
 def render_message(message,client=None):
 
 	msg_to_display = message.contents
@@ -241,33 +267,15 @@ def render_message(message,client=None):
 		style = STYLES["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
 
-		x = STYLES["all"]
-		bg = None
-		is_light = True
-		x = x.strip()
-		for e in x.split(';'):
-			y = e.split(':')
-			if len(y)==2:
-				c = y[0].strip()
-				if c.lower()=='background-color':
-					bg = y[1].strip()
+		if IS_BACKGROUND_LIGHT==None:
+			test_if_background_is_light(STYLES["all"])
 
-		if bg!=None:
-			c = tuple(int(bg[i:i + 2], 16) / 255. for i in (1, 3, 5))
-			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-			luma = luma*100
-
-			if luma>=40:
-				is_light = True
-			else:
-				is_light = False
-
-
-		if is_light:
+		if IS_BACKGROUND_LIGHT==True:
 			output = HORIZONTAL_RULE
-		else:
+		elif IS_BACKGROUND_LIGHT==False:
 			output = LIGHT_HORIZONTAL_RULE
-
+		else:
+			output = HORIZONTAL_RULE
 
 		#output = HORIZONTAL_RULE
 		style = STYLES["message"]
@@ -279,32 +287,15 @@ def render_message(message,client=None):
 		style = STYLES["message"]
 	elif message.type==DATE_MESSAGE:
 
-		x = STYLES["all"]
-		bg = None
-		is_light = True
-		x = x.strip()
-		for e in x.split(';'):
-			y = e.split(':')
-			if len(y)==2:
-				c = y[0].strip()
-				if c.lower()=='background-color':
-					bg = y[1].strip()
+		if IS_BACKGROUND_LIGHT==None:
+			test_if_background_is_light(STYLES["all"])
 
-		if bg!=None:
-			c = tuple(int(bg[i:i + 2], 16) / 255. for i in (1, 3, 5))
-			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-			luma = luma*100
-
-			if luma>=40:
-				is_light = True
-			else:
-				is_light = False
-
-
-		if is_light:
-			output = DATE_MESSAGE_TEMPLATE
+		if IS_BACKGROUND_LIGHT==True:
+			output = HORIZONTAL_RULE
+		elif IS_BACKGROUND_LIGHT==False:
+			output = LIGHT_HORIZONTAL_RULE
 		else:
-			output = LIGHT_DATE_MESSAGE_TEMPLATE
+			output = HORIZONTAL_RULE
 
 		#output = DATE_MESSAGE_TEMPLATE
 		style = STYLES["message"]

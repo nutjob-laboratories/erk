@@ -2,6 +2,8 @@ Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
 	* Menu separators now darken and lighten as above
 	* Chat separators now darken or lighten depending on the text display's background color
+	* Minor bugfix: luminosity of text background is now determined only the first time text is rendered, not every time
+	* The "Ok" button on the connection dialog is now labeled "Connect"
 
 Version 0.822
 	* First version with Linux support
