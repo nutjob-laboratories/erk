@@ -291,11 +291,11 @@ def render_message(message,client=None):
 			test_if_background_is_light(STYLES["all"])
 
 		if IS_BACKGROUND_LIGHT==True:
-			output = HORIZONTAL_RULE
+			output = DATE_MESSAGE_TEMPLATE
 		elif IS_BACKGROUND_LIGHT==False:
-			output = LIGHT_HORIZONTAL_RULE
+			output = LIGHT_DATE_MESSAGE_TEMPLATE
 		else:
-			output = HORIZONTAL_RULE
+			output = DATE_MESSAGE_TEMPLATE
 
 		#output = DATE_MESSAGE_TEMPLATE
 		style = STYLES["message"]
