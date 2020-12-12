@@ -5,6 +5,7 @@ Version 0.830
 	* Minor bugfix: luminosity of text background is now determined only the first time text is rendered, not every time
 	* The "Ok" button on the connection dialog is now labeled "Connect"
 	* Editor now uses a white background and black text by default, regardless of host OS theme
+	* Main logo display now darkens or lightens depending on the host OS color theme
 
 Version 0.822
 	* First version with Linux support

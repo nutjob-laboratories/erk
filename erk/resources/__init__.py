@@ -34,6 +34,7 @@ globals()["erk.resources.resources"] = __import__("erk.resources.resources")
 
 ERK_ICON = ":/gui-erk.png"
 LOGO_IMAGE = ":/gui-logo.png"
+LIGHT_LOGO_IMAGE = ":/gui-light_logo.png"
 DEFAULT_FONT = ":/font-DejaVuSansMono.ttf"
 
 USERLIST_OPERATOR_ICON		= ":/gui-ulist_op.png"
