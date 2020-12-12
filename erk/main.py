@@ -122,14 +122,41 @@ class Erk(QMainWindow):
 		self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
-		self.erk_is_quitting = True
-		if not self.block_plugins:
-			self.plugins.unload()
-		if self.fullscreen==False:
-			config.DEFAULT_APP_WIDTH = self.width()
-			config.DEFAULT_APP_HEIGHT = self.height()
-			config.save_settings(self.configfile)
-		self.app.quit()
+
+		do_quit = True
+
+		if config.ASK_BEFORE_QUIT:
+
+			num_servers = len(events.fetch_connections())
+
+			if num_servers>0:
+
+				msgBox = QMessageBox()
+				msgBox.setIcon(QMessageBox.Warning)
+				if num_servers==1:
+					msgBox.setText("Are you sure you want to quit?")
+				else:
+					msgBox.setText("You are currently connected to "+str(num_servers)+" servers. Are you sure you want to quit?")
+				msgBox.setWindowTitle("Quit "+NORMAL_APPLICATION_NAME)
+				msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+
+				rval = msgBox.exec()
+
+				if rval == QMessageBox.Cancel:
+					do_quit = False
+
+		if do_quit:
+
+			self.erk_is_quitting = True
+			if not self.block_plugins:
+				self.plugins.unload()
+			if self.fullscreen==False:
+				config.DEFAULT_APP_WIDTH = self.width()
+				config.DEFAULT_APP_HEIGHT = self.height()
+				config.save_settings(self.configfile)
+			self.app.quit()
+		else:
+			event.ignore()
 
 	def disconnect_current(self,msg=None):
 		if self.current_client:

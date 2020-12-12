@@ -103,29 +103,6 @@ LIGHT_DATE_MESSAGE_TEMPLATE = f'''
 	</tbody>
 </table>'''
 
-# HORIZONTAL_RULE = f'''
-# <table width="100%" border="0">
-# 	<tbody>
-# 		<tr>
-# 			<td style="background-image: url($SEP); background-repeat: repeat-x;">&nbsp;
-# 			</td>
-# 		</tr>
-# 	</tbody>
-# </table>'''
-
-# DATE_MESSAGE_TEMPLATE = f'''
-# <table width="100%" border="0">
-# 	<tbody>
-# 		<tr>
-# 			<td style="background-image: url($SEP)); background-repeat: repeat-x;">&nbsp;
-# 			</td>
-# 			<td><center><small><b>!MESSAGE!</b></small></center></td>
-# 			<td style="background-image: url($SEP)); background-repeat: repeat-x;">&nbsp;
-# 			</td>
-# 		</tr>
-# 	</tbody>
-# </table>'''
-
 TIMESTAMP_TEMPLATE = """<td style="vertical-align:top; font-size:small; text-align:left;"><div style="!TIMESTAMP_STYLE!">[!TIME!]</div></td><td style="font-size:small;">&nbsp;</td>"""
 
 MESSAGE_TEMPLATE = f"""

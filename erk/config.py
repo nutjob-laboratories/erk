@@ -132,11 +132,14 @@ CONNECTION_ANIMATION_COLOR = 'system'
 
 SCHWA_ANIMATION = True
 
+ASK_BEFORE_QUIT = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+		"ask_before_quitting": ASK_BEFORE_QUIT,
 		"schwa_corner_animation": SCHWA_ANIMATION,
 		"animate_unseen_messages_in_connection_display": UNSEEN_MESSAGE_ANIMATION,
 		"animate_connecting_messages_in_connection_display": CONNECTION_MESSAGE_ANIMATION,
@@ -225,6 +228,10 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "ask_before_quitting" in data:
+		data["ask_before_quitting"] = ASK_BEFORE_QUIT
+
 	if not "display_user_lists" in data:
 		data["display_user_lists"] = DISPLAY_USER_LIST
 
@@ -338,6 +345,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SHOW_CONNECTION_LOST_ERROR
 	global SHOW_CONNECTION_FAIL_ERROR
 	global DISPLAY_USER_LIST
+	global ASK_BEFORE_QUIT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -345,6 +353,8 @@ def load_settings(filename=SETTINGS_FILE):
 			data = json.load(read_settings)
 
 			data = patch_settings(data)
+
+			ASK_BEFORE_QUIT = data["ask_before_quitting"]
 
 			SHOW_CONNECTION_LOST_ERROR = data["show_connection_lost_dialog"]
 			SHOW_CONNECTION_FAIL_ERROR = data["show_connection_fail_dialog"]

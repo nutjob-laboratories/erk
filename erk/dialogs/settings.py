@@ -372,6 +372,8 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.unseenConnection)
 		cpLayout.addWidget(self.animateConnection)
 
+		cpLayout.addStretch()
+
 		self.connectionPage.setLayout(cpLayout)
 
 		# Autocomplete settings
@@ -458,7 +460,7 @@ class Dialog(QDialog):
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.enabledSpellcheck)
 		cpLayout.addWidget(self.nickSpellcheck)
-		cpLayout.addStretch()
+		#cpLayout.addStretch()
 		cpLayout.addLayout(lLayout)
 		cpLayout.addStretch()
 
@@ -585,6 +587,9 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.miscPage)
 
+		self.askMisc = QCheckBox("Ask before quitting",self)
+		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
+
 		self.nametitleMisc = QCheckBox("Show chat name in title",self)
 		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
 
@@ -612,6 +617,7 @@ class Dialog(QDialog):
 		hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.askMisc)
 		cpLayout.addWidget(self.lostErrors)
 		cpLayout.addWidget(self.failErrors)
 		cpLayout.addWidget(self.nametitleMisc)
@@ -623,6 +629,10 @@ class Dialog(QDialog):
 
 		cpLayout.addWidget(self.listMisc)
 		cpLayout.addLayout(hsLayout)
+
+		cpLayout.addWidget(QLabel(' '))
+		cpLayout.addWidget(QLabel(' '))
+
 		cpLayout.addStretch()
 
 		self.miscPage.setLayout(cpLayout)
@@ -658,6 +668,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.ASK_BEFORE_QUIT = self.askMisc.isChecked()
 
 		config.SCHWA_ANIMATION = self.showSchwa.isChecked()
 
