@@ -60,6 +60,8 @@ PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
 DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
+LIGHT_MODE = True
+
 def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
 	x = EditorInput(title,prompt,twoinputs,twoprompt)
 	info = x.get_string_information(title,prompt,twoinputs,twoprompt)
@@ -490,6 +492,15 @@ class Window(QMainWindow):
 		self.autoindent = config.EDITOR_AUTO_INDENT
 
 		self.editor = QCodeEditor(self)
+		# self.highlight = PythonHighlighter(self.editor.document())
+
+		if LIGHT_MODE:
+			self.editor.setStyleSheet("color: #000000; background-color: #ffffff;")
+			switch_light_mode()
+		else:
+			self.editor.setStyleSheet("color: #ffffff; background-color: #464646;")
+			switch_dark_mode()
+
 		self.highlight = PythonHighlighter(self.editor.document())
 
 		self.highlight.do_highlight = config.EDITOR_SYNTAX_HIGHLIGHT
@@ -1244,9 +1255,44 @@ STYLES = {
 	'comment': format('darkGreen', 'italic'),
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
-
 	'erk': format('#0212b6','bi'),
 }
+
+def switch_dark_mode():
+
+	global STYLES
+
+	# Syntax styles that can be shared by all languages
+	STYLES = {
+		'keyword': format('#55acde'),
+		'operator': format('#ff6161'),
+		'brace': format('gray'),
+		'defclass': format('white', 'bold'),
+		'string': format('#ed6bff'),
+		'string2': format('#55de67'),
+		'comment': format('#55de67', 'italic'),
+		'self': format('white', 'italic'),
+		'numbers': format('yellow'),
+		'erk': format('#cdff00','bi'),
+	}
+
+def switch_light_mode():
+
+	global STYLES
+
+	# Syntax styles that can be shared by all languages
+	STYLES = {
+		'keyword': format('blue'),
+		'operator': format('red'),
+		'brace': format('darkGray'),
+		'defclass': format('black', 'bold'),
+		'string': format('magenta'),
+		'string2': format('darkMagenta'),
+		'comment': format('darkGreen', 'italic'),
+		'self': format('black', 'italic'),
+		'numbers': format('brown'),
+		'erk': format('#0212b6','bi'),
+	}
 
 class PythonHighlighter (QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.
