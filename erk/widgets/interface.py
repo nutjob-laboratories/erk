@@ -1400,19 +1400,21 @@ class SpellTextEdit(QPlainTextEdit):
 
 
 		# Don't autoselect if the user has selected text
+		# Don't offer spelling corrections if the user has selected text
 		if self.textCursor().hasSelection():
-			pass
+			do_spellcheck = False
 		else:
 			# Select the word under the cursor.
 			cursor = self.textCursor()
 			cursor.select(QTextCursor.WordUnderCursor)
 			self.setTextCursor(cursor)
+			do_spellcheck = True
 		
 		counter = 0
 
 		# Check if the selected word is misspelled and offer spelling
 		# suggestions if it is.
-		if config.SPELLCHECK_INPUT:
+		if config.SPELLCHECK_INPUT and do_spellcheck:
 			if self.textCursor().hasSelection():
 				text = self.textCursor().selectedText()
 
@@ -1494,7 +1496,6 @@ class SpellTextEdit(QPlainTextEdit):
 			entry = QAction("Light gray",self)
 			entry.triggered.connect(lambda state,s="15": self.insertColor(s))
 			colorMenu.addAction(entry)
-
 
 			cmenu = QMenu("Foreground/Background Color")
 			cmenu.setIcon(QIcon(FORMAT_ICON))

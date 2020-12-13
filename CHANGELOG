@@ -14,6 +14,7 @@ Version 0.830
 	* Support for setting foreground/background colors from the input context menu
 	* Bugfix: fixed an IRC color rendering bug
 	* Bugfix: users can now select input text (for coloring) without the client autoselecting only the word the cursor is over
+	* Bugfix: no spelling correction is attempted if the user has selected text in the input box
 
 Version 0.822
 	* First version with Linux support
