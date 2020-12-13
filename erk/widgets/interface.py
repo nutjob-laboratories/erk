@@ -1398,10 +1398,15 @@ class SpellTextEdit(QPlainTextEdit):
 
 		popup_menu = self.createStandardContextMenu()
 
-		# Select the word under the cursor.
-		cursor = self.textCursor()
-		cursor.select(QTextCursor.WordUnderCursor)
-		self.setTextCursor(cursor)
+
+		# Don't autoselect if the user has selected text
+		if self.textCursor().hasSelection():
+			pass
+		else:
+			# Select the word under the cursor.
+			cursor = self.textCursor()
+			cursor.select(QTextCursor.WordUnderCursor)
+			self.setTextCursor(cursor)
 		
 		counter = 0
 
