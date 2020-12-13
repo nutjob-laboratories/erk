@@ -54,7 +54,9 @@
 	* Type the first few letters of a command or nickname and hit the tab key
 	* Auto-complete works for emoji shortcodes, too
 * Optional profanity filter
-* Support for IRC color codes (and the option to turn them off)
+* Full IRC color support
+	* Colors are rendered in the client (and rendering can be turned off)
+	* Full support for using foreground and background colors in outgoing messages
 * A built-in list of over 80 IRC servers to connect to
 * Automatic logging of channel and private chats
 	* Logging can be switched on and off
@@ -87,9 +89,9 @@ To connect to IRC servers via SSL, two additional libraries are needed:
     pip install pyOpenSSL
     pip install service_identity
 
-**Ərk** is being developed with Python 3.7 on Windows 10.
+**Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
-To run properly on Linux, the latest version of all required software is recommended.  __**If you are running Debian or Debian-variant (such as Mint, Ubuntu, Xubuntu, etc) you must install PyQt5 and qt5reactor from pip! If you install these from the standard repo Ərk will not function!**__
+To run properly on Linux, the latest version of all required software is recommended.  __**If you are running Debian or a Debian-variant (such as Mint, Ubuntu, Xubuntu, etc) you must install PyQt5 and qt5reactor from pip! If you install these from the standard repo Ərk will not function!**__
 
 # Install
 
