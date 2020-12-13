@@ -1396,36 +1396,36 @@ class SpellTextEdit(QPlainTextEdit):
 
 	def contextMenuEvent(self, event):
 
-		if not config.SPELLCHECK_INPUT:
-			return super().contextMenuEvent(event)
-
 		popup_menu = self.createStandardContextMenu()
 
 		# Select the word under the cursor.
 		cursor = self.textCursor()
 		cursor.select(QTextCursor.WordUnderCursor)
 		self.setTextCursor(cursor)
+		
+		counter = 0
 
 		# Check if the selected word is misspelled and offer spelling
 		# suggestions if it is.
-		counter = 0
-		if self.textCursor().hasSelection():
-			text = self.textCursor().selectedText()
+		if config.SPELLCHECK_INPUT:
+			if self.textCursor().hasSelection():
+				text = self.textCursor().selectedText()
 
-			misspelled = self.dict.unknown([text])
-			if len(misspelled)>0:
-				
-				for word in self.dict.candidates(text):
-					action = SpellAction(word, popup_menu)
-					action.correct.connect(self.correctWord)
-					popup_menu.insertAction(popup_menu.actions()[0],action)
-					counter = counter + 1
-				if counter != 0:
-					popup_menu.insertSeparator(popup_menu.actions()[counter])
+				misspelled = self.dict.unknown([text])
+				if len(misspelled)>0:
+					
+					for word in self.dict.candidates(text):
+						action = SpellAction(word, popup_menu)
+						action.correct.connect(self.correctWord)
+						popup_menu.insertAction(popup_menu.actions()[0],action)
+						counter = counter + 1
+					if counter != 0:
+						popup_menu.insertSeparator(popup_menu.actions()[counter])
 
-		popup_menu.insertSeparator(popup_menu.actions()[counter])
-		counter = counter + 1
+			popup_menu.insertSeparator(popup_menu.actions()[counter])
+			counter = counter + 1
 
+		# Color menu
 		text = self.textCursor().selectedText()
 		if len(text)>0:
 
