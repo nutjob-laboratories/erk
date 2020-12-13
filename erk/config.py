@@ -134,11 +134,19 @@ SCHWA_ANIMATION = True
 
 ASK_BEFORE_QUIT = True
 
+MENU_BAR_MOVABLE = True
+MENU_BAR_ORIENT = "top"
+
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+
+		"movable_menubar": MENU_BAR_MOVABLE,
+		"menubar_location": MENU_BAR_ORIENT,
+
 		"ask_before_quitting": ASK_BEFORE_QUIT,
 		"schwa_corner_animation": SCHWA_ANIMATION,
 		"animate_unseen_messages_in_connection_display": UNSEEN_MESSAGE_ANIMATION,
@@ -228,6 +236,14 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "movable_menubar" in data:
+		data["movable_menubar"] = MENU_BAR_MOVABLE
+
+	if not "menubar_location" in data:
+		data["menubar_location"] = MENU_BAR_ORIENT
+
+
 
 	if not "ask_before_quitting" in data:
 		data["ask_before_quitting"] = ASK_BEFORE_QUIT
@@ -346,6 +362,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global SHOW_CONNECTION_FAIL_ERROR
 	global DISPLAY_USER_LIST
 	global ASK_BEFORE_QUIT
+	global MENU_BAR_MOVABLE
+	global MENU_BAR_ORIENT
+
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -353,6 +372,9 @@ def load_settings(filename=SETTINGS_FILE):
 			data = json.load(read_settings)
 
 			data = patch_settings(data)
+
+			MENU_BAR_MOVABLE = data["movable_menubar"]
+			MENU_BAR_ORIENT = data["menubar_location"]
 
 			ASK_BEFORE_QUIT = data["ask_before_quitting"]
 

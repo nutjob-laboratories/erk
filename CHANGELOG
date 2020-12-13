@@ -15,6 +15,8 @@ Version 0.830
 	* Bugfix: fixed an IRC color rendering bug
 	* Bugfix: users can now select input text (for coloring) without the client autoselecting only the word the cursor is over
 	* Bugfix: no spelling correction is attempted if the user has selected text in the input box
+	* Menubar is now moveable, and can be docked at either the top or bottom of the app
+	* Added a setting to turn "moveable menubar" on and off
 
 Version 0.822
 	* First version with Linux support

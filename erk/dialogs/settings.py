@@ -176,6 +176,10 @@ class Dialog(QDialog):
 		self.showSchwa = QCheckBox("Netscape-esque schwa animation",self)
 		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
 
+
+		self.showMenu = QCheckBox("Moveable menu bar",self)
+		if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
+
 		pbLayout = QHBoxLayout()
 		pbLayout.addWidget(fontButton)
 		pbLayout.addStretch()
@@ -189,6 +193,7 @@ class Dialog(QDialog):
 		mpLayout.addLayout(pbLayout)
 		mpLayout.addLayout(pb2Layout)
 		mpLayout.addWidget(self.showSchwa)
+		mpLayout.addWidget(self.showMenu)
 		mpLayout.addStretch()
 
 		self.displayPage.setLayout(mpLayout)
@@ -668,6 +673,19 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+
+		# self.showMenu = QCheckBox("Moveable menu bar",self)
+		# if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
+
+		config.MENU_BAR_MOVABLE = self.showMenu.isChecked()
+
+		if config.MENU_BAR_MOVABLE:
+			self.parent.set_menubar_moveable(True)
+		else:
+			self.parent.set_menubar_moveable(False)
+
+
 
 		config.ASK_BEFORE_QUIT = self.askMisc.isChecked()
 

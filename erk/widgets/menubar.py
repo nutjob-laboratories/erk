@@ -36,6 +36,8 @@ from PyQt5 import QtCore
 
 from ..resources import *
 
+from .. import config
+
 toolbar_button_style = '''
 	QPushButton {
 		border: 0px;
@@ -113,9 +115,16 @@ def generate_menu_toolbar(self):
 	#print(mbcolor,mfcolor)
 
 	# toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-	toolbar.setAllowedAreas(Qt.TopToolBarArea)
+
+	
+	#toolbar.setAllowedAreas(Qt.TopToolBarArea)
+
 	#toolbar.setFloatable(False)
-	toolbar.setMovable(False)
+
+	#toolbar.setMovable(False)
+
+	toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
+
 
 	# toolbar.setStyleSheet(''' QToolBar { spacing: 5px; } ''')
 	toolbar.setStyleSheet(''' QToolBar { spacing: 8px; } ''')

@@ -323,6 +323,27 @@ class Erk(QMainWindow):
 
 		self.do_connection_display_width_save = self.total_uptime + 5
 
+	def menuDocked(self,is_floating):
+		if not is_floating:
+			# menu bar has been docked
+			p = self.toolBarArea(self.toolbar)
+			if p == Qt.TopToolBarArea:
+				config.MENU_BAR_ORIENT="top"
+			else:
+				config.MENU_BAR_ORIENT="bottom"
+			config.save_settings(self.configfile)
+
+	def set_menubar_moveable(self,is_moveable):
+		if hasattr(self,'toolbar'):
+			if is_moveable:
+				self.toolbar.setMovable(True)
+			else:
+				self.toolbar.setMovable(False)
+				if config.MENU_BAR_ORIENT.lower()=='top':
+					self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+				else:
+					self.addToolBar(Qt.BottomToolBarArea,self.toolbar)
+
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
@@ -433,7 +454,20 @@ class Erk(QMainWindow):
 				self.menubar = self.menuBar()
 			else:
 				self.toolbar = generate_menu_toolbar(self)
-				self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+
+				if config.MENU_BAR_ORIENT.lower()=='top':
+					self.addToolBar(Qt.TopToolBarArea,self.toolbar)
+				else:
+					self.addToolBar(Qt.BottomToolBarArea,self.toolbar)
+
+				self.toolbar.topLevelChanged.connect(self.menuDocked)
+
+				if config.MENU_BAR_MOVABLE:
+					self.toolbar.setMovable(True)
+				else:
+					self.toolbar.setMovable(False)
+
+				# self.addToolBar(Qt.TopToolBarArea,self.toolbar)
 
 				if self.is_light_colored:
 					self.toolbar_icon = TOOLBAR_ICON
