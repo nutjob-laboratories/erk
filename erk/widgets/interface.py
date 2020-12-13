@@ -1429,7 +1429,7 @@ class SpellTextEdit(QPlainTextEdit):
 		text = self.textCursor().selectedText()
 		if len(text)>0:
 
-			colorMenu = QMenu("Colors")
+			colorMenu = QMenu("Foreground Color")
 			colorMenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],colorMenu)
 			counter = counter + 1
@@ -1490,8 +1490,827 @@ class SpellTextEdit(QPlainTextEdit):
 			entry.triggered.connect(lambda state,s="15": self.insertColor(s))
 			colorMenu.addAction(entry)
 
+
+			cmenu = QMenu("Background/Foreground Color")
+			cmenu.setIcon(QIcon(FORMAT_ICON))
+			popup_menu.insertMenu(popup_menu.actions()[counter],cmenu)
+			counter = counter + 1
+
+			# Blue
+			bcolor = cmenu.addMenu("Blue")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('02',s))
+			bcolor.addAction(entry)
+
+			# Green
+			bcolor = cmenu.addMenu("Green")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('03',s))
+			bcolor.addAction(entry)
+
+			# Red
+			bcolor = cmenu.addMenu("Red")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('04',s))
+			bcolor.addAction(entry)
+
+			# Maroon
+			bcolor = cmenu.addMenu("Maroon")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('05',s))
+			bcolor.addAction(entry)
+
+			# Purple
+			bcolor = cmenu.addMenu("Purple")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('06',s))
+			bcolor.addAction(entry)
+
+			# Orange
+			bcolor = cmenu.addMenu("Orange")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('07',s))
+			bcolor.addAction(entry)
+
+			# Yellow
+			bcolor = cmenu.addMenu("Yellow")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('08',s))
+			bcolor.addAction(entry)
+
+			# Light green
+			bcolor = cmenu.addMenu("Light green")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('09',s))
+			bcolor.addAction(entry)
+
+			# Teal
+			bcolor = cmenu.addMenu("Teal")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('10',s))
+			bcolor.addAction(entry)
+
+			# Cyan
+			bcolor = cmenu.addMenu("Cyan")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('11',s))
+			bcolor.addAction(entry)
+
+			# Royal blue
+			bcolor = cmenu.addMenu("Royal blue")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('12',s))
+			bcolor.addAction(entry)
+
+			# Magenta
+			bcolor = cmenu.addMenu("Magenta")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('13',s))
+			bcolor.addAction(entry)
+
+			# Gray
+			bcolor = cmenu.addMenu("Gray")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('14',s))
+			bcolor.addAction(entry)
+
+			# Light gray
+			bcolor = cmenu.addMenu("Light gray")
+			entry = QAction("Blue",self)
+			entry.triggered.connect(lambda state,s="02": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Green",self)
+			entry.triggered.connect(lambda state,s="03": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Red",self)
+			entry.triggered.connect(lambda state,s="04": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Maroon",self)
+			entry.triggered.connect(lambda state,s="05": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Purple",self)
+			entry.triggered.connect(lambda state,s="06": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Orange",self)
+			entry.triggered.connect(lambda state,s="07": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Yellow",self)
+			entry.triggered.connect(lambda state,s="08": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light green",self)
+			entry.triggered.connect(lambda state,s="09": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Teal",self)
+			entry.triggered.connect(lambda state,s="10": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Cyan",self)
+			entry.triggered.connect(lambda state,s="11": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Royal blue",self)
+			entry.triggered.connect(lambda state,s="12": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Magenta",self)
+			entry.triggered.connect(lambda state,s="13": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Gray",self)
+			entry.triggered.connect(lambda state,s="14": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
+			entry = QAction("Light gray",self)
+			entry.triggered.connect(lambda state,s="15": self.insertColor2('15',s))
+			bcolor.addAction(entry)
+
 			popup_menu.insertSeparator(popup_menu.actions()[counter])
 			counter = counter + 1
+
 
 		popup_menu.exec_(event.globalPos())
 
@@ -1502,6 +2321,14 @@ class SpellTextEdit(QPlainTextEdit):
 		text = self.textCursor().selectedText()
 
 		cursor.insertText("\x03"+color+text+"\x0F")
+
+	def insertColor2(self,color,color2):
+
+		cursor = self.textCursor()
+
+		text = self.textCursor().selectedText()
+
+		cursor.insertText("\x03"+color+","+color2+text+"\x0F")
 
 	def correctWord(self, word):
 		'''

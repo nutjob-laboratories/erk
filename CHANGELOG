@@ -11,6 +11,7 @@ Version 0.830
 	* Added "ask on quit" setting to the preferences dialog
 	* Cleaned up the preferences dialog
 	* Bugfix: IRC color options in input context menu would not appear if spellcheck is turned off
+	* Support for setting foreground/background colors from the input context menu
 
 Version 0.822
 	* First version with Linux support
