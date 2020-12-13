@@ -49,7 +49,6 @@ from .. import userinput
 from .. import macros
 from ..dialogs import KeyDialog
 from .. import events
-
 from .action import *
 
 class Window(QMainWindow):
@@ -222,7 +221,6 @@ class Window(QMainWindow):
 
 
 	def splitterResize(self,position,index):
-
 		# Save the width of the userlist for the resize event
 		self.userlist_width = self.userlist.width()
 
@@ -235,7 +233,6 @@ class Window(QMainWindow):
 		self.parent.open_private_window(self.client,user)
 
 	def refresh_name_topic_display(self):
-
 		if hasattr(self,"key_display"):
 			if not config.CHAT_DISPLAY_INFO_BAR:
 				self.key_display.hide()
@@ -653,8 +650,6 @@ class Window(QMainWindow):
 						self.chat.append(d2)
 
 			self.chat.append(d)
-
-			#if self.type==config.SERVER_WINDOW: self.chat.moveCursor(QTextCursor.End)
 
 			self.do_move_to_bottom()
 

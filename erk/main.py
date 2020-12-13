@@ -467,8 +467,6 @@ class Erk(QMainWindow):
 				else:
 					self.toolbar.setMovable(False)
 
-				# self.addToolBar(Qt.TopToolBarArea,self.toolbar)
-
 				if self.is_light_colored:
 					self.toolbar_icon = TOOLBAR_ICON
 				else:
@@ -481,7 +479,6 @@ class Erk(QMainWindow):
 				self.helpMenu = QMenu()
 				self.macroMenu = QMenu()
 				self.pluginMenu = QMenu()
-				#self.displayMenu = QMenu()
 
 		# Plugins
 		if not self.block_plugins:
@@ -518,13 +515,6 @@ class Erk(QMainWindow):
 
 		self.resize(appwidth,appheight)
 
-		# # Status bar
-		# self.status = self.statusBar()
-		# self.status.setStyleSheet('QStatusBar::item {border: None;}')
-
-		# self.status_msg = QLabel("<i><small>&nbsp;</small></i>")
-		# self.status.addPermanentWidget(self.status_msg,0)
-
 		if info:
 			self.connectToIRCServer(info)
 
@@ -549,9 +539,6 @@ class Erk(QMainWindow):
 
 		if self.fullscreen:
 			self.showFullScreen()
-
-	# def set_status(self,msg):
-	# 	self.status_msg.setText(f"<i><small>{msg}</small></i>")
 
 	def spellcheck_language(self,setting):
 
