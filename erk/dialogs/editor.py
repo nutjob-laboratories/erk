@@ -42,14 +42,13 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from ..resources import *
-from ..files import PLUGIN_TEMPLATE
+from ..files import PLUGIN_TEMPLATE,get_text_format_settings
 from .. import config
 from ..widgets.action import MenuAction
 from .export_package import Dialog as Export
 from .editor_input import Dialog as EditorInput
 from .find import Dialog as Find
 from .template import Dialog as Template
-
 from ..strings import *
 
 INSTALL_DIRECTORY = sys.path[0]
@@ -121,8 +120,6 @@ class Window(QMainWindow):
 		self.toolbarSave.setEnabled(False)
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle("Find")
-
-		#self.status_package.setText("<b><small>Unknown package</small></b>")
 
 		self.package_icon.hide()
 		self.status_package.hide()
@@ -454,7 +451,6 @@ class Window(QMainWindow):
 						zf.write(sfile,pname+"\\"+bname)
 				zf.close()
 
-
 	def __init__(self,filename=None,obj=None,app=None,econfig=None,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -469,6 +465,8 @@ class Window(QMainWindow):
 		self.package_dir = None
 
 		config.load_settings(econfig)
+
+		self.style = get_text_format_settings(self.gui.stylefile)
 
 		if self.filename:
 			self.title = os.path.basename(self.filename)
@@ -492,16 +490,9 @@ class Window(QMainWindow):
 		self.autoindent = config.EDITOR_AUTO_INDENT
 
 		self.editor = QCodeEditor(self)
-		# self.highlight = PythonHighlighter(self.editor.document())
-
-		if LIGHT_MODE:
-			self.editor.setStyleSheet("color: #000000; background-color: #ffffff;")
-			switch_light_mode()
-		else:
-			self.editor.setStyleSheet("color: #ffffff; background-color: #464646;")
-			switch_dark_mode()
-
 		self.highlight = PythonHighlighter(self.editor.document())
+
+		load_style_settings(self,self.style)
 
 		self.highlight.do_highlight = config.EDITOR_SYNTAX_HIGHLIGHT
 
@@ -1258,41 +1249,71 @@ STYLES = {
 	'erk': format('#0212b6','bi'),
 }
 
-def switch_dark_mode():
+def load_style_settings(self,styles):
+	color = '#000000'
+	background = '#ffffff'
+	s = styles['editor']
+	for ent in s.split(';'):
+		ent = ent.strip()
+		l = ent.split(':')
+		if len(l)==2:
+			if l[0].lower()=='color':
+				color = l[1].strip()
+			if l[0].lower()=='background-color':
+				background = l[1].strip()
 
-	global STYLES
+			if l[0].lower()=='keyword':
+				STYLES['keyword'] =format(l[1].strip())
 
-	# Syntax styles that can be shared by all languages
-	STYLES = {
-		'keyword': format('#55acde'),
-		'operator': format('#ff6161'),
-		'brace': format('gray'),
-		'defclass': format('white', 'bold'),
-		'string': format('#ed6bff'),
-		'string2': format('#55de67'),
-		'comment': format('#55de67', 'italic'),
-		'self': format('white', 'italic'),
-		'numbers': format('yellow'),
-		'erk': format('#cdff00','bi'),
-	}
+			if l[0].lower()=='operator':
+				STYLES['operator'] =format(l[1].strip())
 
-def switch_light_mode():
+			if l[0].lower()=='brace':
+				STYLES['brace'] =format(l[1].strip())
 
-	global STYLES
+			if l[0].lower()=='defined':
+				STYLES['defclass'] =format(l[1].strip(),'bold')
 
-	# Syntax styles that can be shared by all languages
-	STYLES = {
-		'keyword': format('blue'),
-		'operator': format('red'),
-		'brace': format('darkGray'),
-		'defclass': format('black', 'bold'),
-		'string': format('magenta'),
-		'string2': format('darkMagenta'),
-		'comment': format('darkGreen', 'italic'),
-		'self': format('black', 'italic'),
-		'numbers': format('brown'),
-		'erk': format('#0212b6','bi'),
-	}
+			if l[0].lower()=='string':
+				STYLES['string'] =format(l[1].strip())
+
+			if l[0].lower()=='multiline-string':
+				STYLES['string2'] =format(l[1].strip())
+
+			if l[0].lower()=='comment':
+				STYLES['comment'] =format(l[1].strip(),'italic')
+
+			if l[0].lower()=='self':
+				STYLES['self'] =format(l[1].strip(),'italic')
+
+			if l[0].lower()=='numbers':
+				STYLES['numbers'] =format(l[1].strip())
+
+			if l[0].lower()=='erk':
+				STYLES['erk'] =format(l[1].strip(),'bi')
+
+	self.editor.setStyleSheet(f"color: {color}; background-color: {background}")
+	self.highlight = PythonHighlighter(self.editor.document())
+	self.highlight.rehighlight()
+
+# def switch_dark_mode():
+
+# 	global STYLES
+
+# 	# Syntax styles that can be shared by all languages
+# 	STYLES = {
+# 		'keyword': format('#55acde'),
+# 		'operator': format('#ff6161'),
+# 		'brace': format('gray'),
+# 		'defclass': format('white', 'bold'),
+# 		'string': format('#ed6bff'),
+# 		'string2': format('#55de67'),
+# 		'comment': format('#55de67', 'italic'),
+# 		'self': format('white', 'italic'),
+# 		'numbers': format('yellow'),
+# 		'erk': format('#cdff00','bi'),
+# 	}
+
 
 class PythonHighlighter (QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.

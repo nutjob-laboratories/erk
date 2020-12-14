@@ -59,3 +59,17 @@ motd {
 	color: #0000FF;
 }
 
+editor {
+	color: #000000;
+	background-color: #ffffff;
+	keyword: blue;
+	operator: red;
+	brace: darkGray;
+	defined: black;
+	string: magenta;
+	multiline-string: darkMagenta;
+	comment: darkGreen;
+	self: black;
+	numbers: brown;
+	erk: #0212b6;
+}
