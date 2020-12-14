@@ -729,10 +729,14 @@ def channel_has_hostmask(gui,client,channel,user):
 	return True
 
 def line_output(gui,client,line):
-	pass
+	
+	if not client.gui.block_plugins:
+		client.gui.plugins.line_out(client,line)
 
 def line_input(gui,client,line):
-	pass
+	
+	if not client.gui.block_plugins:
+		client.gui.plugins.line_in(client,line)
 
 def received_error(gui,client,error):
 

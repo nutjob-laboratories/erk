@@ -112,21 +112,7 @@ def generate_menu_toolbar(self):
 	toolbar_menu_style = toolbar_menu_style.replace('$LOW',mlow)
 	toolbar_menu_style = toolbar_menu_style.replace('$HIGH',mhigh)
 
-	#print(mbcolor,mfcolor)
-
-	# toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-
-	
-	#toolbar.setAllowedAreas(Qt.TopToolBarArea)
-
-	#toolbar.setFloatable(False)
-
-	#toolbar.setMovable(False)
-
 	toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-
-
-	# toolbar.setStyleSheet(''' QToolBar { spacing: 5px; } ''')
 	toolbar.setStyleSheet(''' QToolBar { spacing: 8px; } ''')
 
 	f = toolbar.font()

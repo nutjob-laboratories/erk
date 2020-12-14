@@ -9,6 +9,26 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!self.website = None
 !_INDENT_!!_INDENT_!self.source = None
 
+!_INDENT_!def received(self,client,line):
+!_INDENT_!!_INDENT_!"""Executed when the client receives data from the server.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!line -- The received data
+!_INDENT_!!_INDENT_!"""
+!_INDENT_!!_INDENT_!pass
+
+!_INDENT_!def sent(self,client,line):
+!_INDENT_!!_INDENT_!"""Executed when the client sends data to the server.
+!_INDENT_!!_INDENT_!
+!_INDENT_!!_INDENT_!Arguments:
+!_INDENT_!!_INDENT_!self -- The plugin's instance
+!_INDENT_!!_INDENT_!client -- The Twisted IRC client object
+!_INDENT_!!_INDENT_!line -- The sent data
+!_INDENT_!!_INDENT_!"""
+!_INDENT_!!_INDENT_!pass
+
 !_INDENT_!def load(self):
 !_INDENT_!!_INDENT_!"""Executed when the plugin is loaded.
 !_INDENT_!!_INDENT_!

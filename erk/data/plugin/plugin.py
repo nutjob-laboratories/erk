@@ -11,6 +11,26 @@ class !_PLUGIN_NAME!(Plugin):
 		self.website = None
 		self.source = None
 
+	def received(self,client,line):
+		"""Executed when the client receives data from the server.
+
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		line -- The received data
+		"""
+		pass
+
+	def sent(self,client,line):
+		"""Executed when the client sends data to the server.
+
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		line -- The sent data
+		"""
+		pass
+
 	def load(self):
 		"""Executed when the plugin is loaded.
 

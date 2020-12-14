@@ -50,7 +50,7 @@ from .editor_input import Dialog as EditorInput
 from .find import Dialog as Find
 from .template import Dialog as Template
 
-from ..strings import*
+from ..strings import *
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")

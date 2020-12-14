@@ -121,19 +121,14 @@ DISPLAY_USER_LIST = True
 AUTOSAVE_LOGS = True
 AUTOSAVE_LOG_TIME = 300
 AUTOSAVE_CACHE_SIZE = 10
-
 UNSEEN_MESSAGE_ANIMATION = True
 UNSEEN_ANIMATION_LENGTH = 500
 UNSEEN_ANIMATION_COLOR = 'system'
-
 CONNECTION_MESSAGE_ANIMATION = True
 CONNECTION_ANIMATION_LENGTH = 1000
 CONNECTION_ANIMATION_COLOR = 'system'
-
 SCHWA_ANIMATION = True
-
 ASK_BEFORE_QUIT = True
-
 MENU_BAR_MOVABLE = True
 MENU_BAR_ORIENT = "top"
 
@@ -146,7 +141,6 @@ def save_settings(filename=SETTINGS_FILE):
 
 		"movable_menubar": MENU_BAR_MOVABLE,
 		"menubar_location": MENU_BAR_ORIENT,
-
 		"ask_before_quitting": ASK_BEFORE_QUIT,
 		"schwa_corner_animation": SCHWA_ANIMATION,
 		"animate_unseen_messages_in_connection_display": UNSEEN_MESSAGE_ANIMATION,
@@ -242,8 +236,6 @@ def patch_settings(data):
 
 	if not "menubar_location" in data:
 		data["menubar_location"] = MENU_BAR_ORIENT
-
-
 
 	if not "ask_before_quitting" in data:
 		data["ask_before_quitting"] = ASK_BEFORE_QUIT
@@ -375,12 +367,9 @@ def load_settings(filename=SETTINGS_FILE):
 
 			MENU_BAR_MOVABLE = data["movable_menubar"]
 			MENU_BAR_ORIENT = data["menubar_location"]
-
 			ASK_BEFORE_QUIT = data["ask_before_quitting"]
-
 			SHOW_CONNECTION_LOST_ERROR = data["show_connection_lost_dialog"]
 			SHOW_CONNECTION_FAIL_ERROR = data["show_connection_fail_dialog"]
-
 			USE_SPACES_FOR_INDENT = data["use_spaces_for_indent"]
 			NUMBER_OF_SPACES_FOR_INDENT = data["number_of_indent_spaces"]
 			EDITOR_WORD_WRAP = data["editor_word_wrap"]

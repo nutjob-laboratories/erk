@@ -17,6 +17,8 @@ Version 0.830
 	* Bugfix: no spelling correction is attempted if the user has selected text in the input box
 	* Menubar is now moveable, and can be docked at either the top or bottom of the app
 	* Added a setting to turn "moveable menubar" on and off
+	* Added two new plugin events: "received" and "sent" (triggered when receiving server data or sending server data)
+	* Updated the documentation with the new events
 
 Version 0.822
 	* First version with Linux support
