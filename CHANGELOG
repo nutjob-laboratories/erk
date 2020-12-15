@@ -21,6 +21,10 @@ Version 0.830
 	* Updated the documentation with the new events
 	* Added an option to stylize the syntax highlighting in the editor
 	* Added new entries to 'text.css' with the new editor color settings
+	* Added new menu separators to the editor
+	* Changed the editor's name to Əditor
+	* Reworked the "plugin" menu; now, only the "install" and installed plugins are displayed if not in development mode
+	* Updated the plugin documentation to reflect new editor/client changes
 
 Version 0.822
 	* First version with Linux support

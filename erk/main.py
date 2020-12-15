@@ -897,23 +897,27 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
+		if config.DEVELOPER_MODE:
+
+			entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create or edit plugins",25,self.menuEditor)
+			self.pluginMenu.addAction(entry)
+
+			if not config.PLUGINS_ENABLED:
+				entry.setEnabled(False)
+
 		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
 		self.pluginMenu.addAction(entry)
 
 		if not config.PLUGINS_ENABLED:
 			entry.setEnabled(False)
 
-		self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export","Export an installed plugin",25,self.exportPackage)
-		self.pluginMenu.addAction(self.expPackMenu)
+		if config.DEVELOPER_MODE:
 
-		if not config.PLUGINS_ENABLED:
-			self.expPackMenu.setEnabled(False)
+			self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export","Export an installed plugin",25,self.exportPackage)
+			self.pluginMenu.addAction(self.expPackMenu)
 
-		entry = MenuAction(self,MENU_EDITOR_ICON,"Editor","Create or edit plugins",25,self.menuEditor)
-		self.pluginMenu.addAction(entry)
-
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+			if not config.PLUGINS_ENABLED:
+				self.expPackMenu.setEnabled(False)
 
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")
@@ -1047,9 +1051,25 @@ class Erk(QMainWindow):
 			m.addAction(entry)
 
 		#self.pluginMenu.addSeparator()
-		insertNoTextSeparator(self,self.pluginMenu)
-
+		
 		if config.DEVELOPER_MODE:
+
+			# s = textSeparator(self,"Development")
+			# self.pluginMenu.addAction(s)
+
+			# self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export","Export an installed plugin",25,self.exportPackage)
+			# self.pluginMenu.addAction(self.expPackMenu)
+
+			# if not config.PLUGINS_ENABLED:
+			# 	self.expPackMenu.setEnabled(False)
+
+			# entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create or edit plugins",25,self.menuEditor)
+			# self.pluginMenu.addAction(entry)
+
+			# if not config.PLUGINS_ENABLED:
+			# 	entry.setEnabled(False)
+
+			insertNoTextSeparator(self,self.pluginMenu)
 
 			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 			entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))

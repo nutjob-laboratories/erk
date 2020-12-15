@@ -37,7 +37,8 @@ DEFAULT_IRCNAME = "Erk IRC Client"
 DEFAULT_ALTERNATIVE = "erk_user99"
 
 # APPLICATION_NAME = "Ərk"
-APPLICATION_NAME = "erk"
+APPLICATION_NAME = "Ərk"
+EDITOR_NAME = "Əditor"
 
 MINOR_VERSION_FILE = os.path.join(os.path.join(os.path.join(sys.path[0], "erk"), "data"), "minor.txt")
 f = open(MINOR_VERSION_FILE,"r")

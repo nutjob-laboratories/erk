@@ -44,7 +44,7 @@ from PyQt5 import QtCore
 from ..resources import *
 from ..files import PLUGIN_TEMPLATE,get_text_format_settings
 from .. import config
-from ..widgets.action import MenuAction
+from ..widgets.action import MenuAction,insertNoTextSeparator
 from .export_package import Dialog as Export
 from .editor_input import Dialog as EditorInput
 from .find import Dialog as Find
@@ -58,8 +58,6 @@ DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
 DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
-
-LIGHT_MODE = True
 
 def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
 	x = EditorInput(title,prompt,twoinputs,twoprompt)
@@ -100,7 +98,7 @@ class Window(QMainWindow):
 		if self.changed: return
 		self.changed = True
 		self.title = "* "+self.title
-		self.setWindowTitle(self.title)
+		self.updateApplicationTitle()
 
 	def doNewFile(self):
 		if self.changed:
@@ -113,8 +111,8 @@ class Window(QMainWindow):
 		self.sep_icon.hide()
 		self.status_file.setText('')
 		self.editor.clear()
-		self.title = "Editor"
-		self.setWindowTitle(self.title)
+		self.title = EDITOR_NAME
+		self.updateApplicationTitle()
 		self.changed = False
 		self.menuSave.setEnabled(False)
 		self.toolbarSave.setEnabled(False)
@@ -124,6 +122,9 @@ class Window(QMainWindow):
 		self.package_icon.hide()
 		self.status_package.hide()
 		self.plugin_icon.hide()
+
+	def updateApplicationTitle(self):
+		self.setWindowTitle(self.title)
 
 	def doFileSaveAs(self):
 		options = QFileDialog.Options()
@@ -140,7 +141,7 @@ class Window(QMainWindow):
 			code.write(self.editor.toPlainText())
 			code.close()
 			self.title = os.path.basename(fileName)
-			self.setWindowTitle(self.title)
+			self.updateApplicationTitle()
 			self.sep_icon.show()
 			self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 			self.changed = False
@@ -168,7 +169,7 @@ class Window(QMainWindow):
 		code.write(self.editor.toPlainText())
 		code.close()
 		self.title = os.path.basename(self.filename)
-		self.setWindowTitle(self.title)
+		self.updateApplicationTitle()
 		self.sep_icon.show()
 		self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 		self.changed = False
@@ -200,7 +201,7 @@ class Window(QMainWindow):
 			self.menuSave.setEnabled(True)
 			self.toolbarSave.setEnabled(True)
 			self.title = os.path.basename(fileName)
-			self.setWindowTitle(self.title)
+			self.updateApplicationTitle()
 			self.sep_icon.show()
 			self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 			self.changed = False
@@ -410,7 +411,7 @@ class Window(QMainWindow):
 				self.menuSave.setEnabled(True)
 				self.toolbarSave.setEnabled(True)
 				self.title = "plugin.py"
-				self.setWindowTitle(self.title)
+				self.updateApplicationTitle()
 				self.changed = False
 				if self.findWindow != None:
 					self.findWindow.close()
@@ -464,6 +465,8 @@ class Window(QMainWindow):
 
 		self.package_dir = None
 
+		self.is_light_colored = self.gui.is_light_colored
+
 		config.load_settings(econfig)
 
 		self.style = get_text_format_settings(self.gui.stylefile)
@@ -471,10 +474,10 @@ class Window(QMainWindow):
 		if self.filename:
 			self.title = os.path.basename(self.filename)
 			self.package_dir = os.path.dirname(self.filename)
-			self.setWindowTitle(self.title)
+			self.updateApplicationTitle()
 		else:
-			self.setWindowTitle("Editor")
-			self.title = "Editor"
+			self.setWindowTitle(EDITOR_NAME)
+			self.title = EDITOR_NAME
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		# Use spaces for indent
@@ -532,7 +535,7 @@ class Window(QMainWindow):
 				self.editor.setPlainText(source_code)
 				self.changed = False
 				self.title = os.path.basename(self.filename)
-				self.setWindowTitle(self.title)
+				self.updateApplicationTitle()
 
 		self.menubar = self.menuBar()
 
@@ -559,7 +562,8 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.doFileSaveAs)
 		fileMenu.addAction(entry)
 
-		fileMenu.addSeparator()
+		#fileMenu.addSeparator()
+		insertNoTextSeparator(self,fileMenu)
 
 		self.menuOpenPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 		self.menuOpenPlugin.triggered.connect(self.openPDir)
@@ -569,7 +573,8 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
 		fileMenu.addAction(entry)
 
-		fileMenu.addSeparator()
+		#fileMenu.addSeparator()
+		insertNoTextSeparator(self,fileMenu)
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
 		entry.setShortcut("Ctrl+Q")
@@ -588,14 +593,16 @@ class Window(QMainWindow):
 		mefind.setShortcut("Ctrl+R")
 		editMenu.addAction(mefind)
 
-		editMenu.addSeparator()
+		#editMenu.addSeparator()
+		insertNoTextSeparator(self,editMenu)
 
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
 		entry.triggered.connect(self.editor.selectAll)
 		entry.setShortcut("Ctrl+A")
 		editMenu.addAction(entry)
 
-		editMenu.addSeparator()
+		#editMenu.addSeparator()
+		insertNoTextSeparator(self,editMenu)
 
 		self.menuUndo = QAction(QIcon(UNDO_ICON),"Undo",self)
 		self.menuUndo.triggered.connect(self.editor.undo)
@@ -609,7 +616,8 @@ class Window(QMainWindow):
 		editMenu.addAction(self.menuRedo)
 		self.menuRedo.setEnabled(False)
 
-		editMenu.addSeparator()
+		#editMenu.addSeparator()
+		insertNoTextSeparator(self,editMenu)
 
 		self.menuCut = QAction(QIcon(CUT_ICON),"Cut",self)
 		self.menuCut.triggered.connect(self.editor.cut)
@@ -628,7 +636,8 @@ class Window(QMainWindow):
 		self.menuPaste.setShortcut("Ctrl+V")
 		editMenu.addAction(self.menuPaste)
 
-		editMenu.addSeparator()
+		#editMenu.addSeparator()
+		insertNoTextSeparator(self,editMenu)
 
 		self.menuZoomIn = QAction(QIcon(PLUS_ICON),"Zoom in",self)
 		self.menuZoomIn.triggered.connect(self.editor.zoomIn)
@@ -651,7 +660,8 @@ class Window(QMainWindow):
 		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
 		toolsMenu.addAction(entry)
 
-		toolsMenu.addSeparator()
+		#toolsMenu.addSeparator()
+		insertNoTextSeparator(self,toolsMenu)
 
 		if self.gui!=None:
 			entry = QAction(QIcon(RESTART_ICON),"Load new plugins into client",self)
@@ -706,7 +716,8 @@ class Window(QMainWindow):
 
 		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
-		indentMenu.addSeparator()
+		#indentMenu.addSeparator()
+		insertNoTextSeparator(self,indentMenu)
 
 		entry = QAction(QIcon(SPACES_ICON),"Convert indent to spaces",self)
 		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
@@ -1091,7 +1102,8 @@ class Window(QMainWindow):
 
 		menu = self.editor.createStandardContextMenu()
 
-		menu.addSeparator()
+		#menu.addSeparator()
+		insertNoTextSeparator(self,menu)
 
 		funcMenu = QMenu("Insert plugin method")
 		funcMenu.setIcon(QIcon(ERK_ICON))
@@ -1113,7 +1125,8 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="userinput": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
-		funcMenu.addSeparator()
+		#funcMenu.addSeparator()
+		insertNoTextSeparator(self,funcMenu)
 
 		entry = QAction(QIcon(PRINT_ICON),"print()",self)
 		entry.triggered.connect(lambda state,f="print": self.insertMethod(f))
