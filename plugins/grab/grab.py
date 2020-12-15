@@ -18,8 +18,8 @@ class NicknameGrabber(Plugin):
         
         self.author = "Dan Hetrick"
         self.version = "1.0"
-        self.website = None
-        self.source = None
+        self.website = "https://github.com/nutjob-laboratories/erk"
+        self.source = "https://github.com/nutjob-laboratories/erk"
         
         self.active = False
         self.next = 0
