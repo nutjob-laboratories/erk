@@ -289,5 +289,10 @@ class Dialog(QDialog):
 
 		self.setStyleSheet(f'color: {self.regtext}; background-color: {self.bgcolor};')
 
+		self.setWindowFlags(self.windowFlags()
+					^ QtCore.Qt.WindowContextHelpButtonHint)
+
 		self.setLayout(self.finalLayout)
+
+		self.setFixedSize(self.finalLayout.sizeHint())
 		
