@@ -744,6 +744,30 @@ class Window(QMainWindow):
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
+		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
+		self.fontMenuEntry.triggered.connect(self.menuFont)
+		settingsMenu.addAction(self.fontMenuEntry)
+
+		f = self.editor.font()
+		fs = f.toString()
+		pfs = fs.split(',')
+		font_name = pfs[0]
+		font_size = pfs[1]
+
+		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
+		self.synMenu = settingsMenu.addMenu(QIcon(FORMAT_ICON),"Syntax highlighting")
+
+		self.colorsEntry = QAction(QIcon(FORMAT_ICON),"Set colors",self)
+		self.colorsEntry.triggered.connect(self.menuColors)
+		self.synMenu.addAction(self.colorsEntry)
+
+		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Active",self)
+		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
+		self.synMenu.addAction(self.set_syntaxcolor)
+
+		if config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
+
 
 		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
@@ -762,30 +786,6 @@ class Window(QMainWindow):
 		settingsMenu.addAction(self.set_exitsave)
 
 		if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
-
-		insertNoTextSeparator(self,settingsMenu)
-
-		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
-		self.fontMenuEntry.triggered.connect(self.menuFont)
-		settingsMenu.addAction(self.fontMenuEntry)
-
-		f = self.editor.font()
-		fs = f.toString()
-		pfs = fs.split(',')
-		font_name = pfs[0]
-		font_size = pfs[1]
-
-		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
-
-		self.colorsEntry = QAction(QIcon(FORMAT_ICON),"Highlight colors",self)
-		self.colorsEntry.triggered.connect(self.menuColors)
-		settingsMenu.addAction(self.colorsEntry)
-
-		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
-		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_syntaxcolor)
-
-		if config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')

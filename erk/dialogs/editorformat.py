@@ -142,11 +142,6 @@ class Dialog(QDialog):
 		cstyle = self.buildStyle()
 
 		self.parent.setStyle(cstyle)
-		
-		if self.parent.changed==False:
-			self.parent.changed = False
-			self.parent.title = self.parent.title.replace('* ','',1)
-			self.parent.updateApplicationTitle()
 
 	def applySave(self):
 
@@ -155,11 +150,6 @@ class Dialog(QDialog):
 		self.parent.setStyle(cstyle)
 
 		write_style_file(cstyle,self.parent.stylefile)
-
-		if self.parent.changed==False:
-			self.parent.changed = False
-			self.parent.title = self.parent.title.replace('* ','',1)
-			self.parent.updateApplicationTitle()
 
 		self.close()
 
