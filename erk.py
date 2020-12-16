@@ -180,7 +180,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app,args.config)
+		EDITOR = EditorDialog(None,None,app,args.config,args.format)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -206,7 +206,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,file,app,args.config)
+		EDITOR = EditorDialog(None,file,app,args.config,args.format)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app,args.config)
+		EDITOR = EditorDialog(None,None,app,args.config,args.format)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 		EDITOR.newPackage()

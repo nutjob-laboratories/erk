@@ -25,6 +25,8 @@ Version 0.830
 	* Changed the editor's name to Əditor
 	* Reworked the "plugin" menu; now, only the "install" and installed plugins are displayed if not in development mode
 	* Updated the plugin documentation to reflect new editor/client changes
+	* Syntax highlight coloring can now be edited in the editor
+	* Reworked the editor's "settings" menu
 
 Version 0.822
 	* First version with Linux support

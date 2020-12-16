@@ -51,6 +51,8 @@ from .find import Dialog as Find
 from .template import Dialog as Template
 from ..strings import *
 
+from .editorformat import Dialog as EditFormat
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -82,6 +84,12 @@ def getPackageName(filename):
 		return [pname,False]
 
 class Window(QMainWindow):
+
+	def menuColors(self):
+
+		self.edcolor = EditFormat(self)
+		self.edcolor.show()
+
 
 	def closeEvent(self, event):
 		if self.changed:
@@ -452,24 +460,31 @@ class Window(QMainWindow):
 						zf.write(sfile,pname+"\\"+bname)
 				zf.close()
 
-	def __init__(self,filename=None,obj=None,app=None,econfig=None,parent=None):
+	def setStyle(self,style):
+		load_style_settings(self,style)
+
+	def __init__(self,filename=None,obj=None,app=None,econfig=None,sfile=None,parent=None):
 		super(Window, self).__init__(parent)
 
 		self.filename = filename
 		self.gui = obj
 		self.app = app
 		self.config = econfig
+		self.stylefile = sfile
 
 		self.changed = False
 		self.findWindow = None
 
 		self.package_dir = None
 
-		self.is_light_colored = self.gui.is_light_colored
+		if self.gui!=None:
+			self.is_light_colored = self.gui.is_light_colored
+		else:
+			self.is_light_colored = True
 
 		config.load_settings(econfig)
 
-		self.style = get_text_format_settings(self.gui.stylefile)
+		self.style = get_text_format_settings(self.stylefile)
 
 		if self.filename:
 			self.title = os.path.basename(self.filename)
@@ -729,17 +744,6 @@ class Window(QMainWindow):
 
 		settingsMenu = self.menubar.addMenu("Settings")
 
-		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
-		self.fontMenuEntry.triggered.connect(self.menuFont)
-		settingsMenu.addAction(self.fontMenuEntry)
-
-		f = self.editor.font()
-		fs = f.toString()
-		pfs = fs.split(',')
-		font_name = pfs[0]
-		font_size = pfs[1]
-
-		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
 
 		self.set_wordwrap = QAction(QIcon(UNCHECKED_ICON),"Word wrap",self)
 		self.set_wordwrap.triggered.connect(lambda state,s="wordrap": self.toggleSetting(s))
@@ -753,17 +757,35 @@ class Window(QMainWindow):
 
 		if config.EDITOR_STATUS_BAR: self.set_statusbar.setIcon(QIcon(CHECKED_ICON))
 
-		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
-		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
-		settingsMenu.addAction(self.set_syntaxcolor)
-
-		if config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
-
 		self.set_exitsave = QAction(QIcon(UNCHECKED_ICON),"Prompt for save on exit",self)
 		self.set_exitsave.triggered.connect(lambda state,s="exitsave": self.toggleSetting(s))
 		settingsMenu.addAction(self.set_exitsave)
 
 		if config.EDITOR_PROMPT_FOR_SAVE_ON_EXIT: self.set_exitsave.setIcon(QIcon(CHECKED_ICON))
+
+		insertNoTextSeparator(self,settingsMenu)
+
+		self.fontMenuEntry = QAction(QIcon(FONT_ICON),"Font",self)
+		self.fontMenuEntry.triggered.connect(self.menuFont)
+		settingsMenu.addAction(self.fontMenuEntry)
+
+		f = self.editor.font()
+		fs = f.toString()
+		pfs = fs.split(',')
+		font_name = pfs[0]
+		font_size = pfs[1]
+
+		self.fontMenuEntry.setText(f"Font ({font_name}, {font_size} pt)")
+
+		self.colorsEntry = QAction(QIcon(FORMAT_ICON),"Highlight colors",self)
+		self.colorsEntry.triggered.connect(self.menuColors)
+		settingsMenu.addAction(self.colorsEntry)
+
+		self.set_syntaxcolor = QAction(QIcon(UNCHECKED_ICON),"Syntax highlighting",self)
+		self.set_syntaxcolor.triggered.connect(lambda state,s="highlight": self.toggleSetting(s))
+		settingsMenu.addAction(self.set_syntaxcolor)
+
+		if config.EDITOR_SYNTAX_HIGHLIGHT: self.set_syntaxcolor.setIcon(QIcon(CHECKED_ICON))
 
 		self.status = self.statusBar()
 		self.status.setStyleSheet('QStatusBar::item {border: None;}')
@@ -1290,7 +1312,7 @@ def load_style_settings(self,styles):
 			if l[0].lower()=='string':
 				STYLES['string'] =format(l[1].strip())
 
-			if l[0].lower()=='multiline-string':
+			if l[0].lower()=='multiline-strings':
 				STYLES['string2'] =format(l[1].strip())
 
 			if l[0].lower()=='comment':
@@ -1308,25 +1330,6 @@ def load_style_settings(self,styles):
 	self.editor.setStyleSheet(f"color: {color}; background-color: {background}")
 	self.highlight = PythonHighlighter(self.editor.document())
 	self.highlight.rehighlight()
-
-# def switch_dark_mode():
-
-# 	global STYLES
-
-# 	# Syntax styles that can be shared by all languages
-# 	STYLES = {
-# 		'keyword': format('#55acde'),
-# 		'operator': format('#ff6161'),
-# 		'brace': format('gray'),
-# 		'defclass': format('white', 'bold'),
-# 		'string': format('#ed6bff'),
-# 		'string2': format('#55de67'),
-# 		'comment': format('#55de67', 'italic'),
-# 		'self': format('white', 'italic'),
-# 		'numbers': format('yellow'),
-# 		'erk': format('#cdff00','bi'),
-# 	}
-
 
 class PythonHighlighter (QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.

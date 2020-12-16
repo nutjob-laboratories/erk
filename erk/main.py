@@ -1049,25 +1049,8 @@ class Erk(QMainWindow):
 			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall \""+pack+"\"",self)
 			entry.triggered.connect(lambda state,f=plugdir,p=pack: self.uninstall_plugin(f,p))
 			m.addAction(entry)
-
-		#self.pluginMenu.addSeparator()
 		
 		if config.DEVELOPER_MODE:
-
-			# s = textSeparator(self,"Development")
-			# self.pluginMenu.addAction(s)
-
-			# self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export","Export an installed plugin",25,self.exportPackage)
-			# self.pluginMenu.addAction(self.expPackMenu)
-
-			# if not config.PLUGINS_ENABLED:
-			# 	self.expPackMenu.setEnabled(False)
-
-			# entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create or edit plugins",25,self.menuEditor)
-			# self.pluginMenu.addAction(entry)
-
-			# if not config.PLUGINS_ENABLED:
-			# 	entry.setEnabled(False)
 
 			insertNoTextSeparator(self,self.pluginMenu)
 
@@ -1145,14 +1128,14 @@ class Erk(QMainWindow):
 
 
 	def menuEditor(self):
-		x = EditorDialog(self,None,None,self.configfile)
+		x = EditorDialog(self,None,None,self.configfile,self.stylefile)
 		w = config.DEFAULT_APP_WIDTH
 		h = config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
 		x.show()
 
 	def editPlugin(self,filename):
-		x = EditorDialog(self,filename,None,self.configfile)
+		x = EditorDialog(self,filename,None,self.configfile,self.stylefile)
 		w = config.DEFAULT_APP_WIDTH
 		h = config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)

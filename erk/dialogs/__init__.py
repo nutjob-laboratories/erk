@@ -128,8 +128,8 @@ def ErrorDialog(obj,errlist=None):
 	x.resize(400,250)
 	x.show()
 
-def EditorDialog(obj=None,filename=None,app=None,config=None):
-	x = Editor(filename,obj,app,config)
+def EditorDialog(obj=None,filename=None,app=None,config=None,stylefile=None):
+	x = Editor(filename,obj,app,config,stylefile)
 	return x
 
 def MacroDialog(obj,filename=None):

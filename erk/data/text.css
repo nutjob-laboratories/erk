@@ -70,7 +70,7 @@ editor {
 	brace: darkGray;
 	defined: black;
 	string: magenta;
-	multiline-string: darkMagenta;
+	multiline-strings: darkMagenta;
 	comment: darkGreen;
 	self: black;
 	numbers: brown;
