@@ -44,9 +44,9 @@ class ColorPick(QWidget):
 		self.newcolor = QColorDialog.getColor(QColor(self.color))
 
 		if self.newcolor.isValid():
-			ncolor = self.newcolor.name()
+			self.ncolor = self.newcolor.name()
 
-			self.color = ncolor
+			self.color = self.ncolor
 			self.exampleText.setStyleSheet(f'color: {self.color};')
 
 
@@ -79,10 +79,19 @@ class Dialog(QDialog):
 		color = QColorDialog.getColor(QColor(self.bgcolor))
 
 		if color.isValid():
-			ncolor = color.name()
+			self.ncolor = color.name()
 
-			self.bgcolor = ncolor
-			self.setStyleSheet(f'background-color: {ncolor};')
+			self.bgcolor = self.ncolor
+			#self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
+
+			c = tuple(int(self.bgcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+			luma = luma*100
+
+			if luma>=40:
+				self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
+			else:
+				self.setStyleSheet(f'color: #ffffff; background-color: {self.bgcolor};')
 
 	def buildStyle(self):
 
@@ -134,9 +143,10 @@ class Dialog(QDialog):
 
 		self.parent.setStyle(cstyle)
 		
-		self.parent.changed = False
-		self.parent.title = self.parent.title.replace('* ','',1)
-		self.parent.updateApplicationTitle()
+		if self.parent.changed==False:
+			self.parent.changed = False
+			self.parent.title = self.parent.title.replace('* ','',1)
+			self.parent.updateApplicationTitle()
 
 	def applySave(self):
 
@@ -146,9 +156,10 @@ class Dialog(QDialog):
 
 		write_style_file(cstyle,self.parent.stylefile)
 
-		self.parent.changed = False
-		self.parent.title = self.parent.title.replace('* ','',1)
-		self.parent.updateApplicationTitle()
+		if self.parent.changed==False:
+			self.parent.changed = False
+			self.parent.title = self.parent.title.replace('* ','',1)
+			self.parent.updateApplicationTitle()
 
 		self.close()
 
@@ -237,56 +248,56 @@ class Dialog(QDialog):
 		self.erk = ColorPick('erk','Erk Specific',sserk,'#0212b6')
 		self.plaintext = ColorPick('color','Text',regtext,'black')
 
-		setbg = QPushButton("Set background color")
-		setbg.clicked.connect(self.getBg)
+		self.bgColorButton = QPushButton("Set background color")
+		self.bgColorButton.clicked.connect(self.getBg)
 
-		leftLayout = QVBoxLayout()
-		leftLayout.addWidget(self.plaintext)
-		leftLayout.addWidget(self.keyword)
-		leftLayout.addWidget(self.operator)
-		leftLayout.addWidget(self.brace)
-		leftLayout.addWidget(self.defined)
-		leftLayout.addWidget(self.mself)
+		self.leftLayout = QVBoxLayout()
+		self.leftLayout.addWidget(self.plaintext)
+		self.leftLayout.addWidget(self.keyword)
+		self.leftLayout.addWidget(self.operator)
+		self.leftLayout.addWidget(self.brace)
+		self.leftLayout.addWidget(self.defined)
+		self.leftLayout.addWidget(self.mself)
 
-		rightColumn = QVBoxLayout()
-		rightColumn.addWidget(self.string)
-		rightColumn.addWidget(self.mstrings)
-		rightColumn.addWidget(self.comment)
-		rightColumn.addWidget(self.numbers)
-		rightColumn.addWidget(self.erk)
+		self.rightColumn = QVBoxLayout()
+		self.rightColumn.addWidget(self.string)
+		self.rightColumn.addWidget(self.mstrings)
+		self.rightColumn.addWidget(self.comment)
+		self.rightColumn.addWidget(self.numbers)
+		self.rightColumn.addWidget(self.erk)
 		
-		columns = QHBoxLayout()
-		columns.addLayout(leftLayout)
-		columns.addLayout(rightColumn)
+		self.columns = QHBoxLayout()
+		self.columns.addLayout(self.leftLayout)
+		self.columns.addLayout(self.rightColumn)
 
-		setApply = QPushButton("Apply")
-		setApply.clicked.connect(self.apply)
+		self.applyButton = QPushButton("Apply")
+		self.applyButton.clicked.connect(self.apply)
 
-		setSave = QPushButton("Apply + Save")
-		setSave.clicked.connect(self.applySave)
+		self.saveAndApplyButton = QPushButton("Apply + Save")
+		self.saveAndApplyButton.clicked.connect(self.applySave)
 
-		setDefault = QPushButton("Defaults")
-		setDefault.clicked.connect(self.applyDefault)
+		self.setDefaultButton = QPushButton("Defaults")
+		self.setDefaultButton.clicked.connect(self.applyDefault)
 
-		setCancel = QPushButton("Cancel")
-		setCancel.clicked.connect(self.close)
+		self.cancelButton = QPushButton("Cancel")
+		self.cancelButton.clicked.connect(self.close)
 
 		buttonsLayout = QHBoxLayout()
-		buttonsLayout.addWidget(setApply)
-		buttonsLayout.addWidget(setSave)
-		buttonsLayout.addWidget(setDefault)
-		buttonsLayout.addWidget(setCancel)
+		buttonsLayout.addWidget(self.applyButton)
+		buttonsLayout.addWidget(self.saveAndApplyButton)
+		buttonsLayout.addWidget(self.setDefaultButton)
+		buttonsLayout.addWidget(self.cancelButton)
 
-		buttonsBox = QGroupBox()
-		buttonsBox.setAlignment(Qt.AlignHCenter)
-		buttonsBox.setLayout(buttonsLayout)
+		self.buttonsBox = QGroupBox()
+		self.buttonsBox.setAlignment(Qt.AlignHCenter)
+		self.buttonsBox.setLayout(buttonsLayout)
 
-		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(columns)
-		finalLayout.addWidget(setbg)
-		finalLayout.addWidget(buttonsBox)
+		self.finalLayout = QVBoxLayout()
+		self.finalLayout.addLayout(self.columns)
+		self.finalLayout.addWidget(self.bgColorButton)
+		self.finalLayout.addWidget(self.buttonsBox)
 
-		self.setStyleSheet(f'color: {regtext}; background-color: {self.bgcolor};')
+		self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
 
-		self.setLayout(finalLayout)
+		self.setLayout(self.finalLayout)
 		

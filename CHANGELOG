@@ -27,6 +27,7 @@ Version 0.830
 	* Updated the plugin documentation to reflect new editor/client changes
 	* Syntax highlight coloring can now be edited in the editor
 	* Reworked the editor's "settings" menu
+	* Bugfix: fixed some coloring errors in the highlight colors dialog
 
 Version 0.822
 	* First version with Linux support
