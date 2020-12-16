@@ -49,17 +49,23 @@ class ColorPick(QWidget):
 			self.color = self.ncolor
 			self.exampleText.setStyleSheet(f'color: {self.color};')
 
+			if self.update:
+				self.parent.regtext = self.ncolor
+				self.parent.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.parent.bgcolor};')
+
 
 	def goDefault(self):
 		self.color = self.default
 		self.exampleText.setStyleSheet(f'color: {self.default};')
 
-	def __init__(self,name,text,color,default,parent=None):
+	def __init__(self,name,text,color,default,do_update=False,parent=None):
 		super(ColorPick,self).__init__(parent)
 
 		self.name = name
 		self.color = color
 		self.default = default
+		self.parent = parent
+		self.update = do_update
 
 		self.exampleText = QLabel(f"{text}")
 		self.exampleText.setStyleSheet(f'color: {self.color};')
@@ -84,14 +90,7 @@ class Dialog(QDialog):
 			self.bgcolor = self.ncolor
 			#self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
 
-			c = tuple(int(self.bgcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
-			luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-			luma = luma*100
-
-			if luma>=40:
-				self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
-			else:
-				self.setStyleSheet(f'color: #ffffff; background-color: {self.bgcolor};')
+			self.setStyleSheet(f'color: {self.regtext}; background-color: {self.bgcolor};')
 
 	def buildStyle(self):
 
@@ -135,6 +134,7 @@ class Dialog(QDialog):
 		self.plaintext.goDefault()
 
 		self.bgcolor = '#ffffff'
+		self.regtext = '#000000'
 		self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
 
 	def apply(self):
@@ -179,7 +179,7 @@ class Dialog(QDialog):
 		smself = 'black'
 		snum = 'brown'
 		sserk = '#0212b6'
-		regtext = 'black'
+		self.regtext = 'black'
 		self.bgcolor = '#ffffff'
 
 
@@ -236,17 +236,17 @@ class Dialog(QDialog):
 					self.bgcolor = val
 
 
-		self.keyword = ColorPick('keyword','Keywords',skey,'blue')
-		self.operator = ColorPick('operator','Operators',soper,'red')
-		self.brace = ColorPick('brace','Braces',sbrac,'darkGray')
-		self.defined = ColorPick('defined','Defines',sdef,'black')
-		self.string = ColorPick('string','Strings',sstring,'magenta')
-		self.mstrings = ColorPick('multiline-strings','Multiline Strings',smstring,'darkMagenta')
-		self.comment = ColorPick('comment','Comments',scom,'darkGreen')
-		self.mself = ColorPick('self','Self',smself,'black')
-		self.numbers = ColorPick('numbers','Numbers',snum,'brown')
-		self.erk = ColorPick('erk','Erk Specific',sserk,'#0212b6')
-		self.plaintext = ColorPick('color','Text',regtext,'black')
+		self.keyword = ColorPick('keyword','Keywords',skey,'blue',False,self)
+		self.operator = ColorPick('operator','Operators',soper,'red',False,self)
+		self.brace = ColorPick('brace','Braces',sbrac,'darkGray',False,self)
+		self.defined = ColorPick('defined','Defines',sdef,'black',False,self)
+		self.string = ColorPick('string','Strings',sstring,'magenta',False,self)
+		self.mstrings = ColorPick('multiline-strings','Multiline Strings',smstring,'darkMagenta',False,self)
+		self.comment = ColorPick('comment','Comments',scom,'darkGreen',False,self)
+		self.mself = ColorPick('self','Self',smself,'black',False,self)
+		self.numbers = ColorPick('numbers','Numbers',snum,'brown',False,self)
+		self.erk = ColorPick('erk','Erk Specific',sserk,'#0212b6',False,self)
+		self.plaintext = ColorPick('color','Text',self.regtext,'black',True,self)
 
 		self.bgColorButton = QPushButton("Set background color")
 		self.bgColorButton.clicked.connect(self.getBg)
@@ -297,7 +297,7 @@ class Dialog(QDialog):
 		self.finalLayout.addWidget(self.bgColorButton)
 		self.finalLayout.addWidget(self.buttonsBox)
 
-		self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
+		self.setStyleSheet(f'color: {self.regtext}; background-color: {self.bgcolor};')
 
 		self.setLayout(self.finalLayout)
 		
