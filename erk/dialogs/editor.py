@@ -1284,7 +1284,11 @@ STYLES = {
 	'erk': format('#0212b6','bi'),
 }
 
-def load_style_settings(self,styles):
+CURRENT_LINE_HIGHLIGHT = QColor()
+CURRENT_LINE_HIGHLIGHT.setNamedColor('yellow')
+
+def load_style_settings(self,styles):	
+
 	color = '#000000'
 	background = '#ffffff'
 	s = styles['editor']
@@ -1327,7 +1331,13 @@ def load_style_settings(self,styles):
 			if l[0].lower()=='erk':
 				STYLES['erk'] =format(l[1].strip(),'bi')
 
+			if l[0].lower()=='current':
+				global CURRENT_LINE_HIGHLIGHT
+				CURRENT_LINE_HIGHLIGHT = QColor()
+				CURRENT_LINE_HIGHLIGHT.setNamedColor(l[1].strip())
+
 	self.editor.setStyleSheet(f"color: {color}; background-color: {background}")
+
 	self.highlight = PythonHighlighter(self.editor.document())
 	self.highlight.rehighlight()
 
@@ -1588,7 +1598,11 @@ class QCodeEditor(QPlainTextEdit):
 		extraSelections = []
 		if not self.isReadOnly():
 			selection = QTextEdit.ExtraSelection()
-			lineColor = QColor(Qt.yellow).lighter(160)
+
+			# CURRENT_LINE_HIGHLIGHT
+			lineColor = CURRENT_LINE_HIGHLIGHT
+			# lineColor = QColor(Qt.yellow).lighter(160)
+
 			selection.format.setBackground(lineColor)
 			selection.format.setProperty(QTextFormat.FullWidthSelection, True)
 			selection.cursor = self.textCursor()

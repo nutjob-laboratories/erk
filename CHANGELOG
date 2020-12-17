@@ -28,6 +28,8 @@ Version 0.830
 	* Syntax highlight coloring can now be edited in the editor
 	* Reworked the editor's "settings" menu
 	* Bugfix: fixed some coloring errors in the highlight colors dialog
+	* Added the ability to edit the background color of the current line in the color dialog
+	* Added help text to the color dialog
 
 Version 0.822
 	* First version with Linux support

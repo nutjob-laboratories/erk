@@ -38,6 +38,45 @@ from ..resources import *
 from ..files import *
 from .. import textformat
 
+class BackgroundPick(QWidget):
+
+	def refresh(self):
+		self.exampleText.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.color};')
+
+	def goDefault(self):
+		self.color = self.default
+		self.exampleText.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.default};')
+
+	def getColor(self):
+		self.newcolor = QColorDialog.getColor(QColor(self.color))
+
+		if self.newcolor.isValid():
+			self.ncolor = self.newcolor.name()
+
+			self.color = self.ncolor
+			self.exampleText.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.color};')
+
+	def __init__(self,name,text,color,default,parent=None):
+		super(BackgroundPick,self).__init__(parent)
+
+		self.name = name
+		self.color = color
+		self.default = default
+		self.parent = parent
+		self.text = text
+
+		self.exampleText = QLabel(f"{self.text}")
+		self.exampleText.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.color};')
+
+		self.setColor = QPushButton("Color")
+		self.setColor.clicked.connect(self.getColor)
+
+		self.exLayout = QHBoxLayout()
+		self.exLayout.addWidget(self.exampleText)
+		self.exLayout.addWidget(self.setColor)
+
+		self.setLayout(self.exLayout)
+
 class ColorPick(QWidget):
 
 	def getColor(self):
@@ -53,12 +92,15 @@ class ColorPick(QWidget):
 				self.parent.regtext = self.ncolor
 				self.parent.setStyleSheet(f'color: {self.parent.regtext}; background-color: {self.parent.bgcolor};')
 
+			if self.wupdate!=None:
+				self.wupdate.refresh()
+
 
 	def goDefault(self):
 		self.color = self.default
 		self.exampleText.setStyleSheet(f'color: {self.default};')
 
-	def __init__(self,name,text,color,default,do_update=False,parent=None):
+	def __init__(self,name,text,color,default,do_update=False,parent=None,wupdate=None):
 		super(ColorPick,self).__init__(parent)
 
 		self.name = name
@@ -66,6 +108,7 @@ class ColorPick(QWidget):
 		self.default = default
 		self.parent = parent
 		self.update = do_update
+		self.wupdate = wupdate
 
 		self.exampleText = QLabel(f"{text}")
 		self.exampleText.setStyleSheet(f'color: {self.color};')
@@ -92,6 +135,8 @@ class Dialog(QDialog):
 
 			self.setStyleSheet(f'color: {self.regtext}; background-color: {self.bgcolor};')
 
+			self.selcolor.refresh()
+
 	def buildStyle(self):
 
 		styles = self.parent.style
@@ -110,6 +155,7 @@ class Dialog(QDialog):
 			{self.mself.name}: {self.mself.color};
 			{self.numbers.name}: {self.numbers.color};
 			{self.erk.name}: {self.erk.color};
+			{self.selcolor.name}: {self.selcolor.color};
 		'''
 
 		styles['editor'] = styles['editor'].replace("\n","")
@@ -132,10 +178,14 @@ class Dialog(QDialog):
 		self.numbers.goDefault()
 		self.erk.goDefault()
 		self.plaintext.goDefault()
+		self.selcolor.goDefault()
 
 		self.bgcolor = '#ffffff'
 		self.regtext = '#000000'
+		self.bgcolor = '#ffffff'
 		self.setStyleSheet(f'color: #000000; background-color: {self.bgcolor};')
+
+		self.selcolor.refresh()
 
 	def apply(self):
 		
@@ -172,6 +222,8 @@ class Dialog(QDialog):
 		self.regtext = 'black'
 		self.bgcolor = '#ffffff'
 
+		self.currentcolor = '#fff397'
+
 
 		self.setWindowTitle("Highlight colors")
 		self.setWindowIcon(QIcon(FORMAT_ICON))
@@ -188,6 +240,8 @@ class Dialog(QDialog):
 				key = str(line[0])
 				val = str(line[1])
 
+				if key.lower()=='current':
+					self.currentcolor = val
 
 				if key.lower()=='keyword':
 					skey = val
@@ -220,7 +274,7 @@ class Dialog(QDialog):
 					sserk = val
 
 				if key.lower()=='color':
-					regtext = val
+					self.regtext = val
 
 				if key.lower()=='background-color':
 					self.bgcolor = val
@@ -236,9 +290,14 @@ class Dialog(QDialog):
 		self.mself = ColorPick('self','Self',smself,'black',False,self)
 		self.numbers = ColorPick('numbers','Numbers',snum,'brown',False,self)
 		self.erk = ColorPick('erk','Erk Specific',sserk,'#0212b6',False,self)
-		self.plaintext = ColorPick('color','Text',self.regtext,'black',True,self)
 
-		self.bgColorButton = QPushButton("Set background color")
+		self.selcolor = BackgroundPick('current','Current line',self.currentcolor,'#fff397',self)
+
+		self.plaintext = ColorPick('color','Text',self.regtext,'black',True,self,self.selcolor)
+
+		
+
+		self.bgColorButton = QPushButton("Set document background color")
 		self.bgColorButton.clicked.connect(self.getBg)
 
 		self.leftLayout = QVBoxLayout()
@@ -255,6 +314,7 @@ class Dialog(QDialog):
 		self.rightColumn.addWidget(self.comment)
 		self.rightColumn.addWidget(self.numbers)
 		self.rightColumn.addWidget(self.erk)
+		# self.rightColumn.addWidget(self.selcolor)
 		
 		self.columns = QHBoxLayout()
 		self.columns.addLayout(self.leftLayout)
@@ -283,8 +343,21 @@ class Dialog(QDialog):
 		self.buttonsBox.setLayout(buttonsLayout)
 
 		self.finalLayout = QVBoxLayout()
-		self.finalLayout.addLayout(self.columns)
+
+		self.desc = QLabel('<center><small><i>The text and background colors of this dialog<br>will be changed to match the current settings</i></small></center>')
+		self.finalLayout.addWidget(self.desc)
+
 		self.finalLayout.addWidget(self.bgColorButton)
+		self.finalLayout.addLayout(self.columns)
+		
+
+		self.finalLayout.addWidget(self.selcolor)
+		self.desc = QLabel('<center><small><i>If the current line highlight color is changed, <br>the editor must be restarted to use the new color</i></small></center>')
+		self.finalLayout.addWidget(self.desc)
+
+		
+
+
 		self.finalLayout.addWidget(self.buttonsBox)
 
 		self.setStyleSheet(f'color: {self.regtext}; background-color: {self.bgcolor};')
