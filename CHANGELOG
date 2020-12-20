@@ -40,6 +40,7 @@ Version 0.830
 	* Added a new style for plugin-generated messages named "plugin"
 	* Added the new style to the text formatting dialog
 	* Incomplete style files will now be patched with default style settings
+	* Changed the header attached to every generated style file with a small ASCII logo and the URL for the client repository
 
 Version 0.822
 	* First version with Linux support

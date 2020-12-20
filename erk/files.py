@@ -205,12 +205,20 @@ def save_user(user,filename=USER_FILE):
 
 def write_style_file(style,filename=STYLE_FILE):
 	if filename==None: filename=STYLE_FILE
-	output = '''/*
+	output = f'''/*
+\t ___      _   
+\t|__ \ _ _| |__
+\t/ _  | '_| / /
+\t\___/|_| |_\_\\
+
+\t{OFFICIAL_REPOSITORY}
+
 \tThis file uses a sub-set of CSS used by Qt called \"QSS\"
 \thttps://doc.qt.io/qt-5/stylesheet-syntax.html
 
-\tIt is generated and maintained by the Erk IRC Client
+\tThis file is generated and maintained by the Erk IRC Client
 \tPlease don't edit manually!
+
 */\n\n'''
 
 	for key in style:
