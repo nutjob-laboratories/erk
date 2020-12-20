@@ -294,6 +294,10 @@ class Dialog(QDialog):
 		self.networkURL.setAlignment(Qt.AlignCenter)
 		self.networkURL.setOpenExternalLinks(True)
 
+		f = self.networkURL.font()
+		f.setBold(True)
+		self.networkURL.setFont(f)
+
 		f = self.connType.font()
 		f.setBold(False)
 		self.connType.setFont(f)
@@ -466,8 +470,19 @@ class Dialog(QDialog):
 		self.reconnect = QCheckBox("Automatic reconnect",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
+		# SMALLER_CHECKBOX_SIZE = '15'
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		SMALLER_CHECKBOX_SIZE = fheight-8
+
+
+		self.reconnect.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
+
 		self.failrecon = QCheckBox("Reconnect on failure",self)
 		self.failrecon.stateChanged.connect(self.clickFailrecon)
+
+		self.failrecon.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
 
 		if self.user_info["failreconnect"]:
 			self.failrecon.toggle()
@@ -496,15 +511,51 @@ class Dialog(QDialog):
 			self.DIALOG_CONNECT_VIA_SSL = False
 			self.ssl.setEnabled(False)
 
-		sslLayout = QHBoxLayout()
-		sslLayout.addStretch()
+		# sslLayout = QHBoxLayout()
+		sslLayout = QVBoxLayout()
+		#sslLayout.addStretch()
 		sslLayout.addWidget(self.ssl)
+		sslLayout.addStretch()
+
+		self.history = QCheckBox("Save server history",self)
+		self.history.stateChanged.connect(self.clickHistory)
+
+		self.history.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
+
+		if self.user_info["save_history"]:
+			self.history.toggle()
+		
 
 		serverTabLayout = QVBoxLayout()
 		serverTabLayout.addStretch()
 		serverTabLayout.addLayout(serverLayout)
 		serverTabLayout.addLayout(sslLayout)
-		serverTabLayout.addStretch()
+		#serverTabLayout.addStretch()
+
+		serverConnectOptions = QVBoxLayout()
+		serverConnectOptions.addWidget(self.reconnect)
+		serverConnectOptions.addWidget(self.failrecon)
+		# serverConnectOptions.setAlignment(Qt.AlignRight)
+
+		hisLayout = QVBoxLayout()
+		hisLayout.addWidget(self.history)
+		hisLayout.addStretch()
+
+		allSetLay = QHBoxLayout()
+		allSetLay.addLayout(serverConnectOptions)
+		allSetLay.addLayout(hisLayout)
+
+		# column2 = QHBoxLayout()
+		# column2.addLayout(serverConnectOptions)
+		# column2.addWidget(self.history)
+
+		finConnectOptions = QHBoxLayout()
+		finConnectOptions.addLayout(allSetLay)
+		finConnectOptions.setAlignment(Qt.AlignLeft)
+		finConnectOptions.addStretch()
+
+		# serverTabLayout.addLayout(serverConnectOptions)
+		serverTabLayout.addLayout(finConnectOptions)
 
 		serverTabCenter = QHBoxLayout()
 		serverTabCenter.addStretch()
@@ -564,12 +615,13 @@ class Dialog(QDialog):
 			self.do_autojoin.toggle()
 
 		self.autoChannels = QListWidget(self)
-		self.autoChannels.setMaximumHeight(100)
+		# self.autoChannels.setMaximumHeight(100)
+		self.autoChannels.setMaximumHeight(125)
 
-		self.addChannelButton = QPushButton("+")
+		self.addChannelButton = QPushButton("Add channel")
 		self.addChannelButton.clicked.connect(self.buttonAdd)
 
-		self.removeChannelButton = QPushButton("-")
+		self.removeChannelButton = QPushButton("Remove channel")
 		self.removeChannelButton.clicked.connect(self.buttonRemove)
 
 		buttonLayout = QHBoxLayout()
@@ -577,10 +629,25 @@ class Dialog(QDialog):
 		buttonLayout.addWidget(self.addChannelButton)
 		buttonLayout.addWidget(self.removeChannelButton)
 
+		
+		self.chantabLabel = QLabel("<center>Channels to auto-join</center>")
+
+
 		autoJoinLayout = QVBoxLayout()
-		# autoJoinLayout.addWidget(self.do_autojoin)
+		autoJoinLayout.addWidget(self.chantabLabel)
 		autoJoinLayout.addWidget(self.autoChannels)
 		autoJoinLayout.addLayout(buttonLayout)
+		# autoJoinLayout.addWidget(self.do_autojoin)
+
+		autoJoinCheckbox = QHBoxLayout()
+		autoJoinCheckbox.addWidget(self.do_autojoin)
+		autoJoinCheckbox.setAlignment(Qt.AlignRight)
+
+		autoJoinLayout.addStretch()
+
+		autoJoinLayout.addLayout(autoJoinCheckbox)
+
+		autoJoinLayout.addStretch()
 
 		self.channels_tab.setLayout(autoJoinLayout)
 
@@ -602,30 +669,34 @@ class Dialog(QDialog):
 
 		# CHANNELS TAB
 
-		self.history = QCheckBox("Save server history",self)
-		self.history.stateChanged.connect(self.clickHistory)
-
-		if self.user_info["save_history"]:
-			self.history.toggle()
+		
 
 		# USER INFO END
 
 		vLayout = QVBoxLayout()
 		vLayout.addWidget(self.tabs)
 
-		c1 = QVBoxLayout()
-		c1.addWidget(self.reconnect)
-		c1.addWidget(self.failrecon)
+		#c1 = QVBoxLayout()
+		#c1.addWidget(self.reconnect)
+		#c1.addWidget(self.failrecon)
 
-		c2 = QVBoxLayout()
-		c2.addWidget(self.do_autojoin)
-		c2.addWidget(self.history)
+		#c2 = QVBoxLayout()
+		# c2.addWidget(self.do_autojoin)
+		#c2.addWidget(self.history)
 
-		hOpts = QHBoxLayout()
-		hOpts.addLayout(c1)
-		hOpts.addLayout(c2)
+		# c2 = QHBoxLayout()
+		# c2.addLayout(finConnectOptions)
+		# serverConnectOptions.addWidget(self.history)
 
-		vLayout.addLayout(hOpts)
+		# serverConnectOptions.addWidget(self.history)
+
+		
+
+		#hOpts = QHBoxLayout()
+		#hOpts.addLayout(c1)
+		#hOpts.addLayout(c2)
+
+		#vLayout.addLayout(hOpts)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
