@@ -364,7 +364,7 @@ class Dialog(QDialog):
 		self.styles['hyperlink'] = self.linkwid.exportQss()
 		self.styles['self'] = self.selfwid.exportQss()
 		self.styles['username'] = self.userwid.exportQss()
-		self.styles['notice'] = self.userwid.exportQss()
+		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
 
 		textformat.STYLES = self.styles
@@ -383,7 +383,7 @@ class Dialog(QDialog):
 		self.styles['hyperlink'] = self.linkwid.exportQss()
 		self.styles['self'] = self.selfwid.exportQss()
 		self.styles['username'] = self.userwid.exportQss()
-		self.styles['notice'] = self.userwid.exportQss()
+		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
 
 		textformat.STYLES = self.styles
@@ -404,7 +404,7 @@ class Dialog(QDialog):
 		self.linkwid.doDefault()
 		self.selfwid.doDefault()
 		self.userwid.doDefault()
-		self.userwid.doDefault()
+		self.noticewid.doDefault()
 		self.allText.doDefault()
 
 	def __init__(self,parent=None):
