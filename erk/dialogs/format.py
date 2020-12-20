@@ -478,10 +478,12 @@ class Dialog(QDialog):
 		usersaLayout.addWidget(self.selfwid)
 		usersaLayout.addWidget(self.userwid)
 		usersaLayout.addWidget(self.noticewid)
+		usersaLayout.addStretch()
 
 		chatLayout = QVBoxLayout()
 		chatLayout.addWidget(self.actwid)
 		chatLayout.addWidget(self.linkwid)
+		chatLayout.addStretch()
 
 		systemLayout = QVBoxLayout()
 		systemLayout.addWidget(self.syswid)
