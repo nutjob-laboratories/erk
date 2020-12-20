@@ -494,38 +494,15 @@ class Dialog(QDialog):
 		self.chat_tab.setLayout(chatLayout)
 		self.system_tab.setLayout(systemLayout)
 
-
-		# row_3 = QHBoxLayout()
-		# row_3.addWidget(self.syswid)
-		# row_3.addWidget(self.actwid)
-
-		# row_1 = QHBoxLayout()
-		# row_1.addWidget(self.selfwid)
-		# row_1.addWidget(self.userwid)
-
-		# row_4 = QHBoxLayout()
-		# row_4.addWidget(self.errwid)
-		# row_4.addWidget(self.linkwid)
-
-		# row_2 = QHBoxLayout()
-		# row_2.addWidget(self.noticewid)
-		# row_2.addWidget(self.motdwid)
-
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
-
-		# bothColumns = QVBoxLayout()
-		# bothColumns.addLayout(row_1)
-		# bothColumns.addLayout(row_2)
-		# bothColumns.addLayout(row_3)
-		# bothColumns.addLayout(row_4)
 
 		self.buttonApply = QPushButton("Apply")
 		self.buttonApply.clicked.connect(self.doApply)
 
-		self.buttonApplySave = QPushButton("Apply + Save")
+		self.buttonApplySave = QPushButton("Save")
 		self.buttonApplySave.clicked.connect(self.doApplySave)
 
-		self.buttonDefault = QPushButton("Set Defaults")
+		self.buttonDefault = QPushButton("Set all to default")
 		self.buttonDefault.clicked.connect(self.doDefaults)
 
 		self.buttonCancel = QPushButton("Cancel")
