@@ -295,8 +295,6 @@ class Dialog(QDialog):
 
 		self.plaintext = ColorPick('color','Text',self.regtext,'black',True,self,self.selcolor)
 
-		
-
 		self.bgColorButton = QPushButton("Set document background color")
 		self.bgColorButton.clicked.connect(self.getBg)
 
@@ -354,9 +352,6 @@ class Dialog(QDialog):
 		self.finalLayout.addWidget(self.selcolor)
 		self.desc = QLabel('<center><small><i>If the current line highlight color is changed, <br>the editor must be restarted to use the new color</i></small></center>')
 		self.finalLayout.addWidget(self.desc)
-
-		
-
 
 		self.finalLayout.addWidget(self.buttonsBox)
 
