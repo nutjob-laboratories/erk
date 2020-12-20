@@ -101,8 +101,7 @@ class AllStyler(QWidget):
 				if key.lower()=='background-color':
 					self.background_color = value
 
-
-	def __init__(self,name,qss,default,parent=None):
+	def __init__(self,name,qss,default,funcs_to_update,parent=None):
 		super(AllStyler,self).__init__(parent)
 		self.name = name
 		self.qss = qss 
@@ -117,7 +116,7 @@ class AllStyler(QWidget):
 		self.first_background = self.background_color
 
 		# self.example = QLabel("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor<br>incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud")
-		self.example = QLabel("This is an example of chat text, with the background color of all text displays")
+		self.example = QLabel("This is an example of chat text, <br>with the background color of all text displays")
 		self.example.setStyleSheet(self.qss)
 
 		self.setColor = QPushButton("Text")
@@ -155,7 +154,7 @@ class AllStyler(QWidget):
 		controlLayout.addWidget(self.setBg)
 		controlLayout.addWidget(self.setDefault)
 		controlLayout.addWidget(self.setReset)
-		controlLayout.setAlignment(Qt.AlignLeft)
+		controlLayout.setAlignment(Qt.AlignRight)
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(self.example)
@@ -181,6 +180,8 @@ class TextStyler(QWidget):
 			gcode = gcode + ' font-style: italic;'
 		else:
 			gcode = gcode + ' font-style: normal;'
+
+		gcode = gcode + f' background-color: {self.bgcolor}'
 		#if self.underline: gcode = gcode + ' text-decoration: underline;'
 
 		self.qss = gcode
@@ -229,7 +230,6 @@ class TextStyler(QWidget):
 				self.setItalic.setCheckState(Qt.Checked)
 			else:
 				self.setItalic.setCheckState(Qt.Unchecked)
-
 
 	def buttonColor(self):
 
@@ -293,6 +293,7 @@ class TextStyler(QWidget):
 		self.bold = False
 		self.italic = False
 		self.underline = underline
+		self.bgcolor = None
 
 		self.parseQss()
 
@@ -305,6 +306,8 @@ class TextStyler(QWidget):
 			self.example = QLabel(f"<u>{self.text}</u>")
 		else:
 			self.example = QLabel(f"{self.text}")
+
+		#self.parseQss()
 		self.example.setStyleSheet(self.qss)
 
 		self.setColor = QPushButton("")
@@ -433,6 +436,7 @@ class Dialog(QDialog):
 		self.allText.doDefault()
 		self.motdwid.doDefault()
 
+
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
 
@@ -458,29 +462,60 @@ class Dialog(QDialog):
 		self.motdwid = TextStyler('motd','Message of the Day',self.styles['motd'],self.default_styles['motd'],True,False,self)
 
 
-		row_3 = QHBoxLayout()
-		row_3.addWidget(self.syswid)
-		row_3.addWidget(self.actwid)
+		self.tabs = QTabWidget()
+		self.user_tab = QWidget()
+		self.chat_tab = QWidget()
+		self.system_tab = QWidget()
 
-		row_1 = QHBoxLayout()
-		row_1.addWidget(self.selfwid)
-		row_1.addWidget(self.userwid)
+		mbcolor = self.palette().color(QPalette.Window).name()
+		self.tabs.setStyleSheet(f'background-color: {mbcolor}')
 
-		row_4 = QHBoxLayout()
-		row_4.addWidget(self.errwid)
-		row_4.addWidget(self.linkwid)
+		self.tabs.addTab(self.user_tab,"Users")
+		self.tabs.addTab(self.chat_tab,"Chat")
+		self.tabs.addTab(self.system_tab,"System")
 
-		row_2 = QHBoxLayout()
-		row_2.addWidget(self.noticewid)
-		row_2.addWidget(self.motdwid)
+		usersaLayout = QVBoxLayout()
+		usersaLayout.addWidget(self.selfwid)
+		usersaLayout.addWidget(self.userwid)
+		usersaLayout.addWidget(self.noticewid)
+
+		chatLayout = QVBoxLayout()
+		chatLayout.addWidget(self.actwid)
+		chatLayout.addWidget(self.linkwid)
+
+		systemLayout = QVBoxLayout()
+		systemLayout.addWidget(self.syswid)
+		systemLayout.addWidget(self.errwid)
+		systemLayout.addWidget(self.motdwid)
+
+		self.user_tab.setLayout(usersaLayout)
+		self.chat_tab.setLayout(chatLayout)
+		self.system_tab.setLayout(systemLayout)
+
+
+		# row_3 = QHBoxLayout()
+		# row_3.addWidget(self.syswid)
+		# row_3.addWidget(self.actwid)
+
+		# row_1 = QHBoxLayout()
+		# row_1.addWidget(self.selfwid)
+		# row_1.addWidget(self.userwid)
+
+		# row_4 = QHBoxLayout()
+		# row_4.addWidget(self.errwid)
+		# row_4.addWidget(self.linkwid)
+
+		# row_2 = QHBoxLayout()
+		# row_2.addWidget(self.noticewid)
+		# row_2.addWidget(self.motdwid)
 
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
 
-		bothColumns = QVBoxLayout()
-		bothColumns.addLayout(row_1)
-		bothColumns.addLayout(row_2)
-		bothColumns.addLayout(row_3)
-		bothColumns.addLayout(row_4)
+		# bothColumns = QVBoxLayout()
+		# bothColumns.addLayout(row_1)
+		# bothColumns.addLayout(row_2)
+		# bothColumns.addLayout(row_3)
+		# bothColumns.addLayout(row_4)
 
 		self.buttonApply = QPushButton("Apply")
 		self.buttonApply.clicked.connect(self.doApply)
@@ -501,7 +536,8 @@ class Dialog(QDialog):
 		buttons.addWidget(self.buttonCancel)
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(bothColumns)
+		#finalLayout.addLayout(bothColumns)
+		finalLayout.addWidget(self.tabs)
 		finalLayout.addWidget(self.allText)
 		finalLayout.addLayout(buttons)
 

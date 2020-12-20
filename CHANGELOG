@@ -35,6 +35,7 @@ Version 0.830
 	* Bugfix: added a MOTD style type (which has been in the style file for a long time, unused)
 	* Bugfix: MOTD now used the "motd" style
 	* Cleaned up the new text format dialog, and fixed a bug where the "username" setting used the "system" style
+	* Added tabs to the text format dialog, and cleaned up some stuff
 
 Version 0.822
 	* First version with Linux support
