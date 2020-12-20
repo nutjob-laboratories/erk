@@ -258,10 +258,10 @@ def render_message(message,client=None):
 		style = STYLES["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["message"]
+		style = STYLES["system"]
 	elif message.type==PLUGIN_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["message"]
+		style = STYLES["plugin"]
 	elif message.type==DATE_MESSAGE:
 
 		if IS_BACKGROUND_LIGHT==None:

@@ -393,6 +393,7 @@ class Dialog(QDialog):
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
 		self.styles['motd'] = self.motdwid.exportQss()
+		self.styles['plugin'] = self.plugwid.exportQss()
 
 		textformat.STYLES = self.styles
 
@@ -413,6 +414,7 @@ class Dialog(QDialog):
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
 		self.styles['motd'] = self.motdwid.exportQss()
+		self.styles['plugin'] = self.plugwid.exportQss()
 
 		textformat.STYLES = self.styles
 
@@ -435,7 +437,7 @@ class Dialog(QDialog):
 		self.noticewid.doDefault()
 		self.allText.doDefault()
 		self.motdwid.doDefault()
-
+		self.plugwid.doDefault()
 
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -461,6 +463,8 @@ class Dialog(QDialog):
 
 		self.motdwid = TextStyler('motd','Message of the Day',self.styles['motd'],self.default_styles['motd'],True,False,self)
 
+		self.plugwid = TextStyler('plugin','This is a plugin-generated message',self.styles['plugin'],self.default_styles['plugin'],True,False,self)
+
 
 		self.tabs = QTabWidget()
 		self.user_tab = QWidget()
@@ -483,12 +487,13 @@ class Dialog(QDialog):
 		chatLayout = QVBoxLayout()
 		chatLayout.addWidget(self.actwid)
 		chatLayout.addWidget(self.linkwid)
+		chatLayout.addWidget(self.motdwid)
 		chatLayout.addStretch()
 
 		systemLayout = QVBoxLayout()
 		systemLayout.addWidget(self.syswid)
 		systemLayout.addWidget(self.errwid)
-		systemLayout.addWidget(self.motdwid)
+		systemLayout.addWidget(self.plugwid)
 
 		self.user_tab.setLayout(usersaLayout)
 		self.chat_tab.setLayout(chatLayout)

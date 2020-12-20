@@ -36,6 +36,9 @@ Version 0.830
 	* Bugfix: MOTD now used the "motd" style
 	* Cleaned up the new text format dialog, and fixed a bug where the "username" setting used the "system" style
 	* Added tabs to the text format dialog, and cleaned up some stuff
+	* WHOIS messages now use the "system" style
+	* Added a new style for plugin-generated messages named "plugin"
+	* Added the new style to the text formatting dialog
 
 Version 0.822
 	* First version with Linux support
