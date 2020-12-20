@@ -116,27 +116,50 @@ class AllStyler(QWidget):
 		self.first_color = self.color
 		self.first_background = self.background_color
 
-		self.example = QLabel("Lorem ipsum dolor sit amet")
+		# self.example = QLabel("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor<br>incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud")
+		self.example = QLabel("This is an example of chat text, with the background color of all text displays")
 		self.example.setStyleSheet(self.qss)
 
-		self.setColor = QPushButton("Set text color")
+		self.setColor = QPushButton("Text")
 		self.setColor.clicked.connect(self.buttonColor)
+		self.setColor.setIcon(QIcon(FORMAT_ICON))
 
-		self.setBg = QPushButton("Set background color")
+		fm = QFontMetrics(self.font())
+		br = fm.boundingRect('Text')
+		#self.setDefault.setFixedWidth(br.width()+8)
+		self.setColor.setFixedWidth(br.width()+35)
+
+		self.setBg = QPushButton("Background")
 		self.setBg.clicked.connect(self.buttonBg)
+		self.setBg.setIcon(QIcon(FORMAT_ICON))
+
+		br = fm.boundingRect('Background')
+		self.setBg.setFixedWidth(br.width()+35)
 
 		self.setDefault = QPushButton("Default")
 		self.setDefault.clicked.connect(self.buttonDefault)
 
+		br = fm.boundingRect('Default')
+		self.setDefault.setFixedWidth(br.width()+10)
+
 		self.setReset = QPushButton("Reset")
 		self.setReset.clicked.connect(self.buttonReset)
 
-		finalLayout = QHBoxLayout()
+		br = fm.boundingRect('Reset')
+		self.setReset.setFixedWidth(br.width()+10)
+
+
+
+		controlLayout = QHBoxLayout()
+		controlLayout.addWidget(self.setColor)
+		controlLayout.addWidget(self.setBg)
+		controlLayout.addWidget(self.setDefault)
+		controlLayout.addWidget(self.setReset)
+		controlLayout.setAlignment(Qt.AlignLeft)
+
+		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(self.example)
-		finalLayout.addWidget(self.setColor)
-		finalLayout.addWidget(self.setBg)
-		finalLayout.addWidget(self.setDefault)
-		finalLayout.addWidget(self.setReset)
+		finalLayout.addLayout(controlLayout)
 
 		self.setLayout(finalLayout)
 
@@ -366,6 +389,7 @@ class Dialog(QDialog):
 		self.styles['username'] = self.userwid.exportQss()
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
+		self.styles['motd'] = self.motdwid.exportQss()
 
 		textformat.STYLES = self.styles
 
@@ -385,6 +409,7 @@ class Dialog(QDialog):
 		self.styles['username'] = self.userwid.exportQss()
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
+		self.styles['motd'] = self.motdwid.exportQss()
 
 		textformat.STYLES = self.styles
 
@@ -406,6 +431,7 @@ class Dialog(QDialog):
 		self.userwid.doDefault()
 		self.noticewid.doDefault()
 		self.allText.doDefault()
+		self.motdwid.doDefault()
 
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -420,28 +446,33 @@ class Dialog(QDialog):
 		self.default_styles = get_text_format_settings(BACKUP_STYLE_FILE)
 
 		self.syswid = TextStyler('system','This is a system message',self.styles['system'],self.default_styles['system'],True,False,self)
-		self.actwid = TextStyler('action','This is a TCTP action message',self.styles['action'],self.default_styles['action'],True,False,self)
+		self.actwid = TextStyler('action','This is a CTCP action message',self.styles['action'],self.default_styles['action'],True,False,self)
 		self.errwid = TextStyler('error','This is an error message',self.styles['error'],self.default_styles['error'],True,False,self)
 
 		self.linkwid = TextStyler('hyperlink','This is an example hyperlink',self.styles['hyperlink'],self.default_styles['hyperlink'],True,True,self)
 
-		self.selfwid = TextStyler('self','Your nickname',self.styles['self'],self.default_styles['self'],False,False,self)
-		self.userwid = TextStyler('username','Other nicknames',self.styles['username'],self.default_styles['username'],False,False,self)
-		self.noticewid = TextStyler('notice','Notice nicknames',self.styles['notice'],self.default_styles['notice'],False,False,self)
+		self.selfwid = TextStyler('self','Your nickname',self.styles['self'],self.default_styles['self'],True,False,self)
+		self.userwid = TextStyler('username','Other nicknames',self.styles['username'],self.default_styles['username'],True,False,self)
+		self.noticewid = TextStyler('notice','Notice nicknames',self.styles['notice'],self.default_styles['notice'],True,False,self)
 
+		self.motdwid = TextStyler('motd','Message of the Day',self.styles['motd'],self.default_styles['motd'],True,False,self)
 
-		row_1 = QHBoxLayout()
-		row_1.addWidget(self.syswid)
-		row_1.addWidget(self.actwid)
-
-		row_2 = QHBoxLayout()
-		row_2.addWidget(self.errwid)
-		row_2.addWidget(self.linkwid)
 
 		row_3 = QHBoxLayout()
-		row_3.addWidget(self.selfwid)
-		row_3.addWidget(self.userwid)
-		row_3.addWidget(self.noticewid)
+		row_3.addWidget(self.syswid)
+		row_3.addWidget(self.actwid)
+
+		row_1 = QHBoxLayout()
+		row_1.addWidget(self.selfwid)
+		row_1.addWidget(self.userwid)
+
+		row_4 = QHBoxLayout()
+		row_4.addWidget(self.errwid)
+		row_4.addWidget(self.linkwid)
+
+		row_2 = QHBoxLayout()
+		row_2.addWidget(self.noticewid)
+		row_2.addWidget(self.motdwid)
 
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
 
@@ -449,6 +480,7 @@ class Dialog(QDialog):
 		bothColumns.addLayout(row_1)
 		bothColumns.addLayout(row_2)
 		bothColumns.addLayout(row_3)
+		bothColumns.addLayout(row_4)
 
 		self.buttonApply = QPushButton("Apply")
 		self.buttonApply.clicked.connect(self.doApply)

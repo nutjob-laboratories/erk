@@ -32,6 +32,9 @@ Version 0.830
 	* Added help text to the color dialog
 	* Rewrote the text format setting dialog to be faster, less spaghetti-like, and make more sense
 	* Added some new features to the format setting dialog
+	* Bugfix: added a MOTD style type (which has been in the style file for a long time, unused)
+	* Bugfix: MOTD now used the "motd" style
+	* Cleaned up the new text format dialog, and fixed a bug where the "username" setting used the "system" style
 
 Version 0.822
 	* First version with Linux support

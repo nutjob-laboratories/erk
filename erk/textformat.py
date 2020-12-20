@@ -279,6 +279,9 @@ def render_message(message,client=None):
 	elif message.type==PLUGIN_SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE
 		style = STYLES["system"]
+	elif message.type==MOTD_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = STYLES["motd"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)

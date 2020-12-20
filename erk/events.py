@@ -1436,7 +1436,9 @@ def motd(gui,client,motd):
 
 	if window:
 		for line in motd:
-			window.writeText( Message(SYSTEM_MESSAGE,'',line) )
+			# window.writeText( Message(SYSTEM_MESSAGE,'',line) )
+			window.writeText( Message(MOTD_MESSAGE,'',line) )
+
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
