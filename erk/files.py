@@ -205,7 +205,13 @@ def save_user(user,filename=USER_FILE):
 
 def write_style_file(style,filename=STYLE_FILE):
 	if filename==None: filename=STYLE_FILE
-	output = "/*\n\tThis file uses a sub-set of CSS used by Qt called \"QSS\"\n\thttps://doc.qt.io/qt-5/stylesheet-syntax.html\n*/\n\n"
+	output = '''/*
+\tThis file uses a sub-set of CSS used by Qt called \"QSS\"
+\thttps://doc.qt.io/qt-5/stylesheet-syntax.html
+
+\tIt is generated and maintained by the Erk IRC Client
+\tPlease don't edit manually!
+*/\n\n'''
 
 	for key in style:
 		output = output + key + " {\n"
@@ -218,6 +224,41 @@ def write_style_file(style,filename=STYLE_FILE):
 	f=open(filename, "w")
 	f.write(output)
 	f.close()
+
+def patch_style_file(filename,data):
+
+	missing = []
+
+	if not 'timestamp' in data: missing.append('timestamp')
+	if not 'username' in data: missing.append('username')
+	if not 'message' in data: missing.append('message')
+	if not 'system' in data: missing.append('system')
+	if not 'self' in data: missing.append('self')
+	if not 'action' in data: missing.append('action')
+	if not 'notice' in data: missing.append('notice')
+	if not 'hyperlink' in data: missing.append('hyperlink')
+	if not 'all' in data: missing.append('all')
+	if not 'error' in data: missing.append('error')
+	if not 'motd' in data: missing.append('motd')
+	if not 'plugin' in data: missing.append('plugin')
+	if not 'editor' in data: missing.append('editor')
+
+	# If there's no missing styles, return unpatched data
+	if len(missing)==0: return data
+
+	# Load in the backup style file
+	backup = read_style_file(BACKUP_STYLE_FILE)
+
+	# Patch the input style with backup data
+	for m in missing:
+		data[m] = backup[m]
+
+	# Save the patched style file
+	write_style_file(data,filename)
+
+	# Return the patched data
+	return data
+
 
 def read_style_file(filename=STYLE_FILE):
 
@@ -274,6 +315,10 @@ def read_style_file(filename=STYLE_FILE):
 				style[name] = comp
 			else:
 				style[name] = ''
+
+	# Check to make sure the style file is complete,
+	# and patch it with any missing data
+	style = patch_style_file(filename,style)
 
 	# Return the dict
 	return style
