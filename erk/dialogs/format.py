@@ -116,7 +116,7 @@ class AllStyler(QWidget):
 		self.first_background = self.background_color
 
 		# self.example = QLabel("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor<br>incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud")
-		self.example = QLabel("This is an example of chat text, <br>with the background color of all text displays")
+		self.example = QLabel("This is an example of chat text, with the <br>background color of all text displays")
 		self.example.setStyleSheet(self.qss)
 
 		self.setColor = QPushButton("Text")
@@ -156,9 +156,20 @@ class AllStyler(QWidget):
 		controlLayout.addWidget(self.setReset)
 		controlLayout.setAlignment(Qt.AlignRight)
 
-		finalLayout = QVBoxLayout()
-		finalLayout.addWidget(self.example)
-		finalLayout.addLayout(controlLayout)
+		allTextLayout = QVBoxLayout()
+		allTextLayout.addWidget(self.example)
+		allTextLayout.addLayout(controlLayout)
+
+		finalBox = QGroupBox()
+		finalBox.setAlignment(Qt.AlignHCenter)
+		finalBox.setLayout(allTextLayout)
+
+		finalLayout = QHBoxLayout()
+		finalLayout.addWidget(finalBox)
+
+		DMARGIN = 0
+		margins = finalLayout.contentsMargins()
+		finalLayout.setContentsMargins(margins.left(),DMARGIN,margins.right(),DMARGIN)
 
 		self.setLayout(finalLayout)
 
@@ -474,7 +485,7 @@ class Dialog(QDialog):
 		mbcolor = self.palette().color(QPalette.Window).name()
 		self.tabs.setStyleSheet(f'background-color: {mbcolor}')
 
-		self.tabs.addTab(self.user_tab,"Users")
+		self.tabs.addTab(self.user_tab,"Nicknames")
 		self.tabs.addTab(self.chat_tab,"Chat")
 		self.tabs.addTab(self.system_tab,"System")
 
@@ -519,12 +530,21 @@ class Dialog(QDialog):
 		buttons.addWidget(self.buttonDefault)
 		buttons.addWidget(self.buttonCancel)
 
+		setLayout = QVBoxLayout()
+		setLayout.addWidget(self.allText)
+		setLayout.addWidget(self.tabs)
+
+		DMARGIN = 0
+		margins = setLayout.contentsMargins()
+		setLayout.setContentsMargins(margins.left(),DMARGIN,margins.right(),DMARGIN)
+
 		finalLayout = QVBoxLayout()
-		#finalLayout.addLayout(bothColumns)
-		finalLayout.addWidget(self.tabs)
-		finalLayout.addWidget(self.allText)
+		# finalLayout.addWidget(self.allText)
+		# finalLayout.addWidget(self.tabs)
+		finalLayout.addLayout(setLayout)
 		finalLayout.addLayout(buttons)
 
+		
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
