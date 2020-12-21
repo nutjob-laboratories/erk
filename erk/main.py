@@ -385,7 +385,6 @@ class Erk(QMainWindow):
 
 		self.logdir = logdir
 
-
 		# Determine if window color is dark or light
 		mbcolor = self.palette().color(QPalette.Window).name()
 		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
@@ -396,7 +395,6 @@ class Erk(QMainWindow):
 			self.is_light_colored = True
 		else:
 			self.is_light_colored = False
-
 
 		textformat.get_text_format_settings(self.stylefile)
 

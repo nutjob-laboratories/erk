@@ -6,10 +6,44 @@ import contextlib
 
 if sys.version_info < (3, 0):
     import io  # python 2 text file encoding support
-
+    READMODE = 'rb'
+    WRITEMODE = 'wb'
     OPEN = io.open  # hijack this
+
+    def ENSURE_UNICODE(s, encoding='utf-8'):
+        if isinstance(s, str):
+            return s.decode(encoding)
+        return s
+
 else:
+    READMODE = 'rt'
+    WRITEMODE = 'wt'
     OPEN = open
+
+    def ENSURE_UNICODE(s, encoding='utf-8'):
+        if isinstance(s, bytes):
+            return s.decode(encoding)
+        return s
+
+
+@contextlib.contextmanager
+def __gzip_read(filename, mode='rb', encoding='UTF-8'):
+    """ Context manager to correctly handle the decoding of the output of \
+        the gzip file
+
+        Args:
+            filename (str): The filename to open
+            mode (str): The mode to read the data
+            encoding (str): The file encoding to use
+        Yields:
+            str: The string data from the gzip file read
+    """
+    if sys.version_info < (3, 0):
+        with gzip.open(filename, mode=mode) as fobj:
+            yield fobj.read().decode(encoding)
+    else:
+        with gzip.open(filename, mode=mode, encoding=encoding) as fobj:
+            yield fobj.read()
 
 
 @contextlib.contextmanager
@@ -24,8 +58,8 @@ def load_file(filename, encoding):
             str: The string data from the file read
     """
     try:
-        with gzip.open(filename, mode="rt") as fobj:
-            yield fobj.read()
+        with __gzip_read(filename, mode=READMODE, encoding=encoding) as data:
+            yield data
     except (OSError, IOError):
         with OPEN(filename, mode="r", encoding=encoding) as fobj:
             yield fobj.read()
@@ -42,7 +76,7 @@ def write_file(filepath, encoding, gzipped, data):
             data (str): The data to be written out
     """
     if gzipped:
-        with gzip.open(filepath, "wt") as fobj:
+        with gzip.open(filepath, WRITEMODE) as fobj:
             fobj.write(data)
     else:
         with OPEN(filepath, "w", encoding=encoding) as fobj:

@@ -44,6 +44,7 @@ Version 0.830
 	* Cleaned up the "connect" dialog to make it look a little better
 	* The "motd" style is now named "server", and is used for WHOIS messages as well as MOTD messages
 	* Changed the default color for the "server" style to a light(er) blue
+	* Updated the bundled "pyspellchecker" library from 0.4.0 to 0.5.5
 
 Version 0.822
 	* First version with Linux support
