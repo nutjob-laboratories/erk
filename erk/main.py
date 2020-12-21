@@ -578,7 +578,10 @@ class Erk(QMainWindow):
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.disconnect.triggered.connect(self.disconnect_current)
 		self.mainMenu.addAction(self.disconnect)
-		self.disconnect.setEnabled(False)
+
+		c = events.fetch_connections()
+		if len(c)==0:
+			self.disconnect.setEnabled(False)
 
 		#self.mainMenu.addSeparator()
 		insertNoTextSeparator(self,self.mainMenu)
