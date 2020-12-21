@@ -247,7 +247,7 @@ def patch_style_file(filename,data):
 	if not 'hyperlink' in data: missing.append('hyperlink')
 	if not 'all' in data: missing.append('all')
 	if not 'error' in data: missing.append('error')
-	if not 'motd' in data: missing.append('motd')
+	if not 'server' in data: missing.append('server')
 	if not 'plugin' in data: missing.append('plugin')
 	if not 'editor' in data: missing.append('editor')
 

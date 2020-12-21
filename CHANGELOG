@@ -42,6 +42,8 @@ Version 0.830
 	* Incomplete style files will now be patched with default style settings
 	* Changed the header attached to every generated style file with a small ASCII logo and the URL for the client repository
 	* Cleaned up the "connect" dialog to make it look a little better
+	* The "motd" style is now named "server", and is used for WHOIS messages as well as MOTD messages
+	* Changed the default color for the "server" style to a light(er) blue
 
 Version 0.822
 	* First version with Linux support

@@ -258,7 +258,7 @@ def render_message(message,client=None):
 		style = STYLES["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["system"]
+		style = STYLES["server"]
 	elif message.type==PLUGIN_MESSAGE:
 		output = SYSTEM_TEMPLATE
 		style = STYLES["plugin"]
@@ -281,7 +281,7 @@ def render_message(message,client=None):
 		style = STYLES["system"]
 	elif message.type==MOTD_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["motd"]
+		style = STYLES["server"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)

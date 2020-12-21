@@ -403,7 +403,7 @@ class Dialog(QDialog):
 		self.styles['username'] = self.userwid.exportQss()
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
-		self.styles['motd'] = self.motdwid.exportQss()
+		self.styles['server'] = self.motdwid.exportQss()
 		self.styles['plugin'] = self.plugwid.exportQss()
 
 		textformat.STYLES = self.styles
@@ -424,7 +424,7 @@ class Dialog(QDialog):
 		self.styles['username'] = self.userwid.exportQss()
 		self.styles['notice'] = self.noticewid.exportQss()
 		self.styles['all'] = self.allText.exportQss()
-		self.styles['motd'] = self.motdwid.exportQss()
+		self.styles['server'] = self.motdwid.exportQss()
 		self.styles['plugin'] = self.plugwid.exportQss()
 
 		textformat.STYLES = self.styles
@@ -472,7 +472,7 @@ class Dialog(QDialog):
 		self.userwid = TextStyler('username','Other nicknames',self.styles['username'],self.default_styles['username'],True,False,self)
 		self.noticewid = TextStyler('notice','Notice nicknames',self.styles['notice'],self.default_styles['notice'],True,False,self)
 
-		self.motdwid = TextStyler('motd','Message of the Day',self.styles['motd'],self.default_styles['motd'],True,False,self)
+		self.motdwid = TextStyler('server','This is a server message',self.styles['server'],self.default_styles['server'],True,False,self)
 
 		self.plugwid = TextStyler('plugin','This is a plugin-generated message',self.styles['plugin'],self.default_styles['plugin'],True,False,self)
 

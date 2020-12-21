@@ -65,9 +65,9 @@ error {
 	color: #FF0000;
 }
 
-motd {
+server {
 	font-weight: bold;
-	color: #0000FF;
+	color: #0073ad;
 }
 
 plugin {
