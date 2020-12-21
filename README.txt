@@ -123,7 +123,30 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff.
 
 **Ərk** runs on both Windows and Linux! It's being developed on Windows 10, but it's been tested (and runs great) on Debian, Ubuntu, and Mint Linux. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
 
+## How do I write an **Ərk** plugin?
+**Ərk** plugins are written in Python 3, and consist of a class that inherits from the _Plugin_ class built into **Ərk**. Here's an example plugin that says greets anyone joining a channel the client is in:
+```python
+from erk import *
+
+class Greeter(Plugin):
+
+	def __init__(self):
+		self.name = "Greeter"
+		self.description = "A greeting plugin."
+	
+	def join(self,client,channel,user):
+		nickname = user.split('!')[0]
+		client.msg(f"Welcome to {channel}, {nickname}!")
+```
+This plugin will greet anyone who joins any channel the client is in. The greeting message will be sent to the channel (and server) where the join event happened, on all servers that **Ərk** is connected to.
+
+To install this plugin, save it to a file and place it in the "plugins" directory in your **Ərk** installation directory. **Ərk** will load it automatically. Individual plugins can be disabled in the client; even if a package contains multiple plugins, you can disable any one plugin while still allowing the others to execute.
+
+For more information, check out the [documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf).
+
 ## Another IRC client? Why not use HexChat?
+
+Honestly? I wanted an IRC client that I liked using, and I wanted an IRC client that I could use in both Windows and Linux. Other than some "connects to every kind of chat network" clients, I didn't have a lot of choices. Since the only kind of chat I regularly use is IRC, I didn't care if the client could connect to Jabber, Facebook, or whatever. That left me (in my opinion) with only one choice: HexChat.
 
 HexChat is, well, aging. The last I heard, there was nobody maintaining the source. I wanted a new IRC client written in a modern, accessible language; I wanted a client that was *not* written in C or C++. I wanted a pretty, attractive client that looks like it was written in the last decade. And, moreover, I wanted a client written for the desktop; I didn't want one that runs in a web browser, or on a smartphone, or in "the cloud". I wanted a client that was open source (both free as in beer and free as in speech).  I wanted a client that ran fast, consumed resources commensurate with the task of a text-only chat protocol.  I wanted a client that wasn't limited to just text;  a client that can send and display emojis.
 
@@ -137,7 +160,7 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
 * Focuses on the chat experience (not downloading/uploading files)
 
-**Ərk** is being developed on Windows 10, but it uses no Windows-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
+**Ərk** is being developed on Windows 10 and Linux Mint, but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
 
 The other reason why I wrote **Ərk** is because I got tired of not understanding how the most popular clients did things. I wanted a client that you could configure to do _exactly_ what you wanted it to do, no more and no less. That's why **Ərk** has a ridiculous amount of configuration options. Do you want to run the client in full-screen mode, and remove the ability of users to change settings or connect to other servers (aka, "kiosk mode")? You can do that. Do you want to strip all the "pretty" off the client, and basically run it in "text only" mode? You can do that. Do you want **Ərk** to do nothing except what you tell it to do? You can do that. Almost everything in the client can be configured from within the GUI or with command-line flags.
 
@@ -171,3 +194,4 @@ Similarly, Bob's batch file looks like this:
 	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.css --logs C:\Bob_Erk\logs
 
 Alice and Bob can now use **Ərk** with their own customized settings!
+
