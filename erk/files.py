@@ -52,6 +52,10 @@ AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 
+# Script directories
+SCRIPTS_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "scripts")
+if not os.path.isdir(SCRIPTS_DIRECTORY): os.mkdir(SCRIPTS_DIRECTORY)
+
 # Log directory
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
@@ -126,6 +130,40 @@ def filterProfanityFromText(text,punc=True):
 		clean.append(word)
 	return ' '.join(clean)
 
+AUTO_SCRIPT_CACHE = {}
+
+def clear_auto_script_cache():
+	global AUTO_SCRIPT_CACHE
+	AUTO_SCRIPT_CACHE = {}
+
+def get_auto_script_name(ip,port):
+	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+
+	return scriptname
+
+def save_auto_script(ip,port,script):
+	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+
+	f=open(scriptname, "w")
+	f.write(script)
+	f.close()
+
+def load_auto_script(ip,port):
+	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+	if scriptname in AUTO_SCRIPT_CACHE: return AUTO_SCRIPT_CACHE[scriptname]
+	if os.path.isfile(scriptname):
+		f=open(scriptname, "r")
+		code = f.read()
+		f.close()
+		AUTO_SCRIPT_CACHE[scriptname] = code
+		return code
+	else:
+		return None
+
+
 def load_emoji_autocomplete():
 	EMOJI_AUTOCOMPLETE = []
 	with open(EMOJI_ALIAS_AUTOCOMPLETE_FILE,mode="r",encoding="latin-1") as fp:
@@ -166,8 +204,10 @@ def get_network_list(filename=NETWORK_FILE):
 	return servlist
 
 def patch_user(data):
-	if 'failreconnect' not in data:
+	if not 'failreconnect' in data:
 		data['failreconnect'] = True
+	if not 'script' in data:
+		data['script'] = False
 	return data
 
 def get_user(filename=USER_FILE):
@@ -195,6 +235,7 @@ def get_user(filename=USER_FILE):
 			"disabled_plugins": [],
 			"ignore": [],
 			'failreconnect': True,
+			'script': False,
 		}
 		return si
 

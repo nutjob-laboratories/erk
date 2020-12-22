@@ -37,7 +37,7 @@ class Window:
 		self.widget = widget
 
 class ConnectInfo:
-	def __init__(self,server,port,password,ssl,nick,alter,username,realname,reconnect,autojoin,failreconnect,dialog=True):
+	def __init__(self,server,port,password,ssl,nick,alter,username,realname,reconnect,autojoin,failreconnect,dialog=True,connect_script=None):
 		self.server = server
 		self.port = int(port)
 		self.password = password
@@ -50,6 +50,7 @@ class ConnectInfo:
 		self.autojoin = autojoin
 		self.failreconnect = failreconnect
 		self.dialog = dialog
+		self.do_script = connect_script
 
 SYSTEM_MESSAGE = 0
 CHAT_MESSAGE = 1

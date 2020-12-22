@@ -34,6 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+import os
+
 from ..resources import *
 from ..objects import *
 from ..files import *
@@ -117,6 +119,7 @@ class Dialog(QDialog):
 			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
 			"failreconnect": self.FAIL_RECONNECT,
+			"script": self.AUTOSCRIPT,
 		}
 		save_user(user,self.userfile)
 
@@ -125,9 +128,23 @@ class Dialog(QDialog):
 		else:
 			channels = []
 
-		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT)
+		# Autoscript
+		if self.AUTOSCRIPT:
+			script = self.scriptedit.toPlainText()
+
+			if len(script)==0: script = None
+		else:
+			script = None
+
+		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
 
 		return retval
+
+	def clickScript(self,state):
+		if state == Qt.Checked:
+			self.AUTOSCRIPT = True
+		else:
+			self.AUTOSCRIPT = False
 
 	def clickHistory(self,state):
 		if state == Qt.Checked:
@@ -231,6 +248,18 @@ class Dialog(QDialog):
 		else:
 			self.ssl.setCheckState(Qt.Unchecked)
 
+	def serverEntered(self):
+		serv = self.host.text()
+		port = self.port.text()
+
+		code = load_auto_script(serv,port)
+		if code!=None:
+			self.scriptedit.setText(code)
+		else:
+			self.scriptedit.clear()
+
+		self.scripttablabel.setText(f"<small><center>Execute these commands on connection to {serv}:{str(port)}</center></small>")
+
 
 	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -253,6 +282,7 @@ class Dialog(QDialog):
 		self.AUTOJOIN_CHANNELS = False
 		self.SAVE_HISTORY = False
 		self.FAIL_RECONNECT = True
+		self.AUTOSCRIPT = False
 
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
@@ -262,17 +292,22 @@ class Dialog(QDialog):
 		self.tabs = QTabWidget()
 		self.network_tab = QWidget()
 		self.server_tab = QWidget()
-		self.user_tab = QWidget()
+		#self.user_tab = QWidget()
 		self.channels_tab = QWidget()
+
+		# self.script_tab = QWidget()
 
 		self.tabs.addTab(self.server_tab,"Server")
 		self.tabs.addTab(self.network_tab,"Networks")
-		self.tabs.addTab(self.user_tab,"User")
-		self.tabs.addTab(self.channels_tab,"Channels")
+		#self.tabs.addTab(self.user_tab,"User")
+		self.tabs.addTab(self.channels_tab,"Options")
+
+		#self.tabs.addTab(self.script_tab,"Script")
 
 		self.tabs.setStyleSheet("""
 			QTabWidget::tab-bar { alignment: center; font: bold; }
 			""")
+
 
 		f = self.tabs.font()
 		f.setBold(True)
@@ -424,10 +459,14 @@ class Dialog(QDialog):
 		fstoreLayout.addWidget(QLabel(' '))
 		fstoreLayout.addWidget(self.description)
 		#fstoreLayout.addStretch()
+
+		# MOVING THIS TO MAIN TAB
 		fstoreLayout.addWidget(self.servers)
+
 		fstoreLayout.addStretch()
 		#fstoreLayout.addWidget(QHLine())
 		fstoreLayout.addWidget(QLabel(' '))
+
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
@@ -448,6 +487,9 @@ class Dialog(QDialog):
 		self.port = QLineEdit(self.user_info["last_port"])
 		self.password = QLineEdit(self.user_info["last_password"])
 		self.password.setEchoMode(QLineEdit.Password)
+
+		self.host.textChanged.connect(self.serverEntered)
+		self.port.textChanged.connect(self.serverEntered)
 
 		hostl = QLabel("Host")
 		f = hostl.font()
@@ -474,7 +516,9 @@ class Dialog(QDialog):
 
 		fm = QFontMetrics(self.font())
 		fheight = fm.height()
-		SMALLER_CHECKBOX_SIZE = fheight-8
+		#SMALLER_CHECKBOX_SIZE = fheight-8
+
+		SMALLER_CHECKBOX_SIZE = fheight * 0.50
 
 
 		self.reconnect.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
@@ -511,9 +555,9 @@ class Dialog(QDialog):
 			self.DIALOG_CONNECT_VIA_SSL = False
 			self.ssl.setEnabled(False)
 
-		# sslLayout = QHBoxLayout()
-		sslLayout = QVBoxLayout()
-		#sslLayout.addStretch()
+		sslLayout = QHBoxLayout()
+		#sslLayout = QVBoxLayout()
+		sslLayout.addStretch()
 		sslLayout.addWidget(self.ssl)
 		sslLayout.addStretch()
 
@@ -526,11 +570,19 @@ class Dialog(QDialog):
 			self.history.toggle()
 		
 
+		centServ = QHBoxLayout()
+		centServ.addStretch()
+		centServ.addLayout(serverLayout)
+		centServ.addStretch()
+
 		serverTabLayout = QVBoxLayout()
 		serverTabLayout.addStretch()
-		serverTabLayout.addLayout(serverLayout)
+		# serverTabLayout.addLayout(serverLayout)
+
+		serverTabLayout.addLayout(centServ)
 		serverTabLayout.addLayout(sslLayout)
 		#serverTabLayout.addStretch()
+		serverTabLayout.setAlignment(Qt.AlignCenter)
 
 		serverConnectOptions = QVBoxLayout()
 		serverConnectOptions.addWidget(self.reconnect)
@@ -550,19 +602,31 @@ class Dialog(QDialog):
 		# column2.addWidget(self.history)
 
 		finConnectOptions = QHBoxLayout()
+		finConnectOptions.addStretch()
 		finConnectOptions.addLayout(allSetLay)
 		finConnectOptions.setAlignment(Qt.AlignLeft)
 		finConnectOptions.addStretch()
 
 		# serverTabLayout.addLayout(serverConnectOptions)
-		serverTabLayout.addLayout(finConnectOptions)
 
-		serverTabCenter = QHBoxLayout()
-		serverTabCenter.addStretch()
-		serverTabCenter.addLayout(serverTabLayout)
-		serverTabCenter.addStretch()
+		ssetBox = QGroupBox()
+		ssetBox.setAlignment(Qt.AlignHCenter)
+		ssetBox.setLayout(finConnectOptions)
 
-		self.server_tab.setLayout(serverTabCenter)
+
+
+		#serverTabLayout.addLayout(finConnectOptions)
+		serverTabLayout.addWidget(ssetBox)
+
+
+
+
+		# serverTabCenter = QHBoxLayout()
+		# serverTabCenter.addStretch()
+		# serverTabCenter.addLayout(serverTabLayout)
+		# serverTabCenter.addStretch()
+
+		# self.server_tab.setLayout(serverTabCenter)
 
 		# SERVER INFO END
 
@@ -604,7 +668,38 @@ class Dialog(QDialog):
 		userTabCenter.addLayout(userTabLayout)
 		userTabCenter.addStretch()
 
-		self.user_tab.setLayout(userTabCenter)
+		# self.user_tab.setLayout(userTabCenter)
+
+		# MOVE THIS TO THE SERVER TAB
+
+		# QFrame *line;
+		# line = new QFrame(Form);
+		# line->setFrameShape(QFrame::HLine);
+		# line->setFrameShadow(QFrame::Sunken);
+
+		userBox = QGroupBox()
+		userBox.setAlignment(Qt.AlignHCenter)
+		userBox.setLayout(userTabCenter)
+
+		servBox = QGroupBox()
+		servBox.setAlignment(Qt.AlignHCenter)
+		servBox.setLayout(serverTabLayout)
+
+
+
+		finalServerTab = QVBoxLayout()
+		finalServerTab.addStretch()
+
+		# finalServerTab.addLayout(userTabCenter)
+		# finalServerTab.addLayout(serverTabLayout)
+
+		finalServerTab.addWidget(userBox)
+		finalServerTab.addWidget(servBox)
+
+
+		finalServerTab.addStretch()
+
+		self.server_tab.setLayout(finalServerTab)
 
 		# CHANNELS TAB
 
@@ -614,8 +709,15 @@ class Dialog(QDialog):
 		if self.user_info["autojoin"]:
 			self.do_autojoin.toggle()
 
+		# NEW EDITOR START
+
+		
+
+		# NEW EDITOR END
+
 		self.autoChannels = QListWidget(self)
 		# self.autoChannels.setMaximumHeight(100)
+
 		self.autoChannels.setMaximumHeight(125)
 
 		self.addChannelButton = QPushButton("Add channel")
@@ -628,29 +730,27 @@ class Dialog(QDialog):
 		#buttonLayout.addStretch()
 		buttonLayout.addWidget(self.addChannelButton)
 		buttonLayout.addWidget(self.removeChannelButton)
-
 		
-		self.chantabLabel = QLabel("<center>Channels to auto-join</center>")
-
+		self.chantabLabel = QLabel("<small><center>Join these channels when connecting to any server</center></small>")
 
 		autoJoinLayout = QVBoxLayout()
 		autoJoinLayout.addWidget(self.chantabLabel)
 		autoJoinLayout.addWidget(self.autoChannels)
 		autoJoinLayout.addLayout(buttonLayout)
-		# autoJoinLayout.addWidget(self.do_autojoin)
 
 		autoJoinCheckbox = QHBoxLayout()
 		autoJoinCheckbox.addWidget(self.do_autojoin)
 		autoJoinCheckbox.setAlignment(Qt.AlignRight)
 
-		autoJoinLayout.addStretch()
+		#autoJoinLayout.addStretch()
 
 		autoJoinLayout.addLayout(autoJoinCheckbox)
 
 		autoJoinLayout.addStretch()
 
-		self.channels_tab.setLayout(autoJoinLayout)
+		# self.channels_tab.setLayout(autoJoinLayout)
 
+		
 		for c in self.user_info["channels"]:
 			channel = c[0]
 			key = c[1]
@@ -667,7 +767,60 @@ class Dialog(QDialog):
 			e = [channel,key]
 			self.autojoins.append(e)
 
+
+		self.scriptedit = QTextEdit(self)
+
+		if len(self.user_info["last_server"])==0:
+			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to server</center></small>")
+		else:
+			serv = self.user_info["last_server"]
+			port = str(self.user_info["last_port"])
+			self.scripttablabel = QLabel(f"<small><center>Execute these commands on connection to {serv}:{port}</center></small>")
+
+		# Load in script if there's one for the last entered server
+		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
+			code = load_auto_script(self.user_info["last_server"],self.user_info["last_port"])
+			if code!=None:
+				self.scriptedit.setText(code)
+
+		autoScriptLayout = QVBoxLayout()
+		autoScriptLayout.addWidget(self.scripttablabel)
+		autoScriptLayout.addWidget(self.scriptedit)
+
+		self.saveScriptButton = QPushButton("Save")
+		self.saveScriptButton.clicked.connect(self.saveScript)
+
+		self.deleteScriptButton = QPushButton("Delete")
+		self.deleteScriptButton.clicked.connect(self.deleteScript)
+
+		self.checkScript = QCheckBox("Execute script on connect",self)
+		self.checkScript.stateChanged.connect(self.clickScript)
+
+		if self.user_info["script"]:
+			self.checkScript.toggle()
+
+		scriptControlsLayout = QHBoxLayout()
+		scriptControlsLayout.addWidget(self.saveScriptButton)
+		scriptControlsLayout.addWidget(self.deleteScriptButton)
+		scriptControlsLayout.addWidget(self.checkScript)
+
+		autoScriptLayout.addLayout(scriptControlsLayout)
+
+		##
+
+		autoJoinLayout.addLayout(autoScriptLayout)
+
+		self.channels_tab.setLayout(autoJoinLayout)
+
+		#self.script_tab.setLayout(autoScriptLayout)
+
 		# CHANNELS TAB
+
+		# SCRIPT TAB BEGIN
+
+		
+
+		# SCRIPT TAB END
 
 		
 
@@ -710,10 +863,40 @@ class Dialog(QDialog):
 		finalLayout.addLayout(vLayout)
 		finalLayout.addWidget(buttons)
 
+
+		# print(finalLayout.sizeHint().width())
+		# print(finalLayout.sizeHint().height())
+
+		# self.resize(
+		# 	finalLayout.sizeHint().width() + 1000,
+		# 	finalLayout.sizeHint().height()
+		# 	)
+
+		# print(config.LOAD_AUTO_CONNECT_SCRIPTS)
+
+
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
+
+	def deleteScript(self):
+		serv = self.host.text()
+		port = self.port.text()
+		self.scriptedit.setText('')
+
+		sfile = get_auto_script_name(serv,port)
+		if os.path.isfile(sfile):
+			os.remove(sfile)
+
+	def saveScript(self):
+
+		serv = self.host.text()
+		port = self.port.text()
+		script = self.scriptedit.toPlainText()
+
+		if len(serv)>0 and len(port)>0 and len(script)>0:
+			save_auto_script(serv,port,script)
 
 	def buttonAdd(self):
 		#x = AddChannelDialog.Dialog()

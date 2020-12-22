@@ -46,6 +46,11 @@ Version 0.830
 	* Changed the default color for the "server" style to a light(er) blue
 	* Updated the bundled "pyspellchecker" library from 0.4.0 to 0.5.5
 	* Fixed a bug where the "disconnect" menu entry would be disabled of only connected to one server
+	* Bugfix: user settings files weren't being patched correctly
+	* New feature: server scripts. Scripts can be written for each server that can be automatically executed on connection to a server
+	* Connection dialog was cleaned up and re-worked
+	* Connection dialog's "user" tab and "server" tabs are now combined into one tab
+	* Added a new tab to the connection dialog: "Options", which combines the old "Channels" tab and the new scripting feature
 
 Version 0.822
 	* First version with Linux support

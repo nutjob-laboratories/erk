@@ -137,7 +137,7 @@ class Erk(QMainWindow):
 					msgBox.setText("Are you sure you want to quit?")
 				else:
 					msgBox.setText("You are currently connected to "+str(num_servers)+" servers. Are you sure you want to quit?")
-				msgBox.setWindowTitle("Quit "+NORMAL_APPLICATION_NAME)
+				msgBox.setWindowTitle("Quit "+APPLICATION_NAME)
 				msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
 
 				rval = msgBox.exec()
@@ -1595,6 +1595,7 @@ class Erk(QMainWindow):
 					reconnect=True,
 					autojoin=info.autojoin,
 					failreconnect=info.failreconnect,
+					script=info.do_script,
 				)
 				actual_connect_attempt = True
 				using_ssl = True
@@ -1612,6 +1613,7 @@ class Erk(QMainWindow):
 					reconnect=False,
 					autojoin=info.autojoin,
 					failreconnect=info.failreconnect,
+					script=info.do_script,
 				)
 				actual_connect_attempt = True
 				using_ssl = True
@@ -1630,6 +1632,7 @@ class Erk(QMainWindow):
 					reconnect=True,
 					autojoin=info.autojoin,
 					failreconnect=info.failreconnect,
+					script=info.do_script,
 				)
 				actual_connect_attempt = True
 			else:
@@ -1646,6 +1649,7 @@ class Erk(QMainWindow):
 					reconnect=False,
 					autojoin=info.autojoin,
 					failreconnect=info.failreconnect,
+					script=info.do_script,
 				)
 				actual_connect_attempt = True
 

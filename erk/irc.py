@@ -45,6 +45,8 @@ from .objects import *
 from . import config
 from . import events
 
+from . import userinput
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -172,6 +174,8 @@ class IRC_Connection(irc.IRCClient):
 		self.kwargs = kwargs
 
 		objectconfig(self,**kwargs)
+
+		self.script = None
 
 		self.oldnick = self.nickname
 
@@ -309,6 +313,16 @@ class IRC_Connection(irc.IRCClient):
 					self.sendLine(f"JOIN {chan} {key}")
 				else:
 					self.sendLine(f"JOIN {chan}")
+
+		if config.LOAD_AUTO_CONNECT_SCRIPTS:
+			# Execute auto-script
+			if self.kwargs['script']!=None:
+				if len(self.kwargs['script'])>0:
+					window = events.fetch_console_window(self)
+					for line in self.kwargs['script'].split("\n"):
+						line = line.strip()
+						if len(line)>0:
+							userinput.handle_input(window,self,line)
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -1144,6 +1158,9 @@ def objectconfig(obj,**kwargs):
 
 		if key=="failreconnect":
 			obj.failreconnect = value
+
+		if key=="script":
+			obj.script = value
 
 class IRC_Connection_Factory(protocol.ClientFactory):
 	def __init__(self,**kwargs):
