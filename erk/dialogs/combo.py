@@ -136,7 +136,6 @@ class Dialog(QDialog):
 		else:
 			script = None
 
-
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
 
 		return retval
@@ -614,7 +613,7 @@ class Dialog(QDialog):
 		ssetBox.setAlignment(Qt.AlignHCenter)
 		ssetBox.setLayout(finConnectOptions)
 
-
+		serverTabLayout.addWidget(QLabel(' '))
 
 		#serverTabLayout.addLayout(finConnectOptions)
 		serverTabLayout.addWidget(ssetBox)
@@ -741,13 +740,13 @@ class Dialog(QDialog):
 
 		autoJoinCheckbox = QHBoxLayout()
 		autoJoinCheckbox.addWidget(self.do_autojoin)
-		autoJoinCheckbox.setAlignment(Qt.AlignRight)
+		autoJoinCheckbox.setAlignment(Qt.AlignLeft)
 
 		#autoJoinLayout.addStretch()
 
 		autoJoinLayout.addLayout(autoJoinCheckbox)
 
-		autoJoinLayout.addStretch()
+		#autoJoinLayout.addStretch()
 
 		# self.channels_tab.setLayout(autoJoinLayout)
 
@@ -785,6 +784,7 @@ class Dialog(QDialog):
 				self.scriptedit.setText(code)
 
 		autoScriptLayout = QVBoxLayout()
+		autoScriptLayout.addWidget(QLabel(' '))
 		autoScriptLayout.addWidget(self.scripttablabel)
 		autoScriptLayout.addWidget(self.scriptedit)
 
