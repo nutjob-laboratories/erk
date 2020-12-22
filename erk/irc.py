@@ -314,15 +314,14 @@ class IRC_Connection(irc.IRCClient):
 				else:
 					self.sendLine(f"JOIN {chan}")
 
-		if config.LOAD_AUTO_CONNECT_SCRIPTS:
-			# Execute auto-script
-			if self.kwargs['script']!=None:
-				if len(self.kwargs['script'])>0:
-					window = events.fetch_console_window(self)
-					for line in self.kwargs['script'].split("\n"):
-						line = line.strip()
-						if len(line)>0:
-							userinput.handle_input(window,self,line)
+		# Execute auto-script
+		if self.kwargs['script']!=None:
+			if len(self.kwargs['script'])>0:
+				window = events.fetch_console_window(self)
+				for line in self.kwargs['script'].split("\n"):
+					line = line.strip()
+					if len(line)>0:
+						userinput.handle_input(window,self,line)
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")

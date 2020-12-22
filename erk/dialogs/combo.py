@@ -136,6 +136,7 @@ class Dialog(QDialog):
 		else:
 			script = None
 
+
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
 
 		return retval
