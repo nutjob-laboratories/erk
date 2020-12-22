@@ -452,20 +452,43 @@ class Dialog(QDialog):
 			self.netType.setText("")
 
 
+		irc_image = QLabel()
+		pixmap = QPixmap(IRC_IMAGE)
+		irc_image.setPixmap(pixmap)
+		irc_image.setAlignment(Qt.AlignCenter)
 
 
 		fstoreLayout = QVBoxLayout()
 		fstoreLayout.addStretch()
-		fstoreLayout.addWidget(QLabel(' '))
+
+		#fstoreLayout.addWidget(QLabel(' '))
+		fstoreLayout.addWidget(irc_image)
+
+
 		fstoreLayout.addWidget(self.description)
 		#fstoreLayout.addStretch()
+
+		self.descMoreInfo = QLabel("""
+			<small>
+				Below is a list of IRC servers to connect to, as well as servers you've previously connected to. Select a
+				server to see what IRC network that server may belong to and how to connect to it. Selecting a server will
+				automatically load the appropriate settings into the "Server" tab.
+			</small>
+		""")
+		self.descMoreInfo.setAlignment(Qt.AlignCenter)
+		self.descMoreInfo.setWordWrap(True)
+
+		fstoreLayout.addWidget(self.descMoreInfo)
+
+		fstoreLayout.addStretch()
 
 		# MOVING THIS TO MAIN TAB
 		fstoreLayout.addWidget(self.servers)
 
-		fstoreLayout.addStretch()
+		#fstoreLayout.addStretch()
+
 		#fstoreLayout.addWidget(QHLine())
-		fstoreLayout.addWidget(QLabel(' '))
+		#fstoreLayout.addWidget(QLabel(' '))
 
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
@@ -473,7 +496,7 @@ class Dialog(QDialog):
 		fstoreLayout.addWidget(self.networkURL)
 		fstoreLayout.addLayout(etLayout)
 		fstoreLayout.addWidget(self.visitbeforeType)
-		fstoreLayout.addStretch()
+		#fstoreLayout.addStretch()
 
 		self.network_tab.setLayout(fstoreLayout)
 
