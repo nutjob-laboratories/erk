@@ -64,6 +64,7 @@ Version 0.830
 	* Added a new button to add comments to the script tab
 	* Erk will look for called scripts first in the script directory, then the settings directory, then in the installation directory
 	* When executing a script with "/script", if /wait is called with a non-number, and error is displayed to the user
+	* Added a new script command: "/print" (or "/echo"): displays a message to the current window
 
 Version 0.822
 	* First version with Linux support

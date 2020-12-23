@@ -73,6 +73,8 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"quit": config.INPUT_COMMAND_SYMBOL+"quit",
 	config.INPUT_COMMAND_SYMBOL+"settings": config.INPUT_COMMAND_SYMBOL+"settings",
 	config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
+	config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
+	config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
 }
 
 CHANNEL_COMMANDS = {
@@ -106,6 +108,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
@@ -137,6 +140,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
@@ -764,11 +768,20 @@ def handle_common_input(window,client,text):
 
 SCRIPT_THREADS = []
 
+def interpolate_for_script(client,line):
+
+	nickname = client.nickname
+	line = line.replace('$NICK',nickname)
+
+	return line
+
 # Executes a single line from a script's thread
 def execute_script_line(data):
 	window = data[0]
 	client = data[1]
 	line = data[2]
+
+	line = interpolate_for_script(client,line)
 
 	handle_input(window,client,line)
 
@@ -814,6 +827,36 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"exit")
 			window.writeText(msg,True)
 			return True
+
+	# PRINT COMMAND
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'print' and len(tokens)>1:
+			tokens.pop(0)
+			pm = ' '.join(tokens)
+			msg = Message(SYSTEM_MESSAGE,'',f"{pm}")
+			window.writeText(msg,True)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'print' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"print MESSAGE")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'echo' and len(tokens)>1:
+			tokens.pop(0)
+			pm = ' '.join(tokens)
+			msg = Message(SYSTEM_MESSAGE,'',f"{pm}")
+			window.writeText(msg,True)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'echo' and len(tokens)==1:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"echo MESSAGE")
+			window.writeText(msg,True)
+			return True
+
+	# PRINT COMMAND
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:
