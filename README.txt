@@ -42,6 +42,7 @@
 * Runs on Windows and Linux
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
+* A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
 	* Almost every part of the interface can be customized
 	* Most behaviors can be customized
@@ -57,13 +58,17 @@
 * Full IRC color support
 	* Colors are rendered in the client (and rendering can be turned off)
 	* Full support for using foreground and background colors in outgoing messages
-* A built-in list of over 80 IRC servers to connect to
 * Automatic logging of channel and private chats
 	* Logging can be switched on and off
 	* Logs can be automatically loaded when resuming public or private chats
 * Powerful macro engine
 	* Users can create and edit macros directly in the client
 	* Macros can send messages or execute commands
+* Powerful scripting engine
+	* Almost anything you can do in the client, you can do in a script
+	* Scripts can be triggered to execute on server connection or manually
+	* Scripts run in a separate thread, so running a script won't interrupt your chatting
+	* Micro-script editor built into the connection dialog
 * Plugins!
 	* Plugins are written in Python 3, just like **Ərk**
 	* **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
