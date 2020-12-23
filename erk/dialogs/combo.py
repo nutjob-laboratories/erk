@@ -263,6 +263,7 @@ class Dialog(QDialog):
 			self.scriptedit.clear()
 
 		self.scripttablabel.setText(f"<small><center>Execute these commands on connection to {serv}:{str(port)}</center></small>")
+		self.scriptedit.moveCursor(QTextCursor.End)
 
 
 	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,parent=None):
@@ -825,6 +826,8 @@ class Dialog(QDialog):
 			code = load_auto_script(self.user_info["last_server"],self.user_info["last_port"])
 			if code!=None:
 				self.scriptedit.setText(code)
+
+		self.scriptedit.moveCursor(QTextCursor.End)
 
 		autoScriptLayout = QVBoxLayout()
 		#autoScriptLayout.addWidget(QLabel(' '))
