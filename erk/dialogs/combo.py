@@ -44,6 +44,9 @@ from ..strings import *
 from ..dialogs import AddChannelDialog
 from ..common import *
 
+from .send_pm import Dialog as SendPM
+from .pause import Dialog as PauseTime
+
 class Dialog(QDialog):
 
 	@staticmethod
@@ -214,7 +217,8 @@ class Dialog(QDialog):
 		if visited:
 			self.visitbeforeType.setText("<small>Connected to previously</small>")
 		else:
-			self.visitbeforeType.setText("<small>&nbsp;</small>")
+			# self.visitbeforeType.setText("<small>&nbsp;</small>")
+			self.visitbeforeType.setText("<small>Never connected to before</small>")
 
 		if self.StoredData[self.StoredServer][2]=="Last server":
 			self.visitbeforeType.setText("<small>Last server connection</small>")
@@ -297,10 +301,10 @@ class Dialog(QDialog):
 
 		# self.script_tab = QWidget()
 
-		self.tabs.addTab(self.server_tab,"Server")
-		self.tabs.addTab(self.network_tab,"Networks")
+		self.tabs.addTab(self.server_tab,"Connect")
+		self.tabs.addTab(self.network_tab,"Servers")
 		#self.tabs.addTab(self.user_tab,"User")
-		self.tabs.addTab(self.channels_tab,"Options")
+		self.tabs.addTab(self.channels_tab,"Script")
 
 		#self.tabs.addTab(self.script_tab,"Script")
 
@@ -323,7 +327,7 @@ class Dialog(QDialog):
 		self.description.setAlignment(Qt.AlignCenter)
 
 		self.visitbeforeType = QLabel("<small>&nbsp;</small>")
-		self.visitbeforeType.setAlignment(Qt.AlignRight)
+		self.visitbeforeType.setAlignment(Qt.AlignCenter)
 
 		self.networkURL = QLabel("<small>&nbsp;</small>")
 		self.networkURL.setAlignment(Qt.AlignCenter)
@@ -452,17 +456,18 @@ class Dialog(QDialog):
 			self.netType.setText("")
 
 
-		irc_image = QLabel()
-		pixmap = QPixmap(IRC_IMAGE)
-		irc_image.setPixmap(pixmap)
-		irc_image.setAlignment(Qt.AlignCenter)
+		# irc_image = QLabel()
+		# pixmap = QPixmap(IRC_IMAGE)
+		# irc_image.setPixmap(pixmap)
+		# irc_image.setAlignment(Qt.AlignCenter)
 
 
 		fstoreLayout = QVBoxLayout()
 		fstoreLayout.addStretch()
 
 		#fstoreLayout.addWidget(QLabel(' '))
-		fstoreLayout.addWidget(irc_image)
+
+		# fstoreLayout.addWidget(irc_image)
 
 
 		fstoreLayout.addWidget(self.description)
@@ -472,10 +477,10 @@ class Dialog(QDialog):
 			<small>
 				Below is a list of IRC servers to connect to, as well as servers you've previously connected to. Select a
 				server to see what IRC network that server may belong to and how to connect to it. Selecting a server will
-				automatically load the appropriate settings into the "Server" tab.
+				automatically load the appropriate settings into the "Connect" tab.
 			</small>
 		""")
-		self.descMoreInfo.setAlignment(Qt.AlignCenter)
+		self.descMoreInfo.setAlignment(Qt.AlignJustify)
 		self.descMoreInfo.setWordWrap(True)
 
 		fstoreLayout.addWidget(self.descMoreInfo)
@@ -493,10 +498,11 @@ class Dialog(QDialog):
 		fstoreLayout.addStretch()
 		fstoreLayout.addLayout(ntLayout)
 		fstoreLayout.addLayout(ctLayout)
+		fstoreLayout.addWidget(self.visitbeforeType)
 		fstoreLayout.addWidget(self.networkURL)
 		fstoreLayout.addLayout(etLayout)
-		fstoreLayout.addWidget(self.visitbeforeType)
-		#fstoreLayout.addStretch()
+		# fstoreLayout.addWidget(self.visitbeforeType)
+		fstoreLayout.addStretch()
 
 		self.network_tab.setLayout(fstoreLayout)
 
@@ -636,10 +642,17 @@ class Dialog(QDialog):
 		ssetBox.setAlignment(Qt.AlignHCenter)
 		ssetBox.setLayout(finConnectOptions)
 
-		serverTabLayout.addWidget(QLabel(' '))
+		#serverTabLayout.addWidget(QLabel(' '))
 
 		#serverTabLayout.addLayout(finConnectOptions)
+
+		serverTabLayout.addWidget(QLabel(" "))
+		serverTabLayout.addWidget(QLabel(" "))
+		# serverTabLayout.addStretch()
+
 		serverTabLayout.addWidget(ssetBox)
+
+		#serverTabLayout.addStretch()
 
 
 
@@ -717,6 +730,7 @@ class Dialog(QDialog):
 		# finalServerTab.addLayout(serverTabLayout)
 
 		finalServerTab.addWidget(userBox)
+
 		finalServerTab.addWidget(servBox)
 
 
@@ -754,9 +768,11 @@ class Dialog(QDialog):
 		buttonLayout.addWidget(self.addChannelButton)
 		buttonLayout.addWidget(self.removeChannelButton)
 		
+		self.chantabTitle = QLabel("<big><center><b>Auto-Join Channels</b></center></big>")
 		self.chantabLabel = QLabel("<small><center>Join these channels when connecting to any server</center></small>")
 
 		autoJoinLayout = QVBoxLayout()
+		autoJoinLayout.addWidget(self.chantabTitle)
 		autoJoinLayout.addWidget(self.chantabLabel)
 		autoJoinLayout.addWidget(self.autoChannels)
 		autoJoinLayout.addLayout(buttonLayout)
@@ -791,6 +807,10 @@ class Dialog(QDialog):
 			self.autojoins.append(e)
 
 
+		# MOVED TO SERVER TAB
+		fstoreLayout.addLayout(autoJoinLayout)
+
+
 		self.scriptedit = QTextEdit(self)
 
 		if len(self.user_info["last_server"])==0:
@@ -807,7 +827,7 @@ class Dialog(QDialog):
 				self.scriptedit.setText(code)
 
 		autoScriptLayout = QVBoxLayout()
-		autoScriptLayout.addWidget(QLabel(' '))
+		#autoScriptLayout.addWidget(QLabel(' '))
 		autoScriptLayout.addWidget(self.scripttablabel)
 		autoScriptLayout.addWidget(self.scriptedit)
 
@@ -817,24 +837,50 @@ class Dialog(QDialog):
 		self.deleteScriptButton = QPushButton("Delete")
 		self.deleteScriptButton.clicked.connect(self.deleteScript)
 
+		self.clearScriptButton = QPushButton("Clear")
+		self.clearScriptButton.clicked.connect(self.clearScript)
+
 		self.checkScript = QCheckBox("Execute script on connect",self)
 		self.checkScript.stateChanged.connect(self.clickScript)
+
+		self.reloadScriptButton = QPushButton("Reload")
+		self.reloadScriptButton.clicked.connect(self.reloadScript)
 
 		if self.user_info["script"]:
 			self.checkScript.toggle()
 
 		scriptControlsLayout = QHBoxLayout()
+		scriptControlsLayout.addWidget(self.clearScriptButton)
 		scriptControlsLayout.addWidget(self.saveScriptButton)
+		scriptControlsLayout.addWidget(self.reloadScriptButton)
 		scriptControlsLayout.addWidget(self.deleteScriptButton)
-		scriptControlsLayout.addWidget(self.checkScript)
+		#scriptControlsLayout.addWidget(self.checkScript)
 
+		self.scriptJoinButton = QPushButton("Join a Channel")
+		self.scriptJoinButton.clicked.connect(self.scriptJoin)
+
+		self.scriptSendPM = QPushButton("Send a Message")
+		self.scriptSendPM.clicked.connect(self.scriptPM)
+
+		self.scriptInsertPause = QPushButton("Insert Pause")
+		self.scriptInsertPause.clicked.connect(self.scriptTime)
+
+		scriptAddLayout = QHBoxLayout()
+		scriptAddLayout.addWidget(self.scriptJoinButton)
+		scriptAddLayout.addWidget(self.scriptSendPM)
+		scriptAddLayout.addWidget(self.scriptInsertPause)
+
+		autoScriptLayout.addLayout(scriptAddLayout)
 		autoScriptLayout.addLayout(scriptControlsLayout)
+
+		autoScriptLayout.addWidget(self.checkScript)
 
 		##
 
-		autoJoinLayout.addLayout(autoScriptLayout)
+		#autoJoinLayout.addLayout(autoScriptLayout)
 
-		self.channels_tab.setLayout(autoJoinLayout)
+		# self.channels_tab.setLayout(autoJoinLayout)
+		self.channels_tab.setLayout(autoScriptLayout)
 
 		#self.script_tab.setLayout(autoScriptLayout)
 
@@ -903,6 +949,53 @@ class Dialog(QDialog):
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
+
+	def reloadScript(self):
+		serv = self.host.text()
+		port = self.port.text()
+
+		code = load_auto_script(serv,port)
+		if code!=None:
+			self.scriptedit.setText(code)
+		else:
+			self.scriptedit.clear()
+
+	def clearScript(self):
+		self.scriptedit.clear()
+
+	def scriptTime(self):
+		x = PauseTime()
+		e = x.get_time_information()
+
+		if not e: return
+
+		self.scriptedit.insertPlainText("/wait "+str(e)+"\n")
+
+	def scriptPM(self):
+		x = SendPM()
+		e = x.get_message_information()
+
+		if not e: return
+
+		target = e[0]
+		msg = e[1]
+		
+		if len(target)>0 and len(msg)>0:
+			self.scriptedit.insertPlainText("/msg "+target+" "+msg+"\n")
+
+	def scriptJoin(self):
+		x = AddChannelDialog()
+		e = x.get_channel_information()
+
+		if not e: return
+
+		channel = e[0]
+		key = e[1]
+
+		if len(key)==0:
+			self.scriptedit.insertPlainText("/join "+channel+"\n")
+		else:
+			self.scriptedit.insertPlainText("/join "+channel+" "+key+"\n")
 
 	def deleteScript(self):
 		serv = self.host.text()

@@ -158,6 +158,9 @@ def load_auto_script(ip,port):
 		f=open(scriptname, "r")
 		code = f.read()
 		f.close()
+
+		if code[-1]!="\n": code = code + "\n"
+
 		AUTO_SCRIPT_CACHE[scriptname] = code
 		return code
 	else:

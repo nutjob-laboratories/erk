@@ -51,6 +51,12 @@ Version 0.830
 	* Connection dialog was cleaned up and re-worked
 	* Connection dialog's "user" tab and "server" tabs are now combined into one tab
 	* Added a new tab to the connection dialog: "Options", which combines the old "Channels" tab and the new scripting feature
+	* Moved the "autojoin" stuff to the "server" tab in the connection dialog, gave an entire tab to the scripting feature
+	* Renamed the tabs "Connect", "Servers", and "Script" in the connection dialog
+	* Server scripts now run on their own thread
+	* Added a new scripting command for server script: "/wait" (or "/sleep")
+	* Added new editing buttons to the scripting tab, allowing for file management and shortcuts for various commands
+	* Added some help text to the connection dialog
 
 Version 0.822
 	* First version with Linux support

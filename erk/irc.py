@@ -68,6 +68,8 @@ except Exception as exception:
 from twisted.words.protocols import irc
 from twisted.words.protocols.irc import ctcpStringify
 
+SCRIPT_WINDOW = None
+
 
 def connect(**kwargs):
 	bot = IRC_Connection_Factory(**kwargs)
@@ -316,12 +318,26 @@ class IRC_Connection(irc.IRCClient):
 
 		# Execute auto-script
 		if self.kwargs['script']!=None:
-			if len(self.kwargs['script'])>0:
-				window = events.fetch_console_window(self)
-				for line in self.kwargs['script'].split("\n"):
-					line = line.strip()
-					if len(line)>0:
-						userinput.handle_input(window,self,line)
+			# if len(self.kwargs['script'])>0:
+			# 	window = events.fetch_console_window(self)
+			# 	for line in self.kwargs['script'].split("\n"):
+			# 		line = line.strip()
+			# 		if len(line)>0:
+			# 			userinput.handle_input(window,self,line)
+
+			global SCRIPT_WINDOW
+			SCRIPT_WINDOW = events.fetch_console_window(self)
+			self.scriptThread = ScriptThread(self.kwargs['script'])
+			self.scriptThread.execLine.connect(self.exec_script_line)
+			self.scriptThread.scriptEnd.connect(self.exec_script_end)
+			self.scriptThread.start()
+
+	def exec_script_line(self,line):
+		userinput.handle_input(SCRIPT_WINDOW,self,line)
+
+	def exec_script_end(self):
+		global SCRIPT_WINDOW
+		SCRIPT_WINDOW = None
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -1285,3 +1301,33 @@ class UptimeHeartbeat(QThread):
 	def stop(self):
 		self.threadactive = False
 		self.wait()
+
+class ScriptThread(QThread):
+
+	execLine = pyqtSignal(str)
+	scriptEnd = pyqtSignal()
+
+	def __init__(self,script,parent=None):
+		super(ScriptThread, self).__init__(parent)
+		self.script = script
+
+	def run(self):
+		for line in self.script.split("\n"):
+			line = line.strip()
+			if len(line)==0: continue
+
+			tokens = line.split()
+			if len(tokens)==2:
+				if tokens[0].lower()=='/wait' or tokens[0].lower()=='/sleep':
+					count = tokens[1]
+					try:
+						count = int(count)
+					except:
+						pass
+					else:
+						time.sleep(count)
+
+			self.execLine.emit(line)
+
+		self.scriptEnd.emit()
+
