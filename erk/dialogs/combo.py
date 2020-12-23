@@ -539,7 +539,7 @@ class Dialog(QDialog):
 		self.ssl.stateChanged.connect(self.clickSSL)
 		self.ssl.setFont(f)
 
-		self.reconnect = QCheckBox("Automatic reconnect",self)
+		self.reconnect = QCheckBox("Reconnect on disconnection",self)
 		self.reconnect.stateChanged.connect(self.clickReconnect)
 
 		# SMALLER_CHECKBOX_SIZE = '15'
@@ -617,15 +617,17 @@ class Dialog(QDialog):
 		serverConnectOptions = QVBoxLayout()
 		serverConnectOptions.addWidget(self.reconnect)
 		serverConnectOptions.addWidget(self.failrecon)
+		serverConnectOptions.addWidget(self.history)
+		serverConnectOptions.addStretch()
 		# serverConnectOptions.setAlignment(Qt.AlignRight)
 
-		hisLayout = QVBoxLayout()
-		hisLayout.addWidget(self.history)
-		hisLayout.addStretch()
+		# hisLayout = QVBoxLayout()
+		# hisLayout.addWidget(self.history)
+		# hisLayout.addStretch()
 
-		allSetLay = QHBoxLayout()
-		allSetLay.addLayout(serverConnectOptions)
-		allSetLay.addLayout(hisLayout)
+		# allSetLay = QHBoxLayout()
+		# allSetLay.addLayout(serverConnectOptions)
+		# allSetLay.addLayout(hisLayout)
 
 		# column2 = QHBoxLayout()
 		# column2.addLayout(serverConnectOptions)
@@ -633,15 +635,15 @@ class Dialog(QDialog):
 
 		finConnectOptions = QHBoxLayout()
 		finConnectOptions.addStretch()
-		finConnectOptions.addLayout(allSetLay)
-		finConnectOptions.setAlignment(Qt.AlignLeft)
+		finConnectOptions.addLayout(serverConnectOptions)
+		#finConnectOptions.setAlignment(Qt.AlignLeft)
 		finConnectOptions.addStretch()
 
 		# serverTabLayout.addLayout(serverConnectOptions)
 
-		ssetBox = QGroupBox()
-		ssetBox.setAlignment(Qt.AlignHCenter)
-		ssetBox.setLayout(finConnectOptions)
+		# ssetBox = QGroupBox()
+		# ssetBox.setAlignment(Qt.AlignHCenter)
+		# ssetBox.setLayout(finConnectOptions)
 
 		#serverTabLayout.addWidget(QLabel(' '))
 
@@ -651,7 +653,8 @@ class Dialog(QDialog):
 		serverTabLayout.addWidget(QLabel(" "))
 		# serverTabLayout.addStretch()
 
-		serverTabLayout.addWidget(ssetBox)
+		# serverTabLayout.addWidget(ssetBox)
+		serverTabLayout.addLayout(finConnectOptions)
 
 		#serverTabLayout.addStretch()
 
