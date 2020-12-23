@@ -318,12 +318,6 @@ class IRC_Connection(irc.IRCClient):
 
 		# Execute auto-script
 		if self.kwargs['script']!=None:
-			# if len(self.kwargs['script'])>0:
-			# 	window = events.fetch_console_window(self)
-			# 	for line in self.kwargs['script'].split("\n"):
-			# 		line = line.strip()
-			# 		if len(line)>0:
-			# 			userinput.handle_input(window,self,line)
 
 			global SCRIPT_WINDOW
 			SCRIPT_WINDOW = events.fetch_console_window(self)
@@ -1318,7 +1312,7 @@ class ScriptThread(QThread):
 
 			tokens = line.split()
 			if len(tokens)==2:
-				if tokens[0].lower()=='/wait' or tokens[0].lower()=='/sleep':
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
 					count = tokens[1]
 					try:
 						count = int(count)
@@ -1331,3 +1325,35 @@ class ScriptThread(QThread):
 
 		self.scriptEnd.emit()
 
+
+class ScriptThreadWindow(QThread):
+
+	execLine = pyqtSignal(list)
+	scriptEnd = pyqtSignal(str)
+
+	def __init__(self,window,client,script,mid,parent=None):
+		super(ScriptThreadWindow, self).__init__(parent)
+		self.script = script
+		self.window = window
+		self.client = client
+		self.id = mid
+
+	def run(self):
+		for line in self.script.split("\n"):
+			line = line.strip()
+			if len(line)==0: continue
+
+			tokens = line.split()
+			if len(tokens)==2:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
+					count = tokens[1]
+					try:
+						count = int(count)
+					except:
+						pass
+					else:
+						time.sleep(count)
+
+			self.execLine.emit([self.window,self.client,line])
+
+		self.scriptEnd.emit(self.id)

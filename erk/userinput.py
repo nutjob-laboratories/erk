@@ -32,6 +32,8 @@
 import emoji
 import os
 import fnmatch
+import string
+import random
 
 from PyQt5.QtGui import *
 
@@ -39,6 +41,7 @@ from .objects import *
 from .files import *
 from . import config
 from . import macros
+from .irc import ScriptThreadWindow
 
 COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"msg": config.INPUT_COMMAND_SYMBOL+"msg ",
@@ -759,6 +762,28 @@ def handle_common_input(window,client,text):
 
 	return False
 
+SCRIPT_THREADS = []
+
+# Executes a single line from a script's thread
+def execute_script_line(data):
+	window = data[0]
+	client = data[1]
+	line = data[2]
+
+	handle_input(window,client,line)
+
+# When a script completes, this is called which deletes the
+# script's thread
+def execute_script_end(mid):
+	global SCRIPT_THREADS
+	clean = []
+	for e in SCRIPT_THREADS:
+		if e[0]==mid:
+			del e[1]
+			continue
+		clean.append(e)
+	SCRIPT_THREADS = clean
+
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
@@ -788,11 +813,25 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			file = tokens.pop(0)
 			if os.path.isfile(file):
+
+				# Read in the script
 				s = open(file,"r")
 				script = s.read()
 				s.close()
-				for line in script.split("\n"):
-					handle_input(window,client,line)
+
+				# Generate a random script ID
+				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+				# Create a thread for the script and run it
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID)
+				scriptThread.execLine.connect(execute_script_line)
+				scriptThread.scriptEnd.connect(execute_script_end)
+				scriptThread.start()
+
+				# Store the thread so it doesn't get garbage collected
+				entry = [scriptID,scriptThread]
+				SCRIPT_THREADS.append(entry)
+
 				return True
 			else:
 				msg = Message(ERROR_MESSAGE,'',"File \""+file+"\" not found")
