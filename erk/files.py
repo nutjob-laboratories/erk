@@ -132,6 +132,24 @@ def filterProfanityFromText(text,punc=True):
 
 AUTO_SCRIPT_CACHE = {}
 
+def find_script_file(script):
+	if os.path.isfile(script):
+		return script
+
+	d_script = os.path.join(SCRIPTS_DIRECTORY, script)
+	if os.path.isfile(d_script):
+		return d_script
+
+	s_script = os.path.join(SETTINGS_DIRECTORY, script)
+	if os.path.isfile(s_script):
+		return s_script
+
+	i_script = os.path.join(INSTALL_DIRECTORY, script)
+	if os.path.isfile(i_script):
+		return i_script
+
+	return None
+
 def clear_auto_script_cache():
 	global AUTO_SCRIPT_CACHE
 	AUTO_SCRIPT_CACHE = {}

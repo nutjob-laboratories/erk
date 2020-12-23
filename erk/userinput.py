@@ -812,10 +812,14 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:
 			tokens.pop(0)
 			file = tokens.pop(0)
-			if os.path.isfile(file):
+
+			scriptname = find_script_file(file)
+
+			# if os.path.isfile(file):
+			if scriptname!=None:
 
 				# Read in the script
-				s = open(file,"r")
+				s = open(scriptname,"r")
 				script = s.read()
 				s.close()
 

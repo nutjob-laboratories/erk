@@ -62,6 +62,7 @@ Version 0.830
 	* Added comments (between /* and */) to all scripts
 	* Added some basic help to the script tab on the connect dialog
 	* Added a new button to add comments to the script tab
+	* Erk will look for called scripts first in the script directory, then the settings directory, then in the installation directory
 
 Version 0.822
 	* First version with Linux support
