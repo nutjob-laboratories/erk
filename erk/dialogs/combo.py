@@ -833,7 +833,7 @@ class Dialog(QDialog):
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
-		self.scripttabinfo = QLabel("<small><center><i>Any command usable in the client can be used. Insert comments between </i><b>/*</b><i> and </i><b>*/</b><i>. To pause the script, call the </i><b>/wait</b><i> command with the number of seconds to wait as the only argument.</i></center></small>")
+		self.scripttabinfo = QLabel("<small><center><i>Any command usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
 		self.scripttabinfo.setWordWrap(True)
 		self.scripttabinfo.setAlignment(Qt.AlignJustify)
 
