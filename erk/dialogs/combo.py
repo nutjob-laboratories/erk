@@ -863,9 +863,9 @@ class Dialog(QDialog):
 			self.checkScript.toggle()
 
 		scriptControlsLayout = QHBoxLayout()
-		scriptControlsLayout.addWidget(self.clearScriptButton)
 		scriptControlsLayout.addWidget(self.saveScriptButton)
 		scriptControlsLayout.addWidget(self.reloadScriptButton)
+		scriptControlsLayout.addWidget(self.clearScriptButton)
 		scriptControlsLayout.addWidget(self.deleteScriptButton)
 		#scriptControlsLayout.addWidget(self.checkScript)
 
