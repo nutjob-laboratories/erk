@@ -47,6 +47,7 @@ from ..common import *
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
 from .comment import Dialog as Comment
+from .print import Dialog as PrintMsg
 
 class Dialog(QDialog):
 
@@ -880,6 +881,9 @@ class Dialog(QDialog):
 		self.scriptInsertComment = QPushButton("Insert Comment")
 		self.scriptInsertComment.clicked.connect(self.scriptComment)
 
+		self.scriptInsertPrint = QPushButton("Insert Print")
+		self.scriptInsertPrint.clicked.connect(self.scriptPrint)
+
 		scriptAddLayout = QHBoxLayout()
 		scriptAddLayout.addWidget(self.scriptJoinButton)
 		scriptAddLayout.addWidget(self.scriptSendPM)
@@ -887,6 +891,7 @@ class Dialog(QDialog):
 		scriptAddLayout2 = QHBoxLayout()
 		scriptAddLayout2.addWidget(self.scriptInsertPause)
 		scriptAddLayout2.addWidget(self.scriptInsertComment)
+		scriptAddLayout2.addWidget(self.scriptInsertPrint)
 
 		scriptInsertStuff = QVBoxLayout()
 		scriptInsertStuff.addLayout(scriptAddLayout)
@@ -1013,6 +1018,15 @@ class Dialog(QDialog):
 
 		if len(e)>0:
 			self.scriptedit.insertPlainText("/* "+e+" */\n")
+
+	def scriptPrint(self):
+		x = PrintMsg()
+		e = x.get_message_information()
+
+		if not e: return
+
+		if len(e)>0:
+			self.scriptedit.insertPlainText("/print "+e+"\n")
 
 	def scriptJoin(self):
 		x = AddChannelDialog()
