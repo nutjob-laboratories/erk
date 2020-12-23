@@ -1334,13 +1334,15 @@ class ScriptThreadWindow(QThread):
 
 	execLine = pyqtSignal(list)
 	scriptEnd = pyqtSignal(str)
+	scriptErr = pyqtSignal(list)
 
-	def __init__(self,window,client,script,mid,parent=None):
+	def __init__(self,window,client,script,mid,scriptname,parent=None):
 		super(ScriptThreadWindow, self).__init__(parent)
 		self.script = script
 		self.window = window
 		self.client = client
 		self.id = mid
+		self.scriptname = scriptname
 
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
@@ -1357,7 +1359,7 @@ class ScriptThreadWindow(QThread):
 					try:
 						count = int(count)
 					except:
-						pass
+						self.scriptErr.emit([self.window,f"Error pausing script in {self.scriptname}: \"{str(count)}\" is not a number"])
 					else:
 						time.sleep(count)
 

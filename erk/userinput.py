@@ -784,6 +784,13 @@ def execute_script_end(mid):
 		clean.append(e)
 	SCRIPT_THREADS = clean
 
+
+def execute_script_error(data):
+	window = data[0]
+	errmsg = data[1]
+	msg = Message(ERROR_MESSAGE,'',errmsg)
+	window.writeText(msg,True)
+
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
@@ -818,6 +825,8 @@ def handle_ui_input(window,client,text):
 			# if os.path.isfile(file):
 			if scriptname!=None:
 
+				base_scriptname = os.path.basename(scriptname)
+
 				# Read in the script
 				s = open(scriptname,"r")
 				script = s.read()
@@ -827,9 +836,10 @@ def handle_ui_input(window,client,text):
 				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 				# Create a thread for the script and run it
-				scriptThread = ScriptThreadWindow(window,client,script,scriptID)
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname)
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
+				scriptThread.scriptErr.connect(execute_script_error)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
