@@ -59,6 +59,9 @@ Version 0.830
 	* Added some help text to the connection dialog
 	* The "/script" command now runs scripts in a separate thread
 	* The "/wait" ("/sleep") command now works with the "/script" command
+	* Added comments (between /* and */) to all scripts
+	* Added some basic help to the script tab on the connect dialog
+	* Added a new button to add comments to the script tab
 
 Version 0.822
 	* First version with Linux support

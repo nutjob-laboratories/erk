@@ -37,6 +37,7 @@ import string
 from collections import defaultdict
 import time
 import fnmatch
+import re
 
 from .resources import *
 from .files import *
@@ -1305,6 +1306,9 @@ class ScriptThread(QThread):
 		super(ScriptThread, self).__init__(parent)
 		self.script = script
 
+		# Strip comments from script
+		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
+
 	def run(self):
 		for line in self.script.split("\n"):
 			line = line.strip()
@@ -1337,6 +1341,9 @@ class ScriptThreadWindow(QThread):
 		self.window = window
 		self.client = client
 		self.id = mid
+
+		# Strip comments from script
+		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
 
 	def run(self):
 		for line in self.script.split("\n"):

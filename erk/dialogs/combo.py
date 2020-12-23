@@ -46,6 +46,7 @@ from ..common import *
 
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
+from .comment import Dialog as Comment
 
 class Dialog(QDialog):
 
@@ -832,9 +833,14 @@ class Dialog(QDialog):
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
+		self.scripttabinfo = QLabel("<small><center><i>Any command usable in the client can be used. Insert comments between </i><b>/*</b><i> and </i><b>*/</b><i>. To pause the script, call the </i><b>/wait</b><i> command with the number of seconds to wait as the only argument.</i></center></small>")
+		self.scripttabinfo.setWordWrap(True)
+		self.scripttabinfo.setAlignment(Qt.AlignJustify)
+
 		autoScriptLayout = QVBoxLayout()
 		#autoScriptLayout.addWidget(QLabel(' '))
 		autoScriptLayout.addWidget(self.scripttablabel)
+		autoScriptLayout.addWidget(self.scripttabinfo)
 		autoScriptLayout.addWidget(self.scriptedit)
 
 		self.saveScriptButton = QPushButton("Save")
@@ -871,12 +877,22 @@ class Dialog(QDialog):
 		self.scriptInsertPause = QPushButton("Insert Pause")
 		self.scriptInsertPause.clicked.connect(self.scriptTime)
 
+		self.scriptInsertComment = QPushButton("Insert Comment")
+		self.scriptInsertComment.clicked.connect(self.scriptComment)
+
 		scriptAddLayout = QHBoxLayout()
 		scriptAddLayout.addWidget(self.scriptJoinButton)
 		scriptAddLayout.addWidget(self.scriptSendPM)
-		scriptAddLayout.addWidget(self.scriptInsertPause)
 
-		autoScriptLayout.addLayout(scriptAddLayout)
+		scriptAddLayout2 = QHBoxLayout()
+		scriptAddLayout2.addWidget(self.scriptInsertPause)
+		scriptAddLayout2.addWidget(self.scriptInsertComment)
+
+		scriptInsertStuff = QVBoxLayout()
+		scriptInsertStuff.addLayout(scriptAddLayout)
+		scriptInsertStuff.addLayout(scriptAddLayout2)
+
+		autoScriptLayout.addLayout(scriptInsertStuff)
 		autoScriptLayout.addLayout(scriptControlsLayout)
 
 		autoScriptLayout.addWidget(self.checkScript)
@@ -988,6 +1004,15 @@ class Dialog(QDialog):
 		
 		if len(target)>0 and len(msg)>0:
 			self.scriptedit.insertPlainText("/msg "+target+" "+msg+"\n")
+
+	def scriptComment(self):
+		x = Comment()
+		e = x.get_message_information()
+
+		if not e: return
+
+		if len(e)>0:
+			self.scriptedit.insertPlainText("/* "+e+" */\n")
 
 	def scriptJoin(self):
 		x = AddChannelDialog()
