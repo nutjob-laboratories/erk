@@ -1135,7 +1135,7 @@ def handle_ui_input(window,client,text):
 
 def execute_script(filename,window,client):
 
-	scriptname = find_script_file(filename)
+	scriptname = find_script_file(filename,client.gui.scriptsdir)
 
 	# if os.path.isfile(file):
 	if scriptname!=None:
