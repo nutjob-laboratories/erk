@@ -50,6 +50,7 @@ from . import config
 from . import events
 from . import textformat
 from . import macros
+from . import userinput
 
 from .dialogs import(
 	ComboDialog,
@@ -387,6 +388,14 @@ class Erk(QMainWindow):
 
 		self.block_scripts = block_scripts
 
+		self.cmdline_macro = False
+		self.cmdline_plugin = False
+		self.cmdline_script = False
+
+		if self.block_macros: self.cmdline_macro = True
+		if self.block_plugins: self.cmdline_plugin = True
+		if self.block_scripts: self.cmdline_script = True
+
 		# Determine if window color is dark or light
 		mbcolor = self.palette().color(QPalette.Window).name()
 		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
@@ -416,8 +425,8 @@ class Erk(QMainWindow):
 		else:
 			appheight = int(config.DEFAULT_APP_HEIGHT)
 
-		if self.block_macros: config.MACROS_ENABLED = False
-		if self.block_plugins: config.PLUGINS_ENABLED = False
+		# if self.block_macros: config.MACROS_ENABLED = False
+		# if self.block_plugins: config.PLUGINS_ENABLED = False
 
 		u = get_user(self.userfile)
 		self.ignore = u["ignore"]

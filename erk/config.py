@@ -131,6 +131,7 @@ SCHWA_ANIMATION = True
 ASK_BEFORE_QUIT = True
 MENU_BAR_MOVABLE = True
 MENU_BAR_ORIENT = "top"
+ENABLE_SCRIPTS = True
 
 
 def save_settings(filename=SETTINGS_FILE):
@@ -139,6 +140,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"enable_scripts": ENABLE_SCRIPTS,
 		"movable_menubar": MENU_BAR_MOVABLE,
 		"menubar_location": MENU_BAR_ORIENT,
 		"ask_before_quitting": ASK_BEFORE_QUIT,
@@ -230,6 +232,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_scripts" in data:
+		data["enable_scripts"] = ENABLE_SCRIPTS
 
 	if not "movable_menubar" in data:
 		data["movable_menubar"] = MENU_BAR_MOVABLE
@@ -356,6 +361,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ASK_BEFORE_QUIT
 	global MENU_BAR_MOVABLE
 	global MENU_BAR_ORIENT
+	global ENABLE_SCRIPTS
 
 
 	# Load in settings if the settings file exists...
@@ -450,7 +456,7 @@ def load_settings(filename=SETTINGS_FILE):
 			SCHWA_ANIMATION =  data["schwa_corner_animation"]
 			UNSEEN_MESSAGE_ANIMATION =  data["animate_unseen_messages_in_connection_display"]
 			CONNECTION_MESSAGE_ANIMATION =  data["animate_connecting_messages_in_connection_display"]
-
+			ENABLE_SCRIPTS = data["enable_scripts"]
 
 	# ...or create the file with defaults if the settings
 	# file doesn't exist

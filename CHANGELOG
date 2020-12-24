@@ -71,6 +71,9 @@ Version 0.830
 	* Changed the name of of the user setting "script" to "auto_script" to better reflect the setting use
 	* Changed the location of the two checkboxes on the "script" tab to be together, horizontally, on the bottom
 	* Added commandline flag "-T","--noscripts" to disable scripts. Scripts can't be executed, and the script tab will not appear in the connection dialog
+	* Added a setting to disable scripting to the config file
+	* Added the new "disable scripting" setting to the "preferences" dialog
+	* Fixed a bug in the preferences dialog (features disabled on the commandline can't be changed in the dialog)
 
 Version 0.822
 	* First version with Linux support

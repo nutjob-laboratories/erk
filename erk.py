@@ -296,6 +296,11 @@ if __name__ == '__main__':
 
 		if args.noconnect: erk.config.DISABLE_CONNECT_COMMANDS = True
 
+		# Disable scripting, if it's disabled in the config file
+		is_scripting_enabled = args.noscripts
+		if not erk.config.ENABLE_SCRIPTS:
+			is_scripting_enabled = True
+
 		# Handle IRC URLs
 
 		if args.url!='':
@@ -364,14 +369,14 @@ if __name__ == '__main__':
 					u["failreconnect"],
 					False,
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -407,15 +412,15 @@ if __name__ == '__main__':
 						u["failreconnect"],
 						False,
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
 				GUI.show()
 			else:
 
 				# Launch normally, showing the connection dialog first
 
-				info = ComboDialog(args.user,args.noscripts)
+				info = ComboDialog(args.user,is_scripting_enabled)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
 					GUI.show()
 				else:
 					app.quit()

@@ -1133,6 +1133,34 @@ def handle_ui_input(window,client,text):
 
 	return False
 
+def execute_script(filename,window,client):
+
+	scriptname = find_script_file(filename)
+
+	# if os.path.isfile(file):
+	if scriptname!=None:
+
+		base_scriptname = os.path.basename(scriptname)
+
+		# Read in the script
+		s = open(scriptname,"r")
+		script = s.read()
+		s.close()
+
+		# Generate a random script ID
+		scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+		# Create a thread for the script and run it
+		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname)
+		scriptThread.execLine.connect(execute_script_line)
+		scriptThread.scriptEnd.connect(execute_script_end)
+		scriptThread.scriptErr.connect(execute_script_error)
+		scriptThread.start()
+
+		# Store the thread so it doesn't get garbage collected
+		entry = [scriptID,scriptThread]
+		SCRIPT_THREADS.append(entry)
+
 # Executes a single line from a script's thread
 def execute_script_line(data):
 	window = data[0]

@@ -559,8 +559,16 @@ class Dialog(QDialog):
 		self.macroFeatures = QCheckBox("Enable macros",self)
 		if config.MACROS_ENABLED: self.macroFeatures.setChecked(True)
 
+		if self.parent.cmdline_macro:
+			self.macroFeatures.setEnabled(False)
+			self.macroFeatures.setText("Enable macros (disabled)")
+
 		self.pluginFeatures = QCheckBox("Enable plugins",self)
 		if config.PLUGINS_ENABLED: self.pluginFeatures.setChecked(True)
+
+		if self.parent.cmdline_plugin:
+			self.pluginFeatures.setEnabled(False)
+			self.pluginFeatures.setText("Enable plugins (disabled)")
 
 		self.pluginErrors = QCheckBox("Show plugin load errors",self)
 		if config.SHOW_LOAD_ERRORS: self.pluginErrors.setChecked(True)
@@ -592,6 +600,13 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.miscPage)
 
+		self.scriptMisc = QCheckBox("Enable scripts",self)
+		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.scriptMisc.setEnabled(False)
+			self.scriptMisc.setText("Enable scripts (disabled)")
+
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
@@ -622,6 +637,7 @@ class Dialog(QDialog):
 		hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.scriptMisc)
 		cpLayout.addWidget(self.askMisc)
 		cpLayout.addWidget(self.lostErrors)
 		cpLayout.addWidget(self.failErrors)
@@ -674,9 +690,11 @@ class Dialog(QDialog):
 
 	def save(self):
 
-
-		# self.showMenu = QCheckBox("Moveable menu bar",self)
-		# if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
+		config.ENABLE_SCRIPTS = self.scriptMisc.isChecked()
+		if config.ENABLE_SCRIPTS:
+			self.parent.block_scripts = False
+		else:
+			self.parent.block_scripts = True
 
 		config.MENU_BAR_MOVABLE = self.showMenu.isChecked()
 
