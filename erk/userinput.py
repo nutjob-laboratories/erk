@@ -164,6 +164,8 @@ for e in CHAT_HELP:
 
 CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentries))
 
+SCRIPT_THREADS = []
+
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
@@ -766,43 +768,9 @@ def handle_common_input(window,client,text):
 
 	return False
 
-SCRIPT_THREADS = []
-
-def interpolate_for_script(client,line):
-
-	nickname = client.nickname
-	line = line.replace('$NICK',nickname)
-
-	return line
-
-# Executes a single line from a script's thread
-def execute_script_line(data):
-	window = data[0]
-	client = data[1]
-	line = data[2]
-
-	line = interpolate_for_script(client,line)
-
-	handle_input(window,client,line)
-
-# When a script completes, this is called which deletes the
-# script's thread
-def execute_script_end(mid):
-	global SCRIPT_THREADS
-	clean = []
-	for e in SCRIPT_THREADS:
-		if e[0]==mid:
-			del e[1]
-			continue
-		clean.append(e)
-	SCRIPT_THREADS = clean
 
 
-def execute_script_error(data):
-	window = data[0]
-	errmsg = data[1]
-	msg = Message(ERROR_MESSAGE,'',errmsg)
-	window.writeText(msg,True)
+
 
 def handle_ui_input(window,client,text):
 
@@ -1156,3 +1124,32 @@ def handle_ui_input(window,client,text):
 			return True
 
 	return False
+
+# Executes a single line from a script's thread
+def execute_script_line(data):
+	window = data[0]
+	client = data[1]
+	line = data[2]
+
+	#line = interpolate_for_script(client,line)
+
+	handle_input(window,client,line)
+
+# When a script completes, this is called which deletes the
+# script's thread
+def execute_script_end(mid):
+	global SCRIPT_THREADS
+	clean = []
+	for e in SCRIPT_THREADS:
+		if e[0]==mid:
+			del e[1]
+			continue
+		clean.append(e)
+	SCRIPT_THREADS = clean
+
+# Triggers every time there's a script error with the "/wait" command
+def execute_script_error(data):
+	window = data[0]
+	errmsg = data[1]
+	msg = Message(ERROR_MESSAGE,'',errmsg)
+	window.writeText(msg,True)

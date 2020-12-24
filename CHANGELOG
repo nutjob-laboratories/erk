@@ -66,6 +66,10 @@ Version 0.830
 	* When executing a script with "/script", if /wait is called with a non-number, and error is displayed to the user
 	* Added a new script command: "/print" (or "/echo"): displays a message to the current window
 	* Added /print command to the connection dialog script tools
+	* Added a new user setting: "save_script", which saves the script from the connect dialog
+	* Connection dialog can now toggle the "save_script" setting, and save scripts without hitting the "save" button
+	* Changed the name of of the user setting "script" to "auto_script" to better reflect the setting use
+	* Changed the location of the two checkboxes on the "script" tab to be together, horizontally, on the bottom
 
 Version 0.822
 	* First version with Linux support

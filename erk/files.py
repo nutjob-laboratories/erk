@@ -177,7 +177,8 @@ def load_auto_script(ip,port):
 		code = f.read()
 		f.close()
 
-		if code[-1]!="\n": code = code + "\n"
+		if len(code)>0:
+			if code[-1]!="\n": code = code + "\n"
 
 		AUTO_SCRIPT_CACHE[scriptname] = code
 		return code
@@ -227,8 +228,10 @@ def get_network_list(filename=NETWORK_FILE):
 def patch_user(data):
 	if not 'failreconnect' in data:
 		data['failreconnect'] = True
-	if not 'script' in data:
-		data['script'] = False
+	if not 'auto_script' in data:
+		data['auto_script'] = False
+	if not 'save_script' in data:
+		data['save_script'] = False
 	return data
 
 def get_user(filename=USER_FILE):
@@ -256,7 +259,8 @@ def get_user(filename=USER_FILE):
 			"disabled_plugins": [],
 			"ignore": [],
 			'failreconnect': True,
-			'script': False,
+			'auto_script': False,
+			'save_script': False,
 		}
 		return si
 

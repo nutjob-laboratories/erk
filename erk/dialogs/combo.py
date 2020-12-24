@@ -97,7 +97,7 @@ class Dialog(QDialog):
 					ussl = "normal"
 
 
-				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text()    ]
+				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text() ]
 				user_history.append(entry)
 
 		# Save disabled plugins
@@ -124,7 +124,8 @@ class Dialog(QDialog):
 			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
 			"failreconnect": self.FAIL_RECONNECT,
-			"script": self.AUTOSCRIPT,
+			"auto_script": self.AUTOSCRIPT,
+			"save_script": self.SAVE_SCRIPT,
 		}
 		save_user(user,self.userfile)
 
@@ -138,8 +139,19 @@ class Dialog(QDialog):
 			script = self.scriptedit.toPlainText()
 
 			if len(script)==0: script = None
+
 		else:
 			script = None
+
+		if self.SAVE_SCRIPT:
+			sscript = self.scriptedit.toPlainText()
+			if len(sscript)==0:
+				# Only save a blank script if the file already exists
+				sfile = get_auto_script_name(self.host.text(),str(port))
+				if os.path.isfile(sfile):
+					save_auto_script(self.host.text(),str(port),sscript)
+			else:
+				save_auto_script(self.host.text(),str(port),sscript)
 
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
 
@@ -150,6 +162,12 @@ class Dialog(QDialog):
 			self.AUTOSCRIPT = True
 		else:
 			self.AUTOSCRIPT = False
+
+	def clickSaveScript(self,state):
+		if state == Qt.Checked:
+			self.SAVE_SCRIPT = True
+		else:
+			self.SAVE_SCRIPT = False
 
 	def clickHistory(self,state):
 		if state == Qt.Checked:
@@ -290,6 +308,7 @@ class Dialog(QDialog):
 		self.SAVE_HISTORY = False
 		self.FAIL_RECONNECT = True
 		self.AUTOSCRIPT = False
+		self.SAVE_SCRIPT = False
 
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
@@ -853,14 +872,20 @@ class Dialog(QDialog):
 		self.clearScriptButton = QPushButton("Clear")
 		self.clearScriptButton.clicked.connect(self.clearScript)
 
-		self.checkScript = QCheckBox("Execute script on connect",self)
+		self.checkScript = QCheckBox("Execute on connect",self)
 		self.checkScript.stateChanged.connect(self.clickScript)
+
+		if self.user_info["auto_script"]:
+			self.checkScript.toggle()
+
+		self.autoSaveScript = QCheckBox("Save on connect",self)
+		self.autoSaveScript.stateChanged.connect(self.clickSaveScript)
+
+		if self.user_info["save_script"]:
+			self.autoSaveScript.toggle()
 
 		self.reloadScriptButton = QPushButton("Reload")
 		self.reloadScriptButton.clicked.connect(self.reloadScript)
-
-		if self.user_info["script"]:
-			self.checkScript.toggle()
 
 		scriptControlsLayout = QHBoxLayout()
 		scriptControlsLayout.addWidget(self.saveScriptButton)
@@ -900,7 +925,11 @@ class Dialog(QDialog):
 		autoScriptLayout.addLayout(scriptInsertStuff)
 		autoScriptLayout.addLayout(scriptControlsLayout)
 
-		autoScriptLayout.addWidget(self.checkScript)
+		scriptToggles = QHBoxLayout()
+		scriptToggles.addWidget(self.checkScript)
+		scriptToggles.addWidget(self.autoSaveScript)
+
+		autoScriptLayout.addLayout(scriptToggles)
 
 		##
 
@@ -1057,7 +1086,7 @@ class Dialog(QDialog):
 		port = self.port.text()
 		script = self.scriptedit.toPlainText()
 
-		if len(serv)>0 and len(port)>0 and len(script)>0:
+		if len(serv)>0 and len(port)>0:
 			save_auto_script(serv,port,script)
 
 	def buttonAdd(self):
