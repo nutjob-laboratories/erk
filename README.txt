@@ -177,6 +177,7 @@ Not directly, as all its configuration files are stored in **Ərk**'s installati
 * `--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
 * `--format` : This tells **Ərk** to use a user-specified text display settings file. This sets what colors and formatting is used to display text in the client.
 * `--logs` : This tells **Ərk** to use a user-specified directory for log loading and storage.
+* `--scripts` : This tells **Ərk** to use a user-specified directory for script loading and storage.
 
 This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to be used for logs.
 
@@ -192,11 +193,11 @@ Now, let's make a directory for Bob:
 
 We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --format C:\Alice_Erk\text.css --logs C:\Alice_Erk\logs
+	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --format C:\Alice_Erk\text.css --logs C:\Alice_Erk\logs --scripts C:\Alice_Erk\scripts
 
 Similarly, Bob's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.css --logs C:\Bob_Erk\logs
+	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.css --logs C:\Bob_Erk\logs --scripts C:\Bob_Erk\scripts
 
 Alice and Bob can now use **Ərk** with their own customized settings!
 

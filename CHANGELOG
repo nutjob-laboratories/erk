@@ -74,6 +74,7 @@ Version 0.830
 	* Added a setting to disable scripting to the config file
 	* Added the new "disable scripting" setting to the "preferences" dialog
 	* Fixed a bug in the preferences dialog (features disabled on the commandline can't be changed in the dialog)
+	* New commandline flag to set a custom directory for all scripts
 
 Version 0.822
 	* First version with Linux support

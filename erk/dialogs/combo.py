@@ -52,8 +52,8 @@ from .print import Dialog as PrintMsg
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_connect_information(can_do_ssl,userfile,do_ssl=None,do_reconnect=None,parent=None):
-		dialog = Dialog(can_do_ssl,userfile,do_ssl,do_reconnect,parent)
+	def get_connect_information(can_do_ssl,userfile,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',parent=None):
+		dialog = Dialog(can_do_ssl,userfile,do_ssl,do_reconnect,block_scripts,scriptsdir,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -149,11 +149,11 @@ class Dialog(QDialog):
 				sscript = self.scriptedit.toPlainText()
 				if len(sscript)==0:
 					# Only save a blank script if the file already exists
-					sfile = get_auto_script_name(self.host.text(),str(port))
+					sfile = get_auto_script_name(self.host.text(),str(port),self.scriptsdir)
 					if os.path.isfile(sfile):
-						save_auto_script(self.host.text(),str(port),sscript)
+						save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
 				else:
-					save_auto_script(self.host.text(),str(port),sscript)
+					save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
 		else:
 			script = None
 
@@ -280,7 +280,7 @@ class Dialog(QDialog):
 		serv = self.host.text()
 		port = self.port.text()
 
-		code = load_auto_script(serv,port)
+		code = load_auto_script(serv,port,self.scriptsdir)
 		if code!=None:
 			self.scriptedit.setText(code)
 		else:
@@ -290,7 +290,7 @@ class Dialog(QDialog):
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 
-	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.can_do_ssl = can_do_ssl
@@ -298,6 +298,7 @@ class Dialog(QDialog):
 		self.userfile = userfile
 
 		self.block_scripts = block_scripts
+		self.scriptsdir = scriptsdir
 
 		self.autojoins = []
 
@@ -854,7 +855,7 @@ class Dialog(QDialog):
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
-			code = load_auto_script(self.user_info["last_server"],self.user_info["last_port"])
+			code = load_auto_script(self.user_info["last_server"],self.user_info["last_port"],self.scriptsdir)
 			if code!=None:
 				self.scriptedit.setText(code)
 
@@ -1017,7 +1018,7 @@ class Dialog(QDialog):
 		serv = self.host.text()
 		port = self.port.text()
 
-		code = load_auto_script(serv,port)
+		code = load_auto_script(serv,port,self.scriptsdir)
 		if code!=None:
 			self.scriptedit.setText(code)
 		else:
@@ -1083,7 +1084,7 @@ class Dialog(QDialog):
 		port = self.port.text()
 		self.scriptedit.setText('')
 
-		sfile = get_auto_script_name(serv,port)
+		sfile = get_auto_script_name(serv,port,self.scriptsdir)
 		if os.path.isfile(sfile):
 			os.remove(sfile)
 
@@ -1094,7 +1095,7 @@ class Dialog(QDialog):
 		script = self.scriptedit.toPlainText()
 
 		if len(serv)>0 and len(port)>0:
-			save_auto_script(serv,port,script)
+			save_auto_script(serv,port,script,self.scriptsdir)
 
 	def buttonAdd(self):
 		#x = AddChannelDialog.Dialog()

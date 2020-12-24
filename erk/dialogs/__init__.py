@@ -185,17 +185,17 @@ def JoinDialog():
 	if not info: return None
 	return info
 
-def ComboDialog(userfile,block_scripts):
-	x = Combo(SSL_AVAILABLE,userfile,None,None,block_scripts)
-	info = x.get_connect_information(SSL_AVAILABLE,userfile,None,None,block_scripts)
+def ComboDialog(userfile,block_scripts,scriptsdir):
+	x = Combo(SSL_AVAILABLE,userfile,None,None,block_scripts,scriptsdir)
+	info = x.get_connect_information(SSL_AVAILABLE,userfile,None,None,block_scripts,scriptsdir)
 	del x
 
 	if not info: return None
 	return info
 
-def ComboDialogCmd(userfile,do_ssl=None,do_reconnect=None,block_scripts=False):
-	x = Combo(SSL_AVAILABLE,userfile,do_ssl,do_reconnect,block_scripts)
-	info = x.get_connect_information(SSL_AVAILABLE,userfile,do_ssl,do_reconnect,block_scripts)
+def ComboDialogCmd(userfile,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir=''):
+	x = Combo(SSL_AVAILABLE,userfile,do_ssl,do_reconnect,block_scripts,scriptsdir)
+	info = x.get_connect_information(SSL_AVAILABLE,userfile,do_ssl,do_reconnect,block_scripts,scriptsdir)
 	del x
 
 	if not info: return None

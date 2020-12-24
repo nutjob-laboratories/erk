@@ -839,7 +839,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			file = tokens.pop(0)
 
-			scriptname = find_script_file(file)
+			scriptname = find_script_file(file,client.gui.scriptsdir)
 
 			# if os.path.isfile(file):
 			if scriptname!=None:

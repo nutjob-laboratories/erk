@@ -115,6 +115,7 @@ miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configur
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
+miscgroup.add_argument("-r","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 
 
 args = parser.parse_args()
@@ -150,6 +151,12 @@ if __name__ == '__main__':
 	if args.logs:
 		if not os.path.isdir(args.logs):
 			os.mkdir(args.logs)
+			print("\""+args.logs+"\" directory created!")
+
+	if args.scripts:
+		if not os.path.isdir(args.scripts):
+			os.mkdir(args.scripts)
+			print("\""+args.scripts+"\" directory created!")
 
 	# Handle installing plugins
 
@@ -369,14 +376,14 @@ if __name__ == '__main__':
 					u["failreconnect"],
 					False,
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -412,15 +419,15 @@ if __name__ == '__main__':
 						u["failreconnect"],
 						False,
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts)
 				GUI.show()
 			else:
 
 				# Launch normally, showing the connection dialog first
 
-				info = ComboDialog(args.user,is_scripting_enabled)
+				info = ComboDialog(args.user,is_scripting_enabled,args.scripts)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts)
 					GUI.show()
 				else:
 					app.quit()

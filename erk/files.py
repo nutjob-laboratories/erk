@@ -132,21 +132,13 @@ def filterProfanityFromText(text,punc=True):
 
 AUTO_SCRIPT_CACHE = {}
 
-def find_script_file(script):
+def find_script_file(script,scriptdir):
 	if os.path.isfile(script):
 		return script
 
-	d_script = os.path.join(SCRIPTS_DIRECTORY, script)
+	d_script = os.path.join(scriptdir, script)
 	if os.path.isfile(d_script):
 		return d_script
-
-	s_script = os.path.join(SETTINGS_DIRECTORY, script)
-	if os.path.isfile(s_script):
-		return s_script
-
-	i_script = os.path.join(INSTALL_DIRECTORY, script)
-	if os.path.isfile(i_script):
-		return i_script
 
 	return None
 
@@ -154,23 +146,23 @@ def clear_auto_script_cache():
 	global AUTO_SCRIPT_CACHE
 	AUTO_SCRIPT_CACHE = {}
 
-def get_auto_script_name(ip,port):
+def get_auto_script_name(ip,port,scriptdir):
 	fname = ip.strip()+"_"+str(port).strip()+".erk"
-	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+	scriptname = os.path.join(scriptdir, fname)
 
 	return scriptname
 
-def save_auto_script(ip,port,script):
+def save_auto_script(ip,port,script,scriptdir):
 	fname = ip.strip()+"_"+str(port).strip()+".erk"
-	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+	scriptname = os.path.join(scriptdir, fname)
 
 	f=open(scriptname, "w")
 	f.write(script)
 	f.close()
 
-def load_auto_script(ip,port):
+def load_auto_script(ip,port,scriptdir):
 	fname = ip.strip()+"_"+str(port).strip()+".erk"
-	scriptname = os.path.join(SCRIPTS_DIRECTORY, fname)
+	scriptname = os.path.join(scriptdir, fname)
 	if scriptname in AUTO_SCRIPT_CACHE: return AUTO_SCRIPT_CACHE[scriptname]
 	if os.path.isfile(scriptname):
 		f=open(scriptname, "r")
