@@ -1020,7 +1020,7 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ssl' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
-			port = 6667
+			port = 6697
 			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
@@ -1070,7 +1070,7 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ressl' and len(tokens)==2:
 			tokens.pop(0)
 			server = tokens.pop(0)
-			port = 6667
+			port = 6697
 			user = get_user(client.gui.userfile)
 
 			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
