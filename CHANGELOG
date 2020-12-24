@@ -70,6 +70,7 @@ Version 0.830
 	* Connection dialog can now toggle the "save_script" setting, and save scripts without hitting the "save" button
 	* Changed the name of of the user setting "script" to "auto_script" to better reflect the setting use
 	* Changed the location of the two checkboxes on the "script" tab to be together, horizontally, on the bottom
+	* Added commandline flag "-T","--noscripts" to disable scripts. Scripts can't be executed, and the script tab will not appear in the connection dialog
 
 Version 0.822
 	* First version with Linux support

@@ -134,24 +134,28 @@ class Dialog(QDialog):
 		else:
 			channels = []
 
-		# Autoscript
-		if self.AUTOSCRIPT:
-			script = self.scriptedit.toPlainText()
+		if not self.block_scripts:
 
-			if len(script)==0: script = None
+			# Autoscript
+			if self.AUTOSCRIPT:
+				script = self.scriptedit.toPlainText()
 
+				if len(script)==0: script = None
+
+			else:
+				script = None
+
+			if self.SAVE_SCRIPT:
+				sscript = self.scriptedit.toPlainText()
+				if len(sscript)==0:
+					# Only save a blank script if the file already exists
+					sfile = get_auto_script_name(self.host.text(),str(port))
+					if os.path.isfile(sfile):
+						save_auto_script(self.host.text(),str(port),sscript)
+				else:
+					save_auto_script(self.host.text(),str(port),sscript)
 		else:
 			script = None
-
-		if self.SAVE_SCRIPT:
-			sscript = self.scriptedit.toPlainText()
-			if len(sscript)==0:
-				# Only save a blank script if the file already exists
-				sfile = get_auto_script_name(self.host.text(),str(port))
-				if os.path.isfile(sfile):
-					save_auto_script(self.host.text(),str(port),sscript)
-			else:
-				save_auto_script(self.host.text(),str(port),sscript)
 
 		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
 
@@ -286,12 +290,14 @@ class Dialog(QDialog):
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 
-	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.can_do_ssl = can_do_ssl
 		self.parent = parent
 		self.userfile = userfile
+
+		self.block_scripts = block_scripts
 
 		self.autojoins = []
 
@@ -326,7 +332,8 @@ class Dialog(QDialog):
 		self.tabs.addTab(self.server_tab,"Connect")
 		self.tabs.addTab(self.network_tab,"Servers")
 		#self.tabs.addTab(self.user_tab,"User")
-		self.tabs.addTab(self.channels_tab,"Script")
+		if not self.block_scripts:
+			self.tabs.addTab(self.channels_tab,"Script")
 
 		#self.tabs.addTab(self.script_tab,"Script")
 

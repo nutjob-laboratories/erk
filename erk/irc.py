@@ -320,12 +320,14 @@ class IRC_Connection(irc.IRCClient):
 		# Execute auto-script
 		if self.kwargs['script']!=None:
 
-			global SCRIPT_WINDOW
-			SCRIPT_WINDOW = events.fetch_console_window(self)
-			self.scriptThread = ScriptThread(self.kwargs['script'])
-			self.scriptThread.execLine.connect(self.exec_script_line)
-			self.scriptThread.scriptEnd.connect(self.exec_script_end)
-			self.scriptThread.start()
+			if not self.gui.block_scripts:
+
+				global SCRIPT_WINDOW
+				SCRIPT_WINDOW = events.fetch_console_window(self)
+				self.scriptThread = ScriptThread(self.kwargs['script'])
+				self.scriptThread.execLine.connect(self.exec_script_line)
+				self.scriptThread.scriptEnd.connect(self.exec_script_end)
+				self.scriptThread.start()
 
 	def exec_script_line(self,line):
 		userinput.handle_input(SCRIPT_WINDOW,self,line)

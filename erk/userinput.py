@@ -826,8 +826,16 @@ def handle_ui_input(window,client,text):
 
 	# PRINT COMMAND
 
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:
+
 			tokens.pop(0)
 			file = tokens.pop(0)
 

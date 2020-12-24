@@ -93,6 +93,7 @@ disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect 
 disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menu(s)", action="store_true")
 disgroup.add_argument( "-X","--nomenus", help=f"Disable all menus", action="store_true")
 disgroup.add_argument( "-N","--noconnect", help=f"Disable connection commands", action="store_true")
+disgroup.add_argument( "-T","--noscripts", help=f"Disable scripting", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
 
@@ -332,7 +333,6 @@ if __name__ == '__main__':
 										args.channel.append([c,''])
 
 		# Handle connecting to a server if one has been provided
-
 		if args.server:
 			if args.password=='':
 				pword = None
@@ -364,14 +364,14 @@ if __name__ == '__main__':
 					u["failreconnect"],
 					False,
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
+			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
+				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -407,15 +407,15 @@ if __name__ == '__main__':
 						u["failreconnect"],
 						False,
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
+				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
 				GUI.show()
 			else:
 
 				# Launch normally, showing the connection dialog first
 
-				info = ComboDialog(args.user)
+				info = ComboDialog(args.user,args.noscripts)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs)
+					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,args.noscripts)
 					GUI.show()
 				else:
 					app.quit()

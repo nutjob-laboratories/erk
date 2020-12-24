@@ -347,7 +347,7 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -384,6 +384,8 @@ class Erk(QMainWindow):
 		self.userfile = userfile
 
 		self.logdir = logdir
+
+		self.block_scripts = block_scripts
 
 		# Determine if window color is dark or light
 		mbcolor = self.palette().color(QPalette.Window).name()
@@ -1445,12 +1447,12 @@ class Erk(QMainWindow):
 		self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 	def menuCombo(self):
-		info = ComboDialog(self.userfile)
+		info = ComboDialog(self.userfile,self.block_scripts)
 		if info!=None:
 			self.connectToIRCServer(info)
 
 	def menuComboCmd(self,do_ssl=None,do_reconnect=None):
-		info = ComboDialogCmd(self.userfile,do_ssl,do_reconnect)
+		info = ComboDialogCmd(self.userfile,do_ssl,do_reconnect,self.block_scripts)
 		if info!=None:
 			self.connectToIRCServer(info)
 
