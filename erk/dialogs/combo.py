@@ -678,8 +678,9 @@ class Dialog(QDialog):
 
 		#serverTabLayout.addLayout(finConnectOptions)
 
-		serverTabLayout.addWidget(QLabel(" "))
-		serverTabLayout.addWidget(QLabel(" "))
+		# serverTabLayout.addWidget(QLabel(" "))
+		# serverTabLayout.addWidget(QLabel(" "))
+
 		# serverTabLayout.addStretch()
 
 		# serverTabLayout.addWidget(ssetBox)
@@ -727,7 +728,13 @@ class Dialog(QDialog):
 		userLayout.addRow(usrl, self.username)
 		userLayout.addRow(reall, self.realname)
 
+		banner = QLabel()
+		pixmap = QPixmap(BANNER_IMAGE)
+		banner.setPixmap(pixmap)
+		banner.setAlignment(Qt.AlignCenter)
+
 		userTabLayout = QVBoxLayout()
+		userTabLayout.addWidget(banner)
 		userTabLayout.addStretch()
 		userTabLayout.addLayout(userLayout)
 		userTabLayout.addStretch()

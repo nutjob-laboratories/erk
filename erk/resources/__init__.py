@@ -37,6 +37,8 @@ LOGO_IMAGE = ":/gui-logo.png"
 LIGHT_LOGO_IMAGE = ":/gui-light_logo.png"
 DEFAULT_FONT = ":/font-DejaVuSansMono.ttf"
 
+BANNER_IMAGE = ":/gui-banner.png"
+
 USERLIST_OPERATOR_ICON		= ":/gui-ulist_op.png"
 USERLIST_VOICED_ICON		= ":/gui-ulist_voice.png"
 USERLIST_OWNER_ICON 		= ":/gui-ulist_owner.png"
