@@ -582,7 +582,7 @@ class Dialog(QDialog):
 
 		self.reconnect.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
 
-		self.failrecon = QCheckBox("Reconnect on failure",self)
+		self.failrecon = QCheckBox("Retry failed connections",self)
 		self.failrecon.stateChanged.connect(self.clickFailrecon)
 
 		self.failrecon.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
