@@ -776,6 +776,11 @@ def handle_ui_input(window,client,text):
 
 	tokens = text.split()
 
+	# The /wait command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
+			return True
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'preferences' and len(tokens)==1:
 			window.prefDialog()

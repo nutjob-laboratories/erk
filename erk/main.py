@@ -551,6 +551,31 @@ class Erk(QMainWindow):
 		if self.fullscreen:
 			self.showFullScreen()
 
+		# System Tray
+		# self.tray = QSystemTrayIcon() 
+		# self.tray.setIcon(QIcon(ERK_ICON)) 
+		# self.tray.setVisible(True)
+
+		# self.trayMenu = QMenu()
+
+		# entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
+		# entry.triggered.connect(self.menuCombo)
+		# self.trayMenu.addAction(entry)
+
+		# entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+		# entry.triggered.connect(self.showSettingsDialog)
+		# self.trayMenu.addAction(entry)
+
+		# insertNoTextSeparator(self,self.trayMenu)
+
+		# entry = QAction(QIcon(QUIT_ICON),"Exit",self)
+		# entry.triggered.connect(self.close)
+		# self.trayMenu.addAction(entry)
+
+		# self.tray.setContextMenu(self.trayMenu)
+
+		
+
 	def spellcheck_language(self,setting):
 
 		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RUNCHECKED_ICON))
@@ -806,6 +831,14 @@ class Erk(QMainWindow):
 		self.about = QAction(QIcon(ABOUT_ICON),"About",self)
 		self.about.triggered.connect(self.menuAbout)
 		self.helpMenu.addAction(self.about)
+
+		idir = sys.path[0]
+		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Commands.pdf")
+
+		entry = QAction(QIcon(PDF_ICON),"Ərk command documentation",self)
+		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.helpMenu.addAction(entry)
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))

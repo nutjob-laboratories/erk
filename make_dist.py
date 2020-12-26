@@ -33,6 +33,7 @@ shutil.copy("./plugins/examples/package.txt", "./dist/plugins/examples/package.t
 
 os.mkdir("./dist/documentation")
 shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./dist/documentation/Erk_Plugin_Guide.pdf")
+shutil.copy("./documentation/Erk_Commands.pdf", "./dist/documentation/Erk_Commands.pdf")
 
 os.mkdir("./dist/macros")
 shutil.copy("./macros/trout.json", "./dist/macros/trout.json")

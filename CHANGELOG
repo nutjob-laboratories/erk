@@ -77,6 +77,9 @@ Version 0.830
 	* New commandline flag to set a custom directory for all scripts
 	* Changed the default port for the /ssl command to 6697
 	* Added a banner to the connection dialog, and cleaned up the widget layout
+	* Bugfix: the /wait command can't be called from the chat input widget, only from scripts
+	* Added documentation for the Erk client commands (for input and scripting)
+	* Added a link to the PDF command documentation to the "Help" menu
 
 Version 0.822
 	* First version with Linux support
