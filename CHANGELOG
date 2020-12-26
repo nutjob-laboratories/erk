@@ -80,6 +80,7 @@ Version 0.830
 	* Bugfix: the /wait command can't be called from the chat input widget, only from scripts
 	* Added documentation for the Erk client commands (for input and scripting)
 	* Added a link to the PDF command documentation to the "Help" menu
+	* Added a new entry to the main menu: "Run script" (loads and runs a script on the current server connection)
 
 Version 0.822
 	* First version with Linux support
