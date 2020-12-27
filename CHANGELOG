@@ -90,6 +90,7 @@ Version 0.830
 	* Bugfix: "You are now know as <new nick>" no longer appears twice if you change nicks on a console window
 	* Added "Join Channel" and "Change Nick" buttons to the console window, right next to the "Run Script" button
 	* Added a "Disconnect" button to the console window
+	* Removed "Join Channel" and "Change Nick" buttons from console windows, as there are multiple other ways to do both of these
 
 Version 0.822
 	* First version with Linux support

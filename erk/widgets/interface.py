@@ -378,11 +378,11 @@ class Window(QMainWindow):
 				self.runScript.setEnabled(False)
 				self.runScript.setVisible(False)
 
-			joinChannel = QPushButton("Join Channel")
-			joinChannel.clicked.connect(self.joinButton)
+			# joinChannel = QPushButton("Join Channel")
+			# joinChannel.clicked.connect(self.joinButton)
 
-			newNick = QPushButton("Change Nick")
-			newNick.clicked.connect(self.nickButton)
+			# newNick = QPushButton("Change Nick")
+			# newNick.clicked.connect(self.nickButton)
 
 			disconnectButton = QPushButton("Disconnect")
 			disconnectButton.clicked.connect(self.discoButton)
@@ -390,8 +390,8 @@ class Window(QMainWindow):
 
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)
-			inputLayout.addWidget(joinChannel)
-			inputLayout.addWidget(newNick)
+			# inputLayout.addWidget(joinChannel)
+			# inputLayout.addWidget(newNick)
 			inputLayout.addWidget(self.runScript)
 			inputLayout.addWidget(QLabel('|'))
 			inputLayout.addWidget(disconnectButton)
