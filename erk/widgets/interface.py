@@ -371,12 +371,22 @@ class Window(QMainWindow):
 			nameLayout.addWidget(self.name_display)
 			nameLayout.addStretch()
 
+			self.runScript = QPushButton("Run Script")
+			self.runScript.clicked.connect(self.runScriptButton)
+
+			if self.parent.block_scripts: self.runScript.setEnabled(False)
+
+			inputLayout = QHBoxLayout()
+			inputLayout.addWidget(self.input)
+			inputLayout.addWidget(self.runScript)
+
 			finalLayout = QVBoxLayout()
 			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.setContentsMargins(config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.addLayout(nameLayout)
 			finalLayout.addWidget(self.chat)
-			finalLayout.addWidget(self.input)
+			# finalLayout.addWidget(self.input)
+			finalLayout.addLayout(inputLayout)
 		else:
 			self.horizontalSplitter = QSplitter(Qt.Horizontal)
 			self.horizontalSplitter.addWidget(self.chat)
@@ -535,6 +545,13 @@ class Window(QMainWindow):
 		self.chat.moveCursor(QTextCursor.End)
 
 	# BEGIN GUI METHODS
+
+	def runScriptButton(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.parent.scriptsdir,"Script File (*.erk);;Text File (*.txt);;All Files (*)", options=options)
+		if fileName:
+			userinput.execute_script(fileName,self,self.client)
 
 	def rebuildConnection(self):
 		events.build_connection_display(self.parent)

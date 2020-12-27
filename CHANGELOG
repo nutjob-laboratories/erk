@@ -83,6 +83,9 @@ Version 0.830
 	* Added a new entry to the main menu: "Run script" (loads and runs a script on the current server connection)
 	* Made the small checkboxes on the connection dialog slightly bigger
 	* Bugfix: blank script will now save if the user uses the "clear" button in the connection dialog (and the save script option is selected)
+	* Moved the "run script" menu entry to a button on every consol window, on the right side of the input widget
+	* Removed the "run script" menu option
+	* Disabling scripting on the commandline or via the "preferences" dialog disables the "run script" button on console windows
 
 Version 0.822
 	* First version with Linux support
