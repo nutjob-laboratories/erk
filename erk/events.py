@@ -1289,7 +1289,8 @@ def erk_changed_nick(gui,client,newnick):
 
 	window = fetch_console_window(client)
 	if window:
-		window.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
+		if window != gui.current_page:
+			window.writeText( Message(SYSTEM_MESSAGE,'',"You are now known as "+newnick) )
 
 	# Update channel window nick displays
 	for window in CHANNELS:

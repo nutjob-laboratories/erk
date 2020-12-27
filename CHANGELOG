@@ -87,6 +87,9 @@ Version 0.830
 	* Removed the "run script" menu option
 	* Disabling scripting on the commandline or via the "preferences" dialog disables the "run script" button on console windows
 	* "Run script" button on console windows is now invisible if scripting is disabled
+	* Bugfix: "You are now know as <new nick>" no longer appears twice if you change nicks on a console window
+	* Added "Join Channel" and "Change Nick" buttons to the console window, right next to the "Run Script" button
+	* Added a "Disconnect" button to the console window
 
 Version 0.822
 	* First version with Linux support

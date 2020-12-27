@@ -47,7 +47,7 @@ from .. import config
 from .. import textformat
 from .. import userinput
 from .. import macros
-from ..dialogs import KeyDialog
+from ..dialogs import KeyDialog,JoinDialog,NickDialog
 from .. import events
 from .action import *
 
@@ -378,9 +378,23 @@ class Window(QMainWindow):
 				self.runScript.setEnabled(False)
 				self.runScript.setVisible(False)
 
+			joinChannel = QPushButton("Join Channel")
+			joinChannel.clicked.connect(self.joinButton)
+
+			newNick = QPushButton("Change Nick")
+			newNick.clicked.connect(self.nickButton)
+
+			disconnectButton = QPushButton("Disconnect")
+			disconnectButton.clicked.connect(self.discoButton)
+
+
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)
+			inputLayout.addWidget(joinChannel)
+			inputLayout.addWidget(newNick)
 			inputLayout.addWidget(self.runScript)
+			inputLayout.addWidget(QLabel('|'))
+			inputLayout.addWidget(disconnectButton)
 
 			finalLayout = QVBoxLayout()
 			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
@@ -547,6 +561,22 @@ class Window(QMainWindow):
 		self.chat.moveCursor(QTextCursor.End)
 
 	# BEGIN GUI METHODS
+	def discoButton(self):
+		events.disconnect_from_server(self.client,None)
+
+
+	def nickButton(self):
+		info = NickDialog(self.client.nickname,self)
+		if info!=None:
+			self.client.setNick(info)
+
+
+	def joinButton(self):
+		info = JoinDialog()
+		if info!=None:
+			channel = info[0]
+			key = info[1]
+			self.client.join(channel,key)
 
 	def runScriptButton(self):
 		options = QFileDialog.Options()
