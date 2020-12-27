@@ -152,6 +152,9 @@ class Dialog(QDialog):
 					sfile = get_auto_script_name(self.host.text(),str(port),self.scriptsdir)
 					if os.path.isfile(sfile):
 						save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
+					elif self.manually_cleared:
+						# Save blank script if the script was manually cleared
+						save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
 				else:
 					save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
 		else:
@@ -316,6 +319,8 @@ class Dialog(QDialog):
 		self.FAIL_RECONNECT = True
 		self.AUTOSCRIPT = False
 		self.SAVE_SCRIPT = False
+
+		self.manually_cleared = False
 
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
@@ -577,7 +582,7 @@ class Dialog(QDialog):
 		fheight = fm.height()
 		#SMALLER_CHECKBOX_SIZE = fheight-8
 
-		SMALLER_CHECKBOX_SIZE = fheight * 0.50
+		SMALLER_CHECKBOX_SIZE = fheight * 0.75
 
 
 		self.reconnect.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
@@ -1033,6 +1038,7 @@ class Dialog(QDialog):
 
 	def clearScript(self):
 		self.scriptedit.clear()
+		self.manually_cleared = True
 
 	def scriptTime(self):
 		x = PauseTime()
