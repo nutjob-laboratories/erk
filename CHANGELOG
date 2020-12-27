@@ -86,6 +86,7 @@ Version 0.830
 	* Moved the "run script" menu entry to a button on every consol window, on the right side of the input widget
 	* Removed the "run script" menu option
 	* Disabling scripting on the commandline or via the "preferences" dialog disables the "run script" button on console windows
+	* "Run script" button on console windows is now invisible if scripting is disabled
 
 Version 0.822
 	* First version with Linux support

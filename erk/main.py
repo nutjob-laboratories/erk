@@ -878,7 +878,6 @@ class Erk(QMainWindow):
 				else:
 					ANIM = LIGHT_SPINNER_ANIMATION
 
-				#self.spinner = QMovie(SPINNER_ANIMATION)
 				self.spinner = QMovie(ANIM)
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )

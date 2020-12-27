@@ -680,10 +680,12 @@ def name_to_private(client,channel):
 def disable_all_runscript():
 	for window in CONSOLES:
 		window.widget.runScript.setEnabled(False)
+		window.widget.runScript.setVisible(False)
 
 def enable_all_runscript():
 	for window in CONSOLES:
 		window.widget.runScript.setEnabled(True)
+		window.widget.runScript.setVisible(True)
 
 def open_private_window(client,target):
 

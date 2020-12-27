@@ -374,7 +374,9 @@ class Window(QMainWindow):
 			self.runScript = QPushButton("Run Script")
 			self.runScript.clicked.connect(self.runScriptButton)
 
-			if self.parent.block_scripts: self.runScript.setEnabled(False)
+			if self.parent.block_scripts:
+				self.runScript.setEnabled(False)
+				self.runScript.setVisible(False)
 
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)
