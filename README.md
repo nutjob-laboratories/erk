@@ -151,6 +151,14 @@ To install this plugin, save it to a file and place it in the "plugins" director
 
 For more information, check out the [documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf).
 
+## How configurable is **Ərk**?
+*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
+
+	python erk.py -PMASXNTD --channel "#erk" irc.efnet.org 6667
+And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
+
+When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
+
 ## Another IRC client? Why not use HexChat?
 
 Honestly? I wanted an IRC client that I liked using, and I wanted an IRC client that I could use in both Windows and Linux. Other than some "connects to every kind of chat network" clients, I didn't have a lot of choices. Since the only kind of chat I regularly use is IRC, I didn't care if the client could connect to Jabber, Facebook, or whatever. That left me (in my opinion) with only one choice: HexChat.
