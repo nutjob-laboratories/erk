@@ -393,7 +393,7 @@ class Window(QMainWindow):
 			# inputLayout.addWidget(joinChannel)
 			# inputLayout.addWidget(newNick)
 			inputLayout.addWidget(self.runScript)
-			inputLayout.addWidget(QLabel('|'))
+			#inputLayout.addWidget(QLabel('|'))
 			inputLayout.addWidget(disconnectButton)
 
 			finalLayout = QVBoxLayout()
