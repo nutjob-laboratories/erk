@@ -91,6 +91,7 @@ Version 0.830
 	* Added "Join Channel" and "Change Nick" buttons to the console window, right next to the "Run Script" button
 	* Added a "Disconnect" button to the console window
 	* Removed "Join Channel" and "Change Nick" buttons from console windows, as there are multiple other ways to do both of these
+	* Bugfix: connection display no longer displays the "selected" box that flickers in and out of existence whenever a server or channel is clicked
 
 Version 0.822
 	* First version with Linux support

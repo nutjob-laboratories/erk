@@ -80,12 +80,13 @@ def buildConnectionDisplayWidget(self):
 	connectionTree = LogWidget(self)
 	connectionTree.headerItem().setText(0,"1")
 	connectionTree.header().setVisible(False)
-
-	#connectionTree.setSelectionMode(QAbstractItemView.NoSelection)
 	
 	connectionTree.setIconSize(QSize(fheight,fheight))
 
+	connectionTree.setSelectionMode(QAbstractItemView.NoSelection)
+
 	connectionTree.setFocusPolicy(Qt.NoFocus)
+
 
 	connectionTree.itemDoubleClicked.connect(self.connectionNodeDoubleClicked)
 	connectionTree.itemClicked.connect(self.connectionNodeSingleClicked)
