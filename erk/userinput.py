@@ -166,8 +166,13 @@ CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentrie
 
 SCRIPT_THREADS = []
 
+VARIABLE_TABLE = {}
+
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
+
+	for key in VARIABLE_TABLE:
+		text = text.replace('$'+key,VARIABLE_TABLE[key])
 
 	if handle_ui_input(window,client,text):
 		window.input.setFocus()
@@ -781,6 +786,11 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
 			return True
 
+	# The /alias command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
+			return True
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'preferences' and len(tokens)==1:
 			window.prefDialog()
@@ -860,7 +870,7 @@ def handle_ui_input(window,client,text):
 				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 				# Create a thread for the script and run it
-				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname)
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE)
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
@@ -1156,7 +1166,7 @@ def execute_script(filename,window,client):
 		scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 		# Create a thread for the script and run it
-		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname)
+		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE)
 		scriptThread.execLine.connect(execute_script_line)
 		scriptThread.scriptEnd.connect(execute_script_end)
 		scriptThread.scriptErr.connect(execute_script_error)
@@ -1178,7 +1188,10 @@ def execute_script_line(data):
 
 # When a script completes, this is called which deletes the
 # script's thread
-def execute_script_end(mid):
+def execute_script_end(data):
+	mid = data[0]
+	vtable = data[1]
+
 	global SCRIPT_THREADS
 	clean = []
 	for e in SCRIPT_THREADS:
@@ -1187,6 +1200,8 @@ def execute_script_end(mid):
 			continue
 		clean.append(e)
 	SCRIPT_THREADS = clean
+
+	VARIABLE_TABLE.update(vtable)
 
 # Triggers every time there's a script error with the "/wait" command
 def execute_script_error(data):

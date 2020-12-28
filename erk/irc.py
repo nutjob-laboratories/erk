@@ -324,7 +324,7 @@ class IRC_Connection(irc.IRCClient):
 
 				global SCRIPT_WINDOW
 				SCRIPT_WINDOW = events.fetch_console_window(self)
-				self.scriptThread = ScriptThread(self.kwargs['script'])
+				self.scriptThread = ScriptThread(self.kwargs['script'],userinput.VARIABLE_TABLE)
 				self.scriptThread.execLine.connect(self.exec_script_line)
 				self.scriptThread.scriptEnd.connect(self.exec_script_end)
 				self.scriptThread.start()
@@ -332,9 +332,11 @@ class IRC_Connection(irc.IRCClient):
 	def exec_script_line(self,line):
 		userinput.handle_input(SCRIPT_WINDOW,self,line)
 
-	def exec_script_end(self):
+	def exec_script_end(self,vtable):
 		global SCRIPT_WINDOW
 		SCRIPT_WINDOW = None
+
+		userinput.VARIABLE_TABLE.update(vtable)
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -1302,11 +1304,12 @@ class UptimeHeartbeat(QThread):
 class ScriptThread(QThread):
 
 	execLine = pyqtSignal(str)
-	scriptEnd = pyqtSignal()
+	scriptEnd = pyqtSignal(dict)
 
-	def __init__(self,script,parent=None):
+	def __init__(self,script,variable_table,parent=None):
 		super(ScriptThread, self).__init__(parent)
 		self.script = script
+		self.vtable = variable_table
 
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
@@ -1316,7 +1319,18 @@ class ScriptThread(QThread):
 			line = line.strip()
 			if len(line)==0: continue
 
+			for key in self.vtable:
+				line = line.replace('$'+key,self.vtable[key])
+
 			tokens = line.split()
+
+			if len(tokens)>=3:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
+					tokens.pop(0)
+					var = tokens.pop(0)
+					value = ' '.join(tokens)
+					self.vtable[var] = value
+
 			if len(tokens)==2:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
 					count = tokens[1]
@@ -1329,22 +1343,24 @@ class ScriptThread(QThread):
 
 			self.execLine.emit(line)
 
-		self.scriptEnd.emit()
+		self.scriptEnd.emit(self.vtable)
 
 
 class ScriptThreadWindow(QThread):
 
 	execLine = pyqtSignal(list)
-	scriptEnd = pyqtSignal(str)
+	scriptEnd = pyqtSignal(list)
 	scriptErr = pyqtSignal(list)
 
-	def __init__(self,window,client,script,mid,scriptname,parent=None):
+	def __init__(self,window,client,script,mid,scriptname,variable_table,parent=None):
 		super(ScriptThreadWindow, self).__init__(parent)
 		self.script = script
 		self.window = window
 		self.client = client
 		self.id = mid
 		self.scriptname = scriptname
+
+		self.vtable = variable_table
 
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
@@ -1354,7 +1370,19 @@ class ScriptThreadWindow(QThread):
 			line = line.strip()
 			if len(line)==0: continue
 
+			for key in self.vtable:
+				line = line.replace('$'+key,self.vtable[key])
+
 			tokens = line.split()
+
+			if len(tokens)>=3:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
+					tokens.pop(0)
+					var = tokens.pop(0)
+					value = ' '.join(tokens)
+					self.vtable[var] = value
+
+
 			if len(tokens)==2:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
 					count = tokens[1]
@@ -1367,4 +1395,4 @@ class ScriptThreadWindow(QThread):
 
 			self.execLine.emit([self.window,self.client,line])
 
-		self.scriptEnd.emit(self.id)
+		self.scriptEnd.emit([self.id,self.vtable])
