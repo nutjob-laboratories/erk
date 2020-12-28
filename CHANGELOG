@@ -103,6 +103,10 @@ Version 0.830
 	* Added a commandline option to hide the connection display
 	* Removed the "(disabled)" tag from settings in the settings dialog for stuff that's been disabled from the commandline
 	* Cleaned up the "Connections" page in the settings dialog
+	* Removed the "always on top" configuration file setting
+	* Removed the "always on top" menu option
+	* Added a commandline flag to launch in "always on top" mode
+	* Changed the "full screen" menu option to say "Enter full screen" to enter, and "Exit full screen" to enter/exit full screen mode
 
 Version 0.822
 	* First version with Linux support

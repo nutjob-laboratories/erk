@@ -351,7 +351,7 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,do_ontop=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -392,6 +392,8 @@ class Erk(QMainWindow):
 		self.block_scripts = block_scripts
 
 		self.scriptsdir = scriptdir
+
+		self.do_ontop = do_ontop
 
 		self.cmdline_macro = False
 		self.cmdline_plugin = False
@@ -449,7 +451,7 @@ class Erk(QMainWindow):
 
 		self.app.setFont(self.font)
 
-		if config.ALWAYS_ON_TOP:
+		if self.do_ontop:
 			self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
 
 		self.stack = QStackedWidget(self)
@@ -711,17 +713,11 @@ class Erk(QMainWindow):
 
 			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
 
-			self.set_ontop = QAction(QIcon(UNCHECKED_ICON),"Always on top",self)
-			self.set_ontop.triggered.connect(lambda state,s="ontop": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_ontop)
-
-			if config.ALWAYS_ON_TOP: self.set_ontop.setIcon(QIcon(CHECKED_ICON))
-
-			self.set_full = QAction(QIcon(UNCHECKED_ICON),"Display full screen",self)
+			self.set_full = QAction(QIcon(WINDOW_ICON),"Enter full screen mode",self)
 			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
 			self.settingsMenu.addAction(self.set_full)
 
-			if self.fullscreen: self.set_full.setIcon(QIcon(CHECKED_ICON))
+			if self.fullscreen: self.set_full.setText("Exit full screen more")
 
 			# Log menu
 
@@ -1354,26 +1350,15 @@ class Erk(QMainWindow):
 			if self.fullscreen:
 				self.fullscreen = False
 				self.showNormal()
-				self.set_full.setIcon(QIcon(UNCHECKED_ICON))
+				#self.set_full.setIcon(QIcon(UNCHECKED_ICON))
+				self.set_full.setText("Enter full screen more")
 				self.winsizeMenuEntry.setEnabled(True)
 			else:
 				self.fullscreen = True
 				self.showFullScreen()
-				self.set_full.setIcon(QIcon(CHECKED_ICON))
+				#self.set_full.setIcon(QIcon(CHECKED_ICON))
+				self.set_full.setText("Exit full screen more")
 				self.winsizeMenuEntry.setEnabled(False)
-			return
-
-		if setting=="ontop":
-			if config.ALWAYS_ON_TOP:
-				config.ALWAYS_ON_TOP = False
-				self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
-				self.set_ontop.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.ALWAYS_ON_TOP = True
-				self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-				self.set_ontop.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			self.show()
 			return
 
 		if setting=="privlogsave":

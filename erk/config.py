@@ -90,7 +90,6 @@ DEVELOPER_MODE = False
 USE_SPACES_FOR_INDENT = True
 NUMBER_OF_SPACES_FOR_INDENT = 4
 EDITOR_WORD_WRAP = False
-ALWAYS_ON_TOP = False
 SHOW_LOAD_ERRORS = True
 DISPLAY_TIMESTAMP_SECONDS = False
 EDITOR_AUTO_INDENT = True
@@ -201,7 +200,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"enable_plugins": PLUGINS_ENABLED,
 		"enable_macros": MACROS_ENABLED,
 		"plugin_developement_mode": DEVELOPER_MODE,
-		"always_on_top": ALWAYS_ON_TOP,
 		"show_plugin_load_error": SHOW_LOAD_ERRORS,
 		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
 		"editor_autoindent": EDITOR_AUTO_INDENT,
@@ -339,7 +337,6 @@ def load_settings(filename=SETTINGS_FILE):
 	global USE_SPACES_FOR_INDENT
 	global NUMBER_OF_SPACES_FOR_INDENT
 	global EDITOR_WORD_WRAP
-	global ALWAYS_ON_TOP
 	global SHOW_LOAD_ERRORS
 	global DISPLAY_TIMESTAMP_SECONDS
 	global EDITOR_AUTO_INDENT
@@ -436,7 +433,6 @@ def load_settings(filename=SETTINGS_FILE):
 			PLUGINS_ENABLED = data["enable_plugins"]
 			MACROS_ENABLED = data["enable_macros"]
 			DEVELOPER_MODE = data["plugin_developement_mode"]
-			ALWAYS_ON_TOP = data["always_on_top"]
 			SHOW_LOAD_ERRORS = data["show_plugin_load_error"]
 			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]
 			EDITOR_AUTO_INDENT = data["editor_autoindent"]
