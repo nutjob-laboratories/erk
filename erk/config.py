@@ -132,6 +132,7 @@ ASK_BEFORE_QUIT = True
 MENU_BAR_MOVABLE = True
 MENU_BAR_ORIENT = "top"
 ENABLE_SCRIPTS = True
+DOUBLECLICK_TO_CHANGE_NICK = True
 
 
 def save_settings(filename=SETTINGS_FILE):
@@ -140,6 +141,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"double_click_nick_to_change_nicks": DOUBLECLICK_TO_CHANGE_NICK,
 		"enable_scripts": ENABLE_SCRIPTS,
 		"movable_menubar": MENU_BAR_MOVABLE,
 		"menubar_location": MENU_BAR_ORIENT,
@@ -232,6 +234,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "double_click_nick_to_change_nicks" in data:
+		data["double_click_nick_to_change_nicks"] = DOUBLECLICK_TO_CHANGE_NICK
 
 	if not "enable_scripts" in data:
 		data["enable_scripts"] = ENABLE_SCRIPTS
@@ -362,7 +367,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global MENU_BAR_MOVABLE
 	global MENU_BAR_ORIENT
 	global ENABLE_SCRIPTS
-
+	global DOUBLECLICK_TO_CHANGE_NICK
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -371,6 +376,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			DOUBLECLICK_TO_CHANGE_NICK = data["double_click_nick_to_change_nicks"]
 			MENU_BAR_MOVABLE = data["movable_menubar"]
 			MENU_BAR_ORIENT = data["menubar_location"]
 			ASK_BEFORE_QUIT = data["ask_before_quitting"]

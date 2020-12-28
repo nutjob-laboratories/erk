@@ -478,6 +478,8 @@ class Window(QMainWindow):
 
 			self.nick_display = QLabel(" <b>"+self.client.nickname+"</b> ")
 
+			self.nick_display.installEventFilter(self)
+
 			if not config.DISPLAY_NICKNAME_ON_CHANNEL: self.nick_display.hide()
 
 			nicknameLayout = QHBoxLayout()
@@ -991,6 +993,13 @@ class Window(QMainWindow):
 		action = menu.exec_(self.chat.mapToGlobal(location))
 
 	def eventFilter(self, source, event):
+
+		# Name click
+		if (event.type() == QtCore.QEvent.MouseButtonDblClick and source is self.nick_display):
+			if config.DOUBLECLICK_TO_CHANGE_NICK:
+				info = NickDialog(self.client.nickname,self)
+				if info!=None:
+					self.client.setNick(info)
 
 		# User List Menu
 		if (event.type() == QtCore.QEvent.ContextMenu and source is self.userlist):

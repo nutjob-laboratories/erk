@@ -292,6 +292,9 @@ class Dialog(QDialog):
 		self.displayNickname = QCheckBox("Display nickname",self)
 		if config.DISPLAY_NICKNAME_ON_CHANNEL: self.displayNickname.setChecked(True)
 
+		self.displayChange = QCheckBox("Double-click nickname to change nickname",self)
+		if config.DOUBLECLICK_TO_CHANGE_NICK: self.displayChange.setChecked(True)
+
 		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
 		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
 		self.fetchMisc.stateChanged.connect(self.setRerender)
@@ -306,6 +309,7 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.displayUserlists)
 		cpLayout.addWidget(self.displayStatus)
 		cpLayout.addWidget(self.displayNickname)
+		cpLayout.addWidget(self.displayChange)
 		cpLayout.addWidget(self.fetchMisc)
 		cpLayout.addWidget(self.joinMisc)
 		cpLayout.addStretch()
@@ -690,6 +694,8 @@ class Dialog(QDialog):
 
 	def save(self):
 
+		config.DOUBLECLICK_TO_CHANGE_NICK = self.displayChange.isChecked()
+
 		config.ENABLE_SCRIPTS = self.scriptMisc.isChecked()
 		if config.ENABLE_SCRIPTS:
 			self.parent.block_scripts = False
@@ -704,8 +710,6 @@ class Dialog(QDialog):
 			self.parent.set_menubar_moveable(True)
 		else:
 			self.parent.set_menubar_moveable(False)
-
-
 
 		config.ASK_BEFORE_QUIT = self.askMisc.isChecked()
 
