@@ -356,6 +356,17 @@ class Dialog(QDialog):
 		if config.CONNECTION_DISPLAY_LOCATION=="left": self.leftRadio.setChecked(True)
 		if config.CONNECTION_DISPLAY_LOCATION=="right": self.rightRadio.setChecked(True)
 
+		if self.parent.block_connectiondisplay:
+			self.enableConnection.setEnabled(False)
+			self.floatConnection.setEnabled(False)
+			self.uptimesConnection.setEnabled(False)
+			self.doubleConnection.setEnabled(False)
+			self.expandConnection.setEnabled(False)
+			self.unseenConnection.setEnabled(False)
+			self.animateConnection.setEnabled(False)
+			self.leftRadio.setEnabled(False)
+			self.rightRadio.setEnabled(False)
+
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
 		cgbLayout.addWidget(self.leftRadio)
@@ -365,15 +376,11 @@ class Dialog(QDialog):
 		clLayout = QGroupBox("Connection display location",self)
 		clLayout.setLayout(cgbLayout)
 
-		efLayout = QHBoxLayout()
-		efLayout.addStretch()
-		efLayout.addWidget(self.enableConnection)
-		efLayout.addStretch()
-		efLayout.addWidget(self.floatConnection)
-		efLayout.addStretch()
+		if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addLayout(efLayout)
+		cpLayout.addWidget(self.enableConnection)
+		cpLayout.addWidget(self.floatConnection)
 		cpLayout.addWidget(clLayout)
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
@@ -565,21 +572,18 @@ class Dialog(QDialog):
 
 		if self.parent.cmdline_script:
 			self.scriptMisc.setEnabled(False)
-			self.scriptMisc.setText("Enable scripts (disabled)")
 
 		self.macroFeatures = QCheckBox("Enable macros",self)
 		if config.MACROS_ENABLED: self.macroFeatures.setChecked(True)
 
 		if self.parent.cmdline_macro:
 			self.macroFeatures.setEnabled(False)
-			self.macroFeatures.setText("Enable macros (disabled)")
 
 		self.pluginFeatures = QCheckBox("Enable plugins",self)
 		if config.PLUGINS_ENABLED: self.pluginFeatures.setChecked(True)
 
 		if self.parent.cmdline_plugin:
 			self.pluginFeatures.setEnabled(False)
-			self.pluginFeatures.setText("Enable plugins (disabled)")
 
 		self.pluginErrors = QCheckBox("Show plugin load errors",self)
 		if config.SHOW_LOAD_ERRORS: self.pluginErrors.setChecked(True)
@@ -589,10 +593,7 @@ class Dialog(QDialog):
 
 		if self.parent.cmdline_plugin:
 			self.pluginErrors.setEnabled(False)
-			self.pluginErrors.setText("Show plugin load errors (disabled)")
-
 			self.pluginDevmode.setEnabled(False)
-			self.pluginDevmode.setText("Plugin development mode (disabled)")
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.scriptMisc)

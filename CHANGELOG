@@ -100,6 +100,9 @@ Version 0.830
 	* Moved 'enable scripts' to the new 'Extensions' page
 	* Updated the plugin documentation to show the new location of the 'Development mode' option
 	* Disabling plugins from the commandline now disables the 'show plugin errors' and 'development mode' settings in the settings dialog
+	* Added a commandline option to hide the connection display
+	* Removed the "(disabled)" tag from settings in the settings dialog for stuff that's been disabled from the commandline
+	* Cleaned up the "Connections" page in the settings dialog
 
 Version 0.822
 	* First version with Linux support

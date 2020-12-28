@@ -351,7 +351,7 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -400,6 +400,8 @@ class Erk(QMainWindow):
 		if self.block_macros: self.cmdline_macro = True
 		if self.block_plugins: self.cmdline_plugin = True
 		if self.block_scripts: self.cmdline_script = True
+
+		self.block_connectiondisplay = block_connectiondisplay
 
 		# Determine if window color is dark or light
 		mbcolor = self.palette().color(QPalette.Window).name()
@@ -523,6 +525,10 @@ class Erk(QMainWindow):
 			self.connection_dock.show()
 		else:
 			self.connection_dock.hide()
+
+		if self.block_connectiondisplay:
+			self.connection_dock.hide()
+			self.connection_display.hide()
 
 		self.resize(appwidth,appheight)
 
