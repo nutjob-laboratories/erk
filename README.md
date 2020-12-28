@@ -46,6 +46,8 @@
 * An extensive set of configuration options
 	* Almost every part of the interface can be customized
 	* Most behaviors can be customized
+	* Over 50 display and configuration options settable in the GUI
+	* Scripting, macros, plugins, menus, and more can be disabled from the command-line
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
 	* Right click on misspelled words for suggested spellings/words
