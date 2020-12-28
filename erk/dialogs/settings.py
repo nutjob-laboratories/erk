@@ -553,12 +553,19 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Plugins & Macros")
+		entry.setText("Extensions")
 		entry.widget = self.featuresPage
 		entry.setIcon(QIcon(MACRO_ICON))
 		self.selector.addItem(entry)
 
 		self.stack.addWidget(self.featuresPage)
+
+		self.scriptMisc = QCheckBox("Enable scripts",self)
+		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.scriptMisc.setEnabled(False)
+			self.scriptMisc.setText("Enable scripts (disabled)")
 
 		self.macroFeatures = QCheckBox("Enable macros",self)
 		if config.MACROS_ENABLED: self.macroFeatures.setChecked(True)
@@ -580,7 +587,15 @@ class Dialog(QDialog):
 		self.pluginDevmode = QCheckBox("Plugin development mode",self)
 		if config.DEVELOPER_MODE: self.pluginDevmode.setChecked(True)
 
+		if self.parent.cmdline_plugin:
+			self.pluginErrors.setEnabled(False)
+			self.pluginErrors.setText("Show plugin load errors (disabled)")
+
+			self.pluginDevmode.setEnabled(False)
+			self.pluginDevmode.setText("Plugin development mode (disabled)")
+
 		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.scriptMisc)
 		cpLayout.addWidget(self.macroFeatures)
 		cpLayout.addWidget(self.pluginFeatures)
 		cpLayout.addWidget(self.pluginErrors)
@@ -604,12 +619,8 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.miscPage)
 
-		self.scriptMisc = QCheckBox("Enable scripts",self)
-		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
-
-		if self.parent.cmdline_script:
-			self.scriptMisc.setEnabled(False)
-			self.scriptMisc.setText("Enable scripts (disabled)")
+		self.buttonsMisc = QCheckBox("'Run Script' and 'Disconnect' buttons",self)
+		if config.SHOW_CONSOLE_BUTTONS: self.buttonsMisc.setChecked(True)
 
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
@@ -641,7 +652,7 @@ class Dialog(QDialog):
 		hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.scriptMisc)
+		cpLayout.addWidget(self.buttonsMisc)
 		cpLayout.addWidget(self.askMisc)
 		cpLayout.addWidget(self.lostErrors)
 		cpLayout.addWidget(self.failErrors)
@@ -693,6 +704,12 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SHOW_CONSOLE_BUTTONS = self.buttonsMisc.isChecked()
+		if config.SHOW_CONSOLE_BUTTONS:
+			events.show_all_console_buttons()
+		else:
+			events.hide_all_console_buttons()
 
 		config.DOUBLECLICK_TO_CHANGE_NICK = self.displayChange.isChecked()
 

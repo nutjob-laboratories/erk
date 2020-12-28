@@ -376,7 +376,7 @@ class Window(QMainWindow):
 
 			if self.parent.block_scripts:
 				self.runScript.setEnabled(False)
-				self.runScript.setVisible(False)
+				#self.runScript.setVisible(False)
 
 			# joinChannel = QPushButton("Join Channel")
 			# joinChannel.clicked.connect(self.joinButton)
@@ -384,17 +384,19 @@ class Window(QMainWindow):
 			# newNick = QPushButton("Change Nick")
 			# newNick.clicked.connect(self.nickButton)
 
-			disconnectButton = QPushButton("Disconnect")
-			disconnectButton.clicked.connect(self.discoButton)
+			self.disconnectButton = QPushButton("Disconnect")
+			self.disconnectButton.clicked.connect(self.discoButton)
 
 
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)
-			# inputLayout.addWidget(joinChannel)
-			# inputLayout.addWidget(newNick)
 			inputLayout.addWidget(self.runScript)
-			#inputLayout.addWidget(QLabel('|'))
-			inputLayout.addWidget(disconnectButton)
+			inputLayout.addWidget(self.disconnectButton)
+
+			if not config.SHOW_CONSOLE_BUTTONS:
+				self.runScript.setVisible(False)
+				self.disconnectButton.setVisible(False)
+
 
 			finalLayout = QVBoxLayout()
 			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)

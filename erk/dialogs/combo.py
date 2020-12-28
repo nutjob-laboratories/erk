@@ -740,6 +740,7 @@ class Dialog(QDialog):
 
 		userTabLayout = QVBoxLayout()
 		userTabLayout.addWidget(banner)
+		#userTabLayout.addWidget(QLabel(f"<small><center><i>Version {APPLICATION_VERSION}</i></center></small>"))
 		userTabLayout.addStretch()
 		userTabLayout.addLayout(userLayout)
 		userTabLayout.addStretch()
@@ -974,6 +975,8 @@ class Dialog(QDialog):
 
 		vLayout = QVBoxLayout()
 		vLayout.addWidget(self.tabs)
+
+		#vLayout.addWidget(QLabel(f"<small><center><i>Version {APPLICATION_VERSION}</i></center></small>"))
 
 		#c1 = QVBoxLayout()
 		#c1.addWidget(self.reconnect)

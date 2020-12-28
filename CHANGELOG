@@ -94,6 +94,12 @@ Version 0.830
 	* Bugfix: connection display no longer displays the "selected" box that flickers in and out of existence whenever a server or channel is clicked
 	* Nickname display in channels can now be double-clicked to bring up the "change nickname" dialog
 	* Added an option to the "settings" dialog to toggle "double click nickname" on and off
+	* Added a new setting to hide/display the 'Run Script' and 'Disconnect' buttons on console windows
+	* Added the new hide/display buttons setting to the 'settings' dialog
+	* Re-named the 'Plugins & Macros' settings page to 'Extensions' in the 'settings' dialog
+	* Moved 'enable scripts' to the new 'Extensions' page
+	* Updated the plugin documentation to show the new location of the 'Development mode' option
+	* Disabling plugins from the commandline now disables the 'show plugin errors' and 'development mode' settings in the settings dialog
 
 Version 0.822
 	* First version with Linux support
