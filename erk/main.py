@@ -842,6 +842,12 @@ class Erk(QMainWindow):
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.helpMenu.addAction(entry)
 
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
+
+		entry = QAction(QIcon(PDF_ICON),"Ərk plugin documentation",self)
+		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		self.helpMenu.addAction(entry)
+
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
