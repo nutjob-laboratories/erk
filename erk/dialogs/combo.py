@@ -908,17 +908,21 @@ class Dialog(QDialog):
 		self.reloadScriptButton = QPushButton("Reload")
 		self.reloadScriptButton.clicked.connect(self.reloadScript)
 
+		self.openScriptButton = QPushButton("Open")
+		self.openScriptButton.clicked.connect(self.openScript)
+
 		scriptControlsLayout = QHBoxLayout()
 		scriptControlsLayout.addWidget(self.saveScriptButton)
 		scriptControlsLayout.addWidget(self.reloadScriptButton)
+		scriptControlsLayout.addWidget(self.openScriptButton)
 		scriptControlsLayout.addWidget(self.clearScriptButton)
 		scriptControlsLayout.addWidget(self.deleteScriptButton)
 		#scriptControlsLayout.addWidget(self.checkScript)
 
-		self.scriptJoinButton = QPushButton("Join a Channel")
+		self.scriptJoinButton = QPushButton("Insert Channel Join")
 		self.scriptJoinButton.clicked.connect(self.scriptJoin)
 
-		self.scriptSendPM = QPushButton("Send a Message")
+		self.scriptSendPM = QPushButton("Insert Private Message")
 		self.scriptSendPM.clicked.connect(self.scriptPM)
 
 		self.scriptInsertPause = QPushButton("Insert Pause")
@@ -1028,6 +1032,20 @@ class Dialog(QDialog):
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
+
+	def openScript(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.scriptsdir,"Script File (*.erk);;Text File (*.txt);;All Files (*)", options=options)
+		if fileName:
+			f=open(fileName, "r")
+			code = f.read()
+			f.close()
+
+			if len(code)>0:
+				if code[-1]!="\n": code = code + "\n"
+
+			self.scriptedit.setText(code)
 
 	def reloadScript(self):
 		serv = self.host.text()

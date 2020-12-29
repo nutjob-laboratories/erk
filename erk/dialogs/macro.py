@@ -117,7 +117,7 @@ class Dialog(QDialog):
 		self.execute = QCheckBox(self)
 		self.execute.stateChanged.connect(self.clickExecute)
 
-		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send as a message; set to <i><b>action</b></i> to send<br>as a CTCP action message; set to <i><b>notice</b></i> to send as a notice;<br>set to <i><b>command</b></i> to interpret as a command</small>")
+		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send as a message<br>Set to <i><b>action</b></i> to send as a CTCP action message<br>Set to <i><b>notice</b></i> to send as a notice<br>Set to <i><b>command</b></i> to interpret as a command</small>")
 		#typeDesc.setWordWrap(True)
 
 
