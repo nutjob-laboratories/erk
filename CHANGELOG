@@ -109,6 +109,9 @@ Version 0.830
 	* Changed the "full screen" menu option to say "Enter full screen" to enter, and "Exit full screen" to enter/exit full screen mode
 	* New script command: /alias
 	* Documentation has been updated with the new /alias command
+	* Scripts can now be passed arguments
+	* New script command: /argcount
+	* Documentation has been updated with the new /argcount command
 
 Version 0.822
 	* First version with Linux support

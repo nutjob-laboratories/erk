@@ -1352,7 +1352,7 @@ class ScriptThreadWindow(QThread):
 	scriptEnd = pyqtSignal(list)
 	scriptErr = pyqtSignal(list)
 
-	def __init__(self,window,client,script,mid,scriptname,variable_table,parent=None):
+	def __init__(self,window,client,script,mid,scriptname,variable_table,arguments,parent=None):
 		super(ScriptThreadWindow, self).__init__(parent)
 		self.script = script
 		self.window = window
@@ -1361,6 +1361,7 @@ class ScriptThreadWindow(QThread):
 		self.scriptname = scriptname
 
 		self.vtable = variable_table
+		self.arguments = arguments
 
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
@@ -1370,10 +1371,28 @@ class ScriptThreadWindow(QThread):
 			line = line.strip()
 			if len(line)==0: continue
 
+			counter = 0
+			for a in self.arguments:
+				counter = counter + 1
+				line = line.replace('$'+str(counter),a)
+
 			for key in self.vtable:
 				line = line.replace('$'+key,self.vtable[key])
 
 			tokens = line.split()
+
+			if len(tokens)>=3:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
+					tokens.pop(0)
+					cnt = tokens.pop(0)
+					try:
+						cnt = int(cnt)
+					except:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: \"{str(cnt)}\" is not a number"])
+					else:
+						if len(self.arguments)!=cnt:
+							self.scriptErr.emit([self.window,f"{' '.join(tokens)}"])
+							break
 
 			if len(tokens)>=3:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':

@@ -791,6 +791,11 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 			return True
 
+	# The /argcount command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
+			return True
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'preferences' and len(tokens)==1:
 			window.prefDialog()
@@ -849,10 +854,11 @@ def handle_ui_input(window,client,text):
 				return True
 
 	if len(tokens)>0:
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)==2:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script' and len(tokens)>=2:
 
 			tokens.pop(0)
 			file = tokens.pop(0)
+			arguments = tokens
 
 			scriptname = find_script_file(file,client.gui.scriptsdir)
 
@@ -870,7 +876,7 @@ def handle_ui_input(window,client,text):
 				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 				# Create a thread for the script and run it
-				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE)
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE,arguments)
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
@@ -1166,7 +1172,7 @@ def execute_script(filename,window,client):
 		scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 		# Create a thread for the script and run it
-		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE)
+		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE,[])
 		scriptThread.execLine.connect(execute_script_line)
 		scriptThread.scriptEnd.connect(execute_script_end)
 		scriptThread.scriptErr.connect(execute_script_error)
