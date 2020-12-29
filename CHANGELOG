@@ -117,6 +117,7 @@ Version 0.830
 	* Cleaned up the macro dialog
 	* Added an "open script" option to the connection dialog
 	* Cleaned up the connection dialog
+	* Changed command documentation filename to "Erk_Scripting_and_Commands", and updated the GUI to match
 
 Version 0.822
 	* First version with Linux support

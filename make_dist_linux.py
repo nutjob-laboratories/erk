@@ -33,7 +33,7 @@ shutil.copy("./plugins/examples/package.txt", "./erk-irc-client/plugins/examples
 
 os.mkdir("./erk-irc-client/documentation")
 shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./erk-irc-client/documentation/Erk_Plugin_Guide.pdf")
-shutil.copy("./documentation/Erk_Commands.pdf", "./erk-irc-client/documentation/Erk_Commands.pdf")
+shutil.copy("./documentation/Erk_Scripting_and_Commands.pdf", "./erk-irc-client/documentation/Erk_Scripting_and_Commands.pdf")
 
 os.mkdir("./erk-irc-client/macros")
 shutil.copy("./macros/trout.json", "./erk-irc-client/macros/trout.json")

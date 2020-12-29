@@ -836,15 +836,15 @@ class Erk(QMainWindow):
 
 		idir = sys.path[0]
 		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
-		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Commands.pdf")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
 
-		entry = QAction(QIcon(PDF_ICON),"Ərk command documentation",self)
+		entry = QAction(QIcon(PDF_ICON),"Ərk Script && Command Documentation",self)
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.helpMenu.addAction(entry)
 
 		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
-		entry = QAction(QIcon(PDF_ICON),"Ərk plugin documentation",self)
+		entry = QAction(QIcon(PDF_ICON),"Ərk Plugin Documentation",self)
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.helpMenu.addAction(entry)
 
