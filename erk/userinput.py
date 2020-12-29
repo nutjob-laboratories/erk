@@ -172,7 +172,7 @@ def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
 	for key in VARIABLE_TABLE:
-		text = text.replace('$'+key,VARIABLE_TABLE[key])
+		text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
 
 	if handle_ui_input(window,client,text):
 		window.input.setFocus()

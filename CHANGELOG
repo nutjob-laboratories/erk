@@ -118,6 +118,8 @@ Version 0.830
 	* Added an "open script" option to the connection dialog
 	* Cleaned up the connection dialog
 	* Changed command documentation filename to "Erk_Scripting_and_Commands", and updated the GUI to match
+	* Added an option to interpolate all arguments to a script with the $0 symbol
+	* Added the interpolation symbol to the config file
 
 Version 0.822
 	* First version with Linux support

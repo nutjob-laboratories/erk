@@ -1371,13 +1371,18 @@ class ScriptThreadWindow(QThread):
 			line = line.strip()
 			if len(line)==0: continue
 
+			# Interpolate arguments
 			counter = 0
 			for a in self.arguments:
 				counter = counter + 1
-				line = line.replace('$'+str(counter),a)
+				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+str(counter),a)
 
+			# Interpolate all arguments as a single string
+			line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+'0',' '.join(self.arguments))
+
+			# Interpolate alias variables
 			for key in self.vtable:
-				line = line.replace('$'+key,self.vtable[key])
+				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
 
 			tokens = line.split()
 
