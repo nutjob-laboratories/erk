@@ -95,6 +95,7 @@ disgroup.add_argument( "-X","--nomenus", help=f"Disable all menus", action="stor
 disgroup.add_argument( "-N","--noconnect", help=f"Disable connection commands", action="store_true")
 disgroup.add_argument( "-T","--noscripts", help=f"Disable scripting", action="store_true")
 disgroup.add_argument( "-D","--nodisplay", help=f"Disable connection display", action="store_true")
+disgroup.add_argument( "-Q","--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
 
@@ -378,14 +379,52 @@ if __name__ == '__main__':
 					u["failreconnect"],
 					False,
 				)
-			GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts,args.nodisplay,args.ontop)
+			GUI = Erk(
+				app,
+				i,
+				args.noplugins,
+				args.nomacros,
+				args.nosettings,
+				args.nomenus,
+				args.config,
+				args.format,
+				args.user,
+				args.fullscreen,
+				args.width,
+				args.height,
+				args.logs,
+				is_scripting_enabled,
+				args.scripts,
+				args.nodisplay,
+				args.ontop,
+				args.qt5menu
+				)
 			GUI.show()
 		else:
 
 			# Handle launching without the connection dialog
 
 			if args.noask:
-				GUI = Erk(app,None,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts,args.nodisplay,args.ontop)
+				GUI = Erk(
+					app,
+					None,
+					args.noplugins,
+					args.nomacros,
+					args.nosettings,
+					args.nomenus,
+					args.config,
+					args.format,
+					args.user,
+					args.fullscreen,
+					args.width,
+					args.height,
+					args.logs,
+					is_scripting_enabled,
+					args.scripts,
+					args.nodisplay,
+					args.ontop,
+					args.qt5menu
+					)
 				GUI.show()
 
 			# Handle connecting to the last server
@@ -421,7 +460,26 @@ if __name__ == '__main__':
 						u["failreconnect"],
 						False,
 					)
-				GUI = Erk(app,i,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts,args.nodisplay,args.ontop)
+				GUI = Erk(
+					app,
+					i,
+					args.noplugins,
+					args.nomacros,
+					args.nosettings,
+					args.nomenus,
+					args.config,
+					args.format,
+					args.user,
+					args.fullscreen,
+					args.width,
+					args.height,
+					args.logs,
+					is_scripting_enabled,
+					args.scripts,
+					args.nodisplay,
+					args.ontop,
+					args.qt5menu
+					)
 				GUI.show()
 			else:
 
@@ -429,7 +487,26 @@ if __name__ == '__main__':
 
 				info = ComboDialog(args.user,is_scripting_enabled,args.scripts)
 				if info!=None:
-					GUI = Erk(app,info,args.noplugins,args.nomacros,args.nosettings,args.nomenus,args.config,args.format,args.user,args.fullscreen,args.width,args.height,args.logs,is_scripting_enabled,args.scripts,args.nodisplay,args.ontop)
+					GUI = Erk(
+						app,
+						info,
+						args.noplugins,
+						args.nomacros,
+						args.nosettings,
+						args.nomenus,
+						args.config,
+						args.format,
+						args.user,
+						args.fullscreen,
+						args.width,
+						args.height,
+						args.logs,
+						is_scripting_enabled,
+						args.scripts,
+						args.nodisplay,
+						args.ontop,
+						args.qt5menu
+						)
 					GUI.show()
 				else:
 					app.quit()
