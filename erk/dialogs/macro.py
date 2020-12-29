@@ -117,8 +117,8 @@ class Dialog(QDialog):
 		self.execute = QCheckBox(self)
 		self.execute.stateChanged.connect(self.clickExecute)
 
-		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send the macro as a message; set to <i><b>action</b></i> to send the macro as a CTCP action message; set to <i><b>notice</b></i> to send the macro as a notice; set to <i><b>command</b></i> to interpret the macro as a command</small>")
-		typeDesc.setWordWrap(True)
+		typeDesc = QLabel("<small>Set to <i><b>privmsg</b></i> to send as a message; set to <i><b>action</b></i> to send<br>as a CTCP action message; set to <i><b>notice</b></i> to send as a notice;<br>set to <i><b>command</b></i> to interpret as a command</small>")
+		#typeDesc.setWordWrap(True)
 
 
 		exeDesc = QLabel("<small>If set to execute immediately, the macro will be processed immediately; if not, the macro's output will be inserted into the window's text entry</small>")
