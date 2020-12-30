@@ -134,6 +134,7 @@ ENABLE_SCRIPTS = True
 DOUBLECLICK_TO_CHANGE_NICK = True
 SHOW_CONSOLE_BUTTONS = True
 SCRIPT_INTERPOLATE_SYMBOL = '$'
+GLOBALIZE_ALL_SCRIPT_ALIASES = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -141,6 +142,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"all_script_aliases_are_global": GLOBALIZE_ALL_SCRIPT_ALIASES,
 		"script_interpolation_symbol": SCRIPT_INTERPOLATE_SYMBOL,
 		"display_console_buttons": SHOW_CONSOLE_BUTTONS,
 		"double_click_nick_to_change_nicks": DOUBLECLICK_TO_CHANGE_NICK,
@@ -235,6 +237,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "all_script_aliases_are_global" in data:
+		data["all_script_aliases_are_global"] = GLOBALIZE_ALL_SCRIPT_ALIASES
 
 	if not "script_interpolation_symbol" in data:
 		data["script_interpolation_symbol"] = SCRIPT_INTERPOLATE_SYMBOL
@@ -376,6 +381,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global DOUBLECLICK_TO_CHANGE_NICK
 	global SHOW_CONSOLE_BUTTONS
 	global SCRIPT_INTERPOLATE_SYMBOL
+	global GLOBALIZE_ALL_SCRIPT_ALIASES
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -384,6 +390,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			GLOBALIZE_ALL_SCRIPT_ALIASES = data["all_script_aliases_are_global"]
 			SCRIPT_INTERPOLATE_SYMBOL = data["script_interpolation_symbol"]
 			SHOW_CONSOLE_BUTTONS = data["display_console_buttons"]
 			DOUBLECLICK_TO_CHANGE_NICK = data["double_click_nick_to_change_nicks"]

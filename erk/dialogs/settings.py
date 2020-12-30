@@ -595,12 +595,54 @@ class Dialog(QDialog):
 			self.pluginErrors.setEnabled(False)
 			self.pluginDevmode.setEnabled(False)
 
+		self.sglobalMisc = QCheckBox("All aliases are global",self)
+		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.sglobalMisc.setEnabled(False)
+
+
+		cgbLayout = QVBoxLayout()
+		cgbLayout.addWidget(self.pluginFeatures)
+		cgbLayout.addWidget(self.pluginErrors)
+		cgbLayout.addWidget(self.pluginDevmode)
+
+		plugBox = QGroupBox("Plugin Settings",self)
+		plugBox.setLayout(cgbLayout)
+
+		if self.parent.cmdline_plugin:
+			plugBox.setEnabled(False)
+
+		scgbLayout = QVBoxLayout()
+		scgbLayout.addWidget(self.scriptMisc)
+		scgbLayout.addWidget(self.sglobalMisc)
+
+		scriptBox = QGroupBox("Script Settings",self)
+		scriptBox.setLayout(scgbLayout)
+
+		if self.parent.cmdline_script:
+			scriptBox.setEnabled(False)
+
+		mcgbLayout = QVBoxLayout()
+		mcgbLayout.addWidget(self.macroFeatures)
+
+		macroBox = QGroupBox("Macro Settings",self)
+		macroBox.setLayout(mcgbLayout)
+
+		if self.parent.cmdline_macro:
+			macroBox.setEnabled(False)
+
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.scriptMisc)
-		cpLayout.addWidget(self.macroFeatures)
-		cpLayout.addWidget(self.pluginFeatures)
-		cpLayout.addWidget(self.pluginErrors)
-		cpLayout.addWidget(self.pluginDevmode)
+		#cpLayout.addWidget(self.scriptMisc)
+		#cpLayout.addWidget(self.macroFeatures)
+
+		cpLayout.addWidget(macroBox)
+		cpLayout.addWidget(scriptBox)
+		cpLayout.addWidget(plugBox)
+
+		# cpLayout.addWidget(self.pluginFeatures)
+		# cpLayout.addWidget(self.pluginErrors)
+		# cpLayout.addWidget(self.pluginDevmode)
 		cpLayout.addStretch()
 
 		self.featuresPage.setLayout(cpLayout)
@@ -705,6 +747,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.GLOBALIZE_ALL_SCRIPT_ALIASES = self.sglobalMisc.isChecked()
 
 		config.SHOW_CONSOLE_BUTTONS = self.buttonsMisc.isChecked()
 		if config.SHOW_CONSOLE_BUTTONS:

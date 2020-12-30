@@ -876,7 +876,7 @@ def handle_ui_input(window,client,text):
 				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 				# Create a thread for the script and run it
-				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE,arguments)
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,dict(VARIABLE_TABLE),arguments)
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
@@ -1172,7 +1172,7 @@ def execute_script(filename,window,client):
 		scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 		# Create a thread for the script and run it
-		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,VARIABLE_TABLE,[])
+		scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,dict(VARIABLE_TABLE),[])
 		scriptThread.execLine.connect(execute_script_line)
 		scriptThread.scriptEnd.connect(execute_script_end)
 		scriptThread.scriptErr.connect(execute_script_error)
@@ -1207,7 +1207,8 @@ def execute_script_end(data):
 		clean.append(e)
 	SCRIPT_THREADS = clean
 
-	VARIABLE_TABLE.update(vtable)
+	if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
+		VARIABLE_TABLE.update(vtable)
 
 # Triggers every time there's a script error with the "/wait" command
 def execute_script_error(data):

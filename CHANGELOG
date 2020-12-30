@@ -122,6 +122,9 @@ Version 0.830
 	* Added the interpolation symbol to the config file
 	* Added a new commandline flag to disable the custom menu toolbar and use the normal QMenuBar instead
 	* OSX users are no longer forced to use the QMenuBar (they can now choose to with the above commandline flag)
+	* Added a new config setting which allows global script aliases to be toggled
+	* Added global script alias setting to the "settings" dialog
+	* Grouped macro, plugin, and script settings in the "settings" dialog together
 
 Version 0.822
 	* First version with Linux support

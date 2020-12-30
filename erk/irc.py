@@ -324,19 +324,20 @@ class IRC_Connection(irc.IRCClient):
 
 				global SCRIPT_WINDOW
 				SCRIPT_WINDOW = events.fetch_console_window(self)
-				self.scriptThread = ScriptThread(self.kwargs['script'],userinput.VARIABLE_TABLE)
-				self.scriptThread.execLine.connect(self.exec_script_line)
-				self.scriptThread.scriptEnd.connect(self.exec_script_end)
+				self.scriptThread = ScriptThread(self.kwargs['script'],dict(userinput.VARIABLE_TABLE))
+				self.scriptThread.execLine.connect(self.execute_script_line)
+				self.scriptThread.scriptEnd.connect(self.execute_script_end)
 				self.scriptThread.start()
 
-	def exec_script_line(self,line):
+	def execute_script_line(self,line):
 		userinput.handle_input(SCRIPT_WINDOW,self,line)
 
-	def exec_script_end(self,vtable):
+	def execute_script_end(self,vtable):
 		global SCRIPT_WINDOW
 		SCRIPT_WINDOW = None
 
-		userinput.VARIABLE_TABLE.update(vtable)
+		if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
+			userinput.VARIABLE_TABLE.update(vtable)
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -1344,7 +1345,6 @@ class ScriptThread(QThread):
 			self.execLine.emit(line)
 
 		self.scriptEnd.emit(self.vtable)
-
 
 class ScriptThreadWindow(QThread):
 
