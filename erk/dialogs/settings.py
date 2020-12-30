@@ -117,7 +117,9 @@ class Dialog(QDialog):
 
 		if not info: return None
 		self.configRefresh = info
-		self.refreshButton.setText("Set channel list refresh rate\n ("+str(self.configRefresh)+" seconds)")
+		#self.refreshButton.setText("Set channel list refresh rate\n ("+str(self.configRefresh)+" seconds)")
+
+		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds (new)")
 
 	def __init__(self,configfile=USER_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -768,7 +770,7 @@ class Dialog(QDialog):
 		self.listMisc = QCheckBox("Fetch channel list on connect",self)
 		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.listMisc.setChecked(True)
 
-		self.refreshButton = QPushButton("Set channel list refresh rate\n ("+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+" seconds)")
+		self.refreshButton = QPushButton("Set channel list refresh rate")
 		self.refreshButton.clicked.connect(self.setListRefresh)
 		self.refreshButton.setAutoDefault(False)
 
@@ -778,17 +780,36 @@ class Dialog(QDialog):
 		self.failErrors = QCheckBox("Show connection fail errors",self)
 		if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
 
-		hsLayout = QHBoxLayout()
-		hsLayout.addWidget(self.refreshButton)
-		hsLayout.addStretch()
+
+		self.listFreq = QLabel("Refresh list every <b>"+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+"</b> seconds")
+
+		cgbLayout = QVBoxLayout()
+		cgbLayout.addWidget(self.listMisc)
+		cgbLayout.addWidget(self.listFreq)
+		cgbLayout.addWidget(self.refreshButton)
+
+
+		listBox = QGroupBox("Channel List",self)
+		listBox.setLayout(cgbLayout)
+
+		listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+
+
+		# hsLayout = QHBoxLayout()
+		# hsLayout.addWidget(self.refreshButton)
+		# hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(listBox)
 		cpLayout.addWidget(self.buttonsMisc)
 		cpLayout.addWidget(self.lostErrors)
 		cpLayout.addWidget(self.failErrors)
 		cpLayout.addWidget(self.switchMisc)
-		cpLayout.addWidget(self.listMisc)
-		cpLayout.addLayout(hsLayout)
+		#cpLayout.addWidget(self.listMisc)
+		#cpLayout.addLayout(hsLayout)
+		
 
 		cpLayout.addWidget(QLabel(' '))
 		cpLayout.addWidget(QLabel(' '))

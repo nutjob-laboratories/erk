@@ -130,6 +130,7 @@ Version 0.830
 	* Added QMenuBar toggle to the "settings" dialog
 	* Removed "autocomplete" tab in the "settings" dialog, and merged those settings into the "text input" tab
 	* Cleaned up "application" tab in the "settings" dialog
+	* Cleanup up the "misc" tab in the "settings" dialog
 
 Version 0.822
 	* First version with Linux support
