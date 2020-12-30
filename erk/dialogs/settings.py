@@ -547,7 +547,7 @@ class Dialog(QDialog):
 		histLayout.addWidget(self.historyLabel)
 		histLayout.addWidget(hsButton)
 
-		histBox = QGroupBox("Input history",self)
+		histBox = QGroupBox("Input History",self)
 		histBox.setLayout(histLayout)
 
 		histBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
