@@ -55,6 +55,8 @@ class Dialog(QDialog):
 		self.systemPrefix = info
 		self.do_rerender = True
 
+		self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b> (new)")
+
 	def setHistory(self):
 		x = HistorySize()
 		info = x.get_entry_information()
@@ -301,19 +303,39 @@ class Dialog(QDialog):
 		prefixButton.clicked.connect(self.setPrefix)
 		prefixButton.setAutoDefault(False)
 
-		pbLayout = QHBoxLayout()
-		pbLayout.addWidget(prefixButton)
-		pbLayout.addStretch()
+		# pbLayout = QHBoxLayout()
+		# pbLayout.addWidget(prefixButton)
+		# pbLayout.addStretch()
+
+		self.prefDisplay = QLabel("Prefix: <b>"+config.SYSTEM_MESSAGE_PREFIX+"</b>")
+
+		tsLay = QVBoxLayout()
+		tsLay.addWidget(self.addPrefixes)
+		tsLay.addWidget(self.prefDisplay)
+		tsLay.addWidget(prefixButton)
+
+		clLayout = QGroupBox("System Messages",self)
+		clLayout.setLayout(tsLay)
+
+		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		
 
 		mpLayout = QVBoxLayout()
+
+		mpLayout.addWidget(clLayout)
+
 		mpLayout.addWidget(self.showDates)
 		mpLayout.addWidget(self.showColors)
 		mpLayout.addWidget(self.showLinks)
 		mpLayout.addWidget(self.hideProfanity)
 		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
-		mpLayout.addWidget(self.addPrefixes)
-		mpLayout.addLayout(pbLayout)
+		#mpLayout.addWidget(self.addPrefixes)
+		#mpLayout.addLayout(pbLayout)
+
+		
+
 		mpLayout.addStretch()
 
 		self.messagesPage.setLayout(mpLayout)
