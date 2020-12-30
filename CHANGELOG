@@ -121,6 +121,7 @@ Version 0.830
 	* Added an option to interpolate all arguments to a script with the $0 symbol
 	* Added the interpolation symbol to the config file
 	* Added a new commandline flag to disable the custom menu toolbar and use the normal QMenuBar instead
+	* OSX users are no longer forced to use the QMenuBar (they can now choose to with the above commandline flag)
 
 Version 0.822
 	* First version with Linux support

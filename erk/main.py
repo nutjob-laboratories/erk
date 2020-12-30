@@ -87,8 +87,8 @@ USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = False
 # The toolbar seems to be non-functional on OSX, so if that's
 # the platform we're running on, don't use the toolbar and use
 # the normal QMenuBar system instead
-if platform.system()!="Windows" and platform.system()!="Linux":
-	USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
+# if platform.system()!="Windows" and platform.system()!="Linux":
+# 	USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
 
 DO_NOT_DISPLAY_MENUS_OR_TOOLBAR = False
 
