@@ -126,6 +126,9 @@ Version 0.830
 	* Added global script alias setting to the "settings" dialog
 	* Grouped macro, plugin, and script settings in the "settings" dialog together
 	* Cleaned up "settings" dialog, and moved various settings to different tabs
+	* Added a new setting to the configuration file: toggle using standard Qt5 menu or using the menu bar
+	* Added QMenuBar toggle to the "settings" dialog
+	* Removed "autocomplete" tab in the "settings" dialog, and merged those settings into the "text input" tab
 
 Version 0.822
 	* First version with Linux support

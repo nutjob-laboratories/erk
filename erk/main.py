@@ -403,10 +403,16 @@ class Erk(QMainWindow):
 		if self.block_plugins: self.cmdline_plugin = True
 		if self.block_scripts: self.cmdline_script = True
 
+		self.force_qmenu = force_qmenu
+
 		self.block_connectiondisplay = block_connectiondisplay
 
+		global USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR
+
 		if force_qmenu:
-			global USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR
+			USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
+
+		if config.USE_QMENUBAR_MENUS:
 			USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
 
 		# Determine if window color is dark or light

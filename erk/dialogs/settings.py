@@ -63,6 +63,8 @@ class Dialog(QDialog):
 		if not info: self.historySize = None
 		self.historySize = info
 
+		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b> (new)")
+
 	def selectorClick(self,item):
 		self.stack.setCurrentWidget(item.widget)
 
@@ -173,7 +175,7 @@ class Dialog(QDialog):
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
-		self.showSchwa = QCheckBox("Animated logo",self)
+		self.showSchwa = QCheckBox("Animated menu bar logo",self)
 		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
 
 
@@ -189,6 +191,22 @@ class Dialog(QDialog):
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
+
+		self.menuMisc = QCheckBox("Use Qt menus rather than a menu bar\n(requires a restart to take effect)",self)
+		if config.USE_QMENUBAR_MENUS: self.menuMisc.setChecked(True)
+
+		self.menuMisc.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
+
+		if self.parent.force_qmenu:
+			self.menuMisc.setEnabled(False)
+			self.showSchwa.setEnabled(False)
+			self.showMenu.setEnabled(False)
+
+		if config.USE_QMENUBAR_MENUS:
+			self.showSchwa.setEnabled(False)
+			self.showMenu.setEnabled(False)
+
+
 		# pbLayout = QHBoxLayout()
 		# pbLayout.addWidget(fontButton)
 		# pbLayout.addStretch()
@@ -202,11 +220,15 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.fontLabel)
 		#mpLayout.addLayout(pbLayout)
 		mpLayout.addLayout(pb2Layout)
-		mpLayout.addWidget(self.showSchwa)
-		mpLayout.addWidget(self.showMenu)
+		
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
 		mpLayout.addWidget(self.askMisc)
+
+		mpLayout.addWidget(self.showSchwa)
+		mpLayout.addWidget(self.showMenu)
+
+		mpLayout.addWidget(self.menuMisc)
 
 		mpLayout.addStretch()
 
@@ -420,16 +442,72 @@ class Dialog(QDialog):
 
 		# Autocomplete settings
 
-		self.autocompletePage = QWidget()
+		# self.autocompletePage = QWidget()
+
+		# entry = QListWidgetItem()
+		# entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		# entry.setText("Autocomplete")
+		# entry.widget = self.autocompletePage
+		# entry.setIcon(QIcon(AUTOCOMPLETE_ICON))
+		# self.selector.addItem(entry)
+
+		# self.stack.addWidget(self.autocompletePage)
+
+		# self.nickComplete = QCheckBox("Autocomplete nicknames",self)
+		# if config.AUTOCOMPLETE_NICKNAMES: self.nickComplete.setChecked(True)
+
+		# self.cmdComplete = QCheckBox("Autocomplete commands",self)
+		# if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
+
+		# self.emojiComplete = QCheckBox("Autocomplete emoji shortcodes",self)
+		# if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
+
+		# cpLayout = QVBoxLayout()
+		# cpLayout.addWidget(self.nickComplete)
+		# cpLayout.addWidget(self.cmdComplete)
+		# cpLayout.addWidget(self.emojiComplete)
+		# cpLayout.addStretch()
+
+		# self.autocompletePage.setLayout(cpLayout)
+
+		# Input settings
+
+		self.inputPage = QWidget()
+
+		self.resetHistory = False
+		self.historySize = None
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Autocomplete")
-		entry.widget = self.autocompletePage
-		entry.setIcon(QIcon(AUTOCOMPLETE_ICON))
+		entry.setText("Text input")
+		entry.widget = self.inputPage
+		entry.setIcon(QIcon(ENTRY_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.autocompletePage)
+		self.stack.addWidget(self.inputPage)
+
+		self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
+		if config.USE_EMOJIS: self.emojiInput.setChecked(True)
+
+		self.trackInput = QCheckBox("Track input history",self)
+		if config.TRACK_COMMAND_HISTORY: self.trackInput.setChecked(True)
+		self.trackInput.stateChanged.connect(self.setReset)
+
+		hsButton = QPushButton("Set history size")
+		hsButton.clicked.connect(self.setHistory)
+		hsButton.setAutoDefault(False)
+
+		self.historyLabel = QLabel("Command history: <b>"+str(config.HISTORY_LENGTH)+" lines</b>")
+
+		histLayout = QVBoxLayout()
+		histLayout.addWidget(self.trackInput)
+		histLayout.addWidget(self.historyLabel)
+		histLayout.addWidget(hsButton)
+
+		histBox = QGroupBox("Input history",self)
+		histBox.setLayout(histLayout)
+
+		histBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		self.nickComplete = QCheckBox("Autocomplete nicknames",self)
 		if config.AUTOCOMPLETE_NICKNAMES: self.nickComplete.setChecked(True)
@@ -441,12 +519,15 @@ class Dialog(QDialog):
 		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
 
 		cpLayout = QVBoxLayout()
+
+		cpLayout.addWidget(histBox)
 		cpLayout.addWidget(self.nickComplete)
 		cpLayout.addWidget(self.cmdComplete)
 		cpLayout.addWidget(self.emojiComplete)
+		cpLayout.addWidget(self.emojiInput)
 		cpLayout.addStretch()
 
-		self.autocompletePage.setLayout(cpLayout)
+		self.inputPage.setLayout(cpLayout)
 
 		# Spellcheck settings
 
@@ -542,45 +623,6 @@ class Dialog(QDialog):
 		cpLayout.addStretch()
 
 		self.timestampPage.setLayout(cpLayout)
-
-		# Input settings
-
-		self.inputPage = QWidget()
-
-		self.resetHistory = False
-		self.historySize = None
-
-		entry = QListWidgetItem()
-		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Text input")
-		entry.widget = self.inputPage
-		entry.setIcon(QIcon(ENTRY_ICON))
-		self.selector.addItem(entry)
-
-		self.stack.addWidget(self.inputPage)
-
-		self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
-		if config.USE_EMOJIS: self.emojiInput.setChecked(True)
-
-		self.trackInput = QCheckBox("Track input history",self)
-		if config.TRACK_COMMAND_HISTORY: self.trackInput.setChecked(True)
-		self.trackInput.stateChanged.connect(self.setReset)
-
-		hsButton = QPushButton("Set input history size")
-		hsButton.clicked.connect(self.setHistory)
-		hsButton.setAutoDefault(False)
-
-		hsLayout = QHBoxLayout()
-		hsLayout.addWidget(hsButton)
-		hsLayout.addStretch()
-
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.emojiInput)
-		cpLayout.addWidget(self.trackInput)
-		cpLayout.addLayout(hsLayout)
-		cpLayout.addStretch()
-
-		self.inputPage.setLayout(cpLayout)
 
 		# Features settings
 
@@ -696,8 +738,10 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.miscPage)
 
-		self.buttonsMisc = QCheckBox("'Run Script' and 'Disconnect' buttons",self)
+		self.buttonsMisc = QCheckBox("Show \"Run Script\" and \"Disconnect\"\nbuttons on server displays",self)
 		if config.SHOW_CONSOLE_BUTTONS: self.buttonsMisc.setChecked(True)
+
+		self.buttonsMisc.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
 
 		self.switchMisc = QCheckBox("Auto-switch to new chats",self)
 		if config.SWITCH_TO_NEW_WINDOWS: self.switchMisc.setChecked(True)
@@ -765,6 +809,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.USE_QMENUBAR_MENUS = self.menuMisc.isChecked()
 
 		config.GLOBALIZE_ALL_SCRIPT_ALIASES = self.sglobalMisc.isChecked()
 
