@@ -104,7 +104,7 @@ class Dialog(QDialog):
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"New font: <b>{font_name}, {font_size} pt</b>")
+			self.fontLabel.setText(f"<center><b>{font_name}, {font_size} pt</b> (new)</center>")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -165,15 +165,16 @@ class Dialog(QDialog):
 		font_name = pfs[0]
 		font_size = pfs[1]
 
-		self.fontLabel = QLabel(f"Current font: <b>{font_name}, {font_size} pt</b>",self)
+		self.fontLabel = QLabel(f"<center><b>{font_name}, {font_size} pt</b></center>",self)
 
 		fontButton = QPushButton("Change font")
 		fontButton.clicked.connect(self.menuFont)
 		fontButton.setAutoDefault(False)
 
-		formatButton = QPushButton("Text colors && formatting")
+		formatButton = QPushButton("Change text colors")
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
+
 
 		self.showSchwa = QCheckBox("Animated menu bar logo",self)
 		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
@@ -212,14 +213,32 @@ class Dialog(QDialog):
 		# pbLayout.addStretch()
 
 		pb2Layout = QHBoxLayout()
+		pb2Layout.addStretch()
 		pb2Layout.addWidget(fontButton)
 		pb2Layout.addWidget(formatButton)
 		pb2Layout.addStretch()
 
-		mpLayout = QVBoxLayout()
-		mpLayout.addWidget(self.fontLabel)
+		
+		# mpLayout.addWidget(self.fontLabel)
+		# #mpLayout.addLayout(pbLayout)
+		# mpLayout.addLayout(pb2Layout)
+
+		tsLay = QVBoxLayout()
+		tsLay.addWidget(self.fontLabel)
 		#mpLayout.addLayout(pbLayout)
-		mpLayout.addLayout(pb2Layout)
+		tsLay.addLayout(pb2Layout)
+
+		clLayout = QGroupBox("Text Settings",self)
+		clLayout.setLayout(tsLay)
+
+		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		clLayout.setAlignment(Qt.AlignHCenter)
+
+
+		mpLayout = QVBoxLayout()
+
+		mpLayout.addWidget(clLayout)
 		
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
