@@ -102,7 +102,7 @@ class Dialog(QDialog):
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"New font: {font_name}, {font_size} pt")
+			self.fontLabel.setText(f"New font: <b>{font_name}, {font_size} pt</b>")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -148,7 +148,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Display")
+		entry.setText("Application")
 		entry.widget = self.displayPage
 		entry.setIcon(QIcon(FONT_ICON))
 		self.selector.addItem(entry)
@@ -163,37 +163,51 @@ class Dialog(QDialog):
 		font_name = pfs[0]
 		font_size = pfs[1]
 
-		self.fontLabel = QLabel(f"Current font: {font_name}, {font_size} pt",self)
+		self.fontLabel = QLabel(f"Current font: <b>{font_name}, {font_size} pt</b>",self)
 
-		fontButton = QPushButton("Set font")
+		fontButton = QPushButton("Change font")
 		fontButton.clicked.connect(self.menuFont)
 		fontButton.setAutoDefault(False)
 
-		formatButton = QPushButton("Set text colors && formatting")
+		formatButton = QPushButton("Text colors && formatting")
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
-		self.showSchwa = QCheckBox("Netscape-esque schwa animation",self)
+		self.showSchwa = QCheckBox("Animated logo",self)
 		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
 
 
 		self.showMenu = QCheckBox("Moveable menu bar",self)
 		if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
 
-		pbLayout = QHBoxLayout()
-		pbLayout.addWidget(fontButton)
-		pbLayout.addStretch()
+		self.nametitleMisc = QCheckBox("Show chat name in title",self)
+		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
+
+		self.topicMisc = QCheckBox("Show channel topic in title",self)
+		if config.APP_TITLE_SHOW_TOPIC: self.topicMisc.setChecked(True)
+
+		self.askMisc = QCheckBox("Ask before quitting",self)
+		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
+
+		# pbLayout = QHBoxLayout()
+		# pbLayout.addWidget(fontButton)
+		# pbLayout.addStretch()
 
 		pb2Layout = QHBoxLayout()
+		pb2Layout.addWidget(fontButton)
 		pb2Layout.addWidget(formatButton)
 		pb2Layout.addStretch()
 
 		mpLayout = QVBoxLayout()
 		mpLayout.addWidget(self.fontLabel)
-		mpLayout.addLayout(pbLayout)
+		#mpLayout.addLayout(pbLayout)
 		mpLayout.addLayout(pb2Layout)
 		mpLayout.addWidget(self.showSchwa)
 		mpLayout.addWidget(self.showMenu)
+		mpLayout.addWidget(self.nametitleMisc)
+		mpLayout.addWidget(self.topicMisc)
+		mpLayout.addWidget(self.askMisc)
+
 		mpLayout.addStretch()
 
 		self.displayPage.setLayout(mpLayout)
@@ -267,7 +281,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Channels")
+		entry.setText("Chats")
 		entry.widget = self.channelPage
 		entry.setIcon(QIcon(CHANNEL_ICON))
 		self.selector.addItem(entry)
@@ -322,7 +336,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Connections")
+		entry.setText("Connection Display")
 		entry.widget = self.connectionPage
 		entry.setIcon(QIcon(CONNECTION_DISPLAY_ICON))
 		self.selector.addItem(entry)
@@ -373,15 +387,27 @@ class Dialog(QDialog):
 		cgbLayout.addWidget(self.rightRadio)
 		cgbLayout.addStretch()
 
-		clLayout = QGroupBox("Connection display location",self)
+		clLayout = QGroupBox("Default Location",self)
 		clLayout.setLayout(cgbLayout)
+
+		clLayoutH = QHBoxLayout()
+		clLayoutH.addStretch()
+		clLayoutH.addWidget(clLayout)
+		clLayoutH.addStretch()
+
+		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
 
+		conSetLayout = QHBoxLayout()
+		conSetLayout.addStretch()
+		conSetLayout.addWidget(self.enableConnection)
+		conSetLayout.addWidget(self.floatConnection)
+		conSetLayout.addStretch()
+
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.enableConnection)
-		cpLayout.addWidget(self.floatConnection)
-		cpLayout.addWidget(clLayout)
+		cpLayout.addLayout(conSetLayout)
+		cpLayout.addLayout(clLayoutH)
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
 		cpLayout.addWidget(self.expandConnection)
@@ -465,8 +491,10 @@ class Dialog(QDialog):
 		langLayout.addRow(self.englishSC, self.frenchSC)
 		langLayout.addRow(self.spanishSC, self.germanSC)
 
-		langBox = QGroupBox("Spellcheck Language",self)
+		langBox = QGroupBox("Language",self)
 		langBox.setLayout(langLayout)
+
+		langBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		lLayout = QHBoxLayout()
 		lLayout.addStretch()
@@ -610,6 +638,8 @@ class Dialog(QDialog):
 		plugBox = QGroupBox("Plugin Settings",self)
 		plugBox.setLayout(cgbLayout)
 
+		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		if self.parent.cmdline_plugin:
 			plugBox.setEnabled(False)
 
@@ -620,6 +650,8 @@ class Dialog(QDialog):
 		scriptBox = QGroupBox("Script Settings",self)
 		scriptBox.setLayout(scgbLayout)
 
+		scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		if self.parent.cmdline_script:
 			scriptBox.setEnabled(False)
 
@@ -628,6 +660,8 @@ class Dialog(QDialog):
 
 		macroBox = QGroupBox("Macro Settings",self)
 		macroBox.setLayout(mcgbLayout)
+
+		macroBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		if self.parent.cmdline_macro:
 			macroBox.setEnabled(False)
@@ -665,15 +699,6 @@ class Dialog(QDialog):
 		self.buttonsMisc = QCheckBox("'Run Script' and 'Disconnect' buttons",self)
 		if config.SHOW_CONSOLE_BUTTONS: self.buttonsMisc.setChecked(True)
 
-		self.askMisc = QCheckBox("Ask before quitting",self)
-		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
-
-		self.nametitleMisc = QCheckBox("Show chat name in title",self)
-		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
-
-		self.topicMisc = QCheckBox("Show channel topic in title",self)
-		if config.APP_TITLE_SHOW_TOPIC: self.topicMisc.setChecked(True)
-
 		self.switchMisc = QCheckBox("Auto-switch to new chats",self)
 		if config.SWITCH_TO_NEW_WINDOWS: self.switchMisc.setChecked(True)
 
@@ -696,16 +721,9 @@ class Dialog(QDialog):
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.buttonsMisc)
-		cpLayout.addWidget(self.askMisc)
 		cpLayout.addWidget(self.lostErrors)
 		cpLayout.addWidget(self.failErrors)
-		cpLayout.addWidget(self.nametitleMisc)
-		cpLayout.addWidget(self.topicMisc)
-		#cpLayout.addWidget(self.joinMisc)
 		cpLayout.addWidget(self.switchMisc)
-
-		#cpLayout.addWidget(self.showSchwa)
-
 		cpLayout.addWidget(self.listMisc)
 		cpLayout.addLayout(hsLayout)
 

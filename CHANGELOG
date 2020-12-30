@@ -125,6 +125,7 @@ Version 0.830
 	* Added a new config setting which allows global script aliases to be toggled
 	* Added global script alias setting to the "settings" dialog
 	* Grouped macro, plugin, and script settings in the "settings" dialog together
+	* Cleaned up "settings" dialog, and moved various settings to different tabs
 
 Version 0.822
 	* First version with Linux support
