@@ -148,6 +148,8 @@ class Dialog(QDialog):
 
 		self.selector.itemClicked.connect(self.selectorClick)
 
+		self.selector.setStyleSheet("background-color: transparent;")
+
 		# Display page
 
 		self.displayPage = QWidget()
@@ -179,14 +181,6 @@ class Dialog(QDialog):
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
-
-		self.showSchwa = QCheckBox("Animated menu bar logo",self)
-		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
-
-
-		self.showMenu = QCheckBox("Moveable menu bar",self)
-		if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
-
 		self.nametitleMisc = QCheckBox("Show chat name in title",self)
 		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
 
@@ -196,6 +190,52 @@ class Dialog(QDialog):
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
+		pb2Layout = QHBoxLayout()
+		pb2Layout.addStretch()
+		pb2Layout.addWidget(fontButton)
+		pb2Layout.addWidget(formatButton)
+		pb2Layout.addStretch()
+
+		tsLay = QVBoxLayout()
+		tsLay.addWidget(self.fontLabel)
+		tsLay.addLayout(pb2Layout)
+
+		clLayout = QGroupBox("Text Settings",self)
+		clLayout.setLayout(tsLay)
+
+		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		clLayout.setAlignment(Qt.AlignHCenter)
+
+		mpLayout = QVBoxLayout()
+
+		mpLayout.addWidget(clLayout)
+		mpLayout.addWidget(self.nametitleMisc)
+		mpLayout.addWidget(self.topicMisc)
+		mpLayout.addWidget(self.askMisc)
+		mpLayout.addStretch()
+
+		self.displayPage.setLayout(mpLayout)
+
+		# MENUBAR PAGE
+
+		self.menubarPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		entry.setText("Menu Bar")
+		entry.widget = self.menubarPage
+		entry.setIcon(QIcon(MENU_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.menubarPage)
+
+		self.showSchwa = QCheckBox("Animated menu bar logo",self)
+		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
+
+
+		self.showMenu = QCheckBox("Moveable menu bar",self)
+		if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
 
 		self.menuMisc = QCheckBox("Use Qt menus rather than a menu bar\n(requires a restart to take effect)",self)
 		if config.USE_QMENUBAR_MENUS: self.menuMisc.setChecked(True)
@@ -211,51 +251,14 @@ class Dialog(QDialog):
 			self.showSchwa.setEnabled(False)
 			self.showMenu.setEnabled(False)
 
+		mbLay = QVBoxLayout()
+		mbLay.addWidget(self.menuMisc)
+		mbLay.addWidget(self.showMenu)
+		mbLay.addWidget(self.showSchwa)
 
-		# pbLayout = QHBoxLayout()
-		# pbLayout.addWidget(fontButton)
-		# pbLayout.addStretch()
+		mbLay.addStretch()
 
-		pb2Layout = QHBoxLayout()
-		pb2Layout.addStretch()
-		pb2Layout.addWidget(fontButton)
-		pb2Layout.addWidget(formatButton)
-		pb2Layout.addStretch()
-
-		
-		# mpLayout.addWidget(self.fontLabel)
-		# #mpLayout.addLayout(pbLayout)
-		# mpLayout.addLayout(pb2Layout)
-
-		tsLay = QVBoxLayout()
-		tsLay.addWidget(self.fontLabel)
-		#mpLayout.addLayout(pbLayout)
-		tsLay.addLayout(pb2Layout)
-
-		clLayout = QGroupBox("Text Settings",self)
-		clLayout.setLayout(tsLay)
-
-		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		clLayout.setAlignment(Qt.AlignHCenter)
-
-
-		mpLayout = QVBoxLayout()
-
-		mpLayout.addWidget(clLayout)
-		
-		mpLayout.addWidget(self.nametitleMisc)
-		mpLayout.addWidget(self.topicMisc)
-		mpLayout.addWidget(self.askMisc)
-
-		mpLayout.addWidget(self.showSchwa)
-		mpLayout.addWidget(self.showMenu)
-
-		mpLayout.addWidget(self.menuMisc)
-
-		mpLayout.addStretch()
-
-		self.displayPage.setLayout(mpLayout)
+		self.menubarPage.setLayout(mbLay)
 
 		# Message settings page
 
@@ -319,22 +322,14 @@ class Dialog(QDialog):
 
 		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		
-
 		mpLayout = QVBoxLayout()
-
 		mpLayout.addWidget(clLayout)
-
 		mpLayout.addWidget(self.showDates)
 		mpLayout.addWidget(self.showColors)
 		mpLayout.addWidget(self.showLinks)
 		mpLayout.addWidget(self.hideProfanity)
 		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
-		#mpLayout.addWidget(self.addPrefixes)
-		#mpLayout.addLayout(pbLayout)
-
-		
 
 		mpLayout.addStretch()
 
@@ -464,15 +459,10 @@ class Dialog(QDialog):
 
 		if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
 
-		conSetLayout = QHBoxLayout()
-		conSetLayout.addStretch()
-		conSetLayout.addWidget(self.enableConnection)
-		conSetLayout.addWidget(self.floatConnection)
-		conSetLayout.addStretch()
-
 		cpLayout = QVBoxLayout()
-		cpLayout.addLayout(conSetLayout)
 		cpLayout.addLayout(clLayoutH)
+		cpLayout.addWidget(self.enableConnection)
+		cpLayout.addWidget(self.floatConnection)
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
 		cpLayout.addWidget(self.expandConnection)
@@ -482,36 +472,6 @@ class Dialog(QDialog):
 		cpLayout.addStretch()
 
 		self.connectionPage.setLayout(cpLayout)
-
-		# Autocomplete settings
-
-		# self.autocompletePage = QWidget()
-
-		# entry = QListWidgetItem()
-		# entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		# entry.setText("Autocomplete")
-		# entry.widget = self.autocompletePage
-		# entry.setIcon(QIcon(AUTOCOMPLETE_ICON))
-		# self.selector.addItem(entry)
-
-		# self.stack.addWidget(self.autocompletePage)
-
-		# self.nickComplete = QCheckBox("Autocomplete nicknames",self)
-		# if config.AUTOCOMPLETE_NICKNAMES: self.nickComplete.setChecked(True)
-
-		# self.cmdComplete = QCheckBox("Autocomplete commands",self)
-		# if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
-
-		# self.emojiComplete = QCheckBox("Autocomplete emoji shortcodes",self)
-		# if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
-
-		# cpLayout = QVBoxLayout()
-		# cpLayout.addWidget(self.nickComplete)
-		# cpLayout.addWidget(self.cmdComplete)
-		# cpLayout.addWidget(self.emojiComplete)
-		# cpLayout.addStretch()
-
-		# self.autocompletePage.setLayout(cpLayout)
 
 		# Input settings
 
@@ -626,10 +586,11 @@ class Dialog(QDialog):
 		lLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
+		cpLayout.addLayout(lLayout)
 		cpLayout.addWidget(self.enabledSpellcheck)
 		cpLayout.addWidget(self.nickSpellcheck)
 		#cpLayout.addStretch()
-		cpLayout.addLayout(lLayout)
+		
 		cpLayout.addStretch()
 
 		self.spellcheckPage.setLayout(cpLayout)

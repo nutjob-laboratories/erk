@@ -77,6 +77,8 @@ LIGHT_SPINNER_ANIMATION = ":/gui-light_spinner.gif"
 
 TOOLBAR_ICON = ":/gui-toolbar.png"
 
+MENU_ICON = ":/gui-menu.png"
+
 LIGHT_TOOLBAR_ICON = ":/gui-light_toolbar.png"
 
 CONNECT_MENU_ICON = ":/connect.png"
