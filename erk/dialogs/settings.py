@@ -207,12 +207,22 @@ class Dialog(QDialog):
 
 		clLayout.setAlignment(Qt.AlignHCenter)
 
+		self.lostErrors = QCheckBox("Show connection lost errors",self)
+		if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
+
+		self.failErrors = QCheckBox("Show connection fail errors",self)
+		if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
+
 		mpLayout = QVBoxLayout()
 
 		mpLayout.addWidget(clLayout)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
 		mpLayout.addWidget(self.askMisc)
+
+		mpLayout.addWidget(self.lostErrors)
+		mpLayout.addWidget(self.failErrors)
+
 		mpLayout.addStretch()
 
 		self.displayPage.setLayout(mpLayout)
@@ -348,19 +358,19 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.channelPage)
 
-		self.channelInfo = QCheckBox("Display channel info bar",self)
+		self.channelInfo = QCheckBox("Display channel name && topic",self)
 		if config.CHAT_DISPLAY_INFO_BAR: self.channelInfo.setChecked(True)
 
 		self.channelModes = QCheckBox("Display channel modes",self)
 		if config.DISPLAY_CHANNEL_MODES: self.channelModes.setChecked(True)
 
-		self.textUserlist = QCheckBox("Text-only user lists",self)
+		self.textUserlist = QCheckBox("Text-only",self)
 		if config.PLAIN_USER_LISTS: self.textUserlist.setChecked(True)
 
-		self.displayUserlists = QCheckBox("Display user lists",self)
+		self.displayUserlists = QCheckBox("Display",self)
 		if config.DISPLAY_USER_LIST: self.displayUserlists.setChecked(True)
 
-		self.displayStatus = QCheckBox("Display status",self)
+		self.displayStatus = QCheckBox("Display channel status",self)
 		if config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY: self.displayStatus.setChecked(True)
 
 		self.displayNickname = QCheckBox("Display nickname",self)
@@ -369,23 +379,55 @@ class Dialog(QDialog):
 		self.displayChange = QCheckBox("Double-click nickname to change nickname",self)
 		if config.DOUBLECLICK_TO_CHANGE_NICK: self.displayChange.setChecked(True)
 
-		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
-		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
-		self.fetchMisc.stateChanged.connect(self.setRerender)
 
-		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
-		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
+		nnbLay = QVBoxLayout()
+		nnbLay.addWidget(self.displayNickname)
+		nnbLay.addWidget(self.displayStatus)
+		nnbLay.addWidget(self.displayChange)
+
+		nickBox = QGroupBox("Nickname Display",self)
+		nickBox.setLayout(nnbLay)
+
+		nickBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+		ubLay = QHBoxLayout()
+		ubLay.addStretch()
+		ubLay.addWidget(self.displayUserlists)
+		ubLay.addWidget(self.textUserlist)
+		ubLay.addStretch()
+
+		userBox = QGroupBox("Channel User Lists",self)
+		userBox.setLayout(ubLay)
+
+		userBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+		# self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
+		# if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
+		# self.fetchMisc.stateChanged.connect(self.setRerender)
+
+		# self.joinMisc = QCheckBox("Auto-join on channel invite",self)
+		# if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
 		cpLayout = QVBoxLayout()
+
+		cpLayout.addWidget(nickBox)
+
+		cpLayout.addWidget(userBox)
+
 		cpLayout.addWidget(self.channelInfo)
 		cpLayout.addWidget(self.channelModes)
-		cpLayout.addWidget(self.textUserlist)
-		cpLayout.addWidget(self.displayUserlists)
-		cpLayout.addWidget(self.displayStatus)
-		cpLayout.addWidget(self.displayNickname)
-		cpLayout.addWidget(self.displayChange)
-		cpLayout.addWidget(self.fetchMisc)
-		cpLayout.addWidget(self.joinMisc)
+
+		# cpLayout.addWidget(self.textUserlist)
+		# cpLayout.addWidget(self.displayUserlists)
+
+		# cpLayout.addWidget(self.displayStatus)
+		# cpLayout.addWidget(self.displayNickname)
+		# cpLayout.addWidget(self.displayChange)
+
+		# cpLayout.addWidget(self.fetchMisc)
+		# cpLayout.addWidget(self.joinMisc)
 		cpLayout.addStretch()
 
 		self.channelPage.setLayout(cpLayout)
@@ -757,11 +799,11 @@ class Dialog(QDialog):
 		self.refreshButton.clicked.connect(self.setListRefresh)
 		self.refreshButton.setAutoDefault(False)
 
-		self.lostErrors = QCheckBox("Show connection lost errors",self)
-		if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
+		# self.lostErrors = QCheckBox("Show connection lost errors",self)
+		# if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
 
-		self.failErrors = QCheckBox("Show connection fail errors",self)
-		if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
+		# self.failErrors = QCheckBox("Show connection fail errors",self)
+		# if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
 
 
 		self.listFreq = QLabel("Refresh list every <b>"+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+"</b> seconds")
@@ -778,7 +820,12 @@ class Dialog(QDialog):
 		listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 
+		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
+		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
+		self.fetchMisc.stateChanged.connect(self.setRerender)
 
+		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
+		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
 		# hsLayout = QHBoxLayout()
 		# hsLayout.addWidget(self.refreshButton)
@@ -787,9 +834,13 @@ class Dialog(QDialog):
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(listBox)
 		cpLayout.addWidget(self.buttonsMisc)
-		cpLayout.addWidget(self.lostErrors)
-		cpLayout.addWidget(self.failErrors)
+		# cpLayout.addWidget(self.lostErrors)
+		# cpLayout.addWidget(self.failErrors)
 		cpLayout.addWidget(self.switchMisc)
+
+		cpLayout.addWidget(self.fetchMisc)
+		cpLayout.addWidget(self.joinMisc)
+
 		#cpLayout.addWidget(self.listMisc)
 		#cpLayout.addLayout(hsLayout)
 		
