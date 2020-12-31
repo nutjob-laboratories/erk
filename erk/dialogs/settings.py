@@ -358,10 +358,10 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.channelPage)
 
-		self.channelInfo = QCheckBox("Display channel name && topic",self)
+		self.channelInfo = QCheckBox("Show name && topic",self)
 		if config.CHAT_DISPLAY_INFO_BAR: self.channelInfo.setChecked(True)
 
-		self.channelModes = QCheckBox("Display channel modes",self)
+		self.channelModes = QCheckBox("Show modes",self)
 		if config.DISPLAY_CHANNEL_MODES: self.channelModes.setChecked(True)
 
 		self.textUserlist = QCheckBox("Text-only",self)
@@ -403,6 +403,18 @@ class Dialog(QDialog):
 		userBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 
+		cbLay = QHBoxLayout()
+		cbLay.addStretch()
+		cbLay.addWidget(self.channelInfo)
+		cbLay.addWidget(self.channelModes)
+		cbLay.addStretch()
+
+		chanBox = QGroupBox("Channel Information",self)
+		chanBox.setLayout(cbLay)
+
+		chanBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
 		# self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
 		# if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
 		# self.fetchMisc.stateChanged.connect(self.setRerender)
@@ -416,8 +428,10 @@ class Dialog(QDialog):
 
 		cpLayout.addWidget(userBox)
 
-		cpLayout.addWidget(self.channelInfo)
-		cpLayout.addWidget(self.channelModes)
+		cpLayout.addWidget(chanBox)
+
+		# cpLayout.addWidget(self.channelInfo)
+		# cpLayout.addWidget(self.channelModes)
 
 		# cpLayout.addWidget(self.textUserlist)
 		# cpLayout.addWidget(self.displayUserlists)
