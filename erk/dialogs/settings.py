@@ -572,8 +572,10 @@ class Dialog(QDialog):
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
 		autoLayout = QHBoxLayout()
+		autoLayout.addStretch()
 		autoLayout.addWidget(self.cmdComplete)
 		autoLayout.addWidget(self.nickComplete)
+		autoLayout.addStretch()
 
 		autoBox = QGroupBox("Auto-Complete",self)
 		autoBox.setLayout(autoLayout)
