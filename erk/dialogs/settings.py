@@ -568,21 +568,42 @@ class Dialog(QDialog):
 
 		histBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		self.nickComplete = QCheckBox("Autocomplete nicknames",self)
+		self.nickComplete = QCheckBox("Nicknames",self)
 		if config.AUTOCOMPLETE_NICKNAMES: self.nickComplete.setChecked(True)
 
-		self.cmdComplete = QCheckBox("Autocomplete commands",self)
+		self.cmdComplete = QCheckBox("Commands",self)
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
-		self.emojiComplete = QCheckBox("Autocomplete emoji shortcodes",self)
+		self.emojiComplete = QCheckBox("Emojis",self)
 		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
+
+		autoLayout = QHBoxLayout()
+		autoLayout.addWidget(self.cmdComplete)
+		autoLayout.addWidget(self.nickComplete)
+		autoLayout.addWidget(self.emojiComplete)
+
+		autoBox = QGroupBox("Auto-Complete",self)
+		autoBox.setLayout(autoLayout)
+
+		autoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		# emojiLayout = QHBoxLayout()
+		# emojiLayout.addWidget(self.emojiInput)
+		# emojiLayout.addWidget(self.emojiComplete)
+
+		# emojiBox = QGroupBox("Emojis",self)
+		# emojiBox.setLayout(emojiLayout)
+
+		# emojiBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		cpLayout = QVBoxLayout()
 
 		cpLayout.addWidget(histBox)
-		cpLayout.addWidget(self.nickComplete)
-		cpLayout.addWidget(self.cmdComplete)
-		cpLayout.addWidget(self.emojiComplete)
+		cpLayout.addWidget(autoBox)
+		#cpLayout.addWidget(emojiBox)
+		# cpLayout.addWidget(self.nickComplete)
+		# cpLayout.addWidget(self.cmdComplete)
+		# cpLayout.addWidget(self.emojiComplete)
 		cpLayout.addWidget(self.emojiInput)
 		cpLayout.addStretch()
 
