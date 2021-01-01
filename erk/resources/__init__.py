@@ -81,6 +81,8 @@ MENU_ICON = ":/gui-menu.png"
 
 LIGHT_TOOLBAR_ICON = ":/gui-light_toolbar.png"
 
+EMOJI_ICON = ":/gui-emoji.png"
+
 CONNECT_MENU_ICON = ":/connect.png"
 UPTIME_ICON = ":/gui-uptime.png"
 LEFT_ICON = ":/gui-left.png"

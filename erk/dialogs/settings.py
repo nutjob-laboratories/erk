@@ -545,9 +545,6 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.inputPage)
 
-		self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
-		if config.USE_EMOJIS: self.emojiInput.setChecked(True)
-
 		self.trackInput = QCheckBox("Track input history",self)
 		if config.TRACK_COMMAND_HISTORY: self.trackInput.setChecked(True)
 		self.trackInput.stateChanged.connect(self.setReset)
@@ -574,42 +571,47 @@ class Dialog(QDialog):
 		self.cmdComplete = QCheckBox("Commands",self)
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
-		self.emojiComplete = QCheckBox("Emoji shortcodes",self)
-		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
-
-		self.emojiComplete.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
-
 		autoLayout = QHBoxLayout()
 		autoLayout.addWidget(self.cmdComplete)
 		autoLayout.addWidget(self.nickComplete)
-		autoLayout.addWidget(self.emojiComplete)
 
 		autoBox = QGroupBox("Auto-Complete",self)
 		autoBox.setLayout(autoLayout)
 
 		autoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		# emojiLayout = QHBoxLayout()
-		# emojiLayout.addWidget(self.emojiInput)
-		# emojiLayout.addWidget(self.emojiComplete)
-
-		# emojiBox = QGroupBox("Emojis",self)
-		# emojiBox.setLayout(emojiLayout)
-
-		# emojiBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		cpLayout = QVBoxLayout()
 
 		cpLayout.addWidget(histBox)
 		cpLayout.addWidget(autoBox)
-		#cpLayout.addWidget(emojiBox)
-		# cpLayout.addWidget(self.nickComplete)
-		# cpLayout.addWidget(self.cmdComplete)
-		# cpLayout.addWidget(self.emojiComplete)
-		cpLayout.addWidget(self.emojiInput)
 		cpLayout.addStretch()
 
 		self.inputPage.setLayout(cpLayout)
+
+		# EMOJI SETTINGS
+		self.emojiPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		entry.setText("Emojis")
+		entry.widget = self.emojiPage
+		entry.setIcon(QIcon(EMOJI_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.emojiPage)
+
+		self.emojiComplete = QCheckBox("Auto-complete emoji shortcodes",self)
+		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
+
+		self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
+		if config.USE_EMOJIS: self.emojiInput.setChecked(True)
+
+		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.emojiInput)
+		cpLayout.addWidget(self.emojiComplete)
+		cpLayout.addStretch()
+
+		self.emojiPage.setLayout(cpLayout)
 
 		# Spellcheck settings
 
