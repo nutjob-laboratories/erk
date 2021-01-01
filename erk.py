@@ -89,15 +89,15 @@ congroup.add_argument("-s","--script", type=str,help="Execute a custom server sc
 
 disgroup = parser.add_argument_group('Disable functionality')
 
-disgroup.add_argument( "-P","--noplugins", help=f"Disable plugins", action="store_true")
-disgroup.add_argument( "-M","--nomacros", help=f"Disable macros", action="store_true")
-disgroup.add_argument( "-A","--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
-disgroup.add_argument( "-S","--nosettings", help=f"Disable settings menu(s)", action="store_true")
-disgroup.add_argument( "-X","--nomenus", help=f"Disable all menus", action="store_true")
-disgroup.add_argument( "-N","--noconnect", help=f"Disable connection commands", action="store_true")
-disgroup.add_argument( "-T","--noscripts", help=f"Disable scripting", action="store_true")
-disgroup.add_argument( "-D","--nodisplay", help=f"Disable connection display", action="store_true")
-disgroup.add_argument( "-Q","--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
+disgroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
+disgroup.add_argument( "--nomacros", help=f"Disable macros", action="store_true")
+disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
+disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
+disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
+disgroup.add_argument( "--noconnect", help=f"Disable connection commands", action="store_true")
+disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
+disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
+disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
 
@@ -111,8 +111,8 @@ displaygroup = parser.add_argument_group('Display')
 
 displaygroup.add_argument("-f","--fullscreen", help="Open in fullscreen mode", action="store_true")
 displaygroup.add_argument("-o","--ontop", help="Application window is always on top", action="store_true")
-displaygroup.add_argument("-W","--width", type=int,help="Set initial window width", default=None, metavar="WIDTH")
-displaygroup.add_argument("-H","--height", type=int,help="Set initial window height", default=None, metavar="HEIGHT")
+displaygroup.add_argument("-w","--width", type=int,help="Set initial window width", default=None, metavar="WIDTH")
+displaygroup.add_argument("-h","--height", type=int,help="Set initial window height", default=None, metavar="HEIGHT")
 
 miscgroup = parser.add_argument_group('Configuration')
 
@@ -120,7 +120,7 @@ miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configur
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
-miscgroup.add_argument("-R","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
+miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 
 
 args = parser.parse_args()

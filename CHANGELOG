@@ -146,6 +146,9 @@ Version 0.830
 	* Added a new commandline flag: "-a,--autoscript" (loads saved server script if the script exists)
 	* Added a new commandline flag: "-s,--script" (loads a custom script and runs it on connection)
 	* If --autoscript and --script are used together, the custom script is concatenated to the server script
+	* Removed single letter commandline flags for flags that disable functionality
+	* Changed -W and -H commandline flags to -w and -h respectively
+	* Changed the -R,--scripts commandline option to -S,--scripts
 
 Version 0.822
 	* First version with Linux support
