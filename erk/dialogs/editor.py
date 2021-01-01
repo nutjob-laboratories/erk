@@ -139,10 +139,7 @@ class Window(QMainWindow):
 		options |= QFileDialog.DontUseNativeDialog
 		fileName, _ = QFileDialog.getSaveFileName(self,"Save Plugin As...",PLUGIN_DIRECTORY,"Python File (*.py);;All Files (*)", options=options)
 		if fileName:
-			if '.py' in fileName:
-				pass
-			else:
-				fileName = fileName + '.py'
+			if fileName[-3:].lower()!=".py": fileName = fileName+".py"
 			self.filename = fileName
 			self.package_dir = os.path.dirname(self.filename)
 			code = open(fileName,"w")
@@ -236,10 +233,7 @@ class Window(QMainWindow):
 		options |= QFileDialog.DontUseNativeDialog
 		fileName, _ = QFileDialog.getSaveFileName(self,"Save Plugin As...",default,"Python File (*.py);;All Files (*)", options=options)
 		if fileName:
-			if '.py' in fileName:
-				pass
-			else:
-				fileName = fileName + '.py'
+			if fileName[-3:].lower()!=".py": fileName = fileName+".py"
 			self.filename = fileName
 			self.package_dir = os.path.dirname(self.filename)
 			code = open(fileName,"w")
