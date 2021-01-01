@@ -148,6 +148,7 @@ Version 0.830
 	* If --autoscript and --script are used together, the custom script is concatenated to the server script
 	* Removed single letter commandline flags for flags that disable functionality
 	* Changed the -R,--scripts commandline option to -S,--scripts
+	* The --script commandline flag can now be used multiple times to load multiple scripts
 
 Version 0.822
 	* First version with Linux support

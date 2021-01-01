@@ -85,7 +85,7 @@ congroup.add_argument("-c","--channel", type=str,help="Join channel on connectio
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 congroup.add_argument("-a","--autoscript", help=f"Execute server script on connection (if one exists)", action="store_true")
-congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", default=None)
+congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", action='append')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -364,24 +364,25 @@ if __name__ == '__main__':
 			if args.autoscript:
 				autoscript = load_auto_script(args.server,args.port,args.scripts)
 
-			if args.script!=None:
-				sfile = find_script_file(args.script,args.scripts)
-				if sfile==None:
-					print("Script not found: "+args.script)
-					sys.exit(1)
+			if args.script:
+				for s in args.script:
+					sfile = find_script_file(s,args.scripts)
+					if sfile==None:
+						print("Script not found: "+s)
+						sys.exit(1)
 
-				if os.path.isfile(sfile):
-					f=open(sfile, "r")
-					cscript = f.read()
-					f.close()
+					if os.path.isfile(sfile):
+						f=open(sfile, "r")
+						cscript = f.read()
+						f.close()
 
-					if len(cscript)>0:
-						if cscript[-1]!="\n": cscript = cscript + "\n"
+						if len(cscript)>0:
+							if cscript[-1]!="\n": cscript = cscript + "\n"
 
-					if autoscript!=None:
-						autoscript = autoscript + cscript
-					else:
-						autoscript = cscript
+						if autoscript!=None:
+							autoscript = autoscript + cscript
+						else:
+							autoscript = cscript
 
 			if args.password=='':
 				pword = None
@@ -480,24 +481,25 @@ if __name__ == '__main__':
 				if args.autoscript:
 					autoscript = load_auto_script(u["last_server"],u["last_port"],args.scripts)
 
-				if args.script!=None:
-					sfile = find_script_file(args.script,args.scripts)
-					if sfile==None:
-						print("Script not found: "+args.script)
-						sys.exit(1)
+				if args.script:
+					for s in args.script:
+						sfile = find_script_file(s,args.scripts)
+						if sfile==None:
+							print("Script not found: "+s)
+							sys.exit(1)
 
-					if os.path.isfile(sfile):
-						f=open(sfile, "r")
-						cscript = f.read()
-						f.close()
+						if os.path.isfile(sfile):
+							f=open(sfile, "r")
+							cscript = f.read()
+							f.close()
 
-						if len(cscript)>0:
-							if cscript[-1]!="\n": cscript = cscript + "\n"
+							if len(cscript)>0:
+								if cscript[-1]!="\n": cscript = cscript + "\n"
 
-						if autoscript!=None:
-							autoscript = autoscript + cscript
-						else:
-							autoscript = cscript
+							if autoscript!=None:
+								autoscript = autoscript + cscript
+							else:
+								autoscript = cscript
 
 				if u["last_password"] == '':
 					pword = None
