@@ -1589,9 +1589,9 @@ class Erk(QMainWindow):
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
 							menu.addAction(entry)
 						else:
-							entry = QAction(QIcon(FORMAT_ICON),"Load Style File",self)
-							entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
-							menu.addAction(entry)
+							# entry = QAction(QIcon(FORMAT_ICON),"Load Style File",self)
+							# entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
+							# menu.addAction(entry)
 
 							if item.erk_channel:
 

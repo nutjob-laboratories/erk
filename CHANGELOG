@@ -143,7 +143,6 @@ Version 0.830
 	* Changed the name of the text format editor in "settings" to "Style Editor"
 	* Added "save as..." option to the style editor
 	* Added the "/style" command to the documentation
-	* Added an option to load a style file in the connection display context menu
 
 Version 0.822
 	* First version with Linux support
