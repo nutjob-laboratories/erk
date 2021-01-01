@@ -513,6 +513,13 @@ def kicked_channel_window(client,name):
 	client.gui.stack.setCurrentWidget(client.gui.starter)
 	build_connection_display(client.gui)
 
+
+def load_chat_style(client,name,file):
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				c.widget.loadNewStyle(file)
+
 def close_channel_window(client,name,msg=None):
 	global CHANNELS
 

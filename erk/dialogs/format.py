@@ -414,6 +414,24 @@ class Dialog(QDialog):
 
 		self.close()
 
+	def doSaveAs(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		if fileName:
+			self.styles['system'] = self.syswid.exportQss()
+			self.styles['action'] = self.actwid.exportQss()
+			self.styles['error'] = self.errwid.exportQss()
+			self.styles['hyperlink'] = self.linkwid.exportQss()
+			self.styles['self'] = self.selfwid.exportQss()
+			self.styles['username'] = self.userwid.exportQss()
+			self.styles['notice'] = self.noticewid.exportQss()
+			self.styles['all'] = self.allText.exportQss()
+			self.styles['server'] = self.motdwid.exportQss()
+			self.styles['plugin'] = self.plugwid.exportQss()
+			if fileName[-4:].lower()!=".css": fileName = fileName+".css"
+			write_style_file(self.styles,fileName)
+
 	def doApplySave(self):
 		
 		self.styles['system'] = self.syswid.exportQss()
@@ -518,6 +536,9 @@ class Dialog(QDialog):
 		self.buttonApplySave = QPushButton("Save")
 		self.buttonApplySave.clicked.connect(self.doApplySave)
 
+		self.buttonSaveAs = QPushButton("Save As...")
+		self.buttonSaveAs.clicked.connect(self.doSaveAs)
+
 		self.buttonDefault = QPushButton("Set all to default")
 		self.buttonDefault.clicked.connect(self.doDefaults)
 
@@ -527,6 +548,7 @@ class Dialog(QDialog):
 		buttons = QHBoxLayout()
 		buttons.addWidget(self.buttonApply)
 		buttons.addWidget(self.buttonApplySave)
+		buttons.addWidget(self.buttonSaveAs)
 		buttons.addWidget(self.buttonDefault)
 		buttons.addWidget(self.buttonCancel)
 

@@ -75,6 +75,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
 	config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
 	config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
+	config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
 }
 
 CHANNEL_COMMANDS = {
@@ -108,6 +109,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
@@ -140,6 +142,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
@@ -780,6 +783,25 @@ def handle_common_input(window,client,text):
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)==2:
+			tokens.pop(0)
+			file = tokens.pop(0)
+
+			ffile = find_style_file(file,client.gui.scriptsdir)
+			if file!= None:
+				window.loadNewStyle(ffile)
+			else:
+				msg = Message(ERROR_MESSAGE,'',f"Style file \"{file}\" not found.")
+				window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)!=2:
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"style FILENAME")
+			window.writeText(msg,True)
+			return True
 
 	# The /wait command an only be called from scripts.
 	if len(tokens)>0:

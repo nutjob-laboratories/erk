@@ -288,7 +288,7 @@ class Window(QMainWindow):
 
 		self.current_date = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y')
 
-		STYLES = get_text_format_settings(self.parent.stylefile)
+		self.styles = get_text_format_settings(self.parent.stylefile)
 
 		self.userlist_width = 0
 
@@ -306,7 +306,7 @@ class Window(QMainWindow):
 		self.chat.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.chat.customContextMenuRequested.connect(self.chatMenu)
 
-		self.chat.setStyleSheet(STYLES["all"])
+		self.chat.setStyleSheet(self.styles["all"])
 
 		if self.type==config.CHANNEL_WINDOW:
 
@@ -322,7 +322,7 @@ class Window(QMainWindow):
 			self.userlist.itemDoubleClicked.connect(self._handleDoubleClick)
 			self.userlist.installEventFilter(self)
 
-			self.userlist.setStyleSheet(STYLES["all"])
+			self.userlist.setStyleSheet(self.styles["all"])
 
 			# Make sure that user status icons are just a little
 			# bigger than the user entry text
@@ -345,7 +345,7 @@ class Window(QMainWindow):
 		self.input.keyUp.connect(self.keyPressUp)
 		self.input.keyDown.connect(self.keyPressDown)
 
-		self.input.setStyleSheet(STYLES["all"])
+		self.input.setStyleSheet(self.styles["all"])
 
 		# Text input widget should only be one line
 		fm = self.input.fontMetrics()
@@ -565,9 +565,25 @@ class Window(QMainWindow):
 		self.chat.moveCursor(QTextCursor.End)
 
 	# BEGIN GUI METHODS
+
+	def loadNewStyle(self,style_file):
+
+		sfile = find_script_file(style_file,self.parent.scriptsdir)
+
+		if sfile!=None:
+			self.styles = get_text_format_settings(style_file)
+
+			self.chat.setStyleSheet(self.styles["all"])
+			self.input.setStyleSheet(self.styles["all"])
+			if hasattr(self,"userlist"):
+				self.userlist.setStyleSheet(self.styles["all"])
+
+			self.rerender()
+			self.rerender_userlist()
+		
+
 	def discoButton(self):
 		events.disconnect_from_server(self.client,None)
-
 
 	def nickButton(self):
 		info = NickDialog(self.client.nickname,self)
@@ -688,7 +704,7 @@ class Window(QMainWindow):
 
 	def writeText(self,message,do_not_save=False):
 
-		d = textformat.render_message(message,self.client)
+		d = textformat.render_message(message,self.client,self.styles)
 
 		if d!=None:
 
@@ -699,7 +715,7 @@ class Window(QMainWindow):
 				if self.type==config.CHANNEL_WINDOW:
 					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
 						m = Message(DATE_MESSAGE,'',cdate)
-						d2 = textformat.render_message(m,self.client)
+						d2 = textformat.render_message(m,self.client,self.styles)
 						self.chat.append(d2)
 
 			self.chat.append(d)
@@ -738,10 +754,10 @@ class Window(QMainWindow):
 				if self.type==config.CHANNEL_WINDOW:
 					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
 						m = Message(DATE_MESSAGE,'',date)
-						d2 = textformat.render_message(m,self.client)
+						d2 = textformat.render_message(m,self.client,self.styles)
 						self.chat.append(d2)
 
-			d = textformat.render_message(line,self.client)
+			d = textformat.render_message(line,self.client,self.styles)
 			if d==None: continue
 
 			cdate = datetime.fromtimestamp(line.timestamp).strftime('%A %B %d, %Y')
@@ -753,7 +769,7 @@ class Window(QMainWindow):
 				if self.type==config.CHANNEL_WINDOW:
 					if config.DISPLAY_DATES_IN_CHANNEL_CHAT:
 						m = Message(DATE_MESSAGE,'',cdate)
-						d2 = textformat.render_message(m,self.client)
+						d2 = textformat.render_message(m,self.client,self.styles)
 						self.chat.append(d2)
 
 			self.chat.append(d)

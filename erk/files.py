@@ -132,6 +132,16 @@ def filterProfanityFromText(text,punc=True):
 
 AUTO_SCRIPT_CACHE = {}
 
+def find_style_file(script,scriptdir):
+	if os.path.isfile(script):
+		return script
+
+	d_script = os.path.join(scriptdir, script)
+	if os.path.isfile(d_script):
+		return d_script
+
+	return None
+
 def find_script_file(script,scriptdir):
 	if os.path.isfile(script):
 		return script

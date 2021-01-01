@@ -177,7 +177,7 @@ class Dialog(QDialog):
 		fontButton.clicked.connect(self.menuFont)
 		fontButton.setAutoDefault(False)
 
-		formatButton = QPushButton("Change text colors")
+		formatButton = QPushButton("Style Editor")
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
@@ -574,8 +574,10 @@ class Dialog(QDialog):
 		self.cmdComplete = QCheckBox("Commands",self)
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
-		self.emojiComplete = QCheckBox("Emojis",self)
+		self.emojiComplete = QCheckBox("Emoji shortcodes",self)
 		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
+
+		self.emojiComplete.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
 
 		autoLayout = QHBoxLayout()
 		autoLayout.addWidget(self.cmdComplete)

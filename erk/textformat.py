@@ -157,7 +157,7 @@ def test_if_background_is_light(style):
 
 
 
-def render_message(message,client=None):
+def render_message(message,client,renderstyle):
 
 	msg_to_display = message.contents
 
@@ -180,7 +180,7 @@ def render_message(message,client=None):
 						if client!=None:
 							if x in client.channels and len(x)>1:
 								o = "<a href=\""+x+"\" "
-								o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
+								o = o + "style=\""+renderstyle["hyperlink"]+"\">"+x+"</a>"
 								w = o
 
 					if message.type==WHOIS_MESSAGE:
@@ -190,7 +190,7 @@ def render_message(message,client=None):
 								if client!=None:
 									if y in client.channels and len(y)>1:
 										o = "<a href=\""+y+"\" "
-										o = o + "style=\""+STYLES["hyperlink"]+"\">"+x+"</a>"
+										o = o + "style=\""+renderstyle["hyperlink"]+"\">"+x+"</a>"
 										w = o
 
 					d.append(w)
@@ -199,7 +199,7 @@ def render_message(message,client=None):
 				pass
 
 	if config.CONVERT_URLS_TO_LINKS:
-		msg_to_display = inject_www_links(msg_to_display,STYLES["hyperlink"])
+		msg_to_display = inject_www_links(msg_to_display,renderstyle["hyperlink"])
 
 	if config.DISPLAY_IRC_COLORS:
 		if string_has_irc_formatting_codes(msg_to_display):
@@ -226,26 +226,26 @@ def render_message(message,client=None):
 
 	if message.type==SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["system"]
+		style = renderstyle["system"]
 	elif message.type==ERROR_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["error"]
+		style = renderstyle["error"]
 	elif message.type==ACTION_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["action"]
+		style = renderstyle["action"]
 	elif message.type==CHAT_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["message"]
+		style = renderstyle["message"]
 	elif message.type==SELF_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["message"]
+		style = renderstyle["message"]
 	elif message.type==NOTICE_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["message"]
+		style = renderstyle["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
 
 		if IS_BACKGROUND_LIGHT==None:
-			test_if_background_is_light(STYLES["all"])
+			test_if_background_is_light(renderstyle["all"])
 
 		if IS_BACKGROUND_LIGHT==True:
 			output = HORIZONTAL_RULE
@@ -255,17 +255,17 @@ def render_message(message,client=None):
 			output = HORIZONTAL_RULE
 
 		#output = HORIZONTAL_RULE
-		style = STYLES["message"]
+		style = renderstyle["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
-		style = STYLES["server"]
+		style = renderstyle["server"]
 	elif message.type==PLUGIN_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["plugin"]
+		style = renderstyle["plugin"]
 	elif message.type==DATE_MESSAGE:
 
 		if IS_BACKGROUND_LIGHT==None:
-			test_if_background_is_light(STYLES["all"])
+			test_if_background_is_light(renderstyle["all"])
 
 		if IS_BACKGROUND_LIGHT==True:
 			output = DATE_MESSAGE_TEMPLATE
@@ -275,13 +275,13 @@ def render_message(message,client=None):
 			output = DATE_MESSAGE_TEMPLATE
 
 		#output = DATE_MESSAGE_TEMPLATE
-		style = STYLES["message"]
+		style = renderstyle["message"]
 	elif message.type==PLUGIN_SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["system"]
+		style = renderstyle["system"]
 	elif message.type==MOTD_MESSAGE:
 		output = SYSTEM_TEMPLATE
-		style = STYLES["server"]
+		style = renderstyle["server"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)
@@ -301,7 +301,7 @@ def render_message(message,client=None):
 
 		pretty_timestamp = datetime.fromtimestamp(message.timestamp).strftime(tfs)
 
-		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",STYLES["timestamp"])
+		ts = TIMESTAMP_TEMPLATE.replace("!TIMESTAMP_STYLE!",renderstyle["timestamp"])
 		ts = ts.replace("!TIME!",pretty_timestamp)
 
 		output = output.replace("!TIMESTAMP!",ts)
@@ -309,13 +309,13 @@ def render_message(message,client=None):
 		output = output.replace("!TIMESTAMP!",'')
 
 	if message.type==SELF_MESSAGE:
-		user_style = STYLES["self"]
+		user_style = renderstyle["self"]
 	elif message.type==CHAT_MESSAGE:
-		user_style = STYLES["username"]
+		user_style = renderstyle["username"]
 	elif message.type==NOTICE_MESSAGE:
-		user_style = STYLES["notice"]
+		user_style = renderstyle["notice"]
 	elif message.type==WHOIS_MESSAGE:
-		user_style = STYLES["system"]
+		user_style = renderstyle["system"]
 	else:
 		user_style = ''
 
