@@ -143,6 +143,9 @@ Version 0.830
 	* Changed the name of the text format editor in "settings" to "Style Editor"
 	* Added "save as..." option to the style editor
 	* Added the "/style" command to the documentation
+	* Added a new commandline flag: "-a,--autoscript" (loads saved server script if the script exists)
+	* Added a new commandline flag: "-s,--script" (loads a custom script and runs it on connection)
+	* If --autoscript and --script are used together, the custom script is concatenated to the server script
 
 Version 0.822
 	* First version with Linux support

@@ -84,6 +84,8 @@ congroup.add_argument("-p","--password", type=str,help="Use server password to c
 congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
+congroup.add_argument("-a","--autoscript", help=f"Execute server script on connection (if one exists)", action="store_true")
+congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", default=None)
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -118,7 +120,7 @@ miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configur
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
 miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
-miscgroup.add_argument("-r","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
+miscgroup.add_argument("-R","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 
 
 args = parser.parse_args()
@@ -349,6 +351,38 @@ if __name__ == '__main__':
 
 		# Handle connecting to a server if one has been provided
 		if args.server:
+
+			if args.noscripts:
+				if args.autoscript:
+					print("Server script cannot execute: scripting has been disabled")
+					sys.exit(1)
+				if args.script!=None:
+					print("Server script cannot execute: scripting has been disabled")
+					sys.exit(1)
+
+			autoscript = None
+			if args.autoscript:
+				autoscript = load_auto_script(args.server,args.port,args.scripts)
+
+			if args.script!=None:
+				sfile = find_script_file(args.script,args.scripts)
+				if sfile==None:
+					print("Script not found: "+args.script)
+					sys.exit(1)
+
+				if os.path.isfile(sfile):
+					f=open(sfile, "r")
+					cscript = f.read()
+					f.close()
+
+					if len(cscript)>0:
+						if cscript[-1]!="\n": cscript = cscript + "\n"
+
+					if autoscript!=None:
+						autoscript = autoscript + cscript
+					else:
+						autoscript = cscript
+
 			if args.password=='':
 				pword = None
 			else:
@@ -378,6 +412,7 @@ if __name__ == '__main__':
 					chans,
 					u["failreconnect"],
 					False,
+					autoscript,
 				)
 			GUI = Erk(
 				app,
@@ -430,7 +465,40 @@ if __name__ == '__main__':
 			# Handle connecting to the last server
 
 			elif args.last:
+
 				u = get_user(args.user)
+
+				if args.noscripts:
+					if args.autoscript:
+						print("Server script cannot execute: scripting has been disabled")
+						sys.exit(1)
+					if args.script!=None:
+						print("Server script cannot execute: scripting has been disabled")
+						sys.exit(1)
+
+				autoscript = None
+				if args.autoscript:
+					autoscript = load_auto_script(u["last_server"],u["last_port"],args.scripts)
+
+				if args.script!=None:
+					sfile = find_script_file(args.script,args.scripts)
+					if sfile==None:
+						print("Script not found: "+args.script)
+						sys.exit(1)
+
+					if os.path.isfile(sfile):
+						f=open(sfile, "r")
+						cscript = f.read()
+						f.close()
+
+						if len(cscript)>0:
+							if cscript[-1]!="\n": cscript = cscript + "\n"
+
+						if autoscript!=None:
+							autoscript = autoscript + cscript
+						else:
+							autoscript = cscript
+
 				if u["last_password"] == '':
 					pword = None
 				else:
@@ -459,6 +527,7 @@ if __name__ == '__main__':
 						c,
 						u["failreconnect"],
 						False,
+						autoscript,
 					)
 				GUI = Erk(
 					app,
