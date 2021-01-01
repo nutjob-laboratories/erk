@@ -111,8 +111,8 @@ displaygroup = parser.add_argument_group('Display')
 
 displaygroup.add_argument("-f","--fullscreen", help="Open in fullscreen mode", action="store_true")
 displaygroup.add_argument("-o","--ontop", help="Application window is always on top", action="store_true")
-displaygroup.add_argument("-w","--width", type=int,help="Set initial window width", default=None, metavar="WIDTH")
-displaygroup.add_argument("-h","--height", type=int,help="Set initial window height", default=None, metavar="HEIGHT")
+displaygroup.add_argument("-W","--width", type=int,help="Set initial window width", default=None, metavar="WIDTH")
+displaygroup.add_argument("-H","--height", type=int,help="Set initial window height", default=None, metavar="HEIGHT")
 
 miscgroup = parser.add_argument_group('Configuration')
 
