@@ -155,6 +155,10 @@ Version 0.830
 	* Added the ability to load style files into the style editor
 	* Relabled and moved the buttons on the style editor to make more sense and be more informative
 	* Set the default file extension for scripts to ".erk"
+	* Set the default file extension for style files to ".style"
+	* Changed the default style file name to "text.style" (from "text.css")
+	* When looking for script files, the ".erk" file extension will be appended while looking for files
+	* When looking for style files, the ".style" file extension will be appended while looking for files
 
 Version 0.822
 	* First version with Linux support

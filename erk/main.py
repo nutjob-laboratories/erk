@@ -1648,14 +1648,14 @@ class Erk(QMainWindow):
 	def load_style_file_in_window(self,client,name):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			events.load_chat_style(client,name,fileName)
 
 	def load_style_file_in_window_server(self,client):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			events.load_chat_style_server(client,fileName)
 

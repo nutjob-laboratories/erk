@@ -6,7 +6,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.236**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.241**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -209,11 +209,11 @@ Now, let's make a directory for Bob:
 
 We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --format C:\Alice_Erk\text.css --logs C:\Alice_Erk\logs --scripts C:\Alice_Erk\scripts
+	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --format C:\Alice_Erk\text.style --logs C:\Alice_Erk\logs --scripts C:\Alice_Erk\scripts
 
 Similarly, Bob's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.css --logs C:\Bob_Erk\logs --scripts C:\Bob_Erk\scripts
+	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --format C:\Bob_Erk\text.style --logs C:\Bob_Erk\logs --scripts C:\Bob_Erk\scripts
 
 Alice and Bob can now use **Ərk** with their own customized settings!
 

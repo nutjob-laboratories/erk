@@ -449,7 +449,7 @@ class Dialog(QDialog):
 	def doSaveAs(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			self.styles['system'] = self.syswid.exportQss()
 			self.styles['action'] = self.actwid.exportQss()
@@ -461,7 +461,8 @@ class Dialog(QDialog):
 			self.styles['all'] = self.allText.exportQss()
 			self.styles['server'] = self.motdwid.exportQss()
 			self.styles['plugin'] = self.plugwid.exportQss()
-			if fileName[-4:].lower()!=".css": fileName = fileName+".css"
+			exlen = len(STYLE_FILE_EXTENSION)+1
+			if fileName[-exlen:].lower()!="."+STYLE_FILE_EXTENSION: fileName = fileName+"."+STYLE_FILE_EXTENSION
 			write_style_file(self.styles,fileName)
 
 			self.filename = fileName
@@ -506,7 +507,7 @@ class Dialog(QDialog):
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 
 			self.styles = get_text_format_settings(fileName)

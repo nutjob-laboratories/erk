@@ -44,6 +44,7 @@ from .objects import *
 
 # File extensions
 SCRIPT_FILE_EXTENSION = "erk"
+STYLE_FILE_EXTENSION = "style"
 
 # Application directories
 INSTALL_DIRECTORY = sys.path[0]
@@ -65,11 +66,11 @@ if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Configuration files
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
-STYLE_FILE = os.path.join(SETTINGS_DIRECTORY, "text.css")
+STYLE_FILE = os.path.join(SETTINGS_DIRECTORY, "text."+STYLE_FILE_EXTENSION)
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
 
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
-BACKUP_STYLE_FILE = os.path.join(DATA_DIRECTORY, "text.css")
+BACKUP_STYLE_FILE = os.path.join(DATA_DIRECTORY, "text."+STYLE_FILE_EXTENSION)
 
 PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
@@ -139,7 +140,15 @@ def find_style_file(script,scriptdir):
 	if os.path.isfile(script):
 		return script
 
+	e_script = script+"."+STYLE_FILE_EXTENSION
+	if os.path.isfile(e_script):
+		return e_script
+
 	d_script = os.path.join(scriptdir, script)
+	if os.path.isfile(d_script):
+		return d_script
+
+	d_script = os.path.join(scriptdir, script+"."+STYLE_FILE_EXTENSION)
 	if os.path.isfile(d_script):
 		return d_script
 

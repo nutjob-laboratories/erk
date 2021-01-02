@@ -605,7 +605,7 @@ class Window(QMainWindow):
 	def runScriptButton(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.parent.scriptsdir,"Script File (*.erk);;Text File (*.txt);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.parent.scriptsdir,f"{APPLICATION_NAME} Script File (*.{SCRIPT_FILE_EXTENSION});;Text File (*.txt);;All Files (*)", options=options)
 		if fileName:
 			userinput.execute_script(fileName,self,self.client)
 
