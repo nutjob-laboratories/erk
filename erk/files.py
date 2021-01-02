@@ -42,6 +42,9 @@ import zipfile
 from .strings import *
 from .objects import *
 
+# File extensions
+SCRIPT_FILE_EXTENSION = "erk"
+
 # Application directories
 INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -146,7 +149,15 @@ def find_script_file(script,scriptdir):
 	if os.path.isfile(script):
 		return script
 
+	e_script = script+"."+SCRIPT_FILE_EXTENSION
+	if os.path.isfile(e_script):
+		return e_script
+
 	d_script = os.path.join(scriptdir, script)
+	if os.path.isfile(d_script):
+		return d_script
+
+	d_script = os.path.join(scriptdir, script+"."+SCRIPT_FILE_EXTENSION)
 	if os.path.isfile(d_script):
 		return d_script
 
@@ -157,13 +168,13 @@ def clear_auto_script_cache():
 	AUTO_SCRIPT_CACHE = {}
 
 def get_auto_script_name(ip,port,scriptdir):
-	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	fname = ip.strip()+"_"+str(port).strip()+"."+SCRIPT_FILE_EXTENSION
 	scriptname = os.path.join(scriptdir, fname)
 
 	return scriptname
 
 def save_auto_script(ip,port,script,scriptdir):
-	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	fname = ip.strip()+"_"+str(port).strip()+"."+SCRIPT_FILE_EXTENSION
 	scriptname = os.path.join(scriptdir, fname)
 
 	f=open(scriptname, "w")
@@ -171,7 +182,7 @@ def save_auto_script(ip,port,script,scriptdir):
 	f.close()
 
 def load_auto_script(ip,port,scriptdir):
-	fname = ip.strip()+"_"+str(port).strip()+".erk"
+	fname = ip.strip()+"_"+str(port).strip()+"."+SCRIPT_FILE_EXTENSION
 	scriptname = os.path.join(scriptdir, fname)
 	if scriptname in AUTO_SCRIPT_CACHE: return AUTO_SCRIPT_CACHE[scriptname]
 	if os.path.isfile(scriptname):

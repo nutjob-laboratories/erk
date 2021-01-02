@@ -154,6 +154,7 @@ Version 0.830
 	* Added a context menu option for all windows to "load style"
 	* Added the ability to load style files into the style editor
 	* Relabled and moved the buttons on the style editor to make more sense and be more informative
+	* Set the default file extension for scripts to ".erk"
 
 Version 0.822
 	* First version with Linux support
