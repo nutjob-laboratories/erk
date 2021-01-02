@@ -159,6 +159,10 @@ Version 0.830
 	* Changed the default style file name to "text.style" (from "text.css")
 	* When looking for script files, the ".erk" file extension will be appended while looking for files
 	* When looking for style files, the ".style" file extension will be appended while looking for files
+	* Style files are now stored/loaded from a specific location (by default, a directory in the "settings" directory named "styles")
+	* Added a new commandline flag (--styles) to allow users to set a specific directory for style files
+	* Changed the "-F,--format" commandline flag to "-Y,--style" to match the new text style naming convention
+	* Updated the README with the new changes
 
 Version 0.822
 	* First version with Linux support

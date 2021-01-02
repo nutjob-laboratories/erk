@@ -60,6 +60,10 @@ if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 SCRIPTS_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "scripts")
 if not os.path.isdir(SCRIPTS_DIRECTORY): os.mkdir(SCRIPTS_DIRECTORY)
 
+# Script directories
+STYLES_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "styles")
+if not os.path.isdir(STYLES_DIRECTORY): os.mkdir(STYLES_DIRECTORY)
+
 # Log directory
 LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
@@ -136,7 +140,7 @@ def filterProfanityFromText(text,punc=True):
 
 AUTO_SCRIPT_CACHE = {}
 
-def find_style_file(script,scriptdir):
+def find_style_file(script,styledir):
 	if os.path.isfile(script):
 		return script
 
@@ -144,11 +148,11 @@ def find_style_file(script,scriptdir):
 	if os.path.isfile(e_script):
 		return e_script
 
-	d_script = os.path.join(scriptdir, script)
+	d_script = os.path.join(styledir, script)
 	if os.path.isfile(d_script):
 		return d_script
 
-	d_script = os.path.join(scriptdir, script+"."+STYLE_FILE_EXTENSION)
+	d_script = os.path.join(styledir, script+"."+STYLE_FILE_EXTENSION)
 	if os.path.isfile(d_script):
 		return d_script
 

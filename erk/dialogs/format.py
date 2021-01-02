@@ -449,7 +449,7 @@ class Dialog(QDialog):
 	def doSaveAs(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			self.styles['system'] = self.syswid.exportQss()
 			self.styles['action'] = self.actwid.exportQss()
@@ -507,7 +507,7 @@ class Dialog(QDialog):
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 
 			self.styles = get_text_format_settings(fileName)

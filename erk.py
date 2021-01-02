@@ -118,10 +118,10 @@ miscgroup = parser.add_argument_group('Configuration')
 
 miscgroup.add_argument("-C","--config", type=str,help="Use an alternate configuration file", metavar="FILE", default=SETTINGS_FILE)
 miscgroup.add_argument("-U","--user", type=str,help="Use an alternate user file", metavar="FILE", default=USER_FILE)
-miscgroup.add_argument("-F","--format", type=str,help="Use an alternate text format file", metavar="FILE", default=STYLE_FILE)
+miscgroup.add_argument("-Y","--style", type=str,help="Use an alternate text style file", metavar="FILE", default=STYLE_FILE)
 miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
-
+miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
 
 args = parser.parse_args()
 
@@ -162,6 +162,11 @@ if __name__ == '__main__':
 		if not os.path.isdir(args.scripts):
 			os.mkdir(args.scripts)
 			print("\""+args.scripts+"\" directory created!")
+
+	if args.styles:
+		if not os.path.isdir(args.styles):
+			os.mkdir(args.styles)
+			print("\""+args.styles+"\" directory created!")
 
 	# Handle installing plugins
 
@@ -433,7 +438,8 @@ if __name__ == '__main__':
 				args.scripts,
 				args.nodisplay,
 				args.ontop,
-				args.qt5menu
+				args.qt5menu,
+				args.styles,
 				)
 			GUI.show()
 		else:
@@ -459,7 +465,8 @@ if __name__ == '__main__':
 					args.scripts,
 					args.nodisplay,
 					args.ontop,
-					args.qt5menu
+					args.qt5menu,
+					args.styles,
 					)
 				GUI.show()
 
@@ -549,7 +556,8 @@ if __name__ == '__main__':
 					args.scripts,
 					args.nodisplay,
 					args.ontop,
-					args.qt5menu
+					args.qt5menu,
+					args.styles,
 					)
 				GUI.show()
 			else:
@@ -576,7 +584,8 @@ if __name__ == '__main__':
 						args.scripts,
 						args.nodisplay,
 						args.ontop,
-						args.qt5menu
+						args.qt5menu,
+						args.styles,
 						)
 					GUI.show()
 				else:

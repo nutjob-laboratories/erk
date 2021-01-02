@@ -351,7 +351,7 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,do_ontop=False,force_qmenu=False,parent=None):
+	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,do_ontop=False,force_qmenu=False,style_dir=STYLES_DIRECTORY,parent=None):
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -392,6 +392,8 @@ class Erk(QMainWindow):
 		self.block_scripts = block_scripts
 
 		self.scriptsdir = scriptdir
+
+		self.styledir = style_dir
 
 		self.do_ontop = do_ontop
 
@@ -1648,14 +1650,14 @@ class Erk(QMainWindow):
 	def load_style_file_in_window(self,client,name):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			events.load_chat_style(client,name,fileName)
 
 	def load_style_file_in_window_server(self,client):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			events.load_chat_style_server(client,fileName)
 

@@ -789,7 +789,7 @@ def handle_ui_input(window,client,text):
 			tokens.pop(0)
 			file = tokens.pop(0)
 
-			ffile = find_style_file(file,client.gui.scriptsdir)
+			ffile = find_style_file(file,client.gui.styledir)
 			if file!= None:
 				window.loadNewStyle(ffile)
 			else:
