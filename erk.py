@@ -141,11 +141,11 @@ if __name__ == '__main__':
 			loaded_config_file = True
 			print("\""+args.config+"\" created!")
 
-	if args.format:
-		if not os.path.isfile(args.format):
+	if args.style:
+		if not os.path.isfile(args.style):
 			f = get_text_format_settings(None)
-			write_style_file(f,args.format)
-			print("\""+args.format+"\" created!")
+			write_style_file(f,args.style)
+			print("\""+args.style+"\" created!")
 
 	if args.user:
 		if not os.path.isfile(args.user):
@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app,args.config,args.format)
+		EDITOR = EditorDialog(None,None,app,args.config,args.style)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,file,app,args.config,args.format)
+		EDITOR = EditorDialog(None,file,app,args.config,args.style)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -244,7 +244,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = EditorDialog(None,None,app,args.config,args.format)
+		EDITOR = EditorDialog(None,None,app,args.config,args.style)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 		EDITOR.newPackage()
@@ -428,7 +428,7 @@ if __name__ == '__main__':
 				args.nosettings,
 				args.nomenus,
 				args.config,
-				args.format,
+				args.style,
 				args.user,
 				args.fullscreen,
 				args.width,
@@ -455,7 +455,7 @@ if __name__ == '__main__':
 					args.nosettings,
 					args.nomenus,
 					args.config,
-					args.format,
+					args.style,
 					args.user,
 					args.fullscreen,
 					args.width,
@@ -546,7 +546,7 @@ if __name__ == '__main__':
 					args.nosettings,
 					args.nomenus,
 					args.config,
-					args.format,
+					args.style,
 					args.user,
 					args.fullscreen,
 					args.width,
@@ -574,7 +574,7 @@ if __name__ == '__main__':
 						args.nosettings,
 						args.nomenus,
 						args.config,
-						args.format,
+						args.style,
 						args.user,
 						args.fullscreen,
 						args.width,
