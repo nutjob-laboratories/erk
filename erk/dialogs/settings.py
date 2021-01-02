@@ -414,34 +414,10 @@ class Dialog(QDialog):
 
 		chanBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-
-		# self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
-		# if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
-		# self.fetchMisc.stateChanged.connect(self.setRerender)
-
-		# self.joinMisc = QCheckBox("Auto-join on channel invite",self)
-		# if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
-
 		cpLayout = QVBoxLayout()
-
 		cpLayout.addWidget(nickBox)
-
 		cpLayout.addWidget(userBox)
-
 		cpLayout.addWidget(chanBox)
-
-		# cpLayout.addWidget(self.channelInfo)
-		# cpLayout.addWidget(self.channelModes)
-
-		# cpLayout.addWidget(self.textUserlist)
-		# cpLayout.addWidget(self.displayUserlists)
-
-		# cpLayout.addWidget(self.displayStatus)
-		# cpLayout.addWidget(self.displayNickname)
-		# cpLayout.addWidget(self.displayChange)
-
-		# cpLayout.addWidget(self.fetchMisc)
-		# cpLayout.addWidget(self.joinMisc)
 		cpLayout.addStretch()
 
 		self.channelPage.setLayout(cpLayout)

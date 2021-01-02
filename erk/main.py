@@ -662,6 +662,10 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
+			entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
+			entry.triggered.connect(self.showStyleDialog)
+			self.settingsMenu.addAction(entry)
+
 			#self.settingsMenu.addSeparator()
 			insertNoTextSeparator(self,self.settingsMenu)
 
@@ -899,6 +903,9 @@ class Erk(QMainWindow):
 				self.spinner = QMovie(ANIM)
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+
+	def showStyleDialog(self):
+		FormatTextDialog(self)
 
 	def menuExportLog(self):
 		d = ExportLogDialog(self)
@@ -1574,6 +1581,12 @@ class Erk(QMainWindow):
 							#menu.addSeparator()
 							insertNoTextSeparator(self,menu)
 
+							entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+							entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
+							menu.addAction(entry)
+
+							insertNoTextSeparator(self,menu)
+
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuNick(client))
 							menu.addAction(entry)
@@ -1589,9 +1602,11 @@ class Erk(QMainWindow):
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
 							menu.addAction(entry)
 						else:
-							# entry = QAction(QIcon(FORMAT_ICON),"Load Style File",self)
-							# entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
-							# menu.addAction(entry)
+							entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+							entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
+							menu.addAction(entry)
+
+							insertNoTextSeparator(self,menu)
 
 							if item.erk_channel:
 
@@ -1636,6 +1651,13 @@ class Erk(QMainWindow):
 		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
 		if fileName:
 			events.load_chat_style(client,name,fileName)
+
+	def load_style_file_in_window_server(self,client):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		if fileName:
+			events.load_chat_style_server(client,fileName)
 
 	def open_private_window(self,client,nickname):
 		events.open_private_window(client,nickname)

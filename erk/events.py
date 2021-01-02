@@ -520,6 +520,11 @@ def load_chat_style(client,name,file):
 			if c.widget.name==name:
 				c.widget.loadNewStyle(file)
 
+def load_chat_style_server(client,file):
+	for c in CONSOLES:
+		if c.widget.client.id == client.id:
+			c.widget.loadNewStyle(file)
+
 def close_channel_window(client,name,msg=None):
 	global CHANNELS
 
