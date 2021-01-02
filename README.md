@@ -52,6 +52,7 @@
 	* Any text, from nicknames to messages to hyperlinks, can use custom colors
 	* Text rendering setting are stored in "style files", and can be shared
 	* Chats windows can load individual style files, allowing for different settings in different channels
+	* Features a built-in style file editor
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
 	* Right click on misspelled words for suggested spellings/words
