@@ -1,8 +1,8 @@
 
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
-	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.822.176"><b>Download latest stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.822.176"><b>Download last stable release</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830.241</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
