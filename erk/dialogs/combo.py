@@ -1036,7 +1036,7 @@ class Dialog(QDialog):
 	def openScript(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.scriptsdir,"Script File (*.erk);;Text File (*.txt);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.scriptsdir,f"Script File (*.{SCRIPT_FILE_EXTENSION});;Text File (*.txt);;All Files (*)", options=options)
 		if fileName:
 			f=open(fileName, "r")
 			code = f.read()
