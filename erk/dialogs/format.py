@@ -40,6 +40,16 @@ from .. import textformat
 
 class AllStyler(QWidget):
 
+	def loadQss(self,style,default):
+		self.qss = style
+		self.default = default
+
+		self.parseQss()
+		self.generateQss()
+
+		self.example.setStyleSheet(self.qss)
+
+
 	def doDefault(self):
 		self.qss = self.default
 		self.parseQss()
@@ -175,6 +185,28 @@ class AllStyler(QWidget):
 
 
 class TextStyler(QWidget):
+
+	def loadQss(self,style,default):
+		self.qss = style
+		self.default = default
+
+		self.parseQss()
+
+		self.example.setStyleSheet(self.qss)
+		self.setColor.setStyleSheet(f'background-color: {self.color};')
+
+		if self.show_styles:
+
+			if self.bold:
+				self.setBold.setCheckState(Qt.Checked)
+			else:
+				self.setBold.setCheckState(Qt.Unchecked)
+
+			if self.italic:
+				self.setItalic.setCheckState(Qt.Checked)
+			else:
+				self.setItalic.setCheckState(Qt.Unchecked)
+
 
 	def exportQss(self):
 		gcode = f'color: {self.color};'
@@ -432,6 +464,8 @@ class Dialog(QDialog):
 			if fileName[-4:].lower()!=".css": fileName = fileName+".css"
 			write_style_file(self.styles,fileName)
 
+			self.filename = fileName
+
 	def doApplySave(self):
 		
 		self.styles['system'] = self.syswid.exportQss()
@@ -451,7 +485,7 @@ class Dialog(QDialog):
 
 		self.parent.reload_all_text()
 
-		write_style_file(self.styles,self.parent.stylefile)
+		write_style_file(self.styles,self.filename)
 
 		self.close()
 
@@ -468,6 +502,27 @@ class Dialog(QDialog):
 		self.motdwid.doDefault()
 		self.plugwid.doDefault()
 
+	def loadStyle(self):
+
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.scriptsdir,"Style File (*.css);;All Files (*)", options=options)
+		if fileName:
+
+			self.styles = get_text_format_settings(fileName)
+
+			self.syswid.loadQss(self.styles["system"],self.default_styles["system"])
+			self.actwid.loadQss(self.styles["action"],self.default_styles["action"])
+			self.errwid.loadQss(self.styles["error"],self.default_styles["error"])
+			self.linkwid.loadQss(self.styles["hyperlink"],self.default_styles["hyperlink"])
+			self.selfwid.loadQss(self.styles["self"],self.default_styles["self"])
+			self.userwid.loadQss(self.styles["username"],self.default_styles["username"])
+			self.noticewid.loadQss(self.styles["notice"],self.default_styles["notice"])
+			self.allText.loadQss(self.styles["all"],self.default_styles["all"])
+			self.motdwid.loadQss(self.styles["server"],self.default_styles["server"])
+			self.plugwid.loadQss(self.styles["plugin"],self.default_styles["plugin"])
+
+
 	def __init__(self,parent=None):
 		super(Dialog,self).__init__(parent)
 
@@ -476,8 +531,10 @@ class Dialog(QDialog):
 		self.setWindowTitle("Text colors & formatting")
 		self.setWindowIcon(QIcon(FORMAT_ICON))
 
+		self.filename = parent.stylefile
+
 		# self.styles = get_text_format_settings()
-		self.styles = get_text_format_settings(parent.stylefile)
+		self.styles = get_text_format_settings(self.filename)
 		self.default_styles = get_text_format_settings(BACKUP_STYLE_FILE)
 
 		self.syswid = TextStyler('system','This is a system message',self.styles['system'],self.default_styles['system'],True,False,self)
@@ -530,29 +587,52 @@ class Dialog(QDialog):
 
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
 
-		self.buttonApply = QPushButton("Apply")
+		self.buttonApply = QPushButton("Apply to all chats")
 		self.buttonApply.clicked.connect(self.doApply)
 
-		self.buttonApplySave = QPushButton("Save")
+		self.buttonApplySave = QPushButton("Save as default style")
 		self.buttonApplySave.clicked.connect(self.doApplySave)
 
-		self.buttonSaveAs = QPushButton("Save As...")
+		self.buttonSaveAs = QPushButton("Save style as...")
 		self.buttonSaveAs.clicked.connect(self.doSaveAs)
 
-		self.buttonDefault = QPushButton("Set all to default")
+		self.buttonDefault = QPushButton("Restore base style")
 		self.buttonDefault.clicked.connect(self.doDefaults)
 
-		self.buttonCancel = QPushButton("Cancel")
+		self.buttonCancel = QPushButton("Exit")
 		self.buttonCancel.clicked.connect(self.close)
 
-		buttons = QHBoxLayout()
-		buttons.addWidget(self.buttonApply)
-		buttons.addWidget(self.buttonApplySave)
-		buttons.addWidget(self.buttonSaveAs)
-		buttons.addWidget(self.buttonDefault)
-		buttons.addWidget(self.buttonCancel)
+		self.buttonLoad = QPushButton("Open style")
+		self.buttonLoad.clicked.connect(self.loadStyle)
+
+		# self.menubar = QMenuBar(self)
+		# fileMenu = self.menubar.addMenu ("File")
+		# self.show()
+
+		topButtons = QHBoxLayout()
+		topButtons.addWidget(self.buttonApply)
+		topButtons.addWidget(self.buttonApplySave)
+
+		midButtons = QHBoxLayout()
+		midButtons.addWidget(self.buttonLoad)
+		midButtons.addWidget(self.buttonSaveAs)
+		midButtons.addWidget(self.buttonDefault)
+
+		# buttons = QHBoxLayout()
+		# buttons.addWidget(self.buttonApply)
+		# buttons.addWidget(self.buttonApplySave)
+		# buttons.addWidget(self.buttonSaveAs)
+		# buttons.addWidget(self.buttonDefault)
+		# buttons.addWidget(self.buttonCancel)
+
+		controls = QVBoxLayout()
+		controls.addLayout(topButtons)
+		controls.addLayout(midButtons)
+		controls.addWidget(self.buttonCancel)
+		
 
 		setLayout = QVBoxLayout()
+		#setLayout.addWidget(self.menubar)
 		setLayout.addWidget(self.allText)
 		setLayout.addWidget(self.tabs)
 
@@ -564,7 +644,7 @@ class Dialog(QDialog):
 		# finalLayout.addWidget(self.allText)
 		# finalLayout.addWidget(self.tabs)
 		finalLayout.addLayout(setLayout)
-		finalLayout.addLayout(buttons)
+		finalLayout.addLayout(controls)
 
 		
 

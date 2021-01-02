@@ -279,6 +279,8 @@ class Window(QMainWindow):
 		self.admin = False
 		self.halfop = False
 
+		self.custom_style = False
+
 		self.banlist = []
 
 		self.language = config.SPELLCHECK_LANGUAGE
@@ -580,6 +582,8 @@ class Window(QMainWindow):
 
 			self.rerender()
 			self.rerender_userlist()
+
+			self.custom_style = True
 		
 
 	def discoButton(self):

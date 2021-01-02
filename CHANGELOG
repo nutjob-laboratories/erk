@@ -151,7 +151,9 @@ Version 0.830
 	* The --script commandline flag can now be used multiple times to load multiple scripts
 	* Moved emoji settings to their own tab in the "settings" dialog
 	* Added a "style editor" menu entry to the "settings" menu
-	* Added a context menu option for all windows to "load style file"
+	* Added a context menu option for all windows to "load style"
+	* Added the ability to load style files into the style editor
+	* Relabled and moved the buttons on the style editor to make more sense and be more informative
 
 Version 0.822
 	* First version with Linux support
