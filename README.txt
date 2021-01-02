@@ -8,7 +8,7 @@
 
 **Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **!_FULL_VERSION_!**.
 
-**Ərk** is fully functional for use. Most features are complete, but bugs are still being found and fixed, and features are still being added.
+**Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
 # Screenshots
 
