@@ -173,6 +173,7 @@ Version 0.830
 	* Added an "edit style" entry to the connection display's context menu
 	* Added load, edit, and revert options to the chat display's context menus
 	* Bugfix: server console styles could be loaded before it could be properly saved
+	* Bugfix: new style items in the chat display's context menu are no longer shown if styles are disabled
 
 Version 0.822
 	* First version with Linux support
