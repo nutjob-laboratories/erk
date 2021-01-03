@@ -1001,25 +1001,27 @@ class Window(QMainWindow):
 
 		menu = self.chat.createStandardContextMenu()
 
-		styleMenu = QMenu("Style")
-		styleMenu.setIcon(QIcon(FORMAT_ICON))
-		menu.insertMenu(menu.actions()[0],styleMenu)
+		if self.type!=config.SERVER_WINDOW or (self.type==config.SERVER_WINDOW and self.client.registered):
 
-		entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
-		entry.triggered.connect(self.contextLoadStyle)
-		styleMenu.addAction(entry)
+			styleMenu = QMenu("Style")
+			styleMenu.setIcon(QIcon(FORMAT_ICON))
+			menu.insertMenu(menu.actions()[0],styleMenu)
 
-		entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
-		entry.triggered.connect(self.contextEditStyle)
-		styleMenu.addAction(entry)
-
-		if self.custom_style:
-			entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
-			if self.type==config.SERVER_WINDOW:
-				entry.triggered.connect(lambda state,client=self.client: events.restore_chat_style_server(client))
-			else:
-				entry.triggered.connect(lambda state,client=self.client,name=self.name: events.restore_chat_style(client,name))
+			entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
+			entry.triggered.connect(self.contextLoadStyle)
 			styleMenu.addAction(entry)
+
+			entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
+			entry.triggered.connect(self.contextEditStyle)
+			styleMenu.addAction(entry)
+
+			if self.custom_style:
+				entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
+				if self.type==config.SERVER_WINDOW:
+					entry.triggered.connect(lambda state,client=self.client: events.restore_chat_style_server(client))
+				else:
+					entry.triggered.connect(lambda state,client=self.client,name=self.name: events.restore_chat_style(client,name))
+				styleMenu.addAction(entry)
 
 		if self.operator:
 
