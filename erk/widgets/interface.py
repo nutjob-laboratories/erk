@@ -290,7 +290,20 @@ class Window(QMainWindow):
 
 		self.current_date = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y')
 
-		self.styles = get_text_format_settings(self.parent.stylefile)
+		# save_custom_style(self.client.network,self.name,self.styles,self.parent.styledir)
+		# load_custom_style(network,name,styledir=STYLES_DIRECTORY)
+
+		if not self.parent.block_styles:
+			custom_style = load_custom_style(self.client.network,self.name,self.parent.styledir)
+			if custom_style==None:
+				self.styles = get_text_format_settings(self.parent.stylefile)
+			else:
+				self.styles = custom_style
+				self.custom_style = True
+		else:
+			self.styles = get_text_format_settings(self.parent.stylefile)
+
+		# self.styles = get_text_format_settings(self.parent.stylefile)
 
 		self.userlist_width = 0
 
@@ -568,9 +581,24 @@ class Window(QMainWindow):
 
 	# BEGIN GUI METHODS
 
+	def restoreStyle(self):
+		self.styles = get_text_format_settings(self.parent.stylefile)
+
+		self.chat.setStyleSheet(self.styles["all"])
+		self.input.setStyleSheet(self.styles["all"])
+		if hasattr(self,"userlist"):
+			self.userlist.setStyleSheet(self.styles["all"])
+
+		self.rerender()
+		self.rerender_userlist()
+
+		self.custom_style = False
+
+		delete_custom_style(self.client.network,self.name,self.parent.styledir)
+
 	def loadNewStyle(self,style_file):
 
-		sfile = find_script_file(style_file,self.parent.scriptsdir)
+		sfile = find_script_file(style_file,self.parent.styledir)
 
 		if sfile!=None:
 			self.styles = get_text_format_settings(style_file)
@@ -584,6 +612,9 @@ class Window(QMainWindow):
 			self.rerender_userlist()
 
 			self.custom_style = True
+
+			# save_custom_style(network,name,style,styledir=STYLES_DIRECTORY):
+			save_custom_style(self.client.network,self.name,self.styles,self.parent.styledir)
 		
 
 	def discoButton(self):

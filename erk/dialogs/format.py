@@ -648,7 +648,7 @@ class Dialog(QDialog):
 
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
 
-		self.buttonApply = QPushButton("Apply to all chats")
+		self.buttonApply = QPushButton("Apply to unstyled chats")
 		self.buttonApply.clicked.connect(self.doApply)
 
 		self.buttonApplySave = QPushButton("Apply && Save")

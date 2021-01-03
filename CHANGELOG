@@ -165,6 +165,10 @@ Version 0.830
 	* Updated the README with the new changes
 	* Added a commandline flag to disable style loading
 	* Added a menu bar to the "text style" dialog
+	* Chat windows now "remember" custom styles (they save when loaded, and are automatically loaded and applied)
+	* Remembered styles are not applied if the --nostyles flag is used
+	* An option to "restore" (set to default) styles has been added to the connection display context menu
+	* Clicking the "apply" button in the style editor only applies the style to non-custom-style chats
 
 Version 0.822
 	* First version with Linux support

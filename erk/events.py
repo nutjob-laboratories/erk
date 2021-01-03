@@ -380,15 +380,18 @@ def build_connection_display(gui,new_server=None):
 
 def apply_style(style):
 	for c in CHANNELS:
-		c.widget.chat.setStyleSheet(style)
-		c.widget.userlist.setStyleSheet(style)
-		c.widget.input.setStyleSheet(style)
+		if not c.widget.custom_style:
+			c.widget.chat.setStyleSheet(style)
+			c.widget.userlist.setStyleSheet(style)
+			c.widget.input.setStyleSheet(style)
 	for c in PRIVATES:
-		c.widget.chat.setStyleSheet(style)
-		c.widget.input.setStyleSheet(style)
+		if not c.widget.custom_style:
+			c.widget.chat.setStyleSheet(style)
+			c.widget.input.setStyleSheet(style)
 	for c in CONSOLES:
-		c.widget.chat.setStyleSheet(style)
-		c.widget.input.setStyleSheet(style)
+		if not c.widget.custom_style:
+			c.widget.chat.setStyleSheet(style)
+			c.widget.input.setStyleSheet(style)
 
 def resize_font_fix():
 	for c in CHANNELS:
@@ -513,6 +516,27 @@ def kicked_channel_window(client,name):
 	client.gui.stack.setCurrentWidget(client.gui.starter)
 	build_connection_display(client.gui)
 
+def using_custom_style(client,name):
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				return c.widget.custom_style
+
+def using_custom_style_server(client):
+	for c in CONSOLES:
+		if c.widget.client.id == client.id:
+			return c.widget.custom_style
+
+def restore_chat_style(client,name):
+	for c in CHANNELS:
+		if c.widget.client.id == client.id:
+			if c.widget.name==name:
+				c.widget.restoreStyle()
+
+def restore_chat_style_server(client):
+	for c in CONSOLES:
+		if c.widget.client.id == client.id:
+			c.widget.restoreStyle()
 
 def load_chat_style(client,name,file):
 	for c in CHANNELS:

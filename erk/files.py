@@ -140,6 +140,36 @@ def filterProfanityFromText(text,punc=True):
 
 AUTO_SCRIPT_CACHE = {}
 
+def delete_custom_style(network,name,styledir=STYLES_DIRECTORY):
+	f = encodeStyleName(network,name)
+	styleFileName = os.path.join(styledir,f)
+
+	if os.path.isfile(styleFileName):
+		os.remove(styleFileName)
+
+def save_custom_style(network,name,style,styledir=STYLES_DIRECTORY):
+	f = encodeStyleName(network,name)
+	styleFileName = os.path.join(styledir,f)
+
+	write_style_file(style,styleFileName)
+
+def load_custom_style(network,name,styledir=STYLES_DIRECTORY):
+	f = encodeStyleName(network,name)
+	styleFileName = os.path.join(styledir,f)
+
+	if os.path.isfile(styleFileName):
+		return read_style_file(styleFileName)
+	else:
+		return None
+
+
+def encodeStyleName(network,name=None):
+	network = network.replace(":","-")
+	if name==None:
+		return f"{network}.style"
+	else:
+		return f"{network}-{name}.style"
+
 def find_style_file(script,styledir):
 	if os.path.isfile(script):
 		return script

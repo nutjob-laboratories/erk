@@ -1615,6 +1615,11 @@ class Erk(QMainWindow):
 								entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
 								menu.addAction(entry)
 
+								if events.using_custom_style_server(item.erk_client):
+									entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
+									entry.triggered.connect(lambda state,client=item.erk_client: self.restore_style_file_in_window_server(client))
+									menu.addAction(entry)
+
 							insertNoTextSeparator(self,menu)
 
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
@@ -1636,6 +1641,11 @@ class Erk(QMainWindow):
 								entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
 								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
 								menu.addAction(entry)
+
+								if events.using_custom_style(item.erk_client,item.text(0)):
+									entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
+									entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.restore_style_file_in_window(client,name))
+									menu.addAction(entry)
 
 								insertNoTextSeparator(self,menu)
 
@@ -1675,6 +1685,12 @@ class Erk(QMainWindow):
 			return True
 
 		return super(Erk, self).eventFilter(source, event)
+
+	def restore_style_file_in_window(self,client,name):
+		events.restore_chat_style(client,name)
+
+	def restore_style_file_in_window_server(self,client):
+		events.restore_chat_style_server(client)
 
 	def load_style_file_in_window(self,client,name):
 		options = QFileDialog.Options()
