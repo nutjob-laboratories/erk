@@ -47,7 +47,7 @@ from .. import config
 from .. import textformat
 from .. import userinput
 from .. import macros
-from ..dialogs import KeyDialog,JoinDialog,NickDialog
+from ..dialogs import KeyDialog,JoinDialog,NickDialog,FormatEditDialog
 from .. import events
 from .action import *
 
@@ -983,10 +983,43 @@ class Window(QMainWindow):
 		if newkey:
 			self.client.mode(self.name,True,"k",None,newkey)
 
+	def contextLoadStyle(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		if fileName:
+			self.loadNewStyle(fileName)
+
+	def contextEditStyle(self):
+		if self.type==config.SERVER_WINDOW:
+			FormatEditDialog(self.parent,self.client,None)
+		else:
+			FormatEditDialog(self.parent,self.client,self.name)
+
 
 	def chatMenu(self,location):
 
 		menu = self.chat.createStandardContextMenu()
+
+		styleMenu = QMenu("Style")
+		styleMenu.setIcon(QIcon(FORMAT_ICON))
+		menu.insertMenu(menu.actions()[0],styleMenu)
+
+		entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
+		entry.triggered.connect(self.contextLoadStyle)
+		styleMenu.addAction(entry)
+
+		entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
+		entry.triggered.connect(self.contextEditStyle)
+		styleMenu.addAction(entry)
+
+		if self.custom_style:
+			entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
+			if self.type==config.SERVER_WINDOW:
+				entry.triggered.connect(lambda state,client=self.client: events.restore_chat_style_server(client))
+			else:
+				entry.triggered.connect(lambda state,client=self.client,name=self.name: events.restore_chat_style(client,name))
+			styleMenu.addAction(entry)
 
 		if self.operator:
 
