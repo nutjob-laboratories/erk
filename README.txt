@@ -159,7 +159,7 @@ For more information, check out the [documentation](https://github.com/nutjob-la
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-	python erk.py -o --noplugins --nomacros --noscripts --nomenu --nodisplay --nosettings --channel "#erk" irc.efnet.org 6667
+	python erk.py -o --noplugins --nomacros --noscripts --nomenu --nodisplay --nosettings --nostyles --channel "#erk" irc.efnet.org 6667
 
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
 

@@ -2,11 +2,11 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.822.176"><b>Download last stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830.247</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830.248</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.247**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.248**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -159,7 +159,7 @@ For more information, check out the [documentation](https://github.com/nutjob-la
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-	python erk.py -o --noplugins --nomacros --noscripts --nomenu --nodisplay --nosettings --channel "#erk" irc.efnet.org 6667
+	python erk.py -o --noplugins --nomacros --noscripts --nomenu --nodisplay --nosettings --nostyles --channel "#erk" irc.efnet.org 6667
 
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
 

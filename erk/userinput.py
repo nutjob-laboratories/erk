@@ -784,24 +784,31 @@ def handle_ui_input(window,client,text):
 
 	tokens = text.split()
 
-	if len(tokens)>0:
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)==2:
-			tokens.pop(0)
-			file = tokens.pop(0)
-
-			ffile = find_style_file(file,client.gui.styledir)
-			if file!= None:
-				window.loadNewStyle(ffile)
-			else:
-				msg = Message(ERROR_MESSAGE,'',f"Style file \"{file}\" not found.")
+	if client.gui.block_styles:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style':
+				msg = Message(ERROR_MESSAGE,'',"Loading styles has been disabled.")
 				window.writeText(msg,True)
-			return True
+				return True
+	else:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)==2:
+				tokens.pop(0)
+				file = tokens.pop(0)
 
-	if len(tokens)>0:
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)!=2:
-			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"style FILENAME")
-			window.writeText(msg,True)
-			return True
+				ffile = find_style_file(file,client.gui.styledir)
+				if file!= None:
+					window.loadNewStyle(ffile)
+				else:
+					msg = Message(ERROR_MESSAGE,'',f"Style file \"{file}\" not found.")
+					window.writeText(msg,True)
+				return True
+
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'style' and len(tokens)!=2:
+				msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"style FILENAME")
+				window.writeText(msg,True)
+				return True
 
 	# The /wait command an only be called from scripts.
 	if len(tokens)>0:

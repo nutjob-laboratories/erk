@@ -351,7 +351,31 @@ class Erk(QMainWindow):
 	def showSettingsDialog(self):
 		self._erk_this_is_the_settings_dialog_space = SettingsDialog(self.configfile,self)
 
-	def __init__(self,app,info=None,block_plugins=False,block_macros=False,block_settings=False,block_toolbar=False,configfile=None,stylefile=STYLE_FILE,userfile=USER_FILE,fullscreen=False,width=None,height=None,logdir=LOG_DIRECTORY,block_scripts=False,scriptdir=SCRIPTS_DIRECTORY,block_connectiondisplay=False,do_ontop=False,force_qmenu=False,style_dir=STYLES_DIRECTORY,parent=None):
+	def __init__(
+			self,
+			app,
+			info=None,
+			block_plugins=False,
+			block_macros=False,
+			block_settings=False,
+			block_toolbar=False,
+			configfile=None,
+			stylefile=STYLE_FILE,
+			userfile=USER_FILE,
+			fullscreen=False,
+			width=None,
+			height=None,
+			logdir=LOG_DIRECTORY,
+			block_scripts=False,
+			scriptdir=SCRIPTS_DIRECTORY,
+			block_connectiondisplay=False,
+			do_ontop=False,
+			force_qmenu=False,
+			style_dir=STYLES_DIRECTORY,
+			no_styles=False,
+			parent=None
+		):
+		
 		super(Erk, self).__init__(parent)
 
 		self.app = app
@@ -396,6 +420,8 @@ class Erk(QMainWindow):
 		self.styledir = style_dir
 
 		self.do_ontop = do_ontop
+
+		self.block_styles = no_styles
 
 		self.cmdline_macro = False
 		self.cmdline_plugin = False
@@ -664,9 +690,10 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
-			entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
-			entry.triggered.connect(self.showStyleDialog)
-			self.settingsMenu.addAction(entry)
+			if not self.block_styles:
+				entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
+				entry.triggered.connect(self.showStyleDialog)
+				self.settingsMenu.addAction(entry)
 
 			#self.settingsMenu.addSeparator()
 			insertNoTextSeparator(self,self.settingsMenu)
@@ -1581,11 +1608,12 @@ class Erk(QMainWindow):
 							menu.addMenu(settingsMenu)
 
 							#menu.addSeparator()
-							insertNoTextSeparator(self,menu)
+							if not self.block_styles:
+								insertNoTextSeparator(self,menu)
 
-							entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
-							entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
-							menu.addAction(entry)
+								entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+								entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
+								menu.addAction(entry)
 
 							insertNoTextSeparator(self,menu)
 
@@ -1604,11 +1632,12 @@ class Erk(QMainWindow):
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
 							menu.addAction(entry)
 						else:
-							entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
-							entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
-							menu.addAction(entry)
+							if not self.block_styles:
+								entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
+								menu.addAction(entry)
 
-							insertNoTextSeparator(self,menu)
+								insertNoTextSeparator(self,menu)
 
 							if item.erk_channel:
 

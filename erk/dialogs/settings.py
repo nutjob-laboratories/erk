@@ -181,6 +181,8 @@ class Dialog(QDialog):
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
+		if self.parent.block_styles: formatButton.setVisible(False)
+
 		self.nametitleMisc = QCheckBox("Show chat name in title",self)
 		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
 
