@@ -71,6 +71,7 @@ from .dialogs import(
 	SettingsDialog,
 	AutosaveDialog,
 	ComboDialogCmd,
+	FormatEditDialog,
 	)
 
 from .dialogs.export_package import Dialog as ExportPackageDialog
@@ -1611,8 +1612,12 @@ class Erk(QMainWindow):
 							if not self.block_styles:
 								insertNoTextSeparator(self,menu)
 
-								entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+								entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
 								entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
+								menu.addAction(entry)
+
+								entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
+								entry.triggered.connect(lambda state,client=item.erk_client: self.edit_style_file_in_window(client,None))
 								menu.addAction(entry)
 
 								if events.using_custom_style_server(item.erk_client):
@@ -1638,9 +1643,17 @@ class Erk(QMainWindow):
 							menu.addAction(entry)
 						else:
 							if not self.block_styles:
-								entry = QAction(QIcon(FORMAT_ICON),"Load style file",self)
+								entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
 								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
 								menu.addAction(entry)
+
+								# BEGIN
+
+								entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
+								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.edit_style_file_in_window(client,name))
+								menu.addAction(entry)
+
+								# END
 
 								if events.using_custom_style(item.erk_client,item.text(0)):
 									entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
@@ -1685,6 +1698,9 @@ class Erk(QMainWindow):
 			return True
 
 		return super(Erk, self).eventFilter(source, event)
+
+	def edit_style_file_in_window(self,client,name):
+		FormatEditDialog(self,client,name)
 
 	def restore_style_file_in_window(self,client,name):
 		events.restore_chat_style(client,name)

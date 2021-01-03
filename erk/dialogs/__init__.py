@@ -145,6 +145,10 @@ def FormatTextDialog(obj):
 	x = FormatText(obj)
 	x.show()
 
+def FormatEditDialog(obj,client,name):
+	x = FormatText(obj,client,name)
+	x.show()
+
 def LogSizeDialog():
 	x = LogSize()
 	info = x.get_entry_information()

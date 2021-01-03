@@ -169,6 +169,8 @@ Version 0.830
 	* Remembered styles are not applied if the --nostyles flag is used
 	* An option to "restore" (set to default) styles has been added to the connection display context menu
 	* Clicking the "apply" button in the style editor only applies the style to non-custom-style chats
+	* A window's specific styling can now be edited and saved
+	* Added an "edit style" entry to the connection display's context menu
 
 Version 0.822
 	* First version with Linux support

@@ -776,10 +776,6 @@ def handle_common_input(window,client,text):
 
 	return False
 
-
-
-
-
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()

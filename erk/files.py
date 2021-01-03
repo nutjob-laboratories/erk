@@ -162,6 +162,9 @@ def load_custom_style(network,name,styledir=STYLES_DIRECTORY):
 	else:
 		return None
 
+def get_complete_style_name(network,name,styledir=STYLES_DIRECTORY):
+	f = encodeStyleName(network,name)
+	return os.path.join(styledir,f)
 
 def encodeStyleName(network,name=None):
 	network = network.replace(":","-")

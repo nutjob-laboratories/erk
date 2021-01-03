@@ -538,16 +538,16 @@ def restore_chat_style_server(client):
 		if c.widget.client.id == client.id:
 			c.widget.restoreStyle()
 
-def load_chat_style(client,name,file):
+def load_chat_style(client,name,file,nosave=False):
 	for c in CHANNELS:
 		if c.widget.client.id == client.id:
 			if c.widget.name==name:
-				c.widget.loadNewStyle(file)
+				c.widget.loadNewStyle(file,nosave)
 
-def load_chat_style_server(client,file):
+def load_chat_style_server(client,file,nosave=False):
 	for c in CONSOLES:
 		if c.widget.client.id == client.id:
-			c.widget.loadNewStyle(file)
+			c.widget.loadNewStyle(file,nosave)
 
 def close_channel_window(client,name,msg=None):
 	global CHANNELS

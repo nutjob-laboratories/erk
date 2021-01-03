@@ -294,7 +294,10 @@ class Window(QMainWindow):
 		# load_custom_style(network,name,styledir=STYLES_DIRECTORY)
 
 		if not self.parent.block_styles:
-			custom_style = load_custom_style(self.client.network,self.name,self.parent.styledir)
+			if self.type==config.SERVER_WINDOW:
+				custom_style = load_custom_style(self.client.network,None,self.parent.styledir)
+			else:
+				custom_style = load_custom_style(self.client.network,self.name,self.parent.styledir)
 			if custom_style==None:
 				self.styles = get_text_format_settings(self.parent.stylefile)
 			else:
@@ -594,9 +597,12 @@ class Window(QMainWindow):
 
 		self.custom_style = False
 
-		delete_custom_style(self.client.network,self.name,self.parent.styledir)
+		if self.type==config.SERVER_WINDOW:
+			delete_custom_style(self.client.network,None,self.parent.styledir)
+		else:
+			delete_custom_style(self.client.network,self.name,self.parent.styledir)
 
-	def loadNewStyle(self,style_file):
+	def loadNewStyle(self,style_file,nosave=False):
 
 		sfile = find_script_file(style_file,self.parent.styledir)
 
@@ -613,8 +619,11 @@ class Window(QMainWindow):
 
 			self.custom_style = True
 
-			# save_custom_style(network,name,style,styledir=STYLES_DIRECTORY):
-			save_custom_style(self.client.network,self.name,self.styles,self.parent.styledir)
+			if not nosave:
+				if self.type==config.SERVER_WINDOW:
+					save_custom_style(self.client.network,None,self.styles,self.parent.styledir)
+				else:
+					save_custom_style(self.client.network,self.name,self.styles,self.parent.styledir)
 		
 
 	def discoButton(self):

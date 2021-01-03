@@ -37,6 +37,7 @@ from PyQt5 import QtCore
 from ..resources import *
 from ..files import *
 from .. import textformat
+from .. import events
 
 
 def menuHtml(icon,text,description,icon_size):
@@ -540,15 +541,34 @@ class Dialog(QDialog):
 		self.styles['server'] = self.motdwid.exportQss()
 		self.styles['plugin'] = self.plugwid.exportQss()
 
-		textformat.STYLES = self.styles
+		if self.client==None:
 
-		self.parent.newStyle(self.styles["all"])
+			textformat.STYLES = self.styles
 
-		self.parent.reload_all_text()
+			self.parent.newStyle(self.styles["all"])
 
-		write_style_file(self.styles,self.filename)
+			self.parent.reload_all_text()
 
-		self.close()
+			write_style_file(self.styles,self.filename)
+
+			self.close()
+
+		else:
+
+			write_style_file(self.styles,self.filename)
+
+			if self.name==None:
+				# Server window
+				events.load_chat_style_server(self.client,self.filename,True)
+			else:
+				# Channel window
+				events.load_chat_style(self.client,self.name,self.filename,True)
+
+			#print(self.filename)
+
+			self.close()
+
+
 
 	def doDefaults(self):
 		
@@ -584,18 +604,35 @@ class Dialog(QDialog):
 			self.plugwid.loadQss(self.styles["plugin"],self.default_styles["plugin"])
 
 
-	def __init__(self,parent=None):
+	def __init__(self,parent=None,client=None,name=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.client = client
+		self.name = name
 
-		self.setWindowTitle("Text colors & formatting")
+		self.network = None
+
+		if self.client!=None:
+			self.network = self.client.network
+			sfile = load_custom_style(self.network,name,self.parent.styledir)
+			if name==None:
+				self.setWindowTitle("Editing style for "+self.network)
+			else:
+				self.setWindowTitle("Editing style for "+name+" ("+self.network+")")
+			if sfile!=None:
+				self.styles = sfile
+			else:
+				self.styles = get_text_format_settings(parent.stylefile)
+			self.filename = get_complete_style_name(self.network,name,self.parent.styledir)
+			#print(self.filename)
+		else:
+			self.setWindowTitle("Text colors & formatting")
+			self.filename = parent.stylefile
+			self.styles = get_text_format_settings(self.filename)
+
 		self.setWindowIcon(QIcon(FORMAT_ICON))
 
-		self.filename = parent.stylefile
-
-		# self.styles = get_text_format_settings()
-		self.styles = get_text_format_settings(self.filename)
 		self.default_styles = get_text_format_settings(BACKUP_STYLE_FILE)
 
 		self.syswid = TextStyler('system','This is a system message',self.styles['system'],self.default_styles['system'],True,False,self)
@@ -651,8 +688,14 @@ class Dialog(QDialog):
 		self.buttonApply = QPushButton("Apply to unstyled chats")
 		self.buttonApply.clicked.connect(self.doApply)
 
+		if self.network!=None:
+			self.buttonApply.setVisible(False)
+
 		self.buttonApplySave = QPushButton("Apply && Save")
 		self.buttonApplySave.clicked.connect(self.doApplySave)
+
+		if self.network!=None:
+			self.buttonApplySave.setText("Apply")
 		
 
 		# self.buttonSaveAs = QPushButton("Save style as...")
