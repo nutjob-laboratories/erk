@@ -38,6 +38,66 @@ from ..resources import *
 from ..files import *
 from .. import textformat
 
+
+def menuHtml(icon,text,description,icon_size):
+	return f'''
+<table style="width: 100%" border="0">
+	  <tbody>
+		<tr>
+		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
+		  <td>
+			<table style="width: 100%" border="0">
+			  <tbody>
+				<tr>
+				  <td style="font-weight: bold;"><big>{text}</big></td>
+				</tr>
+				<tr>
+				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+	'''
+
+def MenuAction(self,icon,title,description,icon_size,func):
+
+	erkmenuLabel = MenuLabel( menuHtml(icon,title,description,icon_size) )
+	erkmenuAction = QWidgetAction(self)
+	erkmenuAction.setDefaultWidget(erkmenuLabel)
+	erkmenuLabel.clicked.connect(func)
+
+	return erkmenuAction
+
+class MenuLabel(QLabel):
+	clicked=pyqtSignal()
+
+	def __init__(self, parent=None):
+		QLabel.__init__(self, parent)
+		self.installEventFilter(self)
+
+	def mousePressEvent(self, ev):
+		self.clicked.emit()
+
+	def eventFilter(self, object, event):
+		if event.type() == QEvent.Enter:
+			col = self.palette().highlight().color().name()
+			highlight = QColor(col).name()
+
+			col = self.palette().highlightedText().color().name()
+			highlight_text = QColor(col).name()
+			
+			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
+
+			#self.setStyleSheet(f"background-color: #a9a9a9; color: white;")
+
+			return True
+		elif event.type() == QEvent.Leave:
+			self.setStyleSheet('')
+		return False
+
 class AllStyler(QWidget):
 
 	def loadQss(self,style,default):
@@ -591,32 +651,52 @@ class Dialog(QDialog):
 		self.buttonApply = QPushButton("Apply to all chats")
 		self.buttonApply.clicked.connect(self.doApply)
 
-		self.buttonApplySave = QPushButton("Save as default style")
+		self.buttonApplySave = QPushButton("Apply && Save")
 		self.buttonApplySave.clicked.connect(self.doApplySave)
+		
 
-		self.buttonSaveAs = QPushButton("Save style as...")
-		self.buttonSaveAs.clicked.connect(self.doSaveAs)
+		# self.buttonSaveAs = QPushButton("Save style as...")
+		# self.buttonSaveAs.clicked.connect(self.doSaveAs)
 
-		self.buttonDefault = QPushButton("Restore base style")
+		self.buttonDefault = QPushButton("Load stock style settings")
 		self.buttonDefault.clicked.connect(self.doDefaults)
 
-		self.buttonCancel = QPushButton("Exit")
+		self.buttonCancel = QPushButton("Cancel")
 		self.buttonCancel.clicked.connect(self.close)
+		self.buttonCancel.setDefault(True)  
 
-		self.buttonLoad = QPushButton("Open style")
-		self.buttonLoad.clicked.connect(self.loadStyle)
+		# self.buttonLoad = QPushButton("Open style")
+		# self.buttonLoad.clicked.connect(self.loadStyle)
 
-		# self.menubar = QMenuBar(self)
-		# fileMenu = self.menubar.addMenu ("File")
-		# self.show()
+		self.menubar = QMenuBar(self)
+		fileMenu = self.menubar.addMenu ("File")
+
+		entry = MenuAction(self,OPENFILE_ICON,"Open","Load a style file",25,self.loadStyle)
+		fileMenu.addAction(entry)
+
+		entry = MenuAction(self,SAVEASFILE_ICON,"Save as...","Save to a style file",25,self.doSaveAs)
+		fileMenu.addAction(entry)
+
+		# entry = MenuAction(self,DOCUMENT_ICON,"Restore","Load base style",25,self.doDefaults)
+		# fileMenu.addAction(entry)
+
+		# fileMenu.addSeparator()
+
+		# entry = QAction(QIcon(EXIT_ICON),"Exit",self)
+		# entry.triggered.connect(self.close)
+		# fileMenu.addAction(entry)
+
+
 
 		topButtons = QHBoxLayout()
+		topButtons.addStretch()
 		topButtons.addWidget(self.buttonApply)
 		topButtons.addWidget(self.buttonApplySave)
+		topButtons.addWidget(self.buttonCancel)
 
 		midButtons = QHBoxLayout()
-		midButtons.addWidget(self.buttonLoad)
-		midButtons.addWidget(self.buttonSaveAs)
+		# midButtons.addWidget(self.buttonLoad)
+		# midButtons.addWidget(self.buttonSaveAs)
 		midButtons.addWidget(self.buttonDefault)
 
 		# buttons = QHBoxLayout()
@@ -627,13 +707,14 @@ class Dialog(QDialog):
 		# buttons.addWidget(self.buttonCancel)
 
 		controls = QVBoxLayout()
-		controls.addLayout(topButtons)
 		controls.addLayout(midButtons)
-		controls.addWidget(self.buttonCancel)
+		controls.addLayout(topButtons)
+		#controls.addLayout(midButtons)
+		#controls.addWidget(self.buttonCancel)
 		
 
 		setLayout = QVBoxLayout()
-		#setLayout.addWidget(self.menubar)
+		setLayout.addWidget(self.menubar)
 		setLayout.addWidget(self.allText)
 		setLayout.addWidget(self.tabs)
 
@@ -646,8 +727,6 @@ class Dialog(QDialog):
 		# finalLayout.addWidget(self.tabs)
 		finalLayout.addLayout(setLayout)
 		finalLayout.addLayout(controls)
-
-		
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
