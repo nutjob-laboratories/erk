@@ -51,7 +51,8 @@
 * Text colors are customizeable
 	* Any text, from nicknames to messages to hyperlinks, can use custom colors
 	* Text rendering setting are stored in "style files", and can be shared
-	* Chats windows can load individual style files, allowing for different settings in different channels
+	* Every text-displaying window can be styled: channels, private chats, and server consoles
+	* Chat styles are "remembered" and loaded automatically
 	* Features a built-in style file editor
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
 	* Supports English, Spanish, French, and German
