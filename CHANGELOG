@@ -175,6 +175,7 @@ Version 0.830
 	* Bugfix: server console styles could be loaded before it could be properly saved
 	* Bugfix: new style items in the chat display's context menu are no longer shown if styles are disabled
 	* Bugfix: context menus now use the same colors for all sub-menus
+	* Added Foreground\Background labels to the IRC color menus
 
 Version 0.822
 	* First version with Linux support

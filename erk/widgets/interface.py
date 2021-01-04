@@ -1659,8 +1659,15 @@ class SpellTextEdit(QPlainTextEdit):
 			popup_menu.insertMenu(popup_menu.actions()[counter],cmenu)
 			counter = counter + 1
 
+			bg = textSeparator(self.parent.parent,"Foreground Color")
+			cmenu.addAction(bg)
+
 			# Blue
 			bcolor = cmenu.addMenu("Blue")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('02',s))
 			bcolor.addAction(entry)
@@ -1719,6 +1726,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Green
 			bcolor = cmenu.addMenu("Green")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('03',s))
 			bcolor.addAction(entry)
@@ -1777,6 +1788,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Red
 			bcolor = cmenu.addMenu("Red")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('04',s))
 			bcolor.addAction(entry)
@@ -1835,6 +1850,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Maroon
 			bcolor = cmenu.addMenu("Maroon")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('05',s))
 			bcolor.addAction(entry)
@@ -1893,6 +1912,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Purple
 			bcolor = cmenu.addMenu("Purple")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('06',s))
 			bcolor.addAction(entry)
@@ -1951,6 +1974,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Orange
 			bcolor = cmenu.addMenu("Orange")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('07',s))
 			bcolor.addAction(entry)
@@ -2009,6 +2036,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Yellow
 			bcolor = cmenu.addMenu("Yellow")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('08',s))
 			bcolor.addAction(entry)
@@ -2067,6 +2098,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Light green
 			bcolor = cmenu.addMenu("Light green")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('09',s))
 			bcolor.addAction(entry)
@@ -2125,6 +2160,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Teal
 			bcolor = cmenu.addMenu("Teal")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('10',s))
 			bcolor.addAction(entry)
@@ -2183,6 +2222,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Cyan
 			bcolor = cmenu.addMenu("Cyan")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('11',s))
 			bcolor.addAction(entry)
@@ -2241,6 +2284,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Royal blue
 			bcolor = cmenu.addMenu("Royal blue")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('12',s))
 			bcolor.addAction(entry)
@@ -2299,6 +2346,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Magenta
 			bcolor = cmenu.addMenu("Magenta")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('13',s))
 			bcolor.addAction(entry)
@@ -2357,6 +2408,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Gray
 			bcolor = cmenu.addMenu("Gray")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('14',s))
 			bcolor.addAction(entry)
@@ -2415,6 +2470,10 @@ class SpellTextEdit(QPlainTextEdit):
 
 			# Light gray
 			bcolor = cmenu.addMenu("Light gray")
+
+			bg = textSeparator(self.parent.parent,"Background Color")
+			bcolor.addAction(bg)
+
 			entry = QAction("Blue",self)
 			entry.triggered.connect(lambda state,s="02": self.insertColor2('15',s))
 			bcolor.addAction(entry)
