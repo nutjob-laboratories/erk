@@ -455,7 +455,7 @@ class Erk(QMainWindow):
 		else:
 			self.is_light_colored = False
 
-		textformat.get_text_format_settings(self.stylefile)
+		self.style = textformat.get_text_format_settings(self.stylefile)
 
 		global DISABLED_PLUGINS
 		DISABLED_PLUGINS = get_disabled(self.userfile)
@@ -1578,6 +1578,7 @@ class Erk(QMainWindow):
 				if item.erk_widget:
 					if hasattr(item,"erk_channel"):
 						menu = QMenu(self)
+						menu.setStyleSheet(self.style["all"])
 
 						if item.erk_console:
 
@@ -1669,6 +1670,7 @@ class Erk(QMainWindow):
 								if len(item.erk_widget.banlist)>0:
 
 									bannedmenu = QMenu("Banned users",self)
+									bannedmenu.setStyleSheet(self.style["all"])
 									bannedmenu.setIcon(QIcon(BAN_ICON))
 									for c in item.erk_widget.banlist:
 										e = QAction(F"{c[0]}", self) 
@@ -1865,6 +1867,7 @@ def buildServerSettingsMenu(self,client):
 	maxmodes = client.maxmodes
 
 	optionsMenu = QMenu("Server settings")
+	optionsMenu.setStyleSheet(self.style["all"])
 
 	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channels"+f":</b> {maxchannels}",self)
 	e = QWidgetAction(self)
@@ -1910,24 +1913,28 @@ def buildServerSettingsMenu(self,client):
 	insertNoTextSeparator(self,optionsMenu)
 
 	maxmodesmenu = QMenu("Maximum modes",self)
+	maxmodesmenu.setStyleSheet(self.style["all"])
 	for c in maxmodes:
 		e = QAction(F"{c[0]}: {c[1]}", self) 
 		maxmodesmenu.addAction(e)
 	optionsMenu.addMenu(maxmodesmenu)
 
 	cmdmenu = QMenu("Commands",self)
+	cmdmenu.setStyleSheet(self.style["all"])
 	for c in cmds:
 		e = QAction(F"{c}", self) 
 		cmdmenu.addAction(e)
 	optionsMenu.addMenu(cmdmenu)
 
 	supportsmenu = QMenu("Supports",self)
+	supportsmenu.setStyleSheet(self.style["all"])
 	for c in supports:
 		e = QAction(F"{c}", self) 
 		supportsmenu.addAction(e)
 	optionsMenu.addMenu(supportsmenu)
 
 	chanmodemenu = QMenu("Channel modes",self)
+	chanmodemenu.setStyleSheet(self.style["all"])
 	ct = 0
 	for c in chanmodes:
 		if ct==0:
@@ -1944,6 +1951,7 @@ def buildServerSettingsMenu(self,client):
 	optionsMenu.addMenu(chanmodemenu)
 
 	prefixmenu = QMenu("Status prefixes",self)
+	prefixmenu.setStyleSheet(self.style["all"])
 	for c in prefix:
 		m = c[0]
 		s = c[1]
