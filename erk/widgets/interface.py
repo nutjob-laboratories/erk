@@ -1592,7 +1592,7 @@ class SpellTextEdit(QPlainTextEdit):
 		if len(text)>0:
 
 			colorMenu = QMenu("Foreground Color")
-			colorMenu.setStyleSheet(self.styles["all"])
+			colorMenu.setStyleSheet(self.parent.styles["all"])
 			colorMenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],colorMenu)
 			counter = counter + 1
@@ -1654,7 +1654,7 @@ class SpellTextEdit(QPlainTextEdit):
 			colorMenu.addAction(entry)
 
 			cmenu = QMenu("Foreground/Background Color")
-			cmenu.setStyleSheet(self.styles["all"])
+			cmenu.setStyleSheet(self.parent.styles["all"])
 			cmenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],cmenu)
 			counter = counter + 1
