@@ -864,7 +864,7 @@ class Dialog(QDialog):
 		else:
 			serv = self.user_info["last_server"]
 			port = str(self.user_info["last_port"])
-			self.scripttablabel = QLabel(f"<small><center>Execute these commands on connection to {serv}:{port}</center></small>")
+			self.scripttablabel = QLabel(f"<small><center>Execute these commands on connection to <b>{serv}:{port}</b></center></small>")
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
@@ -881,8 +881,8 @@ class Dialog(QDialog):
 		autoScriptLayout = QVBoxLayout()
 		#autoScriptLayout.addWidget(QLabel(' '))
 		autoScriptLayout.addWidget(self.scripttablabel)
-		autoScriptLayout.addWidget(self.scripttabinfo)
-		autoScriptLayout.addWidget(self.scriptedit)
+		# autoScriptLayout.addWidget(self.scripttabinfo)
+		# autoScriptLayout.addWidget(self.scriptedit)
 
 		self.saveScriptButton = QPushButton("Save")
 		self.saveScriptButton.clicked.connect(self.saveScript)
@@ -919,19 +919,19 @@ class Dialog(QDialog):
 		scriptControlsLayout.addWidget(self.deleteScriptButton)
 		#scriptControlsLayout.addWidget(self.checkScript)
 
-		self.scriptJoinButton = QPushButton("Insert Channel Join")
+		self.scriptJoinButton = QPushButton("/join")
 		self.scriptJoinButton.clicked.connect(self.scriptJoin)
 
-		self.scriptSendPM = QPushButton("Insert Private Message")
+		self.scriptSendPM = QPushButton("/msg")
 		self.scriptSendPM.clicked.connect(self.scriptPM)
 
-		self.scriptInsertPause = QPushButton("Insert Pause")
+		self.scriptInsertPause = QPushButton("/wait")
 		self.scriptInsertPause.clicked.connect(self.scriptTime)
 
-		self.scriptInsertComment = QPushButton("Insert Comment")
+		self.scriptInsertComment = QPushButton("Insert a Comment")
 		self.scriptInsertComment.clicked.connect(self.scriptComment)
 
-		self.scriptInsertPrint = QPushButton("Insert Print")
+		self.scriptInsertPrint = QPushButton("/print")
 		self.scriptInsertPrint.clicked.connect(self.scriptPrint)
 
 		scriptAddLayout = QHBoxLayout()
@@ -940,14 +940,24 @@ class Dialog(QDialog):
 
 		scriptAddLayout2 = QHBoxLayout()
 		scriptAddLayout2.addWidget(self.scriptInsertPause)
-		scriptAddLayout2.addWidget(self.scriptInsertComment)
+		# scriptAddLayout2.addWidget(self.scriptInsertComment)
 		scriptAddLayout2.addWidget(self.scriptInsertPrint)
 
 		scriptInsertStuff = QVBoxLayout()
 		scriptInsertStuff.addLayout(scriptAddLayout)
 		scriptInsertStuff.addLayout(scriptAddLayout2)
+		scriptInsertStuff.addWidget(self.scriptInsertComment)
 
-		autoScriptLayout.addLayout(scriptInsertStuff)
+		insertBox = QGroupBox("Insert Commands",self)
+		#insertBox = QGroupBox("",self)
+		insertBox.setLayout(scriptInsertStuff)
+
+		insertBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		
+		autoScriptLayout.addWidget(self.scriptedit)
+		autoScriptLayout.addWidget(self.scripttabinfo)
+		autoScriptLayout.addWidget(insertBox)
+		# autoScriptLayout.addLayout(scriptInsertStuff)
 		autoScriptLayout.addLayout(scriptControlsLayout)
 
 		scriptToggles = QHBoxLayout()
