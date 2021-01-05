@@ -135,7 +135,6 @@ DOUBLECLICK_TO_CHANGE_NICK = True
 SHOW_CONSOLE_BUTTONS = True
 SCRIPT_INTERPOLATE_SYMBOL = '$'
 GLOBALIZE_ALL_SCRIPT_ALIASES = True
-
 USE_QMENUBAR_MENUS = False
 
 def save_settings(filename=SETTINGS_FILE):
@@ -145,7 +144,6 @@ def save_settings(filename=SETTINGS_FILE):
 	settings = {
 
 		"use_default_qmenubar": USE_QMENUBAR_MENUS,
-
 		"all_script_aliases_are_global": GLOBALIZE_ALL_SCRIPT_ALIASES,
 		"script_interpolation_symbol": SCRIPT_INTERPOLATE_SYMBOL,
 		"display_console_buttons": SHOW_CONSOLE_BUTTONS,

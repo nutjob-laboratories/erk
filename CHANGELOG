@@ -176,6 +176,9 @@ Version 0.830
 	* Bugfix: new style items in the chat display's context menu are no longer shown if styles are disabled
 	* Bugfix: context menus now use the same colors for all sub-menus
 	* Added Foreground\Background labels to the IRC color menus
+	* The "disconnect" menu option is now hidden when disconnected
+	* Moved the "disconnect" menu option to be directly under the "Connect" menu option
+	* Removed the built-in plugin method "directory"; it's not working, and when I figure out why, I will add the method again later
 
 Version 0.822
 	* First version with Linux support

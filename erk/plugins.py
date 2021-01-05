@@ -159,9 +159,6 @@ class Plugin(ErkFunctions):
 	website = None
 	source = None
 
-	def directory(self):
-		return self._packdir
-
 	def userinput(self,text):
 		if hasattr(self,"_icon"):
 			return PluginInputDialog(self.name,text,self._icon)

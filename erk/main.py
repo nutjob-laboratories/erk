@@ -232,17 +232,24 @@ class Erk(QMainWindow):
 		if hasattr(window,"client"):
 			self.current_client = window.client
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-				self.disconnect.setEnabled(True)
+				self.disconnect.setVisible(True)
+
+			# if window.client.hostname==None:
+			# 	self.disconnect.setText("Disconnect from "+window.client.server+":"+str(window.client.port))
+			# else:
+			# 	self.disconnect.setText("Disconnect from "+window.client.hostname)
 		else:
 			self.current_client = None
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-				self.disconnect.setEnabled(False)
+				self.disconnect.setVisible(False)
+
+
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
 				if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-					self.disconnect.setEnabled(False)
+					self.disconnect.setVisible(False)
 
 		if hasattr(window,"input"):
 			# Set focus to the input widget
@@ -658,7 +665,7 @@ class Erk(QMainWindow):
 		self.mainMenu.addAction(entry)
 
 		#self.mainMenu.addSeparator()
-		insertNoTextSeparator(self,self.mainMenu)
+		#insertNoTextSeparator(self,self.mainMenu)
 
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.disconnect.triggered.connect(self.disconnect_current)
@@ -666,7 +673,7 @@ class Erk(QMainWindow):
 
 		c = events.fetch_connections()
 		if len(c)==0:
-			self.disconnect.setEnabled(False)
+			self.disconnect.setVisible(False)
 
 		#self.mainMenu.addSeparator()
 		insertNoTextSeparator(self,self.mainMenu)
