@@ -178,6 +178,8 @@ Version 0.830
 	* Added Foreground\Background labels to the IRC color menus
 	* The "disconnect" menu option is now hidden when disconnected
 	* Moved the "disconnect" menu option to be directly under the "Connect" menu option
+	* Added a new command: /connectscript (which executes a connection script for a specific server)
+	* The /switch command will now let the user know if there are no available chats
 
 Version 0.822
 	* First version with Linux support

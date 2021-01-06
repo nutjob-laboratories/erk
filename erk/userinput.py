@@ -76,6 +76,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
 	config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
 	config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
+	config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
 }
 
 CHANNEL_COMMANDS = {
@@ -108,6 +109,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -873,6 +875,93 @@ def handle_ui_input(window,client,text):
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connectscript':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connectscript' and len(tokens)==3:
+			tokens.pop(0)
+			ip = tokens.pop(0)
+			port = tokens.pop(0)
+
+			script = load_auto_script(ip,port,client.gui.scriptsdir)
+			if script==None:
+				msg = Message(ERROR_MESSAGE,'',"Script for "+ip+":"+port+" not found.")
+				window.writeText(msg,True)
+				return True
+			else:
+				scriptname = get_auto_script_name(ip,port,client.gui.scriptsdir)
+				base_scriptname = os.path.basename(scriptname)
+
+				# Generate a random script ID
+				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+				# Create a thread for the script and run it
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,dict(VARIABLE_TABLE),[])
+				scriptThread.execLine.connect(execute_script_line)
+				scriptThread.scriptEnd.connect(execute_script_end)
+				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.start()
+
+				# Store the thread so it doesn't get garbage collected
+				entry = [scriptID,scriptThread]
+				SCRIPT_THREADS.append(entry)
+
+				return True
+
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connectscript' and len(tokens)==2:
+			tokens.pop(0)
+			host = tokens.pop(0)
+			if ':' in host:
+				p = host.split(':')
+				if len(p)!=2:
+					msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"connectscript SERVER [PORT]")
+					window.writeText(msg,True)
+					return True
+				ip = p[0]
+				port = p[1]
+			else:
+				ip = host
+				port = "6667"
+
+			script = load_auto_script(ip,port,client.gui.scriptsdir)
+			if script==None:
+				msg = Message(ERROR_MESSAGE,'',"Script for "+ip+":"+port+" not found.")
+				window.writeText(msg,True)
+				return True
+			else:
+				scriptname = get_auto_script_name(ip,port,client.gui.scriptsdir)
+				base_scriptname = os.path.basename(scriptname)
+
+				# Generate a random script ID
+				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+				# Create a thread for the script and run it
+				scriptThread = ScriptThreadWindow(window,client,script,scriptID,base_scriptname,dict(VARIABLE_TABLE),[])
+				scriptThread.execLine.connect(execute_script_line)
+				scriptThread.scriptEnd.connect(execute_script_end)
+				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.start()
+
+				# Store the thread so it doesn't get garbage collected
+				entry = [scriptID,scriptThread]
+				SCRIPT_THREADS.append(entry)
+
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'connectscript':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"connectscript SERVER [PORT]")
+			window.writeText(msg,True)
+			return True
+
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
 			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'script':
 				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
 				window.writeText(msg,True)
@@ -946,9 +1035,14 @@ def handle_ui_input(window,client,text):
 			channels = window.channelList()
 			privates = window.privateList()
 			dl = channels + privates
-			msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
-			window.writeText(msg,True)
-			return True
+			if len(dl>0):
+				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+				window.writeText(msg,True)
+				return True
+			else:
+				msg = Message(SYSTEM_MESSAGE,'',"No available chats.")
+				window.writeText(msg,True)
+				return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch':
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch [CHAT_NAME]")
 			window.writeText(msg,True)
