@@ -181,6 +181,8 @@ Version 0.830
 	* Added a new command: /connectscript (which executes a connection script for a specific server)
 	* The /switch command will now let the user know if there are no available chats
 	* Bugfix: the /part commands now uses the Twisted client to part, rather than some GUI nonsense
+	* Added a link to the command documentation to the connection dialog's "script" tab
+	* Added syntax highlighting to the "script" tab's editor
 
 Version 0.822
 	* First version with Linux support

@@ -285,7 +285,7 @@ class Dialog(QDialog):
 
 		code = load_auto_script(serv,port,self.scriptsdir)
 		if code!=None:
-			self.scriptedit.setText(code)
+			self.scriptedit.setPlainText(code)
 		else:
 			self.scriptedit.clear()
 
@@ -857,7 +857,8 @@ class Dialog(QDialog):
 		fstoreLayout.addLayout(autoJoinLayout)
 
 
-		self.scriptedit = QTextEdit(self)
+		self.scriptedit = QPlainTextEdit(self)
+		self.highlight = ErkScriptHighlighter(self.scriptedit.document())
 
 		if len(self.user_info["last_server"])==0:
 			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to this server</center></small>")
@@ -870,13 +871,19 @@ class Dialog(QDialog):
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
 			code = load_auto_script(self.user_info["last_server"],self.user_info["last_port"],self.scriptsdir)
 			if code!=None:
-				self.scriptedit.setText(code)
+				self.scriptedit.setPlainText(code)
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 		self.scripttabinfo = QLabel("<small><center><i>Any command usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
 		self.scripttabinfo.setWordWrap(True)
 		self.scripttabinfo.setAlignment(Qt.AlignJustify)
+
+		idir = sys.path[0]
+		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
+		self.docLink = QLabel("<center><small><b><a href=\""+DOCUMENTATION+"\">Command documentation</a></b></small></center>")
+		self.docLink.setOpenExternalLinks(True)
 
 		autoScriptLayout = QVBoxLayout()
 		#autoScriptLayout.addWidget(QLabel(' '))
@@ -955,7 +962,9 @@ class Dialog(QDialog):
 		insertBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 		
 		autoScriptLayout.addWidget(self.scriptedit)
+		autoScriptLayout.addWidget(self.docLink)
 		autoScriptLayout.addWidget(self.scripttabinfo)
+
 		autoScriptLayout.addWidget(insertBox)
 		# autoScriptLayout.addLayout(scriptInsertStuff)
 		autoScriptLayout.addLayout(scriptControlsLayout)
@@ -1055,7 +1064,7 @@ class Dialog(QDialog):
 			if len(code)>0:
 				if code[-1]!="\n": code = code + "\n"
 
-			self.scriptedit.setText(code)
+			self.scriptedit.setPlainText(code)
 
 	def reloadScript(self):
 		serv = self.host.text()
@@ -1063,7 +1072,7 @@ class Dialog(QDialog):
 
 		code = load_auto_script(serv,port,self.scriptsdir)
 		if code!=None:
-			self.scriptedit.setText(code)
+			self.scriptedit.setPlainText(code)
 		else:
 			self.scriptedit.clear()
 
@@ -1126,7 +1135,7 @@ class Dialog(QDialog):
 	def deleteScript(self):
 		serv = self.host.text()
 		port = self.port.text()
-		self.scriptedit.setText('')
+		self.scriptedit.setPlainText('')
 
 		sfile = get_auto_script_name(serv,port,self.scriptsdir)
 		if os.path.isfile(sfile):
@@ -1185,3 +1194,135 @@ class Dialog(QDialog):
 			self.autojoins = clean
 		except:
 			pass
+
+def format(color, style=''):
+	"""Return a QTextCharFormat with the given attributes.
+	"""
+	_color = QColor()
+	_color.setNamedColor(color)
+
+	_format = QTextCharFormat()
+	_format.setForeground(_color)
+	if 'bold' in style:
+		_format.setFontWeight(QFont.Bold)
+	if 'italic' in style:
+		_format.setFontItalic(True)
+	if 'bi' in style:
+		_format.setFontWeight(QFont.Bold)
+		_format.setFontItalic(True)
+
+	return _format
+
+STYLES = {
+	'comments': format('darkMagenta','bold'),
+	'erk': format('darkBlue','bold'),
+	'channel': format('darkRed','bold'),
+}
+
+class ErkScriptHighlighter (QSyntaxHighlighter):
+
+	erk = [
+		'/away',
+		'/back',
+		'/invite',
+		'/join',
+		'/list',
+		'/me',
+		'/msg',
+		'/nick',
+		'/notice',
+		'/oper',
+		'/part',
+		'/quit',
+		'/send',
+		'/time',
+		'/topic',
+		'/version',
+		'/who',
+		'/whois',
+		'/whowas',
+		'/alias',
+		'/argcount',
+		'/connect',
+		'/connectscript',
+		'/exit',
+		'/help',
+		'/print',
+		'/reconnect',
+		'/refresh',
+		'/ressl',
+		'/script',
+		'/settings',
+		'/ssl',
+		'/style',
+		'/switch',
+		'/wait',
+	]
+
+
+	def __init__(self, document):
+		QSyntaxHighlighter.__init__(self, document)
+
+		# Comments
+		self.script_comments = (QRegExp("(\\/\\*|\\*\\/|\n)"), 1, STYLES['comments'])
+
+		rules = []
+
+		# Commands
+		rules += [(r'%s' % o, 0, STYLES['erk'])
+			for o in ErkScriptHighlighter.erk]
+
+		# Channel names
+		rules += [
+			(r'(#\w+)', 0, STYLES['channel']),
+			(r'(\&\w+)', 0, STYLES['channel']),
+			(r'(\!\w+)', 0, STYLES['channel']),
+			(r'(\+\w+)', 0, STYLES['channel']),
+		]
+
+		# Build a QRegExp for each pattern
+		self.rules = [(QRegExp(pat), index, fmt)
+			for (pat, index, fmt) in rules]
+
+	def highlightBlock(self, text):
+
+		"""Apply syntax highlighting to the given block of text.
+		"""
+		# Do other syntax formatting
+		for expression, nth, format in self.rules:
+			index = expression.indexIn(text, 0)
+
+			while index >= 0:
+				index = expression.pos(nth)
+				length = len(expression.cap(nth))
+				self.setFormat(index, length, format)
+				index = expression.indexIn(text, index + length)
+
+		self.setCurrentBlockState(0)
+
+		# Do multi-line comments
+		in_multiline = self.match_multiline(text, *self.script_comments)
+
+	def match_multiline(self, text, delimiter, in_state, style):
+		if self.previousBlockState() == in_state:
+			start = 0
+			add = 0
+		else:
+			start = delimiter.indexIn(text)
+			add = delimiter.matchedLength()
+
+		while start >= 0:
+			end = delimiter.indexIn(text, start + add)
+			if end >= add:
+				length = end - start + add + delimiter.matchedLength()
+				self.setCurrentBlockState(0)
+			else:
+				self.setCurrentBlockState(in_state)
+				length = len(text) - start + add
+			self.setFormat(start, length, style)
+			start = delimiter.indexIn(text, start + length)
+
+		if self.currentBlockState() == in_state:
+			return True
+		else:
+			return False
