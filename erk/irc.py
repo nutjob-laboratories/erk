@@ -453,6 +453,9 @@ class IRC_Connection(irc.IRCClient):
 
 		self.sendLine("NAMES "+channel)
 
+	def left(self,channel):
+		events.close_channel_window(self,channel,None)
+
 	def irc_ERR_NICKNAMEINUSE(self, prefix, params):
 
 		if self.registered:

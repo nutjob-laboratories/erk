@@ -180,6 +180,7 @@ Version 0.830
 	* Moved the "disconnect" menu option to be directly under the "Connect" menu option
 	* Added a new command: /connectscript (which executes a connection script for a specific server)
 	* The /switch command will now let the user know if there are no available chats
+	* Bugfix: the /part commands now uses the Twisted client to part, rather than some GUI nonsense
 
 Version 0.822
 	* First version with Linux support

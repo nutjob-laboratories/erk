@@ -1685,7 +1685,7 @@ class Erk(QMainWindow):
 									menu.addMenu(bannedmenu)
 
 								entry = QAction(QIcon(EXIT_ICON),"Leave channel",self)
-								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: events.close_channel_window(client,name))
+								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: client.part(name))
 								menu.addAction(entry)
 							else:
 

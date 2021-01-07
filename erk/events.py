@@ -558,7 +558,7 @@ def close_channel_window(client,name,msg=None):
 		if c.widget.client.id == client.id:
 			if c.widget.name==name:
 				windex = client.gui.stack.indexOf(c.widget)
-				c.widget.client.part(name,msg)
+				# c.widget.client.part(name,msg)
 				c.widget.close()
 				continue
 		clean.append(c)

@@ -679,9 +679,6 @@ class Window(QMainWindow):
 	def newPrivate(self,target):
 		events.open_private_window(self.client,target)
 
-	def leaveChannel(self,channel,msg=None):
-		events.close_channel_window(self.client,channel,msg)
-
 	def channelList(self):
 		return events.fetch_channel_list(self.client)
 
