@@ -860,6 +860,8 @@ class Dialog(QDialog):
 		self.scriptedit = QPlainTextEdit(self)
 		self.highlight = ErkScriptHighlighter(self.scriptedit.document())
 
+		self.scriptedit.setPlaceholderText("Enter your connection script here.")
+
 		if len(self.user_info["last_server"])==0:
 			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to this server</center></small>")
 		else:

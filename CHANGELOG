@@ -183,6 +183,7 @@ Version 0.830
 	* Bugfix: the /part commands now uses the Twisted client to part, rather than some GUI nonsense
 	* Added a link to the command documentation to the connection dialog's "script" tab
 	* Added syntax highlighting to the "script" tab's editor
+	* Added placeholder text to the "script" tab's editor
 
 Version 0.822
 	* First version with Linux support
