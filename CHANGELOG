@@ -185,6 +185,8 @@ Version 0.830
 	* Added syntax highlighting to the "script" tab's editor
 	* Added placeholder text to the "script" tab's editor
 	* Cleaned up and added some more explanitory text to the "connect" dialog
+	* Moved script syntax highlighting code to its own module
+	* Bugfix: saving a script from the connection dialog now auto-updates the script cache
 
 Version 0.822
 	* First version with Linux support

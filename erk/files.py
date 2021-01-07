@@ -223,6 +223,9 @@ def save_auto_script(ip,port,script,scriptdir):
 	fname = ip.strip()+"_"+str(port).strip()+"."+SCRIPT_FILE_EXTENSION
 	scriptname = os.path.join(scriptdir, fname)
 
+	global AUTO_SCRIPT_CACHE
+	if scriptname in AUTO_SCRIPT_CACHE: AUTO_SCRIPT_CACHE[scriptname] = script
+
 	f=open(scriptname, "w")
 	f.write(script)
 	f.close()
