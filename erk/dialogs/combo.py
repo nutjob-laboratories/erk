@@ -289,7 +289,10 @@ class Dialog(QDialog):
 		else:
 			self.scriptedit.clear()
 
-		self.scripttablabel.setText(f"<small><center>Execute these commands on connection to <b>{serv}:{str(port)}</b></center></small>")
+		#self.scripttablabel.setText(f"<small><center>Execute these commands on connection to <b>{serv}:{str(port)}</b></center></small>")
+
+		self.scriptServer.setText(f"<center><big><b>{serv}:{str(port)}</b></big></center>")
+
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 
@@ -512,7 +515,7 @@ class Dialog(QDialog):
 			<small>
 				Below is a list of IRC servers to connect to, as well as servers you've previously connected to. Select a
 				server to see what IRC network that server may belong to and how to connect to it. Selecting a server will
-				automatically load the appropriate settings into the "Connect" tab.
+				automatically load the appropriate settings into the "Connect" and "Script" tabs.
 			</small>
 		""")
 		self.descMoreInfo.setAlignment(Qt.AlignJustify)
@@ -863,11 +866,15 @@ class Dialog(QDialog):
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 
 		if len(self.user_info["last_server"])==0:
-			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to this server</center></small>")
+			self.scripttablabel = QLabel("<small><center>Execute these commands upon connection to</center></small>")
+			self.scriptServer = QLabel("<center><big><b>this server</b></big></center>")
 		else:
 			serv = self.user_info["last_server"]
 			port = str(self.user_info["last_port"])
-			self.scripttablabel = QLabel(f"<small><center>Execute these commands on connection to <b>{serv}:{port}</b></center></small>")
+			self.scripttablabel = QLabel(f"<small><center>Execute these commands upon connection to</center></small>")
+			self.scriptServer = QLabel(f"<center><big><b>{serv}:{port}</b></big></center>")
+
+		
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
@@ -890,6 +897,7 @@ class Dialog(QDialog):
 		autoScriptLayout = QVBoxLayout()
 		#autoScriptLayout.addWidget(QLabel(' '))
 		autoScriptLayout.addWidget(self.scripttablabel)
+		autoScriptLayout.addWidget(self.scriptServer)
 		# autoScriptLayout.addWidget(self.scripttabinfo)
 		# autoScriptLayout.addWidget(self.scriptedit)
 
@@ -966,6 +974,8 @@ class Dialog(QDialog):
 		autoScriptLayout.addWidget(self.scriptedit)
 		autoScriptLayout.addWidget(self.docLink)
 		autoScriptLayout.addWidget(self.scripttabinfo)
+
+		
 
 		autoScriptLayout.addWidget(insertBox)
 		# autoScriptLayout.addLayout(scriptInsertStuff)
