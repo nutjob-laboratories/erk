@@ -289,7 +289,7 @@ class Dialog(QDialog):
 		else:
 			self.scriptedit.clear()
 
-		self.scripttablabel.setText(f"<small><center>Execute these commands on connection to {serv}:{str(port)}</center></small>")
+		self.scripttablabel.setText(f"<small><center>Execute these commands on connection to <b>{serv}:{str(port)}</b></center></small>")
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 
@@ -860,7 +860,7 @@ class Dialog(QDialog):
 		self.scriptedit = QTextEdit(self)
 
 		if len(self.user_info["last_server"])==0:
-			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to server</center></small>")
+			self.scripttablabel = QLabel("<small><center>Execute these commands on connection to this server</center></small>")
 		else:
 			serv = self.user_info["last_server"]
 			port = str(self.user_info["last_port"])
