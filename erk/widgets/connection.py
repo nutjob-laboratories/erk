@@ -108,9 +108,12 @@ def buildConnectionDisplayWidget(self):
 	# connectionDisplay.setTitleBarWidget(QWidget())
 
 	# STYLES = get_text_format_settings()
-	STYLES = get_text_format_settings(self.stylefile)
+
+
+	# STYLES = get_text_format_settings(self.stylefile)
 	
-	connectionTree.setStyleSheet(STYLES["all"])
+	# connectionTree.setStyleSheet(STYLES["all"])
+	
 
 	return [connectionTree,connectionDisplay]
 

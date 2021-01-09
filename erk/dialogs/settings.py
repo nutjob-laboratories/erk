@@ -736,6 +736,15 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.sglobalMisc.setEnabled(False)
 
+		self.seditMisc = QCheckBox("Enable script editor",self)
+		if config.ENABLE_SCRIPT_EDITOR: self.seditMisc.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.seditMisc.setEnabled(False)
+
+		if self.parent.cmdline_editor:
+			self.seditMisc.setEnabled(False)
+
 
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
@@ -752,6 +761,7 @@ class Dialog(QDialog):
 
 		scgbLayout = QVBoxLayout()
 		scgbLayout.addWidget(self.scriptMisc)
+		scgbLayout.addWidget(self.seditMisc)
 		scgbLayout.addWidget(self.sglobalMisc)
 
 		scriptBox = QGroupBox("Script Settings",self)
@@ -902,6 +912,12 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.ENABLE_SCRIPT_EDITOR = self.seditMisc.isChecked()
+		if config.ENABLE_SCRIPT_EDITOR:
+			self.parent.block_editor = False
+		else:
+			self.parent.block_editor = True
 
 		config.USE_QMENUBAR_MENUS = self.menuMisc.isChecked()
 

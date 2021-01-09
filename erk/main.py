@@ -122,7 +122,7 @@ class Erk(QMainWindow):
 
 	def newStyle(self,style):
 		events.apply_style(style)
-		self.connection_display.setStyleSheet(style)
+		#self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
 
@@ -382,6 +382,7 @@ class Erk(QMainWindow):
 			force_qmenu=False,
 			style_dir=STYLES_DIRECTORY,
 			no_styles=False,
+			block_editor=False,
 			parent=None
 		):
 		
@@ -414,6 +415,8 @@ class Erk(QMainWindow):
 
 		self.block_toolbar = block_toolbar
 
+		self.block_editor = block_editor
+
 		self.fullscreen = fullscreen
 
 		self.configfile = configfile
@@ -437,10 +440,12 @@ class Erk(QMainWindow):
 		self.cmdline_macro = False
 		self.cmdline_plugin = False
 		self.cmdline_script = False
+		self.cmdline_editor = False
 
 		if self.block_macros: self.cmdline_macro = True
 		if self.block_plugins: self.cmdline_plugin = True
 		if self.block_scripts: self.cmdline_script = True
+		if self.block_editor: self.cmdline_editor = True
 
 		self.force_qmenu = force_qmenu
 
@@ -472,6 +477,8 @@ class Erk(QMainWindow):
 
 		# Load application settings
 		config.load_settings(configfile)
+
+		if not config.ENABLE_SCRIPT_EDITOR: self.block_editor = True
 
 		if width!=None:
 			appwidth = width
@@ -1609,7 +1616,7 @@ class Erk(QMainWindow):
 				if item.erk_widget:
 					if hasattr(item,"erk_channel"):
 						menu = QMenu(self)
-						menu.setStyleSheet(self.style["all"])
+						#menu.setStyleSheet(self.style["all"])
 
 						if item.erk_console:
 
@@ -1701,7 +1708,7 @@ class Erk(QMainWindow):
 								if len(item.erk_widget.banlist)>0:
 
 									bannedmenu = QMenu("Banned users",self)
-									bannedmenu.setStyleSheet(self.style["all"])
+									#bannedmenu.setStyleSheet(self.style["all"])
 									bannedmenu.setIcon(QIcon(BAN_ICON))
 									for c in item.erk_widget.banlist:
 										e = QAction(F"{c[0]}", self) 

@@ -876,6 +876,13 @@ def handle_ui_input(window,client,text):
 
 	# PRINT COMMAND
 
+	if client.gui.block_editor:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit':
+				msg = Message(ERROR_MESSAGE,'',"Script editor is disabled")
+				window.writeText(msg,True)
+				return True
+
 	if client.gui.block_scripts:
 		if len(tokens)>0:
 			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit':
@@ -921,14 +928,6 @@ def handle_ui_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',f"File \"{file}\" doesn't exist")
 				window.writeText(msg,True)
 				return True
-
-
-
-
-
-
-
-
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:

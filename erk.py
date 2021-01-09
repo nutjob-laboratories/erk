@@ -98,6 +98,7 @@ disgroup.add_argument( "--noconnect", help=f"Disable connection commands", actio
 disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
 disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
+disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
@@ -442,6 +443,7 @@ if __name__ == '__main__':
 				args.qt5menu,
 				args.styles,
 				args.nostyles,
+				args.noedit,
 				)
 			GUI.show()
 		else:
@@ -470,6 +472,7 @@ if __name__ == '__main__':
 					args.qt5menu,
 					args.styles,
 					args.nostyles,
+					args.noedit,
 					)
 				GUI.show()
 
@@ -562,6 +565,7 @@ if __name__ == '__main__':
 					args.qt5menu,
 					args.styles,
 					args.nostyles,
+					args.noedit,
 					)
 				GUI.show()
 			else:
@@ -591,6 +595,7 @@ if __name__ == '__main__':
 						args.qt5menu,
 						args.styles,
 						args.nostyles,
+						args.noedit,
 						)
 					GUI.show()
 				else:

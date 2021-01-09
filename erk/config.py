@@ -136,6 +136,7 @@ SHOW_CONSOLE_BUTTONS = True
 SCRIPT_INTERPOLATE_SYMBOL = '$'
 GLOBALIZE_ALL_SCRIPT_ALIASES = True
 USE_QMENUBAR_MENUS = False
+ENABLE_SCRIPT_EDITOR = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -143,6 +144,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"enable_script_editor": ENABLE_SCRIPT_EDITOR,
 		"use_default_qmenubar": USE_QMENUBAR_MENUS,
 		"all_script_aliases_are_global": GLOBALIZE_ALL_SCRIPT_ALIASES,
 		"script_interpolation_symbol": SCRIPT_INTERPOLATE_SYMBOL,
@@ -239,6 +241,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_script_editor" in data:
+		data["enable_script_editor"] = ENABLE_SCRIPT_EDITOR
 
 	if not "use_default_qmenubar" in data:
 		data["use_default_qmenubar"] = USE_QMENUBAR_MENUS
@@ -388,6 +393,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SCRIPT_INTERPOLATE_SYMBOL
 	global GLOBALIZE_ALL_SCRIPT_ALIASES
 	global USE_QMENUBAR_MENUS
+	global ENABLE_SCRIPT_EDITOR
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -396,6 +402,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ENABLE_SCRIPT_EDITOR = data["enable_script_editor"]
 			USE_QMENUBAR_MENUS = data["use_default_qmenubar"]
 			GLOBALIZE_ALL_SCRIPT_ALIASES = data["all_script_aliases_are_global"]
 			SCRIPT_INTERPOLATE_SYMBOL = data["script_interpolation_symbol"]

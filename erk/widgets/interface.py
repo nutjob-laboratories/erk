@@ -1003,7 +1003,7 @@ class Window(QMainWindow):
 			if self.type!=config.SERVER_WINDOW or (self.type==config.SERVER_WINDOW and self.client.registered):
 
 				styleMenu = QMenu("Style")
-				styleMenu.setStyleSheet(self.styles["all"])
+				#styleMenu.setStyleSheet(self.styles["all"])
 				styleMenu.setIcon(QIcon(FORMAT_ICON))
 				menu.insertMenu(menu.actions()[0],styleMenu)
 
@@ -1028,7 +1028,7 @@ class Window(QMainWindow):
 			if self.type==config.CHANNEL_WINDOW:
 
 				opMenu = QMenu("Operator actions")
-				opMenu.setStyleSheet(self.styles["all"])
+				#opMenu.setStyleSheet(self.styles["all"])
 				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 				menu.insertMenu(menu.actions()[0],opMenu)
 
@@ -1201,7 +1201,7 @@ class Window(QMainWindow):
 				this_is_me = False
 
 			menu = QMenu(self)
-			menu.setStyleSheet(self.styles["all"])
+			#menu.setStyleSheet(self.styles["all"])
 
 			tsLabel = QLabel( "&nbsp;<big><b>"+user_nick+"</b></big>" )
 			tsAction = QWidgetAction(self)
@@ -1589,7 +1589,7 @@ class SpellTextEdit(QPlainTextEdit):
 		if len(text)>0:
 
 			colorMenu = QMenu("Foreground Color")
-			colorMenu.setStyleSheet(self.parent.styles["all"])
+			#colorMenu.setStyleSheet(self.parent.styles["all"])
 			colorMenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],colorMenu)
 			counter = counter + 1
@@ -1651,7 +1651,7 @@ class SpellTextEdit(QPlainTextEdit):
 			colorMenu.addAction(entry)
 
 			cmenu = QMenu("Foreground/Background Color")
-			cmenu.setStyleSheet(self.parent.styles["all"])
+			#cmenu.setStyleSheet(self.parent.styles["all"])
 			cmenu.setIcon(QIcon(FORMAT_ICON))
 			popup_menu.insertMenu(popup_menu.actions()[counter],cmenu)
 			counter = counter + 1
