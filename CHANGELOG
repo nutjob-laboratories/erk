@@ -191,6 +191,8 @@ Version 0.830
 	* Added an entry to run the script editor to the main menu
 	* Added editor documentation to the scripting documentation
 	* Converted separators in the main menu back to the stock QMenu widget
+	* Added new error displays to the script engine
+	* Added the ability for the script editor to display errors
 
 Version 0.822
 	* First version with Linux support

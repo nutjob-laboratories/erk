@@ -18,8 +18,36 @@ class Window(QMainWindow):
 	def doRun(self):
 		if self.current_client!=None:
 			code = self.editor.toPlainText()
-			userinput.execute_code(code,self.current_client)
+			userinput.execute_code(code,self.current_client,self.scriptError)
 
+	def scriptError(self,error):
+		e = error[1]
+		ep = e.split(':')
+		if len(ep)==2:
+			if "wait" in ep[0]:
+				# wrong arg to /wait
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/wait")
+				msg.exec_()
+			elif 'argcount' in ep[0]:
+				# wrong arg to /argcount
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/argcount")
+				msg.exec_()
+			elif 'alias' in ep[0]:
+				# wrong arg to /argcount
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/alias")
+				msg.exec_()
 
 	def closeEvent(self, event):
 

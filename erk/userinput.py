@@ -1273,7 +1273,7 @@ def handle_ui_input(window,client,text):
 
 	return False
 
-def execute_code(script,client):
+def execute_code(script,client,err_func):
 
 	window = events.fetch_console_window(client)
 
@@ -1284,7 +1284,7 @@ def execute_code(script,client):
 	scriptThread = ScriptThreadWindow(window,client,script,scriptID,'NONE',dict(VARIABLE_TABLE),[])
 	scriptThread.execLine.connect(execute_script_line)
 	scriptThread.scriptEnd.connect(execute_script_end)
-	scriptThread.scriptErr.connect(execute_script_error)
+	scriptThread.scriptErr.connect(err_func)
 	scriptThread.start()
 
 	# Store the thread so it doesn't get garbage collected

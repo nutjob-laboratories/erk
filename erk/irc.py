@@ -1389,6 +1389,27 @@ class ScriptThreadWindow(QThread):
 
 			tokens = line.split()
 
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
+					if len(tokens)<3:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}argcount requires at least 3 arguments"])
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
+					if len(tokens)<3:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}alias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}alias requires at least 3 arguments"])
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
+					if len(tokens)<2:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}wait requires at least 1 argument"])
+						break
+					if len(tokens)>2:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: Too many arguments passed to {config.INPUT_COMMAND_SYMBOL}wait"])
+						break
+
 			if len(tokens)>=3:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
 					tokens.pop(0)
@@ -1397,6 +1418,7 @@ class ScriptThreadWindow(QThread):
 						cnt = int(cnt)
 					except:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: \"{str(cnt)}\" is not a number"])
+						break
 					else:
 						if len(self.arguments)!=cnt:
 							self.scriptErr.emit([self.window,f"{' '.join(tokens)}"])
@@ -1416,7 +1438,8 @@ class ScriptThreadWindow(QThread):
 					try:
 						count = int(count)
 					except:
-						self.scriptErr.emit([self.window,f"Error pausing script in {self.scriptname}: \"{str(count)}\" is not a number"])
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: \"{count}\" is not a number"])
+						break
 					else:
 						time.sleep(count)
 
