@@ -26,6 +26,7 @@ STYLES = {
 	'comments': format('darkMagenta','bold'),
 	'erk': format('darkBlue','bold'),
 	'channel': format('darkRed','bold'),
+	'alias': format('darkGreen','bold'),
 }
 
 class ErkScriptHighlighter (QSyntaxHighlighter):
@@ -87,6 +88,8 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 			(r'(\&\w+)', 0, STYLES['channel']),
 			(r'(\!\w+)', 0, STYLES['channel']),
 			(r'(\+\w+)', 0, STYLES['channel']),
+
+			(r'(\$\w+)', 0, STYLES['alias']),
 		]
 
 		# Build a QRegExp for each pattern
