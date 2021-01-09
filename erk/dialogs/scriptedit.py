@@ -345,6 +345,16 @@ class Window(QMainWindow):
 		self.editor.clear()
 		self.menuSave.setEnabled(False)
 
+	def openFile(self,filename):
+		x = open(filename,mode="r",encoding="latin-1")
+		source_code = str(x.read())
+		x.close()
+		self.editor.setPlainText(source_code)
+		self.filename = filename
+		self.changed = False
+		self.updateApplicationTitle()
+		self.menuSave.setEnabled(True)
+
 	def doFileOpen(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog

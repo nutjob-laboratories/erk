@@ -682,9 +682,9 @@ class Erk(QMainWindow):
 		#self.mainMenu.addSeparator()
 		#insertNoTextSeparator(self,self.mainMenu)
 
-		if not self.block_scripts:
-			entry = MenuAction(self,SCRIPT_ICON,"Script","Edit & execute scripts",25,self.startScriptEditor)
-			self.mainMenu.addAction(entry)
+		# if not self.block_scripts:
+		# 	entry = MenuAction(self,SCRIPT_ICON,"Script","Edit & execute scripts",25,self.startScriptEditor)
+		# 	self.mainMenu.addAction(entry)
 
 		self.mainMenu.addSeparator()
 

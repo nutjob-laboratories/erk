@@ -42,8 +42,9 @@ from .files import *
 from . import config
 from . import macros
 from .irc import ScriptThreadWindow
-
 from . import events
+
+from .dialogs import ScriptEditor
 
 COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"msg": config.INPUT_COMMAND_SYMBOL+"msg ",
@@ -79,6 +80,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
 	config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
 	config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
+	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
 }
 
 CHANNEL_COMMANDS = {
@@ -110,7 +112,8 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a text file and executes its contents as commands" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
@@ -872,6 +875,60 @@ def handle_ui_input(window,client,text):
 			return True
 
 	# PRINT COMMAND
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit' and len(tokens)==1:
+			if client.gui.seditors==None:
+				client.gui.seditors = ScriptEditor(None,client.gui)
+				client.gui.seditors.resize(640,480)
+
+				client.gui.seditors.clientsRefreshed(events.fetch_connections())
+				return True
+			else:
+				client.gui.seditors.activateWindow()
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit' and len(tokens)==2:
+
+			tokens.pop(0)
+			file = tokens.pop(0)
+			arguments = tokens
+
+			scriptname = find_script_file(file,client.gui.scriptsdir)
+
+			# if os.path.isfile(file):
+			if scriptname!=None:
+				if client.gui.seditors==None:
+
+					client.gui.seditors = ScriptEditor(scriptname,client.gui)
+					client.gui.seditors.resize(640,480)
+
+					client.gui.seditors.clientsRefreshed(events.fetch_connections())
+					return True
+				else:
+					client.gui.seditors.openFile(scriptname)
+					return True
+
+			else:
+				msg = Message(ERROR_MESSAGE,'',f"File \"{file}\" doesn't exist")
+				window.writeText(msg,True)
+				return True
+
+
+
+
+
+
+
+
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:

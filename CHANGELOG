@@ -194,6 +194,8 @@ Version 0.830
 	* Added new error displays to the script engine
 	* Added the ability for the script editor to display errors
 	* Added a new color for the script syntax highlighter: aliases
+	* Added a new command: /edit, which can be used to edit scripts
+	* Removed the menu option to launch the script editor (only way to open the editor now is with the /edit command)
 
 Version 0.822
 	* First version with Linux support
