@@ -97,6 +97,8 @@ def insertNoTextSeparator(self,menu):
 
 	menu.addAction(tsAction)
 
+	return tsAction
+
 def textSeparator(self,text):
 
 	if self.is_light_colored:

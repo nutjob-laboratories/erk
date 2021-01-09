@@ -187,6 +187,10 @@ Version 0.830
 	* Cleaned up and added some more explanitory text to the "connect" dialog
 	* Moved script syntax highlighting code to its own module
 	* Bugfix: saving a script from the connection dialog now auto-updates the script cache
+	* Added a script editor to the client
+	* Added an entry to run the script editor to the main menu
+	* Added editor documentation to the scripting documentation
+	* Converted separators in the main menu back to the stock QMenu widget
 
 Version 0.822
 	* First version with Linux support

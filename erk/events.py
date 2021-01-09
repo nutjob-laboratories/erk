@@ -108,23 +108,26 @@ def quit_all():
 		c.quit()
 
 def clear_unseen(window):
-	global UNSEEN
-	global TRIGGERED
-	clean = []
-	for w in UNSEEN:
-		if w.client.id==window.client.id:
-			if w.name==window.name:
-				continue
-		clean.append(w)
-	UNSEEN = clean
+	try:
+		global UNSEEN
+		global TRIGGERED
+		clean = []
+		for w in UNSEEN:
+			if w.client.id==window.client.id:
+				if w.name==window.name:
+					continue
+			clean.append(w)
+		UNSEEN = clean
 
-	clean = []
-	for w in TRIGGERED:
-		if w.client.id==window.client.id:
-			if w.name==window.name:
-				continue
-		clean.append(w)
-	TRIGGERED = clean
+		clean = []
+		for w in TRIGGERED:
+			if w.client.id==window.client.id:
+				if w.name==window.name:
+					continue
+			clean.append(w)
+		TRIGGERED = clean
+	except:
+		pass
 
 def window_has_unseen(window,gui):
 
@@ -163,6 +166,9 @@ def animation_triggered(window):
 	return False
 
 def build_connection_display(gui,new_server=None):
+
+	if gui.seditors!=None:
+		gui.seditors.clientsRefreshed(fetch_connections())
 
 	global TRIGGERED
 

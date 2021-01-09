@@ -43,6 +43,8 @@ from . import config
 from . import macros
 from .irc import ScriptThreadWindow
 
+from . import events
+
 COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"msg": config.INPUT_COMMAND_SYMBOL+"msg ",
 	config.INPUT_COMMAND_SYMBOL+"part": config.INPUT_COMMAND_SYMBOL+"part ",
@@ -1270,6 +1272,24 @@ def handle_ui_input(window,client,text):
 			return True
 
 	return False
+
+def execute_code(script,client):
+
+	window = events.fetch_console_window(client)
+
+	# Generate a random script ID
+	scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+	# Create a thread for the script and run it
+	scriptThread = ScriptThreadWindow(window,client,script,scriptID,'NONE',dict(VARIABLE_TABLE),[])
+	scriptThread.execLine.connect(execute_script_line)
+	scriptThread.scriptEnd.connect(execute_script_end)
+	scriptThread.scriptErr.connect(execute_script_error)
+	scriptThread.start()
+
+	# Store the thread so it doesn't get garbage collected
+	entry = [scriptID,scriptThread]
+	SCRIPT_THREADS.append(entry)
 
 def execute_script(filename,window,client):
 

@@ -77,6 +77,10 @@
 	* Scripts can be triggered to execute on server connection or manually
 	* Scripts run in a separate thread, so running a script won't interrupt your chatting
 	* Micro-script editor built into the connection dialog
+	* A script editor is built into the client
+		* Create, open, and edit scripts
+		* Syntax highlighting
+		* Run scripts on any connection the client is connected to
 * Plugins!
 	* Plugins are written in Python 3, just like **Ərk**
 	* **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!

@@ -72,6 +72,7 @@ from .dialogs import(
 	AutosaveDialog,
 	ComboDialogCmd,
 	FormatEditDialog,
+	ScriptEditor,
 	)
 
 from .dialogs.export_package import Dialog as ExportPackageDialog
@@ -396,6 +397,8 @@ class Erk(QMainWindow):
 		self.quitting = []
 		self.connecting = []
 
+		self.seditors = None
+
 		self.uptimers = {}
 
 		self.total_uptime = 0
@@ -541,6 +544,8 @@ class Erk(QMainWindow):
 				self.macroMenu = QMenu()
 				self.pluginMenu = QMenu()
 
+				self.scriptMenu = QMenu()
+
 		# Plugins
 		if not self.block_plugins:
 			self.plugins = PluginCollection("plugins")
@@ -647,6 +652,16 @@ class Erk(QMainWindow):
 		if config.SPELLCHECK_LANGUAGE=="de": self.spell_de.setIcon(QIcon(RCHECKED_ICON))
 
 	
+	def startScriptEditor(self):
+		if self.seditors!= None:
+			self.seditors.activateWindow()
+			return
+
+		self.seditors = ScriptEditor(None,self)
+		self.seditors.resize(640,480)
+
+		self.seditors.clientsRefreshed(events.fetch_connections())
+
 	def buildMenuInterface(self):
 
 		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
@@ -667,16 +682,24 @@ class Erk(QMainWindow):
 		#self.mainMenu.addSeparator()
 		#insertNoTextSeparator(self,self.mainMenu)
 
+		if not self.block_scripts:
+			entry = MenuAction(self,SCRIPT_ICON,"Script","Edit & execute scripts",25,self.startScriptEditor)
+			self.mainMenu.addAction(entry)
+
+		self.mainMenu.addSeparator()
+
 		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 		self.disconnect.triggered.connect(self.disconnect_current)
 		self.mainMenu.addAction(self.disconnect)
+
+		self.mainMenu.addSeparator()
 
 		c = events.fetch_connections()
 		if len(c)==0:
 			self.disconnect.setVisible(False)
 
 		#self.mainMenu.addSeparator()
-		insertNoTextSeparator(self,self.mainMenu)
+		#insertNoTextSeparator(self,self.mainMenu)
 		
 		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
 		entry.triggered.connect(lambda state: restart_program())
@@ -703,8 +726,8 @@ class Erk(QMainWindow):
 				entry.triggered.connect(self.showStyleDialog)
 				self.settingsMenu.addAction(entry)
 
-			#self.settingsMenu.addSeparator()
-			insertNoTextSeparator(self,self.settingsMenu)
+			self.settingsMenu.addSeparator()
+			#insertNoTextSeparator(self,self.settingsMenu)
 
 			# Hide menu
 
@@ -752,8 +775,8 @@ class Erk(QMainWindow):
 
 			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 
-			#self.settingsMenu.addSeparator()
-			insertNoTextSeparator(self,self.settingsMenu)
+			self.settingsMenu.addSeparator()
+			#insertNoTextSeparator(self,self.settingsMenu)
 
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
@@ -823,8 +846,8 @@ class Erk(QMainWindow):
 			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
 				self.set_autosave.setEnabled(False)
 
-			#self.logMenu.addSeparator()
-			insertNoTextSeparator(self,self.logMenu)
+			self.logMenu.addSeparator()
+			#insertNoTextSeparator(self,self.logMenu)
 
 			self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
 			self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
@@ -844,8 +867,8 @@ class Erk(QMainWindow):
 
 			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
-			#self.logMenu.addSeparator()
-			insertNoTextSeparator(self,self.logMenu)
+			self.logMenu.addSeparator()
+			#insertNoTextSeparator(self,self.logMenu)
 
 			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
 			entry.triggered.connect(self.menuExportLog)
@@ -907,8 +930,8 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		#self.helpMenu.addSeparator()
-		insertNoTextSeparator(self,self.helpMenu)
+		self.helpMenu.addSeparator()
+		#insertNoTextSeparator(self,self.helpMenu)
 
 		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
 		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
@@ -918,8 +941,8 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		#self.helpMenu.addSeparator()
-		insertNoTextSeparator(self,self.helpMenu)
+		self.helpMenu.addSeparator()
+		#insertNoTextSeparator(self,self.helpMenu)
 
 		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
@@ -1033,8 +1056,8 @@ class Erk(QMainWindow):
 
 		if len(self.plugins.plugins)==0:
 
-			#self.pluginMenu.addSeparator()
-			insertNoTextSeparator(self,self.pluginMenu)
+			self.pluginMenu.addSeparator()
+			#insertNoTextSeparator(self,self.pluginMenu)
 
 			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;<br>")
 			l1.setAlignment(Qt.AlignCenter)
@@ -1151,8 +1174,8 @@ class Erk(QMainWindow):
 				entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
 				m.addAction(entry)
 
-				#m.addSeparator()
-				insertNoTextSeparator(self,m)
+				m.addSeparator()
+				#insertNoTextSeparator(self,m)
 
 			entry = QAction(QIcon(UNINSTALL_ICON),"Uninstall \""+pack+"\"",self)
 			entry.triggered.connect(lambda state,f=plugdir,p=pack: self.uninstall_plugin(f,p))
@@ -1160,7 +1183,8 @@ class Erk(QMainWindow):
 		
 		if config.DEVELOPER_MODE:
 
-			insertNoTextSeparator(self,self.pluginMenu)
+			self.pluginMenu.addSeparator()
+			#insertNoTextSeparator(self,self.pluginMenu)
 
 			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 			entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
@@ -1297,8 +1321,8 @@ class Erk(QMainWindow):
 
 				if not config.MACROS_ENABLED: entry.setEnabled(False)
 
-			#self.macroMenu.addSeparator()
-			insertNoTextSeparator(self,self.macroMenu)
+			self.macroMenu.addSeparator()
+			#insertNoTextSeparator(self,self.macroMenu)
 
 		else:
 			l1 = QLabel("<br>&nbsp;<b>No macros installed</b>&nbsp;")
@@ -1307,8 +1331,8 @@ class Erk(QMainWindow):
 			entry.setDefaultWidget(l1)
 			self.macroMenu.addAction(entry)
 
-			#self.macroMenu.addSeparator()
-			insertNoTextSeparator(self,self.macroMenu)
+			self.macroMenu.addSeparator()
+			#insertNoTextSeparator(self,self.macroMenu)
 
 		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
 		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))

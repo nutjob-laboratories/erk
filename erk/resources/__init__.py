@@ -85,6 +85,9 @@ EMOJI_ICON = ":/gui-emoji.png"
 
 EDIT_ICON = ":/gui-edit.png"
 
+SCRIPT_ICON = ":/gui-script.png"
+RUN_ICON = ":/gui-run.png"
+
 CONNECT_MENU_ICON = ":/connect.png"
 UPTIME_ICON = ":/gui-uptime.png"
 LEFT_ICON = ":/gui-left.png"

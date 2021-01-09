@@ -2,11 +2,11 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.822.176"><b>Download last stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830.291</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.830.300</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.291**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.830.300**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -77,6 +77,10 @@
 	* Scripts can be triggered to execute on server connection or manually
 	* Scripts run in a separate thread, so running a script won't interrupt your chatting
 	* Micro-script editor built into the connection dialog
+	* A script editor is built into the client
+		* Create, open, and edit scripts
+		* Syntax highlighting
+		* Run scripts on any connection the client is connected to
 * Plugins!
 	* Plugins are written in Python 3, just like **Ərk**
 	* **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!

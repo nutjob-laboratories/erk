@@ -57,6 +57,8 @@ from .install import Dialog as Installer
 from .settings import Dialog as Settings
 from .autosave_freq import Dialog as Autosave
 
+from .scriptedit import Window as ErkScriptEditor
+
 def AutosaveDialog():
 	x = Autosave()
 	info = x.get_entry_information()
@@ -130,6 +132,12 @@ def ErrorDialog(obj,errlist=None):
 
 def EditorDialog(obj=None,filename=None,app=None,config=None,stylefile=None):
 	x = Editor(filename,obj,app,config,stylefile)
+	return x
+
+def ScriptEditor(filename,parent):
+	x = ErkScriptEditor(filename,parent)
+	x.show()
+
 	return x
 
 def MacroDialog(obj,filename=None):
