@@ -11,8 +11,7 @@
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
 # Screenshots
-
-<p align="center">
+<center><p align="center">
 <table style="width: 100%" border="0">
       <tbody>
         <tr>
@@ -31,7 +30,7 @@
         </tr>
       </tbody>
     </table>
-</p>
+</p></center>
 
 # Features
 
@@ -122,6 +121,76 @@ Hit enter, and **Ərk** will start up! Click "Connect" on the **Ərk** menu to e
 
 To make things easier, Windows users can create a shortcut to **Ərk** so all you have to do is double click to start chatting. There are many tutorials on how to do this online; a good place to start is [right here](https://therenegadecoder.com/code/how-to-make-a-python-script-shortcut-with-arguments/).
 
+# Usage
+```
+usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
+                     [-u URL] [-a] [-s FILENAME] [--noplugins] [--nomacros] [--noask]
+                     [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
+                     [--nostyles] [--noedit] [--noextensions] [--qt5menu] [--generate NAME]
+                     [--new] [--editor] [--edit FILE] [--install ZIP] [-f] [-o] [-W WIDTH]
+                     [-H HEIGHT] [-C FILE] [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY]
+                     [-T DIRECTORY]
+                     [SERVER] [PORT]
+optional arguments:
+  -h, --help            show this help message and exit
+
+Connection:
+  SERVER                Server to connect to
+  PORT                  Server port to connect to (6667)
+  --ssl                 Use SSL to connect to IRC
+  --reconnect           Reconnect to servers on disconnection
+  -p PASSWORD, --password PASSWORD
+                        Use server password to connect
+  -c CHANNEL[:KEY], --channel CHANNEL[:KEY]
+                        Join channel on connection
+  -l, --last            Automatically connect to the last server connected to
+  -u URL, --url URL     Use an IRC URL to connect
+  -a, --autoscript      Execute server script on connection (if one exists)
+  -s FILENAME, --script FILENAME
+                        Execute a custom server script on connection
+
+Disable functionality:
+  --noplugins           Disable plugins
+  --nomacros            Disable macros
+  --noask               Don't ask for a server to connect to on start
+  --nosettings          Disable settings menu(s)
+  --nomenus             Disable all menus
+  --noconnect           Disable connection commands
+  --noscripts           Disable scripting
+  --nodisplay           Disable connection display
+  --nostyles            Disables style loading and editing
+  --noedit              Disables the script editor
+  --noextensions        Disables scripts, macros, and plugins
+  --qt5menu             Disable menu toolbar, and use normal menus
+
+Plugins:
+  --generate NAME       Generate a "blank" plugin package in the current directory
+  --new                 Generate a "blank" plugin package in the plugins directory
+  --editor              Open the code editor
+  --edit FILE           Open a file in the code editor
+  --install ZIP         Install a plugin
+
+Display:
+  -f, --fullscreen      Open in fullscreen mode
+  -o, --ontop           Application window is always on top
+  -W WIDTH, --width WIDTH
+                        Set initial window width
+  -H HEIGHT, --height HEIGHT
+                        Set initial window height
+
+Configuration:
+  -C FILE, --config FILE
+                        Use an alternate configuration file
+  -U FILE, --user FILE  Use an alternate user file
+  -Y FILE, --style FILE
+                        Use an alternate text style file
+  -L DIRECTORY, --logs DIRECTORY
+                        Use an alternate log storage location
+  -S DIRECTORY, --scripts DIRECTORY
+                        Use an alternate script storage location
+  -T DIRECTORY, --styles DIRECTORY
+                        Use an alternate style storage location
+```
 # Frequently asked questions
 
 ## What does "erk" mean?
@@ -185,8 +254,9 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 * A full, modern GUI (HexChat is sort of modern, I guess, if was still 1999-2000)
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
 * Focuses on the chat experience (not downloading/uploading files)
+* The ability to easily extend the client without resorting to Black Magic&trade; or spend hours and hours surfing endless forum posts or decipher less-than-helpful documentation
 
-**Ərk** is being developed on Windows 10 and Linux Mint, but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repo, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
+**Ərk** is being developed on Windows 10 and Linux Mint, but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repository, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
 
 The other reason why I wrote **Ərk** is because I got tired of not understanding how the most popular clients did things. I wanted a client that you could configure to do _exactly_ what you wanted it to do, no more and no less. That's why **Ərk** has a ridiculous amount of configuration options. Do you want to run the client in full-screen mode, and remove the ability of users to change settings or connect to other servers (aka, "kiosk mode")? You can do that. Do you want to strip all the "pretty" off the client, and basically run it in "text only" mode? You can do that. Do you want **Ərk** to do nothing except what you tell it to do? You can do that. Almost everything in the client can be configured from within the GUI or with command-line flags.
 
@@ -194,12 +264,12 @@ The other reason why I wrote **Ərk** is because I got tired of not understandin
 
 Not directly, as all its configuration files are stored in **Ərk**'s installation directory. However, there are six command-line options you can use to manage settings for different users:
 
-* `--config` : This tells **Ərk** to use a user-specified file for most configuration options.
-* `--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
-* `--style` : This tells **Ərk** to use a user-specified text style file. This sets what colors and formatting is used to display text in the client.
-* `--logs` : This tells **Ərk** to use a user-specified directory for log loading and storage.
-* `--scripts` : This tells **Ərk** to use a user-specified directory for script loading and storage.
-* `--styles` : This tells **Ərk** to use a user-specified directory for text style loading and storage.
+* `-C`,`--config` : This tells **Ərk** to use a user-specified file for most configuration options.
+* `-U`,`--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
+* `-Y`,`--style` : This tells **Ərk** to use a user-specified text style file. This sets what colors and formatting is used to display text in the client.
+* `-L`,`--logs` : This tells **Ərk** to use a user-specified directory for log loading and storage.
+* `-S`,`--scripts` : This tells **Ərk** to use a user-specified directory for script loading and storage.
+* `-T`,`--styles` : This tells **Ərk** to use a user-specified directory for text style loading and storage.
 
 This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to be used for logs.
 
@@ -215,11 +285,10 @@ Now, let's make a directory for Bob:
 
 We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Alice_Erk\settings.json --user C:\Alice_Erk\user.json --style C:\Alice_Erk\text.style --logs C:\Alice_Erk\logs --scripts C:\Alice_Erk\scripts --styles C:\Alice\styles
+	python C:\Erk\erk.py -C C:\Alice_Erk\settings.json -U C:\Alice_Erk\user.json -Y C:\Alice_Erk\text.style -L C:\Alice_Erk\logs -S C:\Alice_Erk\scripts -T C:\Alice\styles
 
 Similarly, Bob's batch file looks like this:
 
-	python C:\Erk\erk.py --config C:\Bob_Erk\settings.json --user C:\Bob_Erk\user.json --style C:\Bob_Erk\text.style --logs C:\Bob_Erk\logs --scripts C:\Bob_Erk\scripts --styles C:\Bob\styles
+	python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles
 
 Alice and Bob can now use **Ərk** with their own customized settings!
-
