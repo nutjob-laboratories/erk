@@ -821,6 +821,11 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 			return True
 
+	# The /_alias command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
+			return True
+
 	# The /argcount command an only be called from scripts.
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':

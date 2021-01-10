@@ -1314,6 +1314,7 @@ class ScriptThread(QThread):
 		super(ScriptThread, self).__init__(parent)
 		self.script = script
 		self.vtable = variable_table
+		self.private_vtable = {}
 
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
@@ -1326,6 +1327,9 @@ class ScriptThread(QThread):
 			for key in self.vtable:
 				line = line.replace('$'+key,self.vtable[key])
 
+			for key in self.private_vtable:
+				line = line.replace('$'+key,self.private_vtable[key])
+
 			tokens = line.split()
 
 			if len(tokens)>=3:
@@ -1334,6 +1338,13 @@ class ScriptThread(QThread):
 					var = tokens.pop(0)
 					value = ' '.join(tokens)
 					self.vtable[var] = value
+
+			if len(tokens)>=3:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
+					tokens.pop(0)
+					var = tokens.pop(0)
+					value = ' '.join(tokens)
+					self.private_vtable[var] = value
 
 			if len(tokens)==2:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
@@ -1366,6 +1377,8 @@ class ScriptThreadWindow(QThread):
 		self.vtable = variable_table
 		self.arguments = arguments
 
+		self.private_vtable = {}
+
 		# Strip comments from script
 		self.script = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,self.script)
 
@@ -1387,6 +1400,10 @@ class ScriptThreadWindow(QThread):
 			for key in self.vtable:
 				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
 
+			# Interpolate private alias variables
+			for key in self.private_vtable:
+				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
+
 			tokens = line.split()
 
 			if len(tokens)>0:
@@ -1399,6 +1416,12 @@ class ScriptThreadWindow(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 					if len(tokens)<3:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}alias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}alias requires at least 3 arguments"])
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
+					if len(tokens)<3:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}palias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}_alias requires at least 3 arguments"])
 						break
 
 			if len(tokens)>0:
@@ -1431,6 +1454,12 @@ class ScriptThreadWindow(QThread):
 					value = ' '.join(tokens)
 					self.vtable[var] = value
 
+			if len(tokens)>=3:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
+					tokens.pop(0)
+					var = tokens.pop(0)
+					value = ' '.join(tokens)
+					self.private_vtable[var] = value
 
 			if len(tokens)==2:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':

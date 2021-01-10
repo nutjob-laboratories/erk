@@ -204,6 +204,9 @@ Version 0.830
 	* Modified the "connection" dialog to load the config file and use the syntax settings
 	* Added new features to the script editor (autoscript loading, insert commands, some small bugs fixed)
 	* Updated the documentation with the new script editor features
+	* Added a new command: /_alias (allows scripts to create alias variables that will not be exported globally to all scripts/commands)
+	* Added new command to the command documentation, and add more info on how scripts work
+	* Added the new command to the syntax highlighter
 
 Version 0.822
 	* First version with Linux support
