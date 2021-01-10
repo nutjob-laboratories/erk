@@ -51,7 +51,7 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
-		retval = self.width.value()
+		retval = self.pauseTime.value()
 
 		return retval
 
@@ -65,12 +65,12 @@ class Dialog(QDialog):
 
 		widthLayout = QHBoxLayout()
 		#self.widthLabel = QLabel("Width")
-		self.width = QSpinBox()
-		self.width.setRange(1,1000)
-		self.width.setValue(1)
+		self.pauseTime = QSpinBox()
+		self.pauseTime.setRange(1,1000)
+		self.pauseTime.setValue(1)
 		#widthLayout.addWidget(self.widthLabel)
 		#widthLayout.addStretch()
-		widthLayout.addWidget(self.width)
+		widthLayout.addWidget(self.pauseTime)
 		widthLayout.addWidget(QLabel("seconds"))
 
 		# Buttons

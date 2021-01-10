@@ -13,6 +13,12 @@ from ..strings import *
 from ..widgets.action import MenuAction,insertNoTextSeparator
 from .. import userinput
 
+from .send_pm import Dialog as SendPM
+from .pause import Dialog as PauseTime
+from .comment import Dialog as Comment
+from .print import Dialog as PrintMsg
+from ..dialogs import AddChannelDialog
+
 class Window(QMainWindow):
 
 	def doRun(self):
@@ -107,11 +113,11 @@ class Window(QMainWindow):
 			self.status_client.setText("&nbsp;<small><i>&nbsp;</i></small>")
 			self.runButton.setEnabled(False)
 			self.servers.setEnabled(False)
+			self.docButton.setEnabled(False)
 		else:
 			self.runButton.setEnabled(True)
 			self.servers.setEnabled(True)
-
-		self.generateFileMenu()
+			self.docButton.setEnabled(True)
 
 	def setServer(self):
 
@@ -121,8 +127,6 @@ class Window(QMainWindow):
 			self.current_client = self.clients[index]
 			self.status_client.setText(  "&nbsp;<small><i>"+self.clients[index].server+":"+str(self.clients[index].port)+" ("+self.clients[index].nickname+")</i></small>"    )
 			self.servers.setCurrentIndex(index)
-
-		self.generateFileMenu()
 
 	def __init__(self,filename=None,parent=None):
 		super(Window, self).__init__(parent)
@@ -180,10 +184,50 @@ class Window(QMainWindow):
 		self.runButton.setFixedSize(height,height)
 		self.runButton.setIconSize(QSize(height,height))
 		self.runButton.setStyleSheet("border: none;")
+		self.runButton.setToolTip("Execute script")
+
+		documentIcon = QIcon(CONNECT_MENU_ICON)
+
+		self.docButton = QPushButton(documentIcon,'')
+		self.docButton.clicked.connect(self.openAutoscript)
+		self.docButton.setEnabled(False)
+
+		height = self.servers.frameGeometry().height()
+
+		self.docButton.setFixedSize(height,height)
+		self.docButton.setIconSize(QSize(height,height))
+		self.docButton.setStyleSheet("border: none;")
+		self.docButton.setToolTip("Open connection script")
 
 		self.fileMenu = self.menubar.addMenu("File")
 
-		self.generateFileMenu()
+		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
+		entry.triggered.connect(self.doNewFile)
+		entry.setShortcut("Ctrl+N")
+		self.fileMenu.addAction(entry)
+
+		entry = QAction(QIcon(OPENFILE_ICON),"Open file",self)
+		entry.triggered.connect(self.doFileOpen)
+		entry.setShortcut("Ctrl+O")
+		self.fileMenu.addAction(entry)
+
+		self.menuSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
+		self.menuSave.triggered.connect(self.doFileSave)
+		self.menuSave.setShortcut("Ctrl+S")
+		self.fileMenu.addAction(self.menuSave)
+
+		if self.filename==None:
+			self.menuSave.setEnabled(False)
+
+		entry = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
+		entry.triggered.connect(self.doFileSaveAs)
+		self.fileMenu.addAction(entry)
+
+		insertNoTextSeparator(self.parent,self.fileMenu)
+
+		entry = QAction(QIcon(EXIT_ICON),"Exit",self)
+		entry.triggered.connect(self.close)
+		self.fileMenu.addAction(entry)
 
 		editMenu = self.menubar.addMenu("Edit")
 
@@ -237,6 +281,29 @@ class Window(QMainWindow):
 		self.menuZoomOut.setShortcut("Ctrl+-")
 		editMenu.addAction(self.menuZoomOut)
 
+
+		insertMenu = self.menubar.addMenu("Insert Command")
+
+		entry = QAction(QIcon(MESSAGE_ICON),"Private message",self)
+		entry.triggered.connect(self.insertPM)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(CHANNEL_ICON),"Channel join",self)
+		entry.triggered.connect(self.insertJoin)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(TIMESTAMP_ICON),"Pause",self)
+		entry.triggered.connect(self.insertPause)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(MISC_ICON),"Comment",self)
+		entry.triggered.connect(self.insertComment)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(EDIT_ICON),"Print",self)
+		entry.triggered.connect(self.insertPrint)
+		insertMenu.addAction(entry)
+
 		self.updateApplicationTitle()
 
 		barLayout = QHBoxLayout()
@@ -247,6 +314,7 @@ class Window(QMainWindow):
 
 		barLayout.addWidget(self.runButton)
 		barLayout.addWidget(self.servers)
+		barLayout.addWidget(self.docButton)
 
 		layout = QVBoxLayout()
 		layout.setSpacing(2)
@@ -258,37 +326,69 @@ class Window(QMainWindow):
 		fL.setLayout(layout)
 		self.setCentralWidget(fL)
 
-	def generateFileMenu(self):
+	def openAutoscript(self):
+		if self.current_client!=None:
+			code = load_auto_script(self.current_client.server,str(self.current_client.port),self.parent.scriptsdir)
+			if code!=None:
+				self.editor.setPlainText(code)
+			else:
+				self.editor.clear()
+			self.filename = get_auto_script_name(self.current_client.server,str(self.current_client.port),self.parent.scriptsdir)
+			self.changed = False
+			self.updateApplicationTitle()
+			self.menuSave.setEnabled(True)
 
-		self.fileMenu.clear()
+	def insertJoin(self):
+		x = AddChannelDialog(self)
+		e = x.get_channel_information(self)
 
-		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
-		entry.triggered.connect(self.doNewFile)
-		entry.setShortcut("Ctrl+N")
-		self.fileMenu.addAction(entry)
+		if not e: return
 
-		entry = QAction(QIcon(OPENFILE_ICON),"Open file",self)
-		entry.triggered.connect(self.doFileOpen)
-		entry.setShortcut("Ctrl+O")
-		self.fileMenu.addAction(entry)
+		channel = e[0]
+		key = e[1]
 
-		self.menuSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
-		self.menuSave.triggered.connect(self.doFileSave)
-		self.menuSave.setShortcut("Ctrl+S")
-		self.fileMenu.addAction(self.menuSave)
+		if len(key)==0:
+			self.editor.insertPlainText("/join "+channel+"\n")
+		else:
+			self.editor.insertPlainText("/join "+channel+" "+key+"\n")
 
-		if self.filename==None:
-			self.menuSave.setEnabled(False)
+	def insertPrint(self):
+		x = PrintMsg(self)
+		e = x.get_message_information(self)
 
-		entry = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
-		entry.triggered.connect(self.doFileSaveAs)
-		self.fileMenu.addAction(entry)
+		if not e: return
 
-		insertNoTextSeparator(self.parent,self.fileMenu)
+		if len(e)>0:
+			self.editor.insertPlainText("/print "+e+"\n")
 
-		entry = QAction(QIcon(EXIT_ICON),"Exit",self)
-		entry.triggered.connect(self.close)
-		self.fileMenu.addAction(entry)
+	def insertComment(self):
+		x = Comment(self)
+		e = x.get_message_information(self)
+
+		if not e: return
+
+		if len(e)>0:
+			self.editor.insertPlainText("/* "+e+" */\n")
+
+	def insertPause(self):
+		x = PauseTime(self)
+		e = x.get_time_information(self)
+
+		if not e: return
+
+		self.editor.insertPlainText("/wait "+str(e)+"\n")
+
+	def insertPM(self):
+		x = SendPM(self)
+		e = x.get_message_information(self)
+
+		if not e: return
+
+		target = e[0]
+		msg = e[1]
+		
+		if len(target)>0 and len(msg)>0:
+			self.editor.insertPlainText("/msg "+target+" "+msg+"\n")
 
 	def updateApplicationTitle(self):
 		if self.filename!=None:
