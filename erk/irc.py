@@ -1325,10 +1325,10 @@ class ScriptThread(QThread):
 			if len(line)==0: continue
 
 			for key in self.vtable:
-				line = line.replace('$'+key,self.vtable[key])
+				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
 
 			for key in self.private_vtable:
-				line = line.replace('$'+key,self.private_vtable[key])
+				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
 
 			tokens = line.split()
 
@@ -1336,6 +1336,13 @@ class ScriptThread(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 					tokens.pop(0)
 					var = tokens.pop(0)
+
+					# If the interpolation symbol has been included, strip it
+					interplen = len(config.SCRIPT_INTERPOLATE_SYMBOL)
+					if len(var)>interplen:
+						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
+							var = var[interplen:]
+
 					value = ' '.join(tokens)
 					self.vtable[var] = value
 
@@ -1343,6 +1350,13 @@ class ScriptThread(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
 					tokens.pop(0)
 					var = tokens.pop(0)
+
+					# If the interpolation symbol has been included, strip it
+					interplen = len(config.SCRIPT_INTERPOLATE_SYMBOL)
+					if len(var)>interplen:
+						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
+							var = var[interplen:]
+
 					value = ' '.join(tokens)
 					self.private_vtable[var] = value
 
@@ -1451,6 +1465,13 @@ class ScriptThreadWindow(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 					tokens.pop(0)
 					var = tokens.pop(0)
+
+					# If the interpolation symbol has been included, strip it
+					interplen = len(config.SCRIPT_INTERPOLATE_SYMBOL)
+					if len(var)>interplen:
+						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
+							var = var[interplen:]
+
 					value = ' '.join(tokens)
 					self.vtable[var] = value
 
@@ -1458,6 +1479,13 @@ class ScriptThreadWindow(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
 					tokens.pop(0)
 					var = tokens.pop(0)
+
+					# If the interpolation symbol has been included, strip it
+					interplen = len(config.SCRIPT_INTERPOLATE_SYMBOL)
+					if len(var)>interplen:
+						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
+							var = var[interplen:]
+
 					value = ' '.join(tokens)
 					self.private_vtable[var] = value
 

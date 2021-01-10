@@ -92,14 +92,23 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 		rules += [(r'%s' % o, 0, STYLES['erk'])
 			for o in ErkScriptHighlighter.erk]
 
+		# Make sure to escape any special characters in the
+		# interpolation symbol; this also allows for interpolation
+		# symbols that are more than one character
+		special = ['\\','^','$','.','|','?','*','+','(',')','{']
+		interp = ''
+		for c in config.SCRIPT_INTERPOLATE_SYMBOL:
+			if c in special:
+				c = '\\'+c
+			interp = interp + c
+
 		# Channel names
 		rules += [
 			(r'(#\w+)', 0, STYLES['channel']),
 			(r'(\&\w+)', 0, STYLES['channel']),
 			(r'(\!\w+)', 0, STYLES['channel']),
 			(r'(\+\w+)', 0, STYLES['channel']),
-
-			(r'(\$\w+)', 0, STYLES['alias']),
+			(rf'({interp}\w+)', 0, STYLES['alias']),
 		]
 
 		# Build a QRegExp for each pattern

@@ -326,6 +326,8 @@ class Window(QMainWindow):
 		fL.setLayout(layout)
 		self.setCentralWidget(fL)
 
+		self.editor.setFocus()
+
 	def openAutoscript(self):
 		if self.current_client!=None:
 			code = load_auto_script(self.current_client.server,str(self.current_client.port),self.parent.scriptsdir)

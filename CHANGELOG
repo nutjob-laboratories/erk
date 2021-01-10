@@ -207,6 +207,10 @@ Version 0.830
 	* Added a new command: /_alias (allows scripts to create alias variables that will not be exported globally to all scripts/commands)
 	* Added new command to the command documentation, and add more info on how scripts work
 	* Added the new command to the syntax highlighter
+	* If /alias is called with the interpolation symbol ($) in the first argument, it is stripped
+	* Added support for multi-character interpolation symbols (if users want to do that...not sure why, but why not?)
+	* Syntax highlighting for multi-character interpolation symbols is supported
+	* Bugfix: when opening the script editor, the text entry widget is automatically in focus
 
 Version 0.822
 	* First version with Linux support

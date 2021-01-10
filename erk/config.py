@@ -153,7 +153,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"script_syntax_color_commands": SCRIPT_SYNTAX_COMMANDS,
 		"script_syntax_color_channels": SCRIPT_SYNTAX_TARGETS,
 		"script_syntax_color_alias": SCRIPT_SYNTAX_ALIAS,
-
 		"enable_script_editor": ENABLE_SCRIPT_EDITOR,
 		"use_default_qmenubar": USE_QMENUBAR_MENUS,
 		"all_script_aliases_are_global": GLOBALIZE_ALL_SCRIPT_ALIASES,
