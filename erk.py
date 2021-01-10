@@ -99,6 +99,7 @@ disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_t
 disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
+disgroup.add_argument( "--noextensions", help=f"Disables scripts, macros, and plugins", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
@@ -132,6 +133,12 @@ loaded_config_file = False
 if __name__ == '__main__':
 
 	app = QApplication([])
+
+	# Shortcut disables
+	if args.noextensions:
+		args.noplugins = True
+		args.nomacros = True
+		args.noscripts = True
 
 	# If the user has passed an alternate configuration file,
 	# and the file doesn't exist, create a new config file

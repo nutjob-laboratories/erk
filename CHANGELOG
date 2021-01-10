@@ -211,6 +211,7 @@ Version 0.830
 	* Added support for multi-character interpolation symbols (if users want to do that...not sure why, but why not?)
 	* Syntax highlighting for multi-character interpolation symbols is supported
 	* Bugfix: when opening the script editor, the text entry widget is automatically in focus
+	* Added a commandline flag to disable scripts, macros, and plugins all at once
 
 Version 0.822
 	* First version with Linux support
