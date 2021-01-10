@@ -115,7 +115,7 @@ First, make sure that all the requirements are installed. Next, [download **Ərk
 
 	python erk.py
 
-Hit enter, and **Ərk** will start up! Click "Connect" on the **Ərk** menu to enter a server hostname/IP and port to connect to a specific IRC server, or click "Networks" to select a server from the built-in server list.
+Hit enter, and **Ərk** will start up! Enter the hostname or IP address of the server you'd like to connect to, or click the "Servers" tab and select a server from the built-in list.
 
 **Ərk** does not need to be "installed" to any specific directory to run; it will run from any directory it is extracted to.
 
