@@ -1572,12 +1572,12 @@ class Erk(QMainWindow):
 		self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 	def menuCombo(self):
-		info = ComboDialog(self.userfile,self.block_scripts,self.scriptsdir)
+		info = ComboDialog(self.userfile,self.block_scripts,self.scriptsdir,self.configfile)
 		if info!=None:
 			self.connectToIRCServer(info)
 
 	def menuComboCmd(self,do_ssl=None,do_reconnect=None):
-		info = ComboDialogCmd(self.userfile,do_ssl,do_reconnect,self.block_scripts,self.scriptsdir)
+		info = ComboDialogCmd(self.userfile,do_ssl,do_reconnect,self.block_scripts,self.scriptsdir,self.configfile)
 		if info!=None:
 			self.connectToIRCServer(info)
 

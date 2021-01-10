@@ -43,7 +43,8 @@ from ..widgets import *
 from ..strings import *
 from ..dialogs import AddChannelDialog
 from ..common import *
-from ..syntax import *
+from .. import syntax
+from .. import config
 
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
@@ -297,8 +298,10 @@ class Dialog(QDialog):
 		self.scriptedit.moveCursor(QTextCursor.End)
 
 
-	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',config_file=SETTINGS_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
+
+		config.load_settings(config_file)
 
 		self.can_do_ssl = can_do_ssl
 		self.parent = parent
@@ -306,6 +309,7 @@ class Dialog(QDialog):
 
 		self.block_scripts = block_scripts
 		self.scriptsdir = scriptsdir
+		self.config_file = config_file
 
 		self.autojoins = []
 
@@ -325,6 +329,15 @@ class Dialog(QDialog):
 		self.SAVE_SCRIPT = False
 
 		self.manually_cleared = False
+
+		# Load in the syntax settings from the configuration file
+		# Since this dialog can be loaded _before_ the main entry point,
+		# the config settings will not be loaded into memory; this loads
+		# in the syntax settings from the config manually
+		syntax.STYLES["comments"] = syntax.format(config.SCRIPT_SYNTAX_COMMENTS,'bold')
+		syntax.STYLES["erk"] = syntax.format(config.SCRIPT_SYNTAX_COMMANDS,'bold')
+		syntax.STYLES["channel"] = syntax.format(config.SCRIPT_SYNTAX_TARGETS,'bold')
+		syntax.STYLES["alias"] = syntax.format(config.SCRIPT_SYNTAX_ALIAS,'bold')
 
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
@@ -862,7 +875,7 @@ class Dialog(QDialog):
 
 
 		self.scriptedit = QPlainTextEdit(self)
-		self.highlight = ErkScriptHighlighter(self.scriptedit.document())
+		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document())
 
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 

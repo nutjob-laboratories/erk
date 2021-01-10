@@ -4,6 +4,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from . import config
+
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
 	"""
@@ -22,11 +24,18 @@ def format(color, style=''):
 
 	return _format
 
+# STYLES = {
+# 	'comments': format('darkMagenta','bold'),
+# 	'erk': format('darkBlue','bold'),
+# 	'channel': format('darkRed','bold'),
+# 	'alias': format('darkGreen','bold'),
+# }
+
 STYLES = {
-	'comments': format('darkMagenta','bold'),
-	'erk': format('darkBlue','bold'),
-	'channel': format('darkRed','bold'),
-	'alias': format('darkGreen','bold'),
+	'comments': format(config.SCRIPT_SYNTAX_COMMENTS,'bold'),
+	'erk': format(config.SCRIPT_SYNTAX_COMMANDS,'bold'),
+	'channel': format(config.SCRIPT_SYNTAX_TARGETS,'bold'),
+	'alias': format(config.SCRIPT_SYNTAX_ALIAS,'bold'),
 }
 
 class ErkScriptHighlighter (QSyntaxHighlighter):

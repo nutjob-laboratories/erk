@@ -572,7 +572,7 @@ if __name__ == '__main__':
 
 				# Launch normally, showing the connection dialog first
 
-				info = ComboDialog(args.user,is_scripting_enabled,args.scripts)
+				info = ComboDialog(args.user,is_scripting_enabled,args.scripts,args.config)
 				if info!=None:
 					GUI = Erk(
 						app,

@@ -200,6 +200,8 @@ Version 0.830
 	* Added a commandline flag to block the script editor
 	* Added a new option to the config file: enable_script_editor
 	* Added new script editor setting to the "settings" dialog
+	* Added script syntax color settings to the config file
+	* Modified the "connection" dialog to load the config file and use the syntax settings
 
 Version 0.822
 	* First version with Linux support

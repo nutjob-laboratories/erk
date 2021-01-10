@@ -138,11 +138,21 @@ GLOBALIZE_ALL_SCRIPT_ALIASES = True
 USE_QMENUBAR_MENUS = False
 ENABLE_SCRIPT_EDITOR = True
 
+SCRIPT_SYNTAX_COMMENTS = 'darkMagenta'
+SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
+SCRIPT_SYNTAX_TARGETS = 'darkRed'
+SCRIPT_SYNTAX_ALIAS = 'darkGreen'
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+
+		"script_syntax_color_comments": SCRIPT_SYNTAX_COMMENTS,
+		"script_syntax_color_commands": SCRIPT_SYNTAX_COMMANDS,
+		"script_syntax_color_channels": SCRIPT_SYNTAX_TARGETS,
+		"script_syntax_color_alias": SCRIPT_SYNTAX_ALIAS,
 
 		"enable_script_editor": ENABLE_SCRIPT_EDITOR,
 		"use_default_qmenubar": USE_QMENUBAR_MENUS,
@@ -241,6 +251,18 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "script_syntax_color_comments" in data:
+		data["script_syntax_color_comments"] = SCRIPT_SYNTAX_COMMENTS
+
+	if not "script_syntax_color_commands" in data:
+		data["script_syntax_color_commands"] = SCRIPT_SYNTAX_COMMANDS
+
+	if not "script_syntax_color_channels" in data:
+		data["script_syntax_color_channels"] = SCRIPT_SYNTAX_TARGETS
+
+	if not "script_syntax_color_alias" in data:
+		data["script_syntax_color_alias"] = SCRIPT_SYNTAX_ALIAS
 
 	if not "enable_script_editor" in data:
 		data["enable_script_editor"] = ENABLE_SCRIPT_EDITOR
@@ -394,6 +416,10 @@ def load_settings(filename=SETTINGS_FILE):
 	global GLOBALIZE_ALL_SCRIPT_ALIASES
 	global USE_QMENUBAR_MENUS
 	global ENABLE_SCRIPT_EDITOR
+	global SCRIPT_SYNTAX_COMMENTS
+	global SCRIPT_SYNTAX_COMMANDS
+	global SCRIPT_SYNTAX_TARGETS
+	global SCRIPT_SYNTAX_ALIAS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -402,6 +428,10 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SCRIPT_SYNTAX_COMMENTS = data["script_syntax_color_comments"]
+			SCRIPT_SYNTAX_COMMANDS = data["script_syntax_color_commands"]
+			SCRIPT_SYNTAX_TARGETS = data["script_syntax_color_channels"]
+			SCRIPT_SYNTAX_ALIAS = data["script_syntax_color_alias"]
 			ENABLE_SCRIPT_EDITOR = data["enable_script_editor"]
 			USE_QMENUBAR_MENUS = data["use_default_qmenubar"]
 			GLOBALIZE_ALL_SCRIPT_ALIASES = data["all_script_aliases_are_global"]
