@@ -49,7 +49,6 @@ from .plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRE
 from . import config
 from . import events
 from . import textformat
-from . import macros
 from . import userinput
 
 from .dialogs import(
@@ -61,7 +60,6 @@ from .dialogs import(
 	LogSizeDialog,
 	FormatTextDialog,
 	AboutDialog,
-	MacroDialog,
 	EditorDialog,
 	ErrorDialog,
 	ExportLogDialog,
@@ -365,7 +363,6 @@ class Erk(QMainWindow):
 			app,
 			info=None,
 			block_plugins=False,
-			block_macros=False,
 			block_settings=False,
 			block_toolbar=False,
 			configfile=None,
@@ -409,8 +406,6 @@ class Erk(QMainWindow):
 
 		self.block_plugins = block_plugins
 
-		self.block_macros = block_macros
-
 		self.block_settings = block_settings
 
 		self.block_toolbar = block_toolbar
@@ -437,12 +432,10 @@ class Erk(QMainWindow):
 
 		self.block_styles = no_styles
 
-		self.cmdline_macro = False
 		self.cmdline_plugin = False
 		self.cmdline_script = False
 		self.cmdline_editor = False
 
-		if self.block_macros: self.cmdline_macro = True
 		if self.block_plugins: self.cmdline_plugin = True
 		if self.block_scripts: self.cmdline_script = True
 		if self.block_editor: self.cmdline_editor = True
@@ -548,7 +541,6 @@ class Erk(QMainWindow):
 				self.settingsMenu = QMenu()
 				self.logMenu = QMenu()
 				self.helpMenu = QMenu()
-				self.macroMenu = QMenu()
 				self.pluginMenu = QMenu()
 
 				self.scriptMenu = QMenu()
@@ -880,17 +872,6 @@ class Erk(QMainWindow):
 			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
 			entry.triggered.connect(self.menuExportLog)
 			self.logMenu.addAction(entry)
-
-		# Macro menu
-
-		if not self.block_macros:
-			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-				self.macroMenu = self.menubar.addMenu("Macros")
-			else:
-				self.macroMenu.clear()
-				add_toolbar_menu(self.toolbar,"Macros",self.macroMenu)
-
-			self.rebuildMacroMenu()
 
 		# Plugin menu
 
@@ -1250,22 +1231,6 @@ class Erk(QMainWindow):
 				self.display_load_errors()
 				self.rebuildPluginMenu()
 
-	def menuInstallMacro(self):
-		# macros.MACRO_DIRECTORY
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Select Macro", None,"JSON File (*.json);;All Files (*)", options=options)
-		if fileName:
-
-			mfile = os.path.basename(fileName)
-			outfile = os.path.join(macros.MACRO_DIRECTORY, mfile)
-			
-			shutil.copy(fileName, outfile)
-
-			self.menuReloadMacros()
-			self.menuReloadPlugins()
-
-
 	def menuEditor(self):
 		x = EditorDialog(self,None,None,self.configfile,self.stylefile)
 		w = config.DEFAULT_APP_WIDTH
@@ -1296,67 +1261,6 @@ class Erk(QMainWindow):
 		self.display_load_errors()
 
 		self.rebuildPluginMenu()
-
-	def create_new_macro(self):
-		MacroDialog(self)
-
-	def open_macro_dir(self):
-		os.startfile(macros.MACRO_DIRECTORY)
-
-	def rebuildMacroMenu(self):
-
-		self.macroMenu.clear()
-
-		entry = MenuAction(self,MENU_MACRO_ICON,"New macro","Create a new macro",25,self.create_new_macro)
-		self.macroMenu.addAction(entry)
-
-		if not config.MACROS_ENABLED:
-			entry.setEnabled(False)
-
-		if len(macros.MACROS)>0:
-
-			s = textSeparator(self,"Installed macros")
-			self.macroMenu.addAction(s)
-
-			for m in macros.MACROS:
-				trigger = m["trigger"]
-				filename = m["filename"]
-
-				entry = QAction(QIcon(MACRO_FILE_ICON),trigger,self)
-				entry.triggered.connect(lambda state,s=self,f=filename: MacroDialog(s,f))
-				self.macroMenu.addAction(entry)
-
-				if not config.MACROS_ENABLED: entry.setEnabled(False)
-
-			self.macroMenu.addSeparator()
-			#insertNoTextSeparator(self,self.macroMenu)
-
-		else:
-			l1 = QLabel("<br>&nbsp;<b>No macros installed</b>&nbsp;")
-			l1.setAlignment(Qt.AlignCenter)
-			entry = QWidgetAction(self)
-			entry.setDefaultWidget(l1)
-			self.macroMenu.addAction(entry)
-
-			self.macroMenu.addSeparator()
-			#insertNoTextSeparator(self,self.macroMenu)
-
-		ircMenu_Macro = QAction(QIcon(DIRECTORY_ICON),"Open macro directory",self)
-		ircMenu_Macro.triggered.connect(lambda state,s=macros.MACRO_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
-
-		ircMenu_Macro = QAction(QIcon(RESTART_ICON),"Reload macros",self)
-		ircMenu_Macro.triggered.connect(self.menuReloadMacros)
-		self.macroMenu.addAction(ircMenu_Macro)
-
-		if not config.MACROS_ENABLED: ircMenu_Macro.setEnabled(False)
-
-	def menuReloadMacros(self):
-		macros.load_macros()
-		self.rebuildMacroMenu()
 
 	def toggleSetting(self,setting):
 

@@ -46,7 +46,6 @@ from ..objects import *
 from .. import config
 from .. import textformat
 from .. import userinput
-from .. import macros
 from ..dialogs import KeyDialog,JoinDialog,NickDialog,FormatEditDialog
 from .. import events
 from .action import *
@@ -1449,8 +1448,6 @@ class SpellTextEdit(QPlainTextEdit):
 					text = self.textCursor().selectedText()
 
 					self.COMMAND_LIST = self.parent.commands
-
-					self.COMMAND_LIST.update(macros.MACRO_COMMANDS)
 
 					for c in self.COMMAND_LIST:
 						cmd = c

@@ -35,9 +35,6 @@ os.mkdir("./erk-irc-client/documentation")
 shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./erk-irc-client/documentation/Erk_Plugin_Guide.pdf")
 shutil.copy("./documentation/Erk_Scripting_and_Commands.pdf", "./erk-irc-client/documentation/Erk_Scripting_and_Commands.pdf")
 
-os.mkdir("./erk-irc-client/macros")
-shutil.copy("./macros/trout.json", "./erk-irc-client/macros/trout.json")
-
 os.system("sh compile_resources.sh")
 
 shutil.copytree("./erk", "./erk-irc-client/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
@@ -50,7 +47,7 @@ shutil.copy("./erk.py", "./erk-irc-client/erk.py")
 shutil.copy("./LICENSE", "./erk-irc-client/LICENSE")
 
 #os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('dist', 'erk_dist.zip'); }\" ")
-os.system("zip -r erk_dist.zip erk-irc-client")
+os.system("cd erk-irc-client; zip -r ../erk_dist.zip . ; cd ..")
 
 shutil.rmtree('./erk-irc-client')
 

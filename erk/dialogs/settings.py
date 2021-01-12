@@ -697,7 +697,7 @@ class Dialog(QDialog):
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Extensions")
 		entry.widget = self.featuresPage
-		entry.setIcon(QIcon(MACRO_ICON))
+		entry.setIcon(QIcon(PLUGIN_ICON))
 		self.selector.addItem(entry)
 
 		self.stack.addWidget(self.featuresPage)
@@ -707,12 +707,6 @@ class Dialog(QDialog):
 
 		if self.parent.cmdline_script:
 			self.scriptMisc.setEnabled(False)
-
-		self.macroFeatures = QCheckBox("Enable macros",self)
-		if config.MACROS_ENABLED: self.macroFeatures.setChecked(True)
-
-		if self.parent.cmdline_macro:
-			self.macroFeatures.setEnabled(False)
 
 		self.pluginFeatures = QCheckBox("Enable plugins",self)
 		if config.PLUGINS_ENABLED: self.pluginFeatures.setChecked(True)
@@ -772,28 +766,9 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			scriptBox.setEnabled(False)
 
-		mcgbLayout = QVBoxLayout()
-		mcgbLayout.addWidget(self.macroFeatures)
-
-		macroBox = QGroupBox("Macro Settings",self)
-		macroBox.setLayout(mcgbLayout)
-
-		macroBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		if self.parent.cmdline_macro:
-			macroBox.setEnabled(False)
-
 		cpLayout = QVBoxLayout()
-		#cpLayout.addWidget(self.scriptMisc)
-		#cpLayout.addWidget(self.macroFeatures)
-
-		cpLayout.addWidget(macroBox)
 		cpLayout.addWidget(scriptBox)
 		cpLayout.addWidget(plugBox)
-
-		# cpLayout.addWidget(self.pluginFeatures)
-		# cpLayout.addWidget(self.pluginErrors)
-		# cpLayout.addWidget(self.pluginDevmode)
 		cpLayout.addStretch()
 
 		self.featuresPage.setLayout(cpLayout)
@@ -966,13 +941,6 @@ class Dialog(QDialog):
 		else:
 			self.parent.block_plugins = True
 		self.parent.rebuildPluginMenu()
-
-		config.MACROS_ENABLED = self.macroFeatures.isChecked()
-		if config.MACROS_ENABLED:
-			self.parent.block_macros = False
-		else:
-			self.parent.block_macros = True
-		self.parent.rebuildMacroMenu()
 
 		config.CHANNEL_LIST_REFRESH_FREQUENCY = self.configRefresh
 

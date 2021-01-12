@@ -1,3 +1,7 @@
+Version 0.831
+	* Macros have been removed from the client
+	* Bugfix: new nickname dialog would error out on saving the new nick to the userfile
+
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
 	* Menu separators now darken and lighten as above

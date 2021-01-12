@@ -46,7 +46,7 @@
 	* Almost every part of the interface can be customized
 	* Most behaviors can be customized
 	* Over 50 display and configuration options settable in the GUI
-	* Scripting, macros, plugins, menus, and more can be disabled from the command-line
+	* Scripting, plugins, menus, and more can be disabled from the command-line
 * Text colors are customizeable
 	* Any text, from nicknames to messages to hyperlinks, can use custom colors
 	* Text rendering setting are stored in "style files", and can be shared
@@ -68,9 +68,6 @@
 * Automatic logging of channel and private chats
 	* Logging can be switched on and off
 	* Logs can be automatically loaded when resuming public or private chats
-* Powerful macro engine
-	* Users can create and edit macros directly in the client
-	* Macros can send messages or execute commands
 * Powerful scripting engine
 	* Almost anything you can do in the client, you can do in a script
 	* Scripts can be triggered to execute on server connection or manually
@@ -124,13 +121,14 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 # Usage
 ```
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
-                     [-u URL] [-a] [-s FILENAME] [--noplugins] [--nomacros] [--noask]
-                     [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
-                     [--nostyles] [--noedit] [--noextensions] [--qt5menu] [--generate NAME]
-                     [--new] [--editor] [--edit FILE] [--install ZIP] [-f] [-o] [-W WIDTH]
+                     [-u URL] [-a] [-s FILENAME] [--noplugins] [--noask] [--nosettings]
+                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
+                     [--noedit] [--noextensions] [--qt5menu] [--generate NAME] [--new]
+                     [--editor] [--edit FILE] [--install ZIP] [-f] [-o] [-W WIDTH]
                      [-H HEIGHT] [-C FILE] [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY]
                      [-T DIRECTORY]
                      [SERVER] [PORT]
+
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -151,7 +149,6 @@ Connection:
 
 Disable functionality:
   --noplugins           Disable plugins
-  --nomacros            Disable macros
   --noask               Don't ask for a server to connect to on start
   --nosettings          Disable settings menu(s)
   --nomenus             Disable all menus
@@ -160,7 +157,7 @@ Disable functionality:
   --nodisplay           Disable connection display
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
-  --noextensions        Disables scripts, macros, and plugins
+  --noextensions        Disables scripts and plugins
   --qt5menu             Disable menu toolbar, and use normal menus
 
 Plugins:

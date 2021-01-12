@@ -90,7 +90,6 @@ congroup.add_argument("-s","--script", type=str,help="Execute a custom server sc
 disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
-disgroup.add_argument( "--nomacros", help=f"Disable macros", action="store_true")
 disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
 disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
 disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
@@ -99,7 +98,7 @@ disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_t
 disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
-disgroup.add_argument( "--noextensions", help=f"Disables scripts, macros, and plugins", action="store_true")
+disgroup.add_argument( "--noextensions", help=f"Disables scripts and plugins", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 devgroup = parser.add_argument_group('Plugins')
@@ -137,7 +136,6 @@ if __name__ == '__main__':
 	# Shortcut disables
 	if args.noextensions:
 		args.noplugins = True
-		args.nomacros = True
 		args.noscripts = True
 
 	# If the user has passed an alternate configuration file,
@@ -433,7 +431,6 @@ if __name__ == '__main__':
 				app,
 				i,
 				args.noplugins,
-				args.nomacros,
 				args.nosettings,
 				args.nomenus,
 				args.config,
@@ -462,7 +459,6 @@ if __name__ == '__main__':
 					app,
 					None,
 					args.noplugins,
-					args.nomacros,
 					args.nosettings,
 					args.nomenus,
 					args.config,
@@ -555,7 +551,6 @@ if __name__ == '__main__':
 					app,
 					i,
 					args.noplugins,
-					args.nomacros,
 					args.nosettings,
 					args.nomenus,
 					args.config,
@@ -585,7 +580,6 @@ if __name__ == '__main__':
 						app,
 						info,
 						args.noplugins,
-						args.nomacros,
 						args.nosettings,
 						args.nomenus,
 						args.config,

@@ -40,7 +40,6 @@ from PyQt5.QtGui import *
 from .objects import *
 from .files import *
 from . import config
-from . import macros
 from .irc import ScriptThreadWindow
 from . import events
 
@@ -200,124 +199,6 @@ def handle_input(window,client,text):
 
 	window.input.setFocus()
 
-def handle_macro_input(window,client,text):
-
-	if client.gui.block_macros: return False
-
-	if not config.MACROS_ENABLED: return False
-
-	tokens = text.split()
-
-	# Macros
-	for m in macros.MACROS:
-		argc = m["arguments"]
-		output = m["output"]
-		trigger = m["trigger"]
-		mtype = m["type"]
-		execute = m["execute"]
-
-		if len(tokens)>0:
-			if tokens[0].lower()==trigger and (len(tokens)-1)==argc:
-				tokens.pop(0)
-
-				output = output.replace('$$',"_ESCAPED_DOLLAR_SIGN_")
-
-				output = macros.macro_variables(window,client,output)
-
-				for a in tokens:
-					output = output.replace('$',a,1)
-
-				output = output.replace('_ESCAPED_DOLLAR_SIGN_',"$")
-
-				if mtype=="privmsg":
-
-					if window.type==config.CHANNEL_WINDOW or window.type==config.PRIVATE_WINDOW:
-
-						if execute:
-							if config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-
-							client.msg(window.name,output)
-
-						else:
-							window.input.setText(config.INPUT_COMMAND_SYMBOL+"msg "+output)
-							window.input.moveCursor(QTextCursor.End)
-						return True
-					else:
-						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg,True)
-						return True
-
-				elif mtype=="action":
-
-					if window.type==config.CHANNEL_WINDOW or window.type==config.PRIVATE_WINDOW:
-
-						if execute:
-							if config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-
-							client.describe(window.name,output)
-
-						else:
-							window.input.setText(config.INPUT_COMMAND_SYMBOL+"me "+output)
-							window.input.moveCursor(QTextCursor.End)
-						return True
-					else:
-						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg,True)
-						return True
-				elif mtype=="notice":
-
-					if window.type==config.CHANNEL_WINDOW or window.type==config.PRIVATE_WINDOW:
-
-						if execute:
-							if config.USE_EMOJIS: output = emoji.emojize(output,use_aliases=True)
-
-							client.notice(window.name,output)
-
-						else:
-							window.input.setText(config.INPUT_COMMAND_SYMBOL+"notice "+output)
-							window.input.moveCursor(QTextCursor.End)
-						return True
-					else:
-						msg = Message(ERROR_MESSAGE,'',"Can't send messages from the console")
-						window.writeText(msg,True)
-						return True
-				elif mtype=="command":
-					if execute:
-						if window.type==config.CHANNEL_WINDOW:
-							handle_channel_input(window,client,output)
-							return True
-
-						if window.type==config.PRIVATE_WINDOW:
-							handle_private_input(window,client,output)
-							return True
-
-						handle_console_input(window,client,output)
-						return True
-					else:
-						window.input.setText(output)
-						window.input.moveCursor(QTextCursor.End)
-						return True
-
-				#return True
-			if tokens[0].lower()==trigger:
-
-				passed = (len(tokens)-1)
-
-				if argc==0 or argc==1:
-					sarg = "argument"
-				else:
-					sarg = "arguments"
-
-				if passed>argc:
-					# too many arguments
-					msg = Message(ERROR_MESSAGE,'',"Too many arguments: \""+trigger+"\" takes "+str(argc)+" "+sarg)
-				elif passed<argc:
-					# too few argument
-					msg = Message(ERROR_MESSAGE,'',"Not enough arguments: \""+trigger+"\" takes "+str(argc)+" "+sarg)
-
-				window.writeText(msg,True)
-				return True
-
 def handle_channel_input(window,client,text):
 
 	if not client.gui.block_plugins:
@@ -448,8 +329,6 @@ def handle_console_input(window,client,text):
 def handle_common_input(window,client,text):
 
 	tokens = text.split()
-
-	if handle_macro_input(window,client,text): return True
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'who' and len(tokens)==2:

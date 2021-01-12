@@ -85,7 +85,6 @@ SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
 PLUGINS_ENABLED = True
-MACROS_ENABLED = True
 DEVELOPER_MODE = False
 USE_SPACES_FOR_INDENT = True
 NUMBER_OF_SPACES_FOR_INDENT = 4
@@ -214,7 +213,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"load_private_logs": LOAD_PRIVATE_LOGS,
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
 		"enable_plugins": PLUGINS_ENABLED,
-		"enable_macros": MACROS_ENABLED,
 		"plugin_developement_mode": DEVELOPER_MODE,
 		"show_plugin_load_error": SHOW_LOAD_ERRORS,
 		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
@@ -372,7 +370,6 @@ def load_settings(filename=SETTINGS_FILE):
 	global LOAD_PRIVATE_LOGS
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
 	global PLUGINS_ENABLED
-	global MACROS_ENABLED
 	global DEVELOPER_MODE
 	global USE_SPACES_FOR_INDENT
 	global NUMBER_OF_SPACES_FOR_INDENT
@@ -487,7 +484,6 @@ def load_settings(filename=SETTINGS_FILE):
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
 			PLUGINS_ENABLED = data["enable_plugins"]
-			MACROS_ENABLED = data["enable_macros"]
 			DEVELOPER_MODE = data["plugin_developement_mode"]
 			SHOW_LOAD_ERRORS = data["show_plugin_load_error"]
 			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]

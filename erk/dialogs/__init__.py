@@ -44,7 +44,6 @@ from .history_size import Dialog as HistorySize
 from .log_size import Dialog as LogSize
 from .format import Dialog as FormatText
 from .about import Dialog as About
-from .macro import Dialog as Macro
 from .editor import Window as Editor
 from .export_log import Dialog as ExportLog
 from .key import Dialog as Key
@@ -139,10 +138,6 @@ def ScriptEditor(filename,parent):
 	x.show()
 
 	return x
-
-def MacroDialog(obj,filename=None):
-	x = Macro(filename,obj)
-	x.show()
 
 def AboutDialog():
 	x = About()

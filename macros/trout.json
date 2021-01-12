@@ -1,7 +1,0 @@
-{
-    "arguments": 1,
-    "execute": true,
-    "output": "slaps $ with a trout",
-    "trigger": "/trout",
-    "type": "action"
-}
