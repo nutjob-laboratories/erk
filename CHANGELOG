@@ -11,6 +11,8 @@ Version 0.831
 	* Macros will not appear in help if scripts are disabled
 	* Added macro information to the documentation
 	* Bugfix: the /preferences command was missing from the documentation
+	* Changed the icon for the "Extensions" tab in the "settings" dialog
+	* Added example macros to the documentation
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

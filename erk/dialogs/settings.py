@@ -697,7 +697,7 @@ class Dialog(QDialog):
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Extensions")
 		entry.widget = self.featuresPage
-		entry.setIcon(QIcon(PLUGIN_ICON))
+		entry.setIcon(QIcon(SCRIPT_ICON))
 		self.selector.addItem(entry)
 
 		self.stack.addWidget(self.featuresPage)
