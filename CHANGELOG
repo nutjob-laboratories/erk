@@ -1,6 +1,16 @@
 Version 0.831
 	* Macros have been removed from the client
 	* Bugfix: new nickname dialog would error out on saving the new nick to the userfile
+	* Added a new /macro command
+	* Reworked the /help command to generate the necessary display text on the fly, allowing macros to be to /help added after creation
+	* Macros are now added to the autocomplete list
+	* Added an option to autocomplete macros to the config file
+	* Added "autocomplete macros" option to the "settings" dialog
+	* Macro autocomplete is disabled if scripts are disabled
+	* Macros are disabled if scripts are disabled
+	* Macros will not appear in help if scripts are disabled
+	* Added macro information to the documentation
+	* Bugfix: the /preferences command was missing from the documentation
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

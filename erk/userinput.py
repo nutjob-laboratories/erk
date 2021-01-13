@@ -80,6 +80,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
 	config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
 	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
+	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 }
 
 CHANNEL_COMMANDS = {
@@ -114,6 +115,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -147,6 +149,9 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -155,30 +160,110 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 ]
 
-hentries = []
+COMMAND_HELP_ENTRIES = []
 for e in COMMAND_HELP:
 	t = HELP_ENTRY
 	t = t.replace("%_USAGE_%",e[0])
 	t = t.replace("%_DESCRIPTION_%",e[1])
-	hentries.append(t)
+	COMMAND_HELP_ENTRIES.append(t)
 
-HELP_DISPLAY = HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentries))
-
-hentries = []
+CHAT_HELP_ENTRIES = []
 for e in CHAT_HELP:
 	t = HELP_ENTRY
 	t = t.replace("%_USAGE_%",e[0])
 	t = t.replace("%_DESCRIPTION_%",e[1])
-	hentries.append(t)
-
-CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hentries))
+	CHAT_HELP_ENTRIES.append(t)
 
 SCRIPT_THREADS = []
 
 VARIABLE_TABLE = {}
 
+MACROS = []
+
+def handle_macros(window,client,text):
+
+	tokens = text.split()
+
+	for m in MACROS:
+		macro_name = m.name
+		macro_argcount = m.argcount
+		macro_data = m.command
+
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+macro_name:
+				tokens.pop(0)
+
+				if macro_argcount<0:
+					counter = 0
+					for a in tokens:
+						counter = counter + 1
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+str(counter),a)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"0",' '.join(tokens))
+					if len(tokens)>1:
+						rest = tokens[1:]
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"+",' '.join(rest))
+
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"NICK",client.nickname)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"USERNAME",client.username)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"REALNAME",client.realname)
+					if client.hostname:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"HOSTNAME",client.hostname)
+					else:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"HOSTNAME",client.server+":"+str(client.port))
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"SERVER",client.server)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"PORT",str(client.port))
+
+					if window.name==SERVER_CONSOLE_NAME:
+						if client.hostname:
+							macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",client.hostname)
+						else:
+							macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",client.server+":"+str(client.port))
+					else:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",window.name)
+
+					return macro_data
+				elif len(tokens)!=macro_argcount:
+					msg = Message(ERROR_MESSAGE,'',"Macro \""+config.INPUT_COMMAND_SYMBOL+macro_name+"\" requires "+str(macro_argcount)+" arguments")
+					window.writeText(msg,True)
+					return None
+				else:
+					counter = 0
+					for a in tokens:
+						counter = counter + 1
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+str(counter),a)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"0",' '.join(tokens))
+					if len(tokens)>1:
+						rest = tokens[1:]
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"+",' '.join(rest))
+
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"NICK",client.nickname)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"USERNAME",client.username)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"REALNAME",client.realname)
+					if client.hostname:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"HOSTNAME",client.hostname)
+					else:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"HOSTNAME",client.server+":"+str(client.port))
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"SERVER",client.server)
+					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"PORT",str(client.port))
+
+					if window.name==SERVER_CONSOLE_NAME:
+						if client.hostname:
+							macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",client.hostname)
+						else:
+							macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",client.server+":"+str(client.port))
+					else:
+						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"WHERE",window.name)
+
+					return macro_data
+
+	return text
+
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
+
+	if not client.gui.block_scripts:
+		text = handle_macros(window,client,text)
+		if text == None: return
 
 	for key in VARIABLE_TABLE:
 		text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
@@ -221,8 +306,28 @@ def handle_channel_input(window,client,text):
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'help':
+			
+			hdisplay = list(CHAT_HELP_ENTRIES)
+
+			if not client.gui.block_scripts:
+				if len(MACROS)>0:
+					for m in MACROS:
+						macro_name = m.name
+						macro_argcount = m.argcount
+						if macro_argcount<0:
+							adis = "[ARG...]"
+						else:
+							adis = "ARG "*macro_argcount
+							adis = adis.strip()
+						t = HELP_ENTRY
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
+						t = t.replace("%_DESCRIPTION_%","Macro")
+						hdisplay.append(t)
+
+			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
+
 			return True
 
 	if len(tokens)>0:
@@ -295,8 +400,27 @@ def handle_private_input(window,client,text):
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'help':
+			hdisplay = list(CHAT_HELP_ENTRIES)
+
+			if not client.gui.block_scripts:
+				if len(MACROS)>0:
+					for m in MACROS:
+						macro_name = m.name
+						macro_argcount = m.argcount
+						if macro_argcount<0:
+							adis = "[ARG...]"
+						else:
+							adis = "ARG "*macro_argcount
+							adis = adis.strip()
+						t = HELP_ENTRY
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
+						t = t.replace("%_DESCRIPTION_%","Macro")
+						hdisplay.append(t)
+
+			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
+
 			return True
 
 	if len(tokens)>0:
@@ -473,8 +597,27 @@ def handle_common_input(window,client,text):
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'help':
-			msg = Message(PLUGIN_MESSAGE,'',HELP_DISPLAY)
+			hdisplay = list(COMMAND_HELP_ENTRIES)
+
+			if not client.gui.block_scripts:
+				if len(MACROS)>0:
+					for m in MACROS:
+						macro_name = m.name
+						macro_argcount = m.argcount
+						if macro_argcount<0:
+							adis = "[ARG...]"
+						else:
+							adis = "ARG "*macro_argcount
+							adis = adis.strip()
+						t = HELP_ENTRY
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
+						t = t.replace("%_DESCRIPTION_%","Macro")
+						hdisplay.append(t)
+
+			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
+			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
+
 			return True
 
 	if len(tokens)>0:
@@ -663,6 +806,64 @@ def handle_common_input(window,client,text):
 def handle_ui_input(window,client,text):
 
 	tokens = text.split()
+
+	# MACRO BEGIN
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macro':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macro' and len(tokens)>=4:
+			tokens.pop(0)
+			name = tokens.pop(0)
+			args = tokens.pop(0)
+			data = ' '.join(tokens)
+
+			if args=='*': args = -1
+
+			try:
+				args = int(args)
+			except:
+				msg = Message(ERROR_MESSAGE,'',"Error calling "+config.INPUT_COMMAND_SYMBOL+"macro: \""+args+"\" is not a number")
+				window.writeText(msg,True)
+				return True
+			else:
+				global MACROS
+				m = Macro(name,args,data)
+
+				NEW_MACROS = []
+				replaced = False
+				for c in MACROS:
+					if c.name == name:
+						NEW_MACROS.append(m)
+						replaced = True
+					else:
+						NEW_MACROS.append(c)
+
+				if replaced:
+					msg = Message(SYSTEM_MESSAGE,'',"Replaced \""+name+"\" macro")
+					window.writeText(msg,True)
+				else:
+					msg = Message(SYSTEM_MESSAGE,'',"Added \""+name+"\" macro")
+					window.writeText(msg,True)
+					NEW_MACROS.append(m)
+
+				MACROS = list(NEW_MACROS)
+				return True
+
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macro':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"macro NAME ARG_COUNT TEXT...")
+			window.writeText(msg,True)
+			return True
+
+
+	# MACRO END
 
 	if client.gui.block_styles:
 		if len(tokens)>0:

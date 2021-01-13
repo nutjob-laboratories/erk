@@ -31,6 +31,12 @@
 
 from datetime import datetime
 
+class Macro:
+	def __init__(self,name,argcount,command):
+		self.name = name
+		self.argcount = argcount
+		self.command = command
+
 class Window:
 	def __init__(self,index,widget):
 		self.index = index
@@ -125,6 +131,23 @@ CHAT_HELP_HTML_TEMPLATE='''<table style="width: 100%" border="0">
 	<tbody>
         <tr>
           <td><center><b>Chat Commands</b></center></td>
+        </tr>
+        <tr>
+          <td>
+            <table style="width: 100%" border="0">
+              <tbody>
+                %_LIST_%
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>'''
+
+MACRO_HELP_HTML_TEMPLATE='''<table style="width: 100%" border="0">
+	<tbody>
+        <tr>
+          <td><center><b>Macros</b></center></td>
         </tr>
         <tr>
           <td>

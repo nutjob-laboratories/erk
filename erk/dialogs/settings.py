@@ -740,6 +740,13 @@ class Dialog(QDialog):
 			self.seditMisc.setEnabled(False)
 
 
+		self.autoMacros = QCheckBox("Auto-complete macros",self)
+		if config.AUTOCOMPLETE_MACROS: self.autoMacros.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.autoMacros.setEnabled(False)
+
+
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
 		cgbLayout.addWidget(self.pluginErrors)
@@ -757,6 +764,7 @@ class Dialog(QDialog):
 		scgbLayout.addWidget(self.scriptMisc)
 		scgbLayout.addWidget(self.seditMisc)
 		scgbLayout.addWidget(self.sglobalMisc)
+		scgbLayout.addWidget(self.autoMacros)
 
 		scriptBox = QGroupBox("Script Settings",self)
 		scriptBox.setLayout(scgbLayout)
@@ -887,6 +895,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.AUTOCOMPLETE_MACROS = self.autoMacros.isChecked()
 
 		config.ENABLE_SCRIPT_EDITOR = self.seditMisc.isChecked()
 		if config.ENABLE_SCRIPT_EDITOR:
