@@ -16,6 +16,8 @@ Version 0.831
 	* Added an option to save macros (so they persist across boots)
 	* Added "save macro" option to the "settings" dialog
 	* Added a new commandline flag: --macros, to set the macro save file name
+	* Added an option for macros to have a custom text line for the /help command
+	* Added a new command: /macrohelp, to set macro custom help text
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

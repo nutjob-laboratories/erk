@@ -88,7 +88,7 @@ def save_macros(macros,filename=MACRO_SAVE_FILE):
 
 	state = []
 	for e in macros:
-		entry = [e.name,e.argcount,e.command]
+		entry = [e.name,e.argcount,e.command,e.args,e.help]
 		state.append(entry)
 
 	with open(filename, "w") as write_data:
@@ -102,7 +102,7 @@ def get_macros(filename=MACRO_SAVE_FILE):
 
 			macros = []
 			for e in data:
-				m = Macro(e[0],e[1],e[2])
+				m = Macro(e[0],e[1],e[2],e[3],e[4])
 				macros.append(m)
 
 			return macros

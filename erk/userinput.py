@@ -81,6 +81,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
 	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
 	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
+	config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
 }
 
 CHANNEL_COMMANDS = {
@@ -116,6 +117,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -151,7 +153,6 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -314,14 +315,20 @@ def handle_channel_input(window,client,text):
 					for m in MACROS:
 						macro_name = m.name
 						macro_argcount = m.argcount
-						if macro_argcount<0:
-							adis = "[ARG...]"
+						if m.args==None:
+							if macro_argcount<0:
+								margs = "[ARG...]"
+							else:
+								margs = "ARG "*macro_argcount
+								margs = margs.strip()
 						else:
-							adis = "ARG "*macro_argcount
-							adis = adis.strip()
+							margs = m.args
 						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
-						t = t.replace("%_DESCRIPTION_%","Macro")
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+						if m.help==None:
+							t = t.replace("%_DESCRIPTION_%","Macro")
+						else:
+							t = t.replace("%_DESCRIPTION_%",m.help)
 						hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
@@ -407,14 +414,20 @@ def handle_private_input(window,client,text):
 					for m in MACROS:
 						macro_name = m.name
 						macro_argcount = m.argcount
-						if macro_argcount<0:
-							adis = "[ARG...]"
+						if m.args==None:
+							if macro_argcount<0:
+								margs = "[ARG...]"
+							else:
+								margs = "ARG "*macro_argcount
+								margs = margs.strip()
 						else:
-							adis = "ARG "*macro_argcount
-							adis = adis.strip()
+							margs = m.args
 						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
-						t = t.replace("%_DESCRIPTION_%","Macro")
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+						if m.help==None:
+							t = t.replace("%_DESCRIPTION_%","Macro")
+						else:
+							t = t.replace("%_DESCRIPTION_%",m.help)
 						hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
@@ -604,14 +617,20 @@ def handle_common_input(window,client,text):
 					for m in MACROS:
 						macro_name = m.name
 						macro_argcount = m.argcount
-						if macro_argcount<0:
-							adis = "[ARG...]"
+						if m.args==None:
+							if macro_argcount<0:
+								margs = "[ARG...]"
+							else:
+								margs = "ARG "*macro_argcount
+								margs = margs.strip()
 						else:
-							adis = "ARG "*macro_argcount
-							adis = adis.strip()
+							margs = m.args
 						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+adis+"</b>")
-						t = t.replace("%_DESCRIPTION_%","Macro")
+						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+						if m.help==None:
+							t = t.replace("%_DESCRIPTION_%","Macro")
+						else:
+							t = t.replace("%_DESCRIPTION_%",m.help)
 						hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
@@ -805,9 +824,39 @@ def handle_common_input(window,client,text):
 
 def handle_ui_input(window,client,text):
 
+	global MACROS
+
 	tokens = text.split()
 
 	# MACRO BEGIN
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrohelp':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrohelp' and len(tokens)>=3:
+			tokens.pop(0)
+			name = tokens.pop(0)
+			macrohelp = ' '.join(tokens)
+
+			for m in MACROS:
+				if m.name==name:
+					m.help = macrohelp
+					msg = Message(SYSTEM_MESSAGE,'',"Help for macro \""+name+"\" updated")
+					window.writeText(msg,True)
+					return True
+
+			msg = Message(ERROR_MESSAGE,'',"Macro \""+name+"\" not found")
+			window.writeText(msg,True)
+			return True
+
+
+
+
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
@@ -832,7 +881,6 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 			else:
-				global MACROS
 				m = Macro(name,args,data)
 
 				NEW_MACROS = []

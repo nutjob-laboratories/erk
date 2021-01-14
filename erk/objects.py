@@ -32,10 +32,12 @@
 from datetime import datetime
 
 class Macro:
-	def __init__(self,name,argcount,command):
+	def __init__(self,name,argcount,command,margs=None,mhelp=None):
 		self.name = name
 		self.argcount = argcount
 		self.command = command
+		self.args = margs
+		self.help = mhelp
 
 class Window:
 	def __init__(self,index,widget):
