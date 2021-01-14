@@ -18,6 +18,8 @@ Version 0.831
 	* Added a new commandline flag: --macros, to set the macro save file name
 	* Added an option for macros to have a custom text line for the /help command
 	* Added a new command: /macrohelp, to set macro custom help text
+	* Added a new command: /unmacro, which deletes a macro
+	* Added more detail to the command documentation, explaining some "quirks" with the script engine
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

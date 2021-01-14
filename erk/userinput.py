@@ -82,6 +82,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
 	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 	config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
+	config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
 }
 
 CHANNEL_COMMANDS = {
@@ -118,6 +119,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
@@ -155,7 +157,6 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
@@ -832,6 +833,55 @@ def handle_ui_input(window,client,text):
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unmacro':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unmacro' and len(tokens)==2:
+			tokens.pop(0)
+			name = tokens.pop(0)
+
+			clean = []
+			found = False
+			for m in MACROS:
+				if m.name==name:
+					found = True
+					continue
+				clean.append(m)
+
+			if found:
+				MACROS = clean
+
+				if config.SAVE_MACROS:
+					save_macros(MACROS,client.gui.macrofile)
+
+				msg = Message(SYSTEM_MESSAGE,'',"Macro \""+name+"\" removed")
+				window.writeText(msg,True)
+				return True
+			else:
+				msg = Message(ERROR_MESSAGE,'',"Macro \""+name+"\" not found")
+				window.writeText(msg,True)
+				return True
+
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unmacro':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"unmacro NAME")
+			window.writeText(msg,True)
+			return True
+
+
+
+
+
+
+
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
 			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrohelp':
 				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
 				window.writeText(msg,True)
@@ -854,9 +904,10 @@ def handle_ui_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
-
-
-
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrohelp':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"macrohelp NAME MESSAGE...")
+			window.writeText(msg,True)
+			return True
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
