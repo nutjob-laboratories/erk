@@ -124,6 +124,7 @@ miscgroup.add_argument("-Y","--style", type=str,help="Use an alternate text styl
 miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storage location", metavar="DIRECTORY", default=LOG_DIRECTORY)
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
+miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro save file", metavar="FILE", default=MACRO_SAVE_FILE)
 
 args = parser.parse_args()
 
@@ -448,6 +449,7 @@ if __name__ == '__main__':
 				args.styles,
 				args.nostyles,
 				args.noedit,
+				args.macros,
 				)
 			GUI.show()
 		else:
@@ -476,6 +478,7 @@ if __name__ == '__main__':
 					args.styles,
 					args.nostyles,
 					args.noedit,
+					args.macros,
 					)
 				GUI.show()
 
@@ -568,6 +571,7 @@ if __name__ == '__main__':
 					args.styles,
 					args.nostyles,
 					args.noedit,
+					args.macros,
 					)
 				GUI.show()
 			else:
@@ -597,6 +601,7 @@ if __name__ == '__main__':
 						args.styles,
 						args.nostyles,
 						args.noedit,
+						args.macros,
 						)
 					GUI.show()
 				else:

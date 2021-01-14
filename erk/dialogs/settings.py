@@ -746,6 +746,11 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.autoMacros.setEnabled(False)
 
+		self.saveMacros = QCheckBox("Save macros",self)
+		if config.SAVE_MACROS: self.saveMacros.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.saveMacros.setEnabled(False)
 
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
@@ -764,6 +769,7 @@ class Dialog(QDialog):
 		scgbLayout.addWidget(self.scriptMisc)
 		scgbLayout.addWidget(self.seditMisc)
 		scgbLayout.addWidget(self.sglobalMisc)
+		scgbLayout.addWidget(self.saveMacros)
 		scgbLayout.addWidget(self.autoMacros)
 
 		scriptBox = QGroupBox("Script Settings",self)
@@ -895,6 +901,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SAVE_MACROS = self.saveMacros.isChecked()
 
 		config.AUTOCOMPLETE_MACROS = self.autoMacros.isChecked()
 

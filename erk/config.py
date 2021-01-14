@@ -144,11 +144,15 @@ SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 
 AUTOCOMPLETE_MACROS = True
 
+SAVE_MACROS = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+
+		"save_macros": SAVE_MACROS,
 
 		"autocomplete_macros": AUTOCOMPLETE_MACROS,
 		"script_syntax_color_comments": SCRIPT_SYNTAX_COMMENTS,
@@ -251,6 +255,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "save_macros" in data:
+		data["save_macros"] = SAVE_MACROS
 
 	if not "autocomplete_macros" in data:
 		data["autocomplete_macros"] = AUTOCOMPLETE_MACROS
@@ -423,6 +430,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SCRIPT_SYNTAX_TARGETS
 	global SCRIPT_SYNTAX_ALIAS
 	global AUTOCOMPLETE_MACROS
+	global SAVE_MACROS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -431,6 +439,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SAVE_MACROS = data["save_macros"]
 			AUTOCOMPLETE_MACROS = data["autocomplete_macros"]
 			SCRIPT_SYNTAX_COMMENTS = data["script_syntax_color_comments"]
 			SCRIPT_SYNTAX_COMMANDS = data["script_syntax_color_commands"]

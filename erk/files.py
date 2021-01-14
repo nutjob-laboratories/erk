@@ -80,6 +80,37 @@ PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
+
+MACRO_SAVE_FILE = os.path.join(SETTINGS_DIRECTORY, "macros.json")
+
+def save_macros(macros,filename=MACRO_SAVE_FILE):
+	if filename==None: filename=MACRO_SAVE_FILE
+
+	state = []
+	for e in macros:
+		entry = [e.name,e.argcount,e.command]
+		state.append(entry)
+
+	with open(filename, "w") as write_data:
+		json.dump(state, write_data, indent=4, sort_keys=True)
+
+def get_macros(filename=MACRO_SAVE_FILE):
+	#if filename==None: filename=USER_FILE
+	if os.path.isfile(filename):
+		with open(filename, "r") as read_user:
+			data = json.load(read_user)
+
+			macros = []
+			for e in data:
+				m = Macro(e[0],e[1],e[2])
+				macros.append(m)
+
+			return macros
+	return []
+
+
+
+
 # Plugin template for the editor
 PLUGIN_TEMPLATE_FILE = os.path.join(DATA_DIRECTORY, "plugin_template.txt")
 PLUGIN_TEMPLATE = ''

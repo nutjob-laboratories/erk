@@ -13,6 +13,9 @@ Version 0.831
 	* Bugfix: the /preferences command was missing from the documentation
 	* Changed the icon for the "Extensions" tab in the "settings" dialog
 	* Added example macros to the documentation
+	* Added an option to save macros (so they persist across boots)
+	* Added "save macro" option to the "settings" dialog
+	* Added a new commandline flag: --macros, to set the macro save file name
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

@@ -148,6 +148,10 @@ class Erk(QMainWindow):
 
 		if do_quit:
 
+			if config.SAVE_MACROS:
+				if len(userinput.MACROS)>0:
+					save_macros(userinput.MACROS,self.macrofile)
+
 			self.erk_is_quitting = True
 			if not self.block_plugins:
 				self.plugins.unload()
@@ -380,6 +384,7 @@ class Erk(QMainWindow):
 			style_dir=STYLES_DIRECTORY,
 			no_styles=False,
 			block_editor=False,
+			macrofile=MACRO_SAVE_FILE,
 			parent=None
 		):
 		
@@ -432,6 +437,8 @@ class Erk(QMainWindow):
 
 		self.block_styles = no_styles
 
+		self.macrofile = macrofile
+
 		self.cmdline_plugin = False
 		self.cmdline_script = False
 		self.cmdline_editor = False
@@ -472,6 +479,15 @@ class Erk(QMainWindow):
 		config.load_settings(configfile)
 
 		if not config.ENABLE_SCRIPT_EDITOR: self.block_editor = True
+
+		# Load in script engine
+		if not self.block_scripts:
+			if config.SAVE_MACROS:
+				macro_table = get_macros(self.macrofile)
+				userinput.MACROS = list(macro_table)
+
+				
+
 
 		if width!=None:
 			appwidth = width
