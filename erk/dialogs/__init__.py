@@ -57,6 +57,7 @@ from .settings import Dialog as Settings
 from .autosave_freq import Dialog as Autosave
 
 from .scriptedit import Window as ErkScriptEditor
+#from .alias import Dialog as InsertAlias
 
 def AutosaveDialog():
 	x = Autosave()

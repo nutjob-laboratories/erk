@@ -19,6 +19,9 @@ from .comment import Dialog as Comment
 from .print import Dialog as PrintMsg
 from ..dialogs import AddChannelDialog
 
+from .alias import Dialog as InsertAlias
+from .part_channel import Dialog as InsertPart
+
 class Window(QMainWindow):
 
 	def doRun(self):
@@ -45,6 +48,14 @@ class Window(QMainWindow):
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
 				msg.setWindowTitle("/argcount")
+				msg.exec_()
+			elif '_alias' in ep[0]:
+				# wrong arg to /argcount
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/_alias")
 				msg.exec_()
 			elif 'alias' in ep[0]:
 				# wrong arg to /argcount
@@ -223,7 +234,7 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.doFileSaveAs)
 		self.fileMenu.addAction(entry)
 
-		insertNoTextSeparator(self.parent,self.fileMenu)
+		self.fileMenu.addSeparator()
 
 		entry = QAction(QIcon(EXIT_ICON),"Exit",self)
 		entry.triggered.connect(self.close)
@@ -236,7 +247,7 @@ class Window(QMainWindow):
 		entry.setShortcut("Ctrl+A")
 		editMenu.addAction(entry)
 
-		insertNoTextSeparator(self.parent,editMenu)
+		editMenu.addSeparator()
 
 		self.menuUndo = QAction(QIcon(UNDO_ICON),"Undo",self)
 		self.menuUndo.triggered.connect(self.editor.undo)
@@ -250,7 +261,7 @@ class Window(QMainWindow):
 		editMenu.addAction(self.menuRedo)
 		self.menuRedo.setEnabled(False)
 
-		insertNoTextSeparator(self.parent,editMenu)
+		editMenu.addSeparator()
 
 		self.menuCut = QAction(QIcon(CUT_ICON),"Cut",self)
 		self.menuCut.triggered.connect(self.editor.cut)
@@ -269,7 +280,7 @@ class Window(QMainWindow):
 		self.menuPaste.setShortcut("Ctrl+V")
 		editMenu.addAction(self.menuPaste)
 
-		insertNoTextSeparator(self.parent,editMenu)
+		editMenu.addSeparator()
 
 		self.menuZoomIn = QAction(QIcon(PLUS_ICON),"Zoom in",self)
 		self.menuZoomIn.triggered.connect(self.editor.zoomIn)
@@ -292,9 +303,11 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.insertJoin)
 		insertMenu.addAction(entry)
 
-		entry = QAction(QIcon(TIMESTAMP_ICON),"Pause",self)
-		entry.triggered.connect(self.insertPause)
+		entry = QAction(QIcon(CHANNEL_ICON),"Channel part",self)
+		entry.triggered.connect(self.insertPart)
 		insertMenu.addAction(entry)
+
+		insertMenu.addSeparator()
 
 		entry = QAction(QIcon(MISC_ICON),"Comment",self)
 		entry.triggered.connect(self.insertComment)
@@ -302,6 +315,18 @@ class Window(QMainWindow):
 
 		entry = QAction(QIcon(EDIT_ICON),"Print",self)
 		entry.triggered.connect(self.insertPrint)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(MISC_ICON),"Alias",self)
+		entry.triggered.connect(self.insertAlias)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(MISC_ICON),"Local alias",self)
+		entry.triggered.connect(self.insertLocalAlias)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(TIMESTAMP_ICON),"Pause",self)
+		entry.triggered.connect(self.insertPause)
 		insertMenu.addAction(entry)
 
 		self.updateApplicationTitle()
@@ -339,6 +364,42 @@ class Window(QMainWindow):
 			self.changed = False
 			self.updateApplicationTitle()
 			self.menuSave.setEnabled(True)
+
+	def insertPart(self):
+		x = InsertPart(self)
+		e = x.get_channel_information(self)
+
+		if not e: return
+
+		channel = e[0]
+		msg = e[1]
+
+		if len(msg)==0:
+			self.editor.insertPlainText("/part "+channel+"\n")
+		else:
+			self.editor.insertPlainText("/part "+channel+" "+msg+"\n")
+
+	def insertLocalAlias(self):
+		x = InsertAlias(self,True)
+		e = x.get_alias_information(self,True)
+
+		if not e: return
+
+		name = e[0]
+		value = e[1]
+
+		self.editor.insertPlainText("/_alias "+name+" "+value+"\n")
+
+	def insertAlias(self):
+		x = InsertAlias(self)
+		e = x.get_alias_information(self)
+
+		if not e: return
+
+		name = e[0]
+		value = e[1]
+
+		self.editor.insertPlainText("/alias "+name+" "+value+"\n")
 
 	def insertJoin(self):
 		x = AddChannelDialog(self)

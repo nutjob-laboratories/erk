@@ -78,6 +78,9 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 		'/wait',
 		'/_alias',
 		'/macro',
+		'/macrohelp',
+		'/unmacro',
+		'/edit',
 	]
 
 

@@ -838,7 +838,6 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
-
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unmacro' and len(tokens)==2:
 			tokens.pop(0)
@@ -872,13 +871,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"unmacro NAME")
 			window.writeText(msg,True)
 			return True
-
-
-
-
-
-
-
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:

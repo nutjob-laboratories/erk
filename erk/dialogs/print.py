@@ -61,7 +61,7 @@ class Dialog(QDialog):
 		self.parent = parent
 
 		self.setWindowTitle("Print")
-		self.setWindowIcon(QIcon(CHANNEL_ICON))
+		self.setWindowIcon(QIcon(EDIT_ICON))
 
 		fm = QFontMetrics(self.font())
 		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")

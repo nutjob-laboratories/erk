@@ -35,12 +35,13 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from ..resources import *
-from ..strings import *
+from ..objects import *
+from .. import config
 
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_message_information(parent=None):
+	def get_alias_information(parent=None,local=False):
 		dialog = Dialog(parent)
 		r = dialog.exec_()
 		if r:
@@ -51,26 +52,38 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
-		retval = self.name.text()
+		retval = [self.name.text(),self.key.text()]
 
 		return retval
 
-	def __init__(self,parent=None):
+	def __init__(self,parent=None,local=False):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
 
-		self.setWindowTitle("Comment")
+		if local:
+			self.setWindowTitle(f"Insert alias")
+		else:
+			self.setWindowTitle(f"Insert local alias")
 		self.setWindowIcon(QIcon(MISC_ICON))
 
 		fm = QFontMetrics(self.font())
 		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
 
 		nameLayout = QHBoxLayout()
+		self.nameLabel = QLabel("Name ")
 		self.name = QLineEdit()
-		self.name.setPlaceholderText("Type your comment here")
+		nameLayout.addWidget(self.nameLabel)
 		nameLayout.addWidget(self.name)
-		self.name.setMinimumWidth(wwidth)
+		nameLayout.addStretch()
+
+		keyLayout = QHBoxLayout()
+		self.keyLabel = QLabel("Value")
+		self.key = QLineEdit()
+		self.key.setMinimumWidth(wwidth)
+		keyLayout.addWidget(self.keyLabel)
+		keyLayout.addStretch()
+		keyLayout.addWidget(self.key)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -80,6 +93,8 @@ class Dialog(QDialog):
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)
+		finalLayout.addLayout(keyLayout)
+		finalLayout.addStretch()
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()

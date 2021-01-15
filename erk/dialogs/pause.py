@@ -61,7 +61,7 @@ class Dialog(QDialog):
 		self.parent = parent
 
 		self.setWindowTitle("Pause")
-		self.setWindowIcon(QIcon(CHANNEL_ICON))
+		self.setWindowIcon(QIcon(TIMESTAMP_ICON))
 
 		widthLayout = QHBoxLayout()
 		#self.widthLabel = QLabel("Width")
