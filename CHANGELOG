@@ -21,6 +21,7 @@ Version 0.831
 	* Added a new command: /unmacro, which deletes a macro
 	* Added more detail to the command documentation, explaining some "quirks" with the script engine
 	* Added /alias, /_alias, and /part shortcuts to the editor
+	* Added a new command: /clear
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

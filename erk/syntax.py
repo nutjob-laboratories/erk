@@ -81,6 +81,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 		'/macrohelp',
 		'/unmacro',
 		'/edit',
+		'/clear',
 	]
 
 

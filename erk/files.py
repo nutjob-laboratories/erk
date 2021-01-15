@@ -108,9 +108,6 @@ def get_macros(filename=MACRO_SAVE_FILE):
 			return macros
 	return []
 
-
-
-
 # Plugin template for the editor
 PLUGIN_TEMPLATE_FILE = os.path.join(DATA_DIRECTORY, "plugin_template.txt")
 PLUGIN_TEMPLATE = ''

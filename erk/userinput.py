@@ -83,6 +83,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 	config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
 	config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
+	config.INPUT_COMMAND_SYMBOL+"clear": config.INPUT_COMMAND_SYMBOL+"clear",
 }
 
 CHANNEL_COMMANDS = {
@@ -121,6 +122,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -156,6 +158,7 @@ CHAT_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
@@ -830,6 +833,17 @@ def handle_ui_input(window,client,text):
 	tokens = text.split()
 
 	# MACRO BEGIN
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'clear' and len(tokens)==1:
+			window.clearScreen()
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'clear':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"clear")
+			window.writeText(msg,True)
+			return True
+
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:

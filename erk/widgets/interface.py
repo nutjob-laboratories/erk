@@ -783,6 +783,9 @@ class Window(QMainWindow):
 		if is_at_bottom:
 			sb.setValue(sb.maximum())
 
+	def clearScreen(self):
+		self.chat.clear()
+
 	def rerender(self):
 
 		self.chat.clear()
