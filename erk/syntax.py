@@ -82,6 +82,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 		'/unmacro',
 		'/edit',
 		'/clear',
+		'/msgbox',
 	]
 
 

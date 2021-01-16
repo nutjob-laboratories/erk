@@ -18,9 +18,10 @@ from .pause import Dialog as PauseTime
 from .comment import Dialog as Comment
 from .print import Dialog as PrintMsg
 from ..dialogs import AddChannelDialog
-
 from .alias import Dialog as InsertAlias
 from .part_channel import Dialog as InsertPart
+
+from .smsgbox import Dialog as ScriptBox
 
 class Window(QMainWindow):
 
@@ -64,6 +65,14 @@ class Window(QMainWindow):
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
 				msg.setWindowTitle("/alias")
+				msg.exec_()
+			elif 'msgbox' in ep[0]:
+				# wrong arg to /argcount
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/msgbox")
 				msg.exec_()
 
 	def closeEvent(self, event):
@@ -329,6 +338,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.insertPause)
 		insertMenu.addAction(entry)
 
+		entry = QAction(QIcon(MISC_ICON),"Message box",self)
+		entry.triggered.connect(self.insertMsgbox)
+		insertMenu.addAction(entry)
+
 		self.updateApplicationTitle()
 
 		barLayout = QHBoxLayout()
@@ -364,6 +377,15 @@ class Window(QMainWindow):
 			self.changed = False
 			self.updateApplicationTitle()
 			self.menuSave.setEnabled(True)
+
+	def insertMsgbox(self):
+		x = ScriptBox(self)
+		e = x.get_message_information(self)
+
+		if not e: return
+
+		if len(e)>0:
+			self.editor.insertPlainText("/msgbox "+e+"\n")
 
 	def insertPart(self):
 		x = InsertPart(self)

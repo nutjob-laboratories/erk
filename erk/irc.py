@@ -1379,6 +1379,7 @@ class ScriptThreadWindow(QThread):
 	execLine = pyqtSignal(list)
 	scriptEnd = pyqtSignal(list)
 	scriptErr = pyqtSignal(list)
+	msgBox = pyqtSignal(list)
 
 	def __init__(self,window,client,script,mid,scriptname,variable_table,arguments,parent=None):
 		super(ScriptThreadWindow, self).__init__(parent)
@@ -1446,6 +1447,18 @@ class ScriptThreadWindow(QThread):
 					if len(tokens)>2:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: Too many arguments passed to {config.INPUT_COMMAND_SYMBOL}wait"])
 						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
+					if len(tokens)<2:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}msgbox in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}msgbox requires at least 1 argument"])
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'msgbox' and len(tokens)>=2:
+					tokens.pop(0)
+					text = ' '.join(tokens)
+					self.msgBox.emit([self.scriptname,text])
 
 			if len(tokens)>=3:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':

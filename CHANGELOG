@@ -22,6 +22,9 @@ Version 0.831
 	* Added more detail to the command documentation, explaining some "quirks" with the script engine
 	* Added /alias, /_alias, and /part shortcuts to the editor
 	* Added a new command: /clear
+	* Added a new command: /msgbox
+	* Added a shortcut insert for /msgbox to the script editor
+	* Cleaned up some of the language in the scripting documentation
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

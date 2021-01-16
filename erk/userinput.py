@@ -35,7 +35,10 @@ import fnmatch
 import string
 import random
 
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5 import QtCore
 
 from .objects import *
 from .files import *
@@ -996,6 +999,11 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 
+	# The /msgbox command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'msgbox':
+			return True
+
 	# The /wait command an only be called from scripts.
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
@@ -1149,6 +1157,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.msgBox.connect(execute_script_msgbox)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1191,6 +1200,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.msgBox.connect(execute_script_msgbox)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1240,6 +1250,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.execLine.connect(execute_script_line)
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.msgBox.connect(execute_script_msgbox)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1527,10 +1538,11 @@ def execute_code(script,client,err_func):
 	scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 	# Create a thread for the script and run it
-	scriptThread = ScriptThreadWindow(window,client,script,scriptID,'NONE',dict(VARIABLE_TABLE),[])
+	scriptThread = ScriptThreadWindow(window,client,script,scriptID,'Editor',dict(VARIABLE_TABLE),[])
 	scriptThread.execLine.connect(execute_script_line)
 	scriptThread.scriptEnd.connect(execute_script_end)
 	scriptThread.scriptErr.connect(err_func)
+	scriptThread.msgBox.connect(execute_script_msgbox)
 	scriptThread.start()
 
 	# Store the thread so it doesn't get garbage collected
@@ -1559,6 +1571,7 @@ def execute_script(filename,window,client):
 		scriptThread.execLine.connect(execute_script_line)
 		scriptThread.scriptEnd.connect(execute_script_end)
 		scriptThread.scriptErr.connect(execute_script_error)
+		scriptThread.msgBox.connect(execute_script_msgbox)
 		scriptThread.start()
 
 		# Store the thread so it doesn't get garbage collected
@@ -1593,9 +1606,18 @@ def execute_script_end(data):
 	if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
 		VARIABLE_TABLE.update(vtable)
 
-# Triggers every time there's a script error with the "/wait" command
+# Triggers every time there's a script error
 def execute_script_error(data):
 	window = data[0]
 	errmsg = data[1]
 	msg = Message(ERROR_MESSAGE,'',errmsg)
 	window.writeText(msg,True)
+
+def execute_script_msgbox(data):
+	scriptname = data[0]
+	msg = data[1]
+
+	x = QMessageBox()
+	x.setText(msg)
+	x.setWindowTitle(scriptname)
+	x.exec_()
