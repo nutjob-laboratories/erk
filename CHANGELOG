@@ -30,6 +30,7 @@ Version 0.831
 	* Added an explanation to the command documentation about how scripts should always have the ".erk" file extension
 	* Added an option to the script editor to save on file close
 	* Bugfix: oddly spelled commands (and other words, like "Erk" and "Ərk") are no longer flagged as misspelled
+	* Bugfix: opening up a file with the /edit command no longer flags it as "changed" when opene w/o editing
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

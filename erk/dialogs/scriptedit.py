@@ -187,6 +187,8 @@ class Window(QMainWindow):
 				source_code = str(x.read())
 				x.close()
 				self.editor.setPlainText(source_code)
+				self.changed = False
+				self.updateApplicationTitle()
 
 		self.menubar = self.menuBar()
 
