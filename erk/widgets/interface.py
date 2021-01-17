@@ -283,7 +283,7 @@ class Window(QMainWindow):
 		self.banlist = []
 
 		# Make sure some commands aren't flagged as misspelled
-		self.cmdlist = [
+		self.special_words = [
 			'msg',
 			'nick',
 			'oper',
@@ -294,6 +294,8 @@ class Window(QMainWindow):
 			'ssl',
 			'macrohelp',
 			'unmacro',
+			APPLICATION_NAME,
+			'Erk',
 		]
 
 		self.language = config.SPELLCHECK_LANGUAGE
@@ -1600,7 +1602,7 @@ class SpellTextEdit(QPlainTextEdit):
 				text = self.textCursor().selectedText()
 
 				# Make sure some oddly spelled commands aren't flagged as misspelled
-				if not text in self.parent.cmdlist:
+				if not text in self.parent.special_words:
 
 					misspelled = self.dict.unknown([text])
 					if len(misspelled)>0:
@@ -2627,7 +2629,7 @@ class Highlighter(QSyntaxHighlighter):
 			if len(misspelled)>0:
 
 				# Make sure some oddly spelled commands aren't flagged as misspelled
-				if not word_object.group() in self.parent.cmdlist:
+				if not word_object.group() in self.parent.special_words:
 					self.setFormat(word_object.start(), word_object.end() - word_object.start(), format)
 
 class SpellAction(QAction):
