@@ -345,6 +345,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.insertComment)
 		insertMenu.addAction(entry)
 
+		entry = QAction(QIcon(MISC_ICON),"Multiline comment",self)
+		entry.triggered.connect(self.insertMLComment)
+		insertMenu.addAction(entry)
+
 		entry = QAction(QIcon(EDIT_ICON),"Print",self)
 		entry.triggered.connect(self.insertPrint)
 		insertMenu.addAction(entry)
@@ -442,6 +446,7 @@ class Window(QMainWindow):
 
 		if len(e)>0:
 			self.editor.insertPlainText("/msgbox "+e+"\n")
+			self.updateApplicationTitle()
 
 	def insertPart(self):
 		x = InsertPart(self)
@@ -454,8 +459,10 @@ class Window(QMainWindow):
 
 		if len(msg)==0:
 			self.editor.insertPlainText("/part "+channel+"\n")
+			self.updateApplicationTitle()
 		else:
 			self.editor.insertPlainText("/part "+channel+" "+msg+"\n")
+			self.updateApplicationTitle()
 
 	def insertLocalAlias(self):
 		x = InsertAlias(self,True)
@@ -467,6 +474,7 @@ class Window(QMainWindow):
 		value = e[1]
 
 		self.editor.insertPlainText("/_alias "+name+" "+value+"\n")
+		self.updateApplicationTitle()
 
 	def insertAlias(self):
 		x = InsertAlias(self)
@@ -478,6 +486,7 @@ class Window(QMainWindow):
 		value = e[1]
 
 		self.editor.insertPlainText("/alias "+name+" "+value+"\n")
+		self.updateApplicationTitle()
 
 	def insertJoin(self):
 		x = AddChannelDialog(self)
@@ -490,8 +499,10 @@ class Window(QMainWindow):
 
 		if len(key)==0:
 			self.editor.insertPlainText("/join "+channel+"\n")
+			self.updateApplicationTitle()
 		else:
 			self.editor.insertPlainText("/join "+channel+" "+key+"\n")
+			self.updateApplicationTitle()
 
 	def insertPrint(self):
 		x = PrintMsg(self)
@@ -501,15 +512,27 @@ class Window(QMainWindow):
 
 		if len(e)>0:
 			self.editor.insertPlainText("/print "+e+"\n")
+			self.updateApplicationTitle()
+
+	def insertMLComment(self):
+		x = Comment(False,self)
+		e = x.get_message_information(False,self)
+
+		if not e: return
+
+		if len(e)>0:
+			self.editor.insertPlainText("/*\n"+e+"\n*/\n")
+			self.updateApplicationTitle()
 
 	def insertComment(self):
-		x = Comment(self)
-		e = x.get_message_information(self)
+		x = Comment(True,self)
+		e = x.get_message_information(True,self)
 
 		if not e: return
 
 		if len(e)>0:
 			self.editor.insertPlainText("/* "+e+" */\n")
+			self.updateApplicationTitle()
 
 	def insertPause(self):
 		x = PauseTime(self)
@@ -518,6 +541,7 @@ class Window(QMainWindow):
 		if not e: return
 
 		self.editor.insertPlainText("/wait "+str(e)+"\n")
+		self.updateApplicationTitle()
 
 	def insertPM(self):
 		x = SendPM(self)
@@ -530,6 +554,7 @@ class Window(QMainWindow):
 		
 		if len(target)>0 and len(msg)>0:
 			self.editor.insertPlainText("/msg "+target+" "+msg+"\n")
+			self.updateApplicationTitle()
 
 	def updateApplicationTitle(self):
 		if self.filename!=None:

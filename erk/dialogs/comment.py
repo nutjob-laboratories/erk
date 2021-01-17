@@ -40,8 +40,8 @@ from ..strings import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_message_information(parent=None):
-		dialog = Dialog(parent)
+	def get_message_information(single_line=True,parent=None):
+		dialog = Dialog(single_line,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -51,26 +51,38 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
-		retval = self.name.text()
+		if self.single_line:
+			retval = self.name.text()
+		else:
+			retval = self.name.toPlainText()
 
 		return retval
 
-	def __init__(self,parent=None):
+	def __init__(self,single_line=True,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.single_line = single_line
 
-		self.setWindowTitle("Comment")
+		if self.single_line:
+			self.setWindowTitle("Comment")
+		else:
+			self.setWindowTitle("Multiline Comment")
 		self.setWindowIcon(QIcon(MISC_ICON))
 
-		fm = QFontMetrics(self.font())
-		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
+		if self.single_line:
+			fm = QFontMetrics(self.font())
+			wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
 
-		nameLayout = QHBoxLayout()
-		self.name = QLineEdit()
-		self.name.setPlaceholderText("Type your comment here")
-		nameLayout.addWidget(self.name)
-		self.name.setMinimumWidth(wwidth)
+			nameLayout = QHBoxLayout()
+			self.name = QLineEdit()
+			self.name.setPlaceholderText("Type your comment here")
+			nameLayout.addWidget(self.name)
+			self.name.setMinimumWidth(wwidth)
+		else:
+			nameLayout = QHBoxLayout()
+			self.name = QPlainTextEdit(self)
+			nameLayout.addWidget(self.name)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
