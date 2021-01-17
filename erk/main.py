@@ -737,9 +737,20 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
+			self.settingsMenu.addSeparator()
+
 			if not self.block_styles:
 				entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
 				entry.triggered.connect(self.showStyleDialog)
+				self.settingsMenu.addAction(entry)
+
+			showEditor = True
+			if self.block_editor: showEditor = False
+			if self.block_scripts: showEditor = False
+
+			if showEditor:
+				entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
+				entry.triggered.connect(self.showScriptEditor)
 				self.settingsMenu.addAction(entry)
 
 			self.settingsMenu.addSeparator()
@@ -971,6 +982,12 @@ class Erk(QMainWindow):
 
 	def showStyleDialog(self):
 		FormatTextDialog(self)
+
+	def showScriptEditor(self):
+		self.seditors = ScriptEditor(None,self)
+		self.seditors.resize(640,480)
+
+		self.seditors.clientsRefreshed(events.fetch_connections())
 
 	def menuExportLog(self):
 		d = ExportLogDialog(self)
