@@ -29,6 +29,7 @@ Version 0.831
 	* Added a menu containing installed scripts (to make it easy to find/open/edit) to the script editor
 	* Added an explanation to the command documentation about how scripts should always have the ".erk" file extension
 	* Added an option to the script editor to save on file close
+	* Bugfix: oddly spelled commands (and potentially other words) are no longer flagged as misspelled
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

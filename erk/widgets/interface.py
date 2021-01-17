@@ -282,6 +282,20 @@ class Window(QMainWindow):
 
 		self.banlist = []
 
+		# Make sure some commands aren't flagged as misspelled
+		self.cmdlist = [
+			'msg',
+			'nick',
+			'oper',
+			'whois',
+			'whowas',
+			'connectscript',
+			'ressl',
+			'ssl',
+			'macrohelp',
+			'unmacro',
+		]
+
 		self.language = config.SPELLCHECK_LANGUAGE
 
 		self.history_buffer = ['']
@@ -1585,16 +1599,19 @@ class SpellTextEdit(QPlainTextEdit):
 			if self.textCursor().hasSelection():
 				text = self.textCursor().selectedText()
 
-				misspelled = self.dict.unknown([text])
-				if len(misspelled)>0:
-					
-					for word in self.dict.candidates(text):
-						action = SpellAction(word, popup_menu)
-						action.correct.connect(self.correctWord)
-						popup_menu.insertAction(popup_menu.actions()[0],action)
-						counter = counter + 1
-					if counter != 0:
-						popup_menu.insertSeparator(popup_menu.actions()[counter])
+				# Make sure some oddly spelled commands aren't flagged as misspelled
+				if not text in self.parent.cmdlist:
+
+					misspelled = self.dict.unknown([text])
+					if len(misspelled)>0:
+						
+						for word in self.dict.candidates(text):
+							action = SpellAction(word, popup_menu)
+							action.correct.connect(self.correctWord)
+							popup_menu.insertAction(popup_menu.actions()[0],action)
+							counter = counter + 1
+						if counter != 0:
+							popup_menu.insertSeparator(popup_menu.actions()[counter])
 
 			popup_menu.insertSeparator(popup_menu.actions()[counter])
 			counter = counter + 1
@@ -2608,7 +2625,10 @@ class Highlighter(QSyntaxHighlighter):
 
 			misspelled = self.dict.unknown([word_object.group()])
 			if len(misspelled)>0:
-				self.setFormat(word_object.start(), word_object.end() - word_object.start(), format)
+
+				# Make sure some oddly spelled commands aren't flagged as misspelled
+				if not word_object.group() in self.parent.cmdlist:
+					self.setFormat(word_object.start(), word_object.end() - word_object.start(), format)
 
 class SpellAction(QAction):
 	correct = pyqtSignal(str)
