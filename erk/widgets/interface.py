@@ -294,6 +294,7 @@ class Window(QMainWindow):
 			'ssl',
 			'macrohelp',
 			'unmacro',
+			'macrousage',
 			APPLICATION_NAME,
 			'Erk',
 		]

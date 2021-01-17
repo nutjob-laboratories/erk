@@ -34,6 +34,10 @@ Version 0.831
 	* Added an option to add multiline comments to the editor
 	* Added a link to the script editor to the "Settings" menu
 	* Bugfix: /mode was omitted from the scripting/command documentation; it has been added
+	* Added a new command: /macrousage, which sets the usage text for a macro
+	* Aliases are now interpolated into input text *before* looking for macros, so macros can use aliases
+	* Macro names can no longer be used to "overload" an existing command name
+	* Bugfix: the script syntax highlighter now uses the "command trigger symbol" (which is / by default) for commands
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

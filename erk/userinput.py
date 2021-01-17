@@ -85,6 +85,7 @@ COMMON_COMMANDS = {
 	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
 	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 	config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
+	config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
 	config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
 	config.INPUT_COMMAND_SYMBOL+"clear": config.INPUT_COMMAND_SYMBOL+"clear",
 }
@@ -123,6 +124,7 @@ COMMAND_HELP = [
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
+	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrousage</b> NAME MESSAGE...", "Sets the \"usage\" text for a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
@@ -188,6 +190,52 @@ VARIABLE_TABLE = {}
 
 MACROS = []
 
+PROTECTED_NAMES = [
+		'away',
+		'back',
+		'invite',
+		'join',
+		'list',
+		'me',
+		'msg',
+		'nick',
+		'notice',
+		'oper',
+		'part',
+		'quit',
+		'send',
+		'time',
+		'topic',
+		'version',
+		'who',
+		'whois',
+		'whowas',
+		'alias',
+		'argcount',
+		'connect',
+		'connectscript',
+		'exit',
+		'help',
+		'print',
+		'reconnect',
+		'refresh',
+		'ressl',
+		'script',
+		'settings',
+		'ssl',
+		'style',
+		'switch',
+		'wait',
+		'_alias',
+		'macro',
+		'macrohelp',
+		'unmacro',
+		'edit',
+		'clear',
+		'msgbox',
+		'macrousage',
+	]
+
 def handle_macros(window,client,text):
 
 	tokens = text.split()
@@ -196,6 +244,7 @@ def handle_macros(window,client,text):
 		macro_name = m.name
 		macro_argcount = m.argcount
 		macro_data = m.command
+		macro_args = m.args
 
 		if len(tokens)>0:
 			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+macro_name:
@@ -231,8 +280,12 @@ def handle_macros(window,client,text):
 
 					return macro_data
 				elif len(tokens)!=macro_argcount:
-					msg = Message(ERROR_MESSAGE,'',"Macro \""+config.INPUT_COMMAND_SYMBOL+macro_name+"\" requires "+str(macro_argcount)+" arguments")
-					window.writeText(msg,True)
+					if macro_args==None:
+						msg = Message(ERROR_MESSAGE,'',"Macro \""+config.INPUT_COMMAND_SYMBOL+macro_name+"\" requires "+str(macro_argcount)+" arguments")
+						window.writeText(msg,True)
+					else:
+						msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+macro_name+" "+macro_args)
+						window.writeText(msg,True)
 					return None
 				else:
 					counter = 0
@@ -269,12 +322,12 @@ def handle_macros(window,client,text):
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
+	for key in VARIABLE_TABLE:
+		text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
+
 	if not client.gui.block_scripts:
 		text = handle_macros(window,client,text)
 		if text == None: return
-
-	for key in VARIABLE_TABLE:
-		text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
 
 	if handle_ui_input(window,client,text):
 		window.input.setFocus()
@@ -837,6 +890,42 @@ def handle_ui_input(window,client,text):
 
 	# MACRO BEGIN
 
+
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrousage':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrousage' and len(tokens)>=3:
+			tokens.pop(0)
+			name = tokens.pop(0)
+			macrohelp = ' '.join(tokens)
+
+			for m in MACROS:
+				if m.name==name:
+					m.args = macrohelp
+					msg = Message(SYSTEM_MESSAGE,'',"Usage for macro \""+name+"\" updated")
+					window.writeText(msg,True)
+					return True
+
+			msg = Message(ERROR_MESSAGE,'',"Macro \""+name+"\" not found")
+			window.writeText(msg,True)
+			return True
+
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'macrousage':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"macrousage NAME MESSAGE...")
+			window.writeText(msg,True)
+			return True
+
+
+
+
+
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'clear' and len(tokens)==1:
 			window.clearScreen()
@@ -931,6 +1020,11 @@ def handle_ui_input(window,client,text):
 			name = tokens.pop(0)
 			args = tokens.pop(0)
 			data = ' '.join(tokens)
+
+			if name in PROTECTED_NAMES:
+				msg = Message(ERROR_MESSAGE,'',"\""+name+"\" already exists as a command, and can't be used as a macro name")
+				window.writeText(msg,True)
+				return True
 
 			if args=='*': args = -1
 
