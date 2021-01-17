@@ -12,6 +12,7 @@ from ..resources import *
 from ..strings import *
 from ..widgets.action import MenuAction,insertNoTextSeparator
 from .. import userinput
+from .. import config
 
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
@@ -77,21 +78,29 @@ class Window(QMainWindow):
 
 	def closeEvent(self, event):
 
-		if self.changed:
-			options = QFileDialog.Options()
-			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save Script As...",self.parent.scriptsdir,f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
-			if fileName:
-				efl = len(SCRIPT_FILE_EXTENSION)+1
-				if fileName[-efl:].lower()!=f".{SCRIPT_FILE_EXTENSION}": fileName = fileName+f".{SCRIPT_FILE_EXTENSION}"
-				self.filename = fileName
-				code = open(self.filename,"w")
-				code.write(self.editor.toPlainText())
-				code.close()
+		self.saveOnClose()
 
 		self.parent.seditors = None
 		event.accept()
 		self.close()
+
+	def saveOnClose(self):
+		if config.SAVE_SCRIPT_ON_CLOSE:
+			if self.changed:
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				if self.filename:
+					outf = os.path.join(self.parent.scriptsdir, self.filename)
+				else:
+					outf = self.parent.scriptsdir
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save Script As...",outf,f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
+				if fileName:
+					efl = len(SCRIPT_FILE_EXTENSION)+1
+					if fileName[-efl:].lower()!=f".{SCRIPT_FILE_EXTENSION}": fileName = fileName+f".{SCRIPT_FILE_EXTENSION}"
+					self.filename = fileName
+					code = open(self.filename,"w")
+					code.write(self.editor.toPlainText())
+					code.close()
 
 	def clientsRefreshed(self,clients):
 		if len(clients)!=len(self.clients):
@@ -245,6 +254,18 @@ class Window(QMainWindow):
 
 		self.fileMenu.addSeparator()
 
+		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
+		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
+		self.fileMenu.addAction(self.setSaveClose)
+
+		if config.SAVE_SCRIPT_ON_CLOSE: self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
+
+		self.installedScripts = self.fileMenu.addMenu("Installed scripts")
+		self.installedScripts.setIcon(QIcon(DIRECTORY_ICON))
+		self.buildInstalledScriptsMenu()
+
+		self.fileMenu.addSeparator()
+
 		entry = QAction(QIcon(EXIT_ICON),"Exit",self)
 		entry.triggered.connect(self.close)
 		self.fileMenu.addAction(entry)
@@ -365,6 +386,39 @@ class Window(QMainWindow):
 		self.setCentralWidget(fL)
 
 		self.editor.setFocus()
+
+	def toggleSaveClose(self):
+		if config.SAVE_SCRIPT_ON_CLOSE:
+			config.SAVE_SCRIPT_ON_CLOSE = False
+			self.setSaveClose.setIcon(QIcon(UNCHECKED_ICON))
+		else:
+			config.SAVE_SCRIPT_ON_CLOSE = True
+			self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
+		config.save_settings(self.parent.configfile)
+
+	def buildInstalledScriptsMenu(self):
+		self.installedScripts.clear()
+
+		files = get_list_of_installed_scripts(self.parent.scriptsdir)
+
+		for file in files:
+			fullname = file[0]
+			name = file[1]
+
+			entry = QAction(QIcon(DOCUMENT_ICON),name,self)
+			entry.triggered.connect(lambda state,f=fullname: self.readScript(f))
+			self.installedScripts.addAction(entry)
+
+	def readScript(self,filename):
+		self.saveOnClose()
+		x = open(filename,mode="r",encoding="latin-1")
+		source_code = str(x.read())
+		x.close()
+		self.editor.setPlainText(source_code)
+		self.filename = filename
+		self.changed = False
+		self.updateApplicationTitle()
+		self.menuSave.setEnabled(True)
 
 	def openAutoscript(self):
 		if self.current_client!=None:
@@ -524,11 +578,15 @@ class Window(QMainWindow):
 			self.changed = False
 			self.menuSave.setEnabled(False)
 			self.updateApplicationTitle()
+			self.buildInstalledScriptsMenu()
 
 	def doNewFile(self):
+		self.saveOnClose()
 		self.filename = None
 		self.editor.clear()
 		self.menuSave.setEnabled(False)
+		self.changed = False
+		self.updateApplicationTitle()
 
 	def openFile(self,filename):
 		x = open(filename,mode="r",encoding="latin-1")

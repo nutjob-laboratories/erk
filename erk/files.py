@@ -83,6 +83,20 @@ EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt
 
 MACRO_SAVE_FILE = os.path.join(SETTINGS_DIRECTORY, "macros.json")
 
+
+def get_list_of_installed_scripts(scriptdir):
+	scripts = []
+	for root, subdirs, files in os.walk(scriptdir):
+		for filename in files:
+			ext = os.path.splitext(filename)[-1].lower()
+			if ext=='.erk':
+				file_path = os.path.join(root, filename)
+				f = os.path.splitext(filename)[0]
+				scripts.append( [file_path,f] )
+
+	return scripts
+
+
 def save_macros(macros,filename=MACRO_SAVE_FILE):
 	if filename==None: filename=MACRO_SAVE_FILE
 

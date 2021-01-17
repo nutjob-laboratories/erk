@@ -25,6 +25,10 @@ Version 0.831
 	* Added a new command: /msgbox
 	* Added a shortcut insert for /msgbox to the script editor
 	* Cleaned up some of the language in the scripting documentation
+	* Bugfix: "Are you sure?" quit messagebox was missing a window icon
+	* Added a menu containing installed scripts (to make it easy to find/open/edit) to the script editor
+	* Added an explanation to the command documentation about how scripts should always have the ".erk" file extension
+	* Added an option to the script editor to save on file close
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
