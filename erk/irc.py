@@ -1392,6 +1392,8 @@ class ScriptThreadWindow(QThread):
 		self.vtable = variable_table
 		self.arguments = arguments
 
+		self.had_error = False
+
 		self.private_vtable = {}
 
 		# Strip comments from script
@@ -1425,33 +1427,39 @@ class ScriptThreadWindow(QThread):
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
 					if len(tokens)<3:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}argcount requires at least 3 arguments"])
+						self.had_error = True
 						break
 
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
 					if len(tokens)<3:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}alias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}alias requires at least 3 arguments"])
+						self.had_error = True
 						break
 
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
 					if len(tokens)<3:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}palias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}_alias requires at least 3 arguments"])
+						self.had_error = True
 						break
 
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
 					if len(tokens)<2:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}wait requires at least 1 argument"])
+						self.had_error = True
 						break
 					if len(tokens)>2:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: Too many arguments passed to {config.INPUT_COMMAND_SYMBOL}wait"])
+						self.had_error = True
 						break
 
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
 					if len(tokens)<2:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}msgbox in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}msgbox requires at least 1 argument"])
+						self.had_error = True
 						break
 
 			if len(tokens)>0:
@@ -1468,10 +1476,12 @@ class ScriptThreadWindow(QThread):
 						cnt = int(cnt)
 					except:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: \"{str(cnt)}\" is not a number"])
+						self.had_error = True
 						break
 					else:
 						if len(self.arguments)!=cnt:
 							self.scriptErr.emit([self.window,f"{' '.join(tokens)}"])
+							self.had_error = True
 							break
 
 			if len(tokens)>=3:
@@ -1509,10 +1519,12 @@ class ScriptThreadWindow(QThread):
 						count = int(count)
 					except:
 						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}wait in {self.scriptname}: \"{count}\" is not a number"])
+						self.had_error = True
 						break
 					else:
 						time.sleep(count)
 
 			self.execLine.emit([self.window,self.client,line])
 
-		self.scriptEnd.emit([self.id,self.vtable])
+		if not self.had_error:
+			self.scriptEnd.emit([self.id,self.vtable])

@@ -38,6 +38,10 @@ Version 0.831
 	* Aliases are now interpolated into input text *before* looking for macros, so macros can use aliases
 	* Macro names can no longer be used to "overload" an existing command name
 	* Bugfix: the script syntax highlighter now uses the "command trigger symbol" (which is / by default) for commands
+	* Made a change to macro interpolation (all arguments are now $+, all arguments less the first one is now $-)
+	* Added a "macro" shortcut to the script editor
+	* Added an option to notify script execution end to the script editor
+	* Bugfix: error notification messageboxes in the script editor now have the script editor dialog as parent
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

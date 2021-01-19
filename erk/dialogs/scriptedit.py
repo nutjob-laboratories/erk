@@ -21,15 +21,24 @@ from .print import Dialog as PrintMsg
 from ..dialogs import AddChannelDialog
 from .alias import Dialog as InsertAlias
 from .part_channel import Dialog as InsertPart
-
 from .smsgbox import Dialog as ScriptBox
+
+from .new_macro import Dialog as NewMacro
 
 class Window(QMainWindow):
 
 	def doRun(self):
 		if self.current_client!=None:
 			code = self.editor.toPlainText()
-			userinput.execute_code(code,self.current_client,self.scriptError)
+			userinput.execute_code(code,self.current_client,self.scriptError,self.scriptEnd)
+
+	def scriptEnd(self):
+		if config.NOTIFY_SCRIPT_END:
+			msg = QMessageBox(self)
+			msg.setIcon(QMessageBox.Information)
+			msg.setText("The script has completed execution")
+			msg.setWindowTitle("Script complete")
+			msg.exec_()
 
 	def scriptError(self,error):
 		e = error[1]
@@ -37,7 +46,7 @@ class Window(QMainWindow):
 		if len(ep)==2:
 			if "wait" in ep[0]:
 				# wrong arg to /wait
-				msg = QMessageBox()
+				msg = QMessageBox(self)
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
@@ -45,7 +54,7 @@ class Window(QMainWindow):
 				msg.exec_()
 			elif 'argcount' in ep[0]:
 				# wrong arg to /argcount
-				msg = QMessageBox()
+				msg = QMessageBox(self)
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
@@ -53,7 +62,7 @@ class Window(QMainWindow):
 				msg.exec_()
 			elif '_alias' in ep[0]:
 				# wrong arg to /argcount
-				msg = QMessageBox()
+				msg = QMessageBox(self)
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
@@ -61,7 +70,7 @@ class Window(QMainWindow):
 				msg.exec_()
 			elif 'alias' in ep[0]:
 				# wrong arg to /argcount
-				msg = QMessageBox()
+				msg = QMessageBox(self)
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
@@ -69,7 +78,7 @@ class Window(QMainWindow):
 				msg.exec_()
 			elif 'msgbox' in ep[0]:
 				# wrong arg to /argcount
-				msg = QMessageBox()
+				msg = QMessageBox(self)
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
@@ -212,9 +221,9 @@ class Window(QMainWindow):
 
 		height = self.servers.frameGeometry().height()
 
-		self.runButton.setFixedSize(height,height)
+		self.runButton.setFixedSize(height+4,height)
 		self.runButton.setIconSize(QSize(height,height))
-		self.runButton.setStyleSheet("border: none;")
+		#self.runButton.setStyleSheet("border: none;")
 		self.runButton.setToolTip("Execute script")
 
 		documentIcon = QIcon(CONNECT_MENU_ICON)
@@ -255,6 +264,12 @@ class Window(QMainWindow):
 		self.fileMenu.addAction(entry)
 
 		self.fileMenu.addSeparator()
+
+		self.setNotifyEnd = QAction(QIcon(UNCHECKED_ICON),"Notify on end of execution",self)
+		self.setNotifyEnd.triggered.connect(lambda state: self.toggleNotifyEnd())
+		self.fileMenu.addAction(self.setNotifyEnd)
+
+		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
 
 		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
 		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
@@ -369,6 +384,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.insertMsgbox)
 		insertMenu.addAction(entry)
 
+		entry = QAction(QIcon(MISC_ICON),"Macro",self)
+		entry.triggered.connect(self.insertMacro)
+		insertMenu.addAction(entry)
+
 		self.updateApplicationTitle()
 
 		barLayout = QHBoxLayout()
@@ -392,6 +411,15 @@ class Window(QMainWindow):
 		self.setCentralWidget(fL)
 
 		self.editor.setFocus()
+
+	def toggleNotifyEnd(self):
+		if config.NOTIFY_SCRIPT_END:
+			config.NOTIFY_SCRIPT_END = False
+			self.setNotifyEnd.setIcon(QIcon(UNCHECKED_ICON))
+		else:
+			config.NOTIFY_SCRIPT_END = True
+			self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
+		config.save_settings(self.parent.configfile)
 
 	def toggleSaveClose(self):
 		if config.SAVE_SCRIPT_ON_CLOSE:
@@ -463,6 +491,25 @@ class Window(QMainWindow):
 		else:
 			self.editor.insertPlainText("/part "+channel+" "+msg+"\n")
 			self.updateApplicationTitle()
+
+	def insertMacro(self):
+		x = NewMacro(self)
+		e = x.get_macro_information(self)
+
+		if not e: return
+
+		macro_name = e[0].strip()
+		macro_args = e[1]
+		macro = e[2].strip()
+		macro_help = e[3].strip()
+		macro_helpargs = e[4].strip()
+
+		self.editor.insertPlainText(f"/macro {macro_name} {macro_args} {macro}\n")
+		if macro_help!='':
+			self.editor.insertPlainText(f"/macrohelp {macro_name} {macro_help}\n")
+		if macro_helpargs!='':
+			self.editor.insertPlainText(f"/macrousage {macro_name} {macro_helpargs}\n")
+		self.updateApplicationTitle()
 
 	def insertLocalAlias(self):
 		x = InsertAlias(self,True)

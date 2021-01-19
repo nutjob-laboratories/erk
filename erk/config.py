@@ -148,14 +148,16 @@ SAVE_MACROS = True
 
 SAVE_SCRIPT_ON_CLOSE = True
 
+NOTIFY_SCRIPT_END = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"notify_script_execution_end": NOTIFY_SCRIPT_END,
 		"save_on_script_editor_close": SAVE_SCRIPT_ON_CLOSE,
-
 		"save_macros": SAVE_MACROS,
 		"autocomplete_macros": AUTOCOMPLETE_MACROS,
 		"script_syntax_color_comments": SCRIPT_SYNTAX_COMMENTS,
@@ -258,6 +260,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "notify_script_execution_end" in data:
+		data["notify_script_execution_end"] = NOTIFY_SCRIPT_END
 
 	if not "save_on_script_editor_close" in data:
 		data["save_on_script_editor_close"] = SAVE_SCRIPT_ON_CLOSE
@@ -438,6 +443,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_MACROS
 	global SAVE_MACROS
 	global SAVE_SCRIPT_ON_CLOSE
+	global NOTIFY_SCRIPT_END
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -446,6 +452,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			NOTIFY_SCRIPT_END = data["notify_script_execution_end"]
 			SAVE_SCRIPT_ON_CLOSE = data["save_on_script_editor_close"]
 			SAVE_MACROS = data["save_macros"]
 			AUTOCOMPLETE_MACROS = data["autocomplete_macros"]
