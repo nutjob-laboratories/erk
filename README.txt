@@ -4,6 +4,7 @@
 	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.822.176"><b>Download last stable release</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk !_FULL_VERSION_!</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
+  <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
 **Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **!_FULL_VERSION_!**.
@@ -77,6 +78,7 @@
 		* Create, open, and edit scripts
 		* Syntax highlighting
 		* Run scripts on any connection the client is connected to
+  * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
 * Plugins!
 	* Plugins are written in Python 3, just like **Ərk**
 	* **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
