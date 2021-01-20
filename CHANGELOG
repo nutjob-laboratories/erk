@@ -42,6 +42,7 @@ Version 0.831
 	* Added a "macro" shortcut to the script editor
 	* Added an option to notify script execution end to the script editor
 	* Bugfix: error notification messageboxes in the script editor now have the script editor dialog as parent
+	* Added additional support for changing the "command symbol" (/) in the config file; help will now display properly, as will syntax highlighting
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

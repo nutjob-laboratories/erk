@@ -31,64 +31,77 @@ def format(color, style=''):
 # 	'alias': format('darkGreen','bold'),
 # }
 
-STYLES = {
-	'comments': format(config.SCRIPT_SYNTAX_COMMENTS,'bold'),
-	'erk': format(config.SCRIPT_SYNTAX_COMMANDS,'bold'),
-	'channel': format(config.SCRIPT_SYNTAX_TARGETS,'bold'),
-	'alias': format(config.SCRIPT_SYNTAX_ALIAS,'bold'),
-}
+
 
 class ErkScriptHighlighter (QSyntaxHighlighter):
 
-	erk = [
-		config.INPUT_COMMAND_SYMBOL+'away',
-		config.INPUT_COMMAND_SYMBOL+'back',
-		config.INPUT_COMMAND_SYMBOL+'invite',
-		config.INPUT_COMMAND_SYMBOL+'join',
-		config.INPUT_COMMAND_SYMBOL+'list',
-		config.INPUT_COMMAND_SYMBOL+'me',
-		config.INPUT_COMMAND_SYMBOL+'msg',
-		config.INPUT_COMMAND_SYMBOL+'nick',
-		config.INPUT_COMMAND_SYMBOL+'notice',
-		config.INPUT_COMMAND_SYMBOL+'oper',
-		config.INPUT_COMMAND_SYMBOL+'part',
-		config.INPUT_COMMAND_SYMBOL+'quit',
-		config.INPUT_COMMAND_SYMBOL+'send',
-		config.INPUT_COMMAND_SYMBOL+'time',
-		config.INPUT_COMMAND_SYMBOL+'topic',
-		config.INPUT_COMMAND_SYMBOL+'version',
-		config.INPUT_COMMAND_SYMBOL+'who',
-		config.INPUT_COMMAND_SYMBOL+'whois',
-		config.INPUT_COMMAND_SYMBOL+'whowas',
-		config.INPUT_COMMAND_SYMBOL+'alias',
-		config.INPUT_COMMAND_SYMBOL+'argcount',
-		config.INPUT_COMMAND_SYMBOL+'connect',
-		config.INPUT_COMMAND_SYMBOL+'connectscript',
-		config.INPUT_COMMAND_SYMBOL+'exit',
-		config.INPUT_COMMAND_SYMBOL+'help',
-		config.INPUT_COMMAND_SYMBOL+'print',
-		config.INPUT_COMMAND_SYMBOL+'reconnect',
-		config.INPUT_COMMAND_SYMBOL+'refresh',
-		config.INPUT_COMMAND_SYMBOL+'ressl',
-		config.INPUT_COMMAND_SYMBOL+'script',
-		config.INPUT_COMMAND_SYMBOL+'settings',
-		config.INPUT_COMMAND_SYMBOL+'ssl',
-		config.INPUT_COMMAND_SYMBOL+'style',
-		config.INPUT_COMMAND_SYMBOL+'switch',
-		config.INPUT_COMMAND_SYMBOL+'wait',
-		config.INPUT_COMMAND_SYMBOL+'_alias',
-		config.INPUT_COMMAND_SYMBOL+'macro',
-		config.INPUT_COMMAND_SYMBOL+'macrohelp',
-		config.INPUT_COMMAND_SYMBOL+'unmacro',
-		config.INPUT_COMMAND_SYMBOL+'edit',
-		config.INPUT_COMMAND_SYMBOL+'clear',
-		config.INPUT_COMMAND_SYMBOL+'msgbox',
-		config.INPUT_COMMAND_SYMBOL+'macrousage',
-	]
-
-
-	def __init__(self, document):
+	def __init__(self, document,configfile):
 		QSyntaxHighlighter.__init__(self, document)
+
+		config.load_settings(configfile)
+
+		# Make sure to escape any special characters in the
+		# command symbol; this also allows for command
+		# symbols that are more than one character
+		special = ['\\','^','$','.','|','?','*','+','(',')','{']
+		cmdsymbol = ''
+		for c in config.INPUT_COMMAND_SYMBOL:
+			if c in special:
+				c = '\\'+c
+			cmdsymbol = cmdsymbol + c
+
+		erk = [
+			cmdsymbol+'away',
+			cmdsymbol+'back',
+			cmdsymbol+'invite',
+			cmdsymbol+'join',
+			cmdsymbol+'list',
+			cmdsymbol+'me',
+			cmdsymbol+'msg',
+			cmdsymbol+'nick',
+			cmdsymbol+'notice',
+			cmdsymbol+'oper',
+			cmdsymbol+'part',
+			cmdsymbol+'quit',
+			cmdsymbol+'send',
+			cmdsymbol+'time',
+			cmdsymbol+'topic',
+			cmdsymbol+'version',
+			cmdsymbol+'who',
+			cmdsymbol+'whois',
+			cmdsymbol+'whowas',
+			cmdsymbol+'alias',
+			cmdsymbol+'argcount',
+			cmdsymbol+'connect',
+			cmdsymbol+'connectscript',
+			cmdsymbol+'exit',
+			cmdsymbol+'help',
+			cmdsymbol+'print',
+			cmdsymbol+'reconnect',
+			cmdsymbol+'refresh',
+			cmdsymbol+'ressl',
+			cmdsymbol+'script',
+			cmdsymbol+'settings',
+			cmdsymbol+'ssl',
+			cmdsymbol+'style',
+			cmdsymbol+'switch',
+			cmdsymbol+'wait',
+			cmdsymbol+'_alias',
+			cmdsymbol+'macro',
+			cmdsymbol+'macrohelp',
+			cmdsymbol+'unmacro',
+			cmdsymbol+'edit',
+			cmdsymbol+'clear',
+			cmdsymbol+'msgbox',
+			cmdsymbol+'macrousage',
+		]
+
+		STYLES = {
+			'comments': format(config.SCRIPT_SYNTAX_COMMENTS,'bold'),
+			'erk': format(config.SCRIPT_SYNTAX_COMMANDS,'bold'),
+			'channel': format(config.SCRIPT_SYNTAX_TARGETS,'bold'),
+			'alias': format(config.SCRIPT_SYNTAX_ALIAS,'bold'),
+		}
 
 		# Comments
 		self.script_comments = (QRegExp("(\\/\\*|\\*\\/|\n)"), 1, STYLES['comments'])
@@ -97,7 +110,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 
 		# Commands
 		rules += [(r'%s' % o, 0, STYLES['erk'])
-			for o in ErkScriptHighlighter.erk]
+			for o in erk]
 
 		# Make sure to escape any special characters in the
 		# interpolation symbol; this also allows for interpolation

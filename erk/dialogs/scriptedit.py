@@ -180,7 +180,7 @@ class Window(QMainWindow):
 		self.current_client = None
 
 		self.editor = QPlainTextEdit(self)
-		self.highlight = ErkScriptHighlighter(self.editor.document())
+		self.highlight = ErkScriptHighlighter(self.editor.document(),self.parent.configfile)
 
 		self.setWindowIcon(QIcon(SCRIPT_ICON))
 

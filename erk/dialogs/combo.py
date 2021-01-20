@@ -330,15 +330,6 @@ class Dialog(QDialog):
 
 		self.manually_cleared = False
 
-		# Load in the syntax settings from the configuration file
-		# Since this dialog can be loaded _before_ the main entry point,
-		# the config settings will not be loaded into memory; this loads
-		# in the syntax settings from the config manually
-		syntax.STYLES["comments"] = syntax.format(config.SCRIPT_SYNTAX_COMMENTS,'bold')
-		syntax.STYLES["erk"] = syntax.format(config.SCRIPT_SYNTAX_COMMANDS,'bold')
-		syntax.STYLES["channel"] = syntax.format(config.SCRIPT_SYNTAX_TARGETS,'bold')
-		syntax.STYLES["alias"] = syntax.format(config.SCRIPT_SYNTAX_ALIAS,'bold')
-
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
@@ -875,7 +866,7 @@ class Dialog(QDialog):
 
 
 		self.scriptedit = QPlainTextEdit(self)
-		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document())
+		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document(),self.config_file)
 
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 
@@ -950,19 +941,19 @@ class Dialog(QDialog):
 		scriptControlsLayout.addWidget(self.deleteScriptButton)
 		#scriptControlsLayout.addWidget(self.checkScript)
 
-		self.scriptJoinButton = QPushButton("/join")
+		self.scriptJoinButton = QPushButton(config.INPUT_COMMAND_SYMBOL+"join")
 		self.scriptJoinButton.clicked.connect(self.scriptJoin)
 
-		self.scriptSendPM = QPushButton("/msg")
+		self.scriptSendPM = QPushButton(config.INPUT_COMMAND_SYMBOL+"msg")
 		self.scriptSendPM.clicked.connect(self.scriptPM)
 
-		self.scriptInsertPause = QPushButton("/wait")
+		self.scriptInsertPause = QPushButton(config.INPUT_COMMAND_SYMBOL+"wait")
 		self.scriptInsertPause.clicked.connect(self.scriptTime)
 
 		self.scriptInsertComment = QPushButton("Insert a Comment")
 		self.scriptInsertComment.clicked.connect(self.scriptComment)
 
-		self.scriptInsertPrint = QPushButton("/print")
+		self.scriptInsertPrint = QPushButton(config.INPUT_COMMAND_SYMBOL+"print")
 		self.scriptInsertPrint.clicked.connect(self.scriptPrint)
 
 		scriptAddLayout = QHBoxLayout()
@@ -1112,7 +1103,7 @@ class Dialog(QDialog):
 
 		if not e: return
 
-		self.scriptedit.insertPlainText("/wait "+str(e)+"\n")
+		self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"wait "+str(e)+"\n")
 
 	def scriptPM(self):
 		x = SendPM()
@@ -1124,7 +1115,7 @@ class Dialog(QDialog):
 		msg = e[1]
 		
 		if len(target)>0 and len(msg)>0:
-			self.scriptedit.insertPlainText("/msg "+target+" "+msg+"\n")
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"msg "+target+" "+msg+"\n")
 
 	def scriptComment(self):
 		x = Comment()
@@ -1142,7 +1133,7 @@ class Dialog(QDialog):
 		if not e: return
 
 		if len(e)>0:
-			self.scriptedit.insertPlainText("/print "+e+"\n")
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"print "+e+"\n")
 
 	def scriptJoin(self):
 		x = AddChannelDialog()
@@ -1154,9 +1145,9 @@ class Dialog(QDialog):
 		key = e[1]
 
 		if len(key)==0:
-			self.scriptedit.insertPlainText("/join "+channel+"\n")
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"join "+channel+"\n")
 		else:
-			self.scriptedit.insertPlainText("/join "+channel+" "+key+"\n")
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"join "+channel+" "+key+"\n")
 
 	def deleteScript(self):
 		serv = self.host.text()

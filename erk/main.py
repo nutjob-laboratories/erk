@@ -479,6 +479,10 @@ class Erk(QMainWindow):
 		# Load application settings
 		config.load_settings(configfile)
 
+		# Rebuild the command help, if a user has a different symbol
+		# for executing commands
+		userinput.buildHelp()
+
 		if not config.ENABLE_SCRIPT_EDITOR: self.block_editor = True
 
 		# Load in script engine

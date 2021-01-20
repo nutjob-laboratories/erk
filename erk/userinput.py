@@ -48,141 +48,161 @@ from . import events
 
 from .dialogs import ScriptEditor
 
-COMMON_COMMANDS = {
-	config.INPUT_COMMAND_SYMBOL+"msg": config.INPUT_COMMAND_SYMBOL+"msg ",
-	config.INPUT_COMMAND_SYMBOL+"part": config.INPUT_COMMAND_SYMBOL+"part ",
-	config.INPUT_COMMAND_SYMBOL+"join": config.INPUT_COMMAND_SYMBOL+"join ",
-	config.INPUT_COMMAND_SYMBOL+"notice": config.INPUT_COMMAND_SYMBOL+"notice ",
-	config.INPUT_COMMAND_SYMBOL+"nick": config.INPUT_COMMAND_SYMBOL+"nick ",
-	config.INPUT_COMMAND_SYMBOL+"mode": config.INPUT_COMMAND_SYMBOL+"mode ",
-	config.INPUT_COMMAND_SYMBOL+"away": config.INPUT_COMMAND_SYMBOL+"away ",
-	config.INPUT_COMMAND_SYMBOL+"back": config.INPUT_COMMAND_SYMBOL+"back",
-	config.INPUT_COMMAND_SYMBOL+"oper": config.INPUT_COMMAND_SYMBOL+"oper ",
-	config.INPUT_COMMAND_SYMBOL+"switch": config.INPUT_COMMAND_SYMBOL+"switch ",
-	config.INPUT_COMMAND_SYMBOL+"connect": config.INPUT_COMMAND_SYMBOL+"connect ",
-	config.INPUT_COMMAND_SYMBOL+"reconnect": config.INPUT_COMMAND_SYMBOL+"reconnect ",
-	config.INPUT_COMMAND_SYMBOL+"ssl": config.INPUT_COMMAND_SYMBOL+"ssl ",
-	config.INPUT_COMMAND_SYMBOL+"ressl": config.INPUT_COMMAND_SYMBOL+"ressl ",
-	config.INPUT_COMMAND_SYMBOL+"send": config.INPUT_COMMAND_SYMBOL+"send ",
-	config.INPUT_COMMAND_SYMBOL+"invite": config.INPUT_COMMAND_SYMBOL+"invite ",
-	config.INPUT_COMMAND_SYMBOL+"list": config.INPUT_COMMAND_SYMBOL+"list",
-	config.INPUT_COMMAND_SYMBOL+"refresh": config.INPUT_COMMAND_SYMBOL+"refresh",
-	config.INPUT_COMMAND_SYMBOL+"help": config.INPUT_COMMAND_SYMBOL+"help",
-	config.INPUT_COMMAND_SYMBOL+"topic": config.INPUT_COMMAND_SYMBOL+"topic ",
-	config.INPUT_COMMAND_SYMBOL+"time": config.INPUT_COMMAND_SYMBOL+"time",
-	config.INPUT_COMMAND_SYMBOL+"whois": config.INPUT_COMMAND_SYMBOL+"whois ",
-	config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
-	config.INPUT_COMMAND_SYMBOL+"version": config.INPUT_COMMAND_SYMBOL+"version",
-	config.INPUT_COMMAND_SYMBOL+"who": config.INPUT_COMMAND_SYMBOL+"who ",
-	config.INPUT_COMMAND_SYMBOL+"exit": config.INPUT_COMMAND_SYMBOL+"exit",
-	config.INPUT_COMMAND_SYMBOL+"quit": config.INPUT_COMMAND_SYMBOL+"quit",
-	config.INPUT_COMMAND_SYMBOL+"settings": config.INPUT_COMMAND_SYMBOL+"settings",
-	config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
-	config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
-	config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
-	config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
-	config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
-	config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
-	config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
-	config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
-	config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
-	config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
-	config.INPUT_COMMAND_SYMBOL+"clear": config.INPUT_COMMAND_SYMBOL+"clear",
-}
-
-CHANNEL_COMMANDS = {
-	config.INPUT_COMMAND_SYMBOL+"me": config.INPUT_COMMAND_SYMBOL+"me ",	
-	config.INPUT_COMMAND_SYMBOL+"part": config.INPUT_COMMAND_SYMBOL+"part",
-}
-
-PRIVATE_COMMANDS = {
-	config.INPUT_COMMAND_SYMBOL+"me": config.INPUT_COMMAND_SYMBOL+"me ",	
-}
-
-COMMAND_HELP = [
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"invite</b> USER CHANNEL", "Sends a channel invite to a user" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrousage</b> NAME MESSAGE...", "Sets the \"usage\" text for a macro" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
-]
-
-CHAT_HELP = [
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"me</b> MESSAGE", "Sends CTCP action message" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"part</b> [CHANNEL] [MESSAGE]", "Leaves a channel" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"invite</b> USER [CHANNEL]", "Sends a channel invite to a user" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
-	[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
-]
-
+COMMON_COMMANDS = {}
+CHANNEL_COMMANDS = {}
+PRIVATE_COMMANDS = {}
+COMMAND_HELP = []
+CHAT_HELP = []
 COMMAND_HELP_ENTRIES = []
-for e in COMMAND_HELP:
-	t = HELP_ENTRY
-	t = t.replace("%_USAGE_%",e[0])
-	t = t.replace("%_DESCRIPTION_%",e[1])
-	COMMAND_HELP_ENTRIES.append(t)
-
 CHAT_HELP_ENTRIES = []
-for e in CHAT_HELP:
-	t = HELP_ENTRY
-	t = t.replace("%_USAGE_%",e[0])
-	t = t.replace("%_DESCRIPTION_%",e[1])
-	CHAT_HELP_ENTRIES.append(t)
+
+def buildHelp():
+
+	global COMMON_COMMANDS
+	global CHANNEL_COMMANDS
+	global PRIVATE_COMMANDS
+	global COMMAND_HELP
+	global CHAT_HELP
+	global COMMAND_HELP_ENTRIES
+	global CHAT_HELP_ENTRIES
+
+	COMMON_COMMANDS = {
+		config.INPUT_COMMAND_SYMBOL+"msg": config.INPUT_COMMAND_SYMBOL+"msg ",
+		config.INPUT_COMMAND_SYMBOL+"part": config.INPUT_COMMAND_SYMBOL+"part ",
+		config.INPUT_COMMAND_SYMBOL+"join": config.INPUT_COMMAND_SYMBOL+"join ",
+		config.INPUT_COMMAND_SYMBOL+"notice": config.INPUT_COMMAND_SYMBOL+"notice ",
+		config.INPUT_COMMAND_SYMBOL+"nick": config.INPUT_COMMAND_SYMBOL+"nick ",
+		config.INPUT_COMMAND_SYMBOL+"mode": config.INPUT_COMMAND_SYMBOL+"mode ",
+		config.INPUT_COMMAND_SYMBOL+"away": config.INPUT_COMMAND_SYMBOL+"away ",
+		config.INPUT_COMMAND_SYMBOL+"back": config.INPUT_COMMAND_SYMBOL+"back",
+		config.INPUT_COMMAND_SYMBOL+"oper": config.INPUT_COMMAND_SYMBOL+"oper ",
+		config.INPUT_COMMAND_SYMBOL+"switch": config.INPUT_COMMAND_SYMBOL+"switch ",
+		config.INPUT_COMMAND_SYMBOL+"connect": config.INPUT_COMMAND_SYMBOL+"connect ",
+		config.INPUT_COMMAND_SYMBOL+"reconnect": config.INPUT_COMMAND_SYMBOL+"reconnect ",
+		config.INPUT_COMMAND_SYMBOL+"ssl": config.INPUT_COMMAND_SYMBOL+"ssl ",
+		config.INPUT_COMMAND_SYMBOL+"ressl": config.INPUT_COMMAND_SYMBOL+"ressl ",
+		config.INPUT_COMMAND_SYMBOL+"send": config.INPUT_COMMAND_SYMBOL+"send ",
+		config.INPUT_COMMAND_SYMBOL+"invite": config.INPUT_COMMAND_SYMBOL+"invite ",
+		config.INPUT_COMMAND_SYMBOL+"list": config.INPUT_COMMAND_SYMBOL+"list",
+		config.INPUT_COMMAND_SYMBOL+"refresh": config.INPUT_COMMAND_SYMBOL+"refresh",
+		config.INPUT_COMMAND_SYMBOL+"help": config.INPUT_COMMAND_SYMBOL+"help",
+		config.INPUT_COMMAND_SYMBOL+"topic": config.INPUT_COMMAND_SYMBOL+"topic ",
+		config.INPUT_COMMAND_SYMBOL+"time": config.INPUT_COMMAND_SYMBOL+"time",
+		config.INPUT_COMMAND_SYMBOL+"whois": config.INPUT_COMMAND_SYMBOL+"whois ",
+		config.INPUT_COMMAND_SYMBOL+"whowas": config.INPUT_COMMAND_SYMBOL+"whowas ",
+		config.INPUT_COMMAND_SYMBOL+"version": config.INPUT_COMMAND_SYMBOL+"version",
+		config.INPUT_COMMAND_SYMBOL+"who": config.INPUT_COMMAND_SYMBOL+"who ",
+		config.INPUT_COMMAND_SYMBOL+"exit": config.INPUT_COMMAND_SYMBOL+"exit",
+		config.INPUT_COMMAND_SYMBOL+"quit": config.INPUT_COMMAND_SYMBOL+"quit",
+		config.INPUT_COMMAND_SYMBOL+"settings": config.INPUT_COMMAND_SYMBOL+"settings",
+		config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
+		config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
+		config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
+		config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
+		config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
+		config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
+		config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
+		config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
+		config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
+		config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
+		config.INPUT_COMMAND_SYMBOL+"clear": config.INPUT_COMMAND_SYMBOL+"clear",
+	}
+
+	CHANNEL_COMMANDS = {
+		config.INPUT_COMMAND_SYMBOL+"me": config.INPUT_COMMAND_SYMBOL+"me ",	
+		config.INPUT_COMMAND_SYMBOL+"part": config.INPUT_COMMAND_SYMBOL+"part",
+	}
+
+	PRIVATE_COMMANDS = {
+		config.INPUT_COMMAND_SYMBOL+"me": config.INPUT_COMMAND_SYMBOL+"me ",	
+	}
+
+	COMMAND_HELP = [
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"part</b> CHANNEL [MESSAGE]", "Leaves a channel" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"invite</b> USER CHANNEL", "Sends a channel invite to a user" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrohelp</b> NAME MESSAGE...", "Sets the \"help\" text for a macro" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrousage</b> NAME MESSAGE...", "Sets the \"usage\" text for a macro" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ressl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL, reconnecting on disconnect" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
+	]
+
+	CHAT_HELP = [
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"me</b> MESSAGE", "Sends CTCP action message" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"notice</b> TARGET MESSAGE", "Sends a notice" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"join</b> CHANNEL [KEY]", "Joins a channel" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"part</b> [CHANNEL] [MESSAGE]", "Leaves a channel" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"invite</b> USER [CHANNEL]", "Sends a channel invite to a user" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"nick</b> NEW_NICKNAME", "Changes your nickname" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"away</b> [MESSAGE]", "Sets your status to \"away\"" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"back</b>", "Sets your status to \"back\"" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"version</b> [SERVER]", "Requests server version" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whowas</b> [NICKNAME] [COUNT] [SERVER]", "Requests past user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
+	]
+
+	COMMAND_HELP_ENTRIES = []
+	for e in COMMAND_HELP:
+		t = HELP_ENTRY
+		t = t.replace("%_USAGE_%",e[0])
+		t = t.replace("%_DESCRIPTION_%",e[1])
+		COMMAND_HELP_ENTRIES.append(t)
+
+	CHAT_HELP_ENTRIES = []
+	for e in CHAT_HELP:
+		t = HELP_ENTRY
+		t = t.replace("%_USAGE_%",e[0])
+		t = t.replace("%_DESCRIPTION_%",e[1])
+		CHAT_HELP_ENTRIES.append(t)
+
+buildHelp()
 
 SCRIPT_THREADS = []
 
