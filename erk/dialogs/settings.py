@@ -43,6 +43,7 @@ from .prefix import Dialog as Prefix
 from .history_size import Dialog as HistorySize
 from .format import Dialog as FormatText
 from .list_time import Dialog as ListTime
+from .quitpart import Dialog as QuitPart
 
 class Dialog(QDialog):
 
@@ -112,6 +113,17 @@ class Dialog(QDialog):
 		x = FormatText(self.parent)
 		x.show()
 
+	def setQuitMsg(self):
+		x = QuitPart()
+		info = x.get_message_information()
+		del x
+
+		if not info: return None
+
+		self.default_quit_part = info
+		self.partMsg.setText("<b>"+str(info)+"</b>")
+
+
 	def setListRefresh(self):
 		x = ListTime()
 		info = x.get_entry_information()
@@ -133,6 +145,8 @@ class Dialog(QDialog):
 
 		self.systemPrefix = config.SYSTEM_MESSAGE_PREFIX
 		self.configRefresh = config.CHANNEL_LIST_REFRESH_FREQUENCY
+
+		self.default_quit_part = config.DEFAULT_QUIT_PART_MESSAGE
 
 		self.do_rerender = False
 
@@ -845,12 +859,35 @@ class Dialog(QDialog):
 		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
 		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
+
+
+		self.partMsg = QLabel("<b>"+str(config.DEFAULT_QUIT_PART_MESSAGE)+"</b>")
+
+		self.setPartMsg = QPushButton("Set default part/quit message")
+		self.setPartMsg.clicked.connect(self.setQuitMsg)
+		self.setPartMsg.setAutoDefault(False)
+
+		cgbLayout = QVBoxLayout()
+		cgbLayout.addWidget(self.partMsg)
+		cgbLayout.addWidget(self.setPartMsg)
+
+
+		quitPartBox = QGroupBox("Default Quit/Part Message",self)
+		quitPartBox.setLayout(cgbLayout)
+
+		quitPartBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+
+
+
 		# hsLayout = QHBoxLayout()
 		# hsLayout.addWidget(self.refreshButton)
 		# hsLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(listBox)
+		cpLayout.addWidget(quitPartBox)
 		cpLayout.addWidget(self.buttonsMisc)
 		# cpLayout.addWidget(self.lostErrors)
 		# cpLayout.addWidget(self.failErrors)
@@ -901,6 +938,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.DEFAULT_QUIT_PART_MESSAGE = self.default_quit_part
 
 		config.SAVE_MACROS = self.saveMacros.isChecked()
 

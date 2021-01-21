@@ -298,7 +298,7 @@ def build_connection_display(gui,new_server=None):
 					child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
 				else:
 					child.setText(0,"00:00:00")
-				child.setIcon(0,QIcon(UPTIME_ICON))
+				child.setIcon(0,QIcon(CLOCK_ICON))
 				child.erk_uptime = True
 				child.erk_client = s[1]
 				child.erk_console = False

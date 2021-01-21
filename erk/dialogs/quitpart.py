@@ -29,37 +29,61 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys,os
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5 import QtCore
 
-DEFAULT_NICKNAME = "erk_user"
-DEFAULT_USERNAME = "erk_user"
-DEFAULT_IRCNAME = "Erk IRC Client"
-DEFAULT_ALTERNATIVE = "erk_user99"
+from ..resources import *
+from ..strings import *
+from .. import config
 
-# APPLICATION_NAME = "Ərk"
-APPLICATION_NAME = "Ərk"
-EDITOR_NAME = "Əditor"
+class Dialog(QDialog):
 
-MINOR_VERSION_FILE = os.path.join(os.path.join(os.path.join(sys.path[0], "erk"), "data"), "minor.txt")
-f = open(MINOR_VERSION_FILE,"r")
-MINOR_VERSION = f.read()
-f.close()
-if len(MINOR_VERSION)==1:
-	MINOR_VERSION = '00'+MINOR_VERSION
-elif len(MINOR_VERSION)==2:
-	MINOR_VERSION = '0'+MINOR_VERSION
+	@staticmethod
+	def get_message_information(parent=None):
+		dialog = Dialog(parent)
+		r = dialog.exec_()
+		if r:
+			return dialog.return_info()
+		return None
 
+		self.close()
 
-APPLICATION_MAJOR_VERSION = "0.831"
-APPLICATION_VERSION = APPLICATION_MAJOR_VERSION+"."+MINOR_VERSION
+	def return_info(self):
 
-OFFICIAL_REPOSITORY = "https://github.com/nutjob-laboratories/erk"
-OFFICIAL_REPOSITORY_SHORT = "http://bit.ly/erk-irc"
-PROGRAM_FILENAME = "erk.py"
-NORMAL_APPLICATION_NAME = "Erk"
+		retval = self.name.text()
 
-SERVER_CONSOLE_NAME = "_Server"
+		return retval
 
-MASTER_LOG_NAME = "Log"
+	def __init__(self,parent=None):
+		super(Dialog,self).__init__(parent)
 
-UNKNOWN_NETWORK = "Unknown"
+		self.parent = parent
+
+		self.setWindowTitle("Default Quit/Part Message")
+		self.setWindowIcon(QIcon(EDIT_ICON))
+
+		fm = QFontMetrics(self.font())
+		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
+
+		nameLayout = QHBoxLayout()
+		self.name = QLineEdit()
+		self.name.setPlaceholderText(config.DEFAULT_QUIT_PART_MESSAGE)
+		nameLayout.addWidget(self.name)
+		self.name.setMinimumWidth(wwidth)
+
+		# Buttons
+		buttons = QDialogButtonBox(self)
+		buttons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+		buttons.accepted.connect(self.accept)
+		buttons.rejected.connect(self.reject)
+
+		finalLayout = QVBoxLayout()
+		finalLayout.addLayout(nameLayout)
+		finalLayout.addWidget(buttons)
+
+		self.setWindowFlags(self.windowFlags()
+                    ^ QtCore.Qt.WindowContextHelpButtonHint)
+
+		self.setLayout(finalLayout)

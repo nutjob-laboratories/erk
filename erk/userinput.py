@@ -462,7 +462,7 @@ def handle_channel_input(window,client,text):
 	# Handle channel-specific cases of the /part command
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)==1:
-			client.part(window.name)
+			client.part(window.name,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
@@ -825,7 +825,7 @@ def handle_common_input(window,client,text):
 			window.parent.disconnect_current(msg)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'quit' and len(tokens)==1:
-			window.parent.disconnect_current()
+			window.parent.disconnect_current(config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 
 	if len(tokens)>0:
@@ -852,7 +852,7 @@ def handle_common_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
 				window.writeText(msg,True)
 				return True
-			client.part(channel)
+			client.part(channel,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':

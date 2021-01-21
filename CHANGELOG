@@ -43,6 +43,10 @@ Version 0.831
 	* Added an option to notify script execution end to the script editor
 	* Bugfix: error notification messageboxes in the script editor now have the script editor dialog as parent
 	* Added additional support for changing the "command symbol" (/) in the config file; help will now display properly, as will syntax highlighting
+	* Changed the "uptime" icon in the connection display to a clock (rather than a stopwatch)
+	* Added a new setting to the config file: a default quit/part message that will be used if one is not provided
+	* Added a custom bitly.com shortened URL for the official repo to the source code (it's used in the default quit/part message)
+	* Added the ability to customize the default quit/part message to the "settings" dialog
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

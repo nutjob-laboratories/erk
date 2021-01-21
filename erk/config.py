@@ -33,6 +33,8 @@ import os
 import json
 from .files import SETTINGS_FILE
 
+from .strings import *
+
 SERVER_WINDOW = 1
 CHANNEL_WINDOW = 2
 PRIVATE_WINDOW = 3
@@ -143,12 +145,11 @@ SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 
 AUTOCOMPLETE_MACROS = True
-
 SAVE_MACROS = True
-
 SAVE_SCRIPT_ON_CLOSE = True
-
 NOTIFY_SCRIPT_END = True
+
+DEFAULT_QUIT_PART_MESSAGE = APPLICATION_NAME + " " + APPLICATION_MAJOR_VERSION + " - " + OFFICIAL_REPOSITORY_SHORT
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -156,6 +157,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"default_quit_and_part_message": DEFAULT_QUIT_PART_MESSAGE,
 		"notify_script_execution_end": NOTIFY_SCRIPT_END,
 		"save_on_script_editor_close": SAVE_SCRIPT_ON_CLOSE,
 		"save_macros": SAVE_MACROS,
@@ -260,6 +262,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "default_quit_and_part_message" in data:
+		data["default_quit_and_part_message"] = DEFAULT_QUIT_PART_MESSAGE
 
 	if not "notify_script_execution_end" in data:
 		data["notify_script_execution_end"] = NOTIFY_SCRIPT_END
@@ -444,6 +449,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SAVE_MACROS
 	global SAVE_SCRIPT_ON_CLOSE
 	global NOTIFY_SCRIPT_END
+	global DEFAULT_QUIT_PART_MESSAGE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -452,6 +458,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			DEFAULT_QUIT_PART_MESSAGE = data["default_quit_and_part_message"]
 			NOTIFY_SCRIPT_END = data["notify_script_execution_end"]
 			SAVE_SCRIPT_ON_CLOSE = data["save_on_script_editor_close"]
 			SAVE_MACROS = data["save_macros"]
