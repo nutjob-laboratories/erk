@@ -1,4 +1,11 @@
 
+rem @echo off
+rem call "C:\Program Files\QGIS 3.0\bin\o4w_env.bat"
+rem call "C:\Program Files\QGIS 3.0\bin\qt5_env.bat"
+rem call "C:\Program Files\QGIS 3.0\bin\py3_env.bat"
+
+rem @echo on
+
 del ./erk/resources.py
 
 cd resources

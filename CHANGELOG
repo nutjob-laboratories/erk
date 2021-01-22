@@ -48,6 +48,7 @@ Version 0.831
 	* Added a custom bitly.com shortened URL for the official repo to the source code (it's used in the default quit/part message)
 	* Added the ability to customize the default quit/part message to the "settings" dialog
 	* Bugfix: all IRC quits now use the default quit/part message
+	* Bugfix: removed colon from default quit message
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
