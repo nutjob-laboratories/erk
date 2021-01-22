@@ -49,6 +49,7 @@ Version 0.831
 	* Added the ability to customize the default quit/part message to the "settings" dialog
 	* Bugfix: all IRC quits now use the default quit/part message
 	* Bugfix: removed colon from default quit message
+	* Added RFC 1459 and RFC 2812 to the distribution
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
