@@ -18,40 +18,38 @@ from erk.strings import *
 
 # Build distribution zips
 
-os.mkdir("./dist")
-os.mkdir("./dist/settings")
+os.mkdir("./erk-irc-client")
+os.mkdir("./erk-irc-client/settings")
 
-os.mkdir("./dist/plugins")
-os.mkdir("./dist/plugins/examples")
+os.mkdir("./erk-irc-client/plugins")
+os.mkdir("./erk-irc-client/plugins/examples")
 
-shutil.copy("./plugins/examples/hello.png", "./dist/plugins/examples/hello.png")
-shutil.copy("./plugins/examples/notes.png", "./dist/plugins/examples/notes.png")
-shutil.copy("./plugins/examples/hello.py", "./dist/plugins/examples/hello.py")
-shutil.copy("./plugins/examples/notes.py", "./dist/plugins/examples/notes.py")
-shutil.copy("./plugins/examples/package.png", "./dist/plugins/examples/package.png")
-shutil.copy("./plugins/examples/package.txt", "./dist/plugins/examples/package.txt")
+shutil.copy("./plugins/examples/hello.png", "./erk-irc-client/plugins/examples/hello.png")
+shutil.copy("./plugins/examples/notes.png", "./erk-irc-client/plugins/examples/notes.png")
+shutil.copy("./plugins/examples/hello.py", "./erk-irc-client/plugins/examples/hello.py")
+shutil.copy("./plugins/examples/notes.py", "./erk-irc-client/plugins/examples/notes.py")
+shutil.copy("./plugins/examples/package.png", "./erk-irc-client/plugins/examples/package.png")
+shutil.copy("./plugins/examples/package.txt", "./erk-irc-client/plugins/examples/package.txt")
 
-os.mkdir("./dist/documentation")
-shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./dist/documentation/Erk_Plugin_Guide.pdf")
-shutil.copy("./documentation/Erk_Commands.pdf", "./dist/documentation/Erk_Commands.pdf")
-
-os.mkdir("./dist/macros")
-shutil.copy("./macros/trout.json", "./dist/macros/trout.json")
+os.mkdir("./erk-irc-client/documentation")
+shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./erk-irc-client/documentation/Erk_Plugin_Guide.pdf")
+shutil.copy("./documentation/Erk_Scripting_and_Commands.pdf", "./erk-irc-client/documentation/Erk_Scripting_and_Commands.pdf")
 
 os.system("compile_resources.bat")
 
-shutil.copytree("./erk", "./dist/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./erk", "./erk-irc-client/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
-shutil.copytree("./spellchecker", "./dist/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
-shutil.copytree("./emoji", "./dist/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./spellchecker", "./erk-irc-client/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./emoji", "./erk-irc-client/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
-shutil.copy("./erk.py", "./dist/erk.py")
+shutil.copy("./erk.py", "./erk-irc-client/erk.py")
 
-shutil.copy("./LICENSE", "./dist/LICENSE")
+shutil.copy("./LICENSE", "./erk-irc-client/LICENSE")
 
-os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('dist', 'erk_dist.zip'); }\" ")
+os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('erk-irc-client', 'erk_dist.zip'); }\" ")
+#os.system("cd erk-irc-client; zip -r ../erk_dist.zip . ; cd ..")
 
-shutil.rmtree('./dist')
+shutil.rmtree('./erk-irc-client')
 
 archive_name = f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_MAJOR_VERSION}.zip"
 

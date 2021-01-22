@@ -105,7 +105,7 @@ def fetch_connections():
 
 def quit_all():
 	for c in CONNECTIONS:
-		c.quit()
+		c.quit(config.DEFAULT_QUIT_PART_MESSAGE)
 
 def clear_unseen(window):
 	try:
