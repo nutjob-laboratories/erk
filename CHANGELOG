@@ -55,6 +55,7 @@ Version 0.831
 	* Bugfix: alias variables were still being interpolated into input even if scripts were turned off
 	* New command: /unalias (deletes global alias variables)
 	* Made a clarification about available commands for connection scripts in the "connect" dialog
+	* Bugfix: /unalias is now marked as "misspelled" by the spell checker (as it's not available for use outside of scripts)
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
