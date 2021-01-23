@@ -953,12 +953,15 @@ class Erk(QMainWindow):
 		self.helpMenu.addSeparator()
 		#insertNoTextSeparator(self,self.helpMenu)
 
-		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 1459",self)
-		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc1459": self.open_link_in_browser(u))
+		RFC_1459 = os.path.join(DOCUMENTATION_DIRECTORY, "rfc1459.pdf")
+		RFC_2812 = os.path.join(DOCUMENTATION_DIRECTORY, "rfc2812.pdf")
+
+		helpLink = QAction(QIcon(PDF_ICON),"RFC 1459",self)
+		helpLink.triggered.connect(lambda state,s=RFC_1459: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.helpMenu.addAction(helpLink)
 
-		helpLink = QAction(QIcon(DOCUMENT_ICON),"RFC 2812",self)
-		helpLink.triggered.connect(lambda state,u="https://tools.ietf.org/html/rfc2812": self.open_link_in_browser(u))
+		helpLink = QAction(QIcon(PDF_ICON),"RFC 2812",self)
+		helpLink.triggered.connect(lambda state,s=RFC_2812: QDesktopServices.openUrl(QUrl("file:"+s)))
 		self.helpMenu.addAction(helpLink)
 
 		self.helpMenu.addSeparator()

@@ -1458,7 +1458,7 @@ class ScriptThreadWindow(QThread):
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
 					if len(tokens)<2:
-						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}msgbox in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}msgbox requires at least 1 argument"])
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}msgbox requires at least 1 argument"])
 						self.had_error = True
 						break
 
