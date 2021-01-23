@@ -60,6 +60,7 @@ Version 0.831
 	* Added the enable/disable macros settings to the "settings" dialog
 	* Bugfix: added "unalias" to the list of forbidden names for macros
 	* Macros will have autocomplete turned off (if it's enabled) if macros are disabled
+	* Cleaned up the "insert macro" dialog in the script editor
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

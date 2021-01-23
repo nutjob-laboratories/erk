@@ -44,6 +44,17 @@ class Dialog(QDialog):
 
 		c = self.argcount.currentText()
 		if c == 'Any': c = '*'
+		if c == 'None': c = '0'
+		if c == 'One': c = '1'
+		if c == 'Two': c = '2'
+		if c == 'Three': c = '3'
+		if c == 'Four': c = '4'
+		if c == 'Five': c = '5'
+		if c == 'Six': c = '6'
+		if c == 'Seven': c = '7'
+		if c == 'Eight': c = '8'
+		if c == 'Nine': c = '9'
+		if c == 'Ten': c = '10'
 
 		self.args = c
 
@@ -78,26 +89,28 @@ class Dialog(QDialog):
 		nameLayout = QHBoxLayout()
 		self.nameLabel = QLabel("Name")
 		self.name = QLineEdit()
+		self.name.setMinimumWidth(wwidth)
+		self.name.setPlaceholderText("Macro name, callable with /NAME")
 		nameLayout.addWidget(self.nameLabel)
-		nameLayout.addWidget(self.name)
 		nameLayout.addStretch()
+		nameLayout.addWidget(self.name)
 
 
 		self.argcount = QComboBox(self)
 		self.argcount.activated.connect(self.setArgcount)
 
-		self.argcount.addItem("0")
+		self.argcount.addItem("None")
 		self.argcount.addItem("Any")
-		self.argcount.addItem("1")
-		self.argcount.addItem("2")
-		self.argcount.addItem("3")
-		self.argcount.addItem("4")
-		self.argcount.addItem("5")
-		self.argcount.addItem("6")
-		self.argcount.addItem("7")
-		self.argcount.addItem("8")
-		self.argcount.addItem("9")
-		self.argcount.addItem("10")
+		self.argcount.addItem("One")
+		self.argcount.addItem("Two")
+		self.argcount.addItem("Three")
+		self.argcount.addItem("Four")
+		self.argcount.addItem("Five")
+		self.argcount.addItem("Six")
+		self.argcount.addItem("Seven")
+		self.argcount.addItem("Eight")
+		self.argcount.addItem("Nine")
+		self.argcount.addItem("Ten")
 
 		# argsLayout = QHBoxLayout()
 		# self.argsLabel = QLabel("# of arguments")
@@ -105,16 +118,20 @@ class Dialog(QDialog):
 		# argsLayout.addStretch()
 		# argsLayout.addWidget(self.argcount)
 
-		self.argsLabel = QLabel("# of arguments")
-		nameLayout.addWidget(self.argsLabel)
-		nameLayout.addWidget(self.argcount)
-		nameLayout.addStretch()
+		self.argsLabel = QLabel("Number of arguments ")
+
+		argsLayout = QHBoxLayout()
+
+		argsLayout.addWidget(self.argsLabel)
+		#argsLayout.addStretch()
+		argsLayout.addWidget(self.argcount)
+		argsLayout.addStretch()
 
 
 		messageLayout = QHBoxLayout()
-		self.messageLabel = QLabel("Message")
+		self.messageLabel = QLabel("Output")
 		self.message = QLineEdit()
-		#self.message.setPlaceholderText("Type your comment here")
+		self.message.setPlaceholderText("Macro output")
 		self.message.setMinimumWidth(wwidth)
 		messageLayout.addWidget(self.messageLabel)
 		messageLayout.addStretch()
@@ -130,13 +147,59 @@ class Dialog(QDialog):
 		helpLayout.addWidget(self.help)
 
 		argdescLayout = QHBoxLayout()
-		self.argsDescLabel = QLabel("Arguments")
+		self.argsDescLabel = QLabel("Argument description")
 		self.argsDesc = QLineEdit()
 		self.argsDesc.setPlaceholderText("Macro argument description")
 		self.argsDesc.setMinimumWidth(wwidth)
 		argdescLayout.addWidget(self.argsDescLabel)
 		argdescLayout.addStretch()
 		argdescLayout.addWidget(self.argsDesc)
+
+
+		
+
+		allArgs = QLabel("<small><b>$+</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments to macro</small>")
+		
+		nicks = QLabel("<small><b>$NICK</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current nickname</small>") 
+		username = QLabel("<small><b>$USERNAME</b>&nbsp;&nbsp;&nbsp;&nbsp;Current username</small>") 
+		realname = QLabel("<small><b>$REALNAME</b>&nbsp;&nbsp;&nbsp;&nbsp;Current realname</small>")
+
+		hostname = QLabel("<small><b>$HOSTNAME</b>&nbsp;&nbsp;&nbsp;&nbsp;Server's hostname</small>")
+
+		columnOne = QVBoxLayout()
+		columnOne.addWidget(allArgs)
+		
+		columnOne.addWidget(nicks)
+		columnOne.addWidget(username)
+		columnOne.addWidget(realname)
+		columnOne.addWidget(hostname)
+
+
+		mostArgs = QLabel("<small><b>$-</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments except the first</small>") 
+		ip = QLabel("<small><b>$SERVER</b>&nbsp;&nbsp;Server's connection address</small>")
+		port = QLabel("<small><b>$PORT</b>&nbsp;&nbsp;&nbsp;&nbsp;Server's connection port</small>")
+		where = QLabel("<small><b>$WHERE</b>&nbsp;&nbsp;&nbsp;Calling channel/nickname</small>")
+
+
+		columnTwo = QVBoxLayout()
+		columnTwo.addWidget(mostArgs)
+		columnTwo.addWidget(ip)
+		columnTwo.addWidget(port)
+		columnTwo.addWidget(where)
+
+		aliasLayout = QHBoxLayout()
+		aliasLayout.addLayout(columnOne)
+		aliasLayout.addLayout(columnTwo)
+
+
+		infoBox = QGroupBox("Special Aliases",self)
+		infoBox.setLayout(aliasLayout)
+
+		infoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+
+
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -146,10 +209,13 @@ class Dialog(QDialog):
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(nameLayout)
-		#finalLayout.addLayout(argsLayout)
+		finalLayout.addLayout(argsLayout)
 		finalLayout.addLayout(messageLayout)
 		finalLayout.addLayout(helpLayout)
 		finalLayout.addLayout(argdescLayout)
+
+		finalLayout.addWidget(infoBox)
+
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
