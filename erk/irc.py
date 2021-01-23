@@ -1381,6 +1381,8 @@ class ScriptThreadWindow(QThread):
 	scriptErr = pyqtSignal(list)
 	msgBox = pyqtSignal(list)
 
+	unalias = pyqtSignal(list)
+
 	def __init__(self,window,client,script,mid,scriptname,variable_table,arguments,parent=None):
 		super(ScriptThreadWindow, self).__init__(parent)
 		self.script = script
@@ -1458,7 +1460,33 @@ class ScriptThreadWindow(QThread):
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':
 					if len(tokens)<2:
-						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}msgbox requires at least 1 argument"])
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}argcount in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}argcount requires at least 1 argument"])
+						self.had_error = True
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unalias':
+					if len(tokens)!=2:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}unalias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}unalias requires only 1 argument"])
+						self.had_error = True
+						break
+
+			if len(tokens)>0:
+				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unalias' and len(tokens)==2:
+					tokens.pop(0)
+					ualias = tokens.pop(0)
+
+					# If the interpolation symbol has been included, strip it
+					interplen = len(config.SCRIPT_INTERPOLATE_SYMBOL)
+					if len(ualias)>interplen:
+						if ualias[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
+							ualias = ualias[interplen:]
+
+					if ualias in self.vtable:
+						self.vtable.pop(ualias)
+						self.unalias.emit([self.scriptname,ualias])
+					else:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}unalias in {self.scriptname}: alias \"{ualias}\" not found"])
 						self.had_error = True
 						break
 

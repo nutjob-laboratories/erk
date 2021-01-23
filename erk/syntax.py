@@ -94,6 +94,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 			cmdsymbol+'clear',
 			cmdsymbol+'msgbox',
 			cmdsymbol+'macrousage',
+			cmdsymbol+'unalias',
 		]
 
 		STYLES = {

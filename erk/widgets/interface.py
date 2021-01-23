@@ -297,6 +297,7 @@ class Window(QMainWindow):
 			'macrousage',
 			APPLICATION_NAME,
 			'Erk',
+			'unalias',
 		]
 
 		self.language = config.SPELLCHECK_LANGUAGE

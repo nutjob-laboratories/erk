@@ -342,8 +342,9 @@ def handle_macros(window,client,text):
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
-	for key in VARIABLE_TABLE:
-		text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
+	if not client.gui.block_scripts:
+		for key in VARIABLE_TABLE:
+			text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
 
 	if not client.gui.block_scripts:
 		text = handle_macros(window,client,text)
@@ -1123,6 +1124,11 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait':
 			return True
 
+	# The /unalias command an only be called from scripts.
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unalias':
+			return True
+
 	# The /alias command an only be called from scripts.
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
@@ -1272,6 +1278,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
 				scriptThread.msgBox.connect(execute_script_msgbox)
+				scriptThread.unalias.connect(execute_script_unalias)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1315,6 +1322,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
 				scriptThread.msgBox.connect(execute_script_msgbox)
+				scriptThread.unalias.connect(execute_script_unalias)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1365,6 +1373,7 @@ def handle_ui_input(window,client,text):
 				scriptThread.scriptEnd.connect(execute_script_end)
 				scriptThread.scriptErr.connect(execute_script_error)
 				scriptThread.msgBox.connect(execute_script_msgbox)
+				scriptThread.unalias.connect(execute_script_unalias)
 				scriptThread.start()
 
 				# Store the thread so it doesn't get garbage collected
@@ -1658,6 +1667,7 @@ def execute_code(script,client,err_func,end_func):
 	scriptThread.scriptEnd.connect(end_func)
 	scriptThread.scriptErr.connect(err_func)
 	scriptThread.msgBox.connect(execute_script_msgbox)
+	scriptThread.unalias.connect(execute_script_unalias)
 	scriptThread.start()
 
 	# Store the thread so it doesn't get garbage collected
@@ -1687,6 +1697,7 @@ def execute_script(filename,window,client):
 		scriptThread.scriptEnd.connect(execute_script_end)
 		scriptThread.scriptErr.connect(execute_script_error)
 		scriptThread.msgBox.connect(execute_script_msgbox)
+		scriptThread.unalias.connect(execute_script_unalias)
 		scriptThread.start()
 
 		# Store the thread so it doesn't get garbage collected
@@ -1736,3 +1747,11 @@ def execute_script_msgbox(data):
 	x.setText(msg)
 	x.setWindowTitle(scriptname)
 	x.exec_()
+
+def execute_script_unalias(data):
+	scriptname = data[0]
+	alias = data[1]
+
+	global VARIABLE_TABLE
+	if alias in VARIABLE_TABLE:
+		VARIABLE_TABLE.pop(alias)

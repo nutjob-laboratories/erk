@@ -60,6 +60,14 @@ class Window(QMainWindow):
 				msg.setInformativeText(ep[1])
 				msg.setWindowTitle("/argcount")
 				msg.exec_()
+			elif 'unalias' in ep[0]:
+				# wrong arg to /argcount
+				msg = QMessageBox(self)
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Script error")
+				msg.setInformativeText(ep[1])
+				msg.setWindowTitle("/unalias")
+				msg.exec_()
 			elif '_alias' in ep[0]:
 				# wrong arg to /argcount
 				msg = QMessageBox(self)
