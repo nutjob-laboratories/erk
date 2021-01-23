@@ -766,6 +766,17 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.saveMacros.setEnabled(False)
 
+
+
+
+		self.enableMacros = QCheckBox("Enable macros",self)
+		if config.ENABLE_MACROS: self.enableMacros.setChecked(True)
+
+		if self.parent.cmdline_script:
+			self.enableMacros.setEnabled(False)
+
+
+
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
 		cgbLayout.addWidget(self.pluginErrors)
@@ -783,6 +794,7 @@ class Dialog(QDialog):
 		scgbLayout.addWidget(self.scriptMisc)
 		scgbLayout.addWidget(self.seditMisc)
 		scgbLayout.addWidget(self.sglobalMisc)
+		scgbLayout.addWidget(self.enableMacros)
 		scgbLayout.addWidget(self.saveMacros)
 		scgbLayout.addWidget(self.autoMacros)
 
@@ -938,6 +950,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.ENABLE_MACROS = self.enableMacros.isChecked()
 
 		config.DEFAULT_QUIT_PART_MESSAGE = self.default_quit_part
 

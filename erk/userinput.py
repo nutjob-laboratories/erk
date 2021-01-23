@@ -254,6 +254,7 @@ PROTECTED_NAMES = [
 		'clear',
 		'msgbox',
 		'macrousage',
+		'unalias',
 	]
 
 def handle_macros(window,client,text):
@@ -347,8 +348,9 @@ def handle_input(window,client,text):
 			text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
 
 	if not client.gui.block_scripts:
-		text = handle_macros(window,client,text)
-		if text == None: return
+		if config.ENABLE_MACROS:
+			text = handle_macros(window,client,text)
+			if text == None: return
 
 	if handle_ui_input(window,client,text):
 		window.input.setFocus()
@@ -392,25 +394,26 @@ def handle_channel_input(window,client,text):
 			hdisplay = list(CHAT_HELP_ENTRIES)
 
 			if not client.gui.block_scripts:
-				if len(MACROS)>0:
-					for m in MACROS:
-						macro_name = m.name
-						macro_argcount = m.argcount
-						if m.args==None:
-							if macro_argcount<0:
-								margs = "[ARG...]"
+				if config.ENABLE_MACROS:
+					if len(MACROS)>0:
+						for m in MACROS:
+							macro_name = m.name
+							macro_argcount = m.argcount
+							if m.args==None:
+								if macro_argcount<0:
+									margs = "[ARG...]"
+								else:
+									margs = "ARG "*macro_argcount
+									margs = margs.strip()
 							else:
-								margs = "ARG "*macro_argcount
-								margs = margs.strip()
-						else:
-							margs = m.args
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
-						if m.help==None:
-							t = t.replace("%_DESCRIPTION_%","Macro")
-						else:
-							t = t.replace("%_DESCRIPTION_%",m.help)
-						hdisplay.append(t)
+								margs = m.args
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+							if m.help==None:
+								t = t.replace("%_DESCRIPTION_%","Macro")
+							else:
+								t = t.replace("%_DESCRIPTION_%",m.help)
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
@@ -491,25 +494,26 @@ def handle_private_input(window,client,text):
 			hdisplay = list(CHAT_HELP_ENTRIES)
 
 			if not client.gui.block_scripts:
-				if len(MACROS)>0:
-					for m in MACROS:
-						macro_name = m.name
-						macro_argcount = m.argcount
-						if m.args==None:
-							if macro_argcount<0:
-								margs = "[ARG...]"
+				if config.ENABLE_MACROS:
+					if len(MACROS)>0:
+						for m in MACROS:
+							macro_name = m.name
+							macro_argcount = m.argcount
+							if m.args==None:
+								if macro_argcount<0:
+									margs = "[ARG...]"
+								else:
+									margs = "ARG "*macro_argcount
+									margs = margs.strip()
 							else:
-								margs = "ARG "*macro_argcount
-								margs = margs.strip()
-						else:
-							margs = m.args
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
-						if m.help==None:
-							t = t.replace("%_DESCRIPTION_%","Macro")
-						else:
-							t = t.replace("%_DESCRIPTION_%",m.help)
-						hdisplay.append(t)
+								margs = m.args
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+							if m.help==None:
+								t = t.replace("%_DESCRIPTION_%","Macro")
+							else:
+								t = t.replace("%_DESCRIPTION_%",m.help)
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
@@ -694,25 +698,26 @@ def handle_common_input(window,client,text):
 			hdisplay = list(COMMAND_HELP_ENTRIES)
 
 			if not client.gui.block_scripts:
-				if len(MACROS)>0:
-					for m in MACROS:
-						macro_name = m.name
-						macro_argcount = m.argcount
-						if m.args==None:
-							if macro_argcount<0:
-								margs = "[ARG...]"
+				if config.ENABLE_MACROS:
+					if len(MACROS)>0:
+						for m in MACROS:
+							macro_name = m.name
+							macro_argcount = m.argcount
+							if m.args==None:
+								if macro_argcount<0:
+									margs = "[ARG...]"
+								else:
+									margs = "ARG "*macro_argcount
+									margs = margs.strip()
 							else:
-								margs = "ARG "*macro_argcount
-								margs = margs.strip()
-						else:
-							margs = m.args
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
-						if m.help==None:
-							t = t.replace("%_DESCRIPTION_%","Macro")
-						else:
-							t = t.replace("%_DESCRIPTION_%",m.help)
-						hdisplay.append(t)
+								margs = m.args
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+config.INPUT_COMMAND_SYMBOL+macro_name+" "+margs+"</b>")
+							if m.help==None:
+								t = t.replace("%_DESCRIPTION_%","Macro")
+							else:
+								t = t.replace("%_DESCRIPTION_%",m.help)
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)

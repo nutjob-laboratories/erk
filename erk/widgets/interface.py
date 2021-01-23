@@ -1482,7 +1482,7 @@ class SpellTextEdit(QPlainTextEdit):
 			if config.AUTOCOMPLETE_MACROS:
 
 				if not self.parent.parent.block_scripts:
-
+					if config.ENABLE_MACROS:
 						# Auto-complete macros
 						macro_list = list(userinput.MACROS)
 						for c in macro_list:

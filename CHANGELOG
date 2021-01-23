@@ -56,6 +56,10 @@ Version 0.831
 	* New command: /unalias (deletes global alias variables)
 	* Made a clarification about available commands for connection scripts in the "connect" dialog
 	* Bugfix: /unalias is now marked as "misspelled" by the spell checker (as it's not available for use outside of scripts)
+	* Added a setting to the configuration file to turn macros on and off
+	* Added the enable/disable macros settings to the "settings" dialog
+	* Bugfix: added "unalias" to the list of forbidden names for macros
+	* Macros will have autocomplete turned off (if it's enabled) if macros are disabled
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
