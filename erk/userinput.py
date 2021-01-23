@@ -343,6 +343,9 @@ def handle_macros(window,client,text):
 def handle_input(window,client,text):
 	if len(text.strip())==0: return
 
+	# Strip leading and trailing whitespace
+	text = text.strip()
+
 	if not client.gui.block_scripts:
 		for key in VARIABLE_TABLE:
 			text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])

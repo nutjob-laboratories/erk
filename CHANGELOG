@@ -61,6 +61,8 @@ Version 0.831
 	* Bugfix: added "unalias" to the list of forbidden names for macros
 	* Macros will have autocomplete turned off (if it's enabled) if macros are disabled
 	* Cleaned up the "insert macro" dialog in the script editor
+	* Autocomplete will now not insert a space after macros that require no arguments
+	* Leading and trailing whitespace is now stripped from text input, explicitly
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

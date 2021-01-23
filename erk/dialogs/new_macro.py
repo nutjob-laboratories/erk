@@ -186,6 +186,7 @@ class Dialog(QDialog):
 		columnTwo.addWidget(ip)
 		columnTwo.addWidget(port)
 		columnTwo.addWidget(where)
+		columnTwo.addWidget(QLabel(' '))
 
 		aliasLayout = QHBoxLayout()
 		aliasLayout.addLayout(columnOne)

@@ -1480,14 +1480,16 @@ class SpellTextEdit(QPlainTextEdit):
 							return
 
 			if config.AUTOCOMPLETE_MACROS:
-
 				if not self.parent.parent.block_scripts:
 					if config.ENABLE_MACROS:
 						# Auto-complete macros
 						macro_list = list(userinput.MACROS)
 						for c in macro_list:
 							cmd = config.INPUT_COMMAND_SYMBOL+c.name
-							rep = config.INPUT_COMMAND_SYMBOL+c.name + " "
+							if c.argcount==0:
+								rep = config.INPUT_COMMAND_SYMBOL+c.name
+							else:
+								rep = config.INPUT_COMMAND_SYMBOL+c.name + " "
 
 							if fnmatch.fnmatch(cmd,f"{text}*"):
 								cursor.beginEditBlock()
