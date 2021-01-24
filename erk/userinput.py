@@ -257,6 +257,11 @@ PROTECTED_NAMES = [
 		'unalias',
 	]
 
+FORBIDDEN_CHARACTERS = [
+	config.INPUT_COMMAND_SYMBOL,
+	config.SCRIPT_INTERPOLATE_SYMBOL,
+]
+
 def handle_macros(window,client,text):
 
 	tokens = text.split()
@@ -1054,6 +1059,12 @@ def handle_ui_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"\""+name+"\" already exists as a command, and can't be used as a macro name")
 				window.writeText(msg,True)
 				return True
+
+			for c in FORBIDDEN_CHARACTERS:
+				if c in name:
+					msg = Message(ERROR_MESSAGE,'',"Macro names can't contains the following: \""+c+"\"")
+					window.writeText(msg,True)
+					return True
 
 			if args=='*': args = -1
 

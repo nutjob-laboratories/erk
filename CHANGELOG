@@ -72,6 +72,7 @@ Version 0.831
 	* Added directory() and channels() methods to the plugin editor
 	* Added the above methods to the syntax highlighter & context menu code generator
 	* Bugfix: removed a menu separator that wasn't supposed to be there from the editor context menu
+	* Added a check to see if macro names contain the command trigger symbol or the interpolation symbol, and stop creation if it finds one
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
