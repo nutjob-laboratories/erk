@@ -1118,8 +1118,8 @@ class Window(QMainWindow):
 
 		menu = self.editor.createStandardContextMenu()
 
-		#menu.addSeparator()
-		insertNoTextSeparator(self,menu)
+		menu.addSeparator()
+		#insertNoTextSeparator(self,menu)
 
 		funcMenu = QMenu("Insert plugin method")
 		funcMenu.setIcon(QIcon(ERK_ICON))

@@ -71,6 +71,7 @@ Version 0.831
 	* Re-arranged the plugin documentation to make more sense (alphabetized the method list, etc)
 	* Added directory() and channels() methods to the plugin editor
 	* Added the above methods to the syntax highlighter & context menu code generator
+	* Bugfix: removed a menu separator that wasn't supposed to be there from the editor context menu
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
