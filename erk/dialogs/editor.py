@@ -1141,6 +1141,14 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="userinput": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(LAMBDA_ICON),"channels()",self)
+		entry.triggered.connect(lambda state,f="channels": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"directory()",self)
+		entry.triggered.connect(lambda state,f="directory": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		#funcMenu.addSeparator()
 		insertNoTextSeparator(self,funcMenu)
 
@@ -1245,6 +1253,16 @@ class Window(QMainWindow):
 				code = "self.sysmsg(\""+data+"\")"
 				self.editor.insertPlainText(code)
 
+		if ctype=="channels":
+			code = "channel_list = self.channels()"
+
+			self.editor.insertPlainText(code)
+
+		if ctype=="directory":
+			code = "plugin_directory = self.directory()"
+
+			self.editor.insertPlainText(code)
+
 
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
@@ -1343,7 +1361,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'self.print','self.console','self.write','self.log','self.uptime',
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
-		'self.userinput','self.msgbox','self.sysmsg',
+		'self.userinput','self.msgbox','self.sysmsg','self.channels','self.directory',
 	]
 
 	# Python keywords

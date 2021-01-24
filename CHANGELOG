@@ -69,6 +69,8 @@ Version 0.831
 	* Added a setting to the config file to toggle channel autocomplete
 	* Added the autocomplete channels option to the "settings" dialog
 	* Re-arranged the plugin documentation to make more sense (alphabetized the method list, etc)
+	* Added directory() and channels() methods to the plugin editor
+	* Added the above methods to the syntax highlighter & context menu code generator
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
