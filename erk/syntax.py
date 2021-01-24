@@ -91,7 +91,6 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 			cmdsymbol+'macrohelp',
 			cmdsymbol+'unmacro',
 			cmdsymbol+'edit',
-			cmdsymbol+'clear',
 			cmdsymbol+'msgbox',
 			cmdsymbol+'macrousage',
 			cmdsymbol+'unalias',

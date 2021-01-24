@@ -145,7 +145,6 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrousage</b> NAME MESSAGE...", "Sets the \"usage\" text for a macro" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
-		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -181,7 +180,6 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
-		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"clear</b>", "Clears the current window" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
@@ -251,7 +249,6 @@ PROTECTED_NAMES = [
 		'macrohelp',
 		'unmacro',
 		'edit',
-		'clear',
 		'msgbox',
 		'macrousage',
 		'unalias',
@@ -954,22 +951,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"macrousage NAME MESSAGE...")
 			window.writeText(msg,True)
 			return True
-
-
-
-
-
-
-	if len(tokens)>0:
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'clear' and len(tokens)==1:
-			window.clearScreen()
-			return True
-
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'clear':
-			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"clear")
-			window.writeText(msg,True)
-			return True
-
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
