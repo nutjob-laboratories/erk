@@ -68,6 +68,7 @@ Version 0.831
 	* Added channel autocomplete
 	* Added a setting to the config file to toggle channel autocomplete
 	* Added the autocomplete channels option to the "settings" dialog
+	* Re-arranged the plugin documentation to make more sense (alphabetized the method list, etc)
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
