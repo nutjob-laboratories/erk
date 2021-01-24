@@ -1352,6 +1352,13 @@ def erk_changed_nick(gui,client,newnick):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+def erk_channel_list(client):
+	result = []
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			result.append(window.widget.name)
+	return result
+
 def erk_left_channel(gui,client,channel):
 	
 	window = fetch_console_window(client)

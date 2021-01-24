@@ -354,6 +354,12 @@ class IRC_Connection(irc.IRCClient):
 		events.erk_left_channel(self.gui,self,channel)
 
 		clean = []
+		for c in self.joined_channels:
+			if c==channel: continue
+			clean.append(c)
+		self.joined_channels = clean
+
+		clean = []
 		for c in self.autojoin:
 			if c[0]==channel: continue
 			clean.append(c)

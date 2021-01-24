@@ -63,6 +63,11 @@ Version 0.831
 	* Cleaned up the "insert macro" dialog in the script editor
 	* Autocomplete will now not insert a space after macros that require no arguments
 	* Leading and trailing whitespace is now stripped from text input, explicitly
+	* Added a new built-in method for plugins: .channels(), which returns a list of channels the client is in
+	* Added the .channels() method to the documentation
+	* Added channel autocomplete
+	* Added a setting to the config file to toggle channel autocomplete
+	* Added the autocomplete channels option to the "settings" dialog
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

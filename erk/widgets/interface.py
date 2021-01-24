@@ -1497,8 +1497,17 @@ class SpellTextEdit(QPlainTextEdit):
 								cursor.endEditBlock()
 								return
 
+			if config.AUTOCOMPLETE_CHANNELS:
+				channel_list = events.erk_channel_list(self.parent.client)
+				for c in channel_list:
+					if fnmatch.fnmatch(c,f"{text}*"):
+						cursor.beginEditBlock()
+						cursor.insertText(c)
+						cursor.endEditBlock()
+						return
+
 			if config.AUTOCOMPLETE_NICKNAMES:
-				# Auto-complete nicks/channels
+				# Auto-complete nicks
 				cursor.select(QTextCursor.WordUnderCursor)
 				self.setTextCursor(cursor)
 				if self.textCursor().hasSelection():

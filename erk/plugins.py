@@ -105,6 +105,12 @@ class ErkFunctions(object):
 	def info(self):
 		return APPLICATION_NAME+" "+APPLICATION_VERSION
 
+	def channels(self):
+		if self._erk_client:
+			return events.erk_channel_list(self._erk_client)
+
+		return []
+
 	def print(self,text):
 		if self._erk_client and self._erk_window_name:
 			if self._erk_window_name==SERVER_CONSOLE_NAME:

@@ -153,14 +153,16 @@ DEFAULT_QUIT_PART_MESSAGE = APPLICATION_NAME + " " + APPLICATION_MAJOR_VERSION +
 
 ENABLE_MACROS = True
 
+AUTOCOMPLETE_CHANNELS = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
-
 		"default_quit_and_part_message": DEFAULT_QUIT_PART_MESSAGE,
 		"notify_script_execution_end": NOTIFY_SCRIPT_END,
 		"save_on_script_editor_close": SAVE_SCRIPT_ON_CLOSE,
@@ -266,6 +268,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "autocomplete_channels" in data:
+		data["autocomplete_channels"] = AUTOCOMPLETE_CHANNELS
 
 	if not "enable_macros" in data:
 		data["enable_macros"] = ENABLE_MACROS
@@ -458,6 +463,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global NOTIFY_SCRIPT_END
 	global DEFAULT_QUIT_PART_MESSAGE
 	global ENABLE_MACROS
+	global AUTOCOMPLETE_CHANNELS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -466,6 +472,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
 			ENABLE_MACROS = data["enable_macros"]
 			DEFAULT_QUIT_PART_MESSAGE = data["default_quit_and_part_message"]
 			NOTIFY_SCRIPT_END = data["notify_script_execution_end"]

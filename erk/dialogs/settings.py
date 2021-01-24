@@ -563,10 +563,14 @@ class Dialog(QDialog):
 		self.cmdComplete = QCheckBox("Commands",self)
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
+		self.channelComplete = QCheckBox("Channels",self)
+		if config.AUTOCOMPLETE_CHANNELS: self.channelComplete.setChecked(True)
+
 		autoLayout = QHBoxLayout()
 		autoLayout.addStretch()
 		autoLayout.addWidget(self.cmdComplete)
 		autoLayout.addWidget(self.nickComplete)
+		autoLayout.addWidget(self.channelComplete)
 		autoLayout.addStretch()
 
 		autoBox = QGroupBox("Auto-Complete",self)
@@ -766,16 +770,11 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.saveMacros.setEnabled(False)
 
-
-
-
 		self.enableMacros = QCheckBox("Enable macros",self)
 		if config.ENABLE_MACROS: self.enableMacros.setChecked(True)
 
 		if self.parent.cmdline_script:
 			self.enableMacros.setEnabled(False)
-
-
 
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
@@ -871,8 +870,6 @@ class Dialog(QDialog):
 		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
 		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
-
-
 		self.partMsg = QLabel("<b>"+str(config.DEFAULT_QUIT_PART_MESSAGE)+"</b>")
 
 		self.setPartMsg = QPushButton("Set default part/quit message")
@@ -888,9 +885,6 @@ class Dialog(QDialog):
 		quitPartBox.setLayout(cgbLayout)
 
 		quitPartBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-
-
 
 
 		# hsLayout = QHBoxLayout()
@@ -950,6 +944,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.AUTOCOMPLETE_CHANNELS = self.channelComplete.isChecked()
 
 		config.ENABLE_MACROS = self.enableMacros.isChecked()
 
