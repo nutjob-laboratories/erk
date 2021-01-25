@@ -61,9 +61,9 @@ PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
 DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
-def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None):
-	x = EditorInput(title,prompt,twoinputs,twoprompt)
-	info = x.get_string_information(title,prompt,twoinputs,twoprompt)
+def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None,self=None):
+	x = EditorInput(title,prompt,twoinputs,twoprompt,self)
+	info = x.get_string_information(title,prompt,twoinputs,twoprompt,self)
 	del x
 
 	if not info: return None
@@ -1133,10 +1133,6 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="uptime": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
-		entry = QAction(QIcon(LAMBDA_ICON),"exec()",self)
-		entry.triggered.connect(lambda state,f="exec": self.insertMethod(f))
-		funcMenu.addAction(entry)
-
 		entry = QAction(QIcon(LAMBDA_ICON),"userinput()",self)
 		entry.triggered.connect(lambda state,f="userinput": self.insertMethod(f))
 		funcMenu.addAction(entry)
@@ -1149,8 +1145,24 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="directory": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(LAMBDA_ICON),"users()",self)
+		entry.triggered.connect(lambda state,f="users": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"topic()",self)
+		entry.triggered.connect(lambda state,f="topic": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		#funcMenu.addSeparator()
 		insertNoTextSeparator(self,funcMenu)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"send()",self)
+		entry.triggered.connect(lambda state,f="send": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
+		entry = QAction(QIcon(LAMBDA_ICON),"exec()",self)
+		entry.triggered.connect(lambda state,f="exec": self.insertMethod(f))
+		funcMenu.addAction(entry)
 
 		entry = QAction(QIcon(PRINT_ICON),"print()",self)
 		entry.triggered.connect(lambda state,f="print": self.insertMethod(f))
@@ -1184,8 +1196,15 @@ class Window(QMainWindow):
 
 	def insertMethod(self,ctype):
 
+		if ctype=="send":
+			data = EditorPrompt("Data to send","Data",False,None,self)
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.send(\""+data+"\")"
+				self.editor.insertPlainText(code)
+
 		if ctype=="userinput":
-			data = EditorPrompt("Get user input","Variable name",True,"Text prompt")
+			data = EditorPrompt("Get user input","Variable name",True,"Text prompt",self)
 			if data:
 				data[0] = data[0].replace('"','\\"')
 				data[1] = data[1].replace('"','\\"')
@@ -1200,7 +1219,7 @@ class Window(QMainWindow):
 				self.editor.insertPlainText(code)
 
 		if ctype=="log":
-			data = EditorPrompt("Write/Log to window","Target",True,"Text")
+			data = EditorPrompt("Write/Log to window","Target",True,"Text",self)
 			if data:
 				data[0] = data[0].replace('"','\\"')
 				data[1] = data[1].replace('"','\\"')
@@ -1208,7 +1227,7 @@ class Window(QMainWindow):
 				self.editor.insertPlainText(code)
 
 		if ctype=="write":
-			data = EditorPrompt("Write to window","Target",True,"Text")
+			data = EditorPrompt("Write to window","Target",True,"Text",self)
 			if data:
 				data[0] = data[0].replace('"','\\"')
 				data[1] = data[1].replace('"','\\"')
@@ -1216,21 +1235,21 @@ class Window(QMainWindow):
 				self.editor.insertPlainText(code)
 
 		if ctype=="console":
-			data = EditorPrompt("Text to console print","Text")
+			data = EditorPrompt("Text to console print","Text",False,None,self)
 			if data:
 				data = data.replace('"','\\"')
 				code = "self.console(\""+data+"\")"
 				self.editor.insertPlainText(code)
 
 		if ctype=="print":
-			data = EditorPrompt("Text to print","Text")
+			data = EditorPrompt("Text to print","Text",False,None,self)
 			if data:
 				data = data.replace('"','\\"')
 				code = "self.print(\""+data+"\")"
 				self.editor.insertPlainText(code)
 
 		if ctype=="exec":
-			data = EditorPrompt("Command to execute","Command")
+			data = EditorPrompt("Command to execute","Command",False,None,self)
 			if data:
 				data = data.replace('"','\\"')
 				code = "self.exec(\""+data+"\")"
@@ -1247,7 +1266,7 @@ class Window(QMainWindow):
 			self.editor.insertPlainText(code)
 
 		if ctype=="sysmsg":
-			data = EditorPrompt("Text to print","Text")
+			data = EditorPrompt("Text to print","Text",False,None,self)
 			if data:
 				data = data.replace('"','\\"')
 				code = "self.sysmsg(\""+data+"\")"
@@ -1262,6 +1281,20 @@ class Window(QMainWindow):
 			code = "plugin_directory = self.directory()"
 
 			self.editor.insertPlainText(code)
+
+		if ctype=="users":
+			data = EditorPrompt("Channel to query","Channel",False,None,self)
+			if data:
+				code = "channel_users = self.users(\""+data+"\")"
+
+				self.editor.insertPlainText(code)
+
+		if ctype=="topic":
+			data = EditorPrompt("Channel to query","Channel",False,None,self)
+			if data:
+				code = "channel_topic = self.topic(\""+data+"\")"
+
+				self.editor.insertPlainText(code)
 
 
 def format(color, style=''):
@@ -1362,6 +1395,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
 		'self.userinput','self.msgbox','self.sysmsg','self.channels','self.directory',
+		'self.users','self.topic', 'self.send',
 	]
 
 	# Python keywords

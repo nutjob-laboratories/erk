@@ -111,6 +111,24 @@ class ErkFunctions(object):
 
 		return []
 
+	def users(self,channel):
+		if self._erk_client:
+			w = fetch_channel_window(self._erk_client,channel)
+			if w:
+				return w.nicks
+			else:
+				return []
+		return []
+
+	def topic(self,channel):
+		if self._erk_client:
+			w = fetch_channel_window(self._erk_client,channel)
+			if w:
+				return w.channel_topic
+			else:
+				return None
+		return None
+
 	def print(self,text):
 		if self._erk_client and self._erk_window_name:
 			if self._erk_window_name==SERVER_CONSOLE_NAME:
@@ -148,6 +166,9 @@ class ErkFunctions(object):
 				if w.name==self._erk_window_name:
 					msg = Message(PLUGIN_SYSTEM_MESSAGE,'',text)
 					w.writeText(msg,True)
+
+	def send(self,data):
+		if self._erk_client: self._erk_client.sendLine(data)
 
 
 

@@ -74,6 +74,11 @@ Version 0.831
 	* Bugfix: removed a menu separator that wasn't supposed to be there from the editor context menu
 	* Added a check to see if macro names contain the command trigger symbol or the interpolation symbol, and stop creation if it finds one
 	* Removed the "/clear" command, as it didn't work very well :-)
+	* Added a new plugin method: .users() (lists users in a channel)
+	* Added the .users() method to the editor and code generator
+	* Bugfix: editor's code generator dialogs did not have the editor as the parent window
+	* Added a new plugin method: .send() (sends raw messages to the server)
+	* Added the .send() method to the editor and code generator
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
