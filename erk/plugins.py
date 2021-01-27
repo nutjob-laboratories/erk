@@ -37,18 +37,31 @@ import os
 import pkgutil
 import imp
 import json
+import random
+import string
 
 from .objects import *
 from .strings import *
 from .events import *
 from . import config
-from .userinput import handle_input
-from .files import get_user,save_user
+from .userinput import(
+	handle_input,
+	VARIABLE_TABLE,
+	execute_script_line,
+	execute_script_end,
+	execute_script_error,
+	execute_script_msgbox,
+	execute_script_unalias,
+	SCRIPT_THREADS,
+)
+from .files import get_user,save_user,find_script_file
 from . import events
 
 from .dialogs import(
 	PluginInputDialog
 	)
+
+from .irc import ScriptThreadWindow
 
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
@@ -86,6 +99,47 @@ class ErkFunctions(object):
 			return self._erk_client.uptime
 		else:
 			return 0
+
+	def script(self,file,arguments=[]):
+		if self._erk_client:
+
+			window = None
+			if self._erk_window_name==SERVER_CONSOLE_NAME:
+				window = events.fetch_console_window(self._erk_client)
+			elif self._erk_window_name==None:
+				window = events.fetch_console_window(self._erk_client)
+			else:
+				windows = events.fetch_window_list(self._erk_client)
+				for w in windows:
+					if w.name==self._erk_window_name:
+						window = w
+
+			scriptname = find_script_file(file,self._erk_client.gui.scriptsdir)
+
+			if scriptname!=None and window!=None:
+
+				base_scriptname = os.path.basename(scriptname)
+
+				# Read in the script
+				s = open(scriptname,"r")
+				script = s.read()
+				s.close()
+
+				# Generate a random script ID
+				scriptID = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+
+				# Create a thread for the script and run it
+				scriptThread = ScriptThreadWindow(window,self._erk_client,script,scriptID,base_scriptname,dict(VARIABLE_TABLE),arguments)
+				scriptThread.execLine.connect(execute_script_line)
+				scriptThread.scriptEnd.connect(execute_script_end)
+				scriptThread.scriptErr.connect(execute_script_error)
+				scriptThread.msgBox.connect(execute_script_msgbox)
+				scriptThread.unalias.connect(execute_script_unalias)
+				scriptThread.start()
+
+				# Store the thread so it doesn't get garbage collected
+				entry = [scriptID,scriptThread]
+				SCRIPT_THREADS.append(entry)
 
 	def exec(self,data):
 		if self._erk_client and self._erk_window_name:

@@ -1160,6 +1160,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="send": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(LAMBDA_ICON),"script()",self)
+		entry.triggered.connect(lambda state,f="script": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		entry = QAction(QIcon(LAMBDA_ICON),"exec()",self)
 		entry.triggered.connect(lambda state,f="exec": self.insertMethod(f))
 		funcMenu.addAction(entry)
@@ -1195,6 +1199,13 @@ class Window(QMainWindow):
 		action = menu.exec_(self.editor.mapToGlobal(location))
 
 	def insertMethod(self,ctype):
+
+		if ctype=="script":
+			data = EditorPrompt("Script to execute","Filename",False,None,self)
+			if data:
+				data = data.replace('"','\\"')
+				code = "self.script(\""+data+"\")"
+				self.editor.insertPlainText(code)
 
 		if ctype=="send":
 			data = EditorPrompt("Data to send","Data",False,None,self)
@@ -1395,7 +1406,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
 		'self.userinput','self.msgbox','self.sysmsg','self.channels','self.directory',
-		'self.users','self.topic', 'self.send',
+		'self.users','self.topic', 'self.send', 'self.script',
 	]
 
 	# Python keywords

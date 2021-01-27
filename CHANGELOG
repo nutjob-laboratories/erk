@@ -79,6 +79,9 @@ Version 0.831
 	* Bugfix: editor's code generator dialogs did not have the editor as the parent window
 	* Added a new plugin method: .send() (sends raw messages to the server)
 	* Added the .send() method to the editor and code generator
+	* Bugfix: /script command will now correctly autocomplete
+	* Added a new plugin method: .script(), which works just like the /script command
+	* Added .script() to the editor, code generator, and to the plugin documentation
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

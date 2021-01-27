@@ -105,7 +105,7 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
 		config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
 		config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
-		config.INPUT_COMMAND_SYMBOL+"clear": config.INPUT_COMMAND_SYMBOL+"clear",
+		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
 	}
 
 	CHANNEL_COMMANDS = {
