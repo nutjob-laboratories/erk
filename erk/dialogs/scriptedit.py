@@ -1,3 +1,34 @@
+#
+#  Erk IRC Client
+#  Copyright (C) 2019  Daniel Hetrick
+#               _   _       _                         
+#              | | (_)     | |                        
+#   _ __  _   _| |_ _  ___ | |__                      
+#  | '_ \| | | | __| |/ _ \| '_ \                     
+#  | | | | |_| | |_| | (_) | |_) |                    
+#  |_| |_|\__,_|\__| |\___/|_.__/ _                   
+#  | |     | |    _/ |           | |                  
+#  | | __ _| |__ |__/_  _ __ __ _| |_ ___  _ __ _   _ 
+#  | |/ _` | '_ \ / _ \| '__/ _` | __/ _ \| '__| | | |
+#  | | (_| | |_) | (_) | | | (_| | || (_) | |  | |_| |
+#  |_|\__,_|_.__/ \___/|_|  \__,_|\__\___/|_|   \__, |
+#                                                __/ |
+#                                               |___/ 
+#  https://github.com/nutjob-laboratories
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -22,7 +53,6 @@ from ..dialogs import AddChannelDialog
 from .alias import Dialog as InsertAlias
 from .part_channel import Dialog as InsertPart
 from .smsgbox import Dialog as ScriptBox
-
 from .new_macro import Dialog as NewMacro
 
 class Window(QMainWindow):
@@ -261,15 +291,16 @@ class Window(QMainWindow):
 
 		self.menuSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
 		self.menuSave.triggered.connect(self.doFileSave)
-		self.menuSave.setShortcut("Ctrl+S")
+		if self.filename: self.menuSave.setShortcut("Ctrl+S")
 		self.fileMenu.addAction(self.menuSave)
 
 		if self.filename==None:
 			self.menuSave.setEnabled(False)
 
-		entry = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
-		entry.triggered.connect(self.doFileSaveAs)
-		self.fileMenu.addAction(entry)
+		self.menuSaveAs = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
+		self.menuSaveAs.triggered.connect(self.doFileSaveAs)
+		if not self.filename: self.menuSaveAs.setShortcut("Ctrl+S")
+		self.fileMenu.addAction(self.menuSaveAs)
 
 		self.fileMenu.addSeparator()
 
@@ -461,6 +492,8 @@ class Window(QMainWindow):
 		self.changed = False
 		self.updateApplicationTitle()
 		self.menuSave.setEnabled(True)
+		self.menuSave.setShortcut("Ctrl+S")
+		self.menuSaveAs.setShortcut(QKeySequence())
 
 	def openAutoscript(self):
 		if self.current_client!=None:
@@ -473,6 +506,8 @@ class Window(QMainWindow):
 			self.changed = False
 			self.updateApplicationTitle()
 			self.menuSave.setEnabled(True)
+			self.menuSave.setShortcut("Ctrl+S")
+			self.menuSaveAs.setShortcut(QKeySequence())
 
 	def insertMsgbox(self):
 		x = ScriptBox(self)
@@ -658,9 +693,11 @@ class Window(QMainWindow):
 			code.write(self.editor.toPlainText())
 			code.close()
 			self.changed = False
-			self.menuSave.setEnabled(False)
+			self.menuSave.setEnabled(True)
 			self.updateApplicationTitle()
 			self.buildInstalledScriptsMenu()
+			self.menuSave.setShortcut("Ctrl+S")
+			self.menuSaveAs.setShortcut(QKeySequence())
 
 	def doNewFile(self):
 		self.saveOnClose()
@@ -669,6 +706,8 @@ class Window(QMainWindow):
 		self.menuSave.setEnabled(False)
 		self.changed = False
 		self.updateApplicationTitle()
+		self.menuSave.setShortcut(QKeySequence())
+		self.menuSaveAs.setShortcut("Ctrl+S")
 
 	def openFile(self,filename):
 		x = open(filename,mode="r",encoding="latin-1")
@@ -679,6 +718,8 @@ class Window(QMainWindow):
 		self.changed = False
 		self.updateApplicationTitle()
 		self.menuSave.setEnabled(True)
+		self.menuSave.setShortcut("Ctrl+S")
+		self.menuSaveAs.setShortcut(QKeySequence())
 
 	def doFileOpen(self):
 		options = QFileDialog.Options()
@@ -692,6 +733,8 @@ class Window(QMainWindow):
 			self.changed = False
 			self.updateApplicationTitle()
 			self.menuSave.setEnabled(True)
+			self.menuSave.setShortcut("Ctrl+S")
+			self.menuSaveAs.setShortcut(QKeySequence())
 
 	def doFileSave(self):
 		code = open(self.filename,"w")

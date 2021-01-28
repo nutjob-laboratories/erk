@@ -126,6 +126,8 @@ class Window(QMainWindow):
 		self.toolbarSave.setEnabled(False)
 		if self.findWindow != None:
 			self.findWindow.setWindowTitle("Find")
+		self.menuSave.setShortcut(QKeySequence())
+		self.menuSaveAs.setShortcut("Ctrl+S")
 
 		self.package_icon.hide()
 		self.status_package.hide()
@@ -154,6 +156,8 @@ class Window(QMainWindow):
 			self.toolbarSave.setEnabled(True)
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
+			self.menuSave.setShortcut("Ctrl+S")
+			self.menuSaveAs.setShortcut(QKeySequence())
 
 			pname = getPackageName(fileName)
 			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
@@ -212,6 +216,8 @@ class Window(QMainWindow):
 			self.changed = False
 			if self.findWindow != None:
 				self.findWindow.setWindowTitle(self.title)
+			self.menuSave.setShortcut("Ctrl+S")
+			self.menuSaveAs.setShortcut(QKeySequence())
 
 			pname = getPackageName(fileName)
 			self.openPlugin.setText("Open \""+pname[0]+"\" directory")
@@ -562,14 +568,15 @@ class Window(QMainWindow):
 
 		self.menuSave = QAction(QIcon(SAVEFILE_ICON),"Save file",self)
 		self.menuSave.triggered.connect(self.doFileSave)
-		self.menuSave.setShortcut("Ctrl+S")
+		if self.filename: self.menuSave.setShortcut("Ctrl+S")
 		fileMenu.addAction(self.menuSave)
 		if not self.filename:
 			self.menuSave.setEnabled(False)
 
-		entry = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
-		entry.triggered.connect(self.doFileSaveAs)
-		fileMenu.addAction(entry)
+		self.menuSaveAs = QAction(QIcon(SAVEASFILE_ICON),"Save as...",self)
+		self.menuSaveAs.triggered.connect(self.doFileSaveAs)
+		if not self.filename: self.menuSaveAs.setShortcut("Ctrl+S")
+		fileMenu.addAction(self.menuSaveAs)
 
 		#fileMenu.addSeparator()
 		insertNoTextSeparator(self,fileMenu)
