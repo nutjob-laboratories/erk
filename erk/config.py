@@ -148,18 +148,19 @@ AUTOCOMPLETE_MACROS = True
 SAVE_MACROS = True
 SAVE_SCRIPT_ON_CLOSE = True
 NOTIFY_SCRIPT_END = True
-
 DEFAULT_QUIT_PART_MESSAGE = APPLICATION_NAME + " " + APPLICATION_MAJOR_VERSION + " - " + OFFICIAL_REPOSITORY_SHORT_CLEAN
-
 ENABLE_MACROS = True
-
 AUTOCOMPLETE_CHANNELS = True
+
+DICTIONARY = []
 
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
+
+		"dictionary": DICTIONARY,
 
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
@@ -268,6 +269,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "dictionary" in data:
+		data["dictionary"] = DICTIONARY
 
 	if not "autocomplete_channels" in data:
 		data["autocomplete_channels"] = AUTOCOMPLETE_CHANNELS
@@ -464,6 +468,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global DEFAULT_QUIT_PART_MESSAGE
 	global ENABLE_MACROS
 	global AUTOCOMPLETE_CHANNELS
+	global DICTIONARY
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -472,6 +477,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
 			ENABLE_MACROS = data["enable_macros"]
 			DEFAULT_QUIT_PART_MESSAGE = data["default_quit_and_part_message"]

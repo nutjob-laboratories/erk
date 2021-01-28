@@ -106,6 +106,8 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
 		config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
 		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
+		config.INPUT_COMMAND_SYMBOL+"dictionary": config.INPUT_COMMAND_SYMBOL+"dictionary ",
+		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 	}
 
 	CHANNEL_COMMANDS = {
@@ -147,6 +149,10 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
+
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"dictionary</b> [WORD] ...", "View or add a word to the spellcheck dictionary" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"undictionary</b> WORD [WORD...]", "Remove a word from the spellcheck dictionary" ],
+
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
@@ -920,6 +926,73 @@ def handle_ui_input(window,client,text):
 	tokens = text.split()
 
 	# MACRO BEGIN
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dictionary' and len(tokens)>=2:
+			tokens.pop(0)
+
+			for t in tokens:
+				config.DICTIONARY.append(t)
+
+			config.save_settings(client.gui.configfile)
+
+			if len(tokens)>1:
+				last_word = tokens.pop()
+				rep = "Added "+", ".join(tokens)+", and "+last_word+" to dictionary"
+				msg = Message(SYSTEM_MESSAGE,'',rep)
+				window.writeText(msg,True)
+			else:
+				word = tokens.pop(0)
+				rep = "Added "+word+" to dictionary"
+				msg = Message(SYSTEM_MESSAGE,'',rep)
+				window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dictionary':
+
+			if len(config.DICTIONARY)==0:
+				rep = "There are no dictionary entries"
+			elif len(config.DICTIONARY)==1:
+				rep = config.DICTIONARY[0]
+			else:
+				rep = ", ".join(config.DICTIONARY)
+
+
+			msg = Message(SYSTEM_MESSAGE,'',rep)
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'undictionary' and len(tokens)>=2:
+			tokens.pop(0)
+
+			clean = []
+			for e in config.DICTIONARY:
+				if e in tokens: continue
+				clean.append(e)
+			config.DICTIONARY = list(clean)
+
+			config.save_settings(client.gui.configfile)
+
+			if len(tokens)>1:
+				last_word = tokens.pop()
+				rep = "Removed "+", ".join(tokens)+", and "+last_word+" from dictionary"
+				msg = Message(SYSTEM_MESSAGE,'',rep)
+				window.writeText(msg,True)
+			else:
+				word = tokens.pop(0)
+				rep = "Removed "+word+" from dictionary"
+				msg = Message(SYSTEM_MESSAGE,'',rep)
+				window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'undictionary':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"undictionary WORD [WORD...]")
+			window.writeText(msg,True)
+			return True
+
 
 
 

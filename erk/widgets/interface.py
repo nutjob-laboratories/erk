@@ -295,6 +295,7 @@ class Window(QMainWindow):
 			'macrohelp',
 			'unmacro',
 			'macrousage',
+			'undictionary',
 			APPLICATION_NAME,
 			'Erk',
 		]
@@ -1614,7 +1615,8 @@ class SpellTextEdit(QPlainTextEdit):
 				text = self.textCursor().selectedText()
 
 				# Make sure some oddly spelled commands aren't flagged as misspelled
-				if not text in self.parent.special_words:
+				# Make sure that words in the custom dictionary aren't flagged as misspelled
+				if not text in self.parent.special_words and not text in config.DICTIONARY:
 
 					misspelled = self.dict.unknown([text])
 					if len(misspelled)>0:
@@ -2641,7 +2643,8 @@ class Highlighter(QSyntaxHighlighter):
 			if len(misspelled)>0:
 
 				# Make sure some oddly spelled commands aren't flagged as misspelled
-				if not word_object.group() in self.parent.special_words:
+				# Make sure that words in the custom dictionary aren't flagged as misspelled
+				if not word_object.group() in self.parent.special_words and not word_object.group() in config.DICTIONARY:
 					self.setFormat(word_object.start(), word_object.end() - word_object.start(), format)
 
 class SpellAction(QAction):
