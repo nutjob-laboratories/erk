@@ -423,6 +423,8 @@ class Window(QMainWindow):
 				self.changed = False
 				if self.findWindow != None:
 					self.findWindow.close()
+				self.menuSave.setShortcut("Ctrl+S")
+				self.menuSaveAs.setShortcut(QKeySequence())
 
 			else:
 

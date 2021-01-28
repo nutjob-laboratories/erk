@@ -84,6 +84,7 @@ Version 0.831
 	* Added .script() to the editor, code generator, and to the plugin documentation
 	* In the script editor, the Ctrl+S hotkey will either work for save as (if the script isn't saved/doesn't have a file name) or save (if loaded/has a filename)
 	* Plugin editor's save/save as behavior works as ^^ above
+	* Bugfix: creating a new package in the editor didn't apply the ^^ above shortcut swaps
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
