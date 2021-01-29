@@ -108,6 +108,7 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
 		config.INPUT_COMMAND_SYMBOL+"dictionary": config.INPUT_COMMAND_SYMBOL+"dictionary ",
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
+		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
 	}
 
 	CHANNEL_COMMANDS = {
@@ -149,10 +150,9 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
-
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"write</b> MESSAGE", "Prints a message to the current window, and saves it in the log" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"dictionary</b> [WORD] ...", "View or add a word to the spellcheck dictionary" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"undictionary</b> WORD [WORD...]", "Remove a word from the spellcheck dictionary" ],
-
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"reconnect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server, reconnecting on disconnect" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ssl</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server via SSL" ],
@@ -928,6 +928,20 @@ def handle_ui_input(window,client,text):
 	# MACRO BEGIN
 
 	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'write' and len(tokens)>=2:
+			tokens.pop(0)
+
+			msg = Message(SYSTEM_MESSAGE,'',' '.join(tokens))
+			window.writeText(msg,False)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'write':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"write MESSAGE...")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dictionary' and len(tokens)>=2:
 			tokens.pop(0)
 
@@ -992,9 +1006,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"undictionary WORD [WORD...]")
 			window.writeText(msg,True)
 			return True
-
-
-
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:

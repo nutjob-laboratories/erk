@@ -89,6 +89,7 @@ Version 0.831
 	* Added new commands to the syntax highlighter
 	* Updated the new command documentation with /dictionary and /undictionary details
 	* Re-formatted the Plugin and Scripting guides to look alike
+	* Added a new command: /write (works like /print but saves the message to the log)
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.

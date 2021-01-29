@@ -407,6 +407,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.insertPrint)
 		insertMenu.addAction(entry)
 
+		entry = QAction(QIcon(EDIT_ICON),"Write",self)
+		entry.triggered.connect(self.insertWrite)
+		insertMenu.addAction(entry)
+
 		entry = QAction(QIcon(MISC_ICON),"Alias",self)
 		entry.triggered.connect(self.insertAlias)
 		insertMenu.addAction(entry)
@@ -602,6 +606,16 @@ class Window(QMainWindow):
 
 		if len(e)>0:
 			self.editor.insertPlainText("/print "+e+"\n")
+			self.updateApplicationTitle()
+
+	def insertWrite(self):
+		x = PrintMsg(self)
+		e = x.get_message_information(self)
+
+		if not e: return
+
+		if len(e)>0:
+			self.editor.insertPlainText("/write "+e+"\n")
 			self.updateApplicationTitle()
 
 	def insertMLComment(self):
