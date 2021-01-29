@@ -88,6 +88,7 @@ Version 0.831
 	* Added two new commands: /dictionary and /undictionary (for adding/removing words to/from the spellcheck dictionary)
 	* Added new commands to the syntax highlighter
 	* Updated the new command documentation with /dictionary and /undictionary details
+	* Re-formatted the Plugin and Scripting guides to look alike
 
 Version 0.830
 	* Menu text separaters now darken for light GUI backgrounds, and vice versa.
