@@ -737,15 +737,18 @@ class Erk(QMainWindow):
 				self.settingsMenu.clear()
 				add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
 
-			entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
-			entry.triggered.connect(self.showSettingsDialog)
-			self.settingsMenu.addAction(entry)
+			# entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+			# entry.triggered.connect(self.showSettingsDialog)
+			# self.settingsMenu.addAction(entry)
 
-			self.settingsMenu.addSeparator()
+			# self.settingsMenu.addSeparator()
 
 			if not self.block_styles:
-				entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
-				entry.triggered.connect(self.showStyleDialog)
+				# entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
+				# entry.triggered.connect(self.showStyleDialog)
+				# self.settingsMenu.addAction(entry)
+
+				entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
 				self.settingsMenu.addAction(entry)
 
 			showEditor = True
@@ -753,12 +756,21 @@ class Erk(QMainWindow):
 			if self.block_scripts: showEditor = False
 
 			if showEditor:
-				entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
-				entry.triggered.connect(self.showScriptEditor)
+				# entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
+				# entry.triggered.connect(self.showScriptEditor)
+				# self.settingsMenu.addAction(entry)
+
+				entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
 				self.settingsMenu.addAction(entry)
 
 			self.settingsMenu.addSeparator()
 			#insertNoTextSeparator(self,self.settingsMenu)
+
+			entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+			entry.triggered.connect(self.showSettingsDialog)
+			self.settingsMenu.addAction(entry)
+
+			self.settingsMenu.addSeparator()
 
 			# Hide menu
 

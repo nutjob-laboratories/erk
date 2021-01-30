@@ -30,15 +30,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys,os
+from random import randint
 
 DEFAULT_NICKNAME = "erk_user"
 DEFAULT_USERNAME = "erk_user"
 DEFAULT_IRCNAME = "Erk IRC Client"
-DEFAULT_ALTERNATIVE = "erk_user99"
+DEFAULT_ALTERNATIVE = "erk_user"+str(randint(10,99))
 
 # APPLICATION_NAME = "Ərk"
 APPLICATION_NAME = "Ərk"
 EDITOR_NAME = "Əditor"
+STYLE_EDITOR_NAME = "Stylər"
+SCRIPT_EDITOR_NAME = "Scriptər"
 
 MINOR_VERSION_FILE = os.path.join(os.path.join(os.path.join(sys.path[0], "erk"), "data"), "minor.txt")
 f = open(MINOR_VERSION_FILE,"r")

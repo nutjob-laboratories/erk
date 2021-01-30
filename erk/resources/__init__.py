@@ -49,11 +49,16 @@ USERLIST_NORMAL_ICON		= ":/gui-chanuser.png"
 HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
 LIGHT_HORIZONTAL_RULE_BACKGROUND = ":/gui-light_horizontal_rule.png"
 
+STYLE_MENU_ICON = ":/style.png"
+SCRIPT_EDITOR_MENU_ICON = ":/scripteditor.png"
+
 MENU_INSTALL_ICON = ":/install.png"
 MENU_EDITOR_ICON = ":/editor.png"
 MENU_PACKAGE_ICON = ":/package.png"
 MENU_ARCHIVE_ICON = ":/archive.png"
 MENU_INSERT_ICON = ":/insert.png"
+
+CONNECT_MENU_ICON = ":/connect.png"
 
 PDF_ICON = ":/gui-pdf.png"
 
@@ -89,7 +94,7 @@ RUN_ICON = ":/gui-run.png"
 
 CLOCK_ICON = ":/gui-clock.png"
 
-CONNECT_MENU_ICON = ":/connect.png"
+
 UPTIME_ICON = ":/gui-uptime.png"
 LEFT_ICON = ":/gui-left.png"
 RIGHT_ICON = ":/gui-right.png"

@@ -38,6 +38,7 @@ from ..resources import *
 from ..files import *
 from .. import textformat
 from .. import events
+from ..strings import *
 
 
 def menuHtml(icon,text,description,icon_size):
@@ -627,7 +628,7 @@ class Dialog(QDialog):
 			self.filename = get_complete_style_name(self.network,name,self.parent.styledir)
 			#print(self.filename)
 		else:
-			self.setWindowTitle("Text colors & formatting")
+			self.setWindowTitle(STYLE_EDITOR_NAME)
 			self.filename = parent.stylefile
 			self.styles = get_text_format_settings(self.filename)
 
