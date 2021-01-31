@@ -49,6 +49,8 @@ USERLIST_NORMAL_ICON		= ":/gui-chanuser.png"
 HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
 LIGHT_HORIZONTAL_RULE_BACKGROUND = ":/gui-light_horizontal_rule.png"
 
+SETTINGS_MENU_ICON = ":/settings.png"
+
 STYLE_MENU_ICON = ":/style.png"
 SCRIPT_EDITOR_MENU_ICON = ":/scripteditor.png"
 

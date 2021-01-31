@@ -9,6 +9,9 @@ Version 0.840
 	* Added .autocomplete() to the editor
 	* Added .autocomplete() to the documentation
 	* Added .autocomplete() to the examples in the plugin documentation
+	* Changed the menu entry for the "settings" dialog from a regular one to a "fancy" entry
+	* Changed the menu icon for the "settings" dialog from a cluster of gears to a wrench
+	* Changed the menu icon for the script editor
 
 Version 0.831
 	* Macros have been removed from the client

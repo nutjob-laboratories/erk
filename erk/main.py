@@ -743,6 +743,9 @@ class Erk(QMainWindow):
 
 			# self.settingsMenu.addSeparator()
 
+			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
+			self.settingsMenu.addAction(entry)
+
 			if not self.block_styles:
 				# entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
 				# entry.triggered.connect(self.showStyleDialog)
@@ -766,11 +769,13 @@ class Erk(QMainWindow):
 			self.settingsMenu.addSeparator()
 			#insertNoTextSeparator(self,self.settingsMenu)
 
-			entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
-			entry.triggered.connect(self.showSettingsDialog)
-			self.settingsMenu.addAction(entry)
+			# entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+			# entry.triggered.connect(self.showSettingsDialog)
+			# self.settingsMenu.addAction(entry)
 
-			self.settingsMenu.addSeparator()
+			
+
+			#self.settingsMenu.addSeparator()
 
 			# Hide menu
 
