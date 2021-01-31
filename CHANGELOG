@@ -5,6 +5,10 @@ Version 0.840
 	* Rearranged the "Settings" menu, and gave the style/script editor fancy menu entries
 	* Edited the documentation to use the new names, and changed some formatting
 	* New command: /cat (sends the contents of a file as a series of text messages)
+	* Added a new built-in plugin method: .autocomplete() (adds entries to the autocompleter)
+	* Added .autocomplete() to the editor
+	* Added .autocomplete() to the documentation
+	* Added .autocomplete() to the examples in the plugin documentation
 
 Version 0.831
 	* Macros have been removed from the client

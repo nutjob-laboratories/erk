@@ -94,6 +94,9 @@ class ErkFunctions(object):
 		self._erk_client = None
 		self._erk_window_name = None
 
+	def autocomplete(self,item,replacement):
+		events.add_to_autocomplete(item,replacement)
+
 	def uptime(self):
 		if self._erk_client:
 			return self._erk_client.uptime

@@ -1555,6 +1555,23 @@ class SpellTextEdit(QPlainTextEdit):
 								cursor.endEditBlock()
 								return
 
+				# Plugin autocompletes
+				if config.AUTOCOMPLETE_COMMANDS:
+					cursor.select(QTextCursor.BlockUnderCursor)
+					self.setTextCursor(cursor)
+					if self.textCursor().hasSelection():
+						text = self.textCursor().selectedText()
+
+						for c in events.fetch_autocompletes():
+							cmd = c[0]
+							rep = c[1]
+
+							if fnmatch.fnmatch(cmd,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(rep)
+								cursor.endEditBlock()
+								return
+
 			cursor.movePosition(QTextCursor.End)
 			self.setTextCursor(cursor)
 

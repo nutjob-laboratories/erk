@@ -51,6 +51,20 @@ UNSEEN = []
 
 TRIGGERED = []
 
+AUTOCOMPLETE = []
+
+def fetch_autocompletes():
+	return AUTOCOMPLETE
+
+def add_to_autocomplete(item,replacement):
+	for e in AUTOCOMPLETE:
+		if e[0]==item:
+			e[1] = replacement
+			return
+
+	entry = [item,replacement]
+	AUTOCOMPLETE.append(entry)
+
 def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
 	if not client.gui.block_plugins:
 		if client.gui.plugins.ctcp(client,user,channel,tag,message): return
