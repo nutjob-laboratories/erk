@@ -4,6 +4,7 @@ Version 0.840
 	* Re-named the script editor to "Scriptər"
 	* Rearranged the "Settings" menu, and gave the style/script editor fancy menu entries
 	* Edited the documentation to use the new names, and changed some formatting
+	* New command: /cat (sends the contents of a file as a series of text messages)
 
 Version 0.831
 	* Macros have been removed from the client

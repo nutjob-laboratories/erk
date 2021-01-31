@@ -215,6 +215,24 @@ def encodeStyleName(network,name=None):
 	else:
 		return f"{network}-{name}.style"
 
+def find_cat_file(script,scriptdir):
+	if os.path.isfile(script):
+		return script
+
+	e_script = script+".txt"
+	if os.path.isfile(e_script):
+		return e_script
+
+	d_script = os.path.join(scriptdir, script)
+	if os.path.isfile(d_script):
+		return d_script
+
+	d_script = os.path.join(scriptdir, script+".txt")
+	if os.path.isfile(d_script):
+		return d_script
+
+	return None
+
 def find_style_file(script,styledir):
 	if os.path.isfile(script):
 		return script

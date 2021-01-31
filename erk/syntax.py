@@ -97,6 +97,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 			cmdsymbol+'dictionary',
 			cmdsymbol+'undictionary',
 			cmdsymbol+'write',
+			cmdsymbol+'cat',
 		]
 
 		STYLES = {

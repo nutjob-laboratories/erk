@@ -109,6 +109,7 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"dictionary": config.INPUT_COMMAND_SYMBOL+"dictionary ",
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
+		config.INPUT_COMMAND_SYMBOL+"cat": config.INPUT_COMMAND_SYMBOL+"cat ",
 	}
 
 	CHANNEL_COMMANDS = {
@@ -151,6 +152,7 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"write</b> MESSAGE", "Prints a message to the current window, and saves it in the log" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"cat</b> [TARGET] FILENAME", "Opens a file and sends its contents as messages" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"dictionary</b> [WORD] ...", "View or add a word to the spellcheck dictionary" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"undictionary</b> WORD [WORD...]", "Remove a word from the spellcheck dictionary" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connect</b> [SERVER] [PORT] [PASSWORD]", "Connects to an IRC server" ],
@@ -926,6 +928,56 @@ def handle_ui_input(window,client,text):
 	tokens = text.split()
 
 	# MACRO BEGIN
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'cat' and len(tokens)==3:
+			tokens.pop(0)
+			target = tokens.pop(0)
+			filename = tokens.pop(0)
+
+			f = find_cat_file(filename,client.gui.scriptsdir)
+			if f!=None:
+				with open(f) as fp:
+					lines = fp.readlines()
+					for line in lines:
+						client.msg(target,line)
+				return True
+			else:
+				msg = Message(ERROR_MESSAGE,'',"File \'"+filename+"\" not found")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'cat' and len(tokens)==2:
+			tokens.pop(0)
+			filename = tokens.pop(0)
+
+			if window.name==SERVER_CONSOLE_NAME:
+				msg = Message(ERROR_MESSAGE,'',"Messages can't be sent to server.")
+				window.writeText(msg,True)
+				return True
+
+			f = find_cat_file(filename,client.gui.scriptsdir)
+			if f!=None:
+				with open(f) as fp:
+					lines = fp.readlines()
+					for line in lines:
+						client.msg(window.name,line)
+				return True
+			else:
+				msg = Message(ERROR_MESSAGE,'',"File \'"+filename+"\" not found")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'cat':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"cat [TARGET] FILENAME")
+			window.writeText(msg,True)
+			return True
+
+
+
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'write' and len(tokens)>=2:
