@@ -12,6 +12,8 @@ Version 0.840
 	* Changed the menu entry for the "settings" dialog from a regular one to a "fancy" entry
 	* Changed the menu icon for the "settings" dialog from a cluster of gears to a wrench
 	* Changed the menu icon for the script editor
+	* Bugfix: fixed an error in the plugin documentation
+	* Added information about program directories to the command documentation
 
 Version 0.831
 	* Macros have been removed from the client
