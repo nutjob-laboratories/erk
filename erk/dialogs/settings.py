@@ -154,7 +154,7 @@ class Dialog(QDialog):
 		info = x.get_entry_information()
 		if info:
 			self.logDisplayLines = info
-			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines of the log")
+			self.logSizeLabel.setText("Display <b>"+str(self.logDisplayLines)+"</b> lines of the log")
 
 
 	def __init__(self,configfile=USER_FILE,parent=None):
@@ -433,6 +433,8 @@ class Dialog(QDialog):
 		if config.MARK_END_OF_LOADED_LOG: self.markLog.setChecked(True)
 		self.markLog.stateChanged.connect(self.setRerender)
 
+		
+
 		self.resumeLog = QCheckBox("Display chat resume date and time",self)
 		if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.resumeLog.setChecked(True)
 		self.resumeLog.stateChanged.connect(self.setRerender)
@@ -450,9 +452,9 @@ class Dialog(QDialog):
 		ltLayout.addWidget(self.hsButton)
 
 
-		self.logSizeLabel = QLabel("Load <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines of the log")
+		self.logSizeLabel = QLabel("Display <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines of the log")
 
-		self.slsButton = QPushButton("Set")
+		self.slsButton = QPushButton("Set length")
 		self.slsButton.clicked.connect(self.setLogSize)
 		self.slsButton.setAutoDefault(False)
 
@@ -460,22 +462,51 @@ class Dialog(QDialog):
 		llLayout.addWidget(self.logSizeLabel)
 		llLayout.addWidget(self.slsButton)
 
+
+		slLayout = QVBoxLayout()
+		slLayout.addWidget(self.chansaveLog)
+		slLayout.addWidget(self.privsaveLog)
+		slLayout.addLayout(ltLayout)
+
+		saveLayout = QGroupBox("Save",self)
+		saveLayout.setLayout(slLayout)
+
+
+		saveLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
+		loadLoglay = QVBoxLayout()
+		loadLoglay.addWidget(self.chanloadLog)
+		loadLoglay.addWidget(self.privloadLog)
+		loadLoglay.addWidget(self.markLog)
+		loadLoglay.addWidget(self.resumeLog)
+		loadLoglay.addLayout(llLayout)
+
+		loadLayout = QGroupBox("Load",self)
+		loadLayout.setLayout(loadLoglay)
+
+
+		loadLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
 		mpLayout = QVBoxLayout()
-		mpLayout.addWidget(self.chansaveLog)
-		mpLayout.addWidget(self.chanloadLog)
-		mpLayout.addWidget(self.privsaveLog)
-		mpLayout.addWidget(self.privloadLog)
-		mpLayout.addLayout(llLayout)
-		mpLayout.addWidget(self.markLog)
-		mpLayout.addWidget(self.resumeLog)
+		mpLayout.addWidget(saveLayout)
+		mpLayout.addWidget(loadLayout)
+		#mpLayout.addWidget(self.chansaveLog)
+		#mpLayout.addWidget(self.chanloadLog)
+		#mpLayout.addWidget(self.privsaveLog)
+		#mpLayout.addWidget(self.privloadLog)
+		#mpLayout.addLayout(llLayout)
+		#mpLayout.addWidget(self.markLog)
+		#mpLayout.addWidget(self.resumeLog)
 
 		# mpLayout.addWidget(self.autoLog)
 		# mpLayout.addWidget(self.hsButton)
-		mpLayout.addLayout(ltLayout)
+		#mpLayout.addLayout(ltLayout)
 
 		# mpLayout.addWidget(self.logSizeLabel)
 		# mpLayout.addWidget(self.slsButton)
-		
+		#mpLayout.addLayout(llLayout)
 
 		mpLayout.addStretch()
 
