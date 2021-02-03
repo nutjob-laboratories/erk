@@ -14,6 +14,7 @@ Version 0.840
 	* Changed the menu icon for the script editor
 	* Bugfix: fixed an error in the plugin documentation
 	* Added information about program directories to the command documentation
+	* Re-arranged how commandline options are displayed to the user with the -h flag
 
 Version 0.831
 	* Macros have been removed from the client

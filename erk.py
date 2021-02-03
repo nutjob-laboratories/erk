@@ -87,28 +87,6 @@ congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", m
 congroup.add_argument("-a","--autoscript", help=f"Execute server script on connection (if one exists)", action="store_true")
 congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", action='append')
 
-disgroup = parser.add_argument_group('Disable functionality')
-
-disgroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
-disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
-disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
-disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
-disgroup.add_argument( "--noconnect", help=f"Disable connection commands", action="store_true")
-disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
-disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
-disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
-disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
-disgroup.add_argument( "--noextensions", help=f"Disables scripts and plugins", action="store_true")
-disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
-
-devgroup = parser.add_argument_group('Plugins')
-
-devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin package in the current directory", metavar="NAME", default='')
-devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the plugins directory", action="store_true")
-devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
-devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
-devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
-
 displaygroup = parser.add_argument_group('Display')
 
 displaygroup.add_argument("-f","--fullscreen", help="Open in fullscreen mode", action="store_true")
@@ -125,6 +103,28 @@ miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storag
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
 miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro save file", metavar="FILE", default=MACRO_SAVE_FILE)
+
+devgroup = parser.add_argument_group('Plugin development')
+
+devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin package in the current directory", metavar="NAME", default='')
+devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the plugins directory", action="store_true")
+devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
+devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
+devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
+
+disgroup = parser.add_argument_group('Disable functionality')
+
+disgroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
+disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
+disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
+disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
+disgroup.add_argument( "--noconnect", help=f"Disable connection commands", action="store_true")
+disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
+disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
+disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
+disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
+disgroup.add_argument( "--noextensions", help=f"Disables scripts and plugins", action="store_true")
+disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
 
