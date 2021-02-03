@@ -51,6 +51,9 @@ LIGHT_HORIZONTAL_RULE_BACKGROUND = ":/gui-light_horizontal_rule.png"
 
 SETTINGS_MENU_ICON = ":/settings.png"
 
+ERK_MENU_ICON = ":/erk.png"
+PDF_MENU_ICON = ":/pdf.png"
+
 STYLE_MENU_ICON = ":/style.png"
 SCRIPT_EDITOR_MENU_ICON = ":/scripteditor.png"
 

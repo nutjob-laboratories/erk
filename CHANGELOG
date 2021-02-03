@@ -15,6 +15,8 @@ Version 0.840
 	* Bugfix: fixed an error in the plugin documentation
 	* Added information about program directories to the command documentation
 	* Re-arranged how commandline options are displayed to the user with the -h flag
+	* Made the "help" menu a bit more "fancy"
+	* Added a link to the GPL 3 to the "help" menu
 
 Version 0.831
 	* Macros have been removed from the client

@@ -941,23 +941,35 @@ class Erk(QMainWindow):
 			self.helpMenu.clear()
 			add_toolbar_menu(self.toolbar,"Help",self.helpMenu)
 
-		self.about = QAction(QIcon(ABOUT_ICON),"About",self)
-		self.about.triggered.connect(self.menuAbout)
-		self.helpMenu.addAction(self.about)
+		# self.about = QAction(QIcon(ABOUT_ICON),"About",self)
+		# self.about.triggered.connect(self.menuAbout)
+		# self.helpMenu.addAction(self.about)
+
+		entry = MenuAction(self,ERK_MENU_ICON,"About","About the "+APPLICATION_NAME+" IRC client",25,self.menuAbout)
+		self.helpMenu.addAction(entry)
+
 
 		idir = sys.path[0]
 		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
 		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
 
-		entry = QAction(QIcon(PDF_ICON),"Ərk Script && Command Documentation",self)
-		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# entry = QAction(QIcon(PDF_ICON),"Ərk Script && Command Documentation",self)
+		# entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# self.helpMenu.addAction(entry)
+
+		entry = MenuAction(self,PDF_MENU_ICON,"Scripting & Commands","How to do stuff directly from chat",25,self.openCommandDocumentation)
 		self.helpMenu.addAction(entry)
 
-		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
+		# DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
-		entry = QAction(QIcon(PDF_ICON),"Ərk Plugin Documentation",self)
-		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# entry = QAction(QIcon(PDF_ICON),"Ərk Plugin Documentation",self)
+		# entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
+		# self.helpMenu.addAction(entry)
+
+		entry = MenuAction(self,PDF_MENU_ICON,"Plugin Guide","How to write and use "+APPLICATION_NAME+" plugins",25,self.openPluginDocumentation)
 		self.helpMenu.addAction(entry)
+
+		self.helpMenu.addSeparator()
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
@@ -965,6 +977,12 @@ class Erk(QMainWindow):
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk plugin repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
+		# https://www.gnu.org/licenses/gpl-3.0.en.html
+
+		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
+		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
 		self.helpMenu.addSeparator()
@@ -1003,6 +1021,20 @@ class Erk(QMainWindow):
 				self.spinner = QMovie(ANIM)
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+
+	def openCommandDocumentation(self):
+		idir = sys.path[0]
+		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
+
+		QDesktopServices.openUrl(QUrl("file:"+DOCUMENTATION))
+
+	def openPluginDocumentation(self):
+		idir = sys.path[0]
+		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
+
+		QDesktopServices.openUrl(QUrl("file:"+DOCUMENTATION))
 
 	def showStyleDialog(self):
 		FormatTextDialog(self)
