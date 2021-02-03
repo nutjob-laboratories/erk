@@ -19,6 +19,9 @@ Version 0.840
 	* Added a link to the GPL 3 to the "help" menu
 	* Moved all of the entries in the "Logs" menu to the "Settings" menu and the "Preferences" dialog
 	* Removed the "logs" menu
+	* Changed the name of the plugin editor to "Pluggər"
+	* Created a new menu: "Tools". Moved most of the built-in tools to this menu
+	* Moved the plugin editor and related tools to the "Tools" menu ("development mode" is still required to view them)
 
 Version 0.831
 	* Macros have been removed from the client

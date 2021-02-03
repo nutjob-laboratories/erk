@@ -37,9 +37,8 @@ DEFAULT_USERNAME = "erk_user"
 DEFAULT_IRCNAME = "Erk IRC Client"
 DEFAULT_ALTERNATIVE = "erk_user"+str(randint(10,99))
 
-# APPLICATION_NAME = "Ərk"
 APPLICATION_NAME = "Ərk"
-EDITOR_NAME = "Əditor"
+EDITOR_NAME = "Pluggər"
 STYLE_EDITOR_NAME = "Stylər"
 SCRIPT_EDITOR_NAME = "Scriptər"
 
