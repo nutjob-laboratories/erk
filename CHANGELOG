@@ -22,6 +22,7 @@ Version 0.840
 	* Changed the name of the plugin editor to "Pluggər"
 	* Created a new menu: "Tools". Moved most of the built-in tools to this menu
 	* Moved the plugin editor and related tools to the "Tools" menu ("development mode" is still required to view them)
+	* Cleaned up the buttons on the "Logs" page in the "settings" dialog
 
 Version 0.831
 	* Macros have been removed from the client

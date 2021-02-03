@@ -146,7 +146,7 @@ class Dialog(QDialog):
 		f = x.get_entry_information()
 		if f:
 			self.autosave_time = f
-			self.autoLog.setText("Autosave logs every "+str(self.autosave_time)+" seconds")
+			self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds")
 
 
 	def setLogSize(self):
@@ -154,7 +154,7 @@ class Dialog(QDialog):
 		info = x.get_entry_information()
 		if info:
 			self.logDisplayLines = info
-			self.logSizeLabel.setText("Display <b>"+str(self.logDisplayLines)+"</b> lines of the log")
+			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display")
 
 
 	def __init__(self,configfile=USER_FILE,parent=None):
@@ -439,28 +439,44 @@ class Dialog(QDialog):
 		if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.resumeLog.setChecked(True)
 		self.resumeLog.stateChanged.connect(self.setRerender)
 
-		self.autoLog = QCheckBox("Autosave logs every "+str(config.AUTOSAVE_LOG_TIME)+" seconds",self)
+		# self.autoLog = QCheckBox("Autosave logs every "+str(config.AUTOSAVE_LOG_TIME)+" seconds",self)
+		self.autoLog = QCheckBox("",self)
+		self.autoLogLabel = QLabel("Autosave logs every <b>"+str(config.AUTOSAVE_LOG_TIME)+"</b> seconds")
 		if config.AUTOSAVE_LOGS: self.autoLog.setChecked(True)
 
-		self.hsButton = QPushButton("Set frequency")
+		self.hsButton = QPushButton("")
 		self.hsButton.clicked.connect(self.setSaveFreq)
 		self.hsButton.setAutoDefault(False)
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.hsButton.setFixedSize(fheight +10,fheight + 10)
+		self.hsButton.setIcon(QIcon(TIMESTAMP_ICON))
+		self.hsButton.setToolTip("Set frequency")
 
 
 		ltLayout = QHBoxLayout()
 		ltLayout.addWidget(self.autoLog)
+		ltLayout.addWidget(self.autoLogLabel)
 		ltLayout.addWidget(self.hsButton)
+		ltLayout.addStretch()
 
 
-		self.logSizeLabel = QLabel("Display <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines of the log")
+		self.logSizeLabel = QLabel("Load <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines for display")
 
-		self.slsButton = QPushButton("Set length")
+		self.slsButton = QPushButton("")
 		self.slsButton.clicked.connect(self.setLogSize)
 		self.slsButton.setAutoDefault(False)
+
+		self.slsButton.setFixedSize(fheight +10,fheight + 10)
+		self.slsButton.setIcon(QIcon(LOG_ICON))
+		self.slsButton.setToolTip("Set length")
 
 		llLayout = QHBoxLayout()
 		llLayout.addWidget(self.logSizeLabel)
 		llLayout.addWidget(self.slsButton)
+		llLayout.addStretch()
+		
 
 
 		slLayout = QVBoxLayout()
