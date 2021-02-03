@@ -53,6 +53,7 @@ SETTINGS_MENU_ICON = ":/settings.png"
 
 ERK_MENU_ICON = ":/erk.png"
 PDF_MENU_ICON = ":/pdf.png"
+EXPORT_MENU_ICON = ":/export.png"
 
 STYLE_MENU_ICON = ":/style.png"
 SCRIPT_EDITOR_MENU_ICON = ":/scripteditor.png"

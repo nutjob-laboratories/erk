@@ -560,7 +560,7 @@ class Erk(QMainWindow):
 				# MENU TOOLBAR
 				self.mainMenu = QMenu()
 				self.settingsMenu = QMenu()
-				self.logMenu = QMenu()
+				#self.logMenu = QMenu()
 				self.helpMenu = QMenu()
 				self.pluginMenu = QMenu()
 
@@ -766,6 +766,13 @@ class Erk(QMainWindow):
 				entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
 				self.settingsMenu.addAction(entry)
 
+			# entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
+			# entry.triggered.connect(self.menuExportLog)
+			# self.logMenu.addAction(entry)
+
+			entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
+			self.settingsMenu.addAction(entry)
+
 			self.settingsMenu.addSeparator()
 			#insertNoTextSeparator(self,self.settingsMenu)
 
@@ -843,84 +850,84 @@ class Erk(QMainWindow):
 
 			# Log menu
 
-			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-				self.logMenu = self.menubar.addMenu("Logs")
-			else:
-				self.logMenu.clear()
-				add_toolbar_menu(self.toolbar,"Logs",self.logMenu)
+			# if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+			# 	self.logMenu = self.menubar.addMenu("Logs")
+			# else:
+			# 	self.logMenu.clear()
+			# 	add_toolbar_menu(self.toolbar,"Logs",self.logMenu)
 
-			channelMenu = self.logMenu.addMenu(QIcon(CHANNEL_ICON),"Channels")
+			# channelMenu = self.logMenu.addMenu(QIcon(CHANNEL_ICON),"Channels")
 
-			self.set_chanlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
-			self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
-			channelMenu.addAction(self.set_chanlogsave)
+			# self.set_chanlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+			# self.set_chanlogsave.triggered.connect(lambda state,s="chanlogsave": self.toggleSetting(s))
+			# channelMenu.addAction(self.set_chanlogsave)
 
-			if config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+			# if config.SAVE_CHANNEL_LOGS: self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
-			self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
-			channelMenu.addAction(self.set_chanlogload)
+			# self.set_chanlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+			# self.set_chanlogload.triggered.connect(lambda state,s="chanlogload": self.toggleSetting(s))
+			# channelMenu.addAction(self.set_chanlogload)
 
-			if config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+			# if config.LOAD_CHANNEL_LOGS: self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
 
-			privateMenu = self.logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
+			# privateMenu = self.logMenu.addMenu(QIcon(NICK_ICON),"Private messages")
 
-			self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
-			self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
-			privateMenu.addAction(self.set_privlogsave)
+			# self.set_privlogsave = QAction(QIcon(UNCHECKED_ICON),"Automatic save",self)
+			# self.set_privlogsave.triggered.connect(lambda state,s="privlogsave": self.toggleSetting(s))
+			# privateMenu.addAction(self.set_privlogsave)
 
-			if config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+			# if config.SAVE_PRIVATE_LOGS: self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
-			self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
-			privateMenu.addAction(self.set_privlogload)
+			# self.set_privlogload = QAction(QIcon(UNCHECKED_ICON),"Automatic load",self)
+			# self.set_privlogload.triggered.connect(lambda state,s="privlogload": self.toggleSetting(s))
+			# privateMenu.addAction(self.set_privlogload)
 
-			if config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+			# if config.LOAD_PRIVATE_LOGS: self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_doautolog = QAction(QIcon(UNCHECKED_ICON),"Autosave logs while running",self)
-			self.set_doautolog.triggered.connect(lambda state,s="autosave_toggle": self.toggleSetting(s))
-			self.logMenu.addAction(self.set_doautolog)
+			# self.set_doautolog = QAction(QIcon(UNCHECKED_ICON),"Autosave logs while running",self)
+			# self.set_doautolog.triggered.connect(lambda state,s="autosave_toggle": self.toggleSetting(s))
+			# self.logMenu.addAction(self.set_doautolog)
 
-			if config.AUTOSAVE_LOGS: self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
+			# if config.AUTOSAVE_LOGS: self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
 
-			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-				self.set_doautolog.setEnabled(False)
+			# if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+			# 	self.set_doautolog.setEnabled(False)
 
 
-			self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
-			self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
-			self.logMenu.addAction(self.set_autosave)
+			# self.set_autosave = QAction(QIcon(UPTIME_ICON),"Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)",self)
+			# self.set_autosave.triggered.connect(lambda state,s="autosave_freq": self.toggleSetting(s))
+			# self.logMenu.addAction(self.set_autosave)
 
-			if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-				self.set_autosave.setEnabled(False)
+			# if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+			# 	self.set_autosave.setEnabled(False)
 
-			self.logMenu.addSeparator()
+			#self.logMenu.addSeparator()
 			#insertNoTextSeparator(self,self.logMenu)
 
-			self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
-			self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
-			self.logMenu.addAction(self.set_marklogend)
+			# self.set_marklogend = QAction(QIcon(UNCHECKED_ICON),"Mark end of loaded log",self)
+			# self.set_marklogend.triggered.connect(lambda state,s="marklogend": self.toggleSetting(s))
+			# self.logMenu.addAction(self.set_marklogend)
 
-			if config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+			# if config.MARK_END_OF_LOADED_LOG: self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
 
-			self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
-			self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
-			self.logMenu.addAction(self.set_logresume)
+			# self.set_logresume = QAction(QIcon(UNCHECKED_ICON),"Display log resume date/time",self)
+			# self.set_logresume.triggered.connect(lambda state,s="logresume": self.toggleSetting(s))
+			# self.logMenu.addAction(self.set_logresume)
 
-			if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+			# if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.set_logresume.setIcon(QIcon(CHECKED_ICON))
 
-			self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
-			self.logSize.triggered.connect(self.menuLogSize)
-			self.logMenu.addAction(self.logSize)
+			# self.logSize = QAction(QIcon(LOG_ICON),"Set log display size",self)
+			# self.logSize.triggered.connect(self.menuLogSize)
+			# self.logMenu.addAction(self.logSize)
 
-			self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
+			# self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
-			self.logMenu.addSeparator()
+			#self.logMenu.addSeparator()
 			#insertNoTextSeparator(self,self.logMenu)
 
-			entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
-			entry.triggered.connect(self.menuExportLog)
-			self.logMenu.addAction(entry)
+			# entry = QAction(QIcon(EXPORT_ICON),"Export log",self)
+			# entry.triggered.connect(self.menuExportLog)
+			# self.logMenu.addAction(entry)
 
 		# Plugin menu
 
@@ -1446,100 +1453,100 @@ class Erk(QMainWindow):
 				self.winsizeMenuEntry.setEnabled(False)
 			return
 
-		if setting=="privlogsave":
-			if config.SAVE_PRIVATE_LOGS:
-				config.SAVE_PRIVATE_LOGS = False
-				self.set_privlogsave.setIcon(QIcon(UNCHECKED_ICON))
+		# if setting=="privlogsave":
+		# 	if config.SAVE_PRIVATE_LOGS:
+		# 		config.SAVE_PRIVATE_LOGS = False
+		# 		self.set_privlogsave.setIcon(QIcon(UNCHECKED_ICON))
 
-				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-					self.set_doautolog.setEnabled(False)
+		# 		if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+		# 			self.set_doautolog.setEnabled(False)
 
-				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-					self.set_autosave.setEnabled(False)
+		# 		if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+		# 			self.set_autosave.setEnabled(False)
 
-			else:
-				config.SAVE_PRIVATE_LOGS = True
-				self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
-				self.set_doautolog.setEnabled(True)
-				self.set_autosave.setEnabled(True)
-			config.save_settings(self.configfile)
-			return
+		# 	else:
+		# 		config.SAVE_PRIVATE_LOGS = True
+		# 		self.set_privlogsave.setIcon(QIcon(CHECKED_ICON))
+		# 		self.set_doautolog.setEnabled(True)
+		# 		self.set_autosave.setEnabled(True)
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="privlogload":
-			if config.LOAD_PRIVATE_LOGS:
-				config.LOAD_PRIVATE_LOGS = False
-				self.set_privlogload.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.LOAD_PRIVATE_LOGS = True
-				self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
+		# if setting=="privlogload":
+		# 	if config.LOAD_PRIVATE_LOGS:
+		# 		config.LOAD_PRIVATE_LOGS = False
+		# 		self.set_privlogload.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		config.LOAD_PRIVATE_LOGS = True
+		# 		self.set_privlogload.setIcon(QIcon(CHECKED_ICON))
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="logresume":
-			if config.DISPLAY_CHAT_RESUME_DATE_TIME:
-				config.DISPLAY_CHAT_RESUME_DATE_TIME = False
-				self.set_logresume.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.DISPLAY_CHAT_RESUME_DATE_TIME = True
-				self.set_logresume.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
+		# if setting=="logresume":
+		# 	if config.DISPLAY_CHAT_RESUME_DATE_TIME:
+		# 		config.DISPLAY_CHAT_RESUME_DATE_TIME = False
+		# 		self.set_logresume.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		config.DISPLAY_CHAT_RESUME_DATE_TIME = True
+		# 		self.set_logresume.setIcon(QIcon(CHECKED_ICON))
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="autosave_toggle":
-			if config.AUTOSAVE_LOGS:
-				config.AUTOSAVE_LOGS = False
-				self.set_doautolog.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.AUTOSAVE_LOGS = True
-				self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
+		# if setting=="autosave_toggle":
+		# 	if config.AUTOSAVE_LOGS:
+		# 		config.AUTOSAVE_LOGS = False
+		# 		self.set_doautolog.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		config.AUTOSAVE_LOGS = True
+		# 		self.set_doautolog.setIcon(QIcon(CHECKED_ICON))
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="autosave_freq":
-			f = AutosaveDialog()
-			if f:
-				config.AUTOSAVE_LOG_TIME = f
-				self.set_autosave.setText("Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)")
-				config.save_settings(self.configfile)
-			return
+		# if setting=="autosave_freq":
+		# 	f = AutosaveDialog()
+		# 	if f:
+		# 		config.AUTOSAVE_LOG_TIME = f
+		# 		self.set_autosave.setText("Set autosave frequency ("+str(config.AUTOSAVE_LOG_TIME)+" seconds)")
+		# 		config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="marklogend":
-			if config.MARK_END_OF_LOADED_LOG:
-				config.MARK_END_OF_LOADED_LOG = False
-				self.set_marklogend.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.MARK_END_OF_LOADED_LOG = True
-				self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
+		# if setting=="marklogend":
+		# 	if config.MARK_END_OF_LOADED_LOG:
+		# 		config.MARK_END_OF_LOADED_LOG = False
+		# 		self.set_marklogend.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		config.MARK_END_OF_LOADED_LOG = True
+		# 		self.set_marklogend.setIcon(QIcon(CHECKED_ICON))
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="chanlogload":
-			if config.LOAD_CHANNEL_LOGS:
-				config.LOAD_CHANNEL_LOGS = False
-				self.set_chanlogload.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.LOAD_CHANNEL_LOGS = True
-				self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			return
+		# if setting=="chanlogload":
+		# 	if config.LOAD_CHANNEL_LOGS:
+		# 		config.LOAD_CHANNEL_LOGS = False
+		# 		self.set_chanlogload.setIcon(QIcon(UNCHECKED_ICON))
+		# 	else:
+		# 		config.LOAD_CHANNEL_LOGS = True
+		# 		self.set_chanlogload.setIcon(QIcon(CHECKED_ICON))
+		# 	config.save_settings(self.configfile)
+		# 	return
 
-		if setting=="chanlogsave":
-			if config.SAVE_CHANNEL_LOGS:
-				config.SAVE_CHANNEL_LOGS = False
-				self.set_chanlogsave.setIcon(QIcon(UNCHECKED_ICON))
+		# if setting=="chanlogsave":
+		# 	if config.SAVE_CHANNEL_LOGS:
+		# 		config.SAVE_CHANNEL_LOGS = False
+		# 		self.set_chanlogsave.setIcon(QIcon(UNCHECKED_ICON))
 
-				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-					self.set_doautolog.setEnabled(False)
+		# 		if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+		# 			self.set_doautolog.setEnabled(False)
 
-				if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
-					self.set_autosave.setEnabled(False)
-			else:
-				config.SAVE_CHANNEL_LOGS = True
-				self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
-				self.set_doautolog.setEnabled(True)
-				self.set_autosave.setEnabled(True)
-			config.save_settings(self.configfile)
-			return
+		# 		if config.SAVE_PRIVATE_LOGS==False and config.SAVE_CHANNEL_LOGS==False:
+		# 			self.set_autosave.setEnabled(False)
+		# 	else:
+		# 		config.SAVE_CHANNEL_LOGS = True
+		# 		self.set_chanlogsave.setIcon(QIcon(CHECKED_ICON))
+		# 		self.set_doautolog.setEnabled(True)
+		# 		self.set_autosave.setEnabled(True)
+		# 	config.save_settings(self.configfile)
+		# 	return
 
 	def linkClicked(self,url):
 		if url.host():
@@ -1558,12 +1565,12 @@ class Erk(QMainWindow):
 	def reload_all_text(self):
 		events.rerender_all()
 
-	def menuLogSize(self):
-		info = LogSizeDialog()
-		if info!=None:
-			config.LOG_LOAD_SIZE_MAX = info
-			config.save_settings(self.configfile)
-		self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
+	# def menuLogSize(self):
+	# 	info = LogSizeDialog()
+	# 	if info!=None:
+	# 		config.LOG_LOAD_SIZE_MAX = info
+	# 		config.save_settings(self.configfile)
+	# 	self.logSize.setText("Set log display size ("+str(config.LOG_LOAD_SIZE_MAX)+" lines)")
 
 	def menuCombo(self):
 		info = ComboDialog(self.userfile,self.block_scripts,self.scriptsdir,self.configfile)

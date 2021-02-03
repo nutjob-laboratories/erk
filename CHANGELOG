@@ -17,6 +17,8 @@ Version 0.840
 	* Re-arranged how commandline options are displayed to the user with the -h flag
 	* Made the "help" menu a bit more "fancy"
 	* Added a link to the GPL 3 to the "help" menu
+	* Moved all of the entries in the "Logs" menu to the "Settings" menu and the "Preferences" dialog
+	* Removed the "logs" menu
 
 Version 0.831
 	* Macros have been removed from the client

@@ -45,6 +45,10 @@ from .format import Dialog as FormatText
 from .list_time import Dialog as ListTime
 from .quitpart import Dialog as QuitPart
 
+from .autosave_freq import Dialog as Autosave
+
+from .log_size import Dialog as LogSize
+
 class Dialog(QDialog):
 
 	def setPrefix(self):
@@ -135,6 +139,24 @@ class Dialog(QDialog):
 
 		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds (new)")
 
+
+	def setSaveFreq(self):
+
+		x = Autosave()
+		f = x.get_entry_information()
+		if f:
+			self.autosave_time = f
+			self.autoLog.setText("Autosave logs every "+str(self.autosave_time)+" seconds")
+
+
+	def setLogSize(self):
+		x = LogSize()
+		info = x.get_entry_information()
+		if info:
+			self.logDisplayLines = info
+			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines of the log")
+
+
 	def __init__(self,configfile=USER_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
 
@@ -142,6 +164,10 @@ class Dialog(QDialog):
 		self.parent = parent
 
 		self.newfont = None
+
+		self.logDisplayLines = config.LOG_LOAD_SIZE_MAX
+
+		self.autosave_time = config.AUTOSAVE_LOG_TIME
 
 		self.systemPrefix = config.SYSTEM_MESSAGE_PREFIX
 		self.configRefresh = config.CHANNEL_LIST_REFRESH_FREQUENCY
@@ -348,6 +374,18 @@ class Dialog(QDialog):
 
 		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
+		# self.chansaveLog = QCheckBox("Save channel chat logs",self)
+		# if config.SAVE_CHANNEL_LOGS: self.chansaveLog.setChecked(True)
+
+		# self.chanloadLog = QCheckBox("Load channel chat logs",self)
+		# if config.LOAD_CHANNEL_LOGS: self.chanloadLog.setChecked(True)
+
+		# self.privsaveLog = QCheckBox("Save private chat logs",self)
+		# if config.SAVE_PRIVATE_LOGS: self.privsaveLog.setChecked(True)
+
+		# self.privloadLog = QCheckBox("Load private chat logs",self)
+		# if config.LOAD_PRIVATE_LOGS: self.privloadLog.setChecked(True)
+
 		mpLayout = QVBoxLayout()
 		mpLayout.addWidget(clLayout)
 		mpLayout.addWidget(self.showDates)
@@ -357,9 +395,93 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
 
+		# mpLayout.addWidget(self.chansaveLog)
+		# mpLayout.addWidget(self.chanloadLog)
+		# mpLayout.addWidget(self.privsaveLog)
+		# mpLayout.addWidget(self.privloadLog)
+
 		mpLayout.addStretch()
 
 		self.messagesPage.setLayout(mpLayout)
+
+		# LOGS PAGE
+
+		self.logsPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		entry.setText("Logs")
+		entry.widget = self.logsPage
+		entry.setIcon(QIcon(LOG_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.logsPage)
+
+		self.chansaveLog = QCheckBox("Save channel chat",self)
+		if config.SAVE_CHANNEL_LOGS: self.chansaveLog.setChecked(True)
+
+		self.chanloadLog = QCheckBox("Load channel chat",self)
+		if config.LOAD_CHANNEL_LOGS: self.chanloadLog.setChecked(True)
+
+		self.privsaveLog = QCheckBox("Save private chat",self)
+		if config.SAVE_PRIVATE_LOGS: self.privsaveLog.setChecked(True)
+
+		self.privloadLog = QCheckBox("Load private chat",self)
+		if config.LOAD_PRIVATE_LOGS: self.privloadLog.setChecked(True)
+
+		self.markLog = QCheckBox("Mark end of loaded log",self)
+		if config.MARK_END_OF_LOADED_LOG: self.markLog.setChecked(True)
+		self.markLog.stateChanged.connect(self.setRerender)
+
+		self.resumeLog = QCheckBox("Display chat resume date and time",self)
+		if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.resumeLog.setChecked(True)
+		self.resumeLog.stateChanged.connect(self.setRerender)
+
+		self.autoLog = QCheckBox("Autosave logs every "+str(config.AUTOSAVE_LOG_TIME)+" seconds",self)
+		if config.AUTOSAVE_LOGS: self.autoLog.setChecked(True)
+
+		self.hsButton = QPushButton("Set frequency")
+		self.hsButton.clicked.connect(self.setSaveFreq)
+		self.hsButton.setAutoDefault(False)
+
+
+		ltLayout = QHBoxLayout()
+		ltLayout.addWidget(self.autoLog)
+		ltLayout.addWidget(self.hsButton)
+
+
+		self.logSizeLabel = QLabel("Load <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines of the log")
+
+		self.slsButton = QPushButton("Set")
+		self.slsButton.clicked.connect(self.setLogSize)
+		self.slsButton.setAutoDefault(False)
+
+		llLayout = QHBoxLayout()
+		llLayout.addWidget(self.logSizeLabel)
+		llLayout.addWidget(self.slsButton)
+
+		mpLayout = QVBoxLayout()
+		mpLayout.addWidget(self.chansaveLog)
+		mpLayout.addWidget(self.chanloadLog)
+		mpLayout.addWidget(self.privsaveLog)
+		mpLayout.addWidget(self.privloadLog)
+		mpLayout.addLayout(llLayout)
+		mpLayout.addWidget(self.markLog)
+		mpLayout.addWidget(self.resumeLog)
+
+		# mpLayout.addWidget(self.autoLog)
+		# mpLayout.addWidget(self.hsButton)
+		mpLayout.addLayout(ltLayout)
+
+		# mpLayout.addWidget(self.logSizeLabel)
+		# mpLayout.addWidget(self.slsButton)
+		
+
+		mpLayout.addStretch()
+
+		self.logsPage.setLayout(mpLayout)
+
+		# LOGS PAGE
 
 		# Channel settings
 
@@ -944,6 +1066,21 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.LOG_LOAD_SIZE_MAX = self.logDisplayLines
+
+		config.AUTOSAVE_LOG_TIME = self.autosave_time
+
+		config.AUTOSAVE_LOGS = self.autoLog.isChecked()
+
+		config.DISPLAY_CHAT_RESUME_DATE_TIME = self.resumeLog.isChecked()
+
+		config.MARK_END_OF_LOADED_LOG = self.markLog.isChecked()
+
+		config.SAVE_CHANNEL_LOGS = self.chansaveLog.isChecked()
+		config.LOAD_CHANNEL_LOGS = self.chanloadLog.isChecked()
+		config.SAVE_PRIVATE_LOGS = self.privsaveLog.isChecked()
+		config.LOAD_PRIVATE_LOGS = self.privloadLog.isChecked()
 
 		config.AUTOCOMPLETE_CHANNELS = self.channelComplete.isChecked()
 
