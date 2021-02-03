@@ -60,7 +60,7 @@ class Dialog(QDialog):
 		self.systemPrefix = info
 		self.do_rerender = True
 
-		self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b> (new)")
+		self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b>*")
 
 	def setHistory(self):
 		x = HistorySize()
@@ -70,7 +70,7 @@ class Dialog(QDialog):
 		if not info: self.historySize = None
 		self.historySize = info
 
-		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b> (new)")
+		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b>*")
 
 	def selectorClick(self,item):
 		self.stack.setCurrentWidget(item.widget)
@@ -111,7 +111,7 @@ class Dialog(QDialog):
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"<center><b>{font_name}, {font_size} pt</b> (new)</center>")
+			self.fontLabel.setText(f"<center><b>{font_name}, {font_size} pt</b>*</center>")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -125,7 +125,7 @@ class Dialog(QDialog):
 		if not info: return None
 
 		self.default_quit_part = info
-		self.partMsg.setText("<b>"+str(info)+"</b>")
+		self.partMsg.setText("<b>"+str(info)+"</b>*")
 
 
 	def setListRefresh(self):
@@ -137,7 +137,7 @@ class Dialog(QDialog):
 		self.configRefresh = info
 		#self.refreshButton.setText("Set channel list refresh rate\n ("+str(self.configRefresh)+" seconds)")
 
-		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds (new)")
+		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds*")
 
 
 	def setSaveFreq(self):
@@ -146,7 +146,7 @@ class Dialog(QDialog):
 		f = x.get_entry_information()
 		if f:
 			self.autosave_time = f
-			self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds")
+			self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds*")
 
 
 	def setLogSize(self):
@@ -154,7 +154,7 @@ class Dialog(QDialog):
 		info = x.get_entry_information()
 		if info:
 			self.logDisplayLines = info
-			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display")
+			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display*")
 
 
 	def __init__(self,configfile=USER_FILE,parent=None):
@@ -1007,9 +1007,15 @@ class Dialog(QDialog):
 		self.listMisc = QCheckBox("Fetch channel list on connect",self)
 		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST: self.listMisc.setChecked(True)
 
-		self.refreshButton = QPushButton("Set channel list refresh rate")
+		self.refreshButton = QPushButton("")
 		self.refreshButton.clicked.connect(self.setListRefresh)
 		self.refreshButton.setAutoDefault(False)
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.refreshButton.setFixedSize(fheight +10,fheight + 10)
+		self.refreshButton.setIcon(QIcon(TIMESTAMP_ICON))
+		self.refreshButton.setToolTip("Set refresh rate")
 
 		# self.lostErrors = QCheckBox("Show connection lost errors",self)
 		# if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
@@ -1020,10 +1026,16 @@ class Dialog(QDialog):
 
 		self.listFreq = QLabel("Refresh list every <b>"+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+"</b> seconds")
 
+		refRateLayout = QHBoxLayout()
+		refRateLayout.addWidget(self.listFreq)
+		refRateLayout.addWidget(self.refreshButton)
+		refRateLayout.addStretch()
+
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.listMisc)
-		cgbLayout.addWidget(self.listFreq)
-		cgbLayout.addWidget(self.refreshButton)
+		# cgbLayout.addWidget(self.listFreq)
+		# cgbLayout.addWidget(self.refreshButton)
+		cgbLayout.addLayout(refRateLayout)
 
 
 		listBox = QGroupBox("Channel List",self)
@@ -1041,13 +1053,20 @@ class Dialog(QDialog):
 
 		self.partMsg = QLabel("<b>"+str(config.DEFAULT_QUIT_PART_MESSAGE)+"</b>")
 
-		self.setPartMsg = QPushButton("Set default part/quit message")
+		self.setPartMsg = QPushButton("")
 		self.setPartMsg.clicked.connect(self.setQuitMsg)
 		self.setPartMsg.setAutoDefault(False)
 
-		cgbLayout = QVBoxLayout()
-		cgbLayout.addWidget(self.partMsg)
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setPartMsg.setFixedSize(fheight +10,fheight + 10)
+		self.setPartMsg.setIcon(QIcon(EDIT_ICON))
+		self.setPartMsg.setToolTip("Set quit/part message")
+
+		cgbLayout = QHBoxLayout()
 		cgbLayout.addWidget(self.setPartMsg)
+		cgbLayout.addWidget(self.partMsg)
+		cgbLayout.addStretch()
 
 
 		quitPartBox = QGroupBox("Default Quit/Part Message",self)

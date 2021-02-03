@@ -23,6 +23,8 @@ Version 0.840
 	* Created a new menu: "Tools". Moved most of the built-in tools to this menu
 	* Moved the plugin editor and related tools to the "Tools" menu ("development mode" is still required to view them)
 	* Cleaned up the buttons on the "Logs" page in the "settings" dialog
+	* Cleaned up the buttons on the "miscellaneous" page
+	* Changed settings in the "settings" dialog are now marked with an asterix
 
 Version 0.831
 	* Macros have been removed from the client
