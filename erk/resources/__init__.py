@@ -68,6 +68,8 @@ CONNECT_MENU_ICON = ":/connect.png"
 
 PDF_ICON = ":/gui-pdf.png"
 
+SCRIPTEDIT_ICON = ":/gui-scriptedit.png"
+
 RCHECKED_ICON = ":/gui-rchecked.png"
 RUNCHECKED_ICON = ":/gui-runchecked.png"
 

@@ -220,7 +220,7 @@ class Window(QMainWindow):
 		self.editor = QPlainTextEdit(self)
 		self.highlight = ErkScriptHighlighter(self.editor.document(),self.parent.configfile)
 
-		self.setWindowIcon(QIcon(SCRIPT_ICON))
+		self.setWindowIcon(QIcon(SCRIPTEDIT_ICON))
 
 		self.editor.textChanged.connect(self.docModified)
 		self.editor.redoAvailable.connect(self.hasRedo)
