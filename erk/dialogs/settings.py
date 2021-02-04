@@ -354,20 +354,34 @@ class Dialog(QDialog):
 		if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.addPrefixes.setChecked(True)
 		self.addPrefixes.stateChanged.connect(self.setRerender)
 
-		prefixButton = QPushButton("Set prefix")
+		prefixButton = QPushButton("")
 		prefixButton.clicked.connect(self.setPrefix)
 		prefixButton.setAutoDefault(False)
+
+		self.prefDisplay = QLabel("Prefix: <b>"+config.SYSTEM_MESSAGE_PREFIX+"</b>")
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		prefixButton.setFixedSize(fheight +10,fheight + 10)
+		prefixButton.setIcon(QIcon(EDIT_ICON))
+		prefixButton.setToolTip("Set prefix")
+
+		psLayout = QHBoxLayout()
+		psLayout.addWidget(prefixButton)
+		psLayout.addWidget(self.prefDisplay)
+		psLayout.addStretch()
 
 		# pbLayout = QHBoxLayout()
 		# pbLayout.addWidget(prefixButton)
 		# pbLayout.addStretch()
 
-		self.prefDisplay = QLabel("Prefix: <b>"+config.SYSTEM_MESSAGE_PREFIX+"</b>")
+		
 
 		tsLay = QVBoxLayout()
 		tsLay.addWidget(self.addPrefixes)
-		tsLay.addWidget(self.prefDisplay)
-		tsLay.addWidget(prefixButton)
+		# tsLay.addWidget(self.prefDisplay)
+		# tsLay.addWidget(prefixButton)
+		tsLay.addLayout(psLayout)
 
 		clLayout = QGroupBox("System Messages",self)
 		clLayout.setLayout(tsLay)
@@ -711,16 +725,28 @@ class Dialog(QDialog):
 		if config.TRACK_COMMAND_HISTORY: self.trackInput.setChecked(True)
 		self.trackInput.stateChanged.connect(self.setReset)
 
-		hsButton = QPushButton("Set history size")
+		hsButton = QPushButton("")
 		hsButton.clicked.connect(self.setHistory)
 		hsButton.setAutoDefault(False)
 
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		hsButton.setFixedSize(fheight +10,fheight + 10)
+		hsButton.setIcon(QIcon(EDIT_ICON))
+		hsButton.setToolTip("Set history length")
+
 		self.historyLabel = QLabel("Command history: <b>"+str(config.HISTORY_LENGTH)+" lines</b>")
+
+		histEdLayout = QHBoxLayout()
+		histEdLayout.addWidget(hsButton)
+		histEdLayout.addWidget(self.historyLabel)
+		histEdLayout.addStretch()
 
 		histLayout = QVBoxLayout()
 		histLayout.addWidget(self.trackInput)
-		histLayout.addWidget(self.historyLabel)
-		histLayout.addWidget(hsButton)
+		# histLayout.addWidget(self.historyLabel)
+		# histLayout.addWidget(hsButton)
+		histLayout.addLayout(histEdLayout)
 
 		histBox = QGroupBox("Input History",self)
 		histBox.setLayout(histLayout)
