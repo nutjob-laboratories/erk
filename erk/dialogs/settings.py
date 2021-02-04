@@ -469,12 +469,13 @@ class Dialog(QDialog):
 		self.slsButton.setAutoDefault(False)
 
 		self.slsButton.setFixedSize(fheight +10,fheight + 10)
-		self.slsButton.setIcon(QIcon(LOG_ICON))
+		self.slsButton.setIcon(QIcon(EDIT_ICON))
 		self.slsButton.setToolTip("Set length")
 
 		llLayout = QHBoxLayout()
-		llLayout.addWidget(self.logSizeLabel)
 		llLayout.addWidget(self.slsButton)
+		llLayout.addWidget(self.logSizeLabel)
+		
 		llLayout.addStretch()
 		
 
@@ -1014,7 +1015,7 @@ class Dialog(QDialog):
 		fm = QFontMetrics(self.font())
 		fheight = fm.height()
 		self.refreshButton.setFixedSize(fheight +10,fheight + 10)
-		self.refreshButton.setIcon(QIcon(TIMESTAMP_ICON))
+		self.refreshButton.setIcon(QIcon(EDIT_ICON))
 		self.refreshButton.setToolTip("Set refresh rate")
 
 		# self.lostErrors = QCheckBox("Show connection lost errors",self)
@@ -1027,8 +1028,9 @@ class Dialog(QDialog):
 		self.listFreq = QLabel("Refresh list every <b>"+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+"</b> seconds")
 
 		refRateLayout = QHBoxLayout()
-		refRateLayout.addWidget(self.listFreq)
 		refRateLayout.addWidget(self.refreshButton)
+		refRateLayout.addWidget(self.listFreq)
+
 		refRateLayout.addStretch()
 
 		cgbLayout = QVBoxLayout()
