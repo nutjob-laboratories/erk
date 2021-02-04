@@ -27,6 +27,7 @@ Version 0.840
 	* Changed settings in the "settings" dialog are now marked with an asterix
 	* All pages in the "settings" dialog have now been "cleaned up" (prettier, smaller buttons for editing stuff)
 	* Changed the editor and script editor icons to be more generic
+	* Changed the "format" (style) icon
 
 Version 0.831
 	* Macros have been removed from the client
