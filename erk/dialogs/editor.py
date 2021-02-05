@@ -580,8 +580,8 @@ class Window(QMainWindow):
 		if not self.filename: self.menuSaveAs.setShortcut("Ctrl+S")
 		fileMenu.addAction(self.menuSaveAs)
 
-		#fileMenu.addSeparator()
-		insertNoTextSeparator(self,fileMenu)
+		fileMenu.addSeparator()
+		#insertNoTextSeparator(self,fileMenu)
 
 		self.menuOpenPlugin = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
 		self.menuOpenPlugin.triggered.connect(self.openPDir)
@@ -591,8 +591,8 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,s=DOCUMENTATION: QDesktopServices.openUrl(QUrl("file:"+s)))
 		fileMenu.addAction(entry)
 
-		#fileMenu.addSeparator()
-		insertNoTextSeparator(self,fileMenu)
+		fileMenu.addSeparator()
+		#insertNoTextSeparator(self,fileMenu)
 
 		entry = QAction(QIcon(QUIT_ICON),"Quit",self)
 		entry.setShortcut("Ctrl+Q")
@@ -611,16 +611,16 @@ class Window(QMainWindow):
 		mefind.setShortcut("Ctrl+R")
 		editMenu.addAction(mefind)
 
-		#editMenu.addSeparator()
-		insertNoTextSeparator(self,editMenu)
+		editMenu.addSeparator()
+		#insertNoTextSeparator(self,editMenu)
 
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
 		entry.triggered.connect(self.editor.selectAll)
 		entry.setShortcut("Ctrl+A")
 		editMenu.addAction(entry)
 
-		#editMenu.addSeparator()
-		insertNoTextSeparator(self,editMenu)
+		editMenu.addSeparator()
+		#insertNoTextSeparator(self,editMenu)
 
 		self.menuUndo = QAction(QIcon(UNDO_ICON),"Undo",self)
 		self.menuUndo.triggered.connect(self.editor.undo)
@@ -634,8 +634,8 @@ class Window(QMainWindow):
 		editMenu.addAction(self.menuRedo)
 		self.menuRedo.setEnabled(False)
 
-		#editMenu.addSeparator()
-		insertNoTextSeparator(self,editMenu)
+		editMenu.addSeparator()
+		#insertNoTextSeparator(self,editMenu)
 
 		self.menuCut = QAction(QIcon(CUT_ICON),"Cut",self)
 		self.menuCut.triggered.connect(self.editor.cut)
@@ -654,8 +654,8 @@ class Window(QMainWindow):
 		self.menuPaste.setShortcut("Ctrl+V")
 		editMenu.addAction(self.menuPaste)
 
-		#editMenu.addSeparator()
-		insertNoTextSeparator(self,editMenu)
+		editMenu.addSeparator()
+		#insertNoTextSeparator(self,editMenu)
 
 		self.menuZoomIn = QAction(QIcon(PLUS_ICON),"Zoom in",self)
 		self.menuZoomIn.triggered.connect(self.editor.zoomIn)
@@ -678,8 +678,8 @@ class Window(QMainWindow):
 		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
 		toolsMenu.addAction(entry)
 
-		#toolsMenu.addSeparator()
-		insertNoTextSeparator(self,toolsMenu)
+		toolsMenu.addSeparator()
+		#insertNoTextSeparator(self,toolsMenu)
 
 		if self.gui!=None:
 			entry = QAction(QIcon(RESTART_ICON),"Load new plugins into client",self)
@@ -734,8 +734,8 @@ class Window(QMainWindow):
 
 		if not config.USE_SPACES_FOR_INDENT: self.spacesMenu.setEnabled(False)
 
-		#indentMenu.addSeparator()
-		insertNoTextSeparator(self,indentMenu)
+		indentMenu.addSeparator()
+		#insertNoTextSeparator(self,indentMenu)
 
 		entry = QAction(QIcon(SPACES_ICON),"Convert indent to spaces",self)
 		entry.triggered.connect(lambda state,s="converttospace": self.toggleSetting(s))
@@ -1162,8 +1162,8 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="topic": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
-		#funcMenu.addSeparator()
-		insertNoTextSeparator(self,funcMenu)
+		funcMenu.addSeparator()
+		#insertNoTextSeparator(self,funcMenu)
 
 		entry = QAction(QIcon(LAMBDA_ICON),"send()",self)
 		entry.triggered.connect(lambda state,f="send": self.insertMethod(f))

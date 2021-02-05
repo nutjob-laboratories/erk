@@ -28,6 +28,11 @@ Version 0.840
 	* All pages in the "settings" dialog have now been "cleaned up" (prettier, smaller buttons for editing stuff)
 	* Changed the editor and script editor icons to be more generic
 	* Changed the "format" (style) icon
+	* Moved the "Styler" menu entry in the "Tools" menu to below the "Scripter" entry
+	* Restored normal QT menu separators to the editor
+	* Changed the default package icon
+	* Changed the "export" icon
+	* Unified the "export package" icon (so Plugger and the main app use the same icon)
 
 Version 0.831
 	* Macros have been removed from the client

@@ -806,16 +806,16 @@ class Erk(QMainWindow):
 			self.toolsMenu.clear()
 			add_toolbar_menu(self.toolbar,"Tools",self.toolsMenu)
 
-		if not self.block_styles:
-			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
-			self.toolsMenu.addAction(entry)
-
 		showEditor = True
 		if self.block_editor: showEditor = False
 		if self.block_scripts: showEditor = False
 
 		if showEditor:
 			entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
+			self.toolsMenu.addAction(entry)
+
+		if not self.block_styles:
+			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
 			self.toolsMenu.addAction(entry)
 
 
