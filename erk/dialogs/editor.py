@@ -440,15 +440,16 @@ class Window(QMainWindow):
 		x = Export(self)
 		info = x.get_name_information(self)
 
+		# print(info)
+		# return
+
 		if info:
 			options = QFileDialog.Options()
 			options |= QFileDialog.DontUseNativeDialog
 			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
 			if fileName:
-				if '.zip' in fileName:
-					pass
-				else:
-					fileName = fileName + '.zip'
+				efl = len("zip")+1
+				if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
 				zf = zipfile.ZipFile(fileName, "w")
 				for dirname, subdirs, files in os.walk(info):
 					pname = os.path.basename(info)
@@ -459,7 +460,11 @@ class Window(QMainWindow):
 						sfile = os.path.join(dirname,fname)
 						bname = os.path.basename(sfile)
 
-						zf.write(sfile,pname+"\\"+bname)
+						#zf.write(sfile,pname+"\\"+bname)
+						# The ^^above unsurprisingly caused a mangled zip to be exported
+						# The following fixes that
+						zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(info, '..')))
+
 				zf.close()
 
 	def setStyle(self,style):

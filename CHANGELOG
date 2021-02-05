@@ -33,6 +33,9 @@ Version 0.840
 	* Changed the default package icon
 	* Changed the "export" icon
 	* Unified the "export package" icon (so Plugger and the main app use the same icon)
+	* Bugfix: exporting plugins, on linux, creating a mangled, non-functional archive; it works now
+	* Bugfix: the export plugin process now makes sure the output has a proper file extension
+	* Bugfix: the export log process now makes sure the output has the proper file extension
 
 Version 0.831
 	* Macros have been removed from the client

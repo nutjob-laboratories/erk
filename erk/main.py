@@ -978,8 +978,10 @@ class Erk(QMainWindow):
 				options |= QFileDialog.DontUseNativeDialog
 				fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
 				if fileName:
-					extension = os.path.splitext(fileName)[1]
-					if extension.lower()!='txt': fileName = fileName + ".txt"
+					# extension = os.path.splitext(fileName)[1]
+					# if extension.lower()!='txt': fileName = fileName + ".txt"
+					efl = len("txt")+1
+					if fileName[-efl:].lower()!=f".txt": fileName = fileName+f".txt"
 					dump = dumpLog(elog,dlog,llog,do_epoch)
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
@@ -989,8 +991,10 @@ class Erk(QMainWindow):
 				options |= QFileDialog.DontUseNativeDialog
 				fileName, _ = QFileDialog.getSaveFileName(self,"Save export As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
 				if fileName:
-					extension = os.path.splitext(fileName)[1]
-					if extension.lower()!='json': fileName = fileName + ".json"
+					# extension = os.path.splitext(fileName)[1]
+					# if extension.lower()!='json': fileName = fileName + ".json"
+					efl = len("json")+1
+					if fileName[-efl:].lower()!=f".json": fileName = fileName+f".json"
 					dump = dumpLogJson(elog,do_epoch)
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
@@ -1005,10 +1009,8 @@ class Erk(QMainWindow):
 			options |= QFileDialog.DontUseNativeDialog
 			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
 			if fileName:
-				if '.zip' in fileName:
-					pass
-				else:
-					fileName = fileName + '.zip'
+				efl = len("zip")+1
+				if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
 				zf = zipfile.ZipFile(fileName, "w")
 				for dirname, subdirs, files in os.walk(info):
 					pname = os.path.basename(info)
@@ -1019,7 +1021,11 @@ class Erk(QMainWindow):
 						sfile = os.path.join(dirname,fname)
 						bname = os.path.basename(sfile)
 
-						zf.write(sfile,pname+"\\"+bname)
+						#zf.write(sfile,pname+"\\"+bname)
+						# The ^^above unsurprisingly caused a mangled zip to be exported
+						# The following fixes that
+						zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(info, '..')))
+
 				zf.close()
 
 	def rebuildPluginMenu(self):
