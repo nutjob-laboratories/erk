@@ -514,6 +514,17 @@ class PluginCollection(object):
 				p._erk_client = None
 				p._erk_window_name = None
 
+	def mode(self,client,channel,user,mset,modes,arguments):
+		if not config.PLUGINS_ENABLED: return
+		for p in self.plugins:
+			if p.name in DISABLED_PLUGINS: continue
+			if hasattr(p,"mode"):
+				p._erk_client = client
+				p._erk_window_name = None
+				p.mode(client,channel,user,mset,modes,arguments)
+				p._erk_client = None
+				p._erk_window_name = None
+
 	def errors(self):
 		return self.load_errors
 

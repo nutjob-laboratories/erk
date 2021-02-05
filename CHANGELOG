@@ -37,6 +37,8 @@ Version 0.840
 	* Bugfix: the export plugin process now makes sure the output has a proper file extension
 	* Bugfix: the export log process now makes sure the output has the proper file extension
 	* Bugfix: plugin editor toolbar button icon for "insert template" now matches the menu icon
+	* Bugfix: creating a plugin from the --new commandline flag didn't include all event methods
+	* New event method: .mode(), for when the client receives a mode notification
 
 Version 0.831
 	* Macros have been removed from the client

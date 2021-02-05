@@ -845,6 +845,9 @@ def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
 
+	if not client.gui.block_plugins:
+		client.gui.plugins.mode(client,channel,user,mset,modes,args)
+
 	args = list(args)
 	cleaned = []
 	for a in args:

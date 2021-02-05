@@ -132,3 +132,30 @@ class !_PLUGIN_NAME!(Plugin):
 		user -- The user who left the channel
 		"""
 		pass
+
+	def ctcp(self,client,user,channel,tag,message):
+		"""Executed when the client receives an unrecognized CTCP message.
+		
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		user -- The user who sent the message
+		channel -- The channel the user sent it from
+		tag -- The message's tag
+		message -- The message contents
+		"""
+		pass
+
+	def mode(self,channel,user,mset,modes,arguments):
+		"""Executed when a mode is set on the client or a channel the client is in.
+		
+		Arguments:
+		self -- The plugin's instance
+		client -- The Twisted IRC client object
+		channel -- The target (user or channel) the mode was set on
+		user -- The user who set the mode
+		mset -- True if a mode is set, False if a mode is unset
+		modes -- The mode(s) set
+		args -- A tuple of any arguments to the mode
+		"""
+		pass
