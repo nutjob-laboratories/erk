@@ -39,6 +39,7 @@ Version 0.840
 	* Bugfix: plugin editor toolbar button icon for "insert template" now matches the menu icon
 	* Bugfix: creating a plugin from the --new commandline flag didn't include all event methods
 	* New event method: .mode(), for when the client receives a mode notification
+	* Added two new commandline options: --export-settings and --import-settings
 
 Version 0.831
 	* Macros have been removed from the client

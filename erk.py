@@ -103,6 +103,8 @@ miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storag
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
 miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro save file", metavar="FILE", default=MACRO_SAVE_FILE)
+miscgroup.add_argument("-X","--export-settings", type=str,help="Export settings to a zip file", metavar="ZIP")
+miscgroup.add_argument("-I","--import-settings", type=str,help="Import settings from a zip file", metavar="ZIP")
 
 devgroup = parser.add_argument_group('Plugin development')
 
@@ -187,6 +189,33 @@ if __name__ == '__main__':
 		print("Installing plugin \""+file+"\"...")
 		with ZipFile(file,'r') as zipObj:
 			zipObj.extractall(PLUGIN_DIRECTORY)
+		print("Done!")
+		sys.exit(0)
+
+	# Handle exporting settings
+	if args.export_settings:
+		outfile = args.export_settings
+		efl = len("zip")+1
+		if outfile[-efl:].lower()!=f".zip": outfile = outfile+f".zip"
+		print("Exporting settings to \""+outfile+"\"...")
+		zf = ZipFile(outfile, "w")
+		for dirname, subdirs, files in os.walk(SETTINGS_DIRECTORY):
+			for fname in files:
+				zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(SETTINGS_DIRECTORY, '..')))
+		zf.close()
+		print("Done!")
+		sys.exit(0)
+
+	# Handle importing settings
+	if args.import_settings:
+		file = args.import_settings
+		if not os.path.isfile(file):
+			print("\""+file+"\" doesn't exist.")
+			sys.exit(1)
+
+		print("Importing settings from \""+file+"\"...")
+		with ZipFile(file,'r') as zipObj:
+			zipObj.extractall(INSTALL_DIRECTORY)
 		print("Done!")
 		sys.exit(0)
 
