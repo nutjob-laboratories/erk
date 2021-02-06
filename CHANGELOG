@@ -41,6 +41,7 @@ Version 0.840
 	* New event method: .mode(), for when the client receives a mode notification
 	* Added two new commandline options: --export-settings and --import-settings
 	* Changed the icon for the plugin editor (it's now a plug, which matches the name, heh)
+	* Added a new commandline option: --export-all (exports settings and logs to a zip file)
 
 Version 0.831
 	* Macros have been removed from the client

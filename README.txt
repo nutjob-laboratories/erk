@@ -173,8 +173,11 @@ Configuration:
                         Use an alternate macro save file
   -X ZIP, --export-settings ZIP
                         Export settings to a zip file
+  -A ZIP, --export-all ZIP
+                        Export settings and logs to a zip file
   -I ZIP, --import-settings ZIP
-                        Import settings from a zip file
+                        Import settings (and logs) from a zip file
+
 
 Plugin development:
   --generate NAME       Generate a "blank" plugin package in the current directory

@@ -2,12 +2,12 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.831.093"><b>Download last stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.840.062</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.840.063</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.840.062**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.840.063**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -173,8 +173,11 @@ Configuration:
                         Use an alternate macro save file
   -X ZIP, --export-settings ZIP
                         Export settings to a zip file
+  -A ZIP, --export-all ZIP
+                        Export settings and logs to a zip file
   -I ZIP, --import-settings ZIP
-                        Import settings from a zip file
+                        Import settings (and logs) from a zip file
+
 
 Plugin development:
   --generate NAME       Generate a "blank" plugin package in the current directory
