@@ -111,7 +111,7 @@ class Dialog(QDialog):
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"<center><b>{font_name}, {font_size} pt</b>*</center>")
+			self.fontLabel.setText(f"Font: <b>{font_name}, {font_size} pt</b>*")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -211,11 +211,17 @@ class Dialog(QDialog):
 		font_name = pfs[0]
 		font_size = pfs[1]
 
-		self.fontLabel = QLabel(f"<center><b>{font_name}, {font_size} pt</b></center>",self)
+		self.fontLabel = QLabel(f"Font: <b>{font_name}, {font_size} pt</b>",self)
 
-		fontButton = QPushButton("Change font")
+		fontButton = QPushButton("")
 		fontButton.clicked.connect(self.menuFont)
 		fontButton.setAutoDefault(False)
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		fontButton.setFixedSize(fheight +10,fheight + 10)
+		fontButton.setIcon(QIcon(EDIT_ICON))
+		fontButton.setToolTip("Change font")
 
 		formatButton = QPushButton("Style Editor")
 		formatButton.clicked.connect(self.menuFormat)
@@ -232,22 +238,29 @@ class Dialog(QDialog):
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
-		pb2Layout = QHBoxLayout()
-		pb2Layout.addStretch()
-		pb2Layout.addWidget(fontButton)
-		pb2Layout.addWidget(formatButton)
-		pb2Layout.addStretch()
+		fbLay = QHBoxLayout()
+		#fbLay.addStretch()
+		fbLay.addWidget(fontButton)
+		fbLay.addWidget(self.fontLabel)
+		fbLay.addStretch()
 
-		tsLay = QVBoxLayout()
-		tsLay.addWidget(self.fontLabel)
-		tsLay.addLayout(pb2Layout)
+		# pb2Layout = QHBoxLayout()
+		# pb2Layout.addStretch()
+		# #pb2Layout.addWidget(fontButton)
+		# pb2Layout.addWidget(formatButton)
+		# pb2Layout.addStretch()
 
-		clLayout = QGroupBox("Text Settings",self)
-		clLayout.setLayout(tsLay)
+		# tsLay = QVBoxLayout()
+		# #tsLay.addWidget(self.fontLabel)
+		# tsLay.addLayout(fbLay)
+		# tsLay.addLayout(pb2Layout)
 
-		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		# clLayout = QGroupBox("Text Settings",self)
+		# clLayout.setLayout(tsLay)
 
-		clLayout.setAlignment(Qt.AlignHCenter)
+		# clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		# clLayout.setAlignment(Qt.AlignHCenter)
 
 		self.lostErrors = QCheckBox("Show connection lost errors",self)
 		if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
@@ -257,7 +270,8 @@ class Dialog(QDialog):
 
 		mpLayout = QVBoxLayout()
 
-		mpLayout.addWidget(clLayout)
+		# mpLayout.addWidget(clLayout)
+		mpLayout.addLayout(fbLay)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
 		mpLayout.addWidget(self.askMisc)
