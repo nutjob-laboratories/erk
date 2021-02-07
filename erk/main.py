@@ -386,6 +386,7 @@ class Erk(QMainWindow):
 			no_styles=False,
 			block_editor=False,
 			macrofile=MACRO_SAVE_FILE,
+			block_install=False,
 			parent=None
 		):
 		
@@ -409,6 +410,8 @@ class Erk(QMainWindow):
 		self.do_connection_display_width_save = 0
 
 		self.current_client = None
+
+		self.block_install = block_install
 
 		self.block_plugins = block_plugins
 
@@ -1032,11 +1035,13 @@ class Erk(QMainWindow):
 
 		self.pluginMenu.clear()
 
-		entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
-		self.pluginMenu.addAction(entry)
+		if not self.block_install:
 
-		if not config.PLUGINS_ENABLED:
-			entry.setEnabled(False)
+			entry = MenuAction(self,MENU_INSTALL_ICON,"Install","Install a plugin",25,self.menuInstall)
+			self.pluginMenu.addAction(entry)
+
+			if not config.PLUGINS_ENABLED:
+				entry.setEnabled(False)
 
 		if not hasattr(self,"plugins"):
 			self.plugins = PluginCollection("plugins")

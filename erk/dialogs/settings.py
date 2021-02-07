@@ -239,28 +239,9 @@ class Dialog(QDialog):
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
 		fbLay = QHBoxLayout()
-		#fbLay.addStretch()
 		fbLay.addWidget(fontButton)
 		fbLay.addWidget(self.fontLabel)
 		fbLay.addStretch()
-
-		# pb2Layout = QHBoxLayout()
-		# pb2Layout.addStretch()
-		# #pb2Layout.addWidget(fontButton)
-		# pb2Layout.addWidget(formatButton)
-		# pb2Layout.addStretch()
-
-		# tsLay = QVBoxLayout()
-		# #tsLay.addWidget(self.fontLabel)
-		# tsLay.addLayout(fbLay)
-		# tsLay.addLayout(pb2Layout)
-
-		# clLayout = QGroupBox("Text Settings",self)
-		# clLayout.setLayout(tsLay)
-
-		# clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		# clLayout.setAlignment(Qt.AlignHCenter)
 
 		self.lostErrors = QCheckBox("Show connection lost errors",self)
 		if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
@@ -270,7 +251,6 @@ class Dialog(QDialog):
 
 		mpLayout = QVBoxLayout()
 
-		# mpLayout.addWidget(clLayout)
 		mpLayout.addLayout(fbLay)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)

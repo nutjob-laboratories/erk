@@ -125,10 +125,10 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-X ZIP] [-I ZIP] [--generate NAME] [--new] [--editor]
-                     [--edit FILE] [--install ZIP] [--noplugins] [--noask] [--nosettings]
-                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
-                     [--noedit] [--noextensions] [--qt5menu]
+                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--generate NAME] [--new]
+                     [--editor] [--edit FILE] [--install ZIP] [--noplugins] [--noask]
+                     [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
+                     [--nostyles] [--noedit] [--noextensions] [--noinstall] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -178,7 +178,6 @@ Configuration:
   -I ZIP, --import-settings ZIP
                         Import settings (and logs) from a zip file
 
-
 Plugin development:
   --generate NAME       Generate a "blank" plugin package in the current directory
   --new                 Generate a "blank" plugin package in the plugins directory
@@ -197,6 +196,7 @@ Disable functionality:
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
   --noextensions        Disables scripts and plugins
+  --noinstall           Disables plugin installation
   --qt5menu             Disable menu toolbar, and use normal menus
 ```
 # Frequently asked questions

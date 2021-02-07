@@ -2,12 +2,12 @@
 <p align="center">
 	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
 	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.831.093"><b>Download last stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.840.066</b></a><br>
+	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.840.067</b></a><br>
 	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.840.066**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.840.067**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -125,10 +125,10 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-X ZIP] [-I ZIP] [--generate NAME] [--new] [--editor]
-                     [--edit FILE] [--install ZIP] [--noplugins] [--noask] [--nosettings]
-                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
-                     [--noedit] [--noextensions] [--qt5menu]
+                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--generate NAME] [--new]
+                     [--editor] [--edit FILE] [--install ZIP] [--noplugins] [--noask]
+                     [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
+                     [--nostyles] [--noedit] [--noextensions] [--noinstall] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -178,7 +178,6 @@ Configuration:
   -I ZIP, --import-settings ZIP
                         Import settings (and logs) from a zip file
 
-
 Plugin development:
   --generate NAME       Generate a "blank" plugin package in the current directory
   --new                 Generate a "blank" plugin package in the plugins directory
@@ -197,6 +196,7 @@ Disable functionality:
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
   --noextensions        Disables scripts and plugins
+  --noinstall           Disables plugin installation
   --qt5menu             Disable menu toolbar, and use normal menus
 ```
 # Frequently asked questions
