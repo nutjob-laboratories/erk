@@ -154,14 +154,17 @@ AUTOCOMPLETE_CHANNELS = True
 
 DICTIONARY = []
 
+BLOCK_PLUGIN_INSTALL = False
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
-		"dictionary": DICTIONARY,
+		"block_plugin_installation": BLOCK_PLUGIN_INSTALL,
 
+		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
 		"default_quit_and_part_message": DEFAULT_QUIT_PART_MESSAGE,
@@ -269,6 +272,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "block_plugin_installation" in data:
+		data["block_plugin_installation"] = BLOCK_PLUGIN_INSTALL
 
 	if not "dictionary" in data:
 		data["dictionary"] = DICTIONARY
@@ -469,6 +475,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_MACROS
 	global AUTOCOMPLETE_CHANNELS
 	global DICTIONARY
+	global BLOCK_PLUGIN_INSTALL
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -477,6 +484,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			BLOCK_PLUGIN_INSTALL = data["block_plugin_installation"]
 			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
 			ENABLE_MACROS = data["enable_macros"]

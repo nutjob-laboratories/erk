@@ -966,8 +966,15 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.enableMacros.setEnabled(False)
 
+		self.pluginInstall = QCheckBox("Enable install from menu",self)
+		if not config.BLOCK_PLUGIN_INSTALL: self.pluginInstall.setChecked(True)
+
+		if self.parent.cmdline_install:
+			self.pluginInstall.setEnabled(False)
+
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.pluginFeatures)
+		cgbLayout.addWidget(self.pluginInstall)
 		cgbLayout.addWidget(self.pluginErrors)
 		cgbLayout.addWidget(self.pluginDevmode)
 
@@ -1038,13 +1045,6 @@ class Dialog(QDialog):
 		self.refreshButton.setIcon(QIcon(EDIT_ICON))
 		self.refreshButton.setToolTip("Set refresh rate")
 
-		# self.lostErrors = QCheckBox("Show connection lost errors",self)
-		# if config.SHOW_CONNECTION_LOST_ERROR: self.lostErrors.setChecked(True)
-
-		# self.failErrors = QCheckBox("Show connection fail errors",self)
-		# if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
-
-
 		self.listFreq = QLabel("Refresh list every <b>"+str(config.CHANNEL_LIST_REFRESH_FREQUENCY)+"</b> seconds")
 
 		refRateLayout = QHBoxLayout()
@@ -1055,16 +1055,12 @@ class Dialog(QDialog):
 
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.listMisc)
-		# cgbLayout.addWidget(self.listFreq)
-		# cgbLayout.addWidget(self.refreshButton)
 		cgbLayout.addLayout(refRateLayout)
-
 
 		listBox = QGroupBox("Channel List",self)
 		listBox.setLayout(cgbLayout)
 
 		listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 
 		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
 		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
@@ -1154,6 +1150,13 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		if self.pluginInstall.isChecked():
+			config.BLOCK_PLUGIN_INSTALL = False
+			self.parent.block_install = False
+		else:
+			config.BLOCK_PLUGIN_INSTALL = True
+			self.parent.block_install = True
 
 		config.LOG_LOAD_SIZE_MAX = self.logDisplayLines
 

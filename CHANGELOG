@@ -44,6 +44,8 @@ Version 0.840
 	* Added a new commandline option: --export-all (exports settings and logs to a zip file)
 	* Removed the "style editor" button from the "settings" dialog, and streamlined the font selection option
 	* Added a commandline flag to block the "install plugin" menu option
+	* Added an option to block the "install plugin" menu option to the config file
+	* Added the "block menu install" option to the "settings" dialog
 
 Version 0.831
 	* Macros have been removed from the client

@@ -446,10 +446,12 @@ class Erk(QMainWindow):
 		self.cmdline_plugin = False
 		self.cmdline_script = False
 		self.cmdline_editor = False
+		self.cmdline_install = False
 
 		if self.block_plugins: self.cmdline_plugin = True
 		if self.block_scripts: self.cmdline_script = True
 		if self.block_editor: self.cmdline_editor = True
+		if self.block_install: self.cmdline_install = True
 
 		self.force_qmenu = force_qmenu
 
@@ -495,7 +497,7 @@ class Erk(QMainWindow):
 				userinput.MACROS = list(macro_table)
 
 				
-
+		if config.BLOCK_PLUGIN_INSTALL: self.block_install = True
 
 		if width!=None:
 			appwidth = width
