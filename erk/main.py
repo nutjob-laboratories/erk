@@ -735,6 +735,9 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
+			entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
+			self.settingsMenu.addAction(entry)
+
 			self.settingsMenu.addSeparator()
 
 
@@ -824,8 +827,8 @@ class Erk(QMainWindow):
 			self.toolsMenu.addAction(entry)
 
 
-		entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
-		self.toolsMenu.addAction(entry)
+		# entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
+		# self.toolsMenu.addAction(entry)
 
 		if config.DEVELOPER_MODE:
 			entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)

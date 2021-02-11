@@ -46,6 +46,8 @@ Version 0.840
 	* Added a commandline flag to block the "install plugin" menu option
 	* Added an option to block the "install plugin" menu option to the config file
 	* Added the "block menu install" option to the "settings" dialog
+	* Changed the "export" icon to the traditional "floppy disk" icon
+	* Moved the "export logs" entry from the "Tools" menu to the "Settings" menu
 
 Version 0.831
 	* Macros have been removed from the client
