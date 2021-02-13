@@ -51,6 +51,7 @@ Version 0.840
 	* Modified the HTML generated for "fancy" menu entries to remove cell spacing in the tables for the "master" table
 	* Changed the appearance of the "title" of the "server settings" context menu to look a bit prettier
 	* Replaced the custom separators in the "server" menu with normal Qt5 separators
+	* Cleaned up the userlist context menu
 
 Version 0.831
 	* Macros have been removed from the client

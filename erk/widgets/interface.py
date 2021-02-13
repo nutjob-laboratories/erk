@@ -1221,12 +1221,6 @@ class Window(QMainWindow):
 				this_is_me = False
 
 			menu = QMenu(self)
-			#menu.setStyleSheet(self.styles["all"])
-
-			tsLabel = QLabel( "&nbsp;<big><b>"+user_nick+"</b></big>" )
-			tsAction = QWidgetAction(self)
-			tsAction.setDefaultWidget(tsLabel)
-			menu.addAction(tsAction)
 
 			if user_hostmask:
 				max_length = 25
@@ -1242,39 +1236,36 @@ class Window(QMainWindow):
 					display_hostmask = user_hostmask[0:offset]+"..."
 				else:
 					display_hostmask = user_hostmask
-				tsLabel = QLabel( "&nbsp;<i>"+display_hostmask+"</i>" )
-				tsAction = QWidgetAction(self)
-				tsAction.setDefaultWidget(tsLabel)
-				menu.addAction(tsAction)
 
 			statusLayout = QHBoxLayout()
 			if user_is_op:
-				statusLayout.addWidget(self.user_op)
-				statusLayout.addWidget(QLabel(f"<i>"+"Channel Operator"+"</i>"))
+				ICON = MENU_USERLIST_OPERATOR_ICON
+				OTHER_TEXT = "Channel operator"
 			elif user_is_voiced:
-				statusLayout.addWidget(self.user_voice)
-				statusLayout.addWidget(QLabel(f"<i>"+"Voiced user"+"</i>"))
+				ICON = MENU_USERLIST_VOICED_ICON
+				OTHER_TEXT = "Voiced user"
 			elif user_is_owner:
-				statusLayout.addWidget(self.user_owner)
-				statusLayout.addWidget(QLabel(f"<i>"+"Channel Owner"+"</i>"))
+				ICON = MENU_USERLIST_OWNER_ICON
+				OTHER_TEXT = "Channel owner"
 			elif user_is_admin:
-				statusLayout.addWidget(self.user_admin)
-				statusLayout.addWidget(QLabel(f"<i>"+"Channel Admin"+"</i>"))
+				ICON = MENU_USERLIST_ADMIN_ICON
+				OTHER_TEXT = "Channel admin"
 			elif user_is_halfop:
-				statusLayout.addWidget(self.user_halfop)
-				statusLayout.addWidget(QLabel(f"<i>"+"Channel Half-Operator"+"</i>"))
+				ICON = MENU_USERLIST_HALFOP_ICON
+				OTHER_TEXT = "Channel half-operator"
 			else:
-				statusLayout.addWidget(self.user_icon)
-				statusLayout.addWidget(QLabel(f"<i>"+"Normal user"+"</i>"))
+				ICON = MENU_USERLIST_NORMAL_ICON
+				OTHER_TEXT = "Normal user"
 			statusLayout.addStretch()
-			u = QWidget()
-			u.setLayout(statusLayout)
-			tsAction = QWidgetAction(self)
-			tsAction.setDefaultWidget(u)
-			menu.addAction(tsAction)
 
-			#menu.addSeparator()
-			insertNoTextSeparator(self.parent,menu)
+			if user_hostmask:
+				entry = MenuNoActionRaw(self,ICON,user_nick,display_hostmask,25)
+				menu.addAction(entry)
+			else:
+				entry = MenuNoActionRaw(self,ICON,user_nick,OTHER_TEXT,25)
+				menu.addAction(entry)
+
+			menu.addSeparator()
 
 			if self.operator:
 
@@ -1287,8 +1278,8 @@ class Window(QMainWindow):
 					if user_is_voiced: actDevoice = opMenu.addAction(QIcon(MINUS_ICON),"Take voiced status")
 					if not user_is_voiced: actVoice = opMenu.addAction(QIcon(PLUS_ICON),"Give voiced status")
 
-				#opMenu.addSeparator()
-				insertNoTextSeparator(self.parent,opMenu)
+				opMenu.addSeparator()
+				#insertNoTextSeparator(self.parent,opMenu)
 
 				actKick = opMenu.addAction(QIcon(KICK_ICON),"Kick")
 				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")

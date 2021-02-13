@@ -46,6 +46,13 @@ USERLIST_ADMIN_ICON 		= ":/gui-ulist_admin.png"
 USERLIST_HALFOP_ICON 		= ":/gui-ulist_halfop.png"
 USERLIST_NORMAL_ICON		= ":/gui-chanuser.png"
 
+MENU_USERLIST_OPERATOR_ICON		= ":/ulist_op.png"
+MENU_USERLIST_VOICED_ICON		= ":/ulist_voice.png"
+MENU_USERLIST_OWNER_ICON 		= ":/ulist_owner.png"
+MENU_USERLIST_ADMIN_ICON 		= ":/ulist_admin.png"
+MENU_USERLIST_HALFOP_ICON 		= ":/ulist_halfop.png"
+MENU_USERLIST_NORMAL_ICON		= ":/nick.png"
+
 HORIZONTAL_RULE_BACKGROUND = ":/gui-horizontal_rule.png"
 LIGHT_HORIZONTAL_RULE_BACKGROUND = ":/gui-light_horizontal_rule.png"
 
