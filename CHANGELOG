@@ -48,6 +48,7 @@ Version 0.840
 	* Added the "block menu install" option to the "settings" dialog
 	* Changed the "export" icon to the traditional "floppy disk" icon
 	* Moved the "export logs" entry from the "Tools" menu to the "Settings" menu
+	* Modified the HTML generated for "fancy" menu entries to remove cell spacing in the tables for the "master" table
 
 Version 0.831
 	* Macros have been removed from the client

@@ -132,12 +132,10 @@ class MenuLabel(QLabel):
 			highlight_text = QColor(col).name()
 			
 			self.setStyleSheet(f"background-color: {highlight}; color: {highlight_text};")
-
-			#self.setStyleSheet(f"background-color: #a9a9a9; color: white;")
-
 			return True
 		elif event.type() == QEvent.Leave:
 			self.setStyleSheet('')
+			return True
 		return False
 
 def MenuAction(self,icon,title,description,icon_size,func):
@@ -188,7 +186,7 @@ def Menu5Action(self,icon,title,description,description2,description3,descriptio
 
 def menuHtml(icon,text,description,icon_size):
 	return f'''
-<table style="width: 100%" border="0">
+<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 	  <tbody>
 		<tr>
 		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
@@ -211,7 +209,7 @@ def menuHtml(icon,text,description,icon_size):
 
 def menu3Html(icon,text,description,description2,icon_size):
 	return f'''
-<table style="width: 100%" border="0">
+<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 	  <tbody>
 		<tr>
 		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
@@ -237,7 +235,7 @@ def menu3Html(icon,text,description,description2,icon_size):
 
 def menu4Html(icon,text,description,description2,description3,icon_size):
 	return f'''
-<table style="width: 100%" border="0">
+<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 	  <tbody>
 		<tr>
 		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
@@ -266,7 +264,7 @@ def menu4Html(icon,text,description,description2,description3,icon_size):
 
 def menu5Html(icon,text,description,description2,description3,description4,icon_size):
 	return f'''
-<table style="width: 100%" border="0">
+<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 	  <tbody>
 		<tr>
 		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
