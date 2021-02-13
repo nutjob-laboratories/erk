@@ -1413,15 +1413,21 @@ class Erk(QMainWindow):
 
 						if item.erk_console:
 
-							entryLabel = QLabel(f"&nbsp;<big><b>"+item.erk_client.server+":"+str(item.erk_client.port)+"</b></big>",self)
-							entry = QWidgetAction(self)
-							entry.setDefaultWidget(entryLabel)
-							menu.addAction(entry)
+							# entryLabel = QLabel(f"&nbsp;<big><b>"+item.erk_client.server+":"+str(item.erk_client.port)+"</b></big>",self)
+							# entry = QWidgetAction(self)
+							# entry.setDefaultWidget(entryLabel)
+							# menu.addAction(entry)
 
 							if item.erk_client.hostname:
-								entryLabel = QLabel(f"&nbsp;<small>"+item.erk_client.hostname+"</small>",self)
-								entry = QWidgetAction(self)
-								entry.setDefaultWidget(entryLabel)
+								# entryLabel = QLabel(f"&nbsp;<small>"+item.erk_client.hostname+"</small>",self)
+								# entry = QWidgetAction(self)
+								# entry.setDefaultWidget(entryLabel)
+								# menu.addAction(entry)
+
+								entry = MenuNoActionRaw(self,CONNECT_MENU_ICON,item.erk_client.server+":"+str(item.erk_client.port),item.erk_client.hostname,25)
+								menu.addAction(entry)
+							else:
+								entry = MenuNoActionRaw(self,CONNECT_MENU_ICON,item.erk_client.server+":"+str(item.erk_client.port),'',25)
 								menu.addAction(entry)
 
 							#menu.addSeparator()
@@ -1698,7 +1704,7 @@ def buildServerSettingsMenu(self,client):
 	maxmodes = client.maxmodes
 
 	optionsMenu = QMenu("Server settings")
-	optionsMenu.setStyleSheet(self.style["all"])
+	#optionsMenu.setStyleSheet(self.style["all"])
 
 	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channels"+f":</b> {maxchannels}",self)
 	e = QWidgetAction(self)
@@ -1744,28 +1750,28 @@ def buildServerSettingsMenu(self,client):
 	insertNoTextSeparator(self,optionsMenu)
 
 	maxmodesmenu = QMenu("Maximum modes",self)
-	maxmodesmenu.setStyleSheet(self.style["all"])
+	#maxmodesmenu.setStyleSheet(self.style["all"])
 	for c in maxmodes:
 		e = QAction(F"{c[0]}: {c[1]}", self) 
 		maxmodesmenu.addAction(e)
 	optionsMenu.addMenu(maxmodesmenu)
 
 	cmdmenu = QMenu("Commands",self)
-	cmdmenu.setStyleSheet(self.style["all"])
+	#cmdmenu.setStyleSheet(self.style["all"])
 	for c in cmds:
 		e = QAction(F"{c}", self) 
 		cmdmenu.addAction(e)
 	optionsMenu.addMenu(cmdmenu)
 
 	supportsmenu = QMenu("Supports",self)
-	supportsmenu.setStyleSheet(self.style["all"])
+	#supportsmenu.setStyleSheet(self.style["all"])
 	for c in supports:
 		e = QAction(F"{c}", self) 
 		supportsmenu.addAction(e)
 	optionsMenu.addMenu(supportsmenu)
 
 	chanmodemenu = QMenu("Channel modes",self)
-	chanmodemenu.setStyleSheet(self.style["all"])
+	#chanmodemenu.setStyleSheet(self.style["all"])
 	ct = 0
 	for c in chanmodes:
 		if ct==0:
@@ -1782,7 +1788,7 @@ def buildServerSettingsMenu(self,client):
 	optionsMenu.addMenu(chanmodemenu)
 
 	prefixmenu = QMenu("Status prefixes",self)
-	prefixmenu.setStyleSheet(self.style["all"])
+	#prefixmenu.setStyleSheet(self.style["all"])
 	for c in prefix:
 		m = c[0]
 		s = c[1]
