@@ -1739,8 +1739,8 @@ def buildServerSettingsMenu(self,client):
 	e.setDefaultWidget(el)
 	optionsMenu.addAction(e)
 
-	#optionsMenu.addSeparator()
-	insertNoTextSeparator(self,optionsMenu)
+	optionsMenu.addSeparator()
+	#insertNoTextSeparator(self,optionsMenu)
 
 	maxmodesmenu = QMenu("Maximum modes",self)
 	#maxmodesmenu.setStyleSheet(self.style["all"])
