@@ -52,6 +52,10 @@ Version 0.840
 	* Changed the appearance of the "title" of the "server settings" context menu to look a bit prettier
 	* Replaced the custom separators in the "server" menu with normal Qt5 separators
 	* Cleaned up the userlist context menu
+	* Added an "import" button to the "settings" dialog, for importing settings from a file
+	* Added a check for imported settings files, so non-config files won't be imported
+	* Changed the "save" button in the "settings" dialog to "apply" (which is more accurate)
+	* Added a "save" button to the settings dialog, for exporting settings to a file
 
 Version 0.831
 	* Macros have been removed from the client

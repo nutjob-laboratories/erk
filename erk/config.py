@@ -592,3 +592,123 @@ def load_settings(filename=SETTINGS_FILE):
 	# file doesn't exist
 	else:
 		save_settings(filename)
+
+
+def check_settings(filename):
+
+	if os.path.isfile(filename):
+		with open(filename, "r") as read_settings:
+			data = json.load(read_settings)
+
+			data = patch_settings(data)
+
+			check = 0
+			if "block_plugin_installation" in data: check = check + 1
+			if "dictionary" in data: check = check + 1
+			if "autocomplete_channels" in data: check = check + 1
+			if "enable_macros" in data: check = check + 1
+			if "default_quit_and_part_message" in data: check = check + 1
+			if "notify_script_execution_end" in data: check = check + 1
+			if "save_on_script_editor_close" in data: check = check + 1
+			if "save_macros" in data: check = check + 1
+			if "autocomplete_macros" in data: check = check + 1
+			if "script_syntax_color_comments" in data: check = check + 1
+			if "script_syntax_color_commands" in data: check = check + 1
+			if "script_syntax_color_channels" in data: check = check + 1
+			if "script_syntax_color_alias" in data: check = check + 1
+			if "enable_script_editor" in data: check = check + 1
+			if "use_default_qmenubar" in data: check = check + 1
+			if "all_script_aliases_are_global" in data: check = check + 1
+			if "script_interpolation_symbol" in data: check = check + 1
+			if "display_console_buttons" in data: check = check + 1
+			if "double_click_nick_to_change_nicks" in data: check = check + 1
+			if "movable_menubar" in data: check = check + 1
+			if "menubar_location" in data: check = check + 1
+			if "ask_before_quitting" in data: check = check + 1
+			if "show_connection_lost_dialog" in data: check = check + 1
+			if "show_connection_fail_dialog" in data: check = check + 1
+			if "use_spaces_for_indent" in data: check = check + 1
+			if "number_of_indent_spaces" in data: check = check + 1
+			if "editor_word_wrap" in data: check = check + 1
+			if "command_history_length" in data: check = check + 1
+			if "chat_display_widget_spacing" in data: check = check + 1
+			if "get_hostmasks_on_channel_join" in data: check = check + 1
+			if "save_joined_channels" in data: check = check + 1
+			if "spellcheck_input" in data: check = check + 1
+			if "starting_app_width" in data: check = check + 1
+			if "starting_app_height" in data: check = check + 1
+			if "spellcheck_language" in data: check = check + 1
+			if "open_window_for_new_private_messages" in data: check = check + 1
+			if "minimum_nickname_display_width" in data: check = check + 1
+			if "show_timestamps" in data: check = check + 1
+			if "use_24hour_clock_for_timestamps" in data: check = check + 1
+			if "display_irc_color_codes" in data: check = check + 1
+			if "convert_urls_in_messages_to_links" in data: check = check + 1
+			if "doubleclick_to_switch_chat_windows" in data: check = check + 1
+			if "font" in data: check = check + 1
+			if "display_connection_uptime" in data: check = check + 1
+			if "connection_display_location" in data: check = check + 1
+			if "is_connection_display_moveable" in data: check = check + 1
+			if "connection_display_visible" in data: check = check + 1
+			if "display_channel_modes" in data: check = check + 1
+			if "switch_to_new_chats" in data: check = check + 1
+			if "autocomplete_nicknames" in data: check = check + 1
+			if "autocomplete_commands" in data: check = check + 1
+			if "spellcheck_ignore_nicknames" in data: check = check + 1
+			if "use_emoji_shortcodes" in data: check = check + 1
+			if "autocomplete_emoji" in data: check = check + 1
+			if "filter_profanity" in data: check = check + 1
+			if "text_only_channel_user_lists" in data: check = check + 1
+			if "display_channel_status" in data: check = check + 1
+			if "display_nickname_on_channels" in data: check = check + 1
+			if "expand_server_node_on_connection" in data: check = check + 1
+			if "enable_command_history" in data: check = check + 1
+			if "save_channel_logs" in data: check = check + 1
+			if "load_channel_logs" in data: check = check + 1
+			if "maximum_log_display_size" in data: check = check + 1
+			if "mark_end_of_loaded_log" in data: check = check + 1
+			if "display_date_and_time_of_channel_log_resume" in data: check = check + 1
+			if "save_private_logs" in data: check = check + 1
+			if "load_private_logs" in data: check = check + 1
+			if "show_system_messages_prefix" in data: check = check + 1
+			if "enable_plugins" in data: check = check + 1
+			if "plugin_developement_mode" in data: check = check + 1
+			if "show_plugin_load_error" in data: check = check + 1
+			if "show_timestamps_with_seconds" in data: check = check + 1
+			if "editor_autoindent" in data: check = check + 1
+			if "editor_font" in data: check = check + 1
+			if "editor_status_bar" in data: check = check + 1
+			if "editor_syntax_highlighting" in data: check = check + 1
+			if "editor_prompt_for_save_on_exit" in data: check = check + 1
+			if "automatically_join_on_invite" in data: check = check + 1
+			if "create_links_for_channel_names" in data: check = check + 1
+			if "connection_display_width" in data: check = check + 1
+			if "channel_list_refresh_in_seconds" in data: check = check + 1
+			if "system_message_prefix" in data: check = check + 1
+			if "automatically_fetch_channel_list" in data: check = check + 1
+			if "hide_mode_messages" in data: check = check + 1
+			if "hide_topic_messages" in data: check = check + 1
+			if "hide_quit_messages" in data: check = check + 1
+			if "hide_nick_messages" in data: check = check + 1
+			if "hide_invite_messages" in data: check = check + 1
+			if "hide_part_messages" in data: check = check + 1
+			if "hide_join_messages" in data: check = check + 1
+			if "set_application_title_to_current_chat_name" in data: check = check + 1
+			if "show_channel_topic_in_title" in data: check = check + 1
+			if "chat_display_info_bar" in data: check = check + 1
+			if "input_command_symbol" in data: check = check + 1
+			if "display_dates_in_channel_chat" in data: check = check + 1
+			if "display_user_lists" in data: check = check + 1
+			if "autosave_logs" in data: check = check + 1
+			if "autosave_log_interval_in_seconds" in data: check = check + 1
+			if "autosave_cache_minimum_size" in data: check = check + 1
+			if "schwa_corner_animation" in data: check = check + 1
+			if "animate_unseen_messages_in_connection_display" in data: check = check + 1
+			if "animate_connecting_messages_in_connection_display" in data: check = check + 1
+			if "enable_scripts" in data: check = check + 1
+
+			if check == 103:
+				return True
+			else:
+				return False
+	return False

@@ -73,6 +73,8 @@ MENU_INSERT_ICON = ":/insert.png"
 
 CONNECT_MENU_ICON = ":/connect.png"
 
+IMPORT_ICON = ":/gui-import.png"
+
 PDF_ICON = ":/gui-pdf.png"
 
 SCRIPTEDIT_ICON = ":/gui-scriptedit.png"

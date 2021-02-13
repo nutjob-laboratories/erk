@@ -365,34 +365,14 @@ class Dialog(QDialog):
 		psLayout.addWidget(self.prefDisplay)
 		psLayout.addStretch()
 
-		# pbLayout = QHBoxLayout()
-		# pbLayout.addWidget(prefixButton)
-		# pbLayout.addStretch()
-
-		
-
 		tsLay = QVBoxLayout()
 		tsLay.addWidget(self.addPrefixes)
-		# tsLay.addWidget(self.prefDisplay)
-		# tsLay.addWidget(prefixButton)
 		tsLay.addLayout(psLayout)
 
 		clLayout = QGroupBox("System Messages",self)
 		clLayout.setLayout(tsLay)
 
 		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		# self.chansaveLog = QCheckBox("Save channel chat logs",self)
-		# if config.SAVE_CHANNEL_LOGS: self.chansaveLog.setChecked(True)
-
-		# self.chanloadLog = QCheckBox("Load channel chat logs",self)
-		# if config.LOAD_CHANNEL_LOGS: self.chanloadLog.setChecked(True)
-
-		# self.privsaveLog = QCheckBox("Save private chat logs",self)
-		# if config.SAVE_PRIVATE_LOGS: self.privsaveLog.setChecked(True)
-
-		# self.privloadLog = QCheckBox("Load private chat logs",self)
-		# if config.LOAD_PRIVATE_LOGS: self.privloadLog.setChecked(True)
 
 		mpLayout = QVBoxLayout()
 		mpLayout.addWidget(clLayout)
@@ -402,12 +382,6 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.hideProfanity)
 		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
-
-		# mpLayout.addWidget(self.chansaveLog)
-		# mpLayout.addWidget(self.chanloadLog)
-		# mpLayout.addWidget(self.privsaveLog)
-		# mpLayout.addWidget(self.privloadLog)
-
 		mpLayout.addStretch()
 
 		self.messagesPage.setLayout(mpLayout)
@@ -441,8 +415,6 @@ class Dialog(QDialog):
 		if config.MARK_END_OF_LOADED_LOG: self.markLog.setChecked(True)
 		self.markLog.stateChanged.connect(self.setRerender)
 
-		
-
 		self.resumeLog = QCheckBox("Display chat resume date and time",self)
 		if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.resumeLog.setChecked(True)
 		self.resumeLog.stateChanged.connect(self.setRerender)
@@ -462,13 +434,11 @@ class Dialog(QDialog):
 		self.hsButton.setIcon(QIcon(TIMESTAMP_ICON))
 		self.hsButton.setToolTip("Set frequency")
 
-
 		ltLayout = QHBoxLayout()
 		ltLayout.addWidget(self.autoLog)
 		ltLayout.addWidget(self.autoLogLabel)
 		ltLayout.addWidget(self.hsButton)
 		ltLayout.addStretch()
-
 
 		self.logSizeLabel = QLabel("Load <b>"+str(config.LOG_LOAD_SIZE_MAX)+"</b> lines for display")
 
@@ -483,11 +453,8 @@ class Dialog(QDialog):
 		llLayout = QHBoxLayout()
 		llLayout.addWidget(self.slsButton)
 		llLayout.addWidget(self.logSizeLabel)
-		
 		llLayout.addStretch()
 		
-
-
 		slLayout = QVBoxLayout()
 		slLayout.addWidget(self.chansaveLog)
 		slLayout.addWidget(self.privsaveLog)
@@ -496,9 +463,7 @@ class Dialog(QDialog):
 		saveLayout = QGroupBox("Save",self)
 		saveLayout.setLayout(slLayout)
 
-
 		saveLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 
 		loadLoglay = QVBoxLayout()
 		loadLoglay.addWidget(self.chanloadLog)
@@ -510,29 +475,11 @@ class Dialog(QDialog):
 		loadLayout = QGroupBox("Load",self)
 		loadLayout.setLayout(loadLoglay)
 
-
 		loadLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 
 		mpLayout = QVBoxLayout()
 		mpLayout.addWidget(saveLayout)
 		mpLayout.addWidget(loadLayout)
-		#mpLayout.addWidget(self.chansaveLog)
-		#mpLayout.addWidget(self.chanloadLog)
-		#mpLayout.addWidget(self.privsaveLog)
-		#mpLayout.addWidget(self.privloadLog)
-		#mpLayout.addLayout(llLayout)
-		#mpLayout.addWidget(self.markLog)
-		#mpLayout.addWidget(self.resumeLog)
-
-		# mpLayout.addWidget(self.autoLog)
-		# mpLayout.addWidget(self.hsButton)
-		#mpLayout.addLayout(ltLayout)
-
-		# mpLayout.addWidget(self.logSizeLabel)
-		# mpLayout.addWidget(self.slsButton)
-		#mpLayout.addLayout(llLayout)
-
 		mpLayout.addStretch()
 
 		self.logsPage.setLayout(mpLayout)
@@ -573,7 +520,6 @@ class Dialog(QDialog):
 		self.displayChange = QCheckBox("Double-click nickname to change nickname",self)
 		if config.DOUBLECLICK_TO_CHANGE_NICK: self.displayChange.setChecked(True)
 
-
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayStatus)
@@ -583,7 +529,6 @@ class Dialog(QDialog):
 		nickBox.setLayout(nnbLay)
 
 		nickBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 
 		ubLay = QHBoxLayout()
 		ubLay.addStretch()
@@ -595,7 +540,6 @@ class Dialog(QDialog):
 		userBox.setLayout(ubLay)
 
 		userBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 
 		cbLay = QHBoxLayout()
 		cbLay.addStretch()
@@ -738,8 +682,6 @@ class Dialog(QDialog):
 
 		histLayout = QVBoxLayout()
 		histLayout.addWidget(self.trackInput)
-		# histLayout.addWidget(self.historyLabel)
-		# histLayout.addWidget(hsButton)
 		histLayout.addLayout(histEdLayout)
 
 		histBox = QGroupBox("Input History",self)
@@ -947,7 +889,6 @@ class Dialog(QDialog):
 		if self.parent.cmdline_editor:
 			self.seditMisc.setEnabled(False)
 
-
 		self.autoMacros = QCheckBox("Auto-complete macros",self)
 		if config.AUTOCOMPLETE_MACROS: self.autoMacros.setChecked(True)
 
@@ -1092,37 +1033,35 @@ class Dialog(QDialog):
 
 		quitPartBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-
-		# hsLayout = QHBoxLayout()
-		# hsLayout.addWidget(self.refreshButton)
-		# hsLayout.addStretch()
-
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(listBox)
 		cpLayout.addWidget(quitPartBox)
 		cpLayout.addWidget(self.buttonsMisc)
-		# cpLayout.addWidget(self.lostErrors)
-		# cpLayout.addWidget(self.failErrors)
 		cpLayout.addWidget(self.switchMisc)
 
 		cpLayout.addWidget(self.fetchMisc)
 		cpLayout.addWidget(self.joinMisc)
-
-		#cpLayout.addWidget(self.listMisc)
-		#cpLayout.addLayout(hsLayout)
-		
-
 		cpLayout.addWidget(QLabel(' '))
 		cpLayout.addWidget(QLabel(' '))
-
 		cpLayout.addStretch()
 
 		self.miscPage.setLayout(cpLayout)
 
-
 		# Buttons and main layout
 
-		saveButton = QPushButton("Save")
+		loadButton = QPushButton("")
+		loadButton.clicked.connect(self.loadConfig)
+		loadButton.setAutoDefault(False)
+		loadButton.setIcon(QIcon(IMPORT_ICON))
+		loadButton.setToolTip("Import configuration file")
+
+		exportButton = QPushButton("")
+		exportButton.clicked.connect(self.saveConfig)
+		exportButton.setAutoDefault(False)
+		exportButton.setIcon(QIcon(EXPORT_ICON))
+		exportButton.setToolTip("Export configuration file")
+
+		saveButton = QPushButton("Apply")
 		saveButton.clicked.connect(self.save)
 		saveButton.setAutoDefault(False)
 
@@ -1130,6 +1069,8 @@ class Dialog(QDialog):
 		cancelButton.clicked.connect(self.close)
 
 		dialogButtonsLayout = QHBoxLayout()
+		dialogButtonsLayout.addWidget(loadButton)
+		dialogButtonsLayout.addWidget(exportButton)
 		dialogButtonsLayout.addStretch()
 		dialogButtonsLayout.addWidget(saveButton)
 		dialogButtonsLayout.addWidget(cancelButton)
@@ -1349,3 +1290,138 @@ class Dialog(QDialog):
 		config.save_settings(self.config)
 
 		self.close()
+
+	def saveConfig(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Preferences As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+		if fileName:
+			efl = len("json")+1
+			if fileName[-efl:].lower()!=f".json": fileName = fileName+f".json"
+			config.save_settings(fileName)
+
+	def loadConfig(self):
+
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Preferences File", INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+		if fileName:
+
+			if config.check_settings(fileName):
+
+				config.load_settings(fileName)
+				self.nametitleMisc.setChecked(config.APP_TITLE_TO_CURRENT_CHAT)
+				self.topicMisc.setChecked(config.APP_TITLE_SHOW_TOPIC)
+				self.askMisc.setChecked(config.ASK_BEFORE_QUIT)
+				self.lostErrors.setChecked(config.SHOW_CONNECTION_LOST_ERROR)
+				self.failErrors.setChecked(config.SHOW_CONNECTION_FAIL_ERROR)
+				self.showSchwa.setChecked(config.SCHWA_ANIMATION)
+				self.showMenu.setChecked(config.MENU_BAR_MOVABLE)
+				self.menuMisc.setChecked(config.USE_QMENUBAR_MENUS)
+				self.showDates.setChecked(config.DISPLAY_DATES_IN_CHANNEL_CHAT)
+				self.showColors.setChecked(config.DISPLAY_IRC_COLORS)
+				self.showLinks.setChecked(config.CONVERT_URLS_TO_LINKS)
+				self.hideProfanity.setChecked(config.FILTER_PROFANITY)
+				self.openNew.setChecked(config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS)
+				self.channelLinks.setChecked(config.CLICKABLE_CHANNELS)
+				self.addPrefixes.setChecked(config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL)
+				self.chansaveLog.setChecked(config.SAVE_CHANNEL_LOGS)
+				self.chanloadLog.setChecked(config.LOAD_CHANNEL_LOGS)
+				self.privsaveLog.setChecked(config.SAVE_PRIVATE_LOGS)
+				self.privloadLog.setChecked(config.LOAD_PRIVATE_LOGS)
+				self.markLog.setChecked(config.MARK_END_OF_LOADED_LOG)
+				self.resumeLog.setChecked(config.DISPLAY_CHAT_RESUME_DATE_TIME)
+				self.autoLog.setChecked(config.AUTOSAVE_LOGS)
+				self.channelInfo.setChecked(config.CHAT_DISPLAY_INFO_BAR)
+				self.channelModes.setChecked(config.DISPLAY_CHANNEL_MODES)
+				self.textUserlist.setChecked(config.PLAIN_USER_LISTS)
+				self.displayUserlists.setChecked(config.DISPLAY_USER_LIST)
+				self.displayStatus.setChecked(config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY)
+				self.displayNickname.setChecked(config.DISPLAY_NICKNAME_ON_CHANNEL)
+				self.displayChange.setChecked(config.DOUBLECLICK_TO_CHANGE_NICK)
+				self.enableConnection.setChecked(config.CONNECTION_DISPLAY_VISIBLE)
+				self.floatConnection.setChecked(config.CONNECTION_DISPLAY_MOVE)
+				self.uptimesConnection.setChecked(config.DISPLAY_CONNECTION_UPTIME)
+				self.doubleConnection.setChecked(config.DOUBLECLICK_SWITCH)
+				self.expandConnection.setChecked(config.EXPAND_SERVER_ON_CONNECT)
+				self.unseenConnection.setChecked(config.UNSEEN_MESSAGE_ANIMATION)
+				self.animateConnection.setChecked(config.CONNECTION_MESSAGE_ANIMATION)
+
+				if config.CONNECTION_DISPLAY_LOCATION=="left":
+					self.leftRadio.setChecked(True)
+					self.rightRadio.setChecked(False)
+				if config.CONNECTION_DISPLAY_LOCATION=="right":
+					self.rightRadio.setChecked(True)
+					self.leftRadio.setChecked(False)
+
+				self.trackInput.setChecked(config.TRACK_COMMAND_HISTORY)
+				self.nickComplete.setChecked(config.AUTOCOMPLETE_NICKNAMES)
+				self.cmdComplete.setChecked(config.AUTOCOMPLETE_COMMANDS)
+				self.channelComplete.setChecked(config.AUTOCOMPLETE_CHANNELS)
+				self.emojiComplete.setChecked(config.AUTOCOMPLETE_EMOJI)
+				self.emojiInput.setChecked(config.USE_EMOJIS)
+				self.enabledSpellcheck.setChecked(config.SPELLCHECK_INPUT)
+				self.nickSpellcheck.setChecked(config.SPELLCHECK_IGNORE_NICKS)
+
+				if config.SPELLCHECK_LANGUAGE=="en": self.englishSC.setChecked(True)
+				if config.SPELLCHECK_LANGUAGE=="fr": self.frenchSC.setChecked(True)
+				if config.SPELLCHECK_LANGUAGE=="es": self.spanishSC.setChecked(True)
+				if config.SPELLCHECK_LANGUAGE=="de": self.germanSC.setChecked(True)
+
+				self.enabledTimestamp.setChecked(config.DISPLAY_TIMESTAMP)
+				self.twentyfourTimestamp.setChecked(config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS)
+				self.secondsTimestamp.setChecked(config.DISPLAY_TIMESTAMP_SECONDS)
+				self.scriptMisc.setChecked(config.ENABLE_SCRIPTS)
+				self.pluginFeatures.setChecked(config.PLUGINS_ENABLED)
+				self.pluginErrors.setChecked(config.SHOW_LOAD_ERRORS)
+				self.pluginDevmode.setChecked(config.DEVELOPER_MODE)
+				self.sglobalMisc.setChecked(config.GLOBALIZE_ALL_SCRIPT_ALIASES)
+				self.seditMisc.setChecked(config.ENABLE_SCRIPT_EDITOR)
+				self.autoMacros.setChecked(config.AUTOCOMPLETE_MACROS)
+				self.saveMacros.setChecked(config.SAVE_MACROS)
+				self.enableMacros.setChecked(config.ENABLE_MACROS)
+
+				if not config.BLOCK_PLUGIN_INSTALL:
+					self.pluginInstall.setChecked(True)
+				else:
+					self.pluginInstall.setChecked(False)
+
+				self.buttonsMisc.setChecked(config.SHOW_CONSOLE_BUTTONS)
+				self.switchMisc.setChecked(config.SWITCH_TO_NEW_WINDOWS)
+				self.listMisc.setChecked(config.AUTOMATICALLY_FETCH_CHANNEL_LIST)
+				self.fetchMisc.setChecked(config.GET_HOSTMASKS_ON_CHANNEL_JOIN)
+				self.joinMisc.setChecked(config.JOIN_ON_INVITE)
+
+				self.logDisplayLines = config.LOG_LOAD_SIZE_MAX
+				self.autosave_time = config.AUTOSAVE_LOG_TIME
+				self.systemPrefix = config.SYSTEM_MESSAGE_PREFIX
+				self.configRefresh = config.CHANNEL_LIST_REFRESH_FREQUENCY
+				self.default_quit_part = config.DEFAULT_QUIT_PART_MESSAGE
+				self.do_rerender = True
+
+				if config.DISPLAY_FONT!=None:
+					f = QFont()
+					f.fromString(config.DISPLAY_FONT)
+					self.newfont = f
+
+					pfs = config.DISPLAY_FONT.split(',')
+					font_name = pfs[0]
+					font_size = pfs[1]
+
+					self.fontLabel.setText(f"Font: <b>{font_name}, {font_size} pt</b>")
+
+				self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b>")
+				self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b>")
+
+				self.partMsg.setText("<b>"+str(self.default_quit_part)+"</b>")
+				self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds")
+				self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds")
+				self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display")
+
+			else:
+				msg = QMessageBox(self)
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Import error!")
+				msg.setInformativeText(fileName+" is not a valid "+APPLICATION_NAME+" configuration file")
+				msg.setWindowTitle("Error")
+				msg.exec_()
