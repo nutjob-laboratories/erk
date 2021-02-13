@@ -220,7 +220,7 @@ def menuHtml(icon,text,description,icon_size):
 <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 	  <tbody>
 		<tr>
-		  <td style="text-align: center; vertical-align: middle;"><img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
+		  <td style="text-align: center; vertical-align: middle;">&nbsp;<img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>
 		  <td>
 			<table style="width: 100%" border="0">
 			  <tbody>
