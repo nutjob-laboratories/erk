@@ -1413,25 +1413,15 @@ class Erk(QMainWindow):
 
 						if item.erk_console:
 
-							# entryLabel = QLabel(f"&nbsp;<big><b>"+item.erk_client.server+":"+str(item.erk_client.port)+"</b></big>",self)
-							# entry = QWidgetAction(self)
-							# entry.setDefaultWidget(entryLabel)
-							# menu.addAction(entry)
-
 							if item.erk_client.hostname:
-								# entryLabel = QLabel(f"&nbsp;<small>"+item.erk_client.hostname+"</small>",self)
-								# entry = QWidgetAction(self)
-								# entry.setDefaultWidget(entryLabel)
-								# menu.addAction(entry)
-
 								entry = MenuNoActionRaw(self,CONNECT_MENU_ICON,item.erk_client.server+":"+str(item.erk_client.port),item.erk_client.hostname,25)
 								menu.addAction(entry)
 							else:
 								entry = MenuNoActionRaw(self,CONNECT_MENU_ICON,item.erk_client.server+":"+str(item.erk_client.port),'',25)
 								menu.addAction(entry)
 
-							#menu.addSeparator()
-							insertNoTextSeparator(self,menu)
+							menu.addSeparator()
+							#insertNoTextSeparator(self,menu)
 
 							if item.erk_client.network:
 								link = get_network_url(item.erk_client.network)
@@ -1448,7 +1438,8 @@ class Erk(QMainWindow):
 
 							#menu.addSeparator()
 							if not self.block_styles:
-								insertNoTextSeparator(self,menu)
+								#insertNoTextSeparator(self,menu)
+								menu.addSeparator()
 
 								entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
 								entry.triggered.connect(lambda state,client=item.erk_client: self.load_style_file_in_window_server(client))
@@ -1463,7 +1454,8 @@ class Erk(QMainWindow):
 									entry.triggered.connect(lambda state,client=item.erk_client: self.restore_style_file_in_window_server(client))
 									menu.addAction(entry)
 
-							insertNoTextSeparator(self,menu)
+							#insertNoTextSeparator(self,menu)
+							menu.addSeparator()
 
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuNick(client))
@@ -1473,8 +1465,8 @@ class Erk(QMainWindow):
 							entry.triggered.connect(lambda state,client=item.erk_client: self.menuJoin(client))
 							menu.addAction(entry)
 
-							#menu.addSeparator()
-							insertNoTextSeparator(self,menu)
+							menu.addSeparator()
+							#insertNoTextSeparator(self,menu)
 
 							entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
@@ -1498,7 +1490,8 @@ class Erk(QMainWindow):
 									entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.restore_style_file_in_window(client,name))
 									menu.addAction(entry)
 
-								insertNoTextSeparator(self,menu)
+								#insertNoTextSeparator(self,menu)
+								menu.addSeparator()
 
 							if item.erk_channel:
 
