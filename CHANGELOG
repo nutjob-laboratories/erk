@@ -57,6 +57,7 @@ Version 0.840
 	* Changed the "save" button in the "settings" dialog to "apply" (which is more accurate)
 	* Added a "save" button to the settings dialog, for exporting settings to a file
 	* Bugfix: several commands were not in the "protected names" list
+	* Changed the user defaults to true: Reconnect on disconnection, save connection history
 
 Version 0.831
 	* Macros have been removed from the client
