@@ -260,6 +260,10 @@ PROTECTED_NAMES = [
 		'msgbox',
 		'macrousage',
 		'unalias',
+		'cat',
+		'write',
+		'dictionary',
+		'undictionary',
 	]
 
 FORBIDDEN_CHARACTERS = [

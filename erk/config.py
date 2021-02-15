@@ -595,7 +595,6 @@ def load_settings(filename=SETTINGS_FILE):
 
 
 def check_settings(filename):
-
 	if os.path.isfile(filename):
 		with open(filename, "r") as read_settings:
 			data = json.load(read_settings)
@@ -707,7 +706,7 @@ def check_settings(filename):
 			if "animate_connecting_messages_in_connection_display" in data: check = check + 1
 			if "enable_scripts" in data: check = check + 1
 
-			if check == 103:
+			if check >= 103:
 				return True
 			else:
 				return False
