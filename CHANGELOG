@@ -58,6 +58,9 @@ Version 0.840
 	* Added a "save" button to the settings dialog, for exporting settings to a file
 	* Bugfix: several commands were not in the "protected names" list
 	* Changed the user defaults to true: Reconnect on disconnection, save connection history
+	* Completely refactored the "connect" dialog; it's not as spaghetti as before, and cleaner
+	* Changed the default in the user config to execute connection script (it was previously turned off)
+	* Bugfix: clicking "connect" from the connection dialog will now display an error if there is no server entered, or if the port is not a number
 
 Version 0.831
 	* Macros have been removed from the client

@@ -41,11 +41,11 @@ from ..objects import *
 from ..files import *
 from ..widgets import *
 from ..strings import *
-from ..dialogs import AddChannelDialog
 from ..common import *
 from .. import syntax
 from .. import config
 
+from ..dialogs import AddChannelDialog
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
 from .comment import Dialog as Comment
@@ -63,11 +63,15 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
+		if len(self.host.text())==0:
+			self.errorDialog("Please select a server to connect to")
+			return []
+
 		try:
 			port = int(self.port.text())
 		except:
-			ErrorDialog("Port must be a number")
-			return None
+			self.errorDialog("Port must be a number")
+			return []
 
 		if len(self.password.text())>0:
 			password = self.password.text()
@@ -75,14 +79,10 @@ class Dialog(QDialog):
 			password = None
 
 		user_history = self.user_info["history"]
-		if self.SAVE_HISTORY:
+		if self.SAVE_HISTORY: # For saving history
 
 			# make sure server isn't in the built-in list
 			inlist = False
-			# for s in self.built_in_server_list:
-			# 	if s[0]==self.host.text():
-			# 		if s[1]==self.port.text():
-			# 			inlist = True
 
 			# make sure server isn't in history
 			inhistory = False
@@ -93,7 +93,7 @@ class Dialog(QDialog):
 
 			if inlist==False and inhistory==False:
 
-				if self.DIALOG_CONNECT_VIA_SSL:
+				if self.CONNECT_VIA_SSL:
 					ussl = "ssl"
 				else:
 					ussl = "normal"
@@ -117,98 +117,56 @@ class Dialog(QDialog):
 			"last_server": self.host.text(),
 			"last_port": self.port.text(),
 			"last_password": self.password.text(),
-			"channels": self.autojoins,
-			"ssl": self.DIALOG_CONNECT_VIA_SSL,
-			"reconnect": self.RECONNECT,
-			"autojoin": self.AUTOJOIN_CHANNELS,
+			"channels": [], # channel autojoins
+			"ssl": self.CONNECT_VIA_SSL,
+			"reconnect": self.RECONNECT_OPTION,
+			"autojoin": True,
 			"history": user_history,
 			"save_history": self.SAVE_HISTORY,
 			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
-			"failreconnect": self.FAIL_RECONNECT,
-			"auto_script": self.AUTOSCRIPT,
-			"save_script": self.SAVE_SCRIPT,
+			"failreconnect": self.RETRY_FAILED_OPTION,
+			"auto_script": self.EXECUTE_AUTOSCRIPT_OPTION,
+			"save_script": self.SAVE_AUTOSCRIPT,
 		}
 		save_user(user,self.userfile)
 
-		if self.AUTOJOIN_CHANNELS:
-			channels = self.autojoins
-		else:
-			channels = []
+		# Don't autojoin channels
+		channels = self.user_info["channels"]
 
 		if not self.block_scripts:
 
-			# Autoscript
-			if self.AUTOSCRIPT:
-				script = self.scriptedit.toPlainText()
+			script = None
 
+			if self.EXECUTE_AUTOSCRIPT_OPTION:
+				# Autoscript
+				script = self.scriptedit.toPlainText()
 				if len(script)==0: script = None
 
-			else:
-				script = None
+				if self.SAVE_AUTOSCRIPT:
+					if script!=None:
+						save_auto_script(self.host.text(),str(port),script,self.scriptsdir)
+					else:
+						# If the script editor is empty, and the connect script exists,
+						# AND saving is turned on, then remove the script
+						sfile = get_auto_script_name(self.host.text(),str(port),self.scriptsdir)
+						if os.path.isfile(sfile):
+							os.remove(sfile)
 
-			if self.SAVE_SCRIPT:
-				sscript = self.scriptedit.toPlainText()
-				if len(sscript)==0:
-					# Only save a blank script if the file already exists
-					sfile = get_auto_script_name(self.host.text(),str(port),self.scriptsdir)
-					if os.path.isfile(sfile):
-						save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
-					elif self.manually_cleared:
-						# Save blank script if the script was manually cleared
-						save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
-				else:
-					save_auto_script(self.host.text(),str(port),sscript,self.scriptsdir)
 		else:
 			script = None
 
-		retval = ConnectInfo(self.host.text(),port,password,self.DIALOG_CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT,channels,self.FAIL_RECONNECT,True,script)
+		retval = ConnectInfo(self.host.text(),port,password,self.CONNECT_VIA_SSL,self.nick.text(),self.alternative.text(),self.username.text(),self.realname.text(),self.RECONNECT_OPTION,channels,self.RETRY_FAILED_OPTION,True,script)
 
 		return retval
 
-	def clickScript(self,state):
-		if state == Qt.Checked:
-			self.AUTOSCRIPT = True
-		else:
-			self.AUTOSCRIPT = False
-
-	def clickSaveScript(self,state):
-		if state == Qt.Checked:
-			self.SAVE_SCRIPT = True
-		else:
-			self.SAVE_SCRIPT = False
-
-	def clickHistory(self,state):
-		if state == Qt.Checked:
-			self.SAVE_HISTORY = True
-		else:
-			self.SAVE_HISTORY = False
+	# BEGIN HELPER METHODS
 
 	def clickSSL(self,state):
 		if state == Qt.Checked:
-			self.DIALOG_CONNECT_VIA_SSL = True
+			self.CONNECT_VIA_SSL = True
 		else:
-			self.DIALOG_CONNECT_VIA_SSL = False
-
-	def clickReconnect(self,state):
-		if state == Qt.Checked:
-			self.RECONNECT = True
-			self.failrecon.setEnabled(True)
-		else:
-			self.RECONNECT = False
-			self.failrecon.setEnabled(False)
-
-	def clickChannels(self,state):
-		if state == Qt.Checked:
-			self.AUTOJOIN_CHANNELS = True
-		else:
-			self.AUTOJOIN_CHANNELS = False
-
-	def clickFailrecon(self,state):
-		if state == Qt.Checked:
-			self.FAIL_RECONNECT = True
-		else:
-			self.FAIL_RECONNECT = False
+			self.CONNECT_VIA_SSL = False
 
 	def setServer(self):
 
@@ -219,39 +177,6 @@ class Dialog(QDialog):
 				self.placeholder = False
 
 		self.StoredServer = self.servers.currentIndex()
-
-		if self.StoredData[self.StoredServer][2]=="Last server":
-			self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
-		else:
-			self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
-		if "ssl" in self.StoredData[self.StoredServer][3]:
-			self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
-		else:
-			self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
-
-		neturl = get_network_url(self.StoredData[self.StoredServer][2])
-		if neturl:
-			self.networkURL.setText(f"<small><a href=\"{neturl}\">{neturl}</a></small>")
-		else:
-			self.networkURL.setText(f"<small>&nbsp;</small>")
-
-		visited = False
-		for ent in self.prevVisit:
-			if ent[0]==self.StoredData[self.StoredServer][0]:
-				if ent[1]==self.StoredData[self.StoredServer][1]:
-					if ent[2]==self.StoredData[self.StoredServer][2]:
-						if ent[3]==self.StoredData[self.StoredServer][3]:
-							visited = True
-
-		if visited:
-			self.visitbeforeType.setText("<small>Connected to previously</small>")
-		else:
-			# self.visitbeforeType.setText("<small>&nbsp;</small>")
-			self.visitbeforeType.setText("<small>Never connected to before</small>")
-
-		if self.StoredData[self.StoredServer][2]=="Last server":
-			self.visitbeforeType.setText("<small>Last server connection</small>")
-
 
 		# Fill in the server info
 		h = self.StoredData[self.StoredServer]
@@ -291,12 +216,9 @@ class Dialog(QDialog):
 		else:
 			self.scriptedit.clear()
 
-		#self.scripttablabel.setText(f"<small><center>Execute these commands on connection to <b>{serv}:{str(port)}</b></center></small>")
-
-		self.scriptServer.setText(f"<center><big><b>{serv}:{str(port)}</b></big></center>")
-
 		self.scriptedit.moveCursor(QTextCursor.End)
 
+	# END HELPER METHODS
 
 	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',config_file=SETTINGS_FILE,parent=None):
 		super(Dialog,self).__init__(parent)
@@ -311,113 +233,89 @@ class Dialog(QDialog):
 		self.scriptsdir = scriptsdir
 		self.config_file = config_file
 
-		self.autojoins = []
+		# do_ssl
+		# Set to "not none" to check off "ssl"
 
-		self.StoredServer = 0
+		# do_reconnect
+		# Set to "not None" to see if a command is trying to activate
+		# the "set reconnect as checked"
+
+		self.CONNECT_VIA_SSL = False
+
+		self.RECONNECT_OPTION = False
+		self.RETRY_FAILED_OPTION = False
+		self.SAVE_HISTORY = False
+		self.EXECUTE_AUTOSCRIPT_OPTION = False
+		self.SAVE_AUTOSCRIPT = False
+
+		self.scriptEditor = None
+
 		self.StoredData = []
+		self.StoredServer = 0
 
 		self.prevVisit = []
 
 		self.placeholder = False
-
-		self.DIALOG_CONNECT_VIA_SSL = False
-		self.RECONNECT = False
-		self.AUTOJOIN_CHANNELS = False
-		self.SAVE_HISTORY = False
-		self.FAIL_RECONNECT = True
-		self.AUTOSCRIPT = False
-		self.SAVE_SCRIPT = False
-
-		self.manually_cleared = False
 
 		self.setWindowTitle(f"Connect to IRC")
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
 		self.user_info = get_user(self.userfile)
 
-		self.tabs = QTabWidget()
-		self.network_tab = QWidget()
-		self.server_tab = QWidget()
-		#self.user_tab = QWidget()
-		self.channels_tab = QWidget()
+		# User information widget
 
-		# self.script_tab = QWidget()
+		self.nick = QLineEdit(self.user_info["nickname"])
+		self.alternative = QLineEdit(self.user_info["alternate"])
+		self.username = QLineEdit(self.user_info["username"])
+		self.realname = QLineEdit(self.user_info["realname"])
 
-		self.tabs.addTab(self.server_tab,"Connect")
-		self.tabs.addTab(self.network_tab,"Servers")
-		#self.tabs.addTab(self.user_tab,"User")
-		if not self.block_scripts:
-			self.tabs.addTab(self.channels_tab,"Script")
-
-		#self.tabs.addTab(self.script_tab,"Script")
-
-		self.tabs.setStyleSheet("""
-			QTabWidget::tab-bar { alignment: center; font: bold; }
-			""")
-
-
-		f = self.tabs.font()
+		nickl = QLabel("Nickname")
+		f = nickl.font()
 		f.setBold(True)
-		self.tabs.setFont(f)
+		nickl.setFont(f)
 
-		# NETWORK TAB BEGIN
+		altl = QLabel("Alternate")
+		altl.setFont(f)
 
-		# Server information
-		self.entryType = QLabel("")
-		self.connType = QLabel("")
-		self.netType = QLabel("")
-		self.description = QLabel("<big><b>Select an IRC server</b></big>")
-		self.description.setAlignment(Qt.AlignCenter)
+		usrl = QLabel("Username")
+		usrl.setFont(f)
 
-		self.visitbeforeType = QLabel("<small>&nbsp;</small>")
-		self.visitbeforeType.setAlignment(Qt.AlignCenter)
+		reall = QLabel("Real name")
+		reall.setFont(f)
 
-		self.networkURL = QLabel("<small>&nbsp;</small>")
-		self.networkURL.setAlignment(Qt.AlignCenter)
-		self.networkURL.setOpenExternalLinks(True)
+		userLayout = QFormLayout()
+		userLayout.addRow(nickl, self.nick)
+		userLayout.addRow(altl, self.alternative)
+		userLayout.addRow(usrl, self.username)
+		userLayout.addRow(reall, self.realname)
 
-		f = self.networkURL.font()
-		f.setBold(True)
-		self.networkURL.setFont(f)
+		userInfoBox = QGroupBox("User Information",self)
+		userInfoBox.setLayout(userLayout)
 
-		f = self.connType.font()
-		f.setBold(False)
-		self.connType.setFont(f)
-		self.entryType.setFont(f)
+		userInfoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		etLayout = QHBoxLayout()
-		etLayout.addStretch()
-		etLayout.addWidget(self.entryType)
-		etLayout.addStretch()
-
-		ntLayout = QHBoxLayout()
-		ntLayout.addStretch()
-		ntLayout.addWidget(self.netType)
-		ntLayout.addStretch()
-
-		ctLayout = QHBoxLayout()
-		ctLayout.addStretch()
-		ctLayout.addWidget(self.connType)
-		ctLayout.addStretch()
-
-		self.servers = QComboBox(self)
-		self.servers.activated.connect(self.setServer)
-
-		self.servers.setStyleSheet("QComboBox { font: bold; }")
+		# Server selector
 
 		if self.user_info["ssl"]:
 			dussl = "ssl"
 		else:
 			dussl = "normal"
 
+		self.servers = QComboBox(self)
+		self.servers.activated.connect(self.setServer)
+
+		f = self.servers.font()
+		f.setBold(True)
+		self.servers.setFont(f)
+
 		if len(self.user_info["last_server"])>0:
 			self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
 			self.servers.addItem("Last server connection")
 		else:
 			self.StoredData.append( ['',"6667",'','normal','' ]    )
-			self.servers.addItem("Servers")
-			self.placeholder = True
+			self.servers.addItem("Select a server")
 
+		# Load in stuff from disk
 		self.built_in_server_list = get_network_list()
 
 		organized_list = []
@@ -476,85 +374,61 @@ class Dialog(QDialog):
 
 		self.StoredServer = self.servers.currentIndex()
 
+		# Menu bar
 
-		if len(self.user_info["last_server"])>0:
-			if self.StoredData[self.StoredServer][2]=="Last server":
-				self.netType.setText("<big><b>"+self.user_info["last_server"]+"</b></big>")
-			else:
-				self.netType.setText("<big><b>"+self.StoredData[self.StoredServer][2]+" IRC Network</b></big>")
+		self.menubar = QMenuBar(self)
 
-			if "ssl" in self.StoredData[self.StoredServer][3]:
-				self.connType.setText(f"<small><i>Connect via</i> <b>SSL/TLS</b> <i>to port</i> <b>{self.StoredData[self.StoredServer][1]}</b></small>")
-			else:
-				self.connType.setText(f"<small><i>Connect via</i> <b>TCP/IP</b> <i>to por</i>t <b>{self.StoredData[self.StoredServer][1]}</b></small>")
+		optionsMenu = self.menubar.addMenu ("Options")
 
-			self.visitbeforeType.setText("<small>Last server connection</small>")
+		self.RECONNECT_OPTION = self.user_info["reconnect"]
 
-			neturl = get_network_url(self.StoredData[self.StoredServer][2])
-			if neturl:
-				self.networkURL.setText(f"<small><a href=\"{neturl}\">{neturl}</a></small>")
-			else:
-				self.networkURL.setText(f"<small>&nbsp;</small>")
-		else:
-			self.netType.setText("")
+		self.reconnect_Option = QAction(QIcon(UNCHECKED_ICON),"Reconnect on disconnection",self)
+		self.reconnect_Option.triggered.connect(lambda state,s="reconnect": self.toggleSetting(s))
+		optionsMenu.addAction(self.reconnect_Option)
+
+		if self.RECONNECT_OPTION: self.reconnect_Option.setIcon(QIcon(CHECKED_ICON))
+
+		if do_reconnect!=None:
+			if not self.RECONNECT_OPTION:
+				self.RECONNECT_OPTION = True
+				self.reconnect_Option.setIcon(QIcon(CHECKED_ICON))
 
 
-		# irc_image = QLabel()
-		# pixmap = QPixmap(IRC_IMAGE)
-		# irc_image.setPixmap(pixmap)
-		# irc_image.setAlignment(Qt.AlignCenter)
+		# self.RETRY_FAILED_OPTION
+
+		self.RETRY_FAILED_OPTION = self.user_info["failreconnect"]
+
+		self.retryfailed_Option = QAction(QIcon(UNCHECKED_ICON),"Retry failed connections",self)
+		self.retryfailed_Option.triggered.connect(lambda state,s="retry": self.toggleSetting(s))
+		optionsMenu.addAction(self.retryfailed_Option)
+
+		if self.RETRY_FAILED_OPTION: self.retryfailed_Option.setIcon(QIcon(CHECKED_ICON))
+
+		if not self.RECONNECT_OPTION: self.retryfailed_Option.setEnabled(False)
+
+		# self.SAVE_HISTORY
+
+		self.SAVE_HISTORY = self.user_info["save_history"]
+
+		self.savehistory_Option = QAction(QIcon(UNCHECKED_ICON),"Save connection history",self)
+		self.savehistory_Option.triggered.connect(lambda state,s="save_history": self.toggleSetting(s))
+		optionsMenu.addAction(self.savehistory_Option)
+
+		if self.SAVE_HISTORY: self.savehistory_Option.setIcon(QIcon(CHECKED_ICON))
 
 
-		fstoreLayout = QVBoxLayout()
-		fstoreLayout.addStretch()
+		# self.EXECUTE_AUTOSCRIPT_OPTION
 
-		#fstoreLayout.addWidget(QLabel(' '))
+		self.EXECUTE_AUTOSCRIPT_OPTION = self.user_info["auto_script"]
 
-		# fstoreLayout.addWidget(irc_image)
+		self.autoscript_Option = QAction(QIcon(UNCHECKED_ICON),"Execute script on connection",self)
+		self.autoscript_Option.triggered.connect(lambda state,s="exec": self.toggleSetting(s))
+		optionsMenu.addAction(self.autoscript_Option)
 
+		if self.EXECUTE_AUTOSCRIPT_OPTION: self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
 
-		fstoreLayout.addWidget(self.description)
-		#fstoreLayout.addStretch()
+		# Server information box
 
-		self.descMoreInfo = QLabel("""
-			<small>
-				Below is a list of IRC servers to connect to, as well as servers you've previously connected to. Select a
-				server to see what IRC network that server may belong to and how to connect to it. Selecting a server will
-				automatically load the appropriate settings into the "Connect" and "Script" tabs.
-			</small>
-		""")
-		self.descMoreInfo.setAlignment(Qt.AlignJustify)
-		self.descMoreInfo.setWordWrap(True)
-
-		fstoreLayout.addWidget(self.descMoreInfo)
-
-		fstoreLayout.addStretch()
-
-		# MOVING THIS TO MAIN TAB
-		fstoreLayout.addWidget(self.servers)
-
-		#fstoreLayout.addStretch()
-
-		#fstoreLayout.addWidget(QHLine())
-		#fstoreLayout.addWidget(QLabel(' '))
-
-		fstoreLayout.addStretch()
-		fstoreLayout.addLayout(ntLayout)
-		fstoreLayout.addLayout(ctLayout)
-		fstoreLayout.addWidget(self.visitbeforeType)
-		fstoreLayout.addWidget(self.networkURL)
-		fstoreLayout.addLayout(etLayout)
-		# fstoreLayout.addWidget(self.visitbeforeType)
-		fstoreLayout.addStretch()
-
-		self.network_tab.setLayout(fstoreLayout)
-
-
-		# NETWORK TAB END
-
-		# SERVER INFO BEGIN
-
-		serverLayout = QFormLayout()
 		self.host = QLineEdit(self.user_info["last_server"])
 		self.port = QLineEdit(self.user_info["last_port"])
 		self.password = QLineEdit(self.user_info["last_password"])
@@ -562,6 +436,8 @@ class Dialog(QDialog):
 
 		self.host.textChanged.connect(self.serverEntered)
 		self.port.textChanged.connect(self.serverEntered)
+
+		serverLayout = QFormLayout()
 
 		hostl = QLabel("Host")
 		f = hostl.font()
@@ -579,307 +455,39 @@ class Dialog(QDialog):
 
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
 		self.ssl.stateChanged.connect(self.clickSSL)
+
+		f = self.ssl.font()
+		f.setBold(True)
 		self.ssl.setFont(f)
-
-		self.reconnect = QCheckBox("Reconnect on disconnection",self)
-		self.reconnect.stateChanged.connect(self.clickReconnect)
-
-		# SMALLER_CHECKBOX_SIZE = '15'
-
-		fm = QFontMetrics(self.font())
-		fheight = fm.height()
-		#SMALLER_CHECKBOX_SIZE = fheight-8
-
-		SMALLER_CHECKBOX_SIZE = fheight * 0.75
-
-
-		self.reconnect.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
-
-		self.failrecon = QCheckBox("Retry failed connections",self)
-		self.failrecon.stateChanged.connect(self.clickFailrecon)
-
-		self.failrecon.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
-
-		if self.user_info["failreconnect"]:
-			self.failrecon.toggle()
 
 		if self.user_info["ssl"]:
 			self.ssl.toggle()
 
-		# Connect commands
 		if do_ssl!=None:
-			if do_ssl:
-				if not self.user_info["ssl"]:
-					self.ssl.toggle()
+			if not self.user_info["ssl"]:
+				self.ssl.toggle()
 
-		if self.user_info["reconnect"]:
-			self.reconnect.toggle()
-		else:
-			self.failrecon.setEnabled(False)
+		sfBox = QVBoxLayout()
+		sfBox.addWidget(self.menubar)
+		sfBox.addWidget(self.servers)
+		sfBox.addLayout(serverLayout)
+		sfBox.addWidget(self.ssl)
 
-		# Connect command
-		if do_reconnect!=None:
-			if do_reconnect:
-				if not self.user_info["reconnect"]:
-					self.reconnect.toggle()
+		serverInfoBox = QGroupBox("IRC Server",self)
+		serverInfoBox.setLayout(sfBox)
 
-		if not self.can_do_ssl:
-			self.DIALOG_CONNECT_VIA_SSL = False
-			self.ssl.setEnabled(False)
+		serverInfoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		sslLayout = QHBoxLayout()
-		#sslLayout = QVBoxLayout()
-		sslLayout.addStretch()
-		sslLayout.addWidget(self.ssl)
-		sslLayout.addStretch()
-
-		self.history = QCheckBox("Save server history",self)
-		self.history.stateChanged.connect(self.clickHistory)
-
-		self.history.setStyleSheet(f'QCheckBox {{ font-size: {SMALLER_CHECKBOX_SIZE}px; }} QCheckBox::indicator {{ width:  {SMALLER_CHECKBOX_SIZE}px; height: {SMALLER_CHECKBOX_SIZE}px;}}')
-
-		if self.user_info["save_history"]:
-			self.history.toggle()
-		
-
-		centServ = QHBoxLayout()
-		centServ.addStretch()
-		centServ.addLayout(serverLayout)
-		centServ.addStretch()
-
-		serverTabLayout = QVBoxLayout()
-		serverTabLayout.addStretch()
-		# serverTabLayout.addLayout(serverLayout)
-
-		serverTabLayout.addLayout(centServ)
-		serverTabLayout.addLayout(sslLayout)
-		#serverTabLayout.addStretch()
-		serverTabLayout.setAlignment(Qt.AlignCenter)
-
-		serverConnectOptions = QVBoxLayout()
-		serverConnectOptions.addWidget(self.reconnect)
-		serverConnectOptions.addWidget(self.failrecon)
-		serverConnectOptions.addWidget(self.history)
-		serverConnectOptions.addStretch()
-		# serverConnectOptions.setAlignment(Qt.AlignRight)
-
-		# hisLayout = QVBoxLayout()
-		# hisLayout.addWidget(self.history)
-		# hisLayout.addStretch()
-
-		# allSetLay = QHBoxLayout()
-		# allSetLay.addLayout(serverConnectOptions)
-		# allSetLay.addLayout(hisLayout)
-
-		# column2 = QHBoxLayout()
-		# column2.addLayout(serverConnectOptions)
-		# column2.addWidget(self.history)
-
-		finConnectOptions = QHBoxLayout()
-		finConnectOptions.addStretch()
-		finConnectOptions.addLayout(serverConnectOptions)
-		#finConnectOptions.setAlignment(Qt.AlignLeft)
-		finConnectOptions.addStretch()
-
-		# serverTabLayout.addLayout(serverConnectOptions)
-
-		# ssetBox = QGroupBox()
-		# ssetBox.setAlignment(Qt.AlignHCenter)
-		# ssetBox.setLayout(finConnectOptions)
-
-		#serverTabLayout.addWidget(QLabel(' '))
-
-		#serverTabLayout.addLayout(finConnectOptions)
-
-		# serverTabLayout.addWidget(QLabel(" "))
-		# serverTabLayout.addWidget(QLabel(" "))
-
-		# serverTabLayout.addStretch()
-
-		# serverTabLayout.addWidget(ssetBox)
-		serverTabLayout.addLayout(finConnectOptions)
-
-		#serverTabLayout.addStretch()
-
-
-
-
-		# serverTabCenter = QHBoxLayout()
-		# serverTabCenter.addStretch()
-		# serverTabCenter.addLayout(serverTabLayout)
-		# serverTabCenter.addStretch()
-
-		# self.server_tab.setLayout(serverTabCenter)
-
-		# SERVER INFO END
-
-		# USER INFO BEGIN
-
-		userLayout = QFormLayout()
-
-		self.nick = QLineEdit(self.user_info["nickname"])
-		self.alternative = QLineEdit(self.user_info["alternate"])
-		self.username = QLineEdit(self.user_info["username"])
-		self.realname = QLineEdit(self.user_info["realname"])
-
-		nickl = QLabel("Nickname")
-		f = nickl.font()
-		f.setBold(True)
-		nickl.setFont(f)
-
-		altl = QLabel("Alternate")
-		altl.setFont(f)
-
-		usrl = QLabel("Username")
-		usrl.setFont(f)
-
-		reall = QLabel("Real name")
-		reall.setFont(f)
-
-		userLayout.addRow(nickl, self.nick)
-		userLayout.addRow(altl, self.alternative)
-		userLayout.addRow(usrl, self.username)
-		userLayout.addRow(reall, self.realname)
-
-		banner = QLabel()
-		pixmap = QPixmap(BANNER_IMAGE)
-		banner.setPixmap(pixmap)
-		banner.setAlignment(Qt.AlignCenter)
-
-		userTabLayout = QVBoxLayout()
-		userTabLayout.addWidget(banner)
-		#userTabLayout.addWidget(QLabel(f"<small><center><i>Version {APPLICATION_VERSION}</i></center></small>"))
-		userTabLayout.addStretch()
-		userTabLayout.addLayout(userLayout)
-		userTabLayout.addStretch()
-
-		userTabCenter = QHBoxLayout()
-		userTabCenter.addStretch()
-		userTabCenter.addLayout(userTabLayout)
-		userTabCenter.addStretch()
-
-		# self.user_tab.setLayout(userTabCenter)
-
-		# MOVE THIS TO THE SERVER TAB
-
-		# QFrame *line;
-		# line = new QFrame(Form);
-		# line->setFrameShape(QFrame::HLine);
-		# line->setFrameShadow(QFrame::Sunken);
-
-		userBox = QGroupBox()
-		userBox.setAlignment(Qt.AlignHCenter)
-		userBox.setLayout(userTabCenter)
-
-		servBox = QGroupBox()
-		servBox.setAlignment(Qt.AlignHCenter)
-		servBox.setLayout(serverTabLayout)
-
-
-
-		finalServerTab = QVBoxLayout()
-		finalServerTab.addStretch()
-
-		# finalServerTab.addLayout(userTabCenter)
-		# finalServerTab.addLayout(serverTabLayout)
-
-		finalServerTab.addWidget(userBox)
-
-		finalServerTab.addWidget(servBox)
-
-
-		finalServerTab.addStretch()
-
-		self.server_tab.setLayout(finalServerTab)
-
-		# CHANNELS TAB
-
-		self.do_autojoin = QCheckBox("Auto-join channels",self)
-		self.do_autojoin.stateChanged.connect(self.clickChannels)
-
-		if self.user_info["autojoin"]:
-			self.do_autojoin.toggle()
-
-		# NEW EDITOR START
-
-		
-
-		# NEW EDITOR END
-
-		self.autoChannels = QListWidget(self)
-		# self.autoChannels.setMaximumHeight(100)
-
-		self.autoChannels.setMaximumHeight(125)
-
-		self.addChannelButton = QPushButton("Add channel")
-		self.addChannelButton.clicked.connect(self.buttonAdd)
-
-		self.removeChannelButton = QPushButton("Remove channel")
-		self.removeChannelButton.clicked.connect(self.buttonRemove)
-
-		buttonLayout = QHBoxLayout()
-		#buttonLayout.addStretch()
-		buttonLayout.addWidget(self.addChannelButton)
-		buttonLayout.addWidget(self.removeChannelButton)
-		
-		self.chantabTitle = QLabel("<big><center><b>Auto-Join Channels</b></center></big>")
-		self.chantabLabel = QLabel("<small><center>Join these channels when connecting to any server</center></small>")
-
-		autoJoinLayout = QVBoxLayout()
-		autoJoinLayout.addWidget(self.chantabTitle)
-		autoJoinLayout.addWidget(self.chantabLabel)
-		autoJoinLayout.addWidget(self.autoChannels)
-		autoJoinLayout.addLayout(buttonLayout)
-
-		autoJoinCheckbox = QHBoxLayout()
-		autoJoinCheckbox.addWidget(self.do_autojoin)
-		autoJoinCheckbox.setAlignment(Qt.AlignLeft)
-
-		#autoJoinLayout.addStretch()
-
-		autoJoinLayout.addLayout(autoJoinCheckbox)
-
-		#autoJoinLayout.addStretch()
-
-		# self.channels_tab.setLayout(autoJoinLayout)
-
-		
-		for c in self.user_info["channels"]:
-			channel = c[0]
-			key = c[1]
-			if key == "":
-				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(CHANNEL_ICON))
-				self.autoChannels.addItem(item)
-
-			else:
-				item = QListWidgetItem(f"{channel}")
-				item.setIcon(QIcon(KEY_ICON))
-				self.autoChannels.addItem(item)
-
-			e = [channel,key]
-			self.autojoins.append(e)
-
-
-		# MOVED TO SERVER TAB
-		fstoreLayout.addLayout(autoJoinLayout)
-
+		# Scripting
 
 		self.scriptedit = QPlainTextEdit(self)
 		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document(),self.config_file)
 
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 
-		if len(self.user_info["last_server"])==0:
-			self.scripttablabel = QLabel("<small><center>Execute these commands upon connection to</center></small>")
-			self.scriptServer = QLabel("<center><big><b>this server</b></big></center>")
-		else:
-			serv = self.user_info["last_server"]
-			port = str(self.user_info["last_port"])
-			self.scripttablabel = QLabel(f"<small><center>Execute these commands upon connection to</center></small>")
-			self.scriptServer = QLabel(f"<center><big><b>{serv}:{port}</b></big></center>")
-
-		
+		self.scripttabinfo = QLabel("<small><center><i>Most commands usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
+		self.scripttabinfo.setWordWrap(True)
+		self.scripttabinfo.setAlignment(Qt.AlignJustify)
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
@@ -889,156 +497,95 @@ class Dialog(QDialog):
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
-		self.scripttabinfo = QLabel("<small><center><i>Most commands usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
-		self.scripttabinfo.setWordWrap(True)
-		self.scripttabinfo.setAlignment(Qt.AlignJustify)
+		# Tabs
 
-		idir = sys.path[0]
-		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
-		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
-		self.docLink = QLabel("<center><small><b><a href=\""+DOCUMENTATION+"\">Command documentation</a></b></small></center>")
-		self.docLink.setOpenExternalLinks(True)
+		self.tabs = QTabWidget()
 
-		autoScriptLayout = QVBoxLayout()
-		#autoScriptLayout.addWidget(QLabel(' '))
-		autoScriptLayout.addWidget(self.scripttablabel)
-		autoScriptLayout.addWidget(self.scriptServer)
-		# autoScriptLayout.addWidget(self.scripttabinfo)
-		# autoScriptLayout.addWidget(self.scriptedit)
+		f = self.tabs.font()
+		f.setBold(True)
+		self.tabs.setFont(f)
 
-		self.saveScriptButton = QPushButton("Save")
-		self.saveScriptButton.clicked.connect(self.saveScript)
-
-		self.deleteScriptButton = QPushButton("Delete")
-		self.deleteScriptButton.clicked.connect(self.deleteScript)
-
-		self.clearScriptButton = QPushButton("Clear")
-		self.clearScriptButton.clicked.connect(self.clearScript)
-
-		self.checkScript = QCheckBox("Execute on connect",self)
-		self.checkScript.stateChanged.connect(self.clickScript)
-
-		if self.user_info["auto_script"]:
-			self.checkScript.toggle()
-
-		self.autoSaveScript = QCheckBox("Save on connect",self)
-		self.autoSaveScript.stateChanged.connect(self.clickSaveScript)
-
-		if self.user_info["save_script"]:
-			self.autoSaveScript.toggle()
-
-		self.reloadScriptButton = QPushButton("Reload")
-		self.reloadScriptButton.clicked.connect(self.reloadScript)
-
-		self.openScriptButton = QPushButton("Open")
-		self.openScriptButton.clicked.connect(self.openScript)
-
-		scriptControlsLayout = QHBoxLayout()
-		scriptControlsLayout.addWidget(self.saveScriptButton)
-		scriptControlsLayout.addWidget(self.reloadScriptButton)
-		scriptControlsLayout.addWidget(self.openScriptButton)
-		scriptControlsLayout.addWidget(self.clearScriptButton)
-		scriptControlsLayout.addWidget(self.deleteScriptButton)
-		#scriptControlsLayout.addWidget(self.checkScript)
-
-		self.scriptJoinButton = QPushButton(config.INPUT_COMMAND_SYMBOL+"join")
-		self.scriptJoinButton.clicked.connect(self.scriptJoin)
-
-		self.scriptSendPM = QPushButton(config.INPUT_COMMAND_SYMBOL+"msg")
-		self.scriptSendPM.clicked.connect(self.scriptPM)
-
-		self.scriptInsertPause = QPushButton(config.INPUT_COMMAND_SYMBOL+"wait")
-		self.scriptInsertPause.clicked.connect(self.scriptTime)
-
-		self.scriptInsertComment = QPushButton("Insert a Comment")
-		self.scriptInsertComment.clicked.connect(self.scriptComment)
-
-		self.scriptInsertPrint = QPushButton(config.INPUT_COMMAND_SYMBOL+"print")
-		self.scriptInsertPrint.clicked.connect(self.scriptPrint)
-
-		scriptAddLayout = QHBoxLayout()
-		scriptAddLayout.addWidget(self.scriptJoinButton)
-		scriptAddLayout.addWidget(self.scriptSendPM)
-
-		scriptAddLayout2 = QHBoxLayout()
-		scriptAddLayout2.addWidget(self.scriptInsertPause)
-		# scriptAddLayout2.addWidget(self.scriptInsertComment)
-		scriptAddLayout2.addWidget(self.scriptInsertPrint)
-
-		scriptInsertStuff = QVBoxLayout()
-		scriptInsertStuff.addLayout(scriptAddLayout)
-		scriptInsertStuff.addLayout(scriptAddLayout2)
-		scriptInsertStuff.addWidget(self.scriptInsertComment)
-
-		insertBox = QGroupBox("Insert Commands",self)
-		#insertBox = QGroupBox("",self)
-		insertBox.setLayout(scriptInsertStuff)
-
-		insertBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		self.tabs.setStyleSheet("""
+			QTabWidget::tab-bar { alignment: center; font: bold; }
+			""")
 		
-		autoScriptLayout.addWidget(self.scriptedit)
-		autoScriptLayout.addWidget(self.docLink)
-		autoScriptLayout.addWidget(self.scripttabinfo)
+		self.connection_information_tab = QWidget()
+		self.tabs.addTab(self.connection_information_tab, QIcon(CONNECT_MENU_ICON), "Connect to IRC")
 
-		
+		connectTabLayout = QVBoxLayout()
+		connectTabLayout.addWidget(userInfoBox)
+		connectTabLayout.addWidget(serverInfoBox)
 
-		autoScriptLayout.addWidget(insertBox)
-		# autoScriptLayout.addLayout(scriptInsertStuff)
-		autoScriptLayout.addLayout(scriptControlsLayout)
+		self.connection_information_tab.setLayout(connectTabLayout)
 
-		scriptToggles = QHBoxLayout()
-		scriptToggles.addWidget(self.checkScript)
-		scriptToggles.addWidget(self.autoSaveScript)
 
-		autoScriptLayout.addLayout(scriptToggles)
+		self.script_tab = QWidget()
+		self.tabs.addTab(self.script_tab, QIcon(SCRIPT_ICON), "Script")
 
-		##
+		self.scriptbar = QMenuBar(self)
 
-		#autoJoinLayout.addLayout(autoScriptLayout)
+		fileMenu = self.scriptbar.addMenu ("File")
 
-		# self.channels_tab.setLayout(autoJoinLayout)
-		self.channels_tab.setLayout(autoScriptLayout)
+		entry = QAction(QIcon(EXPORT_ICON),"Save",self)
+		entry.triggered.connect(self.scriptSave)
+		fileMenu.addAction(entry)
 
-		#self.script_tab.setLayout(autoScriptLayout)
+		entry = QAction(QIcon(NEWFILE_ICON),"Clear",self)
+		entry.triggered.connect(self.scriptClear)
+		fileMenu.addAction(entry)
 
-		# CHANNELS TAB
+		fileMenu.addSeparator()
 
-		# SCRIPT TAB BEGIN
+		# self.SAVE_AUTOSCRIPT
 
-		
+		self.SAVE_AUTOSCRIPT = self.user_info["save_script"]
 
-		# SCRIPT TAB END
+		self.savescript_Option = QAction(QIcon(UNCHECKED_ICON),"Save script on connection",self)
+		self.savescript_Option.triggered.connect(lambda state,s="save_script": self.toggleSetting(s))
+		fileMenu.addAction(self.savescript_Option)
 
-		
+		if self.SAVE_AUTOSCRIPT: self.savescript_Option.setIcon(QIcon(CHECKED_ICON))
 
-		# USER INFO END
+		if not self.EXECUTE_AUTOSCRIPT_OPTION: self.savescript_Option.setEnabled(False)
 
-		vLayout = QVBoxLayout()
-		vLayout.addWidget(self.tabs)
+		insertMenu = self.scriptbar.addMenu ("Insert command")
 
-		#vLayout.addWidget(QLabel(f"<small><center><i>Version {APPLICATION_VERSION}</i></center></small>"))
+		entry = QAction(QIcon(MESSAGE_ICON),"Private message",self)
+		entry.triggered.connect(self.scriptPM)
+		insertMenu.addAction(entry)
 
-		#c1 = QVBoxLayout()
-		#c1.addWidget(self.reconnect)
-		#c1.addWidget(self.failrecon)
+		entry = QAction(QIcon(CHANNEL_ICON),"Join channel",self)
+		entry.triggered.connect(self.scriptJoin)
+		insertMenu.addAction(entry)
 
-		#c2 = QVBoxLayout()
-		# c2.addWidget(self.do_autojoin)
-		#c2.addWidget(self.history)
+		entry = QAction(QIcon(TIMESTAMP_ICON),"Pause",self)
+		entry.triggered.connect(self.scriptTime)
+		insertMenu.addAction(entry)
 
-		# c2 = QHBoxLayout()
-		# c2.addLayout(finConnectOptions)
-		# serverConnectOptions.addWidget(self.history)
+		entry = QAction(QIcon(EDIT_ICON),"Print",self)
+		entry.triggered.connect(self.scriptPrint)
+		insertMenu.addAction(entry)
 
-		# serverConnectOptions.addWidget(self.history)
+		entry = QAction(QIcon(EDIT_ICON),"Comment",self)
+		entry.triggered.connect(self.scriptComment)
+		insertMenu.addAction(entry)
 
-		
+		entry = QAction(QIcon(EDIT_ICON),"Multi-line comment",self)
+		entry.triggered.connect(self.scriptMLComment)
+		insertMenu.addAction(entry)
 
-		#hOpts = QHBoxLayout()
-		#hOpts.addLayout(c1)
-		#hOpts.addLayout(c2)
+		scriptTabLayout = QVBoxLayout()
+		scriptTabLayout.addWidget(self.scriptbar)
+		scriptTabLayout.addWidget(self.scripttabinfo)
+		scriptTabLayout.addWidget(self.scriptedit)
 
-		#vLayout.addLayout(hOpts)
+		self.script_tab.setLayout(scriptTabLayout)
+
+		# Disable script tab if execute script is disabled
+		if not self.EXECUTE_AUTOSCRIPT_OPTION:
+			self.tabs.setTabEnabled(1,False)
+
+		# Built final layout
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -1048,54 +595,42 @@ class Dialog(QDialog):
 
 		buttons.button(QDialogButtonBox.Ok).setText("Connect")
 
+		banner = QLabel()
+		pixmap = QPixmap(BANNER_IMAGE)
+		banner.setPixmap(pixmap)
+		banner.setAlignment(Qt.AlignCenter)
+
 		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(vLayout)
+		finalLayout.addWidget(banner)
+		finalLayout.addWidget(self.tabs)
+		#finalLayout.addWidget(self.menubar)
 		finalLayout.addWidget(buttons)
-
-
-		# print(finalLayout.sizeHint().width())
-		# print(finalLayout.sizeHint().height())
-
-		# self.resize(
-		# 	finalLayout.sizeHint().width() + 1000,
-		# 	finalLayout.sizeHint().height()
-		# 	)
-
-		# print(config.LOAD_AUTO_CONNECT_SCRIPTS)
-
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
 
-	def openScript(self):
-		options = QFileDialog.Options()
-		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Run script", self.scriptsdir,f"Script File (*.{SCRIPT_FILE_EXTENSION});;Text File (*.txt);;All Files (*)", options=options)
-		if fileName:
-			f=open(fileName, "r")
-			code = f.read()
-			f.close()
+	def errorDialog(self,text):
+		msg = QMessageBox(self)
+		msg.setIcon(QMessageBox.Critical)
+		msg.setText(text)
+		msg.setWindowTitle("Error!")
+		msg.exec_()
 
-			if len(code)>0:
-				if code[-1]!="\n": code = code + "\n"
+	def scriptSave(self):
 
-			self.scriptedit.setPlainText(code)
+		try:
+			port = int(self.port.text())
+		except:
+			self.errorDialog("Port must be a number")
+			return
 
-	def reloadScript(self):
-		serv = self.host.text()
-		port = self.port.text()
+		script = self.scriptedit.toPlainText()
+		save_auto_script(self.host.text(),str(port),script,self.scriptsdir)
 
-		code = load_auto_script(serv,port,self.scriptsdir)
-		if code!=None:
-			self.scriptedit.setPlainText(code)
-		else:
-			self.scriptedit.clear()
-
-	def clearScript(self):
+	def scriptClear(self):
 		self.scriptedit.clear()
-		self.manually_cleared = True
 
 	def scriptTime(self):
 		x = PauseTime()
@@ -1126,6 +661,15 @@ class Dialog(QDialog):
 		if len(e)>0:
 			self.scriptedit.insertPlainText("/* "+e+" */\n")
 
+	def scriptMLComment(self):
+		x = Comment(False)
+		e = x.get_message_information(False)
+
+		if not e: return
+
+		if len(e)>0:
+			self.scriptedit.insertPlainText("/*\n"+e+"\n*/\n")
+
 	def scriptPrint(self):
 		x = PrintMsg()
 		e = x.get_message_information()
@@ -1149,65 +693,50 @@ class Dialog(QDialog):
 		else:
 			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"join "+channel+" "+key+"\n")
 
-	def deleteScript(self):
-		serv = self.host.text()
-		port = self.port.text()
-		self.scriptedit.setPlainText('')
+	def toggleSetting(self,setting):
 
-		sfile = get_auto_script_name(serv,port,self.scriptsdir)
-		if os.path.isfile(sfile):
-			os.remove(sfile)
+		if setting=="save_script":
+			if self.SAVE_AUTOSCRIPT:
+				self.SAVE_AUTOSCRIPT = False
+				self.savescript_Option.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				self.SAVE_AUTOSCRIPT = True
+				self.savescript_Option.setIcon(QIcon(CHECKED_ICON))
 
-	def saveScript(self):
+		if setting=="exec":
+			if self.EXECUTE_AUTOSCRIPT_OPTION:
+				self.EXECUTE_AUTOSCRIPT_OPTION = False
+				self.autoscript_Option.setIcon(QIcon(UNCHECKED_ICON))
+				self.savescript_Option.setEnabled(False)
+				self.tabs.setTabEnabled(1,False)
+			else:
+				self.EXECUTE_AUTOSCRIPT_OPTION = True
+				self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
+				self.savescript_Option.setEnabled(True)
+				self.tabs.setTabEnabled(1,True)
 
-		serv = self.host.text()
-		port = self.port.text()
-		script = self.scriptedit.toPlainText()
+		if setting=="save_history":
+			if self.SAVE_HISTORY:
+				self.SAVE_HISTORY = False
+				self.savehistory_Option.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				self.SAVE_HISTORY = True
+				self.savehistory_Option.setIcon(QIcon(CHECKED_ICON))
 
-		if len(serv)>0 and len(port)>0:
-			save_auto_script(serv,port,script,self.scriptsdir)
+		if setting=="retry":
+			if self.RETRY_FAILED_OPTION:
+				self.RETRY_FAILED_OPTION = False
+				self.retryfailed_Option.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				self.RETRY_FAILED_OPTION = True
+				self.retryfailed_Option.setIcon(QIcon(CHECKED_ICON))
 
-	def buttonAdd(self):
-		#x = AddChannelDialog.Dialog()
-		x = AddChannelDialog()
-		e = x.get_channel_information()
-
-		if not e: return
-
-		channel = e[0]
-		key = e[1]
-
-		if len(channel)==0:
-			self.error_dialog = QErrorMessage()
-			self.error_dialog.showMessage("No channel entered!")
-			self.close()
-			return
-
-		#print(channel,key)
-		if key == "":
-			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(CHANNEL_ICON))
-			self.autoChannels.addItem(item)
-
-		else:
-			item = QListWidgetItem(f"{channel}")
-			item.setIcon(QIcon(KEY_ICON))
-			self.autoChannels.addItem(item)
-
-		e = [channel,key]
-		self.autojoins.append(e)
-
-	def buttonRemove(self):
-		#self.removeSel()
-		try:
-			channel = self.autoChannels.currentItem().text()
-			i = self.autoChannels.currentRow()
-			self.autoChannels.takeItem(i)
-
-			clean = []
-			for c in self.autojoins:
-				if c[0]==channel: continue
-				clean.append(c)
-			self.autojoins = clean
-		except:
-			pass
+		if setting=="reconnect":
+			if self.RECONNECT_OPTION:
+				self.RECONNECT_OPTION = False
+				self.retryfailed_Option.setEnabled(False)
+				self.reconnect_Option.setIcon(QIcon(UNCHECKED_ICON))
+			else:
+				self.RECONNECT_OPTION = True
+				self.retryfailed_Option.setEnabled(True)
+				self.reconnect_Option.setIcon(QIcon(CHECKED_ICON))

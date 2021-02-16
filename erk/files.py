@@ -381,7 +381,7 @@ def get_user(filename=USER_FILE):
 			"disabled_plugins": [],
 			"ignore": [],
 			'failreconnect': True,
-			'auto_script': False,
+			'auto_script': True,
 			'save_script': False,
 		}
 		return si
