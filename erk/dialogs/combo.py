@@ -218,6 +218,8 @@ class Dialog(QDialog):
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
+		self.scriptDesignateServer.setText("<center><big><b>"+serv+":"+str(port)+"</b></big></center>")
+
 	# END HELPER METHODS
 
 	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',config_file=SETTINGS_FILE,parent=None):
@@ -482,12 +484,18 @@ class Dialog(QDialog):
 
 		self.scriptedit = QPlainTextEdit(self)
 		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document(),self.config_file)
-
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 
 		self.scripttabinfo = QLabel("<small><center><i>Most commands usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
 		self.scripttabinfo.setWordWrap(True)
 		self.scripttabinfo.setAlignment(Qt.AlignJustify)
+
+		self.scriptDesignate = QLabel("<center><small>Execute on connection to</small></center>")
+		if len(self.user_info["last_server"])==0:
+			self.scriptDesignateServer = QLabel("<center><big><b>IRC Server</b></big></center>")
+		else:
+			self.scriptDesignateServer = QLabel("<center><big><b>"+self.user_info["last_server"]+"</b></big></center>")
+
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
@@ -575,9 +583,11 @@ class Dialog(QDialog):
 		insertMenu.addAction(entry)
 
 		scriptTabLayout = QVBoxLayout()
+		scriptTabLayout.addWidget(self.scriptDesignate)
+		scriptTabLayout.addWidget(self.scriptDesignateServer)
 		scriptTabLayout.addWidget(self.scriptbar)
-		scriptTabLayout.addWidget(self.scripttabinfo)
 		scriptTabLayout.addWidget(self.scriptedit)
+		scriptTabLayout.addWidget(self.scripttabinfo)
 
 		self.script_tab.setLayout(scriptTabLayout)
 
