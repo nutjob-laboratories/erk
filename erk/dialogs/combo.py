@@ -166,6 +166,14 @@ class Dialog(QDialog):
 
 	# BEGIN HELPER METHODS
 
+	def clickDoScript(self,state):
+		if state == Qt.Checked:
+			self.EXECUTE_AUTOSCRIPT_OPTION = True
+			self.tabs.addTab(self.script_tab, QIcon(SCRIPT_ICON), "Script")
+		else:
+			self.EXECUTE_AUTOSCRIPT_OPTION = False
+			self.tabs.removeTab(1)
+
 	def clickSSL(self,state):
 		if state == Qt.Checked:
 			self.CONNECT_VIA_SSL = True
@@ -268,10 +276,12 @@ class Dialog(QDialog):
 
 		self.placeholder = False
 
-		self.setWindowTitle(f"Connect to IRC")
+		self.setWindowTitle(APPLICATION_NAME+" "+APPLICATION_VERSION)
 		self.setWindowIcon(QIcon(CONNECT_MENU_ICON))
 
 		self.user_info = get_user(self.userfile)
+
+		self.EXECUTE_AUTOSCRIPT_OPTION = self.user_info["auto_script"]
 
 		# User information widget
 
@@ -430,13 +440,13 @@ class Dialog(QDialog):
 
 		# self.EXECUTE_AUTOSCRIPT_OPTION
 
-		self.EXECUTE_AUTOSCRIPT_OPTION = self.user_info["auto_script"]
+		# self.EXECUTE_AUTOSCRIPT_OPTION = self.user_info["auto_script"]
 
-		self.autoscript_Option = QAction(QIcon(UNCHECKED_ICON),"Execute script on connection",self)
-		self.autoscript_Option.triggered.connect(lambda state,s="exec": self.toggleSetting(s))
-		optionsMenu.addAction(self.autoscript_Option)
+		# self.autoscript_Option = QAction(QIcon(UNCHECKED_ICON),"Execute script on connection",self)
+		# self.autoscript_Option.triggered.connect(lambda state,s="exec": self.toggleSetting(s))
+		# optionsMenu.addAction(self.autoscript_Option)
 
-		if self.EXECUTE_AUTOSCRIPT_OPTION: self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
+		# if self.EXECUTE_AUTOSCRIPT_OPTION: self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
 
 		# Server information box
 
@@ -467,9 +477,13 @@ class Dialog(QDialog):
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
 		self.ssl.stateChanged.connect(self.clickSSL)
 
+		self.doScript = QCheckBox("Execute script on connect",self)
+		self.doScript.stateChanged.connect(self.clickDoScript)
+
 		f = self.ssl.font()
 		f.setBold(True)
 		self.ssl.setFont(f)
+		self.doScript.setFont(f)
 
 		if self.user_info["ssl"]:
 			self.ssl.toggle()
@@ -483,6 +497,7 @@ class Dialog(QDialog):
 		sfBox.addWidget(self.servers)
 		sfBox.addLayout(serverLayout)
 		sfBox.addWidget(self.ssl)
+		sfBox.addWidget(self.doScript)
 
 		serverInfoBox = QGroupBox("IRC Server",self)
 		serverInfoBox.setLayout(sfBox)
@@ -607,8 +622,13 @@ class Dialog(QDialog):
 		self.script_tab.setLayout(scriptTabLayout)
 
 		# Disable script tab if execute script is disabled
-		if not self.EXECUTE_AUTOSCRIPT_OPTION:
-			self.tabs.setTabEnabled(1,False)
+		# if not self.EXECUTE_AUTOSCRIPT_OPTION:
+		# 	self.tabs.setTabEnabled(1,False)
+
+		if self.EXECUTE_AUTOSCRIPT_OPTION:
+			self.doScript.toggle()
+		else:
+			self.tabs.removeTab(1)
 
 		# Built final layout
 
@@ -628,7 +648,6 @@ class Dialog(QDialog):
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(banner)
 		finalLayout.addWidget(self.tabs)
-		#finalLayout.addWidget(self.menubar)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
@@ -728,17 +747,17 @@ class Dialog(QDialog):
 				self.SAVE_AUTOSCRIPT = True
 				self.savescript_Option.setIcon(QIcon(CHECKED_ICON))
 
-		if setting=="exec":
-			if self.EXECUTE_AUTOSCRIPT_OPTION:
-				self.EXECUTE_AUTOSCRIPT_OPTION = False
-				self.autoscript_Option.setIcon(QIcon(UNCHECKED_ICON))
-				self.savescript_Option.setEnabled(False)
-				self.tabs.setTabEnabled(1,False)
-			else:
-				self.EXECUTE_AUTOSCRIPT_OPTION = True
-				self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
-				self.savescript_Option.setEnabled(True)
-				self.tabs.setTabEnabled(1,True)
+		# if setting=="exec":
+		# 	if self.EXECUTE_AUTOSCRIPT_OPTION:
+		# 		self.EXECUTE_AUTOSCRIPT_OPTION = False
+		# 		self.autoscript_Option.setIcon(QIcon(UNCHECKED_ICON))
+		# 		self.savescript_Option.setEnabled(False)
+		# 		self.tabs.setTabEnabled(1,False)
+		# 	else:
+		# 		self.EXECUTE_AUTOSCRIPT_OPTION = True
+		# 		self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
+		# 		self.savescript_Option.setEnabled(True)
+		# 		self.tabs.setTabEnabled(1,True)
 
 		if setting=="save_history":
 			if self.SAVE_HISTORY:

@@ -63,6 +63,9 @@ Version 0.840
 	* Bugfix: clicking "connect" from the connection dialog will now display an error if there is no server entered, or if the port is not a number
 	* Added a "server" designation to the "script" tab in the connection dialog
 	* Added a link to the command documentation to the connect dialog
+	* Changed the "title" of the connection dialog to the application name and version
+	* Changed how "scripts" on the connection dialog work (turning off script execution now hides the script tab, and vice versa)
+	* Moved the "execute script" option from the options menu to a checkbox on the main window in the connection dialog
 
 Version 0.831
 	* Macros have been removed from the client
