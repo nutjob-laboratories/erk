@@ -267,11 +267,13 @@ class Dialog(QDialog):
 		self.EXECUTE_AUTOSCRIPT_OPTION = False
 		self.SAVE_AUTOSCRIPT = False
 
+		BOLD_FONT = self.font()
+		BOLD_FONT.setBold(True)
+
 		self.scriptEditor = None
 
 		self.StoredData = []
 		self.StoredServer = 0
-
 		self.prevVisit = []
 
 		self.placeholder = False
@@ -291,18 +293,29 @@ class Dialog(QDialog):
 		self.realname = QLineEdit(self.user_info["realname"])
 
 		nickl = QLabel("Nickname")
-		f = nickl.font()
-		f.setBold(True)
-		nickl.setFont(f)
+		nickl.setFont(BOLD_FONT)
 
 		altl = QLabel("Alternate")
-		altl.setFont(f)
+		altl.setFont(BOLD_FONT)
 
 		usrl = QLabel("Username")
-		usrl.setFont(f)
+		usrl.setFont(BOLD_FONT)
 
 		reall = QLabel("Real name")
-		reall.setFont(f)
+		reall.setFont(BOLD_FONT)
+
+		self.userbar = QMenuBar(self)
+		self.userbar.setFont(BOLD_FONT)
+
+		userMenu = self.userbar.addMenu ("Options")
+
+		entry = QAction(QIcon(RESTART_ICON),"Restore defaults",self)
+		entry.triggered.connect(self.restoreDefaults)
+		userMenu.addAction(entry)
+
+		entry = QAction(QIcon(EXPORT_ICON),"Save user settings",self)
+		entry.triggered.connect(self.saveSettings)
+		userMenu.addAction(entry)
 
 		userLayout = QFormLayout()
 		userLayout.addRow(nickl, self.nick)
@@ -310,96 +323,43 @@ class Dialog(QDialog):
 		userLayout.addRow(usrl, self.username)
 		userLayout.addRow(reall, self.realname)
 
+		finUserLayout = QVBoxLayout()
+		finUserLayout.addWidget(self.userbar)
+		finUserLayout.addLayout(userLayout)
+
 		userInfoBox = QGroupBox("User Information",self)
-		userInfoBox.setLayout(userLayout)
+		userInfoBox.setLayout(finUserLayout)
 
 		userInfoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		# Server selector
 
-		if self.user_info["ssl"]:
-			dussl = "ssl"
-		else:
-			dussl = "normal"
-
 		self.servers = QComboBox(self)
 		self.servers.activated.connect(self.setServer)
+		self.servers.setFont(BOLD_FONT)
 
-		f = self.servers.font()
-		f.setBold(True)
-		self.servers.setFont(f)
-
-		if len(self.user_info["last_server"])>0:
-			self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
-			self.servers.addItem("Last server connection")
-		else:
-			self.StoredData.append( ['',"6667",'','normal','' ]    )
-			self.servers.addItem("Select a server")
-
-		# Load in stuff from disk
-		self.built_in_server_list = get_network_list()
-
-		organized_list = []
-
-		if len(self.user_info["history"])>0:
-			# servers are in history
-			for s in self.user_info["history"]:
-				#self.built_in_server_list.append(s)
-
-				builtin = False
-				for entry in self.built_in_server_list:
-					if entry[0]==s[0]:
-						if entry[1]==s[1]:
-							builtin = True
-
-				if not builtin:
-					self.built_in_server_list.insert(0,s)
-
-		counter = -1
-		for entry in self.built_in_server_list:
-			counter = counter + 1
-			if len(entry) < 4: continue
-
-			if "ssl" in entry[3]:
-				if not self.can_do_ssl: continue
-
-			visited = False
-			if len(self.user_info["history"])>0:
-				for s in self.user_info["history"]:
-					if s[0]==entry[0]:
-						if s[1]==entry[1]:
-							visited = True
-
-			if visited:
-				organized_list.append([True,entry])
-			else:
-				organized_list.append([False,entry])
-
-		vserver = []
-		nserver = []
-		for x in organized_list:
-			if x[0]:
-				vserver.append(x)
-			else:
-				nserver.append(x)
-		finallist = vserver + nserver
-		
-		for s in finallist:
-			if s[0]:
-				self.prevVisit.append(s[1])
-				self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
-			else:
-				self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
-
-			self.StoredData.append(s[1])
-
-		self.StoredServer = self.servers.currentIndex()
+		self.buildServerSelector()
 
 		# Menu bar
 
 		self.menubar = QMenuBar(self)
+		self.menubar.setFont(BOLD_FONT)
 
 		optionsMenu = self.menubar.addMenu ("Options")
+
+		entry = QAction(QIcon(BAN_ICON),"Clear connection history",self)
+		entry.triggered.connect(self.clearHistory)
+		optionsMenu.addAction(entry)
+
+		entry = QAction(QIcon(BAN_ICON),"Clear last connection",self)
+		entry.triggered.connect(self.clearLast)
+		optionsMenu.addAction(entry)
+
+		entry = QAction(QIcon(EXPORT_ICON),"Save user settings",self)
+		entry.triggered.connect(self.saveSettings)
+		optionsMenu.addAction(entry)
+
+		optionsMenu.addSeparator()
 
 		self.RECONNECT_OPTION = self.user_info["reconnect"]
 
@@ -413,7 +373,6 @@ class Dialog(QDialog):
 			if not self.RECONNECT_OPTION:
 				self.RECONNECT_OPTION = True
 				self.reconnect_Option.setIcon(QIcon(CHECKED_ICON))
-
 
 		# self.RETRY_FAILED_OPTION
 
@@ -437,17 +396,6 @@ class Dialog(QDialog):
 
 		if self.SAVE_HISTORY: self.savehistory_Option.setIcon(QIcon(CHECKED_ICON))
 
-
-		# self.EXECUTE_AUTOSCRIPT_OPTION
-
-		# self.EXECUTE_AUTOSCRIPT_OPTION = self.user_info["auto_script"]
-
-		# self.autoscript_Option = QAction(QIcon(UNCHECKED_ICON),"Execute script on connection",self)
-		# self.autoscript_Option.triggered.connect(lambda state,s="exec": self.toggleSetting(s))
-		# optionsMenu.addAction(self.autoscript_Option)
-
-		# if self.EXECUTE_AUTOSCRIPT_OPTION: self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
-
 		# Server information box
 
 		self.host = QLineEdit(self.user_info["last_server"])
@@ -461,17 +409,15 @@ class Dialog(QDialog):
 		serverLayout = QFormLayout()
 
 		hostl = QLabel("Host")
-		f = hostl.font()
-		f.setBold(True)
-		hostl.setFont(f)
+		hostl.setFont(BOLD_FONT)
 		serverLayout.addRow(hostl, self.host)
 
 		portl = QLabel("Port")
-		portl.setFont(f)
+		portl.setFont(BOLD_FONT)
 		serverLayout.addRow(portl, self.port)
 
 		passl = QLabel("Password")
-		passl.setFont(f)
+		passl.setFont(BOLD_FONT)
 		serverLayout.addRow(passl, self.password)
 
 		self.ssl = QCheckBox("Connect via SSL/TLS",self)
@@ -480,10 +426,8 @@ class Dialog(QDialog):
 		self.doScript = QCheckBox("Execute script on connect",self)
 		self.doScript.stateChanged.connect(self.clickDoScript)
 
-		f = self.ssl.font()
-		f.setBold(True)
-		self.ssl.setFont(f)
-		self.doScript.setFont(f)
+		self.ssl.setFont(BOLD_FONT)
+		self.doScript.setFont(BOLD_FONT)
 
 		if self.user_info["ssl"]:
 			self.ssl.toggle()
@@ -497,7 +441,9 @@ class Dialog(QDialog):
 		sfBox.addWidget(self.servers)
 		sfBox.addLayout(serverLayout)
 		sfBox.addWidget(self.ssl)
+
 		sfBox.addWidget(self.doScript)
+		
 
 		serverInfoBox = QGroupBox("IRC Server",self)
 		serverInfoBox.setLayout(sfBox)
@@ -533,9 +479,7 @@ class Dialog(QDialog):
 
 		self.tabs = QTabWidget()
 
-		f = self.tabs.font()
-		f.setBold(True)
-		self.tabs.setFont(f)
+		self.tabs.setFont(BOLD_FONT)
 
 		self.tabs.setStyleSheet("""
 			QTabWidget::tab-bar { alignment: center; font: bold; }
@@ -555,6 +499,7 @@ class Dialog(QDialog):
 		self.tabs.addTab(self.script_tab, QIcon(SCRIPT_ICON), "Script")
 
 		self.scriptbar = QMenuBar(self)
+		self.scriptbar.setFont(BOLD_FONT)
 
 		fileMenu = self.scriptbar.addMenu ("File")
 
@@ -646,6 +591,10 @@ class Dialog(QDialog):
 			banner.setPixmap(pixmap)
 			banner.setAlignment(Qt.AlignCenter)
 
+		self.menubar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")
+		self.scriptbar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")
+		self.userbar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")
+
 		finalLayout = QVBoxLayout()
 		if show_banner: finalLayout.addWidget(banner)
 		finalLayout.addWidget(self.tabs)
@@ -672,6 +621,15 @@ class Dialog(QDialog):
 			return
 
 		script = self.scriptedit.toPlainText()
+
+		# If the script is blank, and the file exists,
+		# then just delete the file
+		if len(script.strip())==0:
+			sfile = get_auto_script_name(self.host.text(),str(port),self.scriptsdir)
+			if os.path.isfile(sfile):
+				os.remove(sfile)
+				return
+
 		save_auto_script(self.host.text(),str(port),script,self.scriptsdir)
 
 	def scriptClear(self):
@@ -748,18 +706,6 @@ class Dialog(QDialog):
 				self.SAVE_AUTOSCRIPT = True
 				self.savescript_Option.setIcon(QIcon(CHECKED_ICON))
 
-		# if setting=="exec":
-		# 	if self.EXECUTE_AUTOSCRIPT_OPTION:
-		# 		self.EXECUTE_AUTOSCRIPT_OPTION = False
-		# 		self.autoscript_Option.setIcon(QIcon(UNCHECKED_ICON))
-		# 		self.savescript_Option.setEnabled(False)
-		# 		self.tabs.setTabEnabled(1,False)
-		# 	else:
-		# 		self.EXECUTE_AUTOSCRIPT_OPTION = True
-		# 		self.autoscript_Option.setIcon(QIcon(CHECKED_ICON))
-		# 		self.savescript_Option.setEnabled(True)
-		# 		self.tabs.setTabEnabled(1,True)
-
 		if setting=="save_history":
 			if self.SAVE_HISTORY:
 				self.SAVE_HISTORY = False
@@ -785,3 +731,129 @@ class Dialog(QDialog):
 				self.RECONNECT_OPTION = True
 				self.retryfailed_Option.setEnabled(True)
 				self.reconnect_Option.setIcon(QIcon(CHECKED_ICON))
+
+	def saveSettings(self):
+
+		# Save user info
+		user = {
+			"nickname": self.nick.text(),
+			"username": self.username.text(),
+			"realname": self.realname.text(),
+			"alternate": self.alternative.text(),
+			"last_server": self.host.text(),
+			"last_port": self.port.text(),
+			"last_password": self.password.text(),
+			"channels": [], # channel autojoins
+			"ssl": self.CONNECT_VIA_SSL,
+			"reconnect": self.RECONNECT_OPTION,
+			"autojoin": True,
+			"history": self.user_info["history"],
+			"save_history": self.SAVE_HISTORY,
+			"disabled_plugins": self.user_info["disabled_plugins"],
+			"ignore": self.user_info["ignore"],
+			"failreconnect": self.RETRY_FAILED_OPTION,
+			"auto_script": self.EXECUTE_AUTOSCRIPT_OPTION,
+			"save_script": self.SAVE_AUTOSCRIPT,
+		}
+		save_user(user,self.userfile)
+
+	def clearHistory(self):
+		self.user_info["history"] = []
+		self.buildServerSelector()
+
+	def clearLast(self):
+		self.user_info["last_server"] = ''
+		self.user_info["last_port"] = '6667'
+		self.user_info["last_password"] = ''
+
+		self.host.setText('')
+		self.port.setText('6667')
+		self.password.setText('')
+
+		self.buildServerSelector()
+
+	def restoreDefaults(self):
+		self.nick.setText(DEFAULT_NICKNAME)
+		self.username.setText(DEFAULT_USERNAME)
+		self.realname.setText(DEFAULT_IRCNAME)
+		self.alternative.setText(DEFAULT_ALTERNATIVE)
+
+	def buildServerSelector(self):
+		self.StoredData = []
+		self.StoredServer = 0
+		self.prevVisit = []
+
+		self.placeholder = False
+
+		self.servers.clear()
+
+		if self.user_info["ssl"]:
+			dussl = "ssl"
+		else:
+			dussl = "normal"
+
+		if len(self.user_info["last_server"])>0:
+			self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
+			self.servers.addItem("Last server connection")
+		else:
+			self.StoredData.append( ['',"6667",'','normal','' ]    )
+			self.servers.addItem("Select a server")
+
+		# Load in stuff from disk
+		self.built_in_server_list = get_network_list()
+
+		organized_list = []
+
+		if len(self.user_info["history"])>0:
+			# servers are in history
+			for s in self.user_info["history"]:
+				#self.built_in_server_list.append(s)
+
+				builtin = False
+				for entry in self.built_in_server_list:
+					if entry[0]==s[0]:
+						if entry[1]==s[1]:
+							builtin = True
+
+				if not builtin:
+					self.built_in_server_list.insert(0,s)
+
+		counter = -1
+		for entry in self.built_in_server_list:
+			counter = counter + 1
+			if len(entry) < 4: continue
+
+			if "ssl" in entry[3]:
+				if not self.can_do_ssl: continue
+
+			visited = False
+			if len(self.user_info["history"])>0:
+				for s in self.user_info["history"]:
+					if s[0]==entry[0]:
+						if s[1]==entry[1]:
+							visited = True
+
+			if visited:
+				organized_list.append([True,entry])
+			else:
+				organized_list.append([False,entry])
+
+		vserver = []
+		nserver = []
+		for x in organized_list:
+			if x[0]:
+				vserver.append(x)
+			else:
+				nserver.append(x)
+		finallist = vserver + nserver
+		
+		for s in finallist:
+			if s[0]:
+				self.prevVisit.append(s[1])
+				self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
+			else:
+				self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
+
+			self.StoredData.append(s[1])
+
+		self.StoredServer = self.servers.currentIndex()

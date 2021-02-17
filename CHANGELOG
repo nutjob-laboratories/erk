@@ -68,6 +68,12 @@ Version 0.840
 	* Moved the "execute script" option from the options menu to a checkbox on the main window in the connection dialog
 	* Removed menu separator underneath the "Disconnect" menu option in the main menu
 	* The "Erk" banner on the connection dialog is now only seen when initially launched (it's removed once the program is running)
+	* Added an option to delete connection history to the connection dialog
+	* Added an option to delete the last connection to the connection dialog
+	* Added an option to restore the default user settings to the connection dialog
+	* Saving an empty connection script from the connection dialog will delete the connection script instead of saving a "blank" file
+	* Added a "save user settings" option to the connection dialog
+	* The background of all settings menubars in the connection dialog are now transparent
 
 Version 0.831
 	* Macros have been removed from the client
