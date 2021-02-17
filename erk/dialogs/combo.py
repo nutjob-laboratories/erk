@@ -58,8 +58,8 @@ DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Command
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_connect_information(can_do_ssl,userfile,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',parent=None):
-		dialog = Dialog(can_do_ssl,userfile,do_ssl,do_reconnect,block_scripts,scriptsdir,parent)
+	def get_connect_information(can_do_ssl,userfile,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',show_banner=False,parent=None):
+		dialog = Dialog(can_do_ssl,userfile,do_ssl,do_reconnect,block_scripts,scriptsdir,show_banner,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -239,7 +239,7 @@ class Dialog(QDialog):
 
 	# END HELPER METHODS
 
-	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',config_file=SETTINGS_FILE,parent=None):
+	def __init__(self,can_do_ssl,userfile=USER_FILE,do_ssl=None,do_reconnect=None,block_scripts=False,scriptsdir='',config_file=SETTINGS_FILE,show_banner=False,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		config.load_settings(config_file)
@@ -640,13 +640,14 @@ class Dialog(QDialog):
 
 		buttons.button(QDialogButtonBox.Ok).setText("Connect")
 
-		banner = QLabel()
-		pixmap = QPixmap(BANNER_IMAGE)
-		banner.setPixmap(pixmap)
-		banner.setAlignment(Qt.AlignCenter)
+		if show_banner:
+			banner = QLabel()
+			pixmap = QPixmap(BANNER_IMAGE)
+			banner.setPixmap(pixmap)
+			banner.setAlignment(Qt.AlignCenter)
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addWidget(banner)
+		if show_banner: finalLayout.addWidget(banner)
 		finalLayout.addWidget(self.tabs)
 		finalLayout.addWidget(buttons)
 

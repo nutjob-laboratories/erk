@@ -50,7 +50,7 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk.dialogs import ComboDialog,EditorDialog
+from erk.dialogs import EditorDialog,ComboDialogBanner
 from erk.main import Erk
 from erk.files import *
 from erk.objects import *
@@ -629,8 +629,7 @@ if __name__ == '__main__':
 			else:
 
 				# Launch normally, showing the connection dialog first
-
-				info = ComboDialog(args.user,is_scripting_enabled,args.scripts,args.config)
+				info = ComboDialogBanner(args.user,is_scripting_enabled,args.scripts,args.config)
 				if info!=None:
 					GUI = Erk(
 						app,

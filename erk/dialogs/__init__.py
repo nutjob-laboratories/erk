@@ -208,3 +208,11 @@ def ComboDialogCmd(userfile,do_ssl=None,do_reconnect=None,block_scripts=False,sc
 
 	if not info: return None
 	return info
+
+def ComboDialogBanner(userfile,block_scripts,scriptsdir,configfile):
+	x = Combo(SSL_AVAILABLE,userfile,None,None,block_scripts,scriptsdir,configfile,True)
+	info = x.get_connect_information(SSL_AVAILABLE,userfile,None,None,block_scripts,scriptsdir,configfile,True)
+	del x
+
+	if not info: return None
+	return info

@@ -67,6 +67,7 @@ Version 0.840
 	* Changed how "scripts" on the connection dialog work (turning off script execution now hides the script tab, and vice versa)
 	* Moved the "execute script" option from the options menu to a checkbox on the main window in the connection dialog
 	* Removed menu separator underneath the "Disconnect" menu option in the main menu
+	* The "Erk" banner on the connection dialog is now only seen when initially launched (it's removed once the program is running)
 
 Version 0.831
 	* Macros have been removed from the client
