@@ -713,8 +713,6 @@ class Erk(QMainWindow):
 		c = events.fetch_connections()
 		if len(c)==0:
 			self.disconnect.setVisible(False)
-
-		self.mainMenu.addSeparator()
 		
 		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
 		entry.triggered.connect(lambda state: restart_program())
