@@ -34,7 +34,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
-import os
+import os,sys
 
 from ..resources import *
 from ..objects import *
@@ -50,6 +50,10 @@ from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
 from .comment import Dialog as Comment
 from .print import Dialog as PrintMsg
+
+INSTALL_DIRECTORY = sys.path[0]
+DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
+DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Scripting_and_Commands.pdf")
 
 class Dialog(QDialog):
 
@@ -218,7 +222,12 @@ class Dialog(QDialog):
 
 		self.scriptedit.moveCursor(QTextCursor.End)
 
-		self.scriptDesignateServer.setText("<center><big><b>"+serv+":"+str(port)+"</b></big></center>")
+		if len(serv)>0:
+			self.scriptDesignateServer.setText("<center><big><b>"+serv+":"+str(port)+"</b></big></center>")
+			self.saveScript.setEnabled(True)
+		else:
+			self.saveScript.setEnabled(False)
+			self.scriptDesignateServer.setText("<center><big><b>IRC Server</b></big></center>")
 
 	# END HELPER METHODS
 
@@ -534,9 +543,11 @@ class Dialog(QDialog):
 
 		fileMenu = self.scriptbar.addMenu ("File")
 
-		entry = QAction(QIcon(EXPORT_ICON),"Save",self)
-		entry.triggered.connect(self.scriptSave)
-		fileMenu.addAction(entry)
+		self.saveScript = QAction(QIcon(EXPORT_ICON),"Save connection script",self)
+		self.saveScript.triggered.connect(self.scriptSave)
+		fileMenu.addAction(self.saveScript)
+
+		if len(self.user_info["last_server"])==0: self.saveScript.setEnabled(False)
 
 		entry = QAction(QIcon(NEWFILE_ICON),"Clear",self)
 		entry.triggered.connect(self.scriptClear)
@@ -582,11 +593,15 @@ class Dialog(QDialog):
 		entry.triggered.connect(self.scriptMLComment)
 		insertMenu.addAction(entry)
 
+		self.docLink = QLabel("<center><small><b><a href=\""+DOCUMENTATION+"\">Command documentation</a></b></small></center>")
+		self.docLink.setOpenExternalLinks(True)
+
 		scriptTabLayout = QVBoxLayout()
 		scriptTabLayout.addWidget(self.scriptDesignate)
 		scriptTabLayout.addWidget(self.scriptDesignateServer)
 		scriptTabLayout.addWidget(self.scriptbar)
 		scriptTabLayout.addWidget(self.scriptedit)
+		scriptTabLayout.addWidget(self.docLink)
 		scriptTabLayout.addWidget(self.scripttabinfo)
 
 		self.script_tab.setLayout(scriptTabLayout)

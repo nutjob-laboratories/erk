@@ -62,6 +62,7 @@ Version 0.840
 	* Changed the default in the user config to execute connection script (it was previously turned off)
 	* Bugfix: clicking "connect" from the connection dialog will now display an error if there is no server entered, or if the port is not a number
 	* Added a "server" designation to the "script" tab in the connection dialog
+	* Added a link to the command documentation to the connect dialog
 
 Version 0.831
 	* Macros have been removed from the client
