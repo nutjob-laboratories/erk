@@ -44,12 +44,14 @@ from ..strings import *
 from ..common import *
 from .. import syntax
 from .. import config
-
+from ..widgets.action import textSeparator
 from ..dialogs import AddChannelDialog
 from .send_pm import Dialog as SendPM
 from .pause import Dialog as PauseTime
 from .comment import Dialog as Comment
 from .print import Dialog as PrintMsg
+from .alias import Dialog as InsertAlias
+from .new_macro import Dialog as NewMacro
 
 INSTALL_DIRECTORY = sys.path[0]
 DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
@@ -269,6 +271,17 @@ class Dialog(QDialog):
 
 		BOLD_FONT = self.font()
 		BOLD_FONT.setBold(True)
+
+		# Determine if window color is dark or light
+		mbcolor = self.palette().color(QPalette.Window).name()
+		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+		luma = luma*100
+
+		if luma>=40:
+			self.is_light_colored = True
+		else:
+			self.is_light_colored = False
 
 		self.scriptEditor = None
 
@@ -533,6 +546,8 @@ class Dialog(QDialog):
 
 		insertMenu = self.scriptbar.addMenu ("Insert command")
 
+		insertMenu.addAction(textSeparator(self,"IRC"))
+
 		entry = QAction(QIcon(MESSAGE_ICON),"Private message",self)
 		entry.triggered.connect(self.scriptPM)
 		insertMenu.addAction(entry)
@@ -541,6 +556,8 @@ class Dialog(QDialog):
 		entry.triggered.connect(self.scriptJoin)
 		insertMenu.addAction(entry)
 
+		insertMenu.addAction(textSeparator(self,APPLICATION_NAME))
+
 		entry = QAction(QIcon(TIMESTAMP_ICON),"Pause",self)
 		entry.triggered.connect(self.scriptTime)
 		insertMenu.addAction(entry)
@@ -548,6 +565,16 @@ class Dialog(QDialog):
 		entry = QAction(QIcon(EDIT_ICON),"Print",self)
 		entry.triggered.connect(self.scriptPrint)
 		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(MISC_ICON),"Alias",self)
+		entry.triggered.connect(self.scriptAlias)
+		insertMenu.addAction(entry)
+
+		entry = QAction(QIcon(MISC_ICON),"Macro",self)
+		entry.triggered.connect(self.scriptMacro)
+		insertMenu.addAction(entry)
+
+		insertMenu.addAction(textSeparator(self,"Miscellaneous"))
 
 		entry = QAction(QIcon(EDIT_ICON),"Comment",self)
 		entry.triggered.connect(self.scriptComment)
@@ -615,6 +642,35 @@ class Dialog(QDialog):
 		msg.setText(text)
 		msg.setWindowTitle("Error!")
 		msg.exec_()
+
+	def scriptMacro(self):
+		x = NewMacro(self)
+		e = x.get_macro_information(self)
+
+		if not e: return
+
+		macro_name = e[0].strip()
+		macro_args = e[1]
+		macro = e[2].strip()
+		macro_help = e[3].strip()
+		macro_helpargs = e[4].strip()
+
+		self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macro {macro_name} {macro_args} {macro}\n")
+		if macro_help!='':
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrohelp {macro_name} {macro_help}\n")
+		if macro_helpargs!='':
+			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrousage {macro_name} {macro_helpargs}\n")
+
+	def scriptAlias(self):
+		x = InsertAlias(self)
+		e = x.get_alias_information(self)
+
+		if not e: return
+
+		name = e[0]
+		value = e[1]
+
+		self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"alias "+name+" "+value+"\n")
 
 	def scriptSave(self):
 

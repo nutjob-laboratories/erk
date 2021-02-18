@@ -38,7 +38,7 @@ from PyQt5 import QtCore
 from ..resources import *
 
 TEXT_SEPARATOR = f'''
-<table width="100%" border="0">
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
 	<tbody>
 		<tr>
 			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
@@ -51,7 +51,7 @@ TEXT_SEPARATOR = f'''
 </table>'''
 
 LIGHT_TEXT_SEPARATOR = f'''
-<table width="100%" border="0">
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
 	<tbody>
 		<tr>
 			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
@@ -105,6 +105,8 @@ def textSeparator(self,text):
 		gsep = TEXT_SEPARATOR
 	else:
 		gsep = LIGHT_TEXT_SEPARATOR
+
+	text = text.upper()
 		
 	# tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
 	tsLabel = QLabel( gsep.replace("!TEXT!",text) )

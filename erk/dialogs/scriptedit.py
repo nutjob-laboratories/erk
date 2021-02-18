@@ -80,7 +80,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/wait")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"wait")
 				msg.exec_()
 			elif 'argcount' in ep[0]:
 				# wrong arg to /argcount
@@ -88,7 +88,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/argcount")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"argcount")
 				msg.exec_()
 			elif 'unalias' in ep[0]:
 				# wrong arg to /argcount
@@ -96,7 +96,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/unalias")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"unalias")
 				msg.exec_()
 			elif '_alias' in ep[0]:
 				# wrong arg to /argcount
@@ -104,7 +104,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/_alias")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"_alias")
 				msg.exec_()
 			elif 'alias' in ep[0]:
 				# wrong arg to /argcount
@@ -112,7 +112,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/alias")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"alias")
 				msg.exec_()
 			elif 'msgbox' in ep[0]:
 				# wrong arg to /argcount
@@ -120,7 +120,7 @@ class Window(QMainWindow):
 				msg.setIcon(QMessageBox.Critical)
 				msg.setText("Script error")
 				msg.setInformativeText(ep[1])
-				msg.setWindowTitle("/msgbox")
+				msg.setWindowTitle(config.INPUT_COMMAND_SYMBOL+"msgbox")
 				msg.exec_()
 
 	def closeEvent(self, event):
@@ -520,7 +520,7 @@ class Window(QMainWindow):
 		if not e: return
 
 		if len(e)>0:
-			self.editor.insertPlainText("/msgbox "+e+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"msgbox "+e+"\n")
 			self.updateApplicationTitle()
 
 	def insertPart(self):
@@ -533,10 +533,10 @@ class Window(QMainWindow):
 		msg = e[1]
 
 		if len(msg)==0:
-			self.editor.insertPlainText("/part "+channel+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"part "+channel+"\n")
 			self.updateApplicationTitle()
 		else:
-			self.editor.insertPlainText("/part "+channel+" "+msg+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"part "+channel+" "+msg+"\n")
 			self.updateApplicationTitle()
 
 	def insertMacro(self):
@@ -551,11 +551,11 @@ class Window(QMainWindow):
 		macro_help = e[3].strip()
 		macro_helpargs = e[4].strip()
 
-		self.editor.insertPlainText(f"/macro {macro_name} {macro_args} {macro}\n")
+		self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macro {macro_name} {macro_args} {macro}\n")
 		if macro_help!='':
-			self.editor.insertPlainText(f"/macrohelp {macro_name} {macro_help}\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrohelp {macro_name} {macro_help}\n")
 		if macro_helpargs!='':
-			self.editor.insertPlainText(f"/macrousage {macro_name} {macro_helpargs}\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrousage {macro_name} {macro_helpargs}\n")
 		self.updateApplicationTitle()
 
 	def insertLocalAlias(self):
@@ -567,7 +567,7 @@ class Window(QMainWindow):
 		name = e[0]
 		value = e[1]
 
-		self.editor.insertPlainText("/_alias "+name+" "+value+"\n")
+		self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"_alias "+name+" "+value+"\n")
 		self.updateApplicationTitle()
 
 	def insertAlias(self):
@@ -579,7 +579,7 @@ class Window(QMainWindow):
 		name = e[0]
 		value = e[1]
 
-		self.editor.insertPlainText("/alias "+name+" "+value+"\n")
+		self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"alias "+name+" "+value+"\n")
 		self.updateApplicationTitle()
 
 	def insertJoin(self):
@@ -592,10 +592,10 @@ class Window(QMainWindow):
 		key = e[1]
 
 		if len(key)==0:
-			self.editor.insertPlainText("/join "+channel+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"join "+channel+"\n")
 			self.updateApplicationTitle()
 		else:
-			self.editor.insertPlainText("/join "+channel+" "+key+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"join "+channel+" "+key+"\n")
 			self.updateApplicationTitle()
 
 	def insertPrint(self):
@@ -605,7 +605,7 @@ class Window(QMainWindow):
 		if not e: return
 
 		if len(e)>0:
-			self.editor.insertPlainText("/print "+e+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"print "+e+"\n")
 			self.updateApplicationTitle()
 
 	def insertWrite(self):
@@ -615,7 +615,7 @@ class Window(QMainWindow):
 		if not e: return
 
 		if len(e)>0:
-			self.editor.insertPlainText("/write "+e+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"write "+e+"\n")
 			self.updateApplicationTitle()
 
 	def insertMLComment(self):
@@ -644,7 +644,7 @@ class Window(QMainWindow):
 
 		if not e: return
 
-		self.editor.insertPlainText("/wait "+str(e)+"\n")
+		self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"wait "+str(e)+"\n")
 		self.updateApplicationTitle()
 
 	def insertPM(self):
@@ -657,7 +657,7 @@ class Window(QMainWindow):
 		msg = e[1]
 		
 		if len(target)>0 and len(msg)>0:
-			self.editor.insertPlainText("/msg "+target+" "+msg+"\n")
+			self.editor.insertPlainText(config.INPUT_COMMAND_SYMBOL+"msg "+target+" "+msg+"\n")
 			self.updateApplicationTitle()
 
 	def updateApplicationTitle(self):
