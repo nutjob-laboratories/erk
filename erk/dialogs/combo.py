@@ -458,10 +458,8 @@ class Dialog(QDialog):
 		sfBox.addWidget(self.servers)
 		sfBox.addLayout(serverLayout)
 		sfBox.addWidget(self.ssl)
-
 		sfBox.addWidget(self.doScript)
 		
-
 		serverInfoBox = QGroupBox("IRC Server",self)
 		serverInfoBox.setLayout(sfBox)
 
@@ -482,7 +480,6 @@ class Dialog(QDialog):
 			self.scriptDesignateServer = QLabel("<center><big><b>IRC Server</b></big></center>")
 		else:
 			self.scriptDesignateServer = QLabel("<center><big><b>"+self.user_info["last_server"]+"</b></big></center>")
-
 
 		# Load in script if there's one for the last entered server
 		if len(self.user_info["last_server"])>0 and len(self.user_info["last_port"])>0:
@@ -510,7 +507,6 @@ class Dialog(QDialog):
 		connectTabLayout.addWidget(serverInfoBox)
 
 		self.connection_information_tab.setLayout(connectTabLayout)
-
 
 		self.script_tab = QWidget()
 		self.tabs.addTab(self.script_tab, QIcon(SCRIPT_ICON), "Script")
@@ -570,6 +566,10 @@ class Dialog(QDialog):
 		entry.triggered.connect(self.scriptAlias)
 		insertMenu.addAction(entry)
 
+		entry = QAction(QIcon(MISC_ICON),"Local alias",self)
+		entry.triggered.connect(self.scriptLocal)
+		insertMenu.addAction(entry)
+
 		entry = QAction(QIcon(MISC_ICON),"Macro",self)
 		entry.triggered.connect(self.scriptMacro)
 		insertMenu.addAction(entry)
@@ -596,10 +596,6 @@ class Dialog(QDialog):
 		scriptTabLayout.addWidget(self.scripttabinfo)
 
 		self.script_tab.setLayout(scriptTabLayout)
-
-		# Disable script tab if execute script is disabled
-		# if not self.EXECUTE_AUTOSCRIPT_OPTION:
-		# 	self.tabs.setTabEnabled(1,False)
 
 		if self.EXECUTE_AUTOSCRIPT_OPTION:
 			self.doScript.toggle()
@@ -660,6 +656,17 @@ class Dialog(QDialog):
 			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrohelp {macro_name} {macro_help}\n")
 		if macro_helpargs!='':
 			self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+f"macrousage {macro_name} {macro_helpargs}\n")
+
+	def scriptLocal(self):
+		x = InsertAlias(self)
+		e = x.get_alias_information(self)
+
+		if not e: return
+
+		name = e[0]
+		value = e[1]
+
+		self.scriptedit.insertPlainText(config.INPUT_COMMAND_SYMBOL+"_alias "+name+" "+value+"\n")
 
 	def scriptAlias(self):
 		x = InsertAlias(self)
@@ -873,7 +880,6 @@ class Dialog(QDialog):
 		if len(self.user_info["history"])>0:
 			# servers are in history
 			for s in self.user_info["history"]:
-				#self.built_in_server_list.append(s)
 
 				builtin = False
 				for entry in self.built_in_server_list:

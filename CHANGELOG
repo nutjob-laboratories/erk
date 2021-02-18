@@ -80,6 +80,7 @@ Version 0.840
 	* Added some SSL/TLS enabled servers to the built-in server list
 	* Bugfix: script editor now uses the command symbol ("/") set in the config file for generated code
 	* Added some script-code-generator stuff to the script editor in the connection dialog
+	* Added a "insert local alias" option to the code generator in the connection dialog
 
 Version 0.831
 	* Macros have been removed from the client
