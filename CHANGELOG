@@ -77,6 +77,7 @@ Version 0.840
 	* Added an option to reload user settings to the connection dialog
 	* SSL/TLS-connection servers now have their own icon (for both visited and unvisited) in the server selection list
 	* Changed the "unvisited" icon from a hollow star to a filled star
+	* Added some SSL/TLS enabled servers to the built-in server list
 
 Version 0.831
 	* Macros have been removed from the client
