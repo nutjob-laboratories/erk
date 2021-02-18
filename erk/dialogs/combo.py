@@ -860,9 +860,15 @@ class Dialog(QDialog):
 		for s in finallist:
 			if s[0]:
 				self.prevVisit.append(s[1])
-				self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
+				if s[1][3].lower()=='ssl':
+					self.servers.addItem(QIcon(VISITED_SSL_ICON),s[1][2]+" - "+s[1][0])
+				else:
+					self.servers.addItem(QIcon(VISITED_ICON),s[1][2]+" - "+s[1][0])
 			else:
-				self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
+				if s[1][3].lower()=='ssl':
+					self.servers.addItem(QIcon(UNVISITED_SSL_ICON),s[1][2]+" - "+s[1][0])
+				else:
+					self.servers.addItem(QIcon(UNVISITED_ICON),s[1][2]+" - "+s[1][0])
 
 			self.StoredData.append(s[1])
 

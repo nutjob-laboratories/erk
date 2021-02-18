@@ -75,6 +75,8 @@ Version 0.840
 	* Added a "save user settings" option to the connection dialog
 	* The background of all settings menubars in the connection dialog are now transparent
 	* Added an option to reload user settings to the connection dialog
+	* SSL/TLS-connection servers now have their own icon (for both visited and unvisited) in the server selection list
+	* Changed the "unvisited" icon from a hollow star to a filled star
 
 Version 0.831
 	* Macros have been removed from the client

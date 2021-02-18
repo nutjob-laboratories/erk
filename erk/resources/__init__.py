@@ -176,3 +176,6 @@ OPTIONS_ICON = ":/gui-options.png"
 CONNECTING_ICON = ":/gui-connecting.png"
 PREFIX_ICON = ":/gui-prefix.png"
 MISC_ICON = ":/gui-misc.png"
+
+VISITED_SSL_ICON = ":/gui-visited_ssl.png"
+UNVISITED_SSL_ICON = ":/gui-unvisited_ssl.png"
