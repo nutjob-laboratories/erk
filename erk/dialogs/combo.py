@@ -309,7 +309,11 @@ class Dialog(QDialog):
 
 		userMenu = self.userbar.addMenu ("Options")
 
-		entry = QAction(QIcon(RESTART_ICON),"Restore defaults",self)
+		entry = QAction(QIcon(REDO_ICON),"Reset",self)
+		entry.triggered.connect(self.resetUser)
+		userMenu.addAction(entry)
+
+		entry = QAction(QIcon(RESTART_ICON),"Set to defaults",self)
 		entry.triggered.connect(self.restoreDefaults)
 		userMenu.addAction(entry)
 
@@ -756,6 +760,12 @@ class Dialog(QDialog):
 			"save_script": self.SAVE_AUTOSCRIPT,
 		}
 		save_user(user,self.userfile)
+
+	def resetUser(self):
+		self.nick.setText(self.user_info["nickname"])
+		self.alternative.setText(self.user_info["alternate"])
+		self.username.setText(self.user_info["username"])
+		self.realname.setText(self.user_info["realname"])
 
 	def clearHistory(self):
 		self.user_info["history"] = []

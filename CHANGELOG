@@ -74,6 +74,7 @@ Version 0.840
 	* Saving an empty connection script from the connection dialog will delete the connection script instead of saving a "blank" file
 	* Added a "save user settings" option to the connection dialog
 	* The background of all settings menubars in the connection dialog are now transparent
+	* Added an option to reload user settings to the connection dialog
 
 Version 0.831
 	* Macros have been removed from the client
