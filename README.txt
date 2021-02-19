@@ -110,7 +110,7 @@ To run properly on Linux, the latest version of all required software is recomme
 
 First, make sure that all the requirements are installed. Next, [download **Ərk**](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip). Extract the zipfile to a directory of your choice using your favorite archive/zip program. Open a command prompt, navigate to the directory you extracted **Ərk** to, and type:
 
-  python erk.py
+    python erk.py
 
 Hit enter, and **Ərk** will start up! Enter the hostname or IP address of the server you'd like to connect to, or click the "Servers" tab and select a server from the built-in list.
 
@@ -239,7 +239,7 @@ For more information, check out the [documentation](https://github.com/nutjob-la
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-  python erk.py -o --noextensions --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
+    python erk.py -o --noextensions --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
 
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
 
@@ -284,18 +284,18 @@ More command-line settings can be viewed by executing **Ərk** with the `--help`
 
 For an example of how to implement this for multiple users, let's assume we have two users, named Alice and Bob. They're both running **Ərk** on the same computer (which runs Windows), and want to keep their settings and logs separate. **Ərk**, in this example, is installed in "C:\Erk". First, we create a directory for Alice; we'll put it in the root directory of the "C" drive. We'll name Alice's directory "Alice_Erk":
 
-  mkdir C:\Alice_Erk
+    mkdir C:\Alice_Erk
 
 Now, let's make a directory for Bob:
 
-  mkdir C:\Bob_Erk
+    mkdir C:\Bob_Erk
 
 We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
 
-  python C:\Erk\erk.py -C C:\Alice_Erk\settings.json -U C:\Alice_Erk\user.json -Y C:\Alice_Erk\text.style -L C:\Alice_Erk\logs -S C:\Alice_Erk\scripts -T C:\Alice\styles -M C:\Alice\macros.json
+    python C:\Erk\erk.py -C C:\Alice_Erk\settings.json -U C:\Alice_Erk\user.json -Y C:\Alice_Erk\text.style -L C:\Alice_Erk\logs -S C:\Alice_Erk\scripts -T C:\Alice\styles -M C:\Alice\macros.json
 
 Similarly, Bob's batch file looks like this:
 
-  python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
+    python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
 
 Alice and Bob can now use **Ərk** with their own customized settings!
