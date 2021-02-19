@@ -43,6 +43,7 @@ shutil.copytree("./erk", "./erk-irc-client/erk",ignore=shutil.ignore_patterns('*
 
 shutil.copytree("./spellchecker", "./erk-irc-client/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./emoji", "./erk-irc-client/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./qt5reactor", "./erk-irc-client/qt5reactor",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
 shutil.copy("./erk.py", "./erk-irc-client/erk.py")
 

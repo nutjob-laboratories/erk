@@ -1,5 +1,6 @@
 Version 0.850
 	* Changed the splash logo
+	* Added qt5reactor to the distribution
 
 Version 0.840
 	* Default alternate nickname now includes a random number
