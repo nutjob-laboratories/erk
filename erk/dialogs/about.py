@@ -109,6 +109,16 @@ class Dialog(QDialog):
 		ce_credit.setAlignment(Qt.AlignCenter)
 		ce_credit.setOpenExternalLinks(True)
 
+
+
+
+		qr_credit = QLabel(f"<a href=\"https://github.com/twisted/qt5reactor\"><small>qt5reactor</small></a> <small>by Twisted Matrix Labs</small>")
+		qr_credit.setAlignment(Qt.AlignCenter)
+		qr_credit.setOpenExternalLinks(True)
+
+
+
+
 		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</i></small>")
 		platform_credit.setAlignment(Qt.AlignCenter)
 
@@ -119,6 +129,7 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(icons_credit)
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
+		creditsLayout.addWidget(qr_credit)
 		creditsLayout.addWidget(plug_credit)
 		creditsLayout.addWidget(syn_credit)
 		creditsLayout.addWidget(ce_credit)
