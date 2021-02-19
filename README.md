@@ -228,7 +228,7 @@ class Greeter(Plugin):
   
   def join(self,client,channel,user):
     nickname = user.split('!')[0]
-    client.msg(f"Welcome to {channel}, {nickname}!")
+    client.msg(channel,f"Welcome to {channel}, {nickname}!")
 ```
 This plugin will greet anyone who joins any channel the client is in. The greeting message will be sent to the channel (and server) where the join event happened, on all servers that **Ərk** is connected to.
 
