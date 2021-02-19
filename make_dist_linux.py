@@ -51,6 +51,23 @@ shutil.copy("./LICENSE", "./erk-irc-client/LICENSE")
 #os.system("powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('dist', 'erk_dist.zip'); }\" ")
 os.system("cd erk-irc-client; zip -r ../erk_dist.zip . ; cd ..")
 
+
+# linux with requirements
+os.system("cd erk-irc-client; zip -r ../erk_linux.zip . ; cd ..")
+os.system("zip -r ./erk_linux.zip requirements/*")
+
+os.system("zip ./erk_linux.zip install_requirements_amd64.sh install_requirements_i386.sh")
+
+# Delete the old file
+os.remove(f"./downloads/erk-latest-linux.zip")
+
+shutil.copy('erk_linux.zip', "./downloads/erk-latest-linux.zip")
+
+# Delete the new file
+os.remove(f"./erk_linux.zip")
+
+
+
 shutil.rmtree('./erk-irc-client')
 
 archive_name = f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_MAJOR_VERSION}.zip"

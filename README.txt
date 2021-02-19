@@ -1,9 +1,10 @@
 
 <p align="center">
-	<img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
-	<a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.840.114"><b>Download last stable release</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk !_FULL_VERSION_!</b></a><br>
-	<a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a><br>
+  <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
+  <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.840.114"><b>Download last stable release</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk !_FULL_VERSION_!</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest-linux.zip"><b>Download Ərk !_FULL_VERSION_! with Linux Requirements</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
@@ -21,9 +22,9 @@
               <tbody>
                 <tr>
                   <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-	<b>Ərk connected to EFnet on Windows 10</b></td>
+  <b>Ərk connected to EFnet on Windows 10</b></td>
                   <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
-	<b>Ərk connected to EFnet on Linux Mint</b></td>
+  <b>Ərk connected to EFnet on Linux Mint</b></td>
                 </tr>
               </tbody>
             </table>
@@ -36,61 +37,61 @@
 # Features
 
 * **Ərk** does chat, and _only_ chat.
-	* **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
-	* **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
-	* Just plain ol' fashioned IRC
+  * **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
+  * **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
+  * Just plain ol' fashioned IRC
 * Runs on Windows and Linux
 * Supports multiple connections (you can chat on more than one IRC server at a time)
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
-	* Almost every part of the interface can be customized
-	* Most behaviors can be customized
-	* Over 50 display and configuration options settable in the GUI
-	* Scripting, plugins, menus, and more can be disabled from the command-line
+  * Almost every part of the interface can be customized
+  * Most behaviors can be customized
+  * Over 50 display and configuration options settable in the GUI
+  * Scripting, plugins, menus, and more can be disabled from the command-line
 * Text colors are customizeable
-	* Any text, from nicknames to messages to hyperlinks, can use custom colors
-	* Text rendering setting are stored in "style files", and can be shared
-	* Every text-displaying window can be styled: channels, private chats, and server consoles
-	* Chat styles are "remembered" and loaded automatically
-	* Features a built-in style file editor
+  * Any text, from nicknames to messages to hyperlinks, can use custom colors
+  * Text rendering setting are stored in "style files", and can be shared
+  * Every text-displaying window can be styled: channels, private chats, and server consoles
+  * Chat styles are "remembered" and loaded automatically
+  * Features a built-in style file editor
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker)
-	* Supports English, Spanish, French, and German
-	* Right click on misspelled words for suggested spellings/words
+  * Supports English, Spanish, French, and German
+  * Right click on misspelled words for suggested spellings/words
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) support
-	* Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)                                                                        |
+  * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 * Command/nickname auto-completion
-	* Type the first few letters of a command or nickname and hit the tab key
-	* Auto-complete works for emoji shortcodes, too
+  * Type the first few letters of a command or nickname and hit the tab key
+  * Auto-complete works for emoji shortcodes, too
 * Optional profanity filter
 * Full IRC color support
-	* Colors are rendered in the client (and rendering can be turned off)
-	* Full support for using foreground and background colors in outgoing messages
+  * Colors are rendered in the client (and rendering can be turned off)
+  * Full support for using foreground and background colors in outgoing messages
 * Automatic logging of channel and private chats
-	* Logging can be switched on and off
-	* Logs can be automatically loaded when resuming public or private chats
+  * Logging can be switched on and off
+  * Logs can be automatically loaded when resuming public or private chats
 * Powerful scripting engine
-	* Almost anything you can do in the client, you can do in a script
-	* Scripts can be triggered to execute on server connection or manually
-	* Scripts run in a separate thread, so running a script won't interrupt your chatting
-	* Micro-script editor built into the connection dialog
-	* A script editor is built into the client
-		* Create, open, and edit scripts
-		* Syntax highlighting
-		* Run scripts on any connection the client is connected to
+  * Almost anything you can do in the client, you can do in a script
+  * Scripts can be triggered to execute on server connection or manually
+  * Scripts run in a separate thread, so running a script won't interrupt your chatting
+  * Micro-script editor built into the connection dialog
+  * A script editor is built into the client
+    * Create, open, and edit scripts
+    * Syntax highlighting
+    * Run scripts on any connection the client is connected to
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
 * Plugins!
-	* Plugins are written in Python 3, just like **Ərk**
-	* **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
-		* Text editor with syntax highlighting
-		* Tools to create, package, and export plugin packages
-		* Create a basic plugin with two mouse clicks!
-	* [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) is included...no trying to figure out how to write a plugin from endless forum posts!
-	* Plugins can be found in the [official **Ərk** plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
+  * Plugins are written in Python 3, just like **Ərk**
+  * **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
+    * Text editor with syntax highlighting
+    * Tools to create, package, and export plugin packages
+    * Create a basic plugin with two mouse clicks!
+  * [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) is included...no trying to figure out how to write a plugin from endless forum posts!
+  * Plugins can be found in the [official **Ərk** plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 * An extensive set of command-line flags, allowing for _even more_ configuration options
-	* Disable most features on startup
-	* Connect to an IRC server from the command-line
-	* Support for connecting via [IRC URLs](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
+  * Disable most features on startup
+  * Connect to an IRC server from the command-line
+  * Support for connecting via [IRC URLs](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
 
 # Requirements
 **Ərk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), [Twisted](https://twistedmatrix.com/trac/), and [qt5reactor](https://github.com/sunu/qt5reactor). PyQt5, Twisted, and qt5reactor can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
@@ -106,19 +107,39 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
-To run properly on Linux, the latest version of all required software is recommended.  __**If you are running Debian or a Debian-variant (such as Mint, Ubuntu, Xubuntu, etc) you must install PyQt5 and qt5reactor from pip! If you install these from the standard repo Ərk will not function!**__
+To run properly on Linux, the latest version of all required software is recommended.  __**If you are running Debian or a Debian-variant (such as Mint, Ubuntu, Xubuntu, etc) you can install PyQt5 and qt5reactor with pip, or by [downloading Ərk with included requirements](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest-linux.zip) and installing the .debs yourself! If you install PyQt5 and qt5reactor from the standard repo Ərk will not function!**__
 
 # Install
 
 First, make sure that all the requirements are installed. Next, [download **Ərk**](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip). Extract the zipfile to a directory of your choice using your favorite archive/zip program. Open a command prompt, navigate to the directory you extracted **Ərk** to, and type:
 
-	python erk.py
+  python erk.py
 
 Hit enter, and **Ərk** will start up! Enter the hostname or IP address of the server you'd like to connect to, or click the "Servers" tab and select a server from the built-in list.
 
 **Ərk** does not need to be "installed" to any specific directory to run; it will run from any directory it is extracted to.
 
 To make things easier, Windows users can create a shortcut to **Ərk** so all you have to do is double click to start chatting. There are many tutorials on how to do this online; a good place to start is [right here](https://therenegadecoder.com/code/how-to-make-a-python-script-shortcut-with-arguments/).
+
+# Install with Linux requirements
+If you're running a Linux distribution with `apt-get`, you can [download **Ərk** with the basic requirements included](https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest-linux.zip). Included with in the zip are the following [.deb](https://en.wikipedia.org/wiki/Deb_%28file_format%29) files:
+
+ - `python3-pyqt5_5.15.2+dfsg-3_i386.deb` ([PyQt5](https://www.riverbankcomputing.com/software/pyqt/) for amd64)
+ - `python3-pyqt5_5.15.2+dfsg-3_amd64.deb` ([PyQt5](https://www.riverbankcomputing.com/software/pyqt/) for i386)
+ - `python3-twisted_20.3.0-4_all.deb` ([Twisted](https://twistedmatrix.com/))
+ - `python3-qt5reactor_0.6.1-1_all.deb` ([qt5reactor](https://github.com/twisted/qt5reactor))
+
+All files were downloaded from [pkgs.org](https://pkgs.org/). Python3 is not included, and should be installed. If you're trying to install **Ərk** on a 64-bit computer, open a terminal in the directory you unzipped **Ərk** to, and execute:
+
+`$ sh install_requirements_amd64.sh`
+
+This will install all the downloaded .deb files with `apt-get` (which will probably require you to enter your password). If you're not comfortable executing a script that someone you've never met wrote (and I wouldn't blame you), you can manually install the .debs; that's all the script does.
+
+If you're installing **Ərk** on a 32-bit computer, execute:
+
+`$ sh install_requirements_i386.sh`
+
+The reason why this is necessary is because the Debian repos (at least the ones in stock Linux Mint, Ubuntu, and Debian) have older version of PyQt5 and qt5reactor which **Ərk** can't work with. The included versions should work and allow **Ərk** to run in all its glory :-)
 
 # Usage
 ```
@@ -224,13 +245,13 @@ from erk import *
 
 class Greeter(Plugin):
 
-	def __init__(self):
-		self.name = "Greeter"
-		self.description = "A greeting plugin."
-	
-	def join(self,client,channel,user):
-		nickname = user.split('!')[0]
-		client.msg(f"Welcome to {channel}, {nickname}!")
+  def __init__(self):
+    self.name = "Greeter"
+    self.description = "A greeting plugin."
+  
+  def join(self,client,channel,user):
+    nickname = user.split('!')[0]
+    client.msg(f"Welcome to {channel}, {nickname}!")
 ```
 This plugin will greet anyone who joins any channel the client is in. The greeting message will be sent to the channel (and server) where the join event happened, on all servers that **Ərk** is connected to.
 
@@ -241,7 +262,7 @@ For more information, check out the [documentation](https://github.com/nutjob-la
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-	python erk.py -o --noextensions --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
+  python erk.py -o --noextensions --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
 
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
 
@@ -286,18 +307,18 @@ More command-line settings can be viewed by executing **Ərk** with the `--help`
 
 For an example of how to implement this for multiple users, let's assume we have two users, named Alice and Bob. They're both running **Ərk** on the same computer (which runs Windows), and want to keep their settings and logs separate. **Ərk**, in this example, is installed in "C:\Erk". First, we create a directory for Alice; we'll put it in the root directory of the "C" drive. We'll name Alice's directory "Alice_Erk":
 
-	mkdir C:\Alice_Erk
+  mkdir C:\Alice_Erk
 
 Now, let's make a directory for Bob:
 
-	mkdir C:\Bob_Erk
+  mkdir C:\Bob_Erk
 
 We'll use these directories to store settings and logs. Now, let's create batch files for both users, ones that start **Ərk** up with the right commandline flags. Assuming that Python is in Window's PATH, Alice's batch file looks like this:
 
-	python C:\Erk\erk.py -C C:\Alice_Erk\settings.json -U C:\Alice_Erk\user.json -Y C:\Alice_Erk\text.style -L C:\Alice_Erk\logs -S C:\Alice_Erk\scripts -T C:\Alice\styles -M C:\Alice\macros.json
+  python C:\Erk\erk.py -C C:\Alice_Erk\settings.json -U C:\Alice_Erk\user.json -Y C:\Alice_Erk\text.style -L C:\Alice_Erk\logs -S C:\Alice_Erk\scripts -T C:\Alice\styles -M C:\Alice\macros.json
 
 Similarly, Bob's batch file looks like this:
 
-	python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
+  python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
 
 Alice and Bob can now use **Ərk** with their own customized settings!
