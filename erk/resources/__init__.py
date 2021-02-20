@@ -111,6 +111,9 @@ RUN_ICON = ":/gui-run.png"
 
 CLOCK_ICON = ":/gui-clock.png"
 
+ERK_BIG_ICON = ":/gui-erk_button.png"
+
+NUTJOB_LOGO = ":/gui-nutjob.png"
 
 UPTIME_ICON = ":/gui-uptime.png"
 LEFT_ICON = ":/gui-left.png"
@@ -134,7 +137,7 @@ CLIPBOARD_ICON = ":/gui-clipboard.png"
 WHOIS_ICON = ":/gui-whois.png"
 HISTORY_LENGTH_ICON = ":/gui-history_length.png"
 FORMAT_ICON = ":/gui-format.png"
-ERK_BIG_ICON = ":/gui-erk_button.png"
+
 ABOUT_ICON = ":/gui-about.png"
 DOCUMENT_ICON = ":/gui-document.png"
 LINK_ICON = ":/gui-link.png"

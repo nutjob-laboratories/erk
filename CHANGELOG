@@ -2,6 +2,9 @@ Version 0.850
 	* Changed the splash logo
 	* Added qt5reactor to the distribution
 	* Added qt5reactor to the credits in the "about" dialog
+	* Reworked the "about" dialog (using tabs now, "about" and "credits")
+	* Using a 200x200px image for the "erk button" image in the about dialog
+	* Added a new "Nutjob Laboratories" image to the about dialog
 
 Version 0.840
 	* Default alternate nickname now includes a random number

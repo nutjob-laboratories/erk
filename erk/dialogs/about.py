@@ -35,6 +35,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 import platform
+import twisted
 
 from ..resources import *
 from ..strings import *
@@ -49,16 +50,38 @@ class Dialog(QDialog):
 		self.setWindowTitle("About "+APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ABOUT_ICON))
 
+		BOLD_FONT = self.font()
+		BOLD_FONT.setBold(True)
+
+		self.tabs = QTabWidget()
+
+		self.tabs.setFont(BOLD_FONT)
+
+		self.tabs.setStyleSheet("""
+			QTabWidget::tab-bar { alignment: center; font: bold; }
+			""")
+
+		self.about_tab = QWidget()
+		self.tabs.addTab(self.about_tab, "About")
+
+		self.credits_tab = QWidget()
+		self.tabs.addTab(self.credits_tab, "Credits")
+
 		logo = QLabel()
 		pixmap = QPixmap(ERK_BIG_ICON)
 		logo.setPixmap(pixmap)
 		logo.setAlignment(Qt.AlignCenter)
 
-		line1 = QLabel("<big><b>"+APPLICATION_NAME+"</b></big>")
+		nutjob = QLabel()
+		pixmap = QPixmap(NUTJOB_LOGO)
+		nutjob.setPixmap(pixmap)
+		nutjob.setAlignment(Qt.AlignCenter)
+
+		line1 = QLabel("<big><b>"+APPLICATION_NAME+" Open Source IRC Client</b></big>")
 		line1.setAlignment(Qt.AlignCenter)
-		line2 = QLabel("<b>Open Source IRC Client</b>")
+		line2 = QLabel("<b>\"It's How You Say IRC\"</b>")
 		line2.setAlignment(Qt.AlignCenter)
-		line3 = QLabel("<small>Version "+APPLICATION_VERSION+"</small>")
+		line3 = QLabel("<b>Version "+APPLICATION_VERSION+"</b>")
 		line3.setAlignment(Qt.AlignCenter)
 		line4 = QLabel(f"<a href=\"{OFFICIAL_REPOSITORY}\"><small>Source Code Repository</small></a>")
 		line4.setAlignment(Qt.AlignCenter)
@@ -70,7 +93,7 @@ class Dialog(QDialog):
 		descriptionLayout.addWidget(line3)
 		descriptionLayout.addWidget(line4)
 
-		titleLayout = QHBoxLayout()
+		titleLayout = QVBoxLayout()
 		titleLayout.addWidget(logo)
 		titleLayout.addLayout(descriptionLayout)
 
@@ -109,18 +132,38 @@ class Dialog(QDialog):
 		ce_credit.setAlignment(Qt.AlignCenter)
 		ce_credit.setOpenExternalLinks(True)
 
-
-
-
 		qr_credit = QLabel(f"<a href=\"https://github.com/twisted/qt5reactor\"><small>qt5reactor</small></a> <small>by Twisted Matrix Labs</small>")
 		qr_credit.setAlignment(Qt.AlignCenter)
 		qr_credit.setOpenExternalLinks(True)
 
-
-
-
 		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</i></small>")
 		platform_credit.setAlignment(Qt.AlignCenter)
+
+		# QT_VERSION_STR
+
+		qtv_credit = QLabel(f"<small><i>Qt5, version " + str(QT_VERSION_STR) +"</i></small>")
+		qtv_credit.setAlignment(Qt.AlignCenter)
+
+		tv = str(twisted.version)
+		tv = tv.replace('[','',1)
+		tv = tv.replace(']','',1)
+		tv = tv.strip()
+
+		twv_credit = QLabel(f"<small><i>" + tv +"</i></small>")
+		twv_credit.setAlignment(Qt.AlignCenter)
+
+		pyv_credit = QLabel(f"<small><i>Python, version " + platform.python_version().strip() +"</i></small>")
+		pyv_credit.setAlignment(Qt.AlignCenter)
+
+		me_credit = QLabel(f"<small>Created and written by <a href=\"https://github.com/danhetrick\">Dan Hetrick</a></small>")
+		me_credit.setAlignment(Qt.AlignCenter)
+		me_credit.setOpenExternalLinks(True)
+
+		# https://bit.ly/erk-irc
+
+		bitly_credit = QLabel(f"<big><b><a href=\"https://bit.ly/erk-irc\">https://bit.ly/erk-irc</a></b></big>")
+		bitly_credit.setAlignment(Qt.AlignCenter)
+		bitly_credit.setOpenExternalLinks(True)
 
 		creditsBox = QGroupBox()
 		creditsBox.setAlignment(Qt.AlignHCenter)
@@ -138,12 +181,37 @@ class Dialog(QDialog):
 		okButton = QPushButton("Ok")
 		okButton.clicked.connect(self.close)
 
+		#self.about_tab = QWidget()
+		#self.credits_tab = QWidget()
+
+		aboutLayout = QVBoxLayout()
+		aboutLayout.addLayout(titleLayout)
+		aboutLayout.addWidget(tech_credit)
+		aboutLayout.addWidget(gnu_credit)
+		aboutLayout.addWidget(platform_credit)
+
+		self.about_tab.setLayout(aboutLayout)
+
+		credLayout = QVBoxLayout()
+		credLayout.addWidget(nutjob)
+		credLayout.addWidget(me_credit)
+		credLayout.addWidget(bitly_credit)
+		credLayout.addWidget(creditsBox)
+		credLayout.addWidget(pyv_credit)
+		credLayout.addWidget(qtv_credit)
+		credLayout.addWidget(twv_credit)
+
+		credLayout.addStretch()
+		
+		self.credits_tab.setLayout(credLayout)
+
 		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(titleLayout)
-		finalLayout.addWidget(tech_credit)
-		finalLayout.addWidget(gnu_credit)
-		finalLayout.addWidget(creditsBox)
-		finalLayout.addWidget(platform_credit)
+		# finalLayout.addLayout(titleLayout)
+		# finalLayout.addWidget(tech_credit)
+		# finalLayout.addWidget(gnu_credit)
+		# finalLayout.addWidget(creditsBox)
+		# finalLayout.addWidget(platform_credit)
+		finalLayout.addWidget(self.tabs)
 		finalLayout.addWidget(okButton)
 
 		self.setWindowFlags(self.windowFlags()
