@@ -104,11 +104,7 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
-To run properly on Linux, the latest version of all required software is recommended.  [qt5reactor](https://github.com/twisted/qt5reactor), a requirement for older versions of **Ərk**, is now bundled with the application. Installing the requirements is easy with [`apt-get`](https://en.wikipedia.org/wiki/APT_%28software%29):
-
-    sudo apt-get install python3-pyqt python3-twisted
-
-**Ərk** requires at least version 5.0 of PyQt.
+To run properly on Linux, the latest version of all required software is recommended.  [qt5reactor](https://github.com/twisted/qt5reactor), a requirement for older versions of **Ərk**, is now bundled with the application.
 
 # Install
 
