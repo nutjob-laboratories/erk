@@ -2,6 +2,7 @@ Version 0.850
 	* Changed the splash logo
 	* Added qt5reactor to the distribution
 	* Added qt5reactor to the credits in the "about" dialog
+	* Erk now works with the "stock" PyQt5 and Twisted versions in the Mint/Debian Stable repos
 
 Version 0.840
 	* Default alternate nickname now includes a random number
