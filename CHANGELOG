@@ -5,6 +5,8 @@ Version 0.850
 	* Reworked the "about" dialog (using tabs now, "about" and "credits")
 	* Using a 200x200px image for the "erk button" image in the about dialog
 	* Added a new "Nutjob Laboratories" image to the about dialog
+	* Log file names now make the server/hostname all lowercase (so that servers with mis-cased network names are treated the same)
+	* Export log dialog now makes the network named all uppercase
 
 Version 0.840
 	* Default alternate nickname now includes a random number

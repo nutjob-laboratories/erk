@@ -547,6 +547,7 @@ def trimLog(ilog,maxsize):
 
 def encodeLogName(network,name=None):
 	network = network.replace(":","-")
+	network = network.lower()
 	if name==None:
 		return f"{network}.json"
 	else:

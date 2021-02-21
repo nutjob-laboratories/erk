@@ -140,6 +140,8 @@ class Dialog(QDialog):
 						netname = p[0]
 						channel = p[1]
 
+						netname = netname.upper()
+
 						item = QListWidgetItem(channel+" ("+netname+")")
 						item.file = log
 						self.packlist.addItem(item)
