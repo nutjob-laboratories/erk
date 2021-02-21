@@ -94,7 +94,7 @@ class Dialog(QDialog):
 		self.setWindowTitle("Export plugin")
 		self.setWindowIcon(QIcon(ARCHIVE_ICON))
 
-		self.title = QLabel("Select a plugin to export")
+		self.title = QLabel("<center><b>Select a plugin to export</b></center>")
 
 		self.packlist = QListWidget(self)
 		self.packlist.setMaximumHeight(100)
