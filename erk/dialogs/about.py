@@ -83,7 +83,7 @@ class Dialog(QDialog):
 		line2.setAlignment(Qt.AlignCenter)
 		line3 = QLabel("<b>Version "+APPLICATION_VERSION+"</b>")
 		line3.setAlignment(Qt.AlignCenter)
-		line4 = QLabel(f"<a href=\"{OFFICIAL_REPOSITORY}\"><small>Source Code Repository</small></a>")
+		line4 = QLabel(f"<big><b><a href=\"https://bit.ly/erk-irc\">https://bit.ly/erk-irc</a></b></big>")
 		line4.setAlignment(Qt.AlignCenter)
 		line4.setOpenExternalLinks(True)
 
@@ -161,7 +161,7 @@ class Dialog(QDialog):
 
 		# https://bit.ly/erk-irc
 
-		bitly_credit = QLabel(f"<big><b><a href=\"https://bit.ly/erk-irc\">https://bit.ly/erk-irc</a></b></big>")
+		bitly_credit = QLabel(f"<a href=\"{OFFICIAL_REPOSITORY}\"><small>Source Code Repository</small></a>")
 		bitly_credit.setAlignment(Qt.AlignCenter)
 		bitly_credit.setOpenExternalLinks(True)
 
