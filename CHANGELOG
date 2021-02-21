@@ -8,6 +8,9 @@ Version 0.850
 	* Log file names now make the server/hostname all lowercase (so that servers with mis-cased network names are treated the same)
 	* Export log dialog now makes the network named all uppercase
 	* Style file names now make the server/hostname all lowercase
+	* Package export dialog now shows the package name rather than just the directory name
+	* Package export dialog now shows the package icon (if it exists)
+	* Changed the package export dialog text to "export plugin" from "export package"
 
 Version 0.840
 	* Default alternate nickname now includes a random number

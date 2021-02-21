@@ -42,6 +42,22 @@ from ..resources import *
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 
+def get_package_name(pack):
+	pname = os.path.join(pack, "package.txt")
+	if os.path.isfile(pname):
+		f=open(pname, "r")
+		package_name = f.read()
+		f.close()
+		return package_name
+	return None
+
+def get_package_icon(pack):
+	pname = os.path.join(pack, "package.png")
+	if os.path.isfile(pname):
+		return pname
+	return None
+
+
 class Dialog(QDialog):
 
 	@staticmethod
@@ -75,10 +91,10 @@ class Dialog(QDialog):
 
 		self.parent = parent
 
-		self.setWindowTitle("Export package")
+		self.setWindowTitle("Export plugin")
 		self.setWindowIcon(QIcon(ARCHIVE_ICON))
 
-		self.title = QLabel("Select a package to export")
+		self.title = QLabel("Select a plugin to export")
 
 		self.packlist = QListWidget(self)
 		self.packlist.setMaximumHeight(100)
@@ -88,6 +104,12 @@ class Dialog(QDialog):
 			pack = os.path.join(PLUGIN_DIRECTORY, x)
 			if os.path.isdir(pack):
 
+				pack_name = get_package_name(pack)
+				if pack_name==None: pack_name = x
+
+				pack_icon = get_package_icon(pack)
+				if pack_icon==None: pack_icon = PACKAGE_ICON
+
 				has_parent_gui = False
 				if hasattr(self.parent,"gui"):
 					if hasattr(self.parent.gui,"plugins"):
@@ -95,17 +117,19 @@ class Dialog(QDialog):
 
 				if has_parent_gui:
 					if x in self.parent.gui.plugins.failed_load:
-						item = QListWidgetItem(x+" (Error loading)")
+						item = QListWidgetItem(pack_name+" (Error loading)")
 						item.setIcon(QIcon(ERROR_ICON))
 					else:
-						item = QListWidgetItem(x)
-						item.setIcon(QIcon(PACKAGE_ICON))
+						item = QListWidgetItem(pack_name)
+						# item.setIcon(QIcon(PACKAGE_ICON))
+						item.setIcon(QIcon(pack_icon))
 					item.file = pack
 					self.packlist.addItem(item)
 				else:
-					item = QListWidgetItem(x)
+					item = QListWidgetItem(pack_name)
 					item.file = pack
-					item.setIcon(QIcon(PACKAGE_ICON))
+					# item.setIcon(QIcon(PACKAGE_ICON))
+					item.setIcon(QIcon(pack_icon))
 					self.packlist.addItem(item)
 
 
