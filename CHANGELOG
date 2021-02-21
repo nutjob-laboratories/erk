@@ -7,6 +7,7 @@ Version 0.850
 	* Added a new "Nutjob Laboratories" image to the about dialog
 	* Log file names now make the server/hostname all lowercase (so that servers with mis-cased network names are treated the same)
 	* Export log dialog now makes the network named all uppercase
+	* Style file names now make the server/hostname all lowercase
 
 Version 0.840
 	* Default alternate nickname now includes a random number
