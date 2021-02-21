@@ -11,6 +11,8 @@ Version 0.850
 	* Package export dialog now shows the package name rather than just the directory name
 	* Package export dialog now shows the package icon (if it exists)
 	* Changed the package export dialog text to "export plugin" from "export package"
+	* Package export dialog can now show single (not in a package) plugins
+	* Package exporting can now handle single plugin files (that is, files not in a package)
 
 Version 0.840
 	* Default alternate nickname now includes a random number

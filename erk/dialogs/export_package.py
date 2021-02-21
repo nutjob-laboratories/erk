@@ -121,15 +121,29 @@ class Dialog(QDialog):
 						item.setIcon(QIcon(ERROR_ICON))
 					else:
 						item = QListWidgetItem(pack_name)
-						# item.setIcon(QIcon(PACKAGE_ICON))
 						item.setIcon(QIcon(pack_icon))
 					item.file = pack
 					self.packlist.addItem(item)
 				else:
 					item = QListWidgetItem(pack_name)
 					item.file = pack
-					# item.setIcon(QIcon(PACKAGE_ICON))
 					item.setIcon(QIcon(pack_icon))
+					self.packlist.addItem(item)
+
+			elif os.path.isfile(pack):
+				if has_parent_gui:
+					if x in self.parent.gui.plugins.failed_load:
+						item = QListWidgetItem(pack_name+" (Error loading)")
+						item.setIcon(QIcon(ERROR_ICON))
+					else:
+						item = QListWidgetItem(x)
+						item.setIcon(QIcon(PLUGIN_ICON))
+					item.file = pack
+					self.packlist.addItem(item)
+				else:
+					item = QListWidgetItem(x)
+					item.file = pack
+					item.setIcon(QIcon(PLUGIN_ICON))
 					self.packlist.addItem(item)
 
 

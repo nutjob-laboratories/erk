@@ -440,8 +440,18 @@ class Window(QMainWindow):
 		x = Export(self)
 		info = x.get_name_information(self)
 
-		# print(info)
-		# return
+		if info:
+			if os.path.isfile(info):
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+				if fileName:
+					efl = len("zip")+1
+					if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
+					zf = zipfile.ZipFile(fileName, "w")
+					zf.write(info,os.path.basename(info))
+					zf.close()
+				return
 
 		if info:
 			options = QFileDialog.Options()
