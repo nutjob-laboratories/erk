@@ -14,6 +14,7 @@ Version 0.850
 	* Package export dialog can now show single (not in a package) plugins
 	* Package exporting can now handle single plugin files (that is, files not in a package)
 	* Cleaned up the export log dialog
+	* Menubar on the style editor now matches the menubar on the connection dialog in appearance
 
 Version 0.840
 	* Default alternate nickname now includes a random number

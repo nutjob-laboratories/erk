@@ -697,10 +697,6 @@ class Dialog(QDialog):
 
 		if self.network!=None:
 			self.buttonApplySave.setText("Apply")
-		
-
-		# self.buttonSaveAs = QPushButton("Save style as...")
-		# self.buttonSaveAs.clicked.connect(self.doSaveAs)
 
 		self.buttonDefault = QPushButton("Load stock style settings")
 		self.buttonDefault.clicked.connect(self.doDefaults)
@@ -709,8 +705,6 @@ class Dialog(QDialog):
 		self.buttonCancel.clicked.connect(self.close)
 		self.buttonCancel.setDefault(True)  
 
-		# self.buttonLoad = QPushButton("Open style")
-		# self.buttonLoad.clicked.connect(self.loadStyle)
 
 		self.menubar = QMenuBar(self)
 		fileMenu = self.menubar.addMenu ("File")
@@ -721,15 +715,12 @@ class Dialog(QDialog):
 		entry = MenuAction(self,SAVEASFILE_ICON,"Save as...","Save to a style file",25,self.doSaveAs)
 		fileMenu.addAction(entry)
 
-		# entry = MenuAction(self,DOCUMENT_ICON,"Restore","Load base style",25,self.doDefaults)
-		# fileMenu.addAction(entry)
+		self.menubar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")
 
-		# fileMenu.addSeparator()
+		BOLD_FONT = self.font()
+		BOLD_FONT.setBold(True)
 
-		# entry = QAction(QIcon(EXIT_ICON),"Exit",self)
-		# entry.triggered.connect(self.close)
-		# fileMenu.addAction(entry)
-
+		self.menubar.setFont(BOLD_FONT)
 
 
 		topButtons = QHBoxLayout()
