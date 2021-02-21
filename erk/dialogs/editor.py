@@ -267,6 +267,11 @@ class Window(QMainWindow):
 
 	def doFind(self):
 
+		if self.editor.textCursor().hasSelection():
+			text = self.editor.textCursor().selectedText()
+		else:
+			text = None
+
 		if self.findWindow != None:
 			ftext = self.findWindow.find.text()
 			winpos = self.findWindow.pos()
@@ -291,10 +296,17 @@ class Window(QMainWindow):
 		if icount:
 			self.findWindow.icount.setText(icount)
 
+		if text: self.findWindow.find.setText(text)
+
 		self.findWindow.show()
 		return
 
 	def doFindReplace(self):
+
+		if self.editor.textCursor().hasSelection():
+			text = self.editor.textCursor().selectedText()
+		else:
+			text = None
 
 		if self.findWindow != None:
 			ftext = self.findWindow.find.text()
@@ -320,6 +332,7 @@ class Window(QMainWindow):
 		if icount:
 			self.findWindow.icount.setText(icount)
 
+		if text: self.findWindow.find.setText(text)
 
 		self.findWindow.show()
 		return
