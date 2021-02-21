@@ -83,6 +83,24 @@ LIGHT_E_SEPARATOR = f'''
 	</tbody>
 </table>'''
 
+PLAIN_TEXT = f'''
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+	<tbody>
+		<tr>
+			<td>&nbsp;&nbsp;!TEXT!&nbsp;&nbsp;</td>
+		</tr>
+	</tbody>
+</table>'''
+
+def plainTextAction(self,text):
+		
+	# tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
+	tsLabel = QLabel( PLAIN_TEXT.replace("!TEXT!",text) )
+	tsAction = QWidgetAction(self)
+	tsAction.setDefaultWidget(tsLabel)
+
+	return tsAction
+
 def insertNoTextSeparator(self,menu):
 
 	if self.is_light_colored:

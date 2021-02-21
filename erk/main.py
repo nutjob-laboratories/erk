@@ -1710,100 +1710,87 @@ def buildServerSettingsMenu(self,client):
 	optionsMenu = QMenu("Server settings")
 	#optionsMenu.setStyleSheet(self.style["all"])
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channels"+f":</b> {maxchannels}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = textSeparator(self,"Limits")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum nickname length"+f":</b> {maxnicklen}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum channels"+f":</b> {maxchannels}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum channel length"+f":</b> {channellen}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum nickname length"+f":</b> {maxnicklen}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum topic length"+f":</b> {topiclen}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum channel length"+f":</b> {channellen}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum kick length"+f":</b> {kicklen}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum topic length"+f":</b> {topiclen}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum away length"+f":</b> {awaylen}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum kick length"+f":</b> {kicklen}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum message targets"+f":</b> {maxtargets}&nbsp;&nbsp;",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum away length"+f":</b> {awaylen}")
 	optionsMenu.addAction(e)
 
-	el = QLabel(f"&nbsp;&nbsp;<b>"+"Maximum modes per user"+f":</b> {modes}",self)
-	e = QWidgetAction(self)
-	e.setDefaultWidget(el)
+	e = plainTextAction(self,"<b>Maximum message targets"+f":</b> {maxtargets}")
 	optionsMenu.addAction(e)
 
-	optionsMenu.addSeparator()
-	#insertNoTextSeparator(self,optionsMenu)
+	e = plainTextAction(self,"<b>Maximum modes per user"+f":</b> {modes}")
+	optionsMenu.addAction(e)
 
-	maxmodesmenu = QMenu("Maximum modes",self)
-	#maxmodesmenu.setStyleSheet(self.style["all"])
-	for c in maxmodes:
-		e = QAction(F"{c[0]}: {c[1]}", self) 
-		maxmodesmenu.addAction(e)
-	optionsMenu.addMenu(maxmodesmenu)
+	e = textSeparator(self,"Miscellaneous")
+	optionsMenu.addAction(e)
 
-	cmdmenu = QMenu("Commands",self)
-	#cmdmenu.setStyleSheet(self.style["all"])
-	for c in cmds:
-		e = QAction(F"{c}", self) 
-		cmdmenu.addAction(e)
-	optionsMenu.addMenu(cmdmenu)
+	if len(maxmodes)>0:
+		maxmodesmenu = QMenu("Maximum modes",self)
+		for c in maxmodes:
+			e = QAction(F"{c[0]}: {c[1]}", self) 
+			maxmodesmenu.addAction(e)
+		optionsMenu.addMenu(maxmodesmenu)
 
-	supportsmenu = QMenu("Supports",self)
-	#supportsmenu.setStyleSheet(self.style["all"])
-	for c in supports:
-		e = QAction(F"{c}", self) 
-		supportsmenu.addAction(e)
-	optionsMenu.addMenu(supportsmenu)
+	if len(cmds)>0:
+		cmdmenu = QMenu("Commands",self)
+		for c in cmds:
+			e = QAction(F"{c}", self) 
+			cmdmenu.addAction(e)
+		optionsMenu.addMenu(cmdmenu)
 
-	chanmodemenu = QMenu("Channel modes",self)
-	#chanmodemenu.setStyleSheet(self.style["all"])
-	ct = 0
-	for c in chanmodes:
-		if ct==0:
-			ctype = "A"
-		elif ct==1:
-			ctype = "B"
-		elif ct==2:
-			ctype = "C"
-		elif ct==3:
-			ctype = "D"
-		e = QAction(F"{ctype}: {c}", self) 
-		chanmodemenu.addAction(e)
-		ct = ct + 1
-	optionsMenu.addMenu(chanmodemenu)
+	if len(supports)>0:
+		supportsmenu = QMenu("Supports",self)
+		for c in supports:
+			e = QAction(F"{c}", self) 
+			supportsmenu.addAction(e)
+		optionsMenu.addMenu(supportsmenu)
 
-	prefixmenu = QMenu("Status prefixes",self)
-	#prefixmenu.setStyleSheet(self.style["all"])
-	for c in prefix:
-		m = c[0]
-		s = c[1]
-		if s=="&": s="&&"
-		e = QAction(F"{m}: {s}", self)
-		if m=="o": e.setIcon(QIcon(USERLIST_OPERATOR_ICON))
-		if m=="v": e.setIcon(QIcon(USERLIST_VOICED_ICON))
-		if m=="a": e.setIcon(QIcon(USERLIST_ADMIN_ICON))
-		if m=="q": e.setIcon(QIcon(USERLIST_OWNER_ICON))
-		if m=="h": e.setIcon(QIcon(USERLIST_HALFOP_ICON))
-		prefixmenu.addAction(e)
-	optionsMenu.addMenu(prefixmenu)
+	if len(chanmodes)>0:
+		chanmodemenu = QMenu("Channel modes",self)
+		ct = 0
+		for c in chanmodes:
+			if ct==0:
+				ctype = "A"
+			elif ct==1:
+				ctype = "B"
+			elif ct==2:
+				ctype = "C"
+			elif ct==3:
+				ctype = "D"
+			e = QAction(F"{ctype}: {c}", self) 
+			chanmodemenu.addAction(e)
+			ct = ct + 1
+		optionsMenu.addMenu(chanmodemenu)
+
+	if len(prefix)>0:
+		prefixmenu = QMenu("Status prefixes",self)
+		for c in prefix:
+			m = c[0]
+			s = c[1]
+			if s=="&": s="&&"
+			e = QAction(F"{m}: {s}", self)
+			if m=="o": e.setIcon(QIcon(USERLIST_OPERATOR_ICON))
+			if m=="v": e.setIcon(QIcon(USERLIST_VOICED_ICON))
+			if m=="a": e.setIcon(QIcon(USERLIST_ADMIN_ICON))
+			if m=="q": e.setIcon(QIcon(USERLIST_OWNER_ICON))
+			if m=="h": e.setIcon(QIcon(USERLIST_HALFOP_ICON))
+			prefixmenu.addAction(e)
+		optionsMenu.addMenu(prefixmenu)
 
 	return optionsMenu
