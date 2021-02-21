@@ -70,54 +70,12 @@ class Dialog(QDialog):
 
 		return retval
 
-	def clickText(self,state):
-
-		if state == Qt.Checked:
-			self.do_json = False
-			self.json.setChecked(False)
-			self.type.setEnabled(True)
-			self.typeLabel.setEnabled(True)
-			self.line.setEnabled(True)
-			self.lineLabel.setEnabled(True)
-		else:
-			self.do_json = True
-			self.json.setChecked(True)
-			self.type.setEnabled(False)
-			self.typeLabel.setEnabled(False)
-			self.line.setEnabled(False)
-			self.lineLabel.setEnabled(False)
 
 	def clickTime(self,state):
 		if state == Qt.Checked:
 			self.epoch = True
 		else:
 			self.epoch = False
-
-	def clickJson(self,state):
-		if state == Qt.Checked:
-			self.do_json = True
-			self.dotext.setChecked(False)
-			# self.line.setEnabled(False)
-			# self.type.setEnabled(False)
-			# self.lineLabel.setEnabled(False)
-			# self.typeLabel.setEnabled(False)
-			# self.formatBox.setVisible(False)
-			self.type.setEnabled(False)
-			self.typeLabel.setEnabled(False)
-			self.line.setEnabled(False)
-			self.lineLabel.setEnabled(False)
-		else:
-			self.do_json = False
-			self.dotext.setChecked(True)
-			# self.line.setEnabled(True)
-			# self.type.setEnabled(True)
-			# self.lineLabel.setEnabled(True)
-			# self.typeLabel.setEnabled(True)
-			# self.formatBox.setVisible(True)
-			self.type.setEnabled(True)
-			self.typeLabel.setEnabled(True)
-			self.line.setEnabled(True)
-			self.lineLabel.setEnabled(True)
 
 	def setLine(self):
 
@@ -200,11 +158,6 @@ class Dialog(QDialog):
 		self.lineLabel = QLabel("<b>Entry Delimiter</b>")
 		delimLayout.addRow(self.lineLabel, self.line)
 
-		self.type.setEnabled(False)
-		self.typeLabel.setEnabled(False)
-		self.line.setEnabled(False)
-		self.lineLabel.setEnabled(False)
-
 		# Buttons
 		buttons = QDialogButtonBox(self)
 		buttons.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
@@ -218,43 +171,6 @@ class Dialog(QDialog):
 		titleLayout.addWidget(self.title)
 		titleLayout.addStretch()
 
-		# self.formatBox = QGroupBox("Export as text")
-		# self.formatBox.setAlignment(Qt.AlignHCenter)
-		# self.formatBox.setLayout(delimLayout)
-
-		# f = self.formatBox.font()
-		# f.setBold(True)
-		# self.formatBox.setFont(f)
-
-		#self.formatBox.setVisible(False)
-
-		self.json = QCheckBox("Export as JSON ",self)
-		#self.json.stateChanged.connect(self.clickJson)
-		self.json.toggle()
-
-		f = self.json.font()
-		f.setBold(True)
-		self.json.setFont(f)
-
-		self.json.setLayoutDirection(Qt.RightToLeft)
-
-
-
-		self.dotext = QCheckBox("Export as text ",self)
-		self.dotext.stateChanged.connect(self.clickText)
-		self.json.stateChanged.connect(self.clickJson)
-		self.dotext.toggle()
-
-		self.dotext.setChecked(False)
-
-		f = self.json.font()
-		f.setBold(True)
-		self.dotext.setFont(f)
-
-		self.dotext.setLayoutDirection(Qt.RightToLeft)
-
-
-
 		self.time = QCheckBox("Epoch format for date/time ",self)
 		self.time.stateChanged.connect(self.clickTime)
 		self.time.toggle()
@@ -265,14 +181,42 @@ class Dialog(QDialog):
 
 		self.time.setLayoutDirection(Qt.RightToLeft)
 
+		self.menubar = QMenuBar(self)
+		BOLD_FONT = self.font()
+		BOLD_FONT.setBold(True)
+		self.menubar.setFont(BOLD_FONT)
+		self.menubar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")
+
+
+		fileMenu = self.menubar.addMenu ("Export As...")
+
+		self.menuJson = QAction(QIcon(RCHECKED_ICON),"JSON",self)
+		self.menuJson.triggered.connect(lambda state,s="json": self.toggleSetting(s))
+		fileMenu.addAction(self.menuJson)
+
+		self.menuText = QAction(QIcon(RUNCHECKED_ICON),"Text",self)
+		self.menuText.triggered.connect(lambda state,s="text": self.toggleSetting(s))
+		fileMenu.addAction(self.menuText)
+
+		self.format = QLabel("JSON file")
+		self.format.setFont(BOLD_FONT)
+
+		self.type.setVisible(False)
+		self.typeLabel.setVisible(False)
+		self.line.setVisible(False)
+		self.lineLabel.setVisible(False)
+
+		formatLayout = QHBoxLayout()
+		formatLayout.addWidget(self.menubar)
+		formatLayout.addWidget(self.format)
+
 		finalLayout = QVBoxLayout()
+		
 		finalLayout.addLayout(titleLayout)
 		finalLayout.addWidget(self.packlist)
-		finalLayout.addWidget(self.time)
-		finalLayout.addWidget(self.json)
-		finalLayout.addWidget(self.dotext)
-		# finalLayout.addWidget(self.formatBox)
+		finalLayout.addLayout(formatLayout)
 		finalLayout.addLayout(delimLayout)
+		finalLayout.addWidget(self.time)
 		
 		finalLayout.addWidget(buttons)
 
@@ -280,3 +224,27 @@ class Dialog(QDialog):
                     ^ QtCore.Qt.WindowContextHelpButtonHint)
 
 		self.setLayout(finalLayout)
+
+	def toggleSetting(self,setting):
+
+		if setting=='json':
+			self.menuJson.setIcon(QIcon(RCHECKED_ICON))
+			self.menuText.setIcon(QIcon(RUNCHECKED_ICON))
+			self.do_json = True
+			self.type.setVisible(False)
+			self.typeLabel.setVisible(False)
+			self.line.setVisible(False)
+			self.lineLabel.setVisible(False)
+			self.format.setText("JSON file")
+			return
+
+		if setting=='text':
+			self.menuJson.setIcon(QIcon(RUNCHECKED_ICON))
+			self.menuText.setIcon(QIcon(RCHECKED_ICON))
+			self.do_json = False
+			self.type.setVisible(True)
+			self.typeLabel.setVisible(True)
+			self.line.setVisible(True)
+			self.lineLabel.setVisible(True)
+			self.format.setText("ASCII text file")
+			return
