@@ -79,7 +79,10 @@ class Dialog(QDialog):
 		self.parent = parent
 		self.title = title
 
-		self.setWindowTitle("Plugin information")
+		if title=="Insert":
+			self.setWindowTitle("Insert template")
+		else:
+			self.setWindowTitle("Create package")
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		nameLayout = QHBoxLayout()
