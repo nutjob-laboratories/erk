@@ -133,7 +133,7 @@ class Erk(QMainWindow):
 			if num_servers>0:
 
 				msgBox = QMessageBox()
-				msgBox.setIcon(QMessageBox.Warning)
+				msgBox.setIconPixmap(QPixmap(ERK_ICON))
 				msgBox.setWindowIcon(QIcon(ERK_ICON))
 				if num_servers==1:
 					msgBox.setText("Are you sure you want to quit?")

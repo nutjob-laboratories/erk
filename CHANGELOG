@@ -21,6 +21,7 @@ Version 0.850
 	* Bugfix: plugin and template generator didn't always escape quotes properly
 	* Reformatted the plugin/template generator dialog
 	* Added new entries for author, version, and website to the plugin/template generator dialog
+	* Exit messagebox now features the "Erk" icon rather than the generic "warning" icon
 
 Version 0.840
 	* Default alternate nickname now includes a random number
