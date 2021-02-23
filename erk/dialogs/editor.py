@@ -394,13 +394,7 @@ class Window(QMainWindow):
 				safe_name=safe_name.replace(c,"")
 			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
 
-			# Escape double quotes in non-safe name
-			#info[0] = info[0].replace('"','\\"')
-
-			# Escape double quotes in description
-			#info[1] = info[1].replace('"','\\"')
-
-			t = self.build_plugin_from_template(safe_name,info[0],info[1])
+			t = self.build_plugin_from_template(safe_name,info[0],info[1],info[2],info[3],info[4])
 			self.editor.insertPlainText(t)
 
 	def newPackage(self):
@@ -421,9 +415,6 @@ class Window(QMainWindow):
 				shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
 				shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
 
-				# Escape double quotes in non-safe name
-				#info[0] = info[0].replace('"','\\"')
-
 				f = open(os.path.join(outdir, "package.txt"),"w")
 				f.write(info[0])
 				f.close()
@@ -433,10 +424,7 @@ class Window(QMainWindow):
 				self.package_icon.show()
 				self.status_package.show()
 
-				# Escape double quotes in description
-				#info[1] = info[1].replace('"','\\"')
-
-				t = self.build_plugin_from_template(safe_name,info[0],info[1],None,None,None,False)
+				t = self.build_plugin_from_template(safe_name,info[0],info[1],info[2],info[3],info[4],False)
 				t = "from erk import *\n\n"+ t
 
 				f = open(os.path.join(outdir, "plugin.py"),"w")

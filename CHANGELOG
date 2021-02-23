@@ -19,6 +19,8 @@ Version 0.850
 	* Using the Ctrl+F or Ctrl+R hotkeys in the plugin editor will now pass any highlighted words to find/find & replace dialog
 	* Cleaned up the server settings menu
 	* Bugfix: plugin and template generator didn't always escape quotes properly
+	* Reformatted the plugin/template generator dialog
+	* Added new entries for author, version, and website to the plugin/template generator dialog
 
 Version 0.840
 	* Default alternate nickname now includes a random number

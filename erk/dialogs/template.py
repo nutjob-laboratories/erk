@@ -69,7 +69,16 @@ class Dialog(QDialog):
 			msg.exec_()
 			return None
 
-		retval = [self.name.text(),self.description.text()]
+		author = self.author.text()
+		if len(author.strip())==0: author = None
+
+		version = self.version.text()
+		if len(version.strip())==0: version = None
+
+		website = self.website.text()
+		if len(website.strip())==0: website = None
+
+		retval = [self.name.text(),self.description.text(),author,version,website]
 
 		return retval
 
@@ -85,19 +94,49 @@ class Dialog(QDialog):
 			self.setWindowTitle("Create package")
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
-		nameLayout = QHBoxLayout()
-		self.nameLabel = QLabel("Name")
-		self.name = QLineEdit()
-		nameLayout.addWidget(self.nameLabel)
-		nameLayout.addStretch()
-		nameLayout.addWidget(self.name)
+		fm = QFontMetrics(self.font())
+		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-		descriptionLayout = QHBoxLayout()
-		self.descriptionLabel = QLabel("Description")
+		BOLD_FONT = self.font()
+		BOLD_FONT.setBold(True)
+
+		self.name = QLineEdit()
 		self.description = QLineEdit()
-		descriptionLayout.addWidget(self.descriptionLabel)
-		descriptionLayout.addStretch()
-		descriptionLayout.addWidget(self.description)
+
+		self.name.setPlaceholderText("Required")
+		self.description.setPlaceholderText("Required")
+
+		self.name.setMinimumWidth(wwidth)
+
+		self.author = QLineEdit()
+		self.version = QLineEdit()
+		self.website = QLineEdit()
+
+		self.author.setPlaceholderText("Optional")
+		self.version.setPlaceholderText("Optional")
+		self.website.setPlaceholderText("http://optional.com")
+
+		n1 = QLabel("Name")
+		n1.setFont(BOLD_FONT)
+
+		n2 = QLabel("Description")
+		n2.setFont(BOLD_FONT)
+
+		n3 = QLabel("Author")
+		n3.setFont(BOLD_FONT)
+
+		n4 = QLabel("Version")
+		n4.setFont(BOLD_FONT)
+
+		n5 = QLabel("Website")
+		n5.setFont(BOLD_FONT)
+
+		infoLayout = QFormLayout()
+		infoLayout.addRow(n1, self.name)
+		infoLayout.addRow(n2, self.description)
+		infoLayout.addRow(n3, self.author)
+		infoLayout.addRow(n4, self.version)
+		infoLayout.addRow(n5, self.website)
 
 		# Buttons
 		buttons = QDialogButtonBox(self)
@@ -108,8 +147,8 @@ class Dialog(QDialog):
 		buttons.button(QDialogButtonBox.Ok).setText(self.title)
 
 		finalLayout = QVBoxLayout()
-		finalLayout.addLayout(nameLayout)
-		finalLayout.addLayout(descriptionLayout)
+		finalLayout.addLayout(infoLayout)
+		#finalLayout.addLayout(descriptionLayout)
 		finalLayout.addWidget(buttons)
 
 		self.setWindowFlags(self.windowFlags()
