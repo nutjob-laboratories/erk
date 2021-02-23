@@ -18,6 +18,7 @@ Version 0.850
 	* Cleaned up the export log dialog some more...with feeling this time :-)
 	* Using the Ctrl+F or Ctrl+R hotkeys in the plugin editor will now pass any highlighted words to find/find & replace dialog
 	* Cleaned up the server settings menu
+	* Bugfix: plugin and template generator didn't always escape quotes properly
 
 Version 0.840
 	* Default alternate nickname now includes a random number

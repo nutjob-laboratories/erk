@@ -4,9 +4,9 @@ class !_PLUGIN_NAME_!(Plugin):
 !_INDENT_!!_INDENT_!self.name = "!_PLUGIN_FULL_NAME_!"
 !_INDENT_!!_INDENT_!self.description = "!_PLUGIN_DESCRIPTION_!"
 !_INDENT_!!_INDENT_!
-!_INDENT_!!_INDENT_!self.author = None
-!_INDENT_!!_INDENT_!self.version = None
-!_INDENT_!!_INDENT_!self.website = None
+!_INDENT_!!_INDENT_!self.author = !_PLUGIN_AUTHOR_!
+!_INDENT_!!_INDENT_!self.version = !_PLUGIN_VERSION_!
+!_INDENT_!!_INDENT_!self.website = !_PLUGIN_WEBSITE_!
 !_INDENT_!!_INDENT_!self.source = None
 
 !_INDENT_!def received(self,client,line):

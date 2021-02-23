@@ -337,18 +337,40 @@ class Window(QMainWindow):
 		self.findWindow.show()
 		return
 
-	def build_plugin_from_template(self,name,fullname,description,do_check=True):
+	def build_plugin_from_template(self,name,fullname,description,author=None,version=None,website=None,do_check=True):
 
 		if self.indentspace:
 			i = ' '*self.tabsize
 		else:
 			i = "\t"
 
+		# Escape double quotes in non-safe name
+		fullname = fullname.replace('"','\\"')
+		description = description.replace('"','\\"')
+
 		out = PLUGIN_TEMPLATE
 		out = out.replace('!_INDENT_!',i)
 		out = out.replace('!_PLUGIN_NAME_!',name)
 		out = out.replace('!_PLUGIN_FULL_NAME_!',fullname)
 		out = out.replace('!_PLUGIN_DESCRIPTION_!',description)
+
+		if author==None:
+			out = out.replace('!_PLUGIN_AUTHOR_!',"None")
+		else:
+			author = author.replace('"','\\"')
+			out = out.replace('!_PLUGIN_AUTHOR_!',"\""+author+"\"")
+
+		if version==None:
+			out = out.replace('!_PLUGIN_VERSION_!',"None")
+		else:
+			version = version.replace('"','\\"')
+			out = out.replace('!_PLUGIN_VERSION_!',"\""+version+"\"")
+
+		if website==None:
+			out = out.replace('!_PLUGIN_WEBSITE_!',"None")
+		else:
+			website = website.replace('"','\\"')
+			out = out.replace('!_PLUGIN_WEBSITE_!',"\""+website+"\"")
 
 		if do_check:
 			if 'from erk import *' in self.editor.toPlainText():
@@ -373,10 +395,10 @@ class Window(QMainWindow):
 			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
 
 			# Escape double quotes in non-safe name
-			info[0] = info[0].replace('"','\\"')
+			#info[0] = info[0].replace('"','\\"')
 
 			# Escape double quotes in description
-			info[1] = info[1].replace('"','\\"')
+			#info[1] = info[1].replace('"','\\"')
 
 			t = self.build_plugin_from_template(safe_name,info[0],info[1])
 			self.editor.insertPlainText(t)
@@ -400,7 +422,7 @@ class Window(QMainWindow):
 				shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
 
 				# Escape double quotes in non-safe name
-				info[0] = info[0].replace('"','\\"')
+				#info[0] = info[0].replace('"','\\"')
 
 				f = open(os.path.join(outdir, "package.txt"),"w")
 				f.write(info[0])
@@ -412,9 +434,9 @@ class Window(QMainWindow):
 				self.status_package.show()
 
 				# Escape double quotes in description
-				info[1] = info[1].replace('"','\\"')
+				#info[1] = info[1].replace('"','\\"')
 
-				t = self.build_plugin_from_template(safe_name,info[0],info[1],False)
+				t = self.build_plugin_from_template(safe_name,info[0],info[1],None,None,None,False)
 				t = "from erk import *\n\n"+ t
 
 				f = open(os.path.join(outdir, "plugin.py"),"w")
