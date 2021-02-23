@@ -412,8 +412,19 @@ class Window(QMainWindow):
 
 			if not os.path.exists(outdir):
 				os.mkdir(outdir)
-				shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
-				shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
+
+				# shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
+				# shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
+
+				if info[5]==None:
+					shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
+				else:
+					shutil.copy(info[5], os.path.join(outdir, "package.png"))
+
+				if info[6]==None:
+					shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
+				else:
+					shutil.copy(info[6], os.path.join(outdir, "plugin.png"))
 
 				f = open(os.path.join(outdir, "package.txt"),"w")
 				f.write(info[0])
