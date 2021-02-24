@@ -27,6 +27,7 @@ Version 0.850
 	* The "create package" dialog can now set a name for the package that is different from the plugin
 	* The "create package" dialog's icon display has been cleaned up a bit
 	* Added a message box to see if the user is sure they want to uninstall a plugin
+	* Created clear markers for required and optional information in the "create package" and "insert template" dialogs
 
 Version 0.840
 	* Default alternate nickname now includes a random number

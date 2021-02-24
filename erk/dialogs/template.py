@@ -38,6 +38,7 @@ import sys,os
 
 from ..resources import *
 from ..strings import *
+from ..widgets.action import textSeparatorLabel
 
 INSTALL_DIRECTORY = sys.path[0]
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -118,6 +119,17 @@ class Dialog(QDialog):
 		self.selectedPackageIcon = None
 		self.selectedPluginIcon = None
 
+		# Determine if window color is dark or light
+		mbcolor = self.palette().color(QPalette.Window).name()
+		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+		luma = luma*100
+
+		if luma>=40:
+			self.is_light_colored = True
+		else:
+			self.is_light_colored = False
+
 		if title=="Insert":
 			self.setWindowTitle("Insert template")
 		else:
@@ -181,12 +193,14 @@ class Dialog(QDialog):
 
 
 		infoLayout = QFormLayout()
+		infoLayout.addRow(textSeparatorLabel(self,"Required"))
 		infoLayout.addRow(self.info1)
 		if self.title!="Insert":
 			# Creating a plugin
 			infoLayout.addRow(n6, self.packname)
 		infoLayout.addRow(n1, self.name)
 		infoLayout.addRow(n2, self.description)
+		infoLayout.addRow(textSeparatorLabel(self,"Optional"))
 		infoLayout.addRow(self.info2)
 		infoLayout.addRow(n3, self.author)
 		infoLayout.addRow(n4, self.version)

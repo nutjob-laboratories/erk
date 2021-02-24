@@ -92,6 +92,15 @@ PLAIN_TEXT = f'''
 	</tbody>
 </table>'''
 
+def textSeparatorLabel(self,text):
+
+	if self.is_light_colored:
+		gsep = TEXT_SEPARATOR
+	else:
+		gsep = LIGHT_TEXT_SEPARATOR
+	
+	return QLabel( gsep.replace("!TEXT!",text) )
+
 def plainTextAction(self,text):
 		
 	# tsLabel = QLabel( TEXT_SEPARATOR.replace("!TEXT!",text) )
