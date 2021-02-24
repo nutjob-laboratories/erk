@@ -24,6 +24,8 @@ Version 0.850
 	* Exit messagebox now features the "Erk" icon rather than the generic "warning" icon
 	* The "create package" and "insert template" dialog now has descriptive text added to it, and is customized depending on which function is being used
 	* The "create package" dialog now allows for customizing the package/plugin icons
+	* The "create package" dialog can now set a name for the package that is different from the plugin
+	* The "create package" dialog's icon display has been cleaned up a bit
 
 Version 0.840
 	* Default alternate nickname now includes a random number

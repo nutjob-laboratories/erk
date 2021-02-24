@@ -402,13 +402,22 @@ class Window(QMainWindow):
 		info = x.get_name_information("Create",self)
 
 		if info:
+
+			# Get the package name
+			package_name = info.pop(0)
+			package_name_safe = package_name
+			for c in string.punctuation:
+				package_name_safe=package_name_safe.replace(c,"")
+			package_name_safe = package_name_safe.translate( {ord(c): None for c in string.whitespace}  )
+
 			# Create Python-safe name
 			safe_name = info[0]
 			for c in string.punctuation:
 				safe_name=safe_name.replace(c,"")
 			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
 
-			outdir = os.path.join(PLUGIN_DIRECTORY, safe_name)
+			# outdir = os.path.join(PLUGIN_DIRECTORY, safe_name)
+			outdir = os.path.join(PLUGIN_DIRECTORY, package_name_safe)
 
 			if not os.path.exists(outdir):
 				os.mkdir(outdir)
@@ -427,7 +436,7 @@ class Window(QMainWindow):
 					shutil.copy(info[6], os.path.join(outdir, "plugin.png"))
 
 				f = open(os.path.join(outdir, "package.txt"),"w")
-				f.write(info[0])
+				f.write(package_name)
 				f.close()
 
 				self.status_package.setText("<b><small>"+info[0]+"</small></b>")

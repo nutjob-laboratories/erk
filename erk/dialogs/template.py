@@ -58,6 +58,18 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
+		if self.title!="Insert":
+			# Creating a plugin
+
+			if self.packname.text().strip()=='':
+				msg = QMessageBox()
+				msg.setIcon(QMessageBox.Critical)
+				msg.setText("Error")
+				msg.setInformativeText("Package name is required")
+				msg.setWindowTitle("Error")
+				msg.exec_()
+				return None
+
 		if self.name.text().strip()=='':
 			msg = QMessageBox()
 			msg.setIcon(QMessageBox.Critical)
@@ -89,6 +101,8 @@ class Dialog(QDialog):
 
 		if self.title!="Insert":
 			# Creating a plugin
+
+			retval.insert(0,self.packname.text())
 
 			retval.append(self.selectedPackageIcon)
 			retval.append(self.selectedPluginIcon)
@@ -155,8 +169,22 @@ class Dialog(QDialog):
 		self.info2.setWordWrap(True)
 		self.info2.setAlignment(Qt.AlignJustify)
 
+		if self.title!="Insert":
+			# Creating a plugin
+
+			n6 = QLabel("Package name")
+			n6.setFont(BOLD_FONT)
+
+			self.packname = QLineEdit()
+
+			self.packname.setPlaceholderText("Required")
+
+
 		infoLayout = QFormLayout()
 		infoLayout.addRow(self.info1)
+		if self.title!="Insert":
+			# Creating a plugin
+			infoLayout.addRow(n6, self.packname)
 		infoLayout.addRow(n1, self.name)
 		infoLayout.addRow(n2, self.description)
 		infoLayout.addRow(self.info2)
@@ -167,7 +195,7 @@ class Dialog(QDialog):
 		if title!="Insert":
 			# Since we're creating a package, add in the icon selection stuff
 
-			self.info1.setText("<small><center><i>You must supply a name and description for your package. The class name for the plugin will be derived from the name you supply (all whitespace and punctuation will be removed).</i></center></small>")
+			self.info1.setText("<small><center><i>You must supply a name for your package, and a name and description for your plugin. The directory name of your package and the class name for your plugin will be derived from the names you supply (all whitespace and punctuation will be removed).</i></center></small>")
 
 			self.package_icon = QLabel()
 			pixmap = QPixmap(os.path.join(PLUGIN_SKELETON, "package.png"))
@@ -185,23 +213,26 @@ class Dialog(QDialog):
 			plug_width = pixmap.width()
 			plug_height = pixmap.height()
 
-			entry = QPushButton("Select package icon")
+			entry = QPushButton("Select icon")
 			entry.clicked.connect(self.selectPack)
 
 			self.pack_desc = QLabel("<center><small>"+str(pack_width)+"x"+str(pack_height)+" PNG image</center></small>")
 
 			piLayout = QVBoxLayout()
 			piLayout.addWidget(self.package_icon)
+			piLayout.addWidget(QLabel("<center><small>Package Icon</center></small>"))
 			piLayout.addWidget(self.pack_desc)
 			piLayout.addWidget(entry)
 
-			entry = QPushButton("Select plugin icon")
+			entry = QPushButton("Select icon")
 			entry.clicked.connect(self.selectPlug)
 
 			self.plug_desc = QLabel("<center><small>"+str(plug_width)+"x"+str(plug_height)+" PNG image</center></small>")
 
 			pi2Layout = QVBoxLayout()
+			pi2Layout.addStretch()
 			pi2Layout.addWidget(self.plugin_icon)
+			pi2Layout.addWidget(QLabel("<center><small>Plugin Icon</center></small>"))
 			pi2Layout.addWidget(self.plug_desc)
 			pi2Layout.addWidget(entry)
 
