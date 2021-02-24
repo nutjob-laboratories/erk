@@ -98,8 +98,8 @@ def textSeparatorLabel(self,text):
 		gsep = TEXT_SEPARATOR
 	else:
 		gsep = LIGHT_TEXT_SEPARATOR
-	
-	return QLabel( gsep.replace("!TEXT!",text) )
+
+	return QLabel( gsep.replace("!TEXT!",text.upper()) )
 
 def plainTextAction(self,text):
 		
