@@ -220,7 +220,7 @@ class Dialog(QDialog):
 
 			piLayout = QVBoxLayout()
 			piLayout.addWidget(self.package_icon)
-			piLayout.addWidget(QLabel("<center><small>Package Icon</center></small>"))
+			piLayout.addWidget(QLabel("<center><small><b>Package Icon</b></center></small>"))
 			piLayout.addWidget(self.pack_desc)
 			piLayout.addWidget(entry)
 
@@ -232,7 +232,7 @@ class Dialog(QDialog):
 			pi2Layout = QVBoxLayout()
 			pi2Layout.addStretch()
 			pi2Layout.addWidget(self.plugin_icon)
-			pi2Layout.addWidget(QLabel("<center><small>Plugin Icon</center></small>"))
+			pi2Layout.addWidget(QLabel("<center><small><b>Plugin Icon</b></center></small>"))
 			pi2Layout.addWidget(self.plug_desc)
 			pi2Layout.addWidget(entry)
 
