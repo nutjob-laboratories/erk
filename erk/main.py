@@ -1192,6 +1192,18 @@ class Erk(QMainWindow):
 
 	def uninstall_plugin(self,directory,upack):
 
+		msgBox = QMessageBox()
+		msgBox.setIconPixmap(QPixmap(ERK_ICON))
+		msgBox.setWindowIcon(QIcon(ERK_ICON))
+		msgBox.setText("Are you sure you want to uninstall \""+upack+"\"?")
+		msgBox.setWindowTitle("Uninstall "+upack)
+		msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+
+		rval = msgBox.exec()
+
+		if rval == QMessageBox.Cancel:
+			return
+
 		# Find the pack we're uninstalling
 		plist = {}
 
