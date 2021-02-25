@@ -1092,15 +1092,22 @@ class Erk(QMainWindow):
 
 		for pack in plist:
 
-			m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
-
 			for p in plist[pack]: plugdir = p._packdir
 			plugtype = "package"
 
 			if plugdir==PLUGIN_DIRECTORY:
 				plugdir = p.__file__
 				plugtype = "plugin"
-				m.setIcon(QIcon(PLUGIN_ICON))
+
+			if plugtype=="plugin":
+				picon = None
+				for p in plist[pack]: picon = p._icon
+				if os.path.isfile(picon):
+					m = self.pluginMenu.addMenu(QIcon(picon),p.name)
+				else:
+					m = self.pluginMenu.addMenu(QIcon(PLUGIN_ICON),p.name)
+			else:
+				m = self.pluginMenu.addMenu(QIcon(PACKAGE_ICON),pack)
 
 			if not config.PLUGINS_ENABLED:
 				m.setEnabled(False)
