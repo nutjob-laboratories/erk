@@ -31,6 +31,9 @@ Version 0.850
 	* Added another check for the "bad input method" detector: multiline/docstrings are ignored
 	* Bugfix: plugin engine now checks for the existence of *any* of the plugin methods, not just the main ones
 	* "Insert template/create package" dialog can now support multiple modes
+	* Creating a package with the generator will now name the plugin file after the name of the (initial) class it contains
+	* Bugfix: dis/en-abling plugins did not work. It works now
+	* The list of diabled plugins is no longer in the user config; it is now stored in the settings file
 
 Version 0.840
 	* Default alternate nickname now includes a random number

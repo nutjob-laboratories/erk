@@ -108,9 +108,6 @@ class Dialog(QDialog):
 				entry = [ self.host.text(),self.port.text(),UNKNOWN_NETWORK,ussl,self.password.text() ]
 				user_history.append(entry)
 
-		# Save disabled plugins
-		disabled_plugins = self.user_info["disabled_plugins"]
-
 		# Save user ignores
 		ignored = self.user_info["ignore"]
 
@@ -129,7 +126,6 @@ class Dialog(QDialog):
 			"autojoin": True,
 			"history": user_history,
 			"save_history": self.SAVE_HISTORY,
-			"disabled_plugins": disabled_plugins,
 			"ignore": ignored,
 			"failreconnect": self.RETRY_FAILED_OPTION,
 			"auto_script": self.EXECUTE_AUTOSCRIPT_OPTION,

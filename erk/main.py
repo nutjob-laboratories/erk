@@ -45,7 +45,7 @@ from .resources import *
 from .widgets import *
 from .files import *
 from .common import *
-from .plugins import PluginCollection,DISABLED_PLUGINS,save_disabled,PLUGIN_DIRECTORY,get_disabled
+from .plugins import PluginCollection,PLUGIN_DIRECTORY
 from . import config
 from . import events
 from . import textformat
@@ -478,8 +478,8 @@ class Erk(QMainWindow):
 
 		self.style = textformat.get_text_format_settings(self.stylefile)
 
-		global DISABLED_PLUGINS
-		DISABLED_PLUGINS = get_disabled(self.userfile)
+		# global DISABLED_PLUGINS
+		# DISABLED_PLUGINS = get_disabled(self.userfile)
 
 		# Load application settings
 		config.load_settings(configfile)
@@ -1173,7 +1173,17 @@ class Erk(QMainWindow):
 						entry.triggered.connect(lambda state,f=p.name: self.plugins.forceunload(f))
 						m.addAction(entry)
 
-				if p.name in DISABLED_PLUGINS:
+				# if p.name in DISABLED_PLUGINS:
+				# 	enabled = False
+				# 	entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+				# else:
+				# 	enabled = True
+				# 	entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
+
+				# entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
+				# m.addAction(entry)
+
+				if p.name in config.DISABLED_PLUGINS:
 					enabled = False
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
 				else:
@@ -1259,12 +1269,21 @@ class Erk(QMainWindow):
 		x.resize(w,h)
 		x.show()
 
+	# def toggle_plugin(self,name):
+	# 	if name in DISABLED_PLUGINS:
+	# 		DISABLED_PLUGINS.remove(name)
+	# 	else:
+	# 		DISABLED_PLUGINS.append(name)
+	# 	save_disabled(self.userfile)
+	# 	self.plugins.load()
+	# 	self.rebuildPluginMenu()
+
 	def toggle_plugin(self,name):
-		if name in DISABLED_PLUGINS:
-			DISABLED_PLUGINS.remove(name)
+		if name in config.DISABLED_PLUGINS:
+			config.DISABLED_PLUGINS.remove(name)
 		else:
-			DISABLED_PLUGINS.append(name)
-		save_disabled(self.userfile)
+			config.DISABLED_PLUGINS.append(name)
+		config.save_settings(self.configfile)
 		self.plugins.load()
 		self.rebuildPluginMenu()
 

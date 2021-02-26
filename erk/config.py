@@ -156,14 +156,17 @@ DICTIONARY = []
 
 BLOCK_PLUGIN_INSTALL = False
 
+DISABLED_PLUGINS = []
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
-		"block_plugin_installation": BLOCK_PLUGIN_INSTALL,
+		"disabled_plugins": DISABLED_PLUGINS,
 
+		"block_plugin_installation": BLOCK_PLUGIN_INSTALL,
 		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
@@ -272,6 +275,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "disabled_plugins" in data:
+		data["disabled_plugins"] = DISABLED_PLUGINS
 
 	if not "block_plugin_installation" in data:
 		data["block_plugin_installation"] = BLOCK_PLUGIN_INSTALL
@@ -476,6 +482,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_CHANNELS
 	global DICTIONARY
 	global BLOCK_PLUGIN_INSTALL
+	global DISABLED_PLUGINS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -484,6 +491,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			DISABLED_PLUGINS = data["disabled_plugins"]
 			BLOCK_PLUGIN_INSTALL = data["block_plugin_installation"]
 			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
@@ -602,6 +610,7 @@ def check_settings(filename):
 			data = patch_settings(data)
 
 			check = 0
+			if "disabled_plugins" in data: check = check + 1
 			if "block_plugin_installation" in data: check = check + 1
 			if "dictionary" in data: check = check + 1
 			if "autocomplete_channels" in data: check = check + 1
@@ -706,7 +715,7 @@ def check_settings(filename):
 			if "animate_connecting_messages_in_connection_display" in data: check = check + 1
 			if "enable_scripts" in data: check = check + 1
 
-			if check >= 103:
+			if check >= 104:
 				return True
 			else:
 				return False

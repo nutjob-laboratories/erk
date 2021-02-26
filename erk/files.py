@@ -379,7 +379,6 @@ def get_user(filename=USER_FILE):
 			"autojoin": False,
 			"history": [],
 			"save_history": True,
-			"disabled_plugins": [],
 			"ignore": [],
 			'failreconnect': True,
 			'auto_script': True,

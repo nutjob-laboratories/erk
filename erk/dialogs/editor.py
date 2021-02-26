@@ -434,9 +434,9 @@ class Window(QMainWindow):
 					shutil.copy(info[5], os.path.join(outdir, "package.png"))
 
 				if info[6]==None:
-					shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
+					shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, safe_name+".png"))
 				else:
-					shutil.copy(info[6], os.path.join(outdir, "plugin.png"))
+					shutil.copy(info[6], os.path.join(outdir, safe_name+".png"))
 
 				f = open(os.path.join(outdir, "package.txt"),"w")
 				f.write(package_name)
@@ -450,13 +450,13 @@ class Window(QMainWindow):
 				t = self.build_plugin_from_template(safe_name,info[0],info[1],info[2],info[3],info[4],False)
 				t = "from erk import *\n\n"+ t
 
-				f = open(os.path.join(outdir, "plugin.py"),"w")
+				f = open(os.path.join(outdir, safe_name+".py"),"w")
 				f.write(t)
 				f.close()
 
 				# Load source into the editor
 				self.editor.setPlainText(t)
-				self.filename = os.path.join(outdir, "plugin.py")
+				self.filename = os.path.join(outdir, safe_name+".py")
 				self.package_dir = os.path.dirname(self.filename)
 				self.openPlugin.setText("Open \""+info[0]+"\" directory")
 				self.menuOpenPlugin.setText("Open \""+info[0]+"\" directory")
@@ -464,7 +464,7 @@ class Window(QMainWindow):
 				self.status_file.setText("<i><small>"+self.filename+"</small></i>")
 				self.menuSave.setEnabled(True)
 				self.toolbarSave.setEnabled(True)
-				self.title = "plugin.py"
+				self.title = safe_name+".py"
 				self.updateApplicationTitle()
 				self.changed = False
 				if self.findWindow != None:

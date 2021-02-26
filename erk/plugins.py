@@ -67,19 +67,7 @@ INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
 
-DISABLED_PLUGINS = []
 LOADED_PLUGINS = []
-
-def get_disabled(config):
-	udata = get_user(config)
-	return udata["disabled_plugins"]
-
-def save_disabled(config):
-	udata = get_user(config)
-	udata["disabled_plugins"] = DISABLED_PLUGINS
-	save_user(udata,config)
-
-DISABLED_PLUGINS = []
 
 class PluginError():
 	def __init__(self,package,classname,file,reason):
@@ -332,7 +320,7 @@ class PluginCollection(object):
 	def line_in(self,client,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"received"):
 				p._erk_client = client
 				p._erk_window_name = None
@@ -343,7 +331,7 @@ class PluginCollection(object):
 	def line_out(self,client,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"sent"):
 				p._erk_client = client
 				p._erk_window_name = None
@@ -363,7 +351,7 @@ class PluginCollection(object):
 		else:
 			name = user
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"ctcp"):
 				p._erk_client = client
 				p._erk_window_name = name
@@ -381,7 +369,7 @@ class PluginCollection(object):
 		else:
 			name = user
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"private"):
 				p._erk_client = client
 				p._erk_window_name = name
@@ -392,7 +380,7 @@ class PluginCollection(object):
 	def public(self,client,channel,user,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"public"):
 				p._erk_client = client
 				p._erk_window_name = channel
@@ -403,7 +391,7 @@ class PluginCollection(object):
 	def input(self,client,name,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"input"):
 				p._erk_client = client
 				p._erk_window_name = name
@@ -448,7 +436,7 @@ class PluginCollection(object):
 	def load(self):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if p.name in LOADED_PLUGINS: continue
 			if hasattr(p,"load"):
 				p._erk_client = None
@@ -467,7 +455,7 @@ class PluginCollection(object):
 	def tick(self,client):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"tick"):
 				p._erk_client = client
 				p._erk_window_name = None
@@ -478,7 +466,7 @@ class PluginCollection(object):
 	def join(self,client,channel,user):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"join"):
 				p._erk_client = client
 				p._erk_window_name = channel
@@ -489,7 +477,7 @@ class PluginCollection(object):
 	def part(self,client,channel,user):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"part"):
 				p._erk_client = client
 				p._erk_window_name = channel
@@ -500,7 +488,7 @@ class PluginCollection(object):
 	def connect(self,client):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"connect"):
 				p._erk_client = client
 				p._erk_window_name = None
@@ -511,7 +499,7 @@ class PluginCollection(object):
 	def notice(self,client,target,user,text):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"notice"):
 				p._erk_client = client
 				p._erk_window_name = target
@@ -522,7 +510,7 @@ class PluginCollection(object):
 	def mode(self,client,channel,user,mset,modes,arguments):
 		if not config.PLUGINS_ENABLED: return
 		for p in self.plugins:
-			if p.name in DISABLED_PLUGINS: continue
+			if p.name in config.DISABLED_PLUGINS: continue
 			if hasattr(p,"mode"):
 				p._erk_client = client
 				p._erk_window_name = None
