@@ -280,7 +280,7 @@ def check_for_attributes(p):
 	return errors
 
 def check_for_methods(p):
-	if hasattr(p,"load") or hasattr(p,"unload") or hasattr(p,"input") or hasattr(p,"public") or hasattr(p,"private"):
+	if hasattr(p,"load") or hasattr(p,"unload") or hasattr(p,"input") or hasattr(p,"public") or hasattr(p,"private") or hasattr(p,"received") or hasattr(p,"sent") or hasattr(p,"tick") or hasattr(p,"connect") or hasattr(p,"join") or hasattr(p,"part") or hasattr(p,"notice") or hasattr(p,"ctcp") or hasattr(p,"mode"):
 		return True
 	return False
 
