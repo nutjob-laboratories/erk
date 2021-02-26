@@ -297,6 +297,11 @@ def check_for_bad_input(p):
 			if l[0]=='#': continue
 			# Strip print commands
 			if l[:5]=="print": continue
+			# Strip multiline strings/docstrings
+			if l[0:3]=="'''": continue
+			if l[0:3]=='"""': continue
+			if l[-3:]=="'''": continue
+			if l[-3:]=='"""': continue
 
 			c.append(l)
 
