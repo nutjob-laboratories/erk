@@ -61,6 +61,9 @@ PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 DOCUMENTATION_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "documentation")
 DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
+INSERT_TEMPLATE_MODE = 0
+CREATE_PACKAGE_MODE = 1
+
 def EditorPrompt(title,prompt,twoinputs=False,twoprompt=None,self=None):
 	x = EditorInput(title,prompt,twoinputs,twoprompt,self)
 	info = x.get_string_information(title,prompt,twoinputs,twoprompt,self)
@@ -384,8 +387,8 @@ class Window(QMainWindow):
 		return out
 
 	def menuTemplate(self):
-		x = Template("Insert",self)
-		info = x.get_name_information("Insert",self)
+		x = Template(INSERT_TEMPLATE_MODE,self)
+		info = x.get_name_information(INSERT_TEMPLATE_MODE,self)
 
 		if info:
 			# Create Python-safe name
@@ -398,8 +401,8 @@ class Window(QMainWindow):
 			self.editor.insertPlainText(t)
 
 	def newPackage(self):
-		x = Template("Create",self)
-		info = x.get_name_information("Create",self)
+		x = Template(CREATE_PACKAGE_MODE,self)
+		info = x.get_name_information(CREATE_PACKAGE_MODE,self)
 
 		if info:
 

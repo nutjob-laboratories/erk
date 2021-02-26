@@ -30,6 +30,7 @@ Version 0.850
 	* Created clear markers for required and optional information in the "create package" and "insert template" dialogs
 	* Added another check for the "bad input method" detector: multiline/docstrings are ignored
 	* Bugfix: plugin engine now checks for the existence of *any* of the plugin methods, not just the main ones
+	* "Insert template/create package" dialog can now support multiple modes
 
 Version 0.840
 	* Default alternate nickname now includes a random number

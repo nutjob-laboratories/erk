@@ -45,11 +45,14 @@ ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
 
+INSERT_TEMPLATE_MODE = 0
+CREATE_PACKAGE_MODE = 1
+
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_name_information(title="Insert",parent=None):
-		dialog = Dialog(title,parent)
+	def get_name_information(mode=INSERT_TEMPLATE_MODE,parent=None):
+		dialog = Dialog(mode,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -59,7 +62,7 @@ class Dialog(QDialog):
 
 	def return_info(self):
 
-		if self.title!="Insert":
+		if self.mode==CREATE_PACKAGE_MODE:
 			# Creating a plugin
 
 			if self.packname.text().strip()=='':
@@ -100,7 +103,7 @@ class Dialog(QDialog):
 
 		retval = [self.name.text(),self.description.text(),author,version,website]
 
-		if self.title!="Insert":
+		if self.mode==CREATE_PACKAGE_MODE:
 			# Creating a plugin
 
 			retval.insert(0,self.packname.text())
@@ -110,11 +113,11 @@ class Dialog(QDialog):
 
 		return retval
 
-	def __init__(self,title,parent=None):
+	def __init__(self,mode,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
-		self.title = title
+		self.mode = mode
 
 		self.selectedPackageIcon = None
 		self.selectedPluginIcon = None
@@ -130,10 +133,11 @@ class Dialog(QDialog):
 		else:
 			self.is_light_colored = False
 
-		if title=="Insert":
+		if mode==INSERT_TEMPLATE_MODE:
 			self.setWindowTitle("Insert template")
-		else:
+		elif mode==CREATE_PACKAGE_MODE:
 			self.setWindowTitle("Create package")
+
 		self.setWindowIcon(QIcon(EDITOR_ICON))
 
 		fm = QFontMetrics(self.font())
@@ -181,7 +185,7 @@ class Dialog(QDialog):
 		self.info2.setWordWrap(True)
 		self.info2.setAlignment(Qt.AlignJustify)
 
-		if self.title!="Insert":
+		if self.mode==CREATE_PACKAGE_MODE:
 			# Creating a plugin
 
 			n6 = QLabel("Package name")
@@ -195,7 +199,7 @@ class Dialog(QDialog):
 		infoLayout = QFormLayout()
 		infoLayout.addRow(textSeparatorLabel(self,"Required"))
 		infoLayout.addRow(self.info1)
-		if self.title!="Insert":
+		if self.mode==CREATE_PACKAGE_MODE:
 			# Creating a plugin
 			infoLayout.addRow(n6, self.packname)
 		infoLayout.addRow(n1, self.name)
@@ -206,7 +210,7 @@ class Dialog(QDialog):
 		infoLayout.addRow(n4, self.version)
 		infoLayout.addRow(n5, self.website)
 
-		if title!="Insert":
+		if self.mode==CREATE_PACKAGE_MODE:
 			# Since we're creating a package, add in the icon selection stuff
 
 			self.info1.setText("<small><center><i>You must supply a name for your package, and a name and description for your plugin. The directory name of your package and the class name for your plugin will be derived from the names you supply (all whitespace and punctuation will be removed).</i></center></small>")
@@ -267,7 +271,10 @@ class Dialog(QDialog):
 		buttons.accepted.connect(self.accept)
 		buttons.rejected.connect(self.reject)
 
-		buttons.button(QDialogButtonBox.Ok).setText(self.title)
+		if self.mode==CREATE_PACKAGE_MODE:
+			buttons.button(QDialogButtonBox.Ok).setText("Create")
+		elif self.mode==INSERT_TEMPLATE_MODE:
+			buttons.button(QDialogButtonBox.Ok).setText("Insert")
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(infoLayout)
