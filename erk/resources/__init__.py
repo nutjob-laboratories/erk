@@ -71,6 +71,9 @@ MENU_PACKAGE_ICON = ":/package.png"
 MENU_ARCHIVE_ICON = ":/archive.png"
 MENU_INSERT_ICON = ":/insert.png"
 
+MENU_RELOAD_ICON = ":/reload.png"
+MENU_DIRECTORY_ICON = ":/directory.png"
+
 CONNECT_MENU_ICON = ":/connect.png"
 
 IMPORT_ICON = ":/gui-import.png"

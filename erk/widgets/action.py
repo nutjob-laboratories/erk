@@ -38,7 +38,7 @@ from PyQt5 import QtCore
 from ..resources import *
 
 TEXT_SEPARATOR = f'''
-<table width="100%" border="0" cellspacing="2" cellpadding="2">
+<table width="100%" border="0" cellspacing="2" cellpadding="0">
 	<tbody>
 		<tr>
 			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
@@ -51,7 +51,7 @@ TEXT_SEPARATOR = f'''
 </table>'''
 
 LIGHT_TEXT_SEPARATOR = f'''
-<table width="100%" border="0" cellspacing="2" cellpadding="2">
+<table width="100%" border="0" cellspacing="2" cellpadding="0">
 	<tbody>
 		<tr>
 			<td style="background-image: url({LIGHT_HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
@@ -246,7 +246,7 @@ def menuHtmlSpaced(icon,text,description,icon_size):
 
 def menuHtml(icon,text,description,icon_size):
 	return f'''
-<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+<table style="width: 100%" border="0" cellspacing="2" cellpadding="0">
 	  <tbody>
 		<tr>
 		  <td style="text-align: center; vertical-align: middle;">&nbsp;<img src="{icon}" width="{icon_size}" height="{icon_size}">&nbsp;</td>

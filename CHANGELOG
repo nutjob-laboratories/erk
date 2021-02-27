@@ -34,6 +34,9 @@ Version 0.850
 	* Creating a package with the generator will now name the plugin file after the name of the (initial) class it contains
 	* Bugfix: dis/en-abling plugins did not work. It works now
 	* The list of diabled plugins is no longer in the user config; it is now stored in the settings file
+	* Changed how plugin development tools are displayed in the "Tools" menu (if the client is in development mode)
+	* Changed the spacing on "fancy" menu entries
+	* The "reload plugins" in the editor is now a "fancy" menu entry
 
 Version 0.840
 	* Default alternate nickname now includes a random number

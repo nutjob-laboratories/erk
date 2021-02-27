@@ -800,36 +800,33 @@ class Erk(QMainWindow):
 			self.toolsMenu.addAction(entry)
 
 		if config.DEVELOPER_MODE:
-			entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
-			self.toolsMenu.addAction(entry)
 
-			if not config.PLUGINS_ENABLED:
-				entry.setEnabled(False)
+			if config.PLUGINS_ENABLED and not self.block_plugins:
 
-		if config.DEVELOPER_MODE:
-			self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export Plugin","Export an installed plugin",25,self.exportPackage)
-			self.toolsMenu.addAction(self.expPackMenu)
+				s = textSeparator(self,"Plugin Development")
+				self.toolsMenu.addAction(s)
 
-			if not config.PLUGINS_ENABLED:
-				self.expPackMenu.setEnabled(False)
+				entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
+				self.toolsMenu.addAction(entry)
 
-		if config.DEVELOPER_MODE:
+				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export Plugin","Export an installed plugin",25,self.exportPackage)
+				self.toolsMenu.addAction(self.expPackMenu)
 
-			self.toolsMenu.addSeparator()
+				f = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
 
-			entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-			entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-			self.toolsMenu.addAction(entry)
+				entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,f)
+				self.toolsMenu.addAction(entry)
 
-			if not config.PLUGINS_ENABLED:
-				entry.setEnabled(False)
+				# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+				# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
+				# self.toolsMenu.addAction(entry)
 
-			entry = QAction(QIcon(RESTART_ICON),"Load new plugins",self)
-			entry.triggered.connect(self.menuReloadPlugins)
-			self.toolsMenu.addAction(entry)
+				entry = MenuAction(self,MENU_RELOAD_ICON,"Reload plugins","Load any new plugins",25,self.menuReloadPlugins)
+				self.toolsMenu.addAction(entry)
 
-			if not config.PLUGINS_ENABLED:
-				entry.setEnabled(False)
+				# entry = QAction(QIcon(RESTART_ICON),"Load new plugins",self)
+				# entry.triggered.connect(self.menuReloadPlugins)
+				# self.toolsMenu.addAction(entry)
 
 		# Plugin menu
 
@@ -1028,7 +1025,6 @@ class Erk(QMainWindow):
 		if len(self.plugins.plugins)==0:
 
 			self.pluginMenu.addSeparator()
-			#insertNoTextSeparator(self,self.pluginMenu)
 
 			l1 = QLabel("<br>&nbsp;<b>No plugins installed</b>&nbsp;<br>")
 			l1.setAlignment(Qt.AlignCenter)

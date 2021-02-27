@@ -735,12 +735,8 @@ class Window(QMainWindow):
 		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
 		toolsMenu.addAction(entry)
 
-		toolsMenu.addSeparator()
-		#insertNoTextSeparator(self,toolsMenu)
-
 		if self.gui!=None:
-			entry = QAction(QIcon(RESTART_ICON),"Load new plugins into client",self)
-			entry.triggered.connect(self.reloadPlugins)
+			entry = MenuAction(self,MENU_RELOAD_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
 			toolsMenu.addAction(entry)
 
 		indentMenu = self.menubar.addMenu("Indent")
