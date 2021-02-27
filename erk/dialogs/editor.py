@@ -419,14 +419,10 @@ class Window(QMainWindow):
 				safe_name=safe_name.replace(c,"")
 			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
 
-			# outdir = os.path.join(PLUGIN_DIRECTORY, safe_name)
 			outdir = os.path.join(PLUGIN_DIRECTORY, package_name_safe)
 
 			if not os.path.exists(outdir):
 				os.mkdir(outdir)
-
-				# shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))
-				# shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(outdir, "plugin.png"))
 
 				if info[5]==None:
 					shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(outdir, "package.png"))

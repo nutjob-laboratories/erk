@@ -45,7 +45,6 @@ from .strings import *
 from .objects import *
 from . import config
 from . import events
-
 from . import userinput
 
 from PyQt5.QtWidgets import *
@@ -70,7 +69,6 @@ from twisted.words.protocols import irc
 from twisted.words.protocols.irc import ctcpStringify
 
 SCRIPT_WINDOW = None
-
 
 def connect(**kwargs):
 	bot = IRC_Connection_Factory(**kwargs)

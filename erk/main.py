@@ -31,7 +31,7 @@
 
 import sys
 import os
-from itertools import combinations_with_replacement
+#from itertools import combinations_with_replacement
 from zipfile import ZipFile
 import shutil
 import platform
@@ -84,12 +84,6 @@ from .irc import(
 
 USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = False
 
-# The toolbar seems to be non-functional on OSX, so if that's
-# the platform we're running on, don't use the toolbar and use
-# the normal QMenuBar system instead
-# if platform.system()!="Windows" and platform.system()!="Linux":
-# 	USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR = True
-
 DO_NOT_DISPLAY_MENUS_OR_TOOLBAR = False
 
 class Erk(QMainWindow):
@@ -120,7 +114,6 @@ class Erk(QMainWindow):
 
 	def newStyle(self,style):
 		events.apply_style(style)
-		#self.connection_display.setStyleSheet(style)
 
 	def closeEvent(self, event):
 
@@ -237,17 +230,10 @@ class Erk(QMainWindow):
 			self.current_client = window.client
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
 				self.disconnect.setVisible(True)
-
-			# if window.client.hostname==None:
-			# 	self.disconnect.setText("Disconnect from "+window.client.server+":"+str(window.client.port))
-			# else:
-			# 	self.disconnect.setText("Disconnect from "+window.client.hostname)
 		else:
 			self.current_client = None
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
 				self.disconnect.setVisible(False)
-
-
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
@@ -283,8 +269,6 @@ class Erk(QMainWindow):
 
 		self.connection_display.clearSelection()
 		events.build_connection_display(self)
-
-		#self.toggle_title()
 
 	def start_spinner(self):
 		if not config.SCHWA_ANIMATION: return
@@ -331,7 +315,6 @@ class Erk(QMainWindow):
 					print(s)
 
 	def resizeEvent(self, event):
-		#self.winsizeMenuEntry.setText("Set window size ("+str(self.width())+" x "+str(self.height())+")")
 		pass
 
 	def connectionDisplayResized(self):
@@ -478,9 +461,6 @@ class Erk(QMainWindow):
 
 		self.style = textformat.get_text_format_settings(self.stylefile)
 
-		# global DISABLED_PLUGINS
-		# DISABLED_PLUGINS = get_disabled(self.userfile)
-
 		# Load application settings
 		config.load_settings(configfile)
 
@@ -565,10 +545,8 @@ class Erk(QMainWindow):
 				# MENU TOOLBAR
 				self.mainMenu = QMenu()
 				self.settingsMenu = QMenu()
-				#self.logMenu = QMenu()
 				self.helpMenu = QMenu()
 				self.pluginMenu = QMenu()
-
 				self.toolsMenu = QMenu()
 
 		# Plugins
@@ -623,7 +601,6 @@ class Erk(QMainWindow):
 		else:
 			css =  "QTextBrowser { background-image: url(" + LIGHT_LOGO_IMAGE + "); background-attachment: fixed; background-repeat: no-repeat; background-position: center middle; }"
 
-		# css =  "QTextBrowser { background-image: url(" + LOGO_IMAGE + "); background-attachment: fixed; background-repeat: no-repeat; background-position: center middle; }"
 		self.starter.setStyleSheet(css)
 
 		self.starter.append("<p style=\"text-align: right;\"><small><b>Version "+APPLICATION_VERSION+ "&nbsp;&nbsp;</b><br><a href=\""+OFFICIAL_REPOSITORY+"\">"+OFFICIAL_REPOSITORY+"</a>&nbsp;&nbsp;</small></p>")
@@ -786,7 +763,6 @@ class Erk(QMainWindow):
 			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
 
 			self.settingsMenu.addSeparator()
-			#insertNoTextSeparator(self,self.settingsMenu)
 
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
@@ -804,7 +780,6 @@ class Erk(QMainWindow):
 			if self.fullscreen: self.set_full.setText("Exit full screen more")
 
 		# Tools menu
-		# self.toolsMenu
 
 		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 			self.toolsMenu = self.menubar.addMenu("Tools")
@@ -823,10 +798,6 @@ class Erk(QMainWindow):
 		if not self.block_styles:
 			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
 			self.toolsMenu.addAction(entry)
-
-
-		# entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
-		# self.toolsMenu.addAction(entry)
 
 		if config.DEVELOPER_MODE:
 			entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
@@ -879,10 +850,6 @@ class Erk(QMainWindow):
 			self.helpMenu.clear()
 			add_toolbar_menu(self.toolbar,"Help",self.helpMenu)
 
-		# self.about = QAction(QIcon(ABOUT_ICON),"About",self)
-		# self.about.triggered.connect(self.menuAbout)
-		# self.helpMenu.addAction(self.about)
-
 		entry = MenuAction(self,ERK_MENU_ICON,"About","About the "+APPLICATION_NAME+" IRC client",25,self.menuAbout)
 		self.helpMenu.addAction(entry)
 
@@ -905,14 +872,11 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		# https://www.gnu.org/licenses/gpl-3.0.en.html
-
 		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
 		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
 		self.helpMenu.addSeparator()
-		#insertNoTextSeparator(self,self.helpMenu)
 
 		RFC_1459 = os.path.join(DOCUMENTATION_DIRECTORY, "rfc1459.pdf")
 		RFC_2812 = os.path.join(DOCUMENTATION_DIRECTORY, "rfc2812.pdf")
@@ -926,13 +890,11 @@ class Erk(QMainWindow):
 		self.helpMenu.addAction(helpLink)
 
 		self.helpMenu.addSeparator()
-		#insertNoTextSeparator(self,self.helpMenu)
 
 		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
-		# End of menus
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 
 			if config.SCHWA_ANIMATION:
@@ -1173,16 +1135,6 @@ class Erk(QMainWindow):
 						entry.triggered.connect(lambda state,f=p.name: self.plugins.forceunload(f))
 						m.addAction(entry)
 
-				# if p.name in DISABLED_PLUGINS:
-				# 	enabled = False
-				# 	entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-				# else:
-				# 	enabled = True
-				# 	entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
-
-				# entry.triggered.connect(lambda state,n=p.name: self.toggle_plugin(n))
-				# m.addAction(entry)
-
 				if p.name in config.DISABLED_PLUGINS:
 					enabled = False
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
@@ -1268,15 +1220,6 @@ class Erk(QMainWindow):
 		h = config.DEFAULT_APP_HEIGHT
 		x.resize(w,h)
 		x.show()
-
-	# def toggle_plugin(self,name):
-	# 	if name in DISABLED_PLUGINS:
-	# 		DISABLED_PLUGINS.remove(name)
-	# 	else:
-	# 		DISABLED_PLUGINS.append(name)
-	# 	save_disabled(self.userfile)
-	# 	self.plugins.load()
-	# 	self.rebuildPluginMenu()
 
 	def toggle_plugin(self,name):
 		if name in config.DISABLED_PLUGINS:
@@ -1436,9 +1379,6 @@ class Erk(QMainWindow):
 			config.save_settings(self.configfile)
 			self.resize(info[0],info[1])
 
-			w = config.DEFAULT_APP_WIDTH
-			h =  config.DEFAULT_APP_HEIGHT
-
 	def eventFilter(self, source, event):
 
 		# User List Menu
@@ -1451,7 +1391,6 @@ class Erk(QMainWindow):
 				if item.erk_widget:
 					if hasattr(item,"erk_channel"):
 						menu = QMenu(self)
-						#menu.setStyleSheet(self.style["all"])
 
 						if item.erk_console:
 
@@ -1463,7 +1402,6 @@ class Erk(QMainWindow):
 								menu.addAction(entry)
 
 							menu.addSeparator()
-							#insertNoTextSeparator(self,menu)
 
 							if item.erk_client.network:
 								link = get_network_url(item.erk_client.network)
@@ -1472,15 +1410,13 @@ class Erk(QMainWindow):
 									entry.triggered.connect(lambda state,u=link: self.open_link_in_browser(u))
 									menu.addAction(entry)
 
-
 							settingsMenu = buildServerSettingsMenu(self,item.erk_client)
 							settingsMenu.setIcon(QIcon(SETTINGS_ICON))
 
 							menu.addMenu(settingsMenu)
 
-							#menu.addSeparator()
 							if not self.block_styles:
-								#insertNoTextSeparator(self,menu)
+
 								menu.addSeparator()
 
 								entry = QAction(QIcon(FORMAT_ICON),"Load style",self)
@@ -1496,7 +1432,6 @@ class Erk(QMainWindow):
 									entry.triggered.connect(lambda state,client=item.erk_client: self.restore_style_file_in_window_server(client))
 									menu.addAction(entry)
 
-							#insertNoTextSeparator(self,menu)
 							menu.addSeparator()
 
 							entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
@@ -1508,7 +1443,6 @@ class Erk(QMainWindow):
 							menu.addAction(entry)
 
 							menu.addSeparator()
-							#insertNoTextSeparator(self,menu)
 
 							entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
 							entry.triggered.connect(lambda state,client=item.erk_client: events.disconnect_from_server(client))
@@ -1519,20 +1453,15 @@ class Erk(QMainWindow):
 								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.load_style_file_in_window(client,name))
 								menu.addAction(entry)
 
-								# BEGIN
-
 								entry = QAction(QIcon(EDIT_ICON),"Edit style",self)
 								entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.edit_style_file_in_window(client,name))
 								menu.addAction(entry)
-
-								# END
 
 								if events.using_custom_style(item.erk_client,item.text(0)):
 									entry = QAction(QIcon(UNDO_ICON),"Revert style to default",self)
 									entry.triggered.connect(lambda state,client=item.erk_client,name=item.text(0): self.restore_style_file_in_window(client,name))
 									menu.addAction(entry)
 
-								#insertNoTextSeparator(self,menu)
 								menu.addSeparator()
 
 							if item.erk_channel:
@@ -1542,7 +1471,6 @@ class Erk(QMainWindow):
 								if len(item.erk_widget.banlist)>0:
 
 									bannedmenu = QMenu("Banned users",self)
-									#bannedmenu.setStyleSheet(self.style["all"])
 									bannedmenu.setIcon(QIcon(BAN_ICON))
 									for c in item.erk_widget.banlist:
 										e = QAction(F"{c[0]}", self) 
@@ -1739,7 +1667,6 @@ def buildServerSettingsMenu(self,client):
 	maxmodes = client.maxmodes
 
 	optionsMenu = QMenu("Server settings")
-	#optionsMenu.setStyleSheet(self.style["all"])
 
 	e = textSeparator(self,"Limits")
 	optionsMenu.addAction(e)

@@ -165,7 +165,6 @@ def save_settings(filename=SETTINGS_FILE):
 	settings = {
 
 		"disabled_plugins": DISABLED_PLUGINS,
-
 		"block_plugin_installation": BLOCK_PLUGIN_INSTALL,
 		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,

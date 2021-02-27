@@ -411,17 +411,9 @@ class Window(QMainWindow):
 
 			if self.parent.block_scripts:
 				self.runScript.setEnabled(False)
-				#self.runScript.setVisible(False)
-
-			# joinChannel = QPushButton("Join Channel")
-			# joinChannel.clicked.connect(self.joinButton)
-
-			# newNick = QPushButton("Change Nick")
-			# newNick.clicked.connect(self.nickButton)
 
 			self.disconnectButton = QPushButton("Disconnect")
 			self.disconnectButton.clicked.connect(self.discoButton)
-
 
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)
@@ -432,13 +424,11 @@ class Window(QMainWindow):
 				self.runScript.setVisible(False)
 				self.disconnectButton.setVisible(False)
 
-
 			finalLayout = QVBoxLayout()
 			finalLayout.setSpacing(config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.setContentsMargins(config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING,config.CHAT_WINDOW_WIDGET_SPACING)
 			finalLayout.addLayout(nameLayout)
 			finalLayout.addWidget(self.chat)
-			# finalLayout.addWidget(self.input)
 			finalLayout.addLayout(inputLayout)
 		else:
 			self.horizontalSplitter = QSplitter(Qt.Horizontal)
@@ -780,7 +770,6 @@ class Window(QMainWindow):
 
 			self.do_move_to_bottom()
 
-
 		self.log.append(message)
 
 		if do_not_save: return 
@@ -1023,7 +1012,6 @@ class Window(QMainWindow):
 			if self.type!=config.SERVER_WINDOW or (self.type==config.SERVER_WINDOW and self.client.registered):
 
 				styleMenu = QMenu("Style")
-				#styleMenu.setStyleSheet(self.styles["all"])
 				styleMenu.setIcon(QIcon(FORMAT_ICON))
 				menu.insertMenu(menu.actions()[0],styleMenu)
 
@@ -1048,7 +1036,6 @@ class Window(QMainWindow):
 			if self.type==config.CHANNEL_WINDOW:
 
 				opMenu = QMenu("Operator actions")
-				#opMenu.setStyleSheet(self.styles["all"])
 				opMenu.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 				menu.insertMenu(menu.actions()[0],opMenu)
 

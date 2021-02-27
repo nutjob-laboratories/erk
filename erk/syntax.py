@@ -24,15 +24,6 @@ def format(color, style=''):
 
 	return _format
 
-# STYLES = {
-# 	'comments': format('darkMagenta','bold'),
-# 	'erk': format('darkBlue','bold'),
-# 	'channel': format('darkRed','bold'),
-# 	'alias': format('darkGreen','bold'),
-# }
-
-
-
 class ErkScriptHighlighter (QSyntaxHighlighter):
 
 	def __init__(self, document,configfile):
