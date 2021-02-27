@@ -809,7 +809,7 @@ class Erk(QMainWindow):
 				entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
 				self.toolsMenu.addAction(entry)
 
-				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export Plugin","Export an installed plugin",25,self.exportPackage)
+				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
 				self.toolsMenu.addAction(self.expPackMenu)
 
 				f = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
