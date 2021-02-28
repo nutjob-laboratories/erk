@@ -75,6 +75,8 @@ from .dialogs import(
 
 from .dialogs.export_package import Dialog as ExportPackageDialog
 
+from .dialogs.blank import Dialog as Blank
+
 from .irc import(
 	connect,
 	connectSSL,
@@ -812,9 +814,9 @@ class Erk(QMainWindow):
 				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
 				self.toolsMenu.addAction(self.expPackMenu)
 
-				f = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
+				#f = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
 
-				entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,f)
+				entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,self.openPlugDir)
 				self.toolsMenu.addAction(entry)
 
 				# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
@@ -907,6 +909,13 @@ class Erk(QMainWindow):
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
+	def openPlugDir(self):
+		QDesktopServices.openUrl(QUrl("file:"+PLUGIN_DIRECTORY))
+
+		x = Blank()
+		x.show()
+		x.close()
+
 	def openCommandDocumentation(self):
 		idir = sys.path[0]
 		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
@@ -914,12 +923,20 @@ class Erk(QMainWindow):
 
 		QDesktopServices.openUrl(QUrl("file:"+DOCUMENTATION))
 
+		x = Blank()
+		x.show()
+		x.close()
+
 	def openPluginDocumentation(self):
 		idir = sys.path[0]
 		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
 		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
 
 		QDesktopServices.openUrl(QUrl("file:"+DOCUMENTATION))
+
+		x = Blank()
+		x.show()
+		x.close()
 
 	def showStyleDialog(self):
 		FormatTextDialog(self)
@@ -1233,6 +1250,10 @@ class Erk(QMainWindow):
 		self.display_load_errors()
 
 		self.rebuildPluginMenu()
+
+		x = Blank()
+		x.show()
+		x.close()
 
 	def toggleSetting(self,setting):
 

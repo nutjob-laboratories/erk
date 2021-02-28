@@ -53,6 +53,8 @@ from ..strings import *
 
 from .editorformat import Dialog as EditFormat
 
+from .blank import Dialog as Blank
+
 INSTALL_DIRECTORY = sys.path[0]
 PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
@@ -982,6 +984,10 @@ class Window(QMainWindow):
 
 		self.gui.rebuildPluginMenu()
 
+		x = Blank()
+		x.show()
+		x.close()
+
 	def openPDir(self):
 		if self.package_dir!=None:
 			QDesktopServices.openUrl(QUrl("file:"+self.package_dir))
@@ -1297,7 +1303,7 @@ class Window(QMainWindow):
 				self.editor.insertPlainText(code)
 
 		if ctype=="msgbox":
-			data = EditorPrompt("Message box text","Text")
+			data = EditorPrompt("Message box text","Text",False,None,self)
 			if data:
 				data = data.replace('"','\\"')
 				code = "self.msgbox(\""+data+"\")"

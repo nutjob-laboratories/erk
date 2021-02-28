@@ -37,6 +37,8 @@ Version 0.850
 	* Changed how plugin development tools are displayed in the "Tools" menu (if the client is in development mode)
 	* Changed the spacing on "fancy" menu entries
 	* The "reload plugins" in the editor is now a "fancy" menu entry
+	* Bugfix: the "insert messagebox" code generator in the editor had the wrong parent GUI
+	* Bugfix: clicking on "fancy" menu entries that didn't spawn a dialog or window wouldn't close the menu; now, they spawn a "blank" dialog that is immediately closed, thus closing the window
 
 Version 0.840
 	* Default alternate nickname now includes a random number
