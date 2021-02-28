@@ -34,6 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+import os
+
 from ..resources import *
 from ..strings import *
 from ..files import *
@@ -67,17 +69,31 @@ class Dialog(QDialog):
 		self.setWindowTitle("Install plugin")
 		self.setWindowIcon(QIcon(INSTALL_ICON))
 
-		packs = get_plugin_info(self.file)
+		file_name, file_extension = os.path.splitext(self.file)
 
-		if len(packs)>1:
-			self.title = QLabel("The following plugins will be installed:")
-			self.packlist = QListWidget(self)
-			for x in packs:
-				item = QListWidgetItem(x)
-				self.packlist.addItem(item)
-		elif len(packs)==1:
-			self.title = QLabel(F"The plugin \"{packs.pop(0)}\" will be installed.")
+		if file_extension.lower()==".zip":
+			packs = get_plugin_info(self.file)
+
+			if len(packs)>1:
+				self.title = QLabel("The following plugins will be installed:")
+				self.packlist = QListWidget(self)
+				for x in packs:
+					item = QListWidgetItem(x)
+					self.packlist.addItem(item)
+			elif len(packs)==1:
+				self.title = QLabel(F"The plugin \"{packs.pop(0)}\" will be installed.")
+				self.packlist = QLabel('')
+			else:
+				self.is_plugin = False
+				self.title = QLabel("No plugins found.")
+				self.packlist = QLabel('')
+
+		elif file_extension.lower()==".py":
+			self.is_plugin = True
+			bfile = os.path.basename(self.file)
+			self.title = QLabel(F"The plugin \"{bfile}\" will be installed.")
 			self.packlist = QLabel('')
+
 		else:
 			self.is_plugin = False
 			self.title = QLabel("No plugins found.")

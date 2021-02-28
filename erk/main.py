@@ -814,21 +814,11 @@ class Erk(QMainWindow):
 				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
 				self.toolsMenu.addAction(self.expPackMenu)
 
-				#f = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
-
 				entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,self.openPlugDir)
 				self.toolsMenu.addAction(entry)
 
-				# entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
-				# entry.triggered.connect(lambda state,s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s)))
-				# self.toolsMenu.addAction(entry)
-
 				entry = MenuAction(self,MENU_RELOAD_ICON,"Reload plugins","Load any new plugins",25,self.menuReloadPlugins)
 				self.toolsMenu.addAction(entry)
-
-				# entry = QAction(QIcon(RESTART_ICON),"Load new plugins",self)
-				# entry.triggered.connect(self.menuReloadPlugins)
-				# self.toolsMenu.addAction(entry)
 
 		# Plugin menu
 
@@ -1209,13 +1199,19 @@ class Erk(QMainWindow):
 		# PLUGIN_DIRECTORY
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", None,"Zip File (*.zip);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", INSTALL_DIRECTORY,"Zip File (*.zip);;Python File (*.py)", options=options)
 		if fileName:
 
 			x = InstallDialog(fileName)
 			if x:
-				with ZipFile(fileName,'r') as zipObj:
-					zipObj.extractall(PLUGIN_DIRECTORY)
+				file_name, file_extension = os.path.splitext(fileName)
+				if file_extension.lower()==".zip":
+					with ZipFile(fileName,'r') as zipObj:
+						zipObj.extractall(PLUGIN_DIRECTORY)
+				else:
+					bname = os.path.basename(fileName)
+					shutil.copy(fileName, os.path.join(PLUGIN_DIRECTORY, bname))
+
 				self.plugins.reload_plugins(True)
 				self.display_load_errors()
 				self.rebuildPluginMenu()
@@ -1246,9 +1242,7 @@ class Erk(QMainWindow):
 	def menuReloadPlugins(self):
 		self.plugins.reset_errors()
 		self.plugins.reload_plugins(True)
-
 		self.display_load_errors()
-
 		self.rebuildPluginMenu()
 
 		x = Blank()
@@ -1338,13 +1332,11 @@ class Erk(QMainWindow):
 			if self.fullscreen:
 				self.fullscreen = False
 				self.showNormal()
-				#self.set_full.setIcon(QIcon(UNCHECKED_ICON))
 				self.set_full.setText("Enter full screen more")
 				self.winsizeMenuEntry.setEnabled(True)
 			else:
 				self.fullscreen = True
 				self.showFullScreen()
-				#self.set_full.setIcon(QIcon(CHECKED_ICON))
 				self.set_full.setText("Exit full screen more")
 				self.winsizeMenuEntry.setEnabled(False)
 			return
