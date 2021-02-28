@@ -99,6 +99,11 @@ class Dialog(QDialog):
 		self.packlist = QListWidget(self)
 		self.packlist.setMaximumHeight(100)
 
+		has_parent_gui = False
+		if hasattr(self.parent,"gui"):
+			if hasattr(self.parent.gui,"plugins"):
+				has_parent_gui= True
+
 		for x in os.listdir(PLUGIN_DIRECTORY):
 			if x.lower()=="__pycache__": continue
 			pack = os.path.join(PLUGIN_DIRECTORY, x)
@@ -109,11 +114,6 @@ class Dialog(QDialog):
 
 				pack_icon = get_package_icon(pack)
 				if pack_icon==None: pack_icon = PACKAGE_ICON
-
-				has_parent_gui = False
-				if hasattr(self.parent,"gui"):
-					if hasattr(self.parent.gui,"plugins"):
-						has_parent_gui= True
 
 				if has_parent_gui:
 					if x in self.parent.gui.plugins.failed_load:

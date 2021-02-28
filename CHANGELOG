@@ -40,6 +40,12 @@ Version 0.850
 	* Bugfix: the "insert messagebox" code generator in the editor had the wrong parent GUI
 	* Bugfix: clicking on "fancy" menu entries that didn't spawn a dialog or window wouldn't close the menu; now, they spawn a "blank" dialog that is immediately closed, thus closing the window
 	* Single file (.py) plugins can now be installed via the GUI as well as zipped plugin packages
+	* Changed the text of the "export package" entry in the editor to "export plugin"
+	* Exporting plugins now has a suggested output file name
+	* Exported plugins now have a new file extension: ".erkp" (for Erk plugin)
+	* Plugin installer now looks for ".erkp" file extension instead of ".zip"
+	* Documentation for plugins has been updated to match the new GUI changes, and Erk Packages (.erkp) files have been added
+	* Documentation for both plugins and scripting has been updated to include the new major version number
 
 Version 0.840
 	* Default alternate nickname now includes a random number

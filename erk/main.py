@@ -977,25 +977,31 @@ class Erk(QMainWindow):
 		info = x.get_name_information(self)
 
 		if info:
+
+			default_outfile = os.path.basename(info)
+
 			if os.path.isfile(info):
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
-				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
 				if fileName:
-					efl = len("zip")+1
-					if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
+					efl = len(PACKAGE_FILE_EXTENSION)+1
+					if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
 					zf = zipfile.ZipFile(fileName, "w")
 					zf.write(info,os.path.basename(info))
 					zf.close()
 				return
 
 		if info:
+
+			default_outfile = os.path.basename(info)+f".{PACKAGE_FILE_EXTENSION}"
+
 			options = QFileDialog.Options()
 			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
 			if fileName:
-				efl = len("zip")+1
-				if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
+				efl = len(PACKAGE_FILE_EXTENSION)+1
+				if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
 				zf = zipfile.ZipFile(fileName, "w")
 				for dirname, subdirs, files in os.walk(info):
 					pname = os.path.basename(info)
@@ -1199,13 +1205,13 @@ class Erk(QMainWindow):
 		# PLUGIN_DIRECTORY
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", INSTALL_DIRECTORY,"Zip File (*.zip);;Python File (*.py)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Select Plugin Package", INSTALL_DIRECTORY,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION});;Python File (*.py)", options=options)
 		if fileName:
 
 			x = InstallDialog(fileName)
 			if x:
 				file_name, file_extension = os.path.splitext(fileName)
-				if file_extension.lower()==".zip":
+				if file_extension.lower()==f".{PACKAGE_FILE_EXTENSION}":
 					with ZipFile(fileName,'r') as zipObj:
 						zipObj.extractall(PLUGIN_DIRECTORY)
 				else:

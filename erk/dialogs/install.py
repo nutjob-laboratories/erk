@@ -71,7 +71,7 @@ class Dialog(QDialog):
 
 		file_name, file_extension = os.path.splitext(self.file)
 
-		if file_extension.lower()==".zip":
+		if file_extension.lower()==f".{PACKAGE_FILE_EXTENSION}":
 			packs = get_plugin_info(self.file)
 
 			if len(packs)>1:

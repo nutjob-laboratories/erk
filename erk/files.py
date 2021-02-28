@@ -45,6 +45,7 @@ from .objects import *
 # File extensions
 SCRIPT_FILE_EXTENSION = "erk"
 STYLE_FILE_EXTENSION = "style"
+PACKAGE_FILE_EXTENSION = "erkp"
 
 # Application directories
 INSTALL_DIRECTORY = sys.path[0]

@@ -42,7 +42,7 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from ..resources import *
-from ..files import PLUGIN_TEMPLATE,get_text_format_settings
+from ..files import PLUGIN_TEMPLATE,get_text_format_settings,PACKAGE_FILE_EXTENSION
 from .. import config
 from ..widgets.action import MenuAction,insertNoTextSeparator
 from .export_package import Dialog as Export
@@ -485,25 +485,31 @@ class Window(QMainWindow):
 		info = x.get_name_information(self)
 
 		if info:
+
+			default_outfile = os.path.basename(info)
+
 			if os.path.isfile(info):
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
-				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...", default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
 				if fileName:
-					efl = len("zip")+1
-					if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
+					efl = len(PACKAGE_FILE_EXTENSION)+1
+					if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
 					zf = zipfile.ZipFile(fileName, "w")
 					zf.write(info,os.path.basename(info))
 					zf.close()
 				return
 
 		if info:
+
+			default_outfile = os.path.basename(info)+f".{PACKAGE_FILE_EXTENSION}"
+
 			options = QFileDialog.Options()
 			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",INSTALL_DIRECTORY,"Zip File (*.zip);;All Files (*)", options=options)
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...", default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
 			if fileName:
-				efl = len("zip")+1
-				if fileName[-efl:].lower()!=f".zip": fileName = fileName+f".zip"
+				efl = len(PACKAGE_FILE_EXTENSION)+1
+				if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
 				zf = zipfile.ZipFile(fileName, "w")
 				for dirname, subdirs, files in os.walk(info):
 					pname = os.path.basename(info)
@@ -734,7 +740,7 @@ class Window(QMainWindow):
 		entry = MenuAction(self,MENU_INSERT_ICON,"Insert template","Insert plugin template code",25,self.menuTemplate)
 		toolsMenu.addAction(entry)
 
-		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export package","Export an installed package",25,self.exportPackage)
+		entry = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
 		toolsMenu.addAction(entry)
 
 		if self.gui!=None:
