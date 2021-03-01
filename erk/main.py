@@ -788,6 +788,11 @@ class Erk(QMainWindow):
 			if self.block_scripts:
 				show_tool_menu = False
 
+				if not self.block_plugins:
+					if config.PLUGINS_ENABLED:
+						if config.DEVELOPER_MODE:
+							show_tool_menu = True
+
 		if show_tool_menu:
 
 			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:

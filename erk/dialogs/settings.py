@@ -1144,8 +1144,9 @@ class Dialog(QDialog):
 
 		config.ENABLE_SCRIPTS = self.scriptMisc.isChecked()
 		if config.ENABLE_SCRIPTS:
-			self.parent.block_scripts = False
-			events.enable_all_runscript()
+			if not self.parent.cmdline_script:
+				self.parent.block_scripts = False
+				events.enable_all_runscript()
 		else:
 			self.parent.block_scripts = True
 			events.disable_all_runscript()
