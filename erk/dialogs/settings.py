@@ -1298,7 +1298,7 @@ class Dialog(QDialog):
 	def saveConfig(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Preferences As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Preferences As...","settings.json","JSON File (*.json);;All Files (*)", options=options)
 		if fileName:
 			efl = len("json")+1
 			if fileName[-efl:].lower()!=f".json": fileName = fileName+f".json"
@@ -1403,7 +1403,7 @@ class Dialog(QDialog):
 				self.default_quit_part = config.DEFAULT_QUIT_PART_MESSAGE
 				self.do_rerender = True
 
-				if config.DISPLAY_FONT!=None:
+				if config.DISPLAY_FONT!='':
 					f = QFont()
 					f.fromString(config.DISPLAY_FONT)
 					self.newfont = f
