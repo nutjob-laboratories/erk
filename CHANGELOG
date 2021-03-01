@@ -46,6 +46,7 @@ Version 0.850
 	* Plugin installer now looks for ".erkp" file extension instead of ".zip"
 	* Documentation for plugins has been updated to match the new GUI changes, and Erk Packages (.erkp) files have been added
 	* Documentation for both plugins and scripting has been updated to include the new major version number
+	* Changed the package file extension to ".perk" because it looks better :-)
 
 Version 0.840
 	* Default alternate nickname now includes a random number
