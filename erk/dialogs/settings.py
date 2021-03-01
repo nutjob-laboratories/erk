@@ -1094,7 +1094,8 @@ class Dialog(QDialog):
 
 		if self.pluginInstall.isChecked():
 			config.BLOCK_PLUGIN_INSTALL = False
-			self.parent.block_install = False
+			if not self.parent.cmdline_install:
+				self.parent.block_install = False
 		else:
 			config.BLOCK_PLUGIN_INSTALL = True
 			self.parent.block_install = True
