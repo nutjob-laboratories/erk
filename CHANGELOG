@@ -49,6 +49,8 @@ Version 0.850
 	* Changed the package file extension to ".perk" because it looks better :-)
 	* Bugfix: "Tools" menu was displaying when, due to commandline flags, it would be empty
 	* Bugfix: toggling development mode could enable the script editor (and scripting) if scripting was blocked from the commandline
+	* Bugfix: editing settings could enable the editor even if the editor was blocked via commandline
+	* Bugfix: editing settings could enable plugins even if plugins were blocked via commandline
 
 Version 0.840
 	* Default alternate nickname now includes a random number

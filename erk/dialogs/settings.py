@@ -1126,7 +1126,8 @@ class Dialog(QDialog):
 
 		config.ENABLE_SCRIPT_EDITOR = self.seditMisc.isChecked()
 		if config.ENABLE_SCRIPT_EDITOR:
-			self.parent.block_editor = False
+			if not self.parent.cmdline_editor:
+				self.parent.block_editor = False
 		else:
 			self.parent.block_editor = True
 
@@ -1174,7 +1175,8 @@ class Dialog(QDialog):
 
 		config.PLUGINS_ENABLED = self.pluginFeatures.isChecked()
 		if config.PLUGINS_ENABLED:
-			self.parent.block_plugins = False
+			if not self.parent.cmdline_plugin:
+				self.parent.block_plugins = False
 		else:
 			self.parent.block_plugins = True
 		self.parent.rebuildPluginMenu()
