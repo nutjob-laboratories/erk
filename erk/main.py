@@ -783,42 +783,49 @@ class Erk(QMainWindow):
 
 		# Tools menu
 
-		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-			self.toolsMenu = self.menubar.addMenu("Tools")
-		else:
-			self.toolsMenu.clear()
-			add_toolbar_menu(self.toolbar,"Tools",self.toolsMenu)
+		show_tool_menu = True
+		if self.block_styles:
+			if self.block_scripts:
+				show_tool_menu = False
 
-		showEditor = True
-		if self.block_editor: showEditor = False
-		if self.block_scripts: showEditor = False
+		if show_tool_menu:
 
-		if showEditor:
-			entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
-			self.toolsMenu.addAction(entry)
+			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+				self.toolsMenu = self.menubar.addMenu("Tools")
+			else:
+				self.toolsMenu.clear()
+				add_toolbar_menu(self.toolbar,"Tools",self.toolsMenu)
 
-		if not self.block_styles:
-			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
-			self.toolsMenu.addAction(entry)
+			showEditor = True
+			if self.block_editor: showEditor = False
+			if self.block_scripts: showEditor = False
 
-		if config.DEVELOPER_MODE:
-
-			if config.PLUGINS_ENABLED and not self.block_plugins:
-
-				s = textSeparator(self,"Plugin Development")
-				self.toolsMenu.addAction(s)
-
-				entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
+			if showEditor:
+				entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
 				self.toolsMenu.addAction(entry)
 
-				self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
-				self.toolsMenu.addAction(self.expPackMenu)
-
-				entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,self.openPlugDir)
+			if not self.block_styles:
+				entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
 				self.toolsMenu.addAction(entry)
 
-				entry = MenuAction(self,MENU_RELOAD_ICON,"Reload plugins","Load any new plugins",25,self.menuReloadPlugins)
-				self.toolsMenu.addAction(entry)
+			if config.DEVELOPER_MODE:
+
+				if config.PLUGINS_ENABLED and not self.block_plugins:
+
+					s = textSeparator(self,"Plugin Development")
+					self.toolsMenu.addAction(s)
+
+					entry = MenuAction(self,MENU_EDITOR_ICON,EDITOR_NAME,"Create and edit plugins",25,self.menuEditor)
+					self.toolsMenu.addAction(entry)
+
+					self.expPackMenu = MenuAction(self,MENU_ARCHIVE_ICON,"Export plugin","Export an installed plugin",25,self.exportPackage)
+					self.toolsMenu.addAction(self.expPackMenu)
+
+					entry = MenuAction(self,MENU_DIRECTORY_ICON,"Open directory","Open the plugin directory",25,self.openPlugDir)
+					self.toolsMenu.addAction(entry)
+
+					entry = MenuAction(self,MENU_RELOAD_ICON,"Reload plugins","Load any new plugins",25,self.menuReloadPlugins)
+					self.toolsMenu.addAction(entry)
 
 		# Plugin menu
 
