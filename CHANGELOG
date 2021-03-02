@@ -54,6 +54,7 @@ Version 0.850
 	* Bugfix: editing settings could enable plugin installation even if plugin installation was disabled via commandline
 	* Exporting settings now defaults to "settings.json" as the default filename
 	* Bugfix: loading a config file into the settings dialog with a blank "FONT" entry no longer throws an error
+	* Added a new plugin command: .help(), which adds a command to the /help command
 
 Version 0.840
 	* Default alternate nickname now includes a random number

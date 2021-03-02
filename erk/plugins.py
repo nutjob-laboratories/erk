@@ -53,6 +53,7 @@ from .userinput import(
 	execute_script_msgbox,
 	execute_script_unalias,
 	SCRIPT_THREADS,
+	PLUGIN_HELP_ENTRIES,
 )
 from .files import get_user,save_user,find_script_file
 from . import events
@@ -214,6 +215,10 @@ class ErkFunctions(object):
 
 	def send(self,data):
 		if self._erk_client: self._erk_client.sendLine(data)
+
+	def help(self,usage,description):
+		e = [usage,description]
+		PLUGIN_HELP_ENTRIES.append(e)
 
 
 

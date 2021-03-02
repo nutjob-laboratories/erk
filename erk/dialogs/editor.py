@@ -1270,6 +1270,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(lambda state,f="autocomplete": self.insertMethod(f))
 		funcMenu.addAction(entry)
 
+		entry = QAction(QIcon(WINDOW_ICON),"help()",self)
+		entry.triggered.connect(lambda state,f="help": self.insertMethod(f))
+		funcMenu.addAction(entry)
+
 		# Finish menu
 
 		menu.insertSeparator(menu.actions()[1])
@@ -1284,6 +1288,14 @@ class Window(QMainWindow):
 				data[0] = data[0].replace('"','\\"')
 				data[1] = data[1].replace('"','\\"')
 				code = "self.autocomplete(\""+data[0]+"\",\""+data[1]+"\")"
+				self.editor.insertPlainText(code)
+
+		if ctype=="help":
+			data = EditorPrompt("Help","Usage",True,"Description",self)
+			if data:
+				data[0] = data[0].replace('"','\\"')
+				data[1] = data[1].replace('"','\\"')
+				code = "self.help(\""+data[0]+"\",\""+data[1]+"\")"
 				self.editor.insertPlainText(code)
 
 		if ctype=="script":
@@ -1492,7 +1504,7 @@ class PythonHighlighter (QSyntaxHighlighter):
 		'Plugin','self.info','self.exec','from erk import *','from erk import Plugin',
 		'self.name','self.description','self.version','self.website','self.source','self.author',
 		'self.userinput','self.msgbox','self.sysmsg','self.channels','self.directory',
-		'self.users','self.topic', 'self.send', 'self.script', 'self.autocomplete',
+		'self.users','self.topic', 'self.send', 'self.script', 'self.autocomplete', 'self.help'
 	]
 
 	# Python keywords
