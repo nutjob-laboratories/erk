@@ -123,8 +123,8 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--generate NAME] [--new]
-                     [--editor] [--edit FILE] [--install ZIP] [--noplugins] [--noask]
+                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--plugger] [--plugger-edit FILE]
+                     [--scripter] [--scripter-edit FILE] [--noplugins] [--noask]
                      [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
                      [--nostyles] [--noedit] [--noextensions] [--noinstall] [--qt5menu]
                      [SERVER] [PORT]
@@ -176,12 +176,11 @@ Configuration:
   -I ZIP, --import-settings ZIP
                         Import settings (and logs) from a zip file
 
-Plugin development:
-  --generate NAME       Generate a "blank" plugin package in the current directory
-  --new                 Generate a "blank" plugin package in the plugins directory
-  --editor              Open the code editor
-  --edit FILE           Open a file in the code editor
-  --install ZIP         Install a plugin
+Tools:
+  --plugger             Open the plugin editor
+  --plugger-edit FILE   Open a file in the plugin editor
+  --scripter            Open the script editor
+  --scripter-edit FILE  Open a file in the script editor
 
 Disable functionality:
   --noplugins           Disable plugins

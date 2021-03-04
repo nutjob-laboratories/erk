@@ -127,9 +127,14 @@ class Window(QMainWindow):
 
 		self.saveOnClose()
 
-		self.parent.seditors = None
+		if self.parent!= None: self.parent.seditors = None
+
+		if self.app != None:
+			self.app.quit()
+
 		event.accept()
 		self.close()
+			
 
 	def saveOnClose(self):
 		if config.SAVE_SCRIPT_ON_CLOSE:
@@ -137,9 +142,9 @@ class Window(QMainWindow):
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
 				if self.filename:
-					outf = os.path.join(self.parent.scriptsdir, self.filename)
+					outf = os.path.join(self.scriptsdir, self.filename)
 				else:
-					outf = self.parent.scriptsdir
+					outf = self.scriptsdir
 				fileName, _ = QFileDialog.getSaveFileName(self,"Save Script As...",outf,f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
 				if fileName:
 					efl = len(SCRIPT_FILE_EXTENSION)+1
@@ -204,11 +209,14 @@ class Window(QMainWindow):
 			self.status_client.setText(  "&nbsp;<small><i>"+self.clients[index].server+":"+str(self.clients[index].port)+" ("+self.clients[index].nickname+")</i></small>"    )
 			self.servers.setCurrentIndex(index)
 
-	def __init__(self,filename=None,parent=None):
+	def __init__(self,filename=None,parent=None,configfile=None,scriptsdir=None,app=None):
 		super(Window, self).__init__(parent)
 
 		self.filename = filename
 		self.parent = parent
+		self.configfile = configfile
+		self.scriptsdir = scriptsdir
+		self.app = None
 
 		self.changed = False
 
@@ -218,7 +226,7 @@ class Window(QMainWindow):
 		self.current_client = None
 
 		self.editor = QPlainTextEdit(self)
-		self.highlight = ErkScriptHighlighter(self.editor.document(),self.parent.configfile)
+		self.highlight = ErkScriptHighlighter(self.editor.document(),self.configfile)
 
 		self.setWindowIcon(QIcon(SCRIPTEDIT_ICON))
 
@@ -228,7 +236,7 @@ class Window(QMainWindow):
 		self.editor.copyAvailable.connect(self.hasCopy)
 
 		if self.filename:
-			f = find_script_file(self.filename,self.parent.scriptsdir)
+			f = find_script_file(self.filename,self.scriptsdir)
 			if f!=None:
 				x = open(f,mode="r",encoding="latin-1")
 				source_code = str(x.read())
@@ -261,7 +269,6 @@ class Window(QMainWindow):
 
 		self.runButton.setFixedSize(height+4,height)
 		self.runButton.setIconSize(QSize(height,height))
-		#self.runButton.setStyleSheet("border: none;")
 		self.runButton.setToolTip("Execute script")
 
 		documentIcon = QIcon(CONNECT_MENU_ICON)
@@ -462,7 +469,7 @@ class Window(QMainWindow):
 		else:
 			config.NOTIFY_SCRIPT_END = True
 			self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
-		config.save_settings(self.parent.configfile)
+		config.save_settings(self.configfile)
 
 	def toggleSaveClose(self):
 		if config.SAVE_SCRIPT_ON_CLOSE:
@@ -471,12 +478,12 @@ class Window(QMainWindow):
 		else:
 			config.SAVE_SCRIPT_ON_CLOSE = True
 			self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
-		config.save_settings(self.parent.configfile)
+		config.save_settings(self.configfile)
 
 	def buildInstalledScriptsMenu(self):
 		self.installedScripts.clear()
 
-		files = get_list_of_installed_scripts(self.parent.scriptsdir)
+		files = get_list_of_installed_scripts(self.scriptsdir)
 
 		for file in files:
 			fullname = file[0]
@@ -501,12 +508,12 @@ class Window(QMainWindow):
 
 	def openAutoscript(self):
 		if self.current_client!=None:
-			code = load_auto_script(self.current_client.server,str(self.current_client.port),self.parent.scriptsdir)
+			code = load_auto_script(self.current_client.server,str(self.current_client.port),self.scriptsdir)
 			if code!=None:
 				self.editor.setPlainText(code)
 			else:
 				self.editor.clear()
-			self.filename = get_auto_script_name(self.current_client.server,str(self.current_client.port),self.parent.scriptsdir)
+			self.filename = get_auto_script_name(self.current_client.server,str(self.current_client.port),self.scriptsdir)
 			self.changed = False
 			self.updateApplicationTitle()
 			self.menuSave.setEnabled(True)
@@ -698,7 +705,7 @@ class Window(QMainWindow):
 	def doFileSaveAs(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Script As...",self.parent.scriptsdir,f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Script As...",self.scriptsdir,f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			efl = len(SCRIPT_FILE_EXTENSION)+1
 			if fileName[-efl:].lower()!=f".{SCRIPT_FILE_EXTENSION}": fileName = fileName+f".{SCRIPT_FILE_EXTENSION}"
@@ -738,7 +745,7 @@ class Window(QMainWindow):
 	def doFileOpen(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Open Script", self.parent.scriptsdir, f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Open Script", self.scriptsdir, f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			script = open(fileName,"r")
 			self.editor.setPlainText(script.read())

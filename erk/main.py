@@ -661,7 +661,7 @@ class Erk(QMainWindow):
 			self.seditors.activateWindow()
 			return
 
-		self.seditors = ScriptEditor(None,self)
+		self.seditors = ScriptEditor(None,self,self.configfile,self.scriptsdir,None)
 		self.seditors.resize(640,480)
 
 		self.seditors.clientsRefreshed(events.fetch_connections())
@@ -944,7 +944,7 @@ class Erk(QMainWindow):
 		FormatTextDialog(self)
 
 	def showScriptEditor(self):
-		self.seditors = ScriptEditor(None,self)
+		self.seditors = ScriptEditor(None,self,self.configfile,self.scriptsdir,None)
 		self.seditors.resize(640,480)
 
 		self.seditors.clientsRefreshed(events.fetch_connections())

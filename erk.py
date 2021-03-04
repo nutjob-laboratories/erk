@@ -50,7 +50,7 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk.dialogs import EditorDialog,ComboDialogBanner
+from erk.dialogs import EditorDialog,ComboDialogBanner,ScriptEditor
 from erk.main import Erk
 from erk.files import *
 from erk.objects import *
@@ -107,13 +107,12 @@ miscgroup.add_argument("-X","--export-settings", type=str,help="Export settings 
 miscgroup.add_argument("-A","--export-all", type=str,help="Export settings and logs to a zip file", metavar="ZIP")
 miscgroup.add_argument("-I","--import-settings", type=str,help="Import settings (and logs) from a zip file", metavar="ZIP")
 
-devgroup = parser.add_argument_group('Plugin development')
+devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("--generate", type=str,help="Generate a \"blank\" plugin package in the current directory", metavar="NAME", default='')
-devgroup.add_argument("--new", help="Generate a \"blank\" plugin package in the plugins directory", action="store_true")
-devgroup.add_argument("--editor", help="Open the code editor", action="store_true")
-devgroup.add_argument("--edit", type=str,help="Open a file in the code editor", metavar="FILE", default='')
-devgroup.add_argument("--install", type=str,help="Install a plugin", metavar="ZIP", default='')
+devgroup.add_argument("--plugger", dest="editor",help="Open the plugin editor", action="store_true")
+devgroup.add_argument("--plugger-edit", dest="edit",type=str,help="Open a file in the plugin editor", metavar="FILE", default='')
+devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
+devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -180,20 +179,6 @@ if __name__ == '__main__':
 			os.mkdir(args.styles)
 			print("\""+args.styles+"\" directory created!")
 
-	# Handle installing plugins
-
-	if args.install:
-		file = args.install
-		if not os.path.isfile(file):
-			print("\""+file+"\" doesn't exist.")
-			sys.exit(1)
-
-		print("Installing plugin \""+file+"\"...")
-		with ZipFile(file,'r') as zipObj:
-			zipObj.extractall(PLUGIN_DIRECTORY)
-		print("Done!")
-		sys.exit(0)
-
 	# Handle exporting settings
 	if args.export_settings:
 		outfile = args.export_settings
@@ -259,6 +244,51 @@ if __name__ == '__main__':
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
+	# Handle launching the script editor
+
+	elif args.scripter:
+
+		erk.config.load_settings(args.config)
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		EDITOR = ScriptEditor(None,None,args.config,args.scripts,app)
+		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		EDITOR.show()
+
+	elif args.scripted:
+
+		file = args.scripted
+		if not os.path.isfile(file):
+			print("\""+file+"\" doesn't exist. Please use --scripter to create a new file.")
+			sys.exit(1)
+
+		erk.config.load_settings(args.config)
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		EDITOR = ScriptEditor(file,None,args.config,args.scripts,app)
+		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+		EDITOR.show()
+
 	# Handle opening a file in the editor
 
 	elif args.edit:
@@ -285,72 +315,7 @@ if __name__ == '__main__':
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
-	# Handle creating a new plugin and opening it in the editor
-
-	elif args.new:
-		erk.config.load_settings(args.config)
-
-		if erk.config.EDITOR_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
-		else:
-			f = QFont()
-			f.fromString(erk.config.EDITOR_FONT)
-			font = f
-
-		app.setFont(font)
-
-		EDITOR = EditorDialog(None,None,app,args.config,args.style)
-		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
-		EDITOR.show()
-		EDITOR.newPackage()
-
-	# Handle creating a new package
-
 	else:
-
-		if args.generate!='':
-			safe_name = args.generate
-			for c in string.punctuation:
-				safe_name=safe_name.replace(c,"")
-			safe_name = safe_name.translate( {ord(c): None for c in string.whitespace}  )
-
-			ERK_MODULE_DIRECTORY = os.path.join(sys.path[0], "erk")
-			DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
-			PLUGIN_SKELETON = os.path.join(DATA_DIRECTORY, "plugin")
-
-			print("Creating plugin package "+safe_name+"...")
-			os.mkdir(safe_name)
-			shutil.copy(os.path.join(PLUGIN_SKELETON, "package.png"), os.path.join(safe_name, "package.png"))
-			shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.png"), os.path.join(safe_name, "plugin.png"))
-			shutil.copy(os.path.join(PLUGIN_SKELETON, "plugin.py"), os.path.join(safe_name, "plugin.py"))
-			shutil.copy(os.path.join(PLUGIN_SKELETON, "package.txt"), os.path.join(safe_name, "package.txt"))
-
-			f = open(os.path.join(safe_name, "package.txt"),"r")
-			ptxt = f.read()
-			f.close()
-
-			ptxt = ptxt.replace("!PLUGIN_FULL_NAME!",args.generate)
-
-			f = open(os.path.join(safe_name, "package.txt"),"w")
-			f.write(ptxt)
-			f.close()
-
-			f = open(os.path.join(safe_name, "plugin.py"),"r")
-			ppy = f.read()
-			f.close()
-
-			ppy = ppy.replace("!PLUGIN_FULL_NAME!",args.generate)
-			ppy = ppy.replace("!_PLUGIN_NAME!",safe_name)
-
-			f = open(os.path.join(safe_name, "plugin.py"),"w")
-			f.write(ppy)
-			f.close()
-
-			print("Done!")
-
-			sys.exit(0)
 
 		if not loaded_config_file:
 			erk.config.load_settings(args.config)

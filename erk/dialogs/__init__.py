@@ -134,8 +134,8 @@ def EditorDialog(obj=None,filename=None,app=None,config=None,stylefile=None):
 	x = Editor(filename,obj,app,config,stylefile)
 	return x
 
-def ScriptEditor(filename,parent):
-	x = ErkScriptEditor(filename,parent)
+def ScriptEditor(filename,parent,configfile,scriptsdir,app):
+	x = ErkScriptEditor(filename,parent,configfile,scriptsdir,app)
 	x.show()
 
 	return x

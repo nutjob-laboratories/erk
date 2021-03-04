@@ -55,6 +55,12 @@ Version 0.850
 	* Exporting settings now defaults to "settings.json" as the default filename
 	* Bugfix: loading a config file into the settings dialog with a blank "FONT" entry no longer throws an error
 	* Added a new plugin command: .help(), which adds a command to the /help command
+	* Removed the option to install a plugin from the commandline
+	* Renamed --editor commandline option to --plugger (reflecting the plugin editor name)
+	* Renamed --edit commandline option to --plugger-edit (reflecting the plugin editor name)
+	* Added a new commandline option: --scripter (runs the script editor)
+	* Added a new commandline option: --scripter-edit (opens a file in the script editor)
+	* Changed the commandline option group "Development" to "Tools"
 
 Version 0.840
 	* Default alternate nickname now includes a random number
