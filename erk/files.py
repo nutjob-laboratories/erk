@@ -53,20 +53,24 @@ ERK_MODULE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "erk")
 DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 
+# Base directory for config files
+BASE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "config")
+if not os.path.isdir(BASE_DIRECTORY): os.mkdir(BASE_DIRECTORY)
+
 # Configuration directories
-SETTINGS_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "settings")
+SETTINGS_DIRECTORY = os.path.join(BASE_DIRECTORY, "settings")
 if not os.path.isdir(SETTINGS_DIRECTORY): os.mkdir(SETTINGS_DIRECTORY)
 
 # Script directories
-SCRIPTS_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "scripts")
+SCRIPTS_DIRECTORY = os.path.join(BASE_DIRECTORY, "scripts")
 if not os.path.isdir(SCRIPTS_DIRECTORY): os.mkdir(SCRIPTS_DIRECTORY)
 
 # Script directories
-STYLES_DIRECTORY = os.path.join(SETTINGS_DIRECTORY, "styles")
+STYLES_DIRECTORY = os.path.join(BASE_DIRECTORY, "styles")
 if not os.path.isdir(STYLES_DIRECTORY): os.mkdir(STYLES_DIRECTORY)
 
 # Log directory
-LOG_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "logs")
+LOG_DIRECTORY = os.path.join(BASE_DIRECTORY, "logs")
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Configuration files

@@ -61,6 +61,7 @@ Version 0.850
 	* Added a new commandline option: --scripter (runs the script editor)
 	* Added a new commandline option: --scripter-edit (opens a file in the script editor)
 	* Changed the commandline option group "Development" to "Tools"
+	* All configuration files, scripts, styles, and logs are now stored in one directory: config/
 
 Version 0.840
 	* Default alternate nickname now includes a random number

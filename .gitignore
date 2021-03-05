@@ -13,3 +13,4 @@ settings/macros.json
 plugins/sysinfo/sysinfo.py
 plugins/sysinfo/package.png
 plugins/sysinfo/package.txt
+config/*
