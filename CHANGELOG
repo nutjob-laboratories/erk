@@ -1,3 +1,12 @@
+Version 0.860
+	* Removed all plugin-related code and documentation
+	* Config files are now stored in a directory in the user's home directory
+	* Log files are now stored in the same directory as settings files (in a subdirectory)
+	* Default style file is now stored in the styles directory
+	* Removed "Tools" menu
+	* The "Settings" menu is now the "Settings & Tools" menu, and "Tools" entries are located there
+	* Edited references to plugins and the plugin editor out of the command documentation
+
 Version 0.850
 	* Changed the splash logo
 	* Added qt5reactor to the distribution

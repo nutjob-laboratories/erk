@@ -75,19 +75,3 @@ plugin {
 	font-weight: bold;
 	color: #FF8C00;
 }
-
-editor {
-	color: #000000;
-	background-color: #ffffff;
-	keyword: blue;
-	operator: red;
-	brace: darkGray;
-	defined: black;
-	string: magenta;
-	multiline-strings: darkMagenta;
-	comment: darkGreen;
-	self: black;
-	numbers: brown;
-	erk: #0212b6;
-	current: #fff397;
-}

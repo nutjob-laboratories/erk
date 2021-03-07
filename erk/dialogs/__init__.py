@@ -44,7 +44,6 @@ from .history_size import Dialog as HistorySize
 from .log_size import Dialog as LogSize
 from .format import Dialog as FormatText
 from .about import Dialog as About
-from .editor import Window as Editor
 from .export_log import Dialog as ExportLog
 from .key import Dialog as Key
 from .error import Dialog as Error
@@ -55,9 +54,7 @@ from .neterror import Dialog as Neterror
 from .install import Dialog as Installer
 from .settings import Dialog as Settings
 from .autosave_freq import Dialog as Autosave
-
 from .scriptedit import Window as ErkScriptEditor
-#from .alias import Dialog as InsertAlias
 
 def AutosaveDialog():
 	x = Autosave()
@@ -129,10 +126,6 @@ def ErrorDialog(obj,errlist=None):
 	x = Error(errlist,obj)
 	x.resize(400,250)
 	x.show()
-
-def EditorDialog(obj=None,filename=None,app=None,config=None,stylefile=None):
-	x = Editor(filename,obj,app,config,stylefile)
-	return x
 
 def ScriptEditor(filename,parent,configfile,scriptsdir,app):
 	x = ErkScriptEditor(filename,parent,configfile,scriptsdir,app)

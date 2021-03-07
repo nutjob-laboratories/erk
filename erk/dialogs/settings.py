@@ -135,7 +135,6 @@ class Dialog(QDialog):
 
 		if not info: return None
 		self.configRefresh = info
-		#self.refreshButton.setText("Set channel list refresh rate\n ("+str(self.configRefresh)+" seconds)")
 
 		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds*")
 
@@ -316,10 +315,8 @@ class Dialog(QDialog):
 		entry.widget = self.messagesPage
 		entry.setIcon(QIcon(MESSAGE_ICON))
 		self.selector.addItem(entry)
-		#self.selector.setCurrentItem(entry)
 
 		self.stack.addWidget(self.messagesPage)
-		#self.stack.setCurrentWidget(self.messagesPage)
 
 		self.showDates = QCheckBox("Display dates in channel chat",self)
 		if config.DISPLAY_DATES_IN_CHANNEL_CHAT: self.showDates.setChecked(True)
@@ -419,7 +416,6 @@ class Dialog(QDialog):
 		if config.DISPLAY_CHAT_RESUME_DATE_TIME: self.resumeLog.setChecked(True)
 		self.resumeLog.stateChanged.connect(self.setRerender)
 
-		# self.autoLog = QCheckBox("Autosave logs every "+str(config.AUTOSAVE_LOG_TIME)+" seconds",self)
 		self.autoLog = QCheckBox("",self)
 		self.autoLogLabel = QLabel("Autosave logs every <b>"+str(config.AUTOSAVE_LOG_TIME)+"</b> seconds")
 		if config.AUTOSAVE_LOGS: self.autoLog.setChecked(True)
@@ -800,7 +796,6 @@ class Dialog(QDialog):
 		cpLayout.addLayout(lLayout)
 		cpLayout.addWidget(self.enabledSpellcheck)
 		cpLayout.addWidget(self.nickSpellcheck)
-		#cpLayout.addStretch()
 		
 		cpLayout.addStretch()
 
@@ -845,7 +840,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Extensions")
+		entry.setText("Scripting")
 		entry.widget = self.featuresPage
 		entry.setIcon(QIcon(SCRIPT_ICON))
 		self.selector.addItem(entry)
@@ -857,22 +852,6 @@ class Dialog(QDialog):
 
 		if self.parent.cmdline_script:
 			self.scriptMisc.setEnabled(False)
-
-		self.pluginFeatures = QCheckBox("Enable plugins",self)
-		if config.PLUGINS_ENABLED: self.pluginFeatures.setChecked(True)
-
-		if self.parent.cmdline_plugin:
-			self.pluginFeatures.setEnabled(False)
-
-		self.pluginErrors = QCheckBox("Show plugin load errors",self)
-		if config.SHOW_LOAD_ERRORS: self.pluginErrors.setChecked(True)
-
-		self.pluginDevmode = QCheckBox("Plugin development mode",self)
-		if config.DEVELOPER_MODE: self.pluginDevmode.setChecked(True)
-
-		if self.parent.cmdline_plugin:
-			self.pluginErrors.setEnabled(False)
-			self.pluginDevmode.setEnabled(False)
 
 		self.sglobalMisc = QCheckBox("All aliases are global",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
@@ -907,45 +886,17 @@ class Dialog(QDialog):
 		if self.parent.cmdline_script:
 			self.enableMacros.setEnabled(False)
 
-		self.pluginInstall = QCheckBox("Enable install from menu",self)
-		if not config.BLOCK_PLUGIN_INSTALL: self.pluginInstall.setChecked(True)
-
-		if self.parent.cmdline_install:
-			self.pluginInstall.setEnabled(False)
-
-		cgbLayout = QVBoxLayout()
-		cgbLayout.addWidget(self.pluginFeatures)
-		cgbLayout.addWidget(self.pluginInstall)
-		cgbLayout.addWidget(self.pluginErrors)
-		cgbLayout.addWidget(self.pluginDevmode)
-
-		plugBox = QGroupBox("Plugin Settings",self)
-		plugBox.setLayout(cgbLayout)
-
-		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		if self.parent.cmdline_plugin:
-			plugBox.setEnabled(False)
-
-		scgbLayout = QVBoxLayout()
-		scgbLayout.addWidget(self.scriptMisc)
-		scgbLayout.addWidget(self.seditMisc)
-		scgbLayout.addWidget(self.sglobalMisc)
-		scgbLayout.addWidget(self.enableMacros)
-		scgbLayout.addWidget(self.saveMacros)
-		scgbLayout.addWidget(self.autoMacros)
-
-		scriptBox = QGroupBox("Script Settings",self)
-		scriptBox.setLayout(scgbLayout)
-
-		scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		if self.parent.cmdline_script:
 			scriptBox.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(scriptBox)
-		cpLayout.addWidget(plugBox)
+		cpLayout.addWidget(self.scriptMisc)
+		cpLayout.addWidget(self.seditMisc)
+		cpLayout.addWidget(self.sglobalMisc)
+		cpLayout.addWidget(self.enableMacros)
+		cpLayout.addWidget(self.saveMacros)
+		cpLayout.addWidget(self.autoMacros)
+
 		cpLayout.addStretch()
 
 		self.featuresPage.setLayout(cpLayout)
@@ -1092,14 +1043,6 @@ class Dialog(QDialog):
 
 	def save(self):
 
-		if self.pluginInstall.isChecked():
-			config.BLOCK_PLUGIN_INSTALL = False
-			if not self.parent.cmdline_install:
-				self.parent.block_install = False
-		else:
-			config.BLOCK_PLUGIN_INSTALL = True
-			self.parent.block_install = True
-
 		config.LOG_LOAD_SIZE_MAX = self.logDisplayLines
 
 		config.AUTOSAVE_LOG_TIME = self.autosave_time
@@ -1167,20 +1110,8 @@ class Dialog(QDialog):
 		config.UNSEEN_MESSAGE_ANIMATION = self.unseenConnection.isChecked()
 		config.CONNECTION_MESSAGE_ANIMATION = self.animateConnection.isChecked()
 
-		config.DEVELOPER_MODE = self.pluginDevmode.isChecked()
-
 		config.SHOW_CONNECTION_FAIL_ERROR = self.failErrors.isChecked()
 		config.SHOW_CONNECTION_LOST_ERROR = self.lostErrors.isChecked()
-
-		config.SHOW_LOAD_ERRORS = self.pluginErrors.isChecked()
-
-		config.PLUGINS_ENABLED = self.pluginFeatures.isChecked()
-		if config.PLUGINS_ENABLED:
-			if not self.parent.cmdline_plugin:
-				self.parent.block_plugins = False
-		else:
-			self.parent.block_plugins = True
-		self.parent.rebuildPluginMenu()
 
 		config.CHANNEL_LIST_REFRESH_FREQUENCY = self.configRefresh
 
@@ -1376,19 +1307,11 @@ class Dialog(QDialog):
 				self.twentyfourTimestamp.setChecked(config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS)
 				self.secondsTimestamp.setChecked(config.DISPLAY_TIMESTAMP_SECONDS)
 				self.scriptMisc.setChecked(config.ENABLE_SCRIPTS)
-				self.pluginFeatures.setChecked(config.PLUGINS_ENABLED)
-				self.pluginErrors.setChecked(config.SHOW_LOAD_ERRORS)
-				self.pluginDevmode.setChecked(config.DEVELOPER_MODE)
 				self.sglobalMisc.setChecked(config.GLOBALIZE_ALL_SCRIPT_ALIASES)
 				self.seditMisc.setChecked(config.ENABLE_SCRIPT_EDITOR)
 				self.autoMacros.setChecked(config.AUTOCOMPLETE_MACROS)
 				self.saveMacros.setChecked(config.SAVE_MACROS)
 				self.enableMacros.setChecked(config.ENABLE_MACROS)
-
-				if not config.BLOCK_PLUGIN_INSTALL:
-					self.pluginInstall.setChecked(True)
-				else:
-					self.pluginInstall.setChecked(False)
 
 				self.buttonsMisc.setChecked(config.SHOW_CONSOLE_BUTTONS)
 				self.switchMisc.setChecked(config.SWITCH_TO_NEW_WINDOWS)

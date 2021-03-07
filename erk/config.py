@@ -86,12 +86,9 @@ DISPLAY_CHAT_RESUME_DATE_TIME = True
 SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
-PLUGINS_ENABLED = True
-DEVELOPER_MODE = False
 USE_SPACES_FOR_INDENT = True
 NUMBER_OF_SPACES_FOR_INDENT = 4
 EDITOR_WORD_WRAP = False
-SHOW_LOAD_ERRORS = True
 DISPLAY_TIMESTAMP_SECONDS = False
 EDITOR_AUTO_INDENT = True
 EDITOR_FONT = ''
@@ -154,9 +151,6 @@ AUTOCOMPLETE_CHANNELS = True
 
 DICTIONARY = []
 
-BLOCK_PLUGIN_INSTALL = False
-
-DISABLED_PLUGINS = []
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -164,8 +158,6 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
-		"disabled_plugins": DISABLED_PLUGINS,
-		"block_plugin_installation": BLOCK_PLUGIN_INSTALL,
 		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
@@ -238,9 +230,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"save_private_logs": SAVE_PRIVATE_LOGS,
 		"load_private_logs": LOAD_PRIVATE_LOGS,
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
-		"enable_plugins": PLUGINS_ENABLED,
-		"plugin_developement_mode": DEVELOPER_MODE,
-		"show_plugin_load_error": SHOW_LOAD_ERRORS,
 		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
 		"editor_autoindent": EDITOR_AUTO_INDENT,
 		"editor_font": EDITOR_FONT,
@@ -274,12 +263,6 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
-
-	if not "disabled_plugins" in data:
-		data["disabled_plugins"] = DISABLED_PLUGINS
-
-	if not "block_plugin_installation" in data:
-		data["block_plugin_installation"] = BLOCK_PLUGIN_INSTALL
 
 	if not "dictionary" in data:
 		data["dictionary"] = DICTIONARY
@@ -425,12 +408,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global SAVE_PRIVATE_LOGS
 	global LOAD_PRIVATE_LOGS
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
-	global PLUGINS_ENABLED
-	global DEVELOPER_MODE
 	global USE_SPACES_FOR_INDENT
 	global NUMBER_OF_SPACES_FOR_INDENT
 	global EDITOR_WORD_WRAP
-	global SHOW_LOAD_ERRORS
 	global DISPLAY_TIMESTAMP_SECONDS
 	global EDITOR_AUTO_INDENT
 	global EDITOR_FONT
@@ -480,8 +460,6 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_MACROS
 	global AUTOCOMPLETE_CHANNELS
 	global DICTIONARY
-	global BLOCK_PLUGIN_INSTALL
-	global DISABLED_PLUGINS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -490,8 +468,6 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
-			DISABLED_PLUGINS = data["disabled_plugins"]
-			BLOCK_PLUGIN_INSTALL = data["block_plugin_installation"]
 			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
 			ENABLE_MACROS = data["enable_macros"]
@@ -559,9 +535,6 @@ def load_settings(filename=SETTINGS_FILE):
 			SAVE_PRIVATE_LOGS = data["save_private_logs"]
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
-			PLUGINS_ENABLED = data["enable_plugins"]
-			DEVELOPER_MODE = data["plugin_developement_mode"]
-			SHOW_LOAD_ERRORS = data["show_plugin_load_error"]
 			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]
 			EDITOR_AUTO_INDENT = data["editor_autoindent"]
 			EDITOR_FONT = data["editor_font"]
@@ -609,8 +582,6 @@ def check_settings(filename):
 			data = patch_settings(data)
 
 			check = 0
-			if "disabled_plugins" in data: check = check + 1
-			if "block_plugin_installation" in data: check = check + 1
 			if "dictionary" in data: check = check + 1
 			if "autocomplete_channels" in data: check = check + 1
 			if "enable_macros" in data: check = check + 1
@@ -678,9 +649,6 @@ def check_settings(filename):
 			if "save_private_logs" in data: check = check + 1
 			if "load_private_logs" in data: check = check + 1
 			if "show_system_messages_prefix" in data: check = check + 1
-			if "enable_plugins" in data: check = check + 1
-			if "plugin_developement_mode" in data: check = check + 1
-			if "show_plugin_load_error" in data: check = check + 1
 			if "show_timestamps_with_seconds" in data: check = check + 1
 			if "editor_autoindent" in data: check = check + 1
 			if "editor_font" in data: check = check + 1
@@ -714,7 +682,7 @@ def check_settings(filename):
 			if "animate_connecting_messages_in_connection_display" in data: check = check + 1
 			if "enable_scripts" in data: check = check + 1
 
-			if check >= 104:
+			if check >= 95:
 				return True
 			else:
 				return False

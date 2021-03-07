@@ -38,6 +38,7 @@ import string
 import random
 from datetime import datetime
 import zipfile
+from pathlib import Path
 
 from .strings import *
 from .objects import *
@@ -54,7 +55,7 @@ DATA_DIRECTORY = os.path.join(ERK_MODULE_DIRECTORY, "data")
 AUTOCOMPLETE_DIRECTORY = os.path.join(DATA_DIRECTORY, "autocomplete")
 
 # Base directory for config files
-BASE_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "config")
+BASE_DIRECTORY = os.path.join(str(Path.home()), ".erk")
 if not os.path.isdir(BASE_DIRECTORY): os.mkdir(BASE_DIRECTORY)
 
 # Configuration directories
@@ -75,8 +76,9 @@ if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
 # Configuration files
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
-STYLE_FILE = os.path.join(SETTINGS_DIRECTORY, "text."+STYLE_FILE_EXTENSION)
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
+
+STYLE_FILE = os.path.join(STYLES_DIRECTORY, "default."+STYLE_FILE_EXTENSION)
 
 NETWORK_FILE = os.path.join(DATA_DIRECTORY, "servers.txt")
 BACKUP_STYLE_FILE = os.path.join(DATA_DIRECTORY, "text."+STYLE_FILE_EXTENSION)
@@ -442,7 +444,6 @@ def patch_style_file(filename,data):
 	if not 'error' in data: missing.append('error')
 	if not 'server' in data: missing.append('server')
 	if not 'plugin' in data: missing.append('plugin')
-	if not 'editor' in data: missing.append('editor')
 
 	# If there's no missing styles, return unpatched data
 	if len(missing)==0: return data

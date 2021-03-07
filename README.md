@@ -1,12 +1,11 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.840.114"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.850.070</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.010</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.850.070**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.010**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -46,7 +45,7 @@
   * Almost every part of the interface can be customized
   * Most behaviors can be customized
   * Over 50 display and configuration options settable in the GUI
-  * Scripting, plugins, menus, and more can be disabled from the command-line
+  * Scripting, menus, and more can be disabled from the command-line
 * Text colors are customizeable
   * Any text, from nicknames to messages to hyperlinks, can use custom colors
   * Text rendering setting are stored in "style files", and can be shared
@@ -78,14 +77,6 @@
     * Syntax highlighting
     * Run scripts on any connection the client is connected to
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
-* Plugins!
-  * Plugins are written in Python 3, just like **Ərk**
-  * **Ərk** features a complete plugin [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), built into the client!
-    * Text editor with syntax highlighting
-    * Tools to create, package, and export plugin packages
-    * Create a basic plugin with two mouse clicks!
-  * [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) is included...no trying to figure out how to write a plugin from endless forum posts!
-  * Plugins can be found in the [official **Ərk** plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 * An extensive set of command-line flags, allowing for _even more_ configuration options
   * Disable most features on startup
   * Connect to an IRC server from the command-line
@@ -123,12 +114,10 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--plugger] [--plugger-edit FILE]
-                     [--scripter] [--scripter-edit FILE] [--noplugins] [--noask]
-                     [--nosettings] [--nomenus] [--noconnect] [--noscripts] [--nodisplay]
-                     [--nostyles] [--noedit] [--noextensions] [--noinstall] [--qt5menu]
+                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--scripter] [--scripter-edit FILE]
+                     [--noask] [--nosettings] [--nomenus] [--noconnect] [--noscripts]
+                     [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
                      [SERVER] [PORT]
-
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -177,13 +166,10 @@ Configuration:
                         Import settings (and logs) from a zip file
 
 Tools:
-  --plugger             Open the plugin editor
-  --plugger-edit FILE   Open a file in the plugin editor
   --scripter            Open the script editor
   --scripter-edit FILE  Open a file in the script editor
 
 Disable functionality:
-  --noplugins           Disable plugins
   --noask               Don't ask for a server to connect to on start
   --nosettings          Disable settings menu(s)
   --nomenus             Disable all menus
@@ -192,9 +178,8 @@ Disable functionality:
   --nodisplay           Disable connection display
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
-  --noextensions        Disables scripts and plugins
-  --noinstall           Disables plugin installation
   --qt5menu             Disable menu toolbar, and use normal menus
+
 ```
 # Frequently asked questions
 
@@ -214,33 +199,12 @@ No. I'm still adding features and tracking down and squashing bugs.
 
 **Ərk** runs on both Windows and Linux! It's being developed on Windows 10, but it's been tested (and runs great) on Debian, Ubuntu, and Mint Linux. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
 
-## How do I write an **Ərk** plugin?
-**Ərk** plugins are written in Python 3, and consist of a class that inherits from the _Plugin_ class built into **Ərk**. Here's an example plugin that says greets anyone joining a channel the client is in:
-```python
-from erk import *
-
-class Greeter(Plugin):
-
-  def __init__(self):
-    self.name = "Greeter"
-    self.description = "A greeting plugin."
-  
-  def join(self,client,channel,user):
-    nickname = user.split('!')[0]
-    client.msg(channel,f"Welcome to {channel}, {nickname}!")
-```
-This plugin will greet anyone who joins any channel the client is in. The greeting message will be sent to the channel (and server) where the join event happened, on all servers that **Ərk** is connected to.
-
-To install this plugin, save it to a file and place it in the "plugins" directory in your **Ərk** installation directory. **Ərk** will load it automatically. Individual plugins can be disabled in the client; even if a package contains multiple plugins, you can disable any one plugin while still allowing the others to execute.
-
-For more information, check out the [documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf).
-
 ## How configurable is **Ərk**?
-*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like plugins and scripts, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
+*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-    python erk.py -o --noextensions --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
+    python erk.py -o --noscripts --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
 
-And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as nearly 20 different command-line options.
+And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as over 20 different command-line options.
 
 When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
 
@@ -259,19 +223,18 @@ When I decided to write a new IRC client, I wanted it to feature a few things:
 * A full, modern GUI (HexChat is sort of modern, I guess, if was still 1999-2000)
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
 * Focuses on the chat experience (not downloading/uploading files)
-* The ability to easily extend the client without resorting to Black Magic&trade; or spend hours and hours surfing endless forum posts or decipher less-than-helpful documentation
 
-**Ərk** is being developed on Windows 10 and Linux Mint, but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repository, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
+**Ərk** is being developed on primarily on Linux (and occasionally on Windows 10), but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repository, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
 
 The other reason why I wrote **Ərk** is because I got tired of not understanding how the most popular clients did things. I wanted a client that you could configure to do _exactly_ what you wanted it to do, no more and no less. That's why **Ərk** has a ridiculous amount of configuration options. Do you want to run the client in full-screen mode, and remove the ability of users to change settings or connect to other servers (aka, "kiosk mode")? You can do that. Do you want to strip all the "pretty" off the client, and basically run it in "text only" mode? You can do that. Do you want **Ərk** to do nothing except what you tell it to do? You can do that. Almost everything in the client can be configured from within the GUI or with command-line flags.
 
 ## Is **Ərk** designed for multiple users?
 
-Not directly, as all its configuration files are stored in **Ərk**'s installation directory. However, there are six command-line options you can use to manage settings for different users:
+Yes! **Ərk** stores configuration files in a user's "home" directory, on both Linux and Windows. However, if multiple users want to use **Ərk** on the same account, there are command-line options to store configuration files in specific, designated locations.
 
 * `-C`,`--config` : This tells **Ərk** to use a user-specified file for most configuration options.
-* `-U`,`--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, the disabled plugins list, and other user specific data.
-* `-Y`,`--style` : This tells **Ərk** to use a user-specified text style file. This sets what colors and formatting is used to display text in the client.
+* `-U`,`--user` : This tells **Ərk** to use a user-specified user settings file. Stored in this file are nickname and username settings, server connection history, and other user specific data.
+* `-Y`,`--style` : This tells **Ərk** to use a user-specified text style file. This sets what colors and formatting are used to display text in the client.
 * `-L`,`--logs` : This tells **Ərk** to use a user-specified directory for log loading and storage.
 * `-S`,`--scripts` : This tells **Ərk** to use a user-specified directory for script loading and storage.
 * `-T`,`--styles` : This tells **Ərk** to use a user-specified directory for text style loading and storage.
@@ -298,4 +261,3 @@ Similarly, Bob's batch file looks like this:
     python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
 
 Alice and Bob can now use **Ərk** with their own customized settings!
-

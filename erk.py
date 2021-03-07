@@ -50,14 +50,14 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk.dialogs import EditorDialog,ComboDialogBanner,ScriptEditor
+from erk.dialogs import ComboDialogBanner,ScriptEditor
 from erk.main import Erk
 from erk.files import *
 from erk.objects import *
 from erk.strings import *
 import erk.config
 from erk.common import *
-from erk.plugins import PLUGIN_DIRECTORY
+#from erk.plugins import PLUGIN_DIRECTORY
 
 # Handle commandline arguments
 
@@ -109,14 +109,11 @@ miscgroup.add_argument("-I","--import-settings", type=str,help="Import settings 
 
 devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("--plugger", dest="editor",help="Open the plugin editor", action="store_true")
-devgroup.add_argument("--plugger-edit", dest="edit",type=str,help="Open a file in the plugin editor", metavar="FILE", default='')
 devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
 devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
-disgroup.add_argument( "--noplugins", help=f"Disable plugins", action="store_true")
 disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
 disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
 disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
@@ -125,8 +122,6 @@ disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_t
 disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
-disgroup.add_argument( "--noextensions", help=f"Disables scripts and plugins", action="store_true")
-disgroup.add_argument( "--noinstall", help=f"Disables plugin installation", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
@@ -136,11 +131,6 @@ loaded_config_file = False
 if __name__ == '__main__':
 
 	app = QApplication([])
-
-	# Shortcut disables
-	if args.noextensions:
-		args.noplugins = True
-		args.noscripts = True
 
 	# If the user has passed an alternate configuration file,
 	# and the file doesn't exist, create a new config file
@@ -224,26 +214,6 @@ if __name__ == '__main__':
 		print("Done!")
 		sys.exit(0)
 
-	# Handle launching the editor
-
-	elif args.editor:
-		erk.config.load_settings(args.config)
-
-		if erk.config.EDITOR_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
-		else:
-			f = QFont()
-			f.fromString(erk.config.EDITOR_FONT)
-			font = f
-
-		app.setFont(font)
-
-		EDITOR = EditorDialog(None,None,app,args.config,args.style)
-		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
-		EDITOR.show()
-
 	# Handle launching the script editor
 
 	elif args.scripter:
@@ -286,32 +256,6 @@ if __name__ == '__main__':
 		app.setFont(font)
 
 		EDITOR = ScriptEditor(file,None,args.config,args.scripts,app)
-		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
-		EDITOR.show()
-
-	# Handle opening a file in the editor
-
-	elif args.edit:
-
-		file = args.edit
-		if not os.path.isfile(file):
-			print("\""+file+"\" doesn't exist. Please use --editor to create a new file.")
-			sys.exit(1)
-
-		erk.config.load_settings(args.config)
-
-		if erk.config.EDITOR_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
-		else:
-			f = QFont()
-			f.fromString(erk.config.EDITOR_FONT)
-			font = f
-
-		app.setFont(font)
-
-		EDITOR = EditorDialog(None,file,app,args.config,args.style)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -445,7 +389,6 @@ if __name__ == '__main__':
 			GUI = Erk(
 				app,
 				i,
-				args.noplugins,
 				args.nosettings,
 				args.nomenus,
 				args.config,
@@ -464,7 +407,6 @@ if __name__ == '__main__':
 				args.nostyles,
 				args.noedit,
 				args.macros,
-				args.noinstall,
 				)
 			GUI.show()
 		else:
@@ -475,7 +417,6 @@ if __name__ == '__main__':
 				GUI = Erk(
 					app,
 					None,
-					args.noplugins,
 					args.nosettings,
 					args.nomenus,
 					args.config,
@@ -494,7 +435,6 @@ if __name__ == '__main__':
 					args.nostyles,
 					args.noedit,
 					args.macros,
-					args.noinstall,
 					)
 				GUI.show()
 
@@ -569,7 +509,6 @@ if __name__ == '__main__':
 				GUI = Erk(
 					app,
 					i,
-					args.noplugins,
 					args.nosettings,
 					args.nomenus,
 					args.config,
@@ -588,7 +527,6 @@ if __name__ == '__main__':
 					args.nostyles,
 					args.noedit,
 					args.macros,
-					args.noinstall,
 					)
 				GUI.show()
 			else:
@@ -599,7 +537,6 @@ if __name__ == '__main__':
 					GUI = Erk(
 						app,
 						info,
-						args.noplugins,
 						args.nosettings,
 						args.nomenus,
 						args.config,
@@ -618,7 +555,6 @@ if __name__ == '__main__':
 						args.nostyles,
 						args.noedit,
 						args.macros,
-						args.noinstall,
 						)
 					GUI.show()
 				else:

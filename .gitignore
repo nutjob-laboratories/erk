@@ -1,16 +1,3 @@
 
-*.pyc
-settings/user.json
-settings/user.json
-settings/settings.json
-logs/*
-*.odt#
-settings/text.css
-settings/scripts/*
-settings/text.style
-settings/styles/*
-settings/macros.json
-plugins/sysinfo/sysinfo.py
-plugins/sysinfo/package.png
-plugins/sysinfo/package.txt
 config/*
+*.pyc

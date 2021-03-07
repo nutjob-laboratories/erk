@@ -66,8 +66,9 @@ def add_to_autocomplete(item,replacement):
 	AUTOCOMPLETE.append(entry)
 
 def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
-	if not client.gui.block_plugins:
-		if client.gui.plugins.ctcp(client,user,channel,tag,message): return
+	pass
+	# if not client.gui.block_plugins:
+	# 	if client.gui.plugins.ctcp(client,user,channel,tag,message): return
 
 def toggle_userlist():
 	for c in CHANNELS:
@@ -805,14 +806,16 @@ def channel_has_hostmask(gui,client,channel,user):
 	return True
 
 def line_output(gui,client,line):
+	pass
 	
-	if not client.gui.block_plugins:
-		client.gui.plugins.line_out(client,line)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.line_out(client,line)
 
 def line_input(gui,client,line):
+	pass
 	
-	if not client.gui.block_plugins:
-		client.gui.plugins.line_in(client,line)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.line_in(client,line)
 
 def received_error(gui,client,error):
 
@@ -845,8 +848,8 @@ def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
 
-	if not client.gui.block_plugins:
-		client.gui.plugins.mode(client,channel,user,mset,modes,args)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.mode(client,channel,user,mset,modes,args)
 
 	args = list(args)
 	cleaned = []
@@ -1423,8 +1426,8 @@ def erk_joined_channel(gui,client,channel):
 
 def uptime(gui,client,uptime):
 
-	if not client.gui.block_plugins:
-		client.gui.plugins.tick(client)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.tick(client)
 	
 	gui.uptimers[client.id] = uptime
 	gui.total_uptime = gui.total_uptime + 1
@@ -1469,8 +1472,8 @@ def uptime(gui,client,uptime):
 
 def part(gui,client,user,channel):
 
-	if not client.gui.block_plugins:
-		client.gui.plugins.part(client,channel,user)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.part(client,channel,user)
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1494,8 +1497,8 @@ def part(gui,client,user,channel):
 
 def join(gui,client,user,channel):
 
-	if not client.gui.block_plugins:
-		client.gui.plugins.join(client,channel,user)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.join(client,channel,user)
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1532,8 +1535,8 @@ def motd(gui,client,motd):
 
 def notice_message(gui,client,target,user,message):
 
-	if not client.gui.block_plugins:
-		if client.gui.plugins.notice(client,target,user,message): return
+	# if not client.gui.block_plugins:
+	# 	if client.gui.plugins.notice(client,target,user,message): return
 
 	if len(user.strip())==0:
 		if client.hostname:
@@ -1618,8 +1621,8 @@ def notice_message(gui,client,target,user,message):
 
 def private_message(gui,client,user,message):
 
-	if not client.gui.block_plugins:
-		if client.gui.plugins.private(client,user,message): return
+	# if not client.gui.block_plugins:
+	# 	if client.gui.plugins.private(client,user,message): return
 
 	global UNSEEN
 
@@ -1720,8 +1723,8 @@ def private_message(gui,client,user,message):
 
 def public_message(gui,client,channel,user,message):
 
-	if not client.gui.block_plugins:
-		if client.gui.plugins.public(client,channel,user,message): return
+	# if not client.gui.block_plugins:
+	# 	if client.gui.plugins.public(client,channel,user,message): return
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1771,8 +1774,8 @@ def public_message(gui,client,channel,user,message):
 
 def registered(gui,client):
 
-	if not client.gui.block_plugins:
-		client.gui.plugins.connect(client)
+	# if not client.gui.block_plugins:
+	# 	client.gui.plugins.connect(client)
 
 	gui.registered(client)
 
