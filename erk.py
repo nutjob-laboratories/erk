@@ -118,7 +118,7 @@ devgroup.add_argument("--export", dest="xlog", help="Open the log export dialog"
 disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
-disgroup.add_argument( "--nosettings", help=f"Disable settings menu(s)", action="store_true")
+disgroup.add_argument( "--nosettings", help=f"Disable \"Settings & Tools\" menu", action="store_true")
 disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
 disgroup.add_argument( "--noconnect", help=f"Disable connection commands", action="store_true")
 disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
