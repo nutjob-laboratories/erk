@@ -120,18 +120,6 @@ class Dialog(QDialog):
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setOpenExternalLinks(True)
 
-		plug_credit = QLabel(f"<a href=\"https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/\"><small>Plugin framework</small></a><small> inspired by </small><small>Guido Diepen</small>")
-		plug_credit.setAlignment(Qt.AlignCenter)
-		plug_credit.setOpenExternalLinks(True)
-
-		syn_credit = QLabel(f"<a href=\"https://wiki.python.org/moin/PyQt/Python%20syntax%20highlighting\"><small>Syntax highlighting from the Python Wiki</a></small>")
-		syn_credit.setAlignment(Qt.AlignCenter)
-		syn_credit.setOpenExternalLinks(True)
-
-		ce_credit = QLabel(f"<a href=\"https://stackoverflow.com/questions/40386194/create-text-area-textedit-with-line-number-in-pyqt\"><small>Code editor line numbers</a></small>")
-		ce_credit.setAlignment(Qt.AlignCenter)
-		ce_credit.setOpenExternalLinks(True)
-
 		qr_credit = QLabel(f"<a href=\"https://github.com/twisted/qt5reactor\"><small>qt5reactor</small></a> <small>by Twisted Matrix Labs</small>")
 		qr_credit.setAlignment(Qt.AlignCenter)
 		qr_credit.setOpenExternalLinks(True)
@@ -173,16 +161,10 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(qr_credit)
-		creditsLayout.addWidget(plug_credit)
-		creditsLayout.addWidget(syn_credit)
-		creditsLayout.addWidget(ce_credit)
 		creditsBox.setLayout(creditsLayout)
 
 		okButton = QPushButton("Ok")
 		okButton.clicked.connect(self.close)
-
-		#self.about_tab = QWidget()
-		#self.credits_tab = QWidget()
 
 		aboutLayout = QVBoxLayout()
 		aboutLayout.addLayout(titleLayout)
@@ -206,11 +188,6 @@ class Dialog(QDialog):
 		self.credits_tab.setLayout(credLayout)
 
 		finalLayout = QVBoxLayout()
-		# finalLayout.addLayout(titleLayout)
-		# finalLayout.addWidget(tech_credit)
-		# finalLayout.addWidget(gnu_credit)
-		# finalLayout.addWidget(creditsBox)
-		# finalLayout.addWidget(platform_credit)
 		finalLayout.addWidget(self.tabs)
 		finalLayout.addWidget(okButton)
 
