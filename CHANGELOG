@@ -10,6 +10,9 @@ Version 0.860
 	* Removed some now-unneeded credits from the about dialog
 	* Tweaked the "about" dialog a bit more
 	* Bugfix: log exporter used the default log directory, rather than one supplied by the user
+	* Bugfix: log exporter defaulted to exporting as text, even though the GUI shows an initial default of JSON
+	* Added a commandline option to open (and use) the "export log" dialog without the client running
+	* Removed three commandline options: --export-all, --export-settings, --import-settings
 
 Version 0.850
 	* Changed the splash logo

@@ -114,9 +114,9 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--scripter] [--scripter-edit FILE]
-                     [--settings] [--noask] [--nosettings] [--nomenus] [--noconnect]
-                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
+                     [-M FILE] [--scripter] [--scripter-edit FILE] [--settings] [--export]
+                     [--noask] [--nosettings] [--nomenus] [--noconnect] [--noscripts]
+                     [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -159,17 +159,12 @@ Configuration:
                         Use an alternate style storage location
   -M FILE, --macros FILE
                         Use an alternate macro save file
-  -X ZIP, --export-settings ZIP
-                        Export settings to a zip file
-  -A ZIP, --export-all ZIP
-                        Export settings and logs to a zip file
-  -I ZIP, --import-settings ZIP
-                        Import settings (and logs) from a zip file
 
 Tools:
   --scripter            Open the script editor
   --scripter-edit FILE  Open a file in the script editor
   --settings            Open the preferences dialog
+  --export              Open the log export dialog
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start

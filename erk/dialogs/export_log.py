@@ -43,8 +43,8 @@ from ..resources import *
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_name_information(logdir,parent=None):
-		dialog = Dialog(logdir,parent)
+	def get_name_information(logdir,parent=None,app=None):
+		dialog = Dialog(logdir,parent,app)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -96,15 +96,24 @@ class Dialog(QDialog):
 		if dtype=='Pipe': self.delimiter = '|'
 		if dtype=='Double Pipe': self.delimiter = '||'
 
-	def __init__(self,logdir,parent=None):
+	def closeEvent(self, event):
+
+		if self.app != None:
+			self.app.quit()
+
+		event.accept()
+		self.close()
+
+	def __init__(self,logdir,parent=None,app=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
 		self.logdir = logdir
+		self.app = None
 		self.delimiter = "\t"
 		self.linedelim = "\n"
 
-		self.do_json = False
+		self.do_json = True
 		self.epoch = False
 
 		self.setWindowTitle("Export log")

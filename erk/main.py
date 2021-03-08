@@ -830,7 +830,7 @@ class Erk(QMainWindow):
 		self.seditors.clientsRefreshed(events.fetch_connections())
 
 	def menuExportLog(self):
-		d = ExportLogDialog(self.logdir,self)
+		d = ExportLogDialog(self.logdir,None)
 		if d:
 			elog = d[0]
 			dlog = d[1]

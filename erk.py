@@ -61,6 +61,7 @@ from erk.common import *
 
 from erk.dialogs.settings import Dialog as Settings
 from erk.dialogs.scriptedit import Window as ErkScriptEditor
+from erk.dialogs.export_log import Dialog as ExportLog
 
 # Handle commandline arguments
 
@@ -106,15 +107,13 @@ miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storag
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
 miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro save file", metavar="FILE", default=MACRO_SAVE_FILE)
-miscgroup.add_argument("-X","--export-settings", type=str,help="Export settings to a zip file", metavar="ZIP")
-miscgroup.add_argument("-A","--export-all", type=str,help="Export settings and logs to a zip file", metavar="ZIP")
-miscgroup.add_argument("-I","--import-settings", type=str,help="Import settings (and logs) from a zip file", metavar="ZIP")
 
 devgroup = parser.add_argument_group('Tools')
 
 devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
 devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
 devgroup.add_argument("--settings", help="Open the preferences dialog", action="store_true")
+devgroup.add_argument("--export", dest="xlog", help="Open the log export dialog", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -173,50 +172,62 @@ if __name__ == '__main__':
 			os.mkdir(args.styles)
 			print("\""+args.styles+"\" directory created!")
 
-	# Handle exporting settings
-	if args.export_settings:
-		outfile = args.export_settings
-		efl = len("zip")+1
-		if outfile[-efl:].lower()!=f".zip": outfile = outfile+f".zip"
-		print("Exporting settings to \""+outfile+"\"...")
-		zf = ZipFile(outfile, "w")
-		for dirname, subdirs, files in os.walk(SETTINGS_DIRECTORY):
-			for fname in files:
-				zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(SETTINGS_DIRECTORY, '..')))
-		zf.close()
-		print("Done!")
-		sys.exit(0)
+	# Handle the log export dialog
+	if args.xlog:
 
-	# Handle exporting settings and logs
-	if args.export_all:
-		outfile = args.export_all
-		efl = len("zip")+1
-		if outfile[-efl:].lower()!=f".zip": outfile = outfile+f".zip"
-		print("Exporting settings to \""+outfile+"\"...")
-		zf = ZipFile(outfile, "w")
-		for dirname, subdirs, files in os.walk(SETTINGS_DIRECTORY):
-			for fname in files:
-				zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(SETTINGS_DIRECTORY, '..')))
-		print("Exporting logs to \""+outfile+"\"...")
-		for dirname, subdirs, files in os.walk(LOG_DIRECTORY):
-			for fname in files:
-				zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(LOG_DIRECTORY, '..')))
-		zf.close()
-		print("Done!")
-		sys.exit(0)
+		erk.config.load_settings(args.config)
 
-	# Handle importing settings
-	if args.import_settings:
-		file = args.import_settings
-		if not os.path.isfile(file):
-			print("\""+file+"\" doesn't exist.")
-			sys.exit(1)
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
 
-		print("Importing settings from \""+file+"\"...")
-		with ZipFile(file,'r') as zipObj:
-			zipObj.extractall(INSTALL_DIRECTORY)
-		print("Done!")
-		sys.exit(0)
+		app.setFont(font)
+		
+		x = ExportLog(args.logs,None,app)
+		info = x.get_name_information(args.logs,None,app)
+
+		if info:
+			
+			elog = info[0]
+			dlog = info[1]
+			llog = info[2]
+			do_json = info[3]
+			do_epoch = info[4]
+			if not do_json:
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				fileName, _ = QFileDialog.getSaveFileName(None,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
+				if fileName:
+					# extension = os.path.splitext(fileName)[1]
+					# if extension.lower()!='txt': fileName = fileName + ".txt"
+					efl = len("txt")+1
+					if fileName[-efl:].lower()!=f".txt": fileName = fileName+f".txt"
+					dump = dumpLog(elog,dlog,llog,do_epoch)
+					code = open(fileName,mode="w",encoding="utf-8")
+					code.write(dump)
+					code.close()
+			else:
+				options = QFileDialog.Options()
+				options |= QFileDialog.DontUseNativeDialog
+				fileName, _ = QFileDialog.getSaveFileName(None,"Save export As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+				if fileName:
+					# extension = os.path.splitext(fileName)[1]
+					# if extension.lower()!='json': fileName = fileName + ".json"
+					efl = len("json")+1
+					if fileName[-efl:].lower()!=f".json": fileName = fileName+f".json"
+					dump = dumpLogJson(elog,do_epoch)
+					code = open(fileName,mode="w",encoding="utf-8")
+					code.write(dump)
+					code.close()
+
+			app.exit()
+		else:
+			sys.exit(0)
 
 	# Handle opening the settings dialog
 
