@@ -89,7 +89,7 @@ congroup.add_argument("-p","--password", type=str,help="Use server password to c
 congroup.add_argument("-c","--channel", type=str,help="Join channel on connection", metavar="CHANNEL[:KEY]", action='append')
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
-congroup.add_argument("-a","--autoscript", help=f"Execute server script on connection (if one exists)", action="store_true")
+congroup.add_argument("-a","--autoscript", help=f"Execute connection script (if one exists)", action="store_true")
 congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", action='append')
 
 displaygroup = parser.add_argument_group('Display')
@@ -111,11 +111,11 @@ miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro sa
 
 devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
+devgroup.add_argument("--scripter", help="Launch the script editor", action="store_true")
 devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
-devgroup.add_argument("--styler", dest="styler", help="Open the style editor", action="store_true")
-devgroup.add_argument("--settings", help="Open the preferences dialog", action="store_true")
-devgroup.add_argument("--export", dest="xlog", help="Open the log export dialog", action="store_true")
+devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
+devgroup.add_argument("--settings", help="Launch the preferences editor", action="store_true")
+devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 

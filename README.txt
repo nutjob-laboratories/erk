@@ -133,7 +133,7 @@ Connection:
                         Join channel on connection
   -l, --last            Automatically connect to the last server connected to
   -u URL, --url URL     Use an IRC URL to connect
-  -a, --autoscript      Execute server script on connection (if one exists)
+  -a, --autoscript      Execute connection script (if one exists)
   -s FILENAME, --script FILENAME
                         Execute a custom server script on connection
 
@@ -161,11 +161,11 @@ Configuration:
                         Use an alternate macro save file
 
 Tools:
-  --scripter            Open the script editor
+  --scripter            Launch the script editor
   --scripter-edit FILE  Open a file in the script editor
-  --styler              Open the style editor
-  --settings            Open the preferences dialog
-  --export              Open the log export dialog
+  --styler              Launch the style editor
+  --settings            Launch the preferences editor
+  --export              Launch the log export tool
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start
@@ -177,6 +177,7 @@ Disable functionality:
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
   --qt5menu             Disable menu toolbar, and use normal menus
+
 
 ```
 # Frequently asked questions

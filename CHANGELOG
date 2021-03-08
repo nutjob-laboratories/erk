@@ -17,6 +17,7 @@ Version 0.860
 	* Added a commandline option to open (and use) the style editor
 	* Added a description of how Erk stores config files and logs to the README.md
 	* Moved "load defaults" into the "File" menu on the "edit style" dialog
+	* Changed some of the wording of the help text
 
 Version 0.850
 	* Changed the splash logo
