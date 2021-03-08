@@ -16,6 +16,7 @@ Version 0.860
 	* Changed a commandline settings description to "disable Settings & Tools menu" from "disable setting menu(s)"
 	* Added a commandline option to open (and use) the style editor
 	* Added a description of how Erk stores config files and logs to the README.md
+	* Moved "load defaults" into the "File" menu on the "edit style" dialog
 
 Version 0.850
 	* Changed the splash logo

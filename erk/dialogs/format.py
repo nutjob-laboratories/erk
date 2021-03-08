@@ -40,6 +40,8 @@ from .. import textformat
 from .. import events
 from ..strings import *
 
+from .blank import Dialog as Blank
+
 
 def menuHtml(icon,text,description,icon_size):
 	return f'''
@@ -587,6 +589,10 @@ class Dialog(QDialog):
 		self.motdwid.doDefault()
 		self.plugwid.doDefault()
 
+		x = Blank()
+		x.show()
+		x.close()
+
 	def loadStyle(self):
 
 		options = QFileDialog.Options()
@@ -720,8 +726,8 @@ class Dialog(QDialog):
 			if self.network!=None:
 				self.buttonApplySave.setText("Apply")
 
-		self.buttonDefault = QPushButton("Load stock style settings")
-		self.buttonDefault.clicked.connect(self.doDefaults)
+		# self.buttonDefault = QPushButton("Load stock style settings")
+		# self.buttonDefault.clicked.connect(self.doDefaults)
 
 		self.buttonCancel = QPushButton("Cancel")
 		self.buttonCancel.clicked.connect(self.close)
@@ -731,6 +737,11 @@ class Dialog(QDialog):
 
 		self.menubar = QMenuBar(self)
 		fileMenu = self.menubar.addMenu ("File")
+
+		entry = MenuAction(self,RESTART_ICON,"Default","Load default style",25,self.doDefaults)
+		fileMenu.addAction(entry)
+
+		fileMenu.addSeparator()
 
 		entry = MenuAction(self,OPENFILE_ICON,"Open","Load a style file",25,self.loadStyle)
 		fileMenu.addAction(entry)
@@ -753,12 +764,12 @@ class Dialog(QDialog):
 			topButtons.addWidget(self.buttonApplySave)
 		topButtons.addWidget(self.buttonCancel)
 
-		midButtons = QHBoxLayout()
-		midButtons.addWidget(self.buttonDefault)
+		# midButtons = QHBoxLayout()
+		# midButtons.addWidget(self.buttonDefault)
 
-		controls = QVBoxLayout()
-		controls.addLayout(midButtons)
-		controls.addLayout(topButtons)
+		#controls = QVBoxLayout()
+		# controls.addLayout(midButtons)
+		#controls.addLayout(topButtons)
 		
 
 		setLayout = QVBoxLayout()
@@ -772,7 +783,7 @@ class Dialog(QDialog):
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addLayout(setLayout)
-		finalLayout.addLayout(controls)
+		finalLayout.addLayout(topButtons)
 
 		self.setWindowFlags(self.windowFlags()
 					^ QtCore.Qt.WindowContextHelpButtonHint)
