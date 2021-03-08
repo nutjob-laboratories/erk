@@ -511,7 +511,10 @@ class Dialog(QDialog):
 	def doSaveAs(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		if self.parent!=None:
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		else:
+			fileName, _ = QFileDialog.getSaveFileName(self,"Save Style As...",self.cdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 			self.styles['system'] = self.syswid.exportQss()
 			self.styles['action'] = self.actwid.exportQss()
@@ -588,7 +591,10 @@ class Dialog(QDialog):
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		if self.parent!=None:
+			fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.parent.styledir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
+		else:
+			fileName, _ = QFileDialog.getOpenFileName(self,"Load Style File",self.cdir,f"{APPLICATION_NAME} Style File (*.{STYLE_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
 
 			self.styles = get_text_format_settings(fileName)
@@ -605,12 +611,23 @@ class Dialog(QDialog):
 			self.plugwid.loadQss(self.styles["plugin"],self.default_styles["plugin"])
 
 
-	def __init__(self,parent=None,client=None,name=None):
+	def closeEvent(self, event):
+
+		if self.app != None:
+			self.app.quit()
+
+		event.accept()
+		self.close()
+
+	def __init__(self,parent=None,client=None,name=None,cstyle=None,app=None,cdir=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
 		self.client = client
 		self.name = name
+		self.cstyle = cstyle
+		self.app = app
+		self.cdir = cdir
 
 		self.network = None
 
@@ -629,7 +646,10 @@ class Dialog(QDialog):
 			#print(self.filename)
 		else:
 			self.setWindowTitle(STYLE_EDITOR_NAME)
-			self.filename = parent.stylefile
+			if self.parent!=None:
+				self.filename = parent.stylefile
+			else:
+				self.filename = self.cstyle
 			self.styles = get_text_format_settings(self.filename)
 
 		self.setWindowIcon(QIcon(FORMAT_ICON))
@@ -686,17 +706,19 @@ class Dialog(QDialog):
 
 		self.allText = AllStyler('all',self.styles['all'],self.default_styles['all'],self)
 
-		self.buttonApply = QPushButton("Apply to unstyled chats")
-		self.buttonApply.clicked.connect(self.doApply)
+		if self.parent!=None:
 
-		if self.network!=None:
-			self.buttonApply.setVisible(False)
+			self.buttonApply = QPushButton("Apply to unstyled chats")
+			self.buttonApply.clicked.connect(self.doApply)
 
-		self.buttonApplySave = QPushButton("Apply && Save")
-		self.buttonApplySave.clicked.connect(self.doApplySave)
+			if self.network!=None:
+				self.buttonApply.setVisible(False)
 
-		if self.network!=None:
-			self.buttonApplySave.setText("Apply")
+			self.buttonApplySave = QPushButton("Apply && Save")
+			self.buttonApplySave.clicked.connect(self.doApplySave)
+
+			if self.network!=None:
+				self.buttonApplySave.setText("Apply")
 
 		self.buttonDefault = QPushButton("Load stock style settings")
 		self.buttonDefault.clicked.connect(self.doDefaults)
@@ -705,6 +727,7 @@ class Dialog(QDialog):
 		self.buttonCancel.clicked.connect(self.close)
 		self.buttonCancel.setDefault(True)  
 
+		if self.parent==None: self.buttonCancel.setText("Exit")
 
 		self.menubar = QMenuBar(self)
 		fileMenu = self.menubar.addMenu ("File")
@@ -725,27 +748,17 @@ class Dialog(QDialog):
 
 		topButtons = QHBoxLayout()
 		topButtons.addStretch()
-		topButtons.addWidget(self.buttonApply)
-		topButtons.addWidget(self.buttonApplySave)
+		if self.parent!=None:
+			topButtons.addWidget(self.buttonApply)
+			topButtons.addWidget(self.buttonApplySave)
 		topButtons.addWidget(self.buttonCancel)
 
 		midButtons = QHBoxLayout()
-		# midButtons.addWidget(self.buttonLoad)
-		# midButtons.addWidget(self.buttonSaveAs)
 		midButtons.addWidget(self.buttonDefault)
-
-		# buttons = QHBoxLayout()
-		# buttons.addWidget(self.buttonApply)
-		# buttons.addWidget(self.buttonApplySave)
-		# buttons.addWidget(self.buttonSaveAs)
-		# buttons.addWidget(self.buttonDefault)
-		# buttons.addWidget(self.buttonCancel)
 
 		controls = QVBoxLayout()
 		controls.addLayout(midButtons)
 		controls.addLayout(topButtons)
-		#controls.addLayout(midButtons)
-		#controls.addWidget(self.buttonCancel)
 		
 
 		setLayout = QVBoxLayout()
@@ -758,8 +771,6 @@ class Dialog(QDialog):
 		setLayout.setContentsMargins(margins.left(),DMARGIN,margins.right(),DMARGIN)
 
 		finalLayout = QVBoxLayout()
-		# finalLayout.addWidget(self.allText)
-		# finalLayout.addWidget(self.tabs)
 		finalLayout.addLayout(setLayout)
 		finalLayout.addLayout(controls)
 

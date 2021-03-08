@@ -1,11 +1,11 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.840.114"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.023</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.024</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.023**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.024**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -114,9 +114,9 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [--scripter] [--scripter-edit FILE] [--settings] [--export]
-                     [--noask] [--nosettings] [--nomenus] [--noconnect] [--noscripts]
-                     [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
+                     [-M FILE] [--scripter] [--scripter-edit FILE] [--styler] [--settings]
+                     [--export] [--noask] [--nosettings] [--nomenus] [--noconnect]
+                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -163,6 +163,7 @@ Configuration:
 Tools:
   --scripter            Open the script editor
   --scripter-edit FILE  Open a file in the script editor
+  --styler              Open the style editor
   --settings            Open the preferences dialog
   --export              Open the log export dialog
 
@@ -204,6 +205,19 @@ No. I'm still adding features and tracking down and squashing bugs.
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as over 20 different command-line options.
 
 When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
+
+## Where does **Ərk** store configuration files and logs?
+
+**Ərk** stores all configuration files and logs in your home directory, on all platforms, in a directory named `.erk`. This directory contains several subdirectories, each of which contains different types of files:
+
+ - **`settings`** - Contains the main configuration files for **Ərk**.
+   - `settings.json` - The main configuration file for the **Ərk** application.
+   - `user.json` - User settings, including your connection history.
+   - `macro.json` - If you've created any macros, here is where they are saved.
+ - **`scripts`** - Contains connection scripts. Put your **Ərk** scripts in this directory so  that they're easily findable by the client. This is also the default location when you're saving scripts created with the script editor.
+ - **`styles`** - Contains any text styles that you've created, as well as the default text style **Ərk** uses.
+   - `default.style` - The default text style for **Ərk**. If this file is missing, **Ərk** will re-create it with default settings.
+ - **`logs`** - This is where **Ərk** stores all chat logs. Logs are stored in JSON, and use a format specific to **Ərk**. If you want to export your logs, use the "Export Log" entry in the "Settings & Tools" menu, or launch **Ərk** with `python erk.py --export` to launch a GUI log export wizard. You can export them to plain text (with your choice of delimiters) or to JSON.
 
 ## Another IRC client? Why not use HexChat?
 
@@ -258,3 +272,4 @@ Similarly, Bob's batch file looks like this:
     python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
 
 Alice and Bob can now use **Ərk** with their own customized settings!
+

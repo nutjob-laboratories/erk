@@ -14,6 +14,8 @@ Version 0.860
 	* Added a commandline option to open (and use) the "export log" dialog without the client running
 	* Removed three commandline options: --export-all, --export-settings, --import-settings
 	* Changed a commandline settings description to "disable Settings & Tools menu" from "disable setting menu(s)"
+	* Added a commandline option to open (and use) the style editor
+	* Added a description of how Erk stores config files and logs to the README.md
 
 Version 0.850
 	* Changed the splash logo

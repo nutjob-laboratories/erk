@@ -57,11 +57,12 @@ from erk.objects import *
 from erk.strings import *
 import erk.config
 from erk.common import *
-#from erk.plugins import PLUGIN_DIRECTORY
 
 from erk.dialogs.settings import Dialog as Settings
 from erk.dialogs.scriptedit import Window as ErkScriptEditor
 from erk.dialogs.export_log import Dialog as ExportLog
+
+from erk.dialogs.format import Dialog as FormatText
 
 # Handle commandline arguments
 
@@ -112,6 +113,7 @@ devgroup = parser.add_argument_group('Tools')
 
 devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
 devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
+devgroup.add_argument("--styler", dest="styler", help="Open the style editor", action="store_true")
 devgroup.add_argument("--settings", help="Open the preferences dialog", action="store_true")
 devgroup.add_argument("--export", dest="xlog", help="Open the log export dialog", action="store_true")
 
@@ -228,6 +230,26 @@ if __name__ == '__main__':
 			app.exit()
 		else:
 			sys.exit(0)
+
+	# Handle opening the style editor
+
+	elif args.styler:
+
+		erk.config.load_settings(args.config)
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		x = FormatText(None,None,None,args.style,app,args.styles)
+		x.show()
 
 	# Handle opening the settings dialog
 
