@@ -168,7 +168,7 @@ Tools:
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start
-  --nosettings          Disable settings menu(s)
+  --nosettings          Disable "Settings & Tools" menu
   --nomenus             Disable all menus
   --noconnect           Disable connection commands
   --noscripts           Disable scripting
