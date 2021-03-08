@@ -114,9 +114,9 @@ def KeyDialog():
 	if not info: return None
 	return info
 
-def ExportLogDialog(obj):
-	x = ExportLog(obj)
-	info = x.get_name_information(obj)
+def ExportLogDialog(logdir,obj):
+	x = ExportLog(logdir,obj)
+	info = x.get_name_information(logdir,obj)
 	del x
 
 	if not info: return None

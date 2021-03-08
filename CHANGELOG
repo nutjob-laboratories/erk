@@ -8,6 +8,8 @@ Version 0.860
 	* Edited references to plugins and the plugin editor out of the command documentation
 	* Added a commandline option to open (and use) the "settings" dialog without the client running
 	* Removed some now-unneeded credits from the about dialog
+	* Tweaked the "about" dialog a bit more
+	* Bugfix: log exporter used the default log directory, rather than one supplied by the user
 
 Version 0.850
 	* Changed the splash logo

@@ -168,7 +168,7 @@ class Dialog(QDialog):
 
 		aboutLayout = QVBoxLayout()
 		aboutLayout.addLayout(titleLayout)
-		aboutLayout.addWidget(tech_credit)
+		
 		aboutLayout.addWidget(gnu_credit)
 		aboutLayout.addWidget(platform_credit)
 
@@ -178,7 +178,10 @@ class Dialog(QDialog):
 		credLayout.addWidget(nutjob)
 		credLayout.addWidget(me_credit)
 		credLayout.addWidget(bitly_credit)
+		credLayout.addWidget(tech_credit)
+		credLayout.addStretch()
 		credLayout.addWidget(creditsBox)
+		credLayout.addStretch()
 		credLayout.addWidget(pyv_credit)
 		credLayout.addWidget(qtv_credit)
 		credLayout.addWidget(twv_credit)

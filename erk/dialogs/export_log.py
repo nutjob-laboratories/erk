@@ -40,15 +40,11 @@ from PyQt5 import QtCore
 
 from ..resources import *
 
-INSTALL_DIRECTORY = sys.path[0]
-BASE_DIRECTORY = os.path.join(str(Path.home()), ".erk")
-LOG_DIRECTORY = os.path.join(BASE_DIRECTORY, "logs")
-
 class Dialog(QDialog):
 
 	@staticmethod
-	def get_name_information(parent=None):
-		dialog = Dialog(parent)
+	def get_name_information(logdir,parent=None):
+		dialog = Dialog(logdir,parent)
 		r = dialog.exec_()
 		if r:
 			return dialog.return_info()
@@ -100,10 +96,11 @@ class Dialog(QDialog):
 		if dtype=='Pipe': self.delimiter = '|'
 		if dtype=='Double Pipe': self.delimiter = '||'
 
-	def __init__(self,parent=None):
+	def __init__(self,logdir,parent=None):
 		super(Dialog,self).__init__(parent)
 
 		self.parent = parent
+		self.logdir = logdir
 		self.delimiter = "\t"
 		self.linedelim = "\n"
 
@@ -117,9 +114,9 @@ class Dialog(QDialog):
 
 		self.packlist = QListWidget(self)
 
-		for x in os.listdir(LOG_DIRECTORY):
+		for x in os.listdir(self.logdir):
 			if x.endswith(".json"):
-				log = os.path.join(LOG_DIRECTORY, x)
+				log = os.path.join(self.logdir, x)
 				if os.path.isfile(log):
 					p = os.path.basename(log).replace('.json','')
 					p = p.split('-')

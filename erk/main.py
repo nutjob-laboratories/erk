@@ -830,7 +830,7 @@ class Erk(QMainWindow):
 		self.seditors.clientsRefreshed(events.fetch_connections())
 
 	def menuExportLog(self):
-		d = ExportLogDialog(self)
+		d = ExportLogDialog(self.logdir,self)
 		if d:
 			elog = d[0]
 			dlog = d[1]
@@ -863,53 +863,6 @@ class Erk(QMainWindow):
 					code = open(fileName,mode="w",encoding="utf-8")
 					code.write(dump)
 					code.close()
-
-	def exportPackage(self):
-		x = ExportPackageDialog(self)
-		info = x.get_name_information(self)
-
-		if info:
-
-			default_outfile = os.path.basename(info)
-
-			if os.path.isfile(info):
-				options = QFileDialog.Options()
-				options |= QFileDialog.DontUseNativeDialog
-				fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
-				if fileName:
-					efl = len(PACKAGE_FILE_EXTENSION)+1
-					if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
-					zf = zipfile.ZipFile(fileName, "w")
-					zf.write(info,os.path.basename(info))
-					zf.close()
-				return
-
-		if info:
-
-			default_outfile = os.path.basename(info)+f".{PACKAGE_FILE_EXTENSION}"
-
-			options = QFileDialog.Options()
-			options |= QFileDialog.DontUseNativeDialog
-			fileName, _ = QFileDialog.getSaveFileName(self,"Save Package As...",default_outfile,f"{APPLICATION_NAME} Package File (*.{PACKAGE_FILE_EXTENSION})", options=options)
-			if fileName:
-				efl = len(PACKAGE_FILE_EXTENSION)+1
-				if fileName[-efl:].lower()!=f".{PACKAGE_FILE_EXTENSION}": fileName = fileName+f".{PACKAGE_FILE_EXTENSION}"
-				zf = zipfile.ZipFile(fileName, "w")
-				for dirname, subdirs, files in os.walk(info):
-					pname = os.path.basename(info)
-					for fname in files:
-						if "__pycache__" in fname: continue
-						filename, file_extension = os.path.splitext(fname)
-						if file_extension.lower()==".pyc": continue
-						sfile = os.path.join(dirname,fname)
-						bname = os.path.basename(sfile)
-
-						#zf.write(sfile,pname+"\\"+bname)
-						# The ^^above unsurprisingly caused a mangled zip to be exported
-						# The following fixes that
-						zf.write(os.path.join(dirname, fname), os.path.relpath(os.path.join(dirname, fname), os.path.join(info, '..')))
-
-				zf.close()
 
 	def toggleSetting(self,setting):
 
