@@ -50,7 +50,7 @@ qt5reactor.install()
 
 from twisted.internet import reactor
 
-from erk.dialogs import ComboDialogBanner,ScriptEditor
+from erk.dialogs import ComboDialogBanner
 from erk.main import Erk
 from erk.files import *
 from erk.objects import *
@@ -58,6 +58,9 @@ from erk.strings import *
 import erk.config
 from erk.common import *
 #from erk.plugins import PLUGIN_DIRECTORY
+
+from erk.dialogs.settings import Dialog as Settings
+from erk.dialogs.scriptedit import Window as ErkScriptEditor
 
 # Handle commandline arguments
 
@@ -111,6 +114,7 @@ devgroup = parser.add_argument_group('Tools')
 
 devgroup.add_argument("--scripter", help="Open the script editor", action="store_true")
 devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
+devgroup.add_argument("--settings", help="Open the preferences dialog", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -214,6 +218,26 @@ if __name__ == '__main__':
 		print("Done!")
 		sys.exit(0)
 
+	# Handle opening the settings dialog
+
+	elif args.settings:
+
+		erk.config.load_settings(args.config)
+
+		if erk.config.DISPLAY_FONT=='':
+			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+			font = QFont(_fontstr,9)
+		else:
+			f = QFont()
+			f.fromString(erk.config.DISPLAY_FONT)
+			font = f
+
+		app.setFont(font)
+
+		SETTINGS = Settings(args.config,None,app)
+		SETTINGS.show()
+
 	# Handle launching the script editor
 
 	elif args.scripter:
@@ -231,7 +255,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = ScriptEditor(None,None,args.config,args.scripts,app)
+		EDITOR = ErkScriptEditor(None,None,args.config,args.scripts,app)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 
@@ -255,7 +279,7 @@ if __name__ == '__main__':
 
 		app.setFont(font)
 
-		EDITOR = ScriptEditor(file,None,args.config,args.scripts,app)
+		EDITOR = ErkScriptEditor(file,None,args.config,args.scripts,app)
 		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
 		EDITOR.show()
 

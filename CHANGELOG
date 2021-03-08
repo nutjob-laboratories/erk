@@ -6,6 +6,7 @@ Version 0.860
 	* Removed "Tools" menu
 	* The "Settings" menu is now the "Settings & Tools" menu, and "Tools" entries are located there
 	* Edited references to plugins and the plugin editor out of the command documentation
+	* Added a commandline option to open (and use) the "settings" dialog without the client running
 
 Version 0.850
 	* Changed the splash logo

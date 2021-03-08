@@ -1,11 +1,11 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.840.114"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.011</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.014</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.011**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.014**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -115,9 +115,10 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
                      [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--scripter] [--scripter-edit FILE]
-                     [--noask] [--nosettings] [--nomenus] [--noconnect] [--noscripts]
-                     [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
+                     [--settings] [--noask] [--nosettings] [--nomenus] [--noconnect]
+                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
                      [SERVER] [PORT]
+
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -168,6 +169,7 @@ Configuration:
 Tools:
   --scripter            Open the script editor
   --scripter-edit FILE  Open a file in the script editor
+  --settings            Open the preferences dialog
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start

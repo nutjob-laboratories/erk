@@ -115,9 +115,10 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
                      [-M FILE] [-X ZIP] [-A ZIP] [-I ZIP] [--scripter] [--scripter-edit FILE]
-                     [--noask] [--nosettings] [--nomenus] [--noconnect] [--noscripts]
-                     [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
+                     [--settings] [--noask] [--nosettings] [--nomenus] [--noconnect]
+                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
                      [SERVER] [PORT]
+
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -168,6 +169,7 @@ Configuration:
 Tools:
   --scripter            Open the script editor
   --scripter-edit FILE  Open a file in the script editor
+  --settings            Open the preferences dialog
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start

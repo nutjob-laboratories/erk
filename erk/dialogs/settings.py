@@ -155,12 +155,21 @@ class Dialog(QDialog):
 			self.logDisplayLines = info
 			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display*")
 
+	def closeEvent(self, event):
 
-	def __init__(self,configfile=USER_FILE,parent=None):
+		if self.app != None:
+			self.app.quit()
+
+		event.accept()
+		self.close()
+
+
+	def __init__(self,configfile=USER_FILE,parent=None,app=None):
 		super(Dialog,self).__init__(parent)
 
 		self.config = configfile
 		self.parent = parent
+		self.app = app
 
 		self.newfont = None
 
@@ -226,7 +235,8 @@ class Dialog(QDialog):
 		formatButton.clicked.connect(self.menuFormat)
 		formatButton.setAutoDefault(False)
 
-		if self.parent.block_styles: formatButton.setVisible(False)
+		if self.parent!= None:
+			if self.parent.block_styles: formatButton.setVisible(False)
 
 		self.nametitleMisc = QCheckBox("Show chat name in title",self)
 		if config.APP_TITLE_TO_CURRENT_CHAT: self.nametitleMisc.setChecked(True)
@@ -287,10 +297,11 @@ class Dialog(QDialog):
 
 		self.menuMisc.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
 
-		if self.parent.force_qmenu:
-			self.menuMisc.setEnabled(False)
-			self.showSchwa.setEnabled(False)
-			self.showMenu.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.force_qmenu:
+				self.menuMisc.setEnabled(False)
+				self.showSchwa.setEnabled(False)
+				self.showMenu.setEnabled(False)
 
 		if config.USE_QMENUBAR_MENUS:
 			self.showSchwa.setEnabled(False)
@@ -596,16 +607,17 @@ class Dialog(QDialog):
 		if config.CONNECTION_DISPLAY_LOCATION=="left": self.leftRadio.setChecked(True)
 		if config.CONNECTION_DISPLAY_LOCATION=="right": self.rightRadio.setChecked(True)
 
-		if self.parent.block_connectiondisplay:
-			self.enableConnection.setEnabled(False)
-			self.floatConnection.setEnabled(False)
-			self.uptimesConnection.setEnabled(False)
-			self.doubleConnection.setEnabled(False)
-			self.expandConnection.setEnabled(False)
-			self.unseenConnection.setEnabled(False)
-			self.animateConnection.setEnabled(False)
-			self.leftRadio.setEnabled(False)
-			self.rightRadio.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.block_connectiondisplay:
+				self.enableConnection.setEnabled(False)
+				self.floatConnection.setEnabled(False)
+				self.uptimesConnection.setEnabled(False)
+				self.doubleConnection.setEnabled(False)
+				self.expandConnection.setEnabled(False)
+				self.unseenConnection.setEnabled(False)
+				self.animateConnection.setEnabled(False)
+				self.leftRadio.setEnabled(False)
+				self.rightRadio.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -623,7 +635,8 @@ class Dialog(QDialog):
 
 		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addLayout(clLayoutH)
@@ -850,44 +863,50 @@ class Dialog(QDialog):
 		self.scriptMisc = QCheckBox("Enable scripts",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.scriptMisc.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.scriptMisc.setEnabled(False)
 
 		self.sglobalMisc = QCheckBox("All aliases are global",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.sglobalMisc.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.sglobalMisc.setEnabled(False)
 
 		self.seditMisc = QCheckBox("Enable script editor",self)
 		if config.ENABLE_SCRIPT_EDITOR: self.seditMisc.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.seditMisc.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.seditMisc.setEnabled(False)
 
-		if self.parent.cmdline_editor:
-			self.seditMisc.setEnabled(False)
+			if self.parent.cmdline_editor:
+				self.seditMisc.setEnabled(False)
 
 		self.autoMacros = QCheckBox("Auto-complete macros",self)
 		if config.AUTOCOMPLETE_MACROS: self.autoMacros.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.autoMacros.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.autoMacros.setEnabled(False)
 
 		self.saveMacros = QCheckBox("Save macros",self)
 		if config.SAVE_MACROS: self.saveMacros.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.saveMacros.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.saveMacros.setEnabled(False)
 
 		self.enableMacros = QCheckBox("Enable macros",self)
 		if config.ENABLE_MACROS: self.enableMacros.setChecked(True)
 
-		if self.parent.cmdline_script:
-			self.enableMacros.setEnabled(False)
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				self.enableMacros.setEnabled(False)
 
-		if self.parent.cmdline_script:
-			scriptBox.setEnabled(False)
+			if self.parent.cmdline_script:
+				scriptBox.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.scriptMisc)
@@ -1016,8 +1035,14 @@ class Dialog(QDialog):
 		saveButton.clicked.connect(self.save)
 		saveButton.setAutoDefault(False)
 
+		if self.parent==None:
+			saveButton.setText("Save")
+
 		cancelButton = QPushButton("Cancel")
 		cancelButton.clicked.connect(self.close)
+
+		if self.parent==None:
+			cancelButton.setText("Exit")
 
 		dialogButtonsLayout = QHBoxLayout()
 		dialogButtonsLayout.addWidget(loadButton)
@@ -1069,39 +1094,46 @@ class Dialog(QDialog):
 		config.AUTOCOMPLETE_MACROS = self.autoMacros.isChecked()
 
 		config.ENABLE_SCRIPT_EDITOR = self.seditMisc.isChecked()
-		if config.ENABLE_SCRIPT_EDITOR:
-			if not self.parent.cmdline_editor:
-				self.parent.block_editor = False
-		else:
-			self.parent.block_editor = True
+
+		if self.parent!= None:
+			if config.ENABLE_SCRIPT_EDITOR:
+				if not self.parent.cmdline_editor:
+					self.parent.block_editor = False
+			else:
+				self.parent.block_editor = True
 
 		config.USE_QMENUBAR_MENUS = self.menuMisc.isChecked()
 
 		config.GLOBALIZE_ALL_SCRIPT_ALIASES = self.sglobalMisc.isChecked()
 
 		config.SHOW_CONSOLE_BUTTONS = self.buttonsMisc.isChecked()
-		if config.SHOW_CONSOLE_BUTTONS:
-			events.show_all_console_buttons()
-		else:
-			events.hide_all_console_buttons()
+
+		if self.parent!= None:
+			if config.SHOW_CONSOLE_BUTTONS:
+				events.show_all_console_buttons()
+			else:
+				events.hide_all_console_buttons()
 
 		config.DOUBLECLICK_TO_CHANGE_NICK = self.displayChange.isChecked()
 
 		config.ENABLE_SCRIPTS = self.scriptMisc.isChecked()
-		if config.ENABLE_SCRIPTS:
-			if not self.parent.cmdline_script:
-				self.parent.block_scripts = False
-				events.enable_all_runscript()
-		else:
-			self.parent.block_scripts = True
-			events.disable_all_runscript()
+
+		if self.parent!= None:
+			if config.ENABLE_SCRIPTS:
+				if not self.parent.cmdline_script:
+					self.parent.block_scripts = False
+					events.enable_all_runscript()
+			else:
+				self.parent.block_scripts = True
+				events.disable_all_runscript()
 
 		config.MENU_BAR_MOVABLE = self.showMenu.isChecked()
 
-		if config.MENU_BAR_MOVABLE:
-			self.parent.set_menubar_moveable(True)
-		else:
-			self.parent.set_menubar_moveable(False)
+		if self.parent!= None:
+			if config.MENU_BAR_MOVABLE:
+				self.parent.set_menubar_moveable(True)
+			else:
+				self.parent.set_menubar_moveable(False)
 
 		config.ASK_BEFORE_QUIT = self.askMisc.isChecked()
 
@@ -1117,20 +1149,23 @@ class Dialog(QDialog):
 
 		config.AUTOMATICALLY_FETCH_CHANNEL_LIST = self.listMisc.isChecked()
 
-		if config.AUTOMATICALLY_FETCH_CHANNEL_LIST!=self.initial_fetch_list:
-			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
-				for c in events.fetch_connections():
-					if c.last_fetch < c.uptime:
-						c.sendLine("LIST")
+		if self.parent!= None:
+			if config.AUTOMATICALLY_FETCH_CHANNEL_LIST!=self.initial_fetch_list:
+				if config.AUTOMATICALLY_FETCH_CHANNEL_LIST:
+					for c in events.fetch_connections():
+						if c.last_fetch < c.uptime:
+							c.sendLine("LIST")
 
 		if self.newfont!=None:
 			config.DISPLAY_FONT = self.newfont.toString()
-			self.parent.app.setFont(self.newfont)
-			events.set_fonts_all(self.newfont)
+			if self.parent!= None:
+				self.parent.app.setFont(self.newfont)
+				events.set_fonts_all(self.newfont)
 
 		if self.historySize!=None: config.HISTORY_LENGTH = self.historySize
 
-		if self.resetHistory: events.reset_history()
+		if self.parent!= None:
+			if self.resetHistory: events.reset_history()
 
 		config.TRACK_COMMAND_HISTORY = self.trackInput.isChecked()
 		config.USE_EMOJIS = self.emojiInput.isChecked()
@@ -1147,7 +1182,7 @@ class Dialog(QDialog):
 
 		if self.sclanguage!=config.SPELLCHECK_LANGUAGE:
 			config.SPELLCHECK_LANGUAGE = self.sclanguage
-			events.newspell_all(self.sclanguage)
+			if self.parent!= None: events.newspell_all(self.sclanguage)
 
 		config.SPELLCHECK_IGNORE_NICKS = self.nickSpellcheck.isChecked()
 		config.SPELLCHECK_INPUT = self.enabledSpellcheck.isChecked()
@@ -1183,44 +1218,46 @@ class Dialog(QDialog):
 		config.DISPLAY_CHANNEL_STATUS_NICK_DISPLAY = self.displayStatus.isChecked()
 		config.DISPLAY_NICKNAME_ON_CHANNEL = self.displayNickname.isChecked()
 
-		if self.do_rerender: events.rerender_all()
+		if self.parent!= None:
 
-		self.parent.buildMenuInterface()
-		events.toggle_name_topic_display()
-		events.toggle_channel_mode_display()
-		events.rerender_userlists()
-		events.toggle_userlist()
-		events.rerender_channel_nickname()
-		self.parent.refresh_application_title()
-		events.resetinput_all()
+			if self.do_rerender: events.rerender_all()
 
-		if config.CONNECTION_DISPLAY_VISIBLE:
-			self.parent.connection_dock.show()
-		else:
-			self.parent.connection_dock.hide()
+			self.parent.buildMenuInterface()
+			events.toggle_name_topic_display()
+			events.toggle_channel_mode_display()
+			events.rerender_userlists()
+			events.toggle_userlist()
+			events.rerender_channel_nickname()
+			self.parent.refresh_application_title()
+			events.resetinput_all()
 
-		if config.CONNECTION_DISPLAY_MOVE:
-			self.parent.connection_dock.setFeatures(
-					QDockWidget.DockWidgetMovable |
-					QDockWidget.DockWidgetFloatable
-				)
-			self.parent.connection_dock.setTitleBarWidget(None)
-		else:
-			self.parent.connection_dock.setFloating(False)
-			self.parent.connection_dock.setFeatures( QDockWidget.NoDockWidgetFeatures )
-			self.parent.connection_dock.setTitleBarWidget(QWidget())
-			events.resize_font_fix()
+			if config.CONNECTION_DISPLAY_VISIBLE:
+				self.parent.connection_dock.show()
+			else:
+				self.parent.connection_dock.hide()
 
-		if config.CONNECTION_DISPLAY_LOCATION=="left":
-			self.parent.removeDockWidget(self.parent.connection_dock)
-			self.parent.addDockWidget(Qt.LeftDockWidgetArea,self.parent.connection_dock)
-			self.parent.connection_dock.show()
-		else:
-			self.parent.removeDockWidget(self.parent.connection_dock)
-			self.parent.addDockWidget(Qt.RightDockWidgetArea,self.parent.connection_dock)
-			self.parent.connection_dock.show()
+			if config.CONNECTION_DISPLAY_MOVE:
+				self.parent.connection_dock.setFeatures(
+						QDockWidget.DockWidgetMovable |
+						QDockWidget.DockWidgetFloatable
+					)
+				self.parent.connection_dock.setTitleBarWidget(None)
+			else:
+				self.parent.connection_dock.setFloating(False)
+				self.parent.connection_dock.setFeatures( QDockWidget.NoDockWidgetFeatures )
+				self.parent.connection_dock.setTitleBarWidget(QWidget())
+				events.resize_font_fix()
 
-		events.build_connection_display(self.parent)
+			if config.CONNECTION_DISPLAY_LOCATION=="left":
+				self.parent.removeDockWidget(self.parent.connection_dock)
+				self.parent.addDockWidget(Qt.LeftDockWidgetArea,self.parent.connection_dock)
+				self.parent.connection_dock.show()
+			else:
+				self.parent.removeDockWidget(self.parent.connection_dock)
+				self.parent.addDockWidget(Qt.RightDockWidgetArea,self.parent.connection_dock)
+				self.parent.connection_dock.show()
+
+			events.build_connection_display(self.parent)
 
 		config.save_settings(self.config)
 
