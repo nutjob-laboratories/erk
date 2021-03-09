@@ -963,6 +963,22 @@ def handle_ui_input(window,client,text):
 			return True
 
 	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore' and len(tokens)==1:
+
+			ilist = []
+			for t in client.gui.ignore:
+				ilist.append(t)
+
+			if len(ilist)==0:
+				msg = Message(SYSTEM_MESSAGE,'',"No ignored users.")
+				window.writeText(msg,True)
+				return True
+
+			msg = Message(SYSTEM_MESSAGE,'',"Ignored users: "+", ".join(ilist))
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore':
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"ignore TARGET")
 			window.writeText(msg,True)
