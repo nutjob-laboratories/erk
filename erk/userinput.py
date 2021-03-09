@@ -110,6 +110,8 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
 		config.INPUT_COMMAND_SYMBOL+"cat": config.INPUT_COMMAND_SYMBOL+"cat ",
+		config.INPUT_COMMAND_SYMBOL+"ignore": config.INPUT_COMMAND_SYMBOL+"ignore ",
+		config.INPUT_COMMAND_SYMBOL+"unignore": config.INPUT_COMMAND_SYMBOL+"unignore ",
 	}
 
 	CHANNEL_COMMANDS = {
@@ -134,6 +136,8 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> CHANNEL NEW_TOPIC", "Sets a channel topic" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ignore</b> TARGET", "Ignore messages from certain users" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unignore</b> TARGET", "Remove users from the ignore list" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"time</b> [SERVER]", "Requests server time" ],
@@ -177,6 +181,8 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"mode</b> TARGET MODE [ARGUMENTS]", "Sets a channel or user mode" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"oper</b> USERNAME PASSWORD", "Logs into an operator account" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"send</b> MESSAGE", "Sends a raw, unaltered command to the server" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"ignore</b> TARGET", "Ignore messages from certain users" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unignore</b> TARGET", "Remove users from the ignore list" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"list</b> [TERMS]", "Fetches a channel list from the server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"refresh</b>", "Requests a new channel list from the server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"topic</b> [CHANNEL] NEW_TOPIC", "Sets a channel topic" ],
@@ -264,6 +270,8 @@ PROTECTED_NAMES = [
 		'write',
 		'dictionary',
 		'undictionary',
+		'ignore',
+		'unignore'
 	]
 
 FORBIDDEN_CHARACTERS = [
@@ -931,7 +939,75 @@ def handle_ui_input(window,client,text):
 
 	tokens = text.split()
 
-	# MACRO BEGIN
+	# IGNORE BEGIN
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore' and len(tokens)==2:
+			tokens.pop(0)
+			target = tokens.pop(0)
+
+			ilist = client.gui.ignore
+			for t in ilist:
+				if t==target:
+					msg = Message(ERROR_MESSAGE,'',f"\"{target}\" is already ignored.")
+					window.writeText(msg,True)
+					return True
+
+			client.gui.ignore.append(target)
+			u = get_user(client.gui.userfile)
+			u["ignore"] = client.gui.ignore
+			save_user(u,client.gui.userfile)
+
+			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is now ignored.")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"ignore TARGET")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unignore' and len(tokens)==2:
+			tokens.pop(0)
+			target = tokens.pop(0)
+
+			ilist = client.gui.ignore
+			clean = []
+			for t in ilist:
+				if t==target: continue
+				clean.append(t)
+
+			if target=='*': clean = []
+
+			if len(ilist)==len(clean) and target!='*':
+				msg = Message(ERROR_MESSAGE,'',f"\"{target}\" is not being ignored.")
+				window.writeText(msg,True)
+				return True
+
+			client.gui.ignore = clean
+			u = get_user(client.gui.userfile)
+			u["ignore"] = client.gui.ignore
+			save_user(u,client.gui.userfile)
+
+			if target=='*':
+				msg = Message(SYSTEM_MESSAGE,'',f"All users unignored.")
+				window.writeText(msg,True)
+			else:
+				msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
+				window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unignore':
+			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"unignore TARGET")
+			window.writeText(msg,True)
+			return True
+
+	# IGNORE END
+
+
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'cat' and len(tokens)==3:
@@ -978,10 +1054,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"cat [TARGET] FILENAME")
 			window.writeText(msg,True)
 			return True
-
-
-
-
 
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'write' and len(tokens)>=2:
@@ -1224,9 +1296,6 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"macro NAME ARG_COUNT TEXT...")
 			window.writeText(msg,True)
 			return True
-
-
-	# MACRO END
 
 	if client.gui.block_styles:
 		if len(tokens)>0:

@@ -296,6 +296,7 @@ class Window(QMainWindow):
 			'unmacro',
 			'macrousage',
 			'undictionary',
+			'unignore',
 			APPLICATION_NAME,
 			'Erk',
 		]
