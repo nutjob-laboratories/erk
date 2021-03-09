@@ -151,6 +151,8 @@ AUTOCOMPLETE_CHANNELS = True
 
 DICTIONARY = []
 
+MACRO_INTERPOLATE_SYMBOL = "&"
+
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -158,6 +160,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"macro_interpolation_symbol": MACRO_INTERPOLATE_SYMBOL,
 		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
 		"enable_macros": ENABLE_MACROS,
@@ -263,6 +266,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "macro_interpolation_symbol" in data:
+		data["macro_interpolation_symbol"] = MACRO_INTERPOLATE_SYMBOL
 
 	if not "dictionary" in data:
 		data["dictionary"] = DICTIONARY
@@ -460,6 +466,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_MACROS
 	global AUTOCOMPLETE_CHANNELS
 	global DICTIONARY
+	global MACRO_INTERPOLATE_SYMBOL
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -468,6 +475,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			MACRO_INTERPOLATE_SYMBOL = data["macro_interpolation_symbol"]
 			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]
 			ENABLE_MACROS = data["enable_macros"]

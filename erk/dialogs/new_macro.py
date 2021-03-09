@@ -158,7 +158,7 @@ class Dialog(QDialog):
 
 		
 
-		allArgs = QLabel("<small><b>$+</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments to macro</small>")
+		allArgs = QLabel("<small><b>&+</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments to macro</small>")
 		
 		nicks = QLabel("<small><b>$NICK</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current nickname</small>") 
 		username = QLabel("<small><b>$USERNAME</b>&nbsp;&nbsp;&nbsp;&nbsp;Current username</small>") 
@@ -175,7 +175,7 @@ class Dialog(QDialog):
 		columnOne.addWidget(hostname)
 
 
-		mostArgs = QLabel("<small><b>$-</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments except the first</small>") 
+		mostArgs = QLabel("<small><b>&-</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All arguments except the first</small>") 
 		ip = QLabel("<small><b>$SERVER</b>&nbsp;&nbsp;Server's connection address</small>")
 		port = QLabel("<small><b>$PORT</b>&nbsp;&nbsp;&nbsp;&nbsp;Server's connection port</small>")
 		where = QLabel("<small><b>$WHERE</b>&nbsp;&nbsp;&nbsp;Calling channel/nickname</small>")

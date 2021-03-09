@@ -20,6 +20,7 @@ Version 0.860
 	* Changed some of the wording of the help text
 	* Added a two new commands: /ignore and /unignore (to add and remove from the ignore user list)
 	* Issuing /ignore with no arguments now displays the list of ignored users/targets
+	* Changed the argument interpolation symbol for macros from $ to &
 
 Version 0.850
 	* Changed the splash logo

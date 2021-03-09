@@ -277,6 +277,7 @@ PROTECTED_NAMES = [
 FORBIDDEN_CHARACTERS = [
 	config.INPUT_COMMAND_SYMBOL,
 	config.SCRIPT_INTERPOLATE_SYMBOL,
+	config.MACRO_INTERPOLATE_SYMBOL,
 ]
 
 def handle_macros(window,client,text):
@@ -297,11 +298,11 @@ def handle_macros(window,client,text):
 					counter = 0
 					for a in tokens:
 						counter = counter + 1
-						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+str(counter),a)
-					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"+",' '.join(tokens))
+						macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+str(counter),a)
+					macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+"+",' '.join(tokens))
 					if len(tokens)>1:
 						rest = tokens[1:]
-						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"-",' '.join(rest))
+						macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+"-",' '.join(rest))
 
 					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"NICK",client.nickname)
 					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"USERNAME",client.username)
@@ -334,11 +335,11 @@ def handle_macros(window,client,text):
 					counter = 0
 					for a in tokens:
 						counter = counter + 1
-						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+str(counter),a)
-					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"0",' '.join(tokens))
+						macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+str(counter),a)
+					macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+"0",' '.join(tokens))
 					if len(tokens)>1:
 						rest = tokens[1:]
-						macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"+",' '.join(rest))
+						macro_data = macro_data.replace(config.MACRO_INTERPOLATE_SYMBOL+"+",' '.join(rest))
 
 					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"NICK",client.nickname)
 					macro_data = macro_data.replace(config.SCRIPT_INTERPOLATE_SYMBOL+"USERNAME",client.username)
