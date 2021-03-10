@@ -867,7 +867,7 @@ class Dialog(QDialog):
 			if self.parent.cmdline_script:
 				self.scriptMisc.setEnabled(False)
 
-		self.sglobalMisc = QCheckBox("All aliases are global",self)
+		self.sglobalMisc = QCheckBox("Global aliases",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
 
 		if self.parent!= None:
