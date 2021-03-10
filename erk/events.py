@@ -1194,13 +1194,7 @@ def action_message(gui,client,target,user,message):
 		nick = user
 		hostmask = None
 
-	ignore = False
-	for i in gui.ignore:
-		if i==nick: ignore = True
-		if i==user: ignore = True
-		if hostmask:
-			if hostmask in i: ignore = True
-
+	ignore = check_for_ignore(user,gui)
 	if ignore: return
 
 	window = fetch_channel_window(client,target)
@@ -1552,13 +1546,7 @@ def notice_message(gui,client,target,user,message):
 		nick = user
 		hostmask = None
 
-	ignore = False
-	for i in gui.ignore:
-		if i==nick: ignore = True
-		if i==user: ignore = True
-		if hostmask:
-			if hostmask in i: ignore = True
-
+	ignore = check_for_ignore(user,gui)
 	if ignore: return
 
 	window = fetch_channel_window(client,target)
@@ -1634,13 +1622,7 @@ def private_message(gui,client,user,message):
 		nick = user
 		hostmask = None
 
-	ignore = False
-	for i in gui.ignore:
-		if i==nick: ignore = True
-		if i==user: ignore = True
-		if hostmask:
-			if hostmask in i: ignore = True
-
+	ignore = check_for_ignore(user,gui)
 	if ignore: return
 	
 	msg = Message(CHAT_MESSAGE,user,message,TYPE_PRIVATE)
@@ -1721,6 +1703,25 @@ def private_message(gui,client,user,message):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+def check_for_ignore(user,gui):
+
+	p = user.split('!')
+	if len(p)==2:
+		nick = p[0]
+		hostmask = p[1]
+	else:
+		nick = user
+		hostmask = None
+
+	ignore = False
+	for i in gui.ignore:
+		if fnmatch.fnmatch(nick,i): ignore = True
+		if fnmatch.fnmatch(user,i): ignore = True
+		if hostmask:
+			if fnmatch.fnmatch(hostmask,i): ignore = True
+
+	return ignore
+
 def public_message(gui,client,channel,user,message):
 
 	# if not client.gui.block_plugins:
@@ -1734,13 +1735,7 @@ def public_message(gui,client,channel,user,message):
 		nick = user
 		hostmask = None
 
-	ignore = False
-	for i in gui.ignore:
-		if i==nick: ignore = True
-		if i==user: ignore = True
-		if hostmask:
-			if hostmask in i: ignore = True
-
+	ignore = check_for_ignore(user,gui)
 	if ignore: return
 
 	msg = Message(CHAT_MESSAGE,user,message)

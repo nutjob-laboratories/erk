@@ -24,6 +24,8 @@ Version 0.860
 	* Bugfix: /edit command would not start the editor properly
 	* Alias names *CAN NOT* be a number (though they can *contain* numbers)
 	* Changed the wording for the global alias setting in the "settings" dialog
+	* /ignore can now use UNIX-style wildcards
+	* Changed the wording of the usage text for the /ignore command ("users" are no longer ignored, "targets" are)
 
 Version 0.850
 	* Changed the splash logo

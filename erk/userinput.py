@@ -971,11 +971,11 @@ def handle_ui_input(window,client,text):
 				ilist.append(t)
 
 			if len(ilist)==0:
-				msg = Message(SYSTEM_MESSAGE,'',"No ignored users.")
+				msg = Message(SYSTEM_MESSAGE,'',"No ignored targets.")
 				window.writeText(msg,True)
 				return True
 
-			msg = Message(SYSTEM_MESSAGE,'',"Ignored users: "+", ".join(ilist))
+			msg = Message(SYSTEM_MESSAGE,'',"Ignored targets: "+", ".join(ilist))
 			window.writeText(msg,True)
 			return True
 
@@ -1009,7 +1009,7 @@ def handle_ui_input(window,client,text):
 			save_user(u,client.gui.userfile)
 
 			if target=='*':
-				msg = Message(SYSTEM_MESSAGE,'',f"All users unignored.")
+				msg = Message(SYSTEM_MESSAGE,'',f"All targets unignored.")
 				window.writeText(msg,True)
 			else:
 				msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
