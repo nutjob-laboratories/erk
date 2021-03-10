@@ -1347,8 +1347,15 @@ class ScriptThread(QThread):
 						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
 							var = var[interplen:]
 
-					value = ' '.join(tokens)
-					self.vtable[var] = value
+					is_num = True
+					try:
+						v = int(var)
+					except:
+						is_num = False
+					
+					if not is_num:
+						value = ' '.join(tokens)
+						self.vtable[var] = value
 
 			if len(tokens)>=3:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
@@ -1361,8 +1368,15 @@ class ScriptThread(QThread):
 						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
 							var = var[interplen:]
 
-					value = ' '.join(tokens)
-					self.private_vtable[var] = value
+					is_num = True
+					try:
+						v = int(var)
+					except:
+						is_num = False
+					
+					if not is_num:
+						value = ' '.join(tokens)
+						self.private_vtable[var] = value
 
 			if len(tokens)==2:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'wait' or tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'sleep':
@@ -1527,6 +1541,16 @@ class ScriptThreadWindow(QThread):
 						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
 							var = var[interplen:]
 
+					is_num = True
+					try:
+						v = int(var)
+					except:
+						is_num = False
+					if is_num:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}alias in {self.scriptname}: \"{str(var)}\" is not a valid alias name"])
+						self.had_error = True
+						break
+
 					value = ' '.join(tokens)
 					self.vtable[var] = value
 
@@ -1540,6 +1564,16 @@ class ScriptThreadWindow(QThread):
 					if len(var)>interplen:
 						if var[0:interplen] == config.SCRIPT_INTERPOLATE_SYMBOL:
 							var = var[interplen:]
+
+					is_num = True
+					try:
+						v = int(var)
+					except:
+						is_num = False
+					if is_num:
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}_alias in {self.scriptname}: \"{str(var)}\" is not a valid alias name"])
+						self.had_error = True
+						break
 
 					value = ' '.join(tokens)
 					self.private_vtable[var] = value

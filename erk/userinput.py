@@ -1437,7 +1437,7 @@ def handle_ui_input(window,client,text):
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'edit' and len(tokens)==1:
 			if client.gui.seditors==None:
-				client.gui.seditors = ScriptEditor(None,client.gui)
+				client.gui.seditors = ScriptEditor(None,client.gui,client.gui.configfile,client.gui.scriptsdir,None)
 				client.gui.seditors.resize(640,480)
 
 				client.gui.seditors.clientsRefreshed(events.fetch_connections())
@@ -1459,7 +1459,7 @@ def handle_ui_input(window,client,text):
 			if scriptname!=None:
 				if client.gui.seditors==None:
 
-					client.gui.seditors = ScriptEditor(scriptname,client.gui)
+					client.gui.seditors = ScriptEditor(scriptname,client.gui,client.gui.configfile,client.gui.scriptsdir,None)
 					client.gui.seditors.resize(640,480)
 
 					client.gui.seditors.clientsRefreshed(events.fetch_connections())

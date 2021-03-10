@@ -21,6 +21,8 @@ Version 0.860
 	* Added a two new commands: /ignore and /unignore (to add and remove from the ignore user list)
 	* Issuing /ignore with no arguments now displays the list of ignored users/targets
 	* Changed the argument interpolation symbol for macros from $ to &
+	* Bugfix: /edit command would not start the editor properly
+	* Alias names *CAN NOT* be a number (though they can *contain* numbers)
 
 Version 0.850
 	* Changed the splash logo
