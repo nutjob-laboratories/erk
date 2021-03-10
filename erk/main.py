@@ -762,7 +762,7 @@ class Erk(QMainWindow):
 		idir = sys.path[0]
 		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
 
-		entry = MenuAction(self,PDF_MENU_ICON,"Scripting & Commands","How to do stuff directly from chat",25,self.openCommandDocumentation)
+		entry = MenuAction(self,PDF_MENU_ICON,"Scripting & Commands","A guide to scripting and using "+APPLICATION_NAME,25,self.openCommandDocumentation)
 		self.helpMenu.addAction(entry)
 
 		self.helpMenu.addSeparator()
