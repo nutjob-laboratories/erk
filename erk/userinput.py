@@ -82,6 +82,8 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"ssl": config.INPUT_COMMAND_SYMBOL+"ssl ",
 		config.INPUT_COMMAND_SYMBOL+"ressl": config.INPUT_COMMAND_SYMBOL+"ressl ",
 		config.INPUT_COMMAND_SYMBOL+"send": config.INPUT_COMMAND_SYMBOL+"send ",
+		config.INPUT_COMMAND_SYMBOL+"ignore": config.INPUT_COMMAND_SYMBOL+"ignore ",
+		config.INPUT_COMMAND_SYMBOL+"unignore": config.INPUT_COMMAND_SYMBOL+"unignore ",
 		config.INPUT_COMMAND_SYMBOL+"invite": config.INPUT_COMMAND_SYMBOL+"invite ",
 		config.INPUT_COMMAND_SYMBOL+"list": config.INPUT_COMMAND_SYMBOL+"list",
 		config.INPUT_COMMAND_SYMBOL+"refresh": config.INPUT_COMMAND_SYMBOL+"refresh",
@@ -110,8 +112,6 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
 		config.INPUT_COMMAND_SYMBOL+"cat": config.INPUT_COMMAND_SYMBOL+"cat ",
-		config.INPUT_COMMAND_SYMBOL+"ignore": config.INPUT_COMMAND_SYMBOL+"ignore ",
-		config.INPUT_COMMAND_SYMBOL+"unignore": config.INPUT_COMMAND_SYMBOL+"unignore ",
 	}
 
 	CHANNEL_COMMANDS = {
@@ -954,6 +954,12 @@ def handle_ui_input(window,client,text):
 					window.writeText(msg,True)
 					return True
 
+			if target=='*':
+				msg = Message(ERROR_MESSAGE,'',f"Warning! You are now ignoring all messages sent to you, public or private")
+				window.writeText(msg,True)
+				msg = Message(ERROR_MESSAGE,'',f"Type \"{config.INPUT_COMMAND_SYMBOL}unignore *\" to stop ignoring all messages")
+				window.writeText(msg,True)
+
 			client.gui.ignore.append(target)
 			u = get_user(client.gui.userfile)
 			u["ignore"] = client.gui.ignore
@@ -996,8 +1002,6 @@ def handle_ui_input(window,client,text):
 				if t==target: continue
 				clean.append(t)
 
-			if target=='*': clean = []
-
 			if len(ilist)==len(clean) and target!='*':
 				msg = Message(ERROR_MESSAGE,'',f"\"{target}\" is not being ignored.")
 				window.writeText(msg,True)
@@ -1008,12 +1012,8 @@ def handle_ui_input(window,client,text):
 			u["ignore"] = client.gui.ignore
 			save_user(u,client.gui.userfile)
 
-			if target=='*':
-				msg = Message(SYSTEM_MESSAGE,'',f"All targets unignored.")
-				window.writeText(msg,True)
-			else:
-				msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
-				window.writeText(msg,True)
+			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
+			window.writeText(msg,True)
 			return True
 
 	if len(tokens)>0:

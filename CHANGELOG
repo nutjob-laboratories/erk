@@ -27,6 +27,10 @@ Version 0.860
 	* /ignore can now use UNIX-style wildcards
 	* Changed the wording of the usage text for the /ignore command ("users" are no longer ignored, "targets" are)
 	* Changed the wording of the link to the scripting documentation in the GUI
+	* /unignore no longer contains a shortcut (/unignore *) to remove all entries in the ignore list
+	* Issuing /ignore * (which ignores ALL messages) now displays a warning
+	* Bugfix: ignoring a user from the userlist context menu would occasionally use the user's current nick with status symbol prefix
+	* Moved /ignore and /unignore higher up in the autocomplete hierarchy (so if a user does /i and hits tab, it will complete to /ignore)
 
 Version 0.850
 	* Changed the splash logo

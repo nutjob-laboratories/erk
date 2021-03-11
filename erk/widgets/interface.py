@@ -1306,10 +1306,10 @@ class Window(QMainWindow):
 					else:
 						if user_hostmask:
 							self.parent.ignore.append(user_hostmask)
-						elif raw_user:
-							self.parent.ignore.append(raw_user)
-						else:
+						elif user_nick:
 							self.parent.ignore.append(user_nick)
+						else:
+							self.parent.ignore.append(raw_user)
 						u = get_user(self.parent.userfile)
 						u["ignore"] = self.parent.ignore
 						save_user(u,self.parent.userfile)
