@@ -31,6 +31,7 @@ Version 0.860
 	* Issuing /ignore * (which ignores ALL messages) now displays a warning
 	* Bugfix: ignoring a user from the userlist context menu would occasionally use the user's current nick with status symbol prefix
 	* Moved /ignore and /unignore higher up in the autocomplete hierarchy (so if a user does /i and hits tab, it will complete to /ignore)
+	* Ignored users (whether directly or by pattern matching) have strikethroughs through their nicknames in channel userlists
 
 Version 0.850
 	* Changed the splash logo

@@ -833,6 +833,26 @@ class Window(QMainWindow):
 	def rerender_userlist(self):
 		self.writeUserlist(self.users)
 
+	def is_ignored(self,nick):
+
+		if nick in self.hostmasks:
+			hostmask = self.hostmasks[nick]
+		else:
+			hostmask = None
+
+		for i in self.parent.ignore:
+			if i==nick: return True
+			if hostmask:
+				if i==hostmask: return True
+
+		for i in self.parent.ignore:
+			if fnmatch.fnmatch(nick,i): return True
+			if hostmask:
+				if fnmatch.fnmatch(hostmask,i): return True
+
+		return False
+				
+
 	def writeUserlist(self,users):
 
 		if not hasattr(self,"userlist"): return
@@ -946,6 +966,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OWNER_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		# Add admins
@@ -953,6 +979,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_ADMIN_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		# Add ops
@@ -960,6 +992,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_OPERATOR_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		# Add halfops
@@ -967,6 +1005,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_HALFOP_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		# Add voiced
@@ -974,6 +1018,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_VOICED_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		# Add normal
@@ -981,6 +1031,12 @@ class Window(QMainWindow):
 			ui = QListWidgetItem()
 			if not config.PLAIN_USER_LISTS: ui.setIcon(QIcon(USERLIST_NORMAL_ICON))
 			ui.setText(u)
+
+			if self.is_ignored(u):
+				f = ui.font()
+				f.setStrikeOut(True)
+				ui.setFont(f)
+
 			self.userlist.addItem(ui)
 
 		self.userlist.update()
@@ -1302,6 +1358,7 @@ class Window(QMainWindow):
 						u = get_user(self.parent.userfile)
 						u["ignore"] = clean
 						save_user(u,self.parent.userfile)
+						self.rerender_userlist()
 						return True
 					else:
 						if user_hostmask:
@@ -1313,6 +1370,7 @@ class Window(QMainWindow):
 						u = get_user(self.parent.userfile)
 						u["ignore"] = self.parent.ignore
 						save_user(u,self.parent.userfile)
+						self.rerender_userlist()
 						return True
 
 			if action == actWhois:
