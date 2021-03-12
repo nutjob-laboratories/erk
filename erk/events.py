@@ -440,6 +440,10 @@ def rerender_userlists():
 	for c in CHANNELS:
 		c.widget.rerender_userlist()
 
+def recheck_userlists():
+	for c in CHANNELS:
+		c.widget.check_for_ignores()
+
 def rerender_channel_nickname():
 	for c in CHANNELS:
 		c.widget.channelNickVisibility()
@@ -1273,6 +1277,13 @@ def nick(gui,client,oldnick,newnick):
 		if window.widget.client.id==client.id:
 			if window.widget.name in channels:
 				window.widget.writeText(msg)
+				# If we have the hostmask for the old nick,
+				# make it so the hostmask for the new nick
+				# is the same
+				if oldnick in window.widget.hostmasks:
+					hm = window.widget.hostmasks[oldnick]
+					window.widget.hostmasks[newnick] = hm
+					del window.widget.hostmasks[oldnick]
 	
 	for window in PRIVATES:
 		if window.widget.client.id==client.id:

@@ -32,6 +32,9 @@ Version 0.860
 	* Bugfix: ignoring a user from the userlist context menu would occasionally use the user's current nick with status symbol prefix
 	* Moved /ignore and /unignore higher up in the autocomplete hierarchy (so if a user does /i and hits tab, it will complete to /ignore)
 	* Ignored users (whether directly or by pattern matching) have strikethroughs through their nicknames in channel userlists
+	* Bugfix: when a user changes nicks, if the client already has their hostmask, the hostmask is migrated to the new nick
+	* Bugfix: users ignored using a hostmask are displayed correctly (with a strikethrough) on the userlist even if they change nicks
+	* Bugfix: users ignored using a hostmask are displayed correctly when initially connecting (as soon as their hostmask is obtained)
 
 Version 0.850
 	* Changed the splash logo

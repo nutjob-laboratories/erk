@@ -608,6 +608,7 @@ class IRC_Connection(irc.IRCClient):
 
 		if nick in self.request_whois:
 			events.received_hostmask_for_channel_user(self.gui,self,nick,username+"@"+host)
+			events.recheck_userlists()
 			return
 
 		if nick in self.whois:

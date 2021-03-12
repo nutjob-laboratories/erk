@@ -851,7 +851,16 @@ class Window(QMainWindow):
 				if fnmatch.fnmatch(hostmask,i): return True
 
 		return False
-				
+	
+	def check_for_ignores(self):
+
+		for index in range(self.userlist.count()):
+			i = self.userlist.item(index)
+			if self.is_ignored(i.text()):
+				f = i.font()
+				f.setStrikeOut(True)
+				i.setFont(f)
+		self.userlist.repaint()
 
 	def writeUserlist(self,users):
 
