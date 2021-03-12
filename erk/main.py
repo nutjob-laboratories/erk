@@ -684,55 +684,6 @@ class Erk(QMainWindow):
 
 			self.settingsMenu.addSeparator()
 
-
-			# Hide menu
-
-			hideMenu = self.settingsMenu.addMenu(QIcon(HIDE_ICON),"Hide notifications")
-
-			self.hide_invite = QAction(QIcon(UNCHECKED_ICON),"Invite",self)
-			self.hide_invite.triggered.connect(lambda state,s="hide_invite": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_invite)
-
-			if config.HIDE_INVITE_MESSAGE: self.hide_invite.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_join = QAction(QIcon(UNCHECKED_ICON),"Join",self)
-			self.hide_join.triggered.connect(lambda state,s="hide_join": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_join)
-
-			if config.HIDE_JOIN_MESSAGE: self.hide_join.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_mode = QAction(QIcon(UNCHECKED_ICON),"Mode",self)
-			self.hide_mode.triggered.connect(lambda state,s="hide_mode": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_mode)
-
-			if config.HIDE_MODE_DISPLAY: self.hide_mode.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_nick = QAction(QIcon(UNCHECKED_ICON),"Nick",self)
-			self.hide_nick.triggered.connect(lambda state,s="hide_nick": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_nick)
-
-			if config.HIDE_NICK_MESSAGE: self.hide_nick.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_part = QAction(QIcon(UNCHECKED_ICON),"Part",self)
-			self.hide_part.triggered.connect(lambda state,s="hide_part": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_part)
-
-			if config.HIDE_PART_MESSAGE: self.hide_part.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_topic = QAction(QIcon(UNCHECKED_ICON),"Topic",self)
-			self.hide_topic.triggered.connect(lambda state,s="hide_topic": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_topic)
-
-			if config.HIDE_TOPIC_MESSAGE: self.hide_topic.setIcon(QIcon(CHECKED_ICON))
-
-			self.hide_quit = QAction(QIcon(UNCHECKED_ICON),"Quit",self)
-			self.hide_quit.triggered.connect(lambda state,s="hide_quit": self.toggleSetting(s))
-			hideMenu.addAction(self.hide_quit)
-
-			if config.HIDE_QUIT_MESSAGE: self.hide_quit.setIcon(QIcon(CHECKED_ICON))
-
-			self.settingsMenu.addSeparator()
-
 			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
 			self.winsizeMenuEntry.triggered.connect(self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
@@ -865,83 +816,6 @@ class Erk(QMainWindow):
 					code.close()
 
 	def toggleSetting(self,setting):
-
-		if setting=="hide_join":
-			if config.HIDE_JOIN_MESSAGE:
-				config.HIDE_JOIN_MESSAGE = False
-				self.hide_join.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_JOIN_MESSAGE = True
-				self.hide_join.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_part":
-			if config.HIDE_PART_MESSAGE:
-				config.HIDE_PART_MESSAGE = False
-				self.hide_part.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_PART_MESSAGE = True
-				self.hide_part.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_invite":
-			if config.HIDE_INVITE_MESSAGE:
-				config.HIDE_INVITE_MESSAGE = False
-				self.hide_invite.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_INVITE_MESSAGE = True
-				self.hide_invite.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_nick":
-			if config.HIDE_NICK_MESSAGE:
-				config.HIDE_NICK_MESSAGE = False
-				self.hide_nick.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_NICK_MESSAGE = True
-				self.hide_nick.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_quit":
-			if config.HIDE_QUIT_MESSAGE:
-				config.HIDE_QUIT_MESSAGE = False
-				self.hide_quit.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_QUIT_MESSAGE = True
-				self.hide_quit.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_topic":
-			if config.HIDE_TOPIC_MESSAGE:
-				config.HIDE_TOPIC_MESSAGE = False
-				self.hide_topic.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_TOPIC_MESSAGE = True
-				self.hide_topic.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
-
-		if setting=="hide_mode":
-			if config.HIDE_MODE_DISPLAY:
-				config.HIDE_MODE_DISPLAY = False
-				self.hide_mode.setIcon(QIcon(UNCHECKED_ICON))
-			else:
-				config.HIDE_MODE_DISPLAY = True
-				self.hide_mode.setIcon(QIcon(CHECKED_ICON))
-			config.save_settings(self.configfile)
-			events.rerender_all()
-			return
 
 		if setting=="fullscreen":
 			if self.fullscreen:

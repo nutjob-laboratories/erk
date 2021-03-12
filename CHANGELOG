@@ -37,6 +37,8 @@ Version 0.860
 	* Bugfix: users ignored using a hostmask are displayed correctly when initially connecting (as soon as their hostmask is obtained)
 	* Userlists are now repainted instead of regenerated when the ignore list is updated
 	* Hostmasks are now retained from chat messages
+	* Added a new page to the "settings" dialog: "hide messages" (from "hide notifications" in the "settings" menu in the GUI)
+	* Removed the "Hide Notification" submenu from the "Settings & Tools" menu
 
 Version 0.850
 	* Changed the splash logo

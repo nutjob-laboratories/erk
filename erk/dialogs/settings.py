@@ -652,6 +652,7 @@ class Dialog(QDialog):
 
 		self.connectionPage.setLayout(cpLayout)
 
+
 		# Input settings
 
 		self.inputPage = QWidget()
@@ -920,6 +921,59 @@ class Dialog(QDialog):
 
 		self.featuresPage.setLayout(cpLayout)
 
+		# HIDE NOTIFICATIONS PAGE
+
+		self.notificationsPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		entry.setText("Hide Messages")
+		entry.widget = self.notificationsPage
+		entry.setIcon(QIcon(HIDE_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.notificationsPage)
+
+		self.noteJoin = QCheckBox("Hide JOIN messages",self)
+		if config.HIDE_JOIN_MESSAGE: self.noteJoin.setChecked(True)
+		self.noteJoin.stateChanged.connect(self.setRerender)
+
+		self.notePart = QCheckBox("Hide PART messages",self)
+		if config.HIDE_PART_MESSAGE: self.notePart.setChecked(True)
+		self.notePart.stateChanged.connect(self.setRerender)
+
+		self.noteInvite = QCheckBox("Hide INVITE messages",self)
+		if config.HIDE_INVITE_MESSAGE: self.noteInvite.setChecked(True)
+		self.noteInvite.stateChanged.connect(self.setRerender)
+
+		self.noteNick = QCheckBox("Hide NICK messages",self)
+		if config.HIDE_NICK_MESSAGE: self.noteNick.setChecked(True)
+		self.noteNick.stateChanged.connect(self.setRerender)
+
+		self.noteQuit = QCheckBox("Hide QUIT messages",self)
+		if config.HIDE_QUIT_MESSAGE: self.noteQuit.setChecked(True)
+		self.noteQuit.stateChanged.connect(self.setRerender)
+
+		self.noteTopic = QCheckBox("Hide TOPIC messages",self)
+		if config.HIDE_TOPIC_MESSAGE: self.noteTopic.setChecked(True)
+		self.noteTopic.stateChanged.connect(self.setRerender)
+
+		self.noteMode = QCheckBox("Hide MODE messages",self)
+		if config.HIDE_MODE_DISPLAY: self.noteMode.setChecked(True)
+		self.noteMode.stateChanged.connect(self.setRerender)
+
+		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.noteJoin)
+		cpLayout.addWidget(self.notePart)
+		cpLayout.addWidget(self.noteInvite)
+		cpLayout.addWidget(self.noteNick)
+		cpLayout.addWidget(self.noteQuit)
+		cpLayout.addWidget(self.noteTopic)
+		cpLayout.addWidget(self.noteMode)
+		cpLayout.addStretch()
+
+		self.notificationsPage.setLayout(cpLayout)
+
 		# Miscellaneous settings
 
 		self.initial_fetch_list = config.AUTOMATICALLY_FETCH_CHANNEL_LIST
@@ -1067,6 +1121,20 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.HIDE_JOIN_MESSAGE = self.noteJoin.isChecked()
+
+		config.HIDE_PART_MESSAGE = self.notePart.isChecked()
+
+		config.HIDE_INVITE_MESSAGE = self.noteInvite.isChecked()
+
+		config.HIDE_NICK_MESSAGE = self.noteNick.isChecked()
+
+		config.HIDE_QUIT_MESSAGE = self.noteQuit.isChecked()
+
+		config.HIDE_TOPIC_MESSAGE = self.noteTopic.isChecked()
+
+		config.HIDE_MODE_DISPLAY = self.noteMode.isChecked()
 
 		config.LOG_LOAD_SIZE_MAX = self.logDisplayLines
 
