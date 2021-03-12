@@ -36,6 +36,7 @@ Version 0.860
 	* Bugfix: users ignored using a hostmask are displayed correctly (with a strikethrough) on the userlist even if they change nicks
 	* Bugfix: users ignored using a hostmask are displayed correctly when initially connecting (as soon as their hostmask is obtained)
 	* Userlists are now repainted instead of regenerated when the ignore list is updated
+	* Hostmasks are now retained from chat messages
 
 Version 0.850
 	* Changed the splash logo

@@ -367,6 +367,9 @@ class IRC_Connection(irc.IRCClient):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
 
+		# Capture hostmasks from messages
+		events.received_hostmask_for_channel_user(self.gui,self,pnick,phostmask)
+
 		if target==self.nickname:
 			events.private_message(self.gui,self,user,msg)
 		else:
