@@ -35,6 +35,7 @@ Version 0.860
 	* Bugfix: when a user changes nicks, if the client already has their hostmask, the hostmask is migrated to the new nick
 	* Bugfix: users ignored using a hostmask are displayed correctly (with a strikethrough) on the userlist even if they change nicks
 	* Bugfix: users ignored using a hostmask are displayed correctly when initially connecting (as soon as their hostmask is obtained)
+	* Userlists are now repainted instead of regenerated when the ignore list is updated
 
 Version 0.850
 	* Changed the splash logo

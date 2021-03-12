@@ -965,7 +965,7 @@ def handle_ui_input(window,client,text):
 			u["ignore"] = client.gui.ignore
 			save_user(u,client.gui.userfile)
 
-			events.rerender_userlists()
+			events.recheck_userlists()
 
 			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is now ignored.")
 			window.writeText(msg,True)
@@ -1014,7 +1014,7 @@ def handle_ui_input(window,client,text):
 			u["ignore"] = client.gui.ignore
 			save_user(u,client.gui.userfile)
 
-			events.rerender_userlists()
+			events.recheck_userlists()
 
 			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
 			window.writeText(msg,True)

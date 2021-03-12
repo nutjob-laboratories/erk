@@ -860,6 +860,10 @@ class Window(QMainWindow):
 				f = i.font()
 				f.setStrikeOut(True)
 				i.setFont(f)
+			else:
+				f = i.font()
+				f.setStrikeOut(False)
+				i.setFont(f)
 		self.userlist.repaint()
 
 	def writeUserlist(self,users):
