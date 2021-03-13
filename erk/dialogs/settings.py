@@ -408,7 +408,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Hide Messages")
+		entry.setText("Hide & Ignore")
 		entry.widget = self.notificationsPage
 		entry.setIcon(QIcon(HIDE_ICON))
 		self.selector.addItem(entry)
