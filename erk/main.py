@@ -512,6 +512,7 @@ class Erk(QMainWindow):
 				self.mainMenu = QMenu()
 				self.settingsMenu = QMenu()
 				self.helpMenu = QMenu()
+				self.toolsMenu = QMenu()
 
 		if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
 			self.buildMenuInterface()
@@ -660,47 +661,48 @@ class Erk(QMainWindow):
 		if not self.block_settings:
 
 			if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-				self.settingsMenu = self.menubar.addMenu("Settings && Tools")
+				self.settingsMenu = self.menubar.addMenu("Settings")
 			else:
 				self.settingsMenu.clear()
-				add_toolbar_menu(self.toolbar,"Settings && Tools",self.settingsMenu)
+				add_toolbar_menu(self.toolbar,"Settings",self.settingsMenu)
 
 			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
-			self.settingsMenu.addSeparator()
-
-			showEditor = True
-			if self.block_editor: showEditor = False
-			if self.block_scripts: showEditor = False
-
-			if showEditor:
-				entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
-				self.settingsMenu.addAction(entry)
-
-			if not self.block_styles:
-				entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
-				self.settingsMenu.addAction(entry)
-
-			entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
-			self.settingsMenu.addAction(entry)
-
-			self.settingsMenu.addSeparator()
-
-			self.winsizeMenuEntry = QAction(QIcon(RESIZE_ICON),"Set initial window size",self)
-			self.winsizeMenuEntry.triggered.connect(self.menuResize)
+			self.winsizeMenuEntry = MenuAction(self,RESIZE_WINDOW_ICON,"Window size","Set initial window size",25,self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
-
-			w = config.DEFAULT_APP_WIDTH
-			h =  config.DEFAULT_APP_HEIGHT
 
 			if self.fullscreen: self.winsizeMenuEntry.setEnabled(False)
 
-			self.set_full = QAction(QIcon(WINDOW_ICON),"Enter full screen mode",self)
-			self.set_full.triggered.connect(lambda state,s="fullscreen": self.toggleSetting(s))
-			self.settingsMenu.addAction(self.set_full)
+			l = lambda s="fullscreen": self.toggleSetting(s)
 
-			if self.fullscreen: self.set_full.setText("Exit full screen more")
+			entry = MenuAction(self,FULLSCREEN_WINDOW_ICON,"Full screen","Toggle full screen mode",25,l)
+			self.settingsMenu.addAction(entry)
+
+		# Tools menu
+		# self.toolsMenu
+
+		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+			self.toolsMenu = self.menubar.addMenu("Tools")
+		else:
+			self.toolsMenu.clear()
+			add_toolbar_menu(self.toolbar,"Tools",self.toolsMenu)
+
+		showEditor = True
+		if self.block_editor: showEditor = False
+		if self.block_scripts: showEditor = False
+
+		if showEditor:
+			entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
+			self.toolsMenu.addAction(entry)
+
+		if not self.block_styles:
+			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
+			self.toolsMenu.addAction(entry)
+
+		entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
+		self.toolsMenu.addAction(entry)
+
 
 		# Help menu
 
@@ -824,13 +826,14 @@ class Erk(QMainWindow):
 			if self.fullscreen:
 				self.fullscreen = False
 				self.showNormal()
-				self.set_full.setText("Enter full screen more")
 				self.winsizeMenuEntry.setEnabled(True)
 			else:
 				self.fullscreen = True
 				self.showFullScreen()
-				self.set_full.setText("Exit full screen more")
 				self.winsizeMenuEntry.setEnabled(False)
+			x = Blank()
+			x.show()
+			x.close()
 			return
 
 	def linkClicked(self,url):
