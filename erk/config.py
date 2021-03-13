@@ -155,6 +155,10 @@ MACRO_INTERPOLATE_SYMBOL = "&"
 
 ENABLE_IGNORE = True
 
+IGNORE_PUBLIC = True
+IGNORE_PRIVATE = True
+IGNORE_NOTICE = True
+
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -162,6 +166,9 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"ignore_public_messages": IGNORE_PUBLIC,
+		"ignore_private_messages": IGNORE_PRIVATE,
+		"ignore_notice_messages": IGNORE_NOTICE,
 		"enable_user_ignore": ENABLE_IGNORE,
 		"macro_interpolation_symbol": MACRO_INTERPOLATE_SYMBOL,
 		"dictionary": DICTIONARY,
@@ -269,6 +276,15 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "ignore_public_messages" in data:
+		data["ignore_public_messages"] = IGNORE_PUBLIC
+
+	if not "ignore_private_messages" in data:
+		data["ignore_private_messages"] = IGNORE_PRIVATE
+
+	if not "ignore_notice_messages" in data:
+		data["ignore_notice_messages"] = IGNORE_NOTICE
 
 	if not "enable_user_ignore" in data:
 		data["enable_user_ignore"] = ENABLE_IGNORE
@@ -474,6 +490,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global DICTIONARY
 	global MACRO_INTERPOLATE_SYMBOL
 	global ENABLE_IGNORE
+	global IGNORE_PUBLIC
+	global IGNORE_PRIVATE
+	global IGNORE_NOTICE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -482,6 +501,9 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			IGNORE_PUBLIC = data["ignore_public_messages"]
+			IGNORE_PRIVATE = data["ignore_private_messages"]
+			IGNORE_NOTICE = data["ignore_notice_messages"]
 			ENABLE_IGNORE = data["enable_user_ignore"]
 			MACRO_INTERPOLATE_SYMBOL = data["macro_interpolation_symbol"]
 			DICTIONARY = data["dictionary"]

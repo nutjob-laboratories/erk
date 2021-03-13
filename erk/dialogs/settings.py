@@ -407,8 +407,28 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.notificationsPage)
 
-		self.noteIgnore = QCheckBox("Enable user ignore",self)
+		self.noteIgnore = QCheckBox("Enabled",self)
 		if config.ENABLE_IGNORE: self.noteIgnore.setChecked(True)
+
+		self.notePublic = QCheckBox("Ignore public messages",self)
+		if config.IGNORE_PUBLIC: self.notePublic.setChecked(True)
+
+		self.notePrivate = QCheckBox("Ignore private messages",self)
+		if config.IGNORE_PRIVATE: self.notePrivate.setChecked(True)
+
+		self.noteNotice = QCheckBox("Ignore notice messages",self)
+		if config.IGNORE_NOTICE: self.noteNotice.setChecked(True)
+
+		c1 = QVBoxLayout()
+		c1.addWidget(self.noteIgnore)
+		c1.addWidget(self.notePublic)
+		c1.addWidget(self.notePrivate)
+		c1.addWidget(self.noteNotice)
+
+		ignoreBox = QGroupBox("User Ignore",self)
+		ignoreBox.setLayout(c1)
+
+		ignoreBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		self.noteJoin = QCheckBox("Hide JOIN messages",self)
 		if config.HIDE_JOIN_MESSAGE: self.noteJoin.setChecked(True)
@@ -439,7 +459,7 @@ class Dialog(QDialog):
 		self.noteMode.stateChanged.connect(self.setRerender)
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.noteIgnore)
+		cpLayout.addWidget(ignoreBox)
 		cpLayout.addWidget(self.noteJoin)
 		cpLayout.addWidget(self.notePart)
 		cpLayout.addWidget(self.noteInvite)
@@ -1126,6 +1146,10 @@ class Dialog(QDialog):
 
 	def save(self):
 
+		config.IGNORE_PUBLIC = self.notePublic.isChecked()
+		config.IGNORE_PRIVATE = self.notePrivate.isChecked()
+		config.IGNORE_NOTICE = self.noteNotice.isChecked()
+
 		if self.parent!= None:
 
 			if self.noteIgnore.isChecked() and not config.ENABLE_IGNORE:
@@ -1136,7 +1160,6 @@ class Dialog(QDialog):
 			if not self.noteIgnore.isChecked() and config.ENABLE_IGNORE:
 				self.parent.ignore = []
 				events.recheck_userlists()
-
 
 		config.ENABLE_IGNORE = self.noteIgnore.isChecked()
 

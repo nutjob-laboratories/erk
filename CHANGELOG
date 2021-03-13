@@ -41,6 +41,8 @@ Version 0.860
 	* Removed the "Hide Notification" submenu from the "Settings & Tools" menu
 	* Added an option to enable/disable user ignoring
 	* Added the enable/disable user ignoring option to the "settings" dialog
+	* Added options to ignore public, private, or notice messages (or any combination of the three)
+	* Added new ignore options to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo

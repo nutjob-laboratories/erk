@@ -1199,6 +1199,15 @@ def action_message(gui,client,target,user,message):
 		hostmask = None
 
 	ignore = check_for_ignore(user,gui)
+
+	if ignore and not config.IGNORE_PUBLIC:
+		if target!=client.nickname:
+			ignore = False
+
+	if ignore and not config.IGNORE_PRIVATE:
+		if target==client.nickname:
+			ignore = False
+
 	if ignore: return
 
 	window = fetch_channel_window(client,target)
@@ -1558,6 +1567,7 @@ def notice_message(gui,client,target,user,message):
 		hostmask = None
 
 	ignore = check_for_ignore(user,gui)
+	if ignore and not config.IGNORE_NOTICE: ignore = False
 	if ignore: return
 
 	window = fetch_channel_window(client,target)
@@ -1634,6 +1644,7 @@ def private_message(gui,client,user,message):
 		hostmask = None
 
 	ignore = check_for_ignore(user,gui)
+	if ignore and not config.IGNORE_PRIVATE: ignore = False
 	if ignore: return
 	
 	msg = Message(CHAT_MESSAGE,user,message,TYPE_PRIVATE)
@@ -1749,6 +1760,9 @@ def public_message(gui,client,channel,user,message):
 		hostmask = None
 
 	ignore = check_for_ignore(user,gui)
+
+	if ignore and not config.IGNORE_PUBLIC: ignore = False
+
 	if ignore: return
 
 	msg = Message(CHAT_MESSAGE,user,message)
