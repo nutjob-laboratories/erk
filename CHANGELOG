@@ -54,6 +54,7 @@ Version 0.860
 	* The "settings" menu now uses all "fancy" menu entries
 	* Removed some legacy plugin code from the chat interface
 	* New adaptive help system: commands that are disabled from commandline or settings will no longer appear in /help or autocomplete
+	* Made the "hide messages" section in the "settings" dialog a little prettier
 
 Version 0.850
 	* Changed the splash logo

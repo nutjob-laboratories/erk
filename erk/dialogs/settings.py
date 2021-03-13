@@ -439,43 +439,57 @@ class Dialog(QDialog):
 
 		ignoreBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		self.noteJoin = QCheckBox("Hide all JOIN messages",self)
+		self.noteJoin = QCheckBox("JOIN messages",self)
 		if config.HIDE_JOIN_MESSAGE: self.noteJoin.setChecked(True)
 		self.noteJoin.stateChanged.connect(self.setRerender)
 
-		self.notePart = QCheckBox("Hide all PART messages",self)
+		self.notePart = QCheckBox("PART messages",self)
 		if config.HIDE_PART_MESSAGE: self.notePart.setChecked(True)
 		self.notePart.stateChanged.connect(self.setRerender)
 
-		self.noteInvite = QCheckBox("Hide all INVITE messages",self)
+		self.noteInvite = QCheckBox("INVITE messages",self)
 		if config.HIDE_INVITE_MESSAGE: self.noteInvite.setChecked(True)
 		self.noteInvite.stateChanged.connect(self.setRerender)
 
-		self.noteNick = QCheckBox("Hide all NICK messages",self)
+		self.noteNick = QCheckBox("NICK messages",self)
 		if config.HIDE_NICK_MESSAGE: self.noteNick.setChecked(True)
 		self.noteNick.stateChanged.connect(self.setRerender)
 
-		self.noteQuit = QCheckBox("Hide all QUIT messages",self)
+		self.noteQuit = QCheckBox("QUIT messages",self)
 		if config.HIDE_QUIT_MESSAGE: self.noteQuit.setChecked(True)
 		self.noteQuit.stateChanged.connect(self.setRerender)
 
-		self.noteTopic = QCheckBox("Hide all TOPIC messages",self)
+		self.noteTopic = QCheckBox("TOPIC messages",self)
 		if config.HIDE_TOPIC_MESSAGE: self.noteTopic.setChecked(True)
 		self.noteTopic.stateChanged.connect(self.setRerender)
 
-		self.noteMode = QCheckBox("Hide all MODE messages",self)
+		self.noteMode = QCheckBox("MODE messages",self)
 		if config.HIDE_MODE_DISPLAY: self.noteMode.setChecked(True)
 		self.noteMode.stateChanged.connect(self.setRerender)
 
+		hc1 = QVBoxLayout()
+		hc1.addWidget(self.noteJoin)
+		hc1.addWidget(self.notePart)
+		hc1.addWidget(self.noteInvite)
+		hc1.addWidget(self.noteNick)
+
+		hc2 = QVBoxLayout()
+		hc2.addWidget(self.noteQuit)
+		hc2.addWidget(self.noteTopic)
+		hc2.addWidget(self.noteMode)
+
+		hideLayout = QHBoxLayout()
+		hideLayout.addLayout(hc1)
+		hideLayout.addLayout(hc2)
+
+		hideBox = QGroupBox("Hide All...",self)
+		hideBox.setLayout(hideLayout)
+
+		hideBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(ignoreBox)
-		cpLayout.addWidget(self.noteJoin)
-		cpLayout.addWidget(self.notePart)
-		cpLayout.addWidget(self.noteInvite)
-		cpLayout.addWidget(self.noteNick)
-		cpLayout.addWidget(self.noteQuit)
-		cpLayout.addWidget(self.noteTopic)
-		cpLayout.addWidget(self.noteMode)
+		cpLayout.addWidget(hideBox)
 		cpLayout.addStretch()
 
 		self.notificationsPage.setLayout(cpLayout)
