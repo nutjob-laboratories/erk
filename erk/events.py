@@ -1668,7 +1668,7 @@ def private_message(gui,client,user,message):
 	if ignore and not config.IGNORE_PRIVATE: ignore = False
 	if ignore: return
 	
-	msg = Message(CHAT_MESSAGE,user,message,TYPE_PRIVATE)
+	msg = Message(CHAT_MESSAGE,user,message)
 
 	window = fetch_private_window(client,nick)
 	if window:

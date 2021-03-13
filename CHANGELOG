@@ -49,6 +49,7 @@ Version 0.860
 	* Added the new notice/pm write to console option to the "settings" dialog
 	* Removed a number of no-longer-needed settings from the config file
 	* Bugfix: the main executable was using an incorrect setting to set the application font
+	* Bugfix: timestamps were being incorrectly recorded (and displayed) for private messages
 
 Version 0.850
 	* Changed the splash logo
