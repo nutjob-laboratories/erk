@@ -430,31 +430,31 @@ class Dialog(QDialog):
 
 		ignoreBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		self.noteJoin = QCheckBox("Hide JOIN messages",self)
+		self.noteJoin = QCheckBox("Hide all JOIN messages",self)
 		if config.HIDE_JOIN_MESSAGE: self.noteJoin.setChecked(True)
 		self.noteJoin.stateChanged.connect(self.setRerender)
 
-		self.notePart = QCheckBox("Hide PART messages",self)
+		self.notePart = QCheckBox("Hide all PART messages",self)
 		if config.HIDE_PART_MESSAGE: self.notePart.setChecked(True)
 		self.notePart.stateChanged.connect(self.setRerender)
 
-		self.noteInvite = QCheckBox("Hide INVITE messages",self)
+		self.noteInvite = QCheckBox("Hide all INVITE messages",self)
 		if config.HIDE_INVITE_MESSAGE: self.noteInvite.setChecked(True)
 		self.noteInvite.stateChanged.connect(self.setRerender)
 
-		self.noteNick = QCheckBox("Hide NICK messages",self)
+		self.noteNick = QCheckBox("Hide all NICK messages",self)
 		if config.HIDE_NICK_MESSAGE: self.noteNick.setChecked(True)
 		self.noteNick.stateChanged.connect(self.setRerender)
 
-		self.noteQuit = QCheckBox("Hide QUIT messages",self)
+		self.noteQuit = QCheckBox("Hide all QUIT messages",self)
 		if config.HIDE_QUIT_MESSAGE: self.noteQuit.setChecked(True)
 		self.noteQuit.stateChanged.connect(self.setRerender)
 
-		self.noteTopic = QCheckBox("Hide TOPIC messages",self)
+		self.noteTopic = QCheckBox("Hide all TOPIC messages",self)
 		if config.HIDE_TOPIC_MESSAGE: self.noteTopic.setChecked(True)
 		self.noteTopic.stateChanged.connect(self.setRerender)
 
-		self.noteMode = QCheckBox("Hide MODE messages",self)
+		self.noteMode = QCheckBox("Hide all MODE messages",self)
 		if config.HIDE_MODE_DISPLAY: self.noteMode.setChecked(True)
 		self.noteMode.stateChanged.connect(self.setRerender)
 
