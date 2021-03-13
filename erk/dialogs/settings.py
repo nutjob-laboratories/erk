@@ -352,6 +352,12 @@ class Dialog(QDialog):
 		if config.CLICKABLE_CHANNELS: self.channelLinks.setChecked(True)
 		self.channelLinks.stateChanged.connect(self.setRerender)
 
+		self.writeNotice = QCheckBox("Write all notices to console",self)
+		if config.WRITE_NOTICE_TO_CONSOLE: self.writeNotice.setChecked(True)
+
+		self.writePrivate = QCheckBox("Write all private messages to console",self)
+		if config.WRITE_PRIVATE_TO_CONSOLE: self.writePrivate.setChecked(True)
+
 		self.addPrefixes = QCheckBox("Add prefix to system messages",self)
 		if config.MARK_SYSTEM_MESSAGES_WITH_SYMBOL: self.addPrefixes.setChecked(True)
 		self.addPrefixes.stateChanged.connect(self.setRerender)
@@ -390,6 +396,8 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.hideProfanity)
 		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
+		mpLayout.addWidget(self.writePrivate)
+		mpLayout.addWidget(self.writeNotice)
 		mpLayout.addStretch()
 
 		self.messagesPage.setLayout(mpLayout)
@@ -1145,6 +1153,9 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.WRITE_NOTICE_TO_CONSOLE = self.writeNotice.isChecked()
+		config.WRITE_PRIVATE_TO_CONSOLE = self.writePrivate.isChecked()
 
 		config.IGNORE_PUBLIC = self.notePublic.isChecked()
 		config.IGNORE_PRIVATE = self.notePrivate.isChecked()

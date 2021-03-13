@@ -159,6 +159,8 @@ IGNORE_PUBLIC = True
 IGNORE_PRIVATE = True
 IGNORE_NOTICE = True
 
+WRITE_PRIVATE_TO_CONSOLE = True
+WRITE_NOTICE_TO_CONSOLE = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -166,6 +168,8 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"write_private_messages_to_console": WRITE_PRIVATE_TO_CONSOLE,
+		"write_notice_messages_to_console": WRITE_NOTICE_TO_CONSOLE,
 		"ignore_public_messages": IGNORE_PUBLIC,
 		"ignore_private_messages": IGNORE_PRIVATE,
 		"ignore_notice_messages": IGNORE_NOTICE,
@@ -276,6 +280,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "write_private_messages_to_console" in data:
+		data["write_private_messages_to_console"] = WRITE_PRIVATE_TO_CONSOLE
+
+	if not "write_notice_messages_to_console" in data:
+		data["write_notice_messages_to_console"] = WRITE_NOTICE_TO_CONSOLE
 
 	if not "ignore_public_messages" in data:
 		data["ignore_public_messages"] = IGNORE_PUBLIC
@@ -493,6 +503,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global IGNORE_PUBLIC
 	global IGNORE_PRIVATE
 	global IGNORE_NOTICE
+	global WRITE_PRIVATE_TO_CONSOLE
+	global WRITE_NOTICE_TO_CONSOLE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -501,6 +513,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			WRITE_PRIVATE_TO_CONSOLE = data["write_private_messages_to_console"]
+			WRITE_NOTICE_TO_CONSOLE = data["write_notice_messages_to_console"]
 			IGNORE_PUBLIC = data["ignore_public_messages"]
 			IGNORE_PRIVATE = data["ignore_private_messages"]
 			IGNORE_NOTICE = data["ignore_notice_messages"]

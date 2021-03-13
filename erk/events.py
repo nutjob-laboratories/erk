@@ -1599,9 +1599,10 @@ def notice_message(gui,client,target,user,message):
 			build_connection_display(gui)
 
 		# Always write notice to the console window
-		window = fetch_console_window(client)
-		if window:
-			window.writeText( Message(NOTICE_MESSAGE,user,message) )
+		if config.WRITE_NOTICE_TO_CONSOLE:
+			window = fetch_console_window(client)
+			if window:
+				window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
 		return
 
@@ -1624,9 +1625,10 @@ def notice_message(gui,client,target,user,message):
 			build_connection_display(gui)
 
 		# Always write notice to the console window
-		window = fetch_console_window(client)
-		if window:
-			window.writeText( Message(NOTICE_MESSAGE,user,message) )
+		if config.WRITE_NOTICE_TO_CONSOLE:
+			window = fetch_console_window(client)
+			if window:
+				window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
 		return
 
@@ -1639,9 +1641,10 @@ def notice_message(gui,client,target,user,message):
 			window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
 	# Always write notice to the console window
-	window = fetch_console_window(client)
-	if window:
-		window.writeText( Message(NOTICE_MESSAGE,user,message) )
+	if config.WRITE_NOTICE_TO_CONSOLE:
+		window = fetch_console_window(client)
+		if window:
+			window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1670,6 +1673,12 @@ def private_message(gui,client,user,message):
 	window = fetch_private_window(client,nick)
 	if window:
 		window.writeText(msg)
+
+		if config.WRITE_PRIVATE_TO_CONSOLE:
+			window = fetch_console_window(client)
+			if window:
+				window.writeText(msg)
+
 	else:
 		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS:
 			newchan = Chat(
@@ -1692,6 +1701,11 @@ def private_message(gui,client,user,message):
 			newchan.writeText(msg)
 
 			window = newchan
+
+			if config.WRITE_PRIVATE_TO_CONSOLE:
+				window = fetch_console_window(client)
+				if window:
+					window.writeText(msg)
 
 			# Update connection display
 			build_connection_display(gui)
@@ -1739,6 +1753,8 @@ def private_message(gui,client,user,message):
 
 		# Update connection display
 		build_connection_display(gui)
+
+
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
