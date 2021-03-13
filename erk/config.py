@@ -86,15 +86,7 @@ DISPLAY_CHAT_RESUME_DATE_TIME = True
 SAVE_PRIVATE_LOGS = False
 LOAD_PRIVATE_LOGS = False
 MARK_SYSTEM_MESSAGES_WITH_SYMBOL = True
-USE_SPACES_FOR_INDENT = True
-NUMBER_OF_SPACES_FOR_INDENT = 4
-EDITOR_WORD_WRAP = False
 DISPLAY_TIMESTAMP_SECONDS = False
-EDITOR_AUTO_INDENT = True
-EDITOR_FONT = ''
-EDITOR_STATUS_BAR = True
-EDITOR_SYNTAX_HIGHLIGHT = True
-EDITOR_PROMPT_FOR_SAVE_ON_EXIT = True
 JOIN_ON_INVITE = False
 CLICKABLE_CHANNELS = True
 CONNECTION_DISPLAY_WIDTH = None
@@ -203,9 +195,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"autosave_cache_minimum_size": AUTOSAVE_CACHE_SIZE,
 		"autosave_logs": AUTOSAVE_LOGS,
 		"autosave_log_interval_in_seconds": AUTOSAVE_LOG_TIME,
-		"use_spaces_for_indent": USE_SPACES_FOR_INDENT,
-		"number_of_indent_spaces": NUMBER_OF_SPACES_FOR_INDENT,
-		"editor_word_wrap": EDITOR_WORD_WRAP,
 		"command_history_length": HISTORY_LENGTH,
 		"chat_display_widget_spacing": CHAT_WINDOW_WIDGET_SPACING,
 		"get_hostmasks_on_channel_join": GET_HOSTMASKS_ON_CHANNEL_JOIN,
@@ -248,11 +237,6 @@ def save_settings(filename=SETTINGS_FILE):
 		"load_private_logs": LOAD_PRIVATE_LOGS,
 		"show_system_messages_prefix": MARK_SYSTEM_MESSAGES_WITH_SYMBOL,
 		"show_timestamps_with_seconds": DISPLAY_TIMESTAMP_SECONDS,
-		"editor_autoindent": EDITOR_AUTO_INDENT,
-		"editor_font": EDITOR_FONT,
-		"editor_status_bar": EDITOR_STATUS_BAR,
-		"editor_syntax_highlighting": EDITOR_SYNTAX_HIGHLIGHT,
-		"editor_prompt_for_save_on_exit": EDITOR_PROMPT_FOR_SAVE_ON_EXIT,
 		"automatically_join_on_invite": JOIN_ON_INVITE,
 		"create_links_for_channel_names": CLICKABLE_CHANNELS,
 		"connection_display_width": CONNECTION_DISPLAY_WIDTH,
@@ -446,15 +430,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SAVE_PRIVATE_LOGS
 	global LOAD_PRIVATE_LOGS
 	global MARK_SYSTEM_MESSAGES_WITH_SYMBOL
-	global USE_SPACES_FOR_INDENT
-	global NUMBER_OF_SPACES_FOR_INDENT
-	global EDITOR_WORD_WRAP
 	global DISPLAY_TIMESTAMP_SECONDS
-	global EDITOR_AUTO_INDENT
-	global EDITOR_FONT
-	global EDITOR_STATUS_BAR
-	global EDITOR_SYNTAX_HIGHLIGHT
-	global EDITOR_PROMPT_FOR_SAVE_ON_EXIT
 	global JOIN_ON_INVITE
 	global CLICKABLE_CHANNELS
 	global CONNECTION_DISPLAY_WIDTH
@@ -543,9 +519,6 @@ def load_settings(filename=SETTINGS_FILE):
 			ASK_BEFORE_QUIT = data["ask_before_quitting"]
 			SHOW_CONNECTION_LOST_ERROR = data["show_connection_lost_dialog"]
 			SHOW_CONNECTION_FAIL_ERROR = data["show_connection_fail_dialog"]
-			USE_SPACES_FOR_INDENT = data["use_spaces_for_indent"]
-			NUMBER_OF_SPACES_FOR_INDENT = data["number_of_indent_spaces"]
-			EDITOR_WORD_WRAP = data["editor_word_wrap"]
 			HISTORY_LENGTH = data["command_history_length"]
 			CHAT_WINDOW_WIDGET_SPACING = data["chat_display_widget_spacing"]
 			GET_HOSTMASKS_ON_CHANNEL_JOIN = data["get_hostmasks_on_channel_join"]
@@ -588,11 +561,6 @@ def load_settings(filename=SETTINGS_FILE):
 			LOAD_PRIVATE_LOGS = data["load_private_logs"]
 			MARK_SYSTEM_MESSAGES_WITH_SYMBOL = data["show_system_messages_prefix"]
 			DISPLAY_TIMESTAMP_SECONDS = data["show_timestamps_with_seconds"]
-			EDITOR_AUTO_INDENT = data["editor_autoindent"]
-			EDITOR_FONT = data["editor_font"]
-			EDITOR_STATUS_BAR = data["editor_status_bar"]
-			EDITOR_SYNTAX_HIGHLIGHT = data["editor_syntax_highlighting"]
-			EDITOR_PROMPT_FOR_SAVE_ON_EXIT = data["editor_prompt_for_save_on_exit"]
 			JOIN_ON_INVITE = data["automatically_join_on_invite"]
 			CLICKABLE_CHANNELS = data["create_links_for_channel_names"]
 			CONNECTION_DISPLAY_WIDTH = data["connection_display_width"]
@@ -657,9 +625,6 @@ def check_settings(filename):
 			if "ask_before_quitting" in data: check = check + 1
 			if "show_connection_lost_dialog" in data: check = check + 1
 			if "show_connection_fail_dialog" in data: check = check + 1
-			if "use_spaces_for_indent" in data: check = check + 1
-			if "number_of_indent_spaces" in data: check = check + 1
-			if "editor_word_wrap" in data: check = check + 1
 			if "command_history_length" in data: check = check + 1
 			if "chat_display_widget_spacing" in data: check = check + 1
 			if "get_hostmasks_on_channel_join" in data: check = check + 1
@@ -702,11 +667,6 @@ def check_settings(filename):
 			if "load_private_logs" in data: check = check + 1
 			if "show_system_messages_prefix" in data: check = check + 1
 			if "show_timestamps_with_seconds" in data: check = check + 1
-			if "editor_autoindent" in data: check = check + 1
-			if "editor_font" in data: check = check + 1
-			if "editor_status_bar" in data: check = check + 1
-			if "editor_syntax_highlighting" in data: check = check + 1
-			if "editor_prompt_for_save_on_exit" in data: check = check + 1
 			if "automatically_join_on_invite" in data: check = check + 1
 			if "create_links_for_channel_names" in data: check = check + 1
 			if "connection_display_width" in data: check = check + 1
@@ -733,6 +693,13 @@ def check_settings(filename):
 			if "animate_unseen_messages_in_connection_display" in data: check = check + 1
 			if "animate_connecting_messages_in_connection_display" in data: check = check + 1
 			if "enable_scripts" in data: check = check + 1
+			if "write_private_messages_to_console" in data: check = check + 1
+			if "write_notice_messages_to_console" in data: check = check + 1
+			if "ignore_public_messages" in data: check = check + 1
+			if "ignore_private_messages" in data: check = check + 1
+			if "ignore_notice_messages" in data: check = check + 1
+			if "enable_user_ignore" in data: check = check + 1
+			if "macro_interpolation_symbol" in data: check = check + 1
 
 			if check >= 95:
 				return True

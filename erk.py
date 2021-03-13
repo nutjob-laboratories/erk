@@ -321,13 +321,13 @@ if __name__ == '__main__':
 		if not loaded_config_file:
 			erk.config.load_settings(args.config)
 
-		if erk.config.EDITOR_FONT=='':
+		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,9)
 		else:
 			f = QFont()
-			f.fromString(erk.config.EDITOR_FONT)
+			f.fromString(erk.config.DISPLAY_FONT)
 			font = f
 
 		app.setFont(font)
