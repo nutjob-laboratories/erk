@@ -592,6 +592,15 @@ class Window(QMainWindow):
 
 	# BEGIN GUI METHODS
 
+	def reloadCommands(self):
+
+		self.commands = {}
+
+		if self.type==config.CHANNEL_WINDOW: self.commands.update(userinput.CHANNEL_COMMANDS)
+		if self.type==config.PRIVATE_WINDOW: self.commands.update(userinput.PRIVATE_COMMANDS)
+
+		self.commands.update(userinput.COMMON_COMMANDS)
+
 	def restoreStyle(self):
 		self.styles = get_text_format_settings(self.parent.stylefile)
 

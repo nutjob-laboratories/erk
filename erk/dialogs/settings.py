@@ -38,6 +38,7 @@ from ..resources import *
 from ..files import *
 from .. import config
 from .. import events
+from .. import userinput
 
 from .prefix import Dialog as Prefix
 from .history_size import Dialog as HistorySize
@@ -991,9 +992,6 @@ class Dialog(QDialog):
 			if self.parent.cmdline_script:
 				self.enableMacros.setEnabled(False)
 
-			if self.parent.cmdline_script:
-				scriptBox.setEnabled(False)
-
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.scriptMisc)
 		cpLayout.addWidget(self.seditMisc)
@@ -1378,6 +1376,9 @@ class Dialog(QDialog):
 				self.parent.connection_dock.show()
 
 			events.build_connection_display(self.parent)
+
+			userinput.buildHelp()
+			events.reload_commands_all()
 
 		config.save_settings(self.config)
 

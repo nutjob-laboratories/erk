@@ -432,6 +432,9 @@ class Erk(QMainWindow):
 
 		# Rebuild the command help, if a user has a different symbol
 		# for executing commands
+		userinput.CMDLINE_BLOCK_SCRIPTS = self.block_scripts
+		userinput.CMDLINE_BLOCK_EDITOR = self.block_editor
+		userinput.CMDLINE_BLOCK_STYLES = self.block_styles
 		userinput.buildHelp()
 
 		if not config.ENABLE_SCRIPT_EDITOR: self.block_editor = True

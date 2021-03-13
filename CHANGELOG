@@ -52,6 +52,8 @@ Version 0.860
 	* Bugfix: timestamps were being incorrectly recorded (and displayed) for private messages
 	* "Settings & Tools" menus are back to being two different menus
 	* The "settings" menu now uses all "fancy" menu entries
+	* Removed some legacy plugin code from the chat interface
+	* New adaptive help system: commands that are disabled from commandline or settings will no longer appear in /help or autocomplete
 
 Version 0.850
 	* Changed the splash logo

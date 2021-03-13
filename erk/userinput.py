@@ -56,6 +56,10 @@ CHAT_HELP = []
 COMMAND_HELP_ENTRIES = []
 CHAT_HELP_ENTRIES = []
 
+CMDLINE_BLOCK_SCRIPTS = False
+CMDLINE_BLOCK_EDITOR = False
+CMDLINE_BLOCK_STYLES = False
+
 def buildHelp():
 
 	global COMMON_COMMANDS
@@ -100,19 +104,66 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
 		config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
 		config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
+
+		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
+
 		config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
+
 		config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
+
 		config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
+
 		config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 		config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
 		config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
 		config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
-		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
+
 		config.INPUT_COMMAND_SYMBOL+"dictionary": config.INPUT_COMMAND_SYMBOL+"dictionary ",
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
 		config.INPUT_COMMAND_SYMBOL+"cat": config.INPUT_COMMAND_SYMBOL+"cat ",
 	}
+
+	display_edit = True
+	if not config.ENABLE_SCRIPTS: display_edit = False
+	if not config.ENABLE_SCRIPT_EDITOR: display_edit = False
+	if CMDLINE_BLOCK_EDITOR: display_edit = False
+	if CMDLINE_BLOCK_SCRIPTS: display_edit = False
+
+	if not display_edit:
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"edit"]
+
+	display_script = True
+	if not config.ENABLE_SCRIPTS: display_script = False
+	if CMDLINE_BLOCK_SCRIPTS: display_script = False
+
+	if not display_script:
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"script"]
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"connectscript"]
+
+	display_macro = True
+	if not config.ENABLE_SCRIPTS: display_macro = False
+	if CMDLINE_BLOCK_SCRIPTS: display_macro = False
+	if not config.ENABLE_MACROS: display_macro = False
+
+	if not display_macro:
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"macro"]
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"macrohelp"]
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"macrousage"]
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"unmacro"]
+
+	display_style = True
+	if CMDLINE_BLOCK_STYLES: display_style = False
+
+	if not display_style:
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"style"]
+
+	display_ignore = True
+	if not config.ENABLE_IGNORE: display_ignore = False
+
+	if not display_ignore:
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"ignore"]
+		del COMMON_COMMANDS[config.INPUT_COMMAND_SYMBOL+"unignore"]
 
 	CHANNEL_COMMANDS = {
 		config.INPUT_COMMAND_SYMBOL+"me": config.INPUT_COMMAND_SYMBOL+"me ",	
@@ -168,6 +219,46 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 	]
 
+	if not display_edit:
+		clean = []
+		for h in COMMAND_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"edit" in h[0]: continue
+			clean.append(h)
+		COMMAND_HELP = clean
+
+	if not display_script:
+		clean = []
+		for h in COMMAND_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"script" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"connectscript" in h[0]: continue
+			clean.append(h)
+		COMMAND_HELP = clean
+
+	if not display_macro:
+		clean = []
+		for h in COMMAND_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"macro" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"macrohelp" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"macrousage" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"unmacro" in h[0]: continue
+			clean.append(h)
+		COMMAND_HELP = clean
+
+	if not display_style:
+		clean = []
+		for h in COMMAND_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"style" in h[0]: continue
+			clean.append(h)
+		COMMAND_HELP = clean
+
+	if not display_ignore:
+		clean = []
+		for h in COMMAND_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"ignore" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"unignore" in h[0]: continue
+			clean.append(h)
+		COMMAND_HELP = clean
+
 	CHAT_HELP = [
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"msg</b> TARGET MESSAGE", "Sends a private message" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"me</b> MESSAGE", "Sends CTCP action message" ],
@@ -199,6 +290,36 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"exit</b>", "Closes the application" ],
 	]
+
+	if not display_edit:
+		 clean = []
+		 for h in CHAT_HELP:
+		 	if config.INPUT_COMMAND_SYMBOL+"edit" in h[0]: continue
+		 	clean.append(h)
+		 CHAT_HELP = clean
+
+	if not display_script:
+		clean = []
+		for h in CHAT_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"script" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"connectscript" in h[0]: continue
+			clean.append(h)
+		CHAT_HELP = clean
+
+	if not display_style:
+		clean = []
+		for h in CHAT_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"style" in h[0]: continue
+			clean.append(h)
+		CHAT_HELP = clean
+
+	if not display_ignore:
+		clean = []
+		for h in CHAT_HELP:
+			if config.INPUT_COMMAND_SYMBOL+"ignore" in h[0]: continue
+			if config.INPUT_COMMAND_SYMBOL+"unignore" in h[0]: continue
+			clean.append(h)
+		CHAT_HELP = clean
 
 	COMMAND_HELP_ENTRIES = []
 	for e in COMMAND_HELP:

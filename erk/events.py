@@ -463,6 +463,14 @@ def resetinput_all():
 	for c in CONSOLES:
 		c.widget.reset_input()
 
+def reload_commands_all():
+	for c in CHANNELS:
+		c.widget.reloadCommands()
+	for c in PRIVATES:
+		c.widget.reloadCommands()
+	for c in CONSOLES:
+		c.widget.reloadCommands()
+
 def set_fonts_all(font):
 	for c in CHANNELS:
 		c.widget.chat.setFont(font)
