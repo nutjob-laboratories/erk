@@ -943,6 +943,18 @@ def handle_ui_input(window,client,text):
 	# IGNORE BEGIN
 
 	if len(tokens)>0:
+		if not config.ENABLE_IGNORE and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore':
+			msg = Message(ERROR_MESSAGE,'',f"Ignore is disabled.")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
+		if not config.ENABLE_IGNORE and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unignore':
+			msg = Message(ERROR_MESSAGE,'',f"Unignore is disabled.")
+			window.writeText(msg,True)
+			return True
+
+	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'ignore' and len(tokens)==2:
 			tokens.pop(0)
 			target = tokens.pop(0)

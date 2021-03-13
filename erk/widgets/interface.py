@@ -835,6 +835,8 @@ class Window(QMainWindow):
 
 	def is_ignored(self,nick):
 
+		if not config.ENABLE_IGNORE: return False
+
 		if nick in self.hostmasks:
 			hostmask = self.hostmasks[nick]
 		else:
@@ -1342,11 +1344,12 @@ class Window(QMainWindow):
 				actBan = opMenu.addAction(QIcon(BAN_ICON),"Ban")
 				actKickBan = opMenu.addAction(QIcon(KICKBAN_ICON),"Kick/Ban")
 
-			if not this_is_me:
-				if is_ignored:
-					actIgnore = menu.addAction(QIcon(SHOW_ICON),"Unignore")
-				else:
-					actIgnore = menu.addAction(QIcon(HIDE_ICON),"Ignore")
+			if config.ENABLE_IGNORE:
+				if not this_is_me:
+					if is_ignored:
+						actIgnore = menu.addAction(QIcon(SHOW_ICON),"Unignore")
+					else:
+						actIgnore = menu.addAction(QIcon(HIDE_ICON),"Ignore")
 
 			actWhois = menu.addAction(QIcon(WHOIS_ICON),"WHOIS")
 
@@ -1357,34 +1360,35 @@ class Window(QMainWindow):
 			action = menu.exec_(self.userlist.mapToGlobal(event.pos()))
 
 			if not this_is_me:
-				if action == actIgnore:
-					if is_ignored:
-						clean = []
-						for i in self.parent.ignore:
-							if user_hostmask:
-								if user_hostmask in i: continue
-							if i==user_nick: continue
-							if raw_user:
-								if i==raw_user: continue
-							clean.append(i)
-						self.parent.ignore = clean
-						u = get_user(self.parent.userfile)
-						u["ignore"] = clean
-						save_user(u,self.parent.userfile)
-						self.rerender_userlist()
-						return True
-					else:
-						if user_hostmask:
-							self.parent.ignore.append(user_hostmask)
-						elif user_nick:
-							self.parent.ignore.append(user_nick)
+				if config.ENABLE_IGNORE:
+					if action == actIgnore:
+						if is_ignored:
+							clean = []
+							for i in self.parent.ignore:
+								if user_hostmask:
+									if user_hostmask in i: continue
+								if i==user_nick: continue
+								if raw_user:
+									if i==raw_user: continue
+								clean.append(i)
+							self.parent.ignore = clean
+							u = get_user(self.parent.userfile)
+							u["ignore"] = clean
+							save_user(u,self.parent.userfile)
+							self.rerender_userlist()
+							return True
 						else:
-							self.parent.ignore.append(raw_user)
-						u = get_user(self.parent.userfile)
-						u["ignore"] = self.parent.ignore
-						save_user(u,self.parent.userfile)
-						self.rerender_userlist()
-						return True
+							if user_hostmask:
+								self.parent.ignore.append(user_hostmask)
+							elif user_nick:
+								self.parent.ignore.append(user_nick)
+							else:
+								self.parent.ignore.append(raw_user)
+							u = get_user(self.parent.userfile)
+							u["ignore"] = self.parent.ignore
+							save_user(u,self.parent.userfile)
+							self.rerender_userlist()
+							return True
 
 			if action == actWhois:
 				self.client.sendLine("WHOIS "+user_nick)

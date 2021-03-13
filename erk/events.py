@@ -1716,6 +1716,8 @@ def private_message(gui,client,user,message):
 
 def check_for_ignore(user,gui):
 
+	if not config.ENABLE_IGNORE: return False
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]

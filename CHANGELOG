@@ -39,6 +39,8 @@ Version 0.860
 	* Hostmasks are now retained from chat messages
 	* Added a new page to the "settings" dialog: "hide messages" (from "hide notifications" in the "settings" menu in the GUI)
 	* Removed the "Hide Notification" submenu from the "Settings & Tools" menu
+	* Added an option to enable/disable user ignoring
+	* Added the enable/disable user ignoring option to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo

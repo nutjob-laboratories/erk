@@ -153,6 +153,8 @@ DICTIONARY = []
 
 MACRO_INTERPOLATE_SYMBOL = "&"
 
+ENABLE_IGNORE = True
+
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -160,6 +162,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"enable_user_ignore": ENABLE_IGNORE,
 		"macro_interpolation_symbol": MACRO_INTERPOLATE_SYMBOL,
 		"dictionary": DICTIONARY,
 		"autocomplete_channels": AUTOCOMPLETE_CHANNELS,
@@ -266,6 +269,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_user_ignore" in data:
+		data["enable_user_ignore"] = ENABLE_IGNORE
 
 	if not "macro_interpolation_symbol" in data:
 		data["macro_interpolation_symbol"] = MACRO_INTERPOLATE_SYMBOL
@@ -467,6 +473,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_CHANNELS
 	global DICTIONARY
 	global MACRO_INTERPOLATE_SYMBOL
+	global ENABLE_IGNORE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -475,6 +482,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ENABLE_IGNORE = data["enable_user_ignore"]
 			MACRO_INTERPOLATE_SYMBOL = data["macro_interpolation_symbol"]
 			DICTIONARY = data["dictionary"]
 			AUTOCOMPLETE_CHANNELS = data["autocomplete_channels"]

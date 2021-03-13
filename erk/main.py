@@ -452,8 +452,11 @@ class Erk(QMainWindow):
 		else:
 			appheight = int(config.DEFAULT_APP_HEIGHT)
 
-		u = get_user(self.userfile)
-		self.ignore = u["ignore"]
+		if config.ENABLE_IGNORE:
+			u = get_user(self.userfile)
+			self.ignore = u["ignore"]
+		else:
+			self.ignore = []
 
 		self.setWindowTitle(APPLICATION_NAME)
 		self.setWindowIcon(QIcon(ERK_ICON))
