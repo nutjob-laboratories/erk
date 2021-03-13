@@ -710,6 +710,17 @@ def fetch_console_window(client):
 			return window.widget
 	return None
 
+def fetch_window(client,name):
+	for window in CHANNELS:
+		if window.widget.client.id==client.id:
+			if window.widget.name==name:
+				return window.widget
+	for window in PRIVATES:
+		if window.widget.client.id==client.id:
+			if window.widget.name==name:
+				return window.widget
+	return None
+
 def fetch_channel_list(client):
 	channels = []
 	for window in CHANNELS:
@@ -1586,6 +1597,12 @@ def notice_message(gui,client,target,user,message):
 
 			# Update connection display
 			build_connection_display(gui)
+
+		# Always write notice to the console window
+		window = fetch_console_window(client)
+		if window:
+			window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
 		return
 
 
@@ -1606,24 +1623,25 @@ def notice_message(gui,client,target,user,message):
 			# Update connection display
 			build_connection_display(gui)
 
+		# Always write notice to the console window
+		window = fetch_console_window(client)
+		if window:
+			window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
 		return
 
+	# Try to write notice to the current window,
+	# since the notice wasn't sent to a channel or
+	# an existing private chat
+	if gui.current_page:
+		window = fetch_window(gui.current_page.client,gui.current_page.name)
+		if window:
+			window.writeText( Message(NOTICE_MESSAGE,user,message) )
+
+	# Always write notice to the console window
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(NOTICE_MESSAGE,user,message) )
-
-		posted_to_current = False
-		if gui.current_page:
-			if gui.current_page.name==SERVER_CONSOLE_NAME:
-				if gui.current_page.client.id==client.id:
-					posted_to_current = True
-
-		if not posted_to_current:
-			if not window_has_unseen(window,gui):
-				UNSEEN.append(window)
-
-			# Update connection display
-			build_connection_display(gui)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()

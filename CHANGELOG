@@ -43,6 +43,8 @@ Version 0.860
 	* Added the enable/disable user ignoring option to the "settings" dialog
 	* Added options to ignore public, private, or notice messages (or any combination of the three)
 	* Added new ignore options to the "settings" dialog
+	* Changes to how notices are handled: now, if not sent to an existing channel or private chat, they are displayed on the current window
+	* Notices are always written to the console window
 
 Version 0.850
 	* Changed the splash logo
