@@ -135,7 +135,7 @@ class Window(QMainWindow):
 		# END COMMAND HISTORY MANAGEMENT
 		# ==============================
 
-		userinput.handle_input(self,self.client,user_input)
+		userinput.handle_input(self,self.client,user_input,config.ENABLE_COMMANDS)
 
 		# Move chat display to the bottom
 		sb = self.chat.verticalScrollBar()
@@ -415,6 +415,10 @@ class Window(QMainWindow):
 
 			self.disconnectButton = QPushButton("Disconnect")
 			self.disconnectButton.clicked.connect(self.discoButton)
+
+			if not config.ENABLE_COMMANDS:
+				self.runScript.setVisible(False)
+				self.disconnectButton.setVisible(False)
 
 			inputLayout = QHBoxLayout()
 			inputLayout.addWidget(self.input)

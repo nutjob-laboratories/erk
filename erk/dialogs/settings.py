@@ -783,7 +783,7 @@ class Dialog(QDialog):
 		hsButton.setIcon(QIcon(EDIT_ICON))
 		hsButton.setToolTip("Set history length")
 
-		self.historyLabel = QLabel("Command history: <b>"+str(config.HISTORY_LENGTH)+" lines</b>")
+		self.historyLabel = QLabel("Input history length: <b>"+str(config.HISTORY_LENGTH)+" lines</b>")
 
 		histEdLayout = QHBoxLayout()
 		histEdLayout.addWidget(hsButton)
@@ -820,8 +820,11 @@ class Dialog(QDialog):
 
 		autoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		cpLayout = QVBoxLayout()
+		self.inputCommands = QCheckBox("Enable command input",self)
+		if config.ENABLE_COMMANDS: self.inputCommands.setChecked(True)
 
+		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(self.inputCommands)
 		cpLayout.addWidget(histBox)
 		cpLayout.addWidget(autoBox)
 		cpLayout.addStretch()
@@ -1166,6 +1169,8 @@ class Dialog(QDialog):
 
 	def save(self):
 
+		config.ENABLE_COMMANDS = self.inputCommands.isChecked()
+
 		config.WRITE_NOTICE_TO_CONSOLE = self.writeNotice.isChecked()
 		config.WRITE_PRIVATE_TO_CONSOLE = self.writePrivate.isChecked()
 
@@ -1242,7 +1247,10 @@ class Dialog(QDialog):
 
 		if self.parent!= None:
 			if config.SHOW_CONSOLE_BUTTONS:
-				events.show_all_console_buttons()
+				if config.ENABLE_COMMANDS:
+					events.show_all_console_buttons()
+				else:
+					events.hide_all_console_buttons()
 			else:
 				events.hide_all_console_buttons()
 

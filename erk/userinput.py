@@ -484,11 +484,17 @@ def handle_macros(window,client,text):
 
 	return text
 
-def handle_input(window,client,text):
+def handle_input(window,client,text,force=True):
 	if len(text.strip())==0: return
 
 	# Strip leading and trailing whitespace
 	text = text.strip()
+
+	if not force:
+		if window.type!=config.SERVER_WINDOW:
+			if config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
+			client.msg(window.name,text)
+		return
 
 	if not client.gui.block_scripts:
 		for key in VARIABLE_TABLE:

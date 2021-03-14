@@ -154,12 +154,15 @@ IGNORE_NOTICE = True
 WRITE_PRIVATE_TO_CONSOLE = True
 WRITE_NOTICE_TO_CONSOLE = True
 
+ENABLE_COMMANDS = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"enable_user_commands": ENABLE_COMMANDS,
 		"write_private_messages_to_console": WRITE_PRIVATE_TO_CONSOLE,
 		"write_notice_messages_to_console": WRITE_NOTICE_TO_CONSOLE,
 		"ignore_public_messages": IGNORE_PUBLIC,
@@ -264,6 +267,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_user_commands" in data:
+		data["enable_user_commands"] = ENABLE_COMMANDS
 
 	if not "write_private_messages_to_console" in data:
 		data["write_private_messages_to_console"] = WRITE_PRIVATE_TO_CONSOLE
@@ -481,6 +487,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global IGNORE_NOTICE
 	global WRITE_PRIVATE_TO_CONSOLE
 	global WRITE_NOTICE_TO_CONSOLE
+	global ENABLE_COMMANDS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -489,6 +496,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ENABLE_COMMANDS = data["enable_user_commands"]
 			WRITE_PRIVATE_TO_CONSOLE = data["write_private_messages_to_console"]
 			WRITE_NOTICE_TO_CONSOLE = data["write_notice_messages_to_console"]
 			IGNORE_PUBLIC = data["ignore_public_messages"]
