@@ -69,9 +69,7 @@ class Dialog(QDialog):
 		self.setWindowTitle("Ignore Manager")
 		self.setWindowIcon(QIcon(HIDE_ICON))
 
-		desc = QLabel("<small><center><b>Entries can use UNIX-style wildcards: use * to match one or more of any symbol, and ? to match any one symbol. Click \"Ok\" to save your changes.</b></center></small>")
-		desc.setWordWrap(True)
-		desc.setAlignment(Qt.AlignJustify)
+		
 
 		self.ignorelist = QListWidget(self)
 
@@ -95,10 +93,11 @@ class Dialog(QDialog):
 		buttons.accepted.connect(self.close)
 		buttons.rejected.connect(self.reject)
 
+		buttons.button(QDialogButtonBox.Ok).setText("Save")
+
 
 		finalLayout = QVBoxLayout()
 		finalLayout.addWidget(self.ignorelist)
-		finalLayout.addWidget(desc)
 		finalLayout.addLayout(cLayout)
 		finalLayout.addWidget(buttons)
 

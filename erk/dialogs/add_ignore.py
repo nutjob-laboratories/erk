@@ -66,6 +66,10 @@ class Dialog(QDialog):
 		fm = QFontMetrics(self.font())
 		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
 
+		desc = QLabel("<small><center><b>Use * to match one or more of any symbol<br>Use ? to match any one symbol.</b></center></small>")
+		desc.setWordWrap(True)
+		desc.setAlignment(Qt.AlignJustify)
+
 		nameLayout = QHBoxLayout()
 		self.name = QLineEdit()
 		self.name.setPlaceholderText("Type ignore entry here")
@@ -79,6 +83,7 @@ class Dialog(QDialog):
 		buttons.rejected.connect(self.reject)
 
 		finalLayout = QVBoxLayout()
+		finalLayout.addWidget(desc)
 		finalLayout.addLayout(nameLayout)
 		finalLayout.addWidget(buttons)
 
