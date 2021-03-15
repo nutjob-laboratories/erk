@@ -66,7 +66,7 @@ class Dialog(QDialog):
 		fm = QFontMetrics(self.font())
 		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
 
-		desc = QLabel("<small><center><b>Use * to match one or more of any symbol<br>Use ? to match any one symbol.</b></center></small>")
+		desc = QLabel("<small><center><b>Use * to match one or more of any symbol.<br>Use ? to match any one symbol.</b></center></small>")
 		desc.setWordWrap(True)
 		desc.setAlignment(Qt.AlignJustify)
 
