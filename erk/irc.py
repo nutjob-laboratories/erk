@@ -381,6 +381,8 @@ class IRC_Connection(irc.IRCClient):
 		if len(tok) >= 2:
 			pnick = tok[0]
 			phostmask = tok[1]
+			if events.received_hostmask_for_channel_user(self.gui,self,pnick,phostmask):
+				events.recheck_userlists()
 		else:
 			pnick = user
 			phostmask = user

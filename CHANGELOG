@@ -58,6 +58,7 @@ Version 0.860
 	* Added an option to the config file: enable/disable commands entered into the text input
 	* Added new option to the "settings" dialog
 	* Client now harvests hostmasks from more events, making the ignore display work better and faster
+	* Bugfix: hostmasks weren't always captured correctly, or handled correctly
 
 Version 0.850
 	* Changed the splash logo
