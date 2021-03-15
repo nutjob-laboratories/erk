@@ -59,6 +59,7 @@ Version 0.860
 	* Added new option to the "settings" dialog
 	* Client now harvests hostmasks from more events, making the ignore display work better and faster
 	* Bugfix: hostmasks weren't always captured correctly, or handled correctly
+	* Added a GUI ignore list manager
 
 Version 0.850
 	* Changed the splash logo

@@ -71,6 +71,7 @@ from .dialogs import(
 	)
 
 from .dialogs.blank import Dialog as Blank
+from .dialogs.ignore import Dialog as Ignore
 
 from .irc import(
 	connect,
@@ -706,6 +707,10 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
 		self.toolsMenu.addAction(entry)
 
+		if config.ENABLE_IGNORE:
+			entry = MenuAction(self,HIDE_ICON,"Ignore Manager","Add and remove ignore list entries",25,self.menuIgnore)
+			self.toolsMenu.addAction(entry)
+
 
 		# Help menu
 
@@ -767,6 +772,10 @@ class Erk(QMainWindow):
 				self.spinner = QMovie(ANIM)
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+
+	def menuIgnore(self):
+		x = Ignore(self)
+		x.show()
 
 	def openCommandDocumentation(self):
 		idir = sys.path[0]
