@@ -368,7 +368,8 @@ class IRC_Connection(irc.IRCClient):
 		phostmask = user.split('!')[1]
 
 		# Capture hostmasks from messages
-		events.received_hostmask_for_channel_user(self.gui,self,pnick,phostmask)
+		if events.received_hostmask_for_channel_user(self.gui,self,pnick,phostmask):
+			events.recheck_userlists()
 
 		if target==self.nickname:
 			events.private_message(self.gui,self,user,msg)
@@ -446,6 +447,8 @@ class IRC_Connection(irc.IRCClient):
 		p = user.split('!')
 		if len(p)==2:
 			if p[0] == self.nickname: return
+			if events.received_hostmask_for_channel_user(self.gui,self,p[0],p[1]):
+				events.recheck_userlists()
 		else:
 			if config.GET_HOSTMASKS_ON_CHANNEL_JOIN:
 				self.do_whois.append(user)
@@ -500,6 +503,9 @@ class IRC_Connection(irc.IRCClient):
 	def action(self, user, channel, data):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
+
+		if events.received_hostmask_for_channel_user(self.gui,self,pnick,phostmask):
+			events.recheck_userlists()
 		
 		events.action_message(self.gui,self,channel,user,data)
 
@@ -610,8 +616,8 @@ class IRC_Connection(irc.IRCClient):
 		realname = params[5]
 
 		if nick in self.request_whois:
-			events.received_hostmask_for_channel_user(self.gui,self,nick,username+"@"+host)
-			events.recheck_userlists()
+			if events.received_hostmask_for_channel_user(self.gui,self,nick,username+"@"+host):
+				events.recheck_userlists()
 			return
 
 		if nick in self.whois:

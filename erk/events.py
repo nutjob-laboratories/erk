@@ -1132,7 +1132,12 @@ def received_hostmask_for_channel_user(gui,client,nick,hostmask):
 	for window in CHANNELS:
 		if window.widget.client.id==client.id:
 			if nick in window.widget.nicks:
+				if nick in window.widget.hostmasks:
+					retval = False
+				else:
+					retval = True
 				window.widget.hostmasks[nick] = hostmask
+				return retval
 
 def received_whois(gui,client,whoisdata):
 	

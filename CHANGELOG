@@ -57,6 +57,7 @@ Version 0.860
 	* Made the "hide messages" section in the "settings" dialog a little prettier
 	* Added an option to the config file: enable/disable commands entered into the text input
 	* Added new option to the "settings" dialog
+	* Client now harvests hostmasks from more events, making the ignore display work better and faster
 
 Version 0.850
 	* Changed the splash logo
