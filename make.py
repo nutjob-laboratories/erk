@@ -23,6 +23,7 @@ os.mkdir("./erk-irc-client/settings")
 
 os.mkdir("./erk-irc-client/documentation")
 shutil.copy("./documentation/Erk_Scripting_and_Commands.pdf", "./erk-irc-client/documentation/Erk_Scripting_and_Commands.pdf")
+shutil.copy("./documentation/Erk_Plugin_Guide.pdf", "./erk-irc-client/documentation/Erk_Plugin_Guide.pdf")
 shutil.copy("./documentation/rfc1459.pdf", "./erk-irc-client/documentation/rfc1459.pdf")
 shutil.copy("./documentation/rfc2812.pdf", "./erk-irc-client/documentation/rfc2812.pdf")
 
