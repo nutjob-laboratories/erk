@@ -45,6 +45,7 @@ from .files import *
 from . import config
 from .irc import ScriptThreadWindow
 from . import events
+from . import plugins
 
 from .dialogs import ScriptEditor
 
