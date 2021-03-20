@@ -509,6 +509,10 @@ def handle_input(window,client,text,force=True):
 	if handle_ui_input(window,client,text):
 		window.input.setFocus()
 		return
+
+	if plugins.input(client,window,text):
+		window.input.setFocus()
+		return
 	
 	if window.type==config.CHANNEL_WINDOW:
 		handle_channel_input(window,client,text)

@@ -189,16 +189,16 @@ def line_in(client,data):
 	for p in PLUGINS:
 		obj = p.obj
 		obj.irc = client
-		if hasattr(obj,"input"):
-			obj.input(data)
+		if hasattr(obj,"line_in"):
+			obj.line_in(data)
 		obj.irc = None
 
 def line_out(client,data):
 	for p in PLUGINS:
 		obj = p.obj
 		obj.irc = client
-		if hasattr(obj,"output"):
-			obj.output(data)
+		if hasattr(obj,"line_out"):
+			obj.line_out(data)
 		obj.irc = None
 
 # plugins.mode_message(client,channel,user,mset,modes,args)
@@ -219,6 +219,20 @@ def tick(client,uptime):
 			obj.tick(uptime)
 		obj.irc = None
 
+def input(client,window,text):
+	result = False
+	if window.type==config.SERVER_WINDOW:
+		name = None
+	else:
+		name = window.name
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"input"):
+			result = obj.input(name,text)
+		obj.irc = None
+		if result: return result
+
 EVENTS = [
 	"public",
 	"private",
@@ -227,7 +241,34 @@ EVENTS = [
 	"output",
 	"mode",
 	"tick",
+	"input",
 ]
+
+def check_for_bad_input(p):
+	if not hasattr(p,"input"): return False
+
+	s = inspect.getsourcelines(p.input)
+
+	c = []
+	for l in s[0]:
+		l = l.strip()
+		if len(l)>0:
+			# Strip comments
+			if l[0]=='#': continue
+			# Strip print commands
+			if l[:5]=="print": continue
+
+			c.append(l)
+
+	if len(c)>=2:
+		# source is greater or equal to two lines
+		if len(c)<3:
+			# source is less than three lines
+			if 'return True' in c:
+				# probably malicious
+				return True
+
+	return False
 
 def load_plugins():
 	global PLUGINS
@@ -268,6 +309,12 @@ def load_plugins():
 		# Make sure the plugin inherits from the "Plugin" class
 		if not issubclass(type(obj), Plugin):
 			entry.errors.append("Plugin doesn't inherit from \"Plugin\"")
+			had_error = True
+
+		# Make sure that the input() event method is valid, if the
+		# plugin has one
+		if check_for_bad_input(obj):
+			entry.errors.append("Malicious input() event method detected")
 			had_error = True
 
 		# Make sure that the plugin has at least *one* event method
