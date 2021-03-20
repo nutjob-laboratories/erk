@@ -124,7 +124,7 @@ def ExportLogDialog(logdir,obj):
 
 def ErrorDialog(obj,errlist=None):
 	x = Error(errlist,obj)
-	x.resize(400,250)
+	#x.resize(400,250)
 	x.show()
 
 def ScriptEditor(filename,parent,configfile,scriptsdir,app):

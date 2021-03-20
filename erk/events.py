@@ -39,8 +39,9 @@ from .objects import *
 from .strings import *
 from .common import *
 from . import config
-
 from . import textformat
+
+from . import plugins
 
 CHANNELS = []
 CONNECTIONS = []
@@ -50,6 +51,12 @@ PRIVATES = []
 UNSEEN = []
 
 TRIGGERED = []
+
+def fetch_current_window(gui):
+	if gui.current_page:
+		window = fetch_window(gui.current_page.client,gui.current_page.name)
+		return window
+	return None
 
 def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
 	pass
@@ -815,16 +822,18 @@ def channel_has_hostmask(gui,client,channel,user):
 	return True
 
 def line_output(gui,client,line):
-	pass
 	
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.line_out(client,line)
 
+	plugins.line_out(client,line)
+
 def line_input(gui,client,line):
-	pass
 	
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.line_in(client,line)
+
+	plugins.line_in(client,line)
 
 def received_error(gui,client,error):
 
@@ -1220,6 +1229,8 @@ def action_message(gui,client,target,user,message):
 			ignore = False
 
 	if ignore: return
+
+	plugins.action_message(client,target,user,message)
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1667,6 +1678,8 @@ def private_message(gui,client,user,message):
 	ignore = check_for_ignore(user,gui)
 	if ignore and not config.IGNORE_PRIVATE: ignore = False
 	if ignore: return
+
+	plugins.private_message(client,user,message)
 	
 	msg = Message(CHAT_MESSAGE,user,message)
 
@@ -1798,6 +1811,8 @@ def public_message(gui,client,channel,user,message):
 	if ignore and not config.IGNORE_PUBLIC: ignore = False
 
 	if ignore: return
+
+	plugins.public_message(client,channel,user,message)
 
 	msg = Message(CHAT_MESSAGE,user,message)
 

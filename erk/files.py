@@ -74,6 +74,10 @@ if not os.path.isdir(STYLES_DIRECTORY): os.mkdir(STYLES_DIRECTORY)
 LOG_DIRECTORY = os.path.join(BASE_DIRECTORY, "logs")
 if not os.path.isdir(LOG_DIRECTORY): os.mkdir(LOG_DIRECTORY)
 
+# Plugin directory
+PLUGIN_DIRECTORY = os.path.join(BASE_DIRECTORY, "plugins")
+if not os.path.isdir(PLUGIN_DIRECTORY): os.mkdir(PLUGIN_DIRECTORY)
+
 # Configuration files
 USER_FILE = os.path.join(SETTINGS_DIRECTORY, "user.json")
 SETTINGS_FILE = os.path.join(SETTINGS_DIRECTORY, "settings.json")
@@ -143,8 +147,6 @@ f.close()
 
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
-
-PLUGIN_DIRECTORY = os.path.join(INSTALL_DIRECTORY, "plugins")
 
 # Opens up a zip file containing plugins, and reads the
 # package.txt from each included plugin, and returns an

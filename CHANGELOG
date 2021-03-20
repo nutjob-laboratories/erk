@@ -60,6 +60,11 @@ Version 0.860
 	* Client now harvests hostmasks from more events, making the ignore display work better and faster
 	* Bugfix: hostmasks weren't always captured correctly, or handled correctly
 	* Added a GUI ignore list manager
+	* Added a new library to the distribution: pike (https://github.com/pyarmory/pike)
+	* Added a new plugin system (plugins will now live in the .erk directory in the user's home directory)
+	* Added an en/disable plugins option to the config file
+	* Added the en/disable plugins option to the "settings" config
+	* Added a new folder for plugin storage : ~/.erk/plugins (plugins live in the user's home directory)
 
 Version 0.850
 	* Changed the splash logo

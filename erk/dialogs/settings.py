@@ -957,7 +957,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Scripting")
+		entry.setText("Extensions")
 		entry.widget = self.featuresPage
 		entry.setIcon(QIcon(SCRIPT_ICON))
 		self.selector.addItem(entry)
@@ -1009,6 +1009,9 @@ class Dialog(QDialog):
 			if self.parent.cmdline_script:
 				self.enableMacros.setEnabled(False)
 
+		self.enPlugins = QCheckBox("Enable plugins",self)
+		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.scriptMisc)
 		cpLayout.addWidget(self.seditMisc)
@@ -1016,6 +1019,9 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.enableMacros)
 		cpLayout.addWidget(self.saveMacros)
 		cpLayout.addWidget(self.autoMacros)
+
+		cpLayout.addStretch()
+		cpLayout.addWidget(self.enPlugins)
 
 		cpLayout.addStretch()
 
@@ -1168,6 +1174,11 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.ENABLE_PLUGINS = self.enPlugins.isChecked()
+
+		if self.parent!= None:
+			self.parent.reloadPlugins()
 
 		config.ENABLE_COMMANDS = self.inputCommands.isChecked()
 

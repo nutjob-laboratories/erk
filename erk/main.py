@@ -48,6 +48,7 @@ from . import config
 from . import events
 from . import textformat
 from . import userinput
+from . import plugins
 
 from .dialogs import(
 	ComboDialog,
@@ -485,6 +486,14 @@ class Erk(QMainWindow):
 
 		self.current_page = None
 
+		# PLUGINS
+
+		plugin_load_errors = plugins.load_plugins()
+		if len(plugin_load_errors)>0:
+			ErrorDialog(self,plugin_load_errors)
+
+		# PLUGINS
+
 		if self.block_toolbar:
 			global DO_NOT_DISPLAY_MENUS_OR_TOOLBAR
 			DO_NOT_DISPLAY_MENUS_OR_TOOLBAR = True
@@ -517,6 +526,7 @@ class Erk(QMainWindow):
 				self.settingsMenu = QMenu()
 				self.helpMenu = QMenu()
 				self.toolsMenu = QMenu()
+				self.pluginsMenu = QMenu()
 
 		if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
 			self.buildMenuInterface()
@@ -597,8 +607,6 @@ class Erk(QMainWindow):
 		# self.trayMenu.addAction(entry)
 
 		# self.tray.setContextMenu(self.trayMenu)
-
-		
 
 	def spellcheck_language(self,setting):
 
@@ -711,7 +719,6 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,HIDE_ICON,"Ignore Manager","Add and remove ignore list entries",25,self.menuIgnore)
 			self.toolsMenu.addAction(entry)
 
-
 		# Help menu
 
 		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
@@ -758,6 +765,19 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
+		# Plugins menu
+
+		if config.ENABLE_PLUGINS:
+			if len(plugins.PLUGINS)>0:
+
+				if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+					self.pluginsMenu = self.menubar.addMenu("Plugins")
+				else:
+					self.pluginsMenu.clear()
+					add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
+
+				self.buildPluginMenu()
+
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 
 			if config.SCHWA_ANIMATION:
@@ -772,6 +792,61 @@ class Erk(QMainWindow):
 				self.spinner = QMovie(ANIM)
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
+
+
+	def buildPluginMenu(self):
+
+		self.pluginsMenu.clear()
+
+		for p in plugins.PLUGINS:
+
+			name = p.plugin_name()
+			version = p.plugin_version()
+			classname = p.class_name()
+			module = p.module_name()
+
+			description = p.plugin_description()
+
+			if p.icon:
+				ico = p.icon
+			else:
+				ico = PLUGIN_MENU_ICON
+
+			lmbd = (lambda u=p.filename: self.openFile(u))
+
+			if description!=None:
+				entry = MenuAction(self,ico,name+" "+version+"&nbsp;&nbsp;",description,25,lmbd)
+			else:
+				entry = MenuAction(self,ico,name+" "+version+"&nbsp;&nbsp;",module+"."+classname,25,lmbd)
+
+			self.pluginsMenu.addAction(entry)
+
+		self.pluginsMenu.addSeparator()
+
+		entry = QAction(QIcon(RESTART_ICON),"Reload all plugins",self)
+		entry.triggered.connect(self.reloadPlugins)
+		self.pluginsMenu.addAction(entry)
+
+	def reloadPlugins(self):
+		plugin_load_errors = plugins.load_plugins()
+		if len(plugin_load_errors)>0:
+			ErrorDialog(self,plugin_load_errors)
+
+		self.buildPluginMenu()
+
+	def openFile(self,file):
+
+		QDesktopServices.openUrl(QUrl("file:"+file))
+
+		x = Blank()
+		x.show()
+		x.close()
+
+
+	def doNothing(self):
+		x = Blank()
+		x.show()
+		x.close()
 
 	def menuIgnore(self):
 		x = Ignore(self)

@@ -56,32 +56,34 @@ class Dialog(QDialog):
 
 		root = errTree.invisibleRootItem()
 
-		dlable = QLabel( str(len(errlist)) + " plugin(s) not loaded"   )
+		counter = 0
+		for e in errlist:
+			counter = counter + len(e.errors)
+
+		if len(errlist)>1:
+			p = "plugins"
+		else:
+			p = "plugin"
+
+		dlable = QLabel( str(len(errlist)) + " "+ p +" not loaded ("+ str(counter) + " errors)"  )
 
 		for pack in errlist:
 			parent = QTreeWidgetItem(root)
-			parent.setText(0,"Package \""+pack+"\"")
-			parent.setIcon(0,QIcon(PACKAGE_ICON))
+			parent.setText(0,"Plugin \""+pack.class_name()+"\"")
+			parent.setIcon(0,QIcon(PLUGIN_MENU_ICON))
 
 			parent.setExpanded(True)
 
-			cl = {}
-			for e in errlist[pack]:
-				if e[0] in cl:
-					cl[e[0]].append(e[1])
-				else:
-					cl[e[0]] = []
-					cl[e[0]].append(e[1])
-
-			for c in cl:
+			for c in pack.errors:
 				uncle = QTreeWidgetItem(parent)
-				uncle.setText(0,c+" class - "+str(len(cl[c]))+" error(s)")
+				uncle.setText(0,c)
 				uncle.setExpanded(True)
-				uncle.setIcon(0,QIcon(PLUGIN_ICON))
-				for e in cl[c]:
-					child = QTreeWidgetItem(uncle)
-					child.setText(0,e)
-					child.setIcon(0,QIcon(ERROR_ICON))
+				uncle.setIcon(0,QIcon(ERROR_ICON))
+				#uncle.setIcon(0,QIcon(PLUGIN_ICON))
+				# for e in c:
+				# 	child = QTreeWidgetItem(uncle)
+				# 	child.setText(0,e)
+				# 	child.setIcon(0,QIcon(ERROR_ICON))
 
 
 		# Buttons
