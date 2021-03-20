@@ -201,12 +201,32 @@ def line_out(client,data):
 			obj.output(data)
 		obj.irc = None
 
+# plugins.mode_message(client,channel,user,mset,modes,args)
+
+def mode_message(client,channel,user,mset,modes,args):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"mode"):
+			obj.mode(channel,user,mset,modes,args)
+		obj.irc = None
+
+def tick(client,uptime):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"tick"):
+			obj.tick(uptime)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
 	"action",
 	"input",
 	"output",
+	"mode",
+	"tick",
 ]
 
 def load_plugins():

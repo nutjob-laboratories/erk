@@ -869,6 +869,8 @@ def mode(gui,client,channel,user,mset,modes,args):
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.mode(client,channel,user,mset,modes,args)
 
+	plugins.mode_message(client,channel,user,mset,modes,args)
+
 	args = list(args)
 	cleaned = []
 	for a in args:
@@ -1464,6 +1466,8 @@ def uptime(gui,client,uptime):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.tick(client)
+
+	plugins.tick(client,uptime)
 	
 	gui.uptimers[client.id] = uptime
 	gui.total_uptime = gui.total_uptime + 1

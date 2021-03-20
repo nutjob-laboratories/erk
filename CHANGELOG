@@ -65,6 +65,7 @@ Version 0.860
 	* Added an en/disable plugins option to the config file
 	* Added the en/disable plugins option to the "settings" config
 	* Added a new folder for plugin storage : ~/.erk/plugins (plugins live in the user's home directory)
+	* Added mode and tick events to plugins
 
 Version 0.850
 	* Changed the splash logo
