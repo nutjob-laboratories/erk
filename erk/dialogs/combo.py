@@ -864,12 +864,14 @@ class Dialog(QDialog):
 
 		if self.user_info["ssl"]:
 			dussl = "ssl"
+			icon = QIcon(VISITED_SSL_ICON)
 		else:
 			dussl = "normal"
+			icon = QIcon(VISITED_ICON)
 
 		if len(self.user_info["last_server"])>0:
 			self.StoredData.append( [ self.user_info["last_server"],self.user_info["last_port"],"Last server",dussl,self.user_info["last_password"] ]    )
-			self.servers.addItem("Last server connection")
+			self.servers.addItem(icon,"Last server connection")
 		else:
 			self.StoredData.append( ['',"6667",'','normal','' ]    )
 			self.servers.addItem("Select a server")

@@ -93,6 +93,8 @@ Version 0.860
 	* Bugfix: if an additional plugin directory was added at the commandline and the directory didn't exist, the client would crash
 	* Bugfix: improper wording in the --help text
 	* Added a new commandline option to block use of user commands (--nocommands)
+	* Added a 2px black border to the visited, unvisited, visited ssl, and unvisited ssl icons in the connection dialog to make them more visible
+	* Added an icon to the "Last server visited" in the QComboBox in the connection dialog
 
 Version 0.850
 	* Changed the splash logo
