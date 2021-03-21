@@ -273,6 +273,22 @@ def part(client,channel,user):
 			obj.part(channel,user)
 		obj.irc = None
 
+def joined(client,channel):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"joined"):
+			obj.joined(channel)
+		obj.irc = None
+
+def parted(client,channel):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"parted"):
+			obj.parted(channel)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -287,6 +303,8 @@ EVENTS = [
 	"registered",
 	"join",
 	"part",
+	"joined",
+	"parted",
 ]
 
 def check_for_bad_input(p):

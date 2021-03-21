@@ -75,6 +75,9 @@ Version 0.860
 	* New plugin event: registered()
 	* New plugin event: join()
 	* New plugin event: part()
+	* New plugin event: joined()
+	* New plugin event: parted()
+	* Updated the README.md to show new plugin stuff
 
 Version 0.850
 	* Changed the splash logo

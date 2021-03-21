@@ -1426,6 +1426,8 @@ def erk_left_channel(gui,client,channel):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.parted(client,channel)
+
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
 	
@@ -1461,6 +1463,8 @@ def erk_joined_channel(gui,client,channel):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.joined(client,channel)
 
 def uptime(gui,client,uptime):
 

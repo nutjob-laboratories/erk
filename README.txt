@@ -77,6 +77,11 @@
     * Syntax highlighting
     * Run scripts on any connection the client is connected to
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
+ * Powerful plugin engine
+   * Plugins are written in Python 3
+   * Plugins are stored in a user's home directory
+   * Most IRC events can be caught
+   * [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
 * An extensive set of command-line flags, allowing for _even more_ configuration options
   * Disable most features on startup
   * Connect to an IRC server from the command-line
@@ -219,6 +224,7 @@ When I started writing **Ərk**, one of my goals was to make it as configurable 
  - **`styles`** - Contains any text styles that you've created, as well as the default text style **Ərk** uses.
    - `default.style` - The default text style for **Ərk**. If this file is missing, **Ərk** will re-create it with default settings.
  - **`logs`** - This is where **Ərk** stores all chat logs. Logs are stored in JSON, and use a format specific to **Ərk**. If you want to export your logs, use the "Export Log" entry in the "Settings & Tools" menu, or launch **Ərk** with `python erk.py --export` to launch a GUI log export wizard. You can export them to plain text (with your choice of delimiters) or to JSON.
+ - **`plugins`** - This is where **Ərk** stores and loads plugins from. Installing a plugin is as easy as placing it in this directory.
 
 ## Another IRC client? Why not use HexChat?
 
@@ -273,4 +279,3 @@ Similarly, Bob's batch file looks like this:
     python C:\Erk\erk.py -C C:\Bob_Erk\settings.json -U C:\Bob_Erk\user.json -Y C:\Bob_Erk\text.style -L C:\Bob_Erk\logs -S C:\Bob_Erk\scripts -T C:\Bob\styles -M C:\Bob\macros.json
 
 Alice and Bob can now use **Ərk** with their own customized settings!
-
