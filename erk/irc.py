@@ -46,6 +46,7 @@ from .objects import *
 from . import config
 from . import events
 from . import userinput
+from . import plugins
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -524,6 +525,8 @@ class IRC_Connection(irc.IRCClient):
 		if win:
 			win.writeText( msg )
 
+		plugins.kick(self,channel,kickee,kicker,message)
+
 	def kickedFrom(self, channel, kicker, message):
 
 		events.kicked_channel_window(self,channel)
@@ -531,6 +534,8 @@ class IRC_Connection(irc.IRCClient):
 		win = events.fetch_console_window(self)
 		if win:
 			win.writeText( Message(SYSTEM_MESSAGE,'',"You were kicked from "+channel+" by "+kicker+" ("+message+")") )
+
+		plugins.kicked(self,channel,kicker,message)
 
 	def irc_QUIT(self,prefix,params):
 		x = prefix.split('!')

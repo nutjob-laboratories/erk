@@ -289,6 +289,22 @@ def parted(client,channel):
 			obj.parted(channel)
 		obj.irc = None
 
+def kick(client,channel,kickee,kicker,message):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"kick"):
+			obj.kick(channel,kickee,kicker,message)
+		obj.irc = None
+
+def kicked(client,channel,kicker,message):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"kicked"):
+			obj.kicked(channel,kicker,message)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -305,6 +321,8 @@ EVENTS = [
 	"part",
 	"joined",
 	"parted",
+	"kick",
+	"kicked",
 ]
 
 def check_for_bad_input(p):
