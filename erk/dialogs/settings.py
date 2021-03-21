@@ -824,6 +824,10 @@ class Dialog(QDialog):
 		self.inputCommands = QCheckBox("Enable command input",self)
 		if config.ENABLE_COMMANDS: self.inputCommands.setChecked(True)
 
+		if self.parent!=None:
+			if self.parent.block_commands:
+				self.inputCommands.setEnabled(False)
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.inputCommands)
 		cpLayout.addWidget(histBox)
@@ -968,47 +972,24 @@ class Dialog(QDialog):
 		self.scriptMisc = QCheckBox("Enable scripts",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
 
-		# if self.parent!= None:
-		# 	if self.parent.cmdline_script:
-		# 		self.scriptMisc.setEnabled(False)
-
 		self.sglobalMisc = QCheckBox("Global aliases",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
-
-		# if self.parent!= None:
-		# 	if self.parent.cmdline_script:
-		# 		self.sglobalMisc.setEnabled(False)
 
 		self.seditMisc = QCheckBox("Enable script editor",self)
 		if config.ENABLE_SCRIPT_EDITOR: self.seditMisc.setChecked(True)
 
 		if self.parent!= None:
-			# if self.parent.cmdline_script:
-			# 	self.seditMisc.setEnabled(False)
-
 			if self.parent.cmdline_editor:
 				self.seditMisc.setEnabled(False)
 
 		self.autoMacros = QCheckBox("Auto-complete macros",self)
 		if config.AUTOCOMPLETE_MACROS: self.autoMacros.setChecked(True)
 
-		# if self.parent!= None:
-		# 	if self.parent.cmdline_script:
-		# 		self.autoMacros.setEnabled(False)
-
 		self.saveMacros = QCheckBox("Save macros",self)
 		if config.SAVE_MACROS: self.saveMacros.setChecked(True)
 
-		# if self.parent!= None:
-		# 	if self.parent.cmdline_script:
-		# 		self.saveMacros.setEnabled(False)
-
 		self.enableMacros = QCheckBox("Enable macros",self)
 		if config.ENABLE_MACROS: self.enableMacros.setChecked(True)
-
-		# if self.parent!= None:
-		# 	if self.parent.cmdline_script:
-		# 		self.enableMacros.setEnabled(False)
 
 		scriptLayout = QVBoxLayout()
 		scriptLayout.addWidget(self.scriptMisc)

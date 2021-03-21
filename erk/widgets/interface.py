@@ -135,7 +135,11 @@ class Window(QMainWindow):
 		# END COMMAND HISTORY MANAGEMENT
 		# ==============================
 
-		userinput.handle_input(self,self.client,user_input,config.ENABLE_COMMANDS)
+		use_commands = True
+		if self.parent.block_commands: use_commands = False
+		if not config.ENABLE_COMMANDS: use_commands = False
+
+		userinput.handle_input(self,self.client,user_input,use_commands)
 
 		# Move chat display to the bottom
 		sb = self.chat.verticalScrollBar()

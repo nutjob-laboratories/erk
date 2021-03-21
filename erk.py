@@ -121,7 +121,7 @@ devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool"
 disgroup = parser.add_argument_group('Disable functionality')
 
 disgroup.add_argument( "--noask", help=f"Don't ask for a server to connect to on start", action="store_true")
-disgroup.add_argument( "--nosettings", help=f"Disable \"Settings & Tools\" menu", action="store_true")
+disgroup.add_argument( "--nosettings", help=f"Disable the \"Settings\" menu", action="store_true")
 disgroup.add_argument( "--nomenus", help=f"Disable all menus", action="store_true")
 disgroup.add_argument( "--noconnect", help=f"Disable connection commands", action="store_true")
 disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_true")
@@ -129,6 +129,7 @@ disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
 disgroup.add_argument( "--noplugins", help=f"Disables plugins", action="store_true")
+disgroup.add_argument( "--nocommands", help=f"Disables user input commands", action="store_true")
 disgroup.add_argument( "--noextensions", help=f"Disables plugins, scripts, and styles", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
@@ -480,6 +481,7 @@ if __name__ == '__main__':
 				args.macros,
 				args.noplugins,
 				args.plugins,
+				args.nocommands,
 				)
 			GUI.show()
 		else:
@@ -510,6 +512,7 @@ if __name__ == '__main__':
 					args.macros,
 					args.noplugins,
 					args.plugins,
+					args.nocommands,
 					)
 				GUI.show()
 
@@ -604,6 +607,7 @@ if __name__ == '__main__':
 					args.macros,
 					args.noplugins,
 					args.plugins,
+					args.nocommands,
 					)
 				GUI.show()
 			else:
@@ -634,6 +638,7 @@ if __name__ == '__main__':
 						args.macros,
 						args.noplugins,
 						args.plugins,
+						args.nocommands,
 						)
 					GUI.show()
 				else:

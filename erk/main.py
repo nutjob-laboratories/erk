@@ -348,6 +348,7 @@ class Erk(QMainWindow):
 			macrofile=MACRO_SAVE_FILE,
 			block_plugins=False,
 			more_plugins=[],
+			block_commands=False,
 			parent=None
 		):
 		
@@ -403,6 +404,8 @@ class Erk(QMainWindow):
 		self.block_plugins = block_plugins
 
 		self.more_plugins = more_plugins
+
+		self.block_commands = block_commands
 
 		self.cmdline_script = False
 		self.cmdline_editor = False
