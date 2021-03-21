@@ -439,6 +439,9 @@ class Dialog(QDialog):
 		self.doScript = QCheckBox("Execute script on connect",self)
 		self.doScript.stateChanged.connect(self.clickDoScript)
 
+		if self.block_scripts:
+			self.doScript.setVisible(False)
+
 		self.ssl.setFont(BOLD_FONT)
 		self.doScript.setFont(BOLD_FONT)
 
@@ -596,6 +599,9 @@ class Dialog(QDialog):
 		if self.EXECUTE_AUTOSCRIPT_OPTION:
 			self.doScript.toggle()
 		else:
+			self.tabs.removeTab(1)
+
+		if self.block_scripts:
 			self.tabs.removeTab(1)
 
 		# Built final layout
