@@ -1196,6 +1196,8 @@ def userlist(gui,client,channel,userlist):
 
 def quit(gui,client,nick,message):
 
+	plugins.quit(client,nick,message)
+
 	for channel in where_is_user(client,nick):
 		window = fetch_channel_window(client,channel)
 		if window:

@@ -305,6 +305,14 @@ def kicked(client,channel,kicker,message):
 			obj.kicked(channel,kicker,message)
 		obj.irc = None
 
+def quit(client,nick,message):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"quit"):
+			obj.quit(nick,message)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
