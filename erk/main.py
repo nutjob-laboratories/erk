@@ -771,15 +771,16 @@ class Erk(QMainWindow):
 		# Plugins menu
 
 		if config.ENABLE_PLUGINS:
-			if len(plugins.PLUGINS)>0:
+			if config.SHOW_PLUGINS_MENU:
+				if len(plugins.PLUGINS)>0:
 
-				if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-					self.pluginsMenu = self.menubar.addMenu("Plugins")
-				else:
-					self.pluginsMenu.clear()
-					add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
+					if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+						self.pluginsMenu = self.menubar.addMenu("Plugins")
+					else:
+						self.pluginsMenu.clear()
+						add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
 
-				self.buildPluginMenu()
+					self.buildPluginMenu()
 
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 

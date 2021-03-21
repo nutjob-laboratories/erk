@@ -1012,6 +1012,9 @@ class Dialog(QDialog):
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
 
+		self.showPlugins = QCheckBox("Show plugins menu",self)
+		if config.SHOW_PLUGINS_MENU: self.showPlugins.setChecked(True)
+
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.scriptMisc)
 		cpLayout.addWidget(self.seditMisc)
@@ -1022,6 +1025,7 @@ class Dialog(QDialog):
 
 		cpLayout.addStretch()
 		cpLayout.addWidget(self.enPlugins)
+		cpLayout.addWidget(self.showPlugins)
 
 		cpLayout.addStretch()
 
@@ -1174,6 +1178,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SHOW_PLUGINS_MENU = self.showPlugins.isChecked()
 
 		config.ENABLE_PLUGINS = self.enPlugins.isChecked()
 

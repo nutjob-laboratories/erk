@@ -127,12 +127,10 @@ SCRIPT_INTERPOLATE_SYMBOL = '$'
 GLOBALIZE_ALL_SCRIPT_ALIASES = True
 USE_QMENUBAR_MENUS = False
 ENABLE_SCRIPT_EDITOR = True
-
 SCRIPT_SYNTAX_COMMENTS = 'darkMagenta'
 SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
 SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
-
 AUTOCOMPLETE_MACROS = True
 SAVE_MACROS = True
 SAVE_SCRIPT_ON_CLOSE = True
@@ -140,24 +138,18 @@ NOTIFY_SCRIPT_END = True
 DEFAULT_QUIT_PART_MESSAGE = APPLICATION_NAME + " " + APPLICATION_MAJOR_VERSION + " - " + OFFICIAL_REPOSITORY_SHORT_CLEAN
 ENABLE_MACROS = True
 AUTOCOMPLETE_CHANNELS = True
-
 DICTIONARY = []
-
 MACRO_INTERPOLATE_SYMBOL = "&"
-
 ENABLE_IGNORE = True
-
 IGNORE_PUBLIC = True
 IGNORE_PRIVATE = True
 IGNORE_NOTICE = True
-
 WRITE_PRIVATE_TO_CONSOLE = True
 WRITE_NOTICE_TO_CONSOLE = True
-
 ENABLE_COMMANDS = True
 
-# Not in file yet
 ENABLE_PLUGINS = True
+SHOW_PLUGINS_MENU = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -165,6 +157,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"show_plugins_menu": SHOW_PLUGINS_MENU,
 		"enable_plugins": ENABLE_PLUGINS,
 		"enable_user_commands": ENABLE_COMMANDS,
 		"write_private_messages_to_console": WRITE_PRIVATE_TO_CONSOLE,
@@ -271,6 +264,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "show_plugins_menu" in data:
+		data["show_plugins_menu"] = SHOW_PLUGINS_MENU
 
 	if not "enable_plugins" in data:
 		data["enable_plugins"] = ENABLE_PLUGINS
@@ -496,6 +492,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global WRITE_NOTICE_TO_CONSOLE
 	global ENABLE_COMMANDS
 	global ENABLE_PLUGINS
+	global SHOW_PLUGINS_MENU
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -504,6 +501,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SHOW_PLUGINS_MENU = data["show_plugins_menu"]
 			ENABLE_PLUGINS = data["enable_plugins"]
 			ENABLE_COMMANDS = data["enable_user_commands"]
 			WRITE_PRIVATE_TO_CONSOLE = data["write_private_messages_to_console"]

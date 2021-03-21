@@ -80,6 +80,8 @@ Version 0.860
 	* Updated the README.md to show new plugin stuff
 	* New plugin event: kick()
 	* New plugin event: kicked()
+	* Added an option to show/hide the plugins menu
+	* Added the show/hide plugins menu option to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo
