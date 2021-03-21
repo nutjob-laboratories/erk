@@ -233,6 +233,46 @@ def input(client,window,text):
 		obj.irc = None
 		if result: return result
 
+def notice_message(client,target,user,message):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"notice"):
+			obj.notice(target,user,message)
+		obj.irc = None
+
+def motd(client,smotd):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"motd"):
+			obj.motd(smotd)
+		obj.irc = None
+
+def registered(client):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"registered"):
+			obj.registered()
+		obj.irc = None
+
+def join(client,channel,user):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"join"):
+			obj.join(channel,user)
+		obj.irc = None
+
+def part(client,channel,user):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"part"):
+			obj.part(channel,user)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -242,6 +282,11 @@ EVENTS = [
 	"mode",
 	"tick",
 	"input",
+	"notice",
+	"motd",
+	"registered",
+	"join",
+	"part",
 ]
 
 def check_for_bad_input(p):

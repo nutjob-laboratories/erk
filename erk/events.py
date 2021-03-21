@@ -1515,6 +1515,8 @@ def part(gui,client,user,channel):
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.part(client,channel,user)
 
+	plugins.part(client,user,channel)
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1540,6 +1542,8 @@ def join(gui,client,user,channel):
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.join(client,channel,user)
 
+	plugins.join(client,user,channel)
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1561,6 +1565,8 @@ def join(gui,client,user,channel):
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def motd(gui,client,motd):
+
+	plugins.motd(client,motd)
 	
 	window = fetch_console_window(client)
 
@@ -1595,6 +1601,8 @@ def notice_message(gui,client,target,user,message):
 	ignore = check_for_ignore(user,gui)
 	if ignore and not config.IGNORE_NOTICE: ignore = False
 	if ignore: return
+
+	plugins.notice(client,target,user,message)
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1851,6 +1859,8 @@ def registered(gui,client):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.connect(client)
+
+	plugins.registered(client)
 
 	gui.registered(client)
 

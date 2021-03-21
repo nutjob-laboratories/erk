@@ -70,6 +70,11 @@ Version 0.860
 	* Added a new event: input() (catches user text input)
 	* Added the new plugin guide to the distribution
 	* Added the new plugin guide to the GUI "Help" menu
+	* New plugin event: notice()
+	* New plugin event: motd()
+	* New plugin event: registered()
+	* New plugin event: join()
+	* New plugin event: part()
 
 Version 0.850
 	* Changed the splash logo
