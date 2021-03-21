@@ -153,12 +153,15 @@ SHOW_PLUGINS_MENU = True
 
 PLUGINS_CATCH_IGNORES = False
 
+ALWAYS_ALLOW_ME = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"always_allow_ctcp_action_command": ALWAYS_ALLOW_ME,
 		"plugins_catch_ignored_messages": PLUGINS_CATCH_IGNORES,
 		"show_plugins_menu": SHOW_PLUGINS_MENU,
 		"enable_plugins": ENABLE_PLUGINS,
@@ -267,6 +270,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "always_allow_ctcp_action_command" in data:
+		data["always_allow_ctcp_action_command"] = ALWAYS_ALLOW_ME
 
 	if not "plugins_catch_ignored_messages" in data:
 		data["plugins_catch_ignored_messages"] = PLUGINS_CATCH_IGNORES
@@ -500,6 +506,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_PLUGINS
 	global SHOW_PLUGINS_MENU
 	global PLUGINS_CATCH_IGNORES
+	global ALWAYS_ALLOW_ME
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -508,6 +515,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ALWAYS_ALLOW_ME = data["always_allow_ctcp_action_command"]
 			PLUGINS_CATCH_IGNORES = data["plugins_catch_ignored_messages"]
 			SHOW_PLUGINS_MENU = data["show_plugins_menu"]
 			ENABLE_PLUGINS = data["enable_plugins"]
@@ -733,6 +741,7 @@ def check_settings(filename):
 			if "ignore_private_messages" in data: check = check + 1
 			if "ignore_notice_messages" in data: check = check + 1
 			if "enable_user_ignore" in data: check = check + 1
+			if "always_allow_ctcp_action_command" in data: check = check + 1
 
 			if check >= 100:
 				return True

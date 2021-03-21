@@ -98,6 +98,8 @@ Version 0.860
 	* Added information about disabling command input to the script and command documentation
 	* Added an exception for the "/me" command to command blocking
 	* Bugfix: importing a settings file did not work properly
+	* Added an option to allow or forbid the use of the /me command if command use is blocked
+	* Added the option to allow or forbid /me to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo

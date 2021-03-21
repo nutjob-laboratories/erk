@@ -824,12 +824,16 @@ class Dialog(QDialog):
 		self.inputCommands = QCheckBox("Enable command input",self)
 		if config.ENABLE_COMMANDS: self.inputCommands.setChecked(True)
 
+		self.inputMe = QCheckBox("Always allow "+config.INPUT_COMMAND_SYMBOL+"me command",self)
+		if config.ALWAYS_ALLOW_ME: self.inputMe.setChecked(True)
+
 		if self.parent!=None:
 			if self.parent.block_commands:
 				self.inputCommands.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.inputCommands)
+		cpLayout.addWidget(self.inputMe)
 		cpLayout.addWidget(histBox)
 		cpLayout.addWidget(autoBox)
 		cpLayout.addStretch()
@@ -1186,6 +1190,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.ALWAYS_ALLOW_ME = self.inputMe.isChecked()
 
 		config.PLUGINS_CATCH_IGNORES = self.igPlugins.isChecked()
 
@@ -1571,6 +1577,7 @@ class Dialog(QDialog):
 				self.noteQuit.setChecked(config.HIDE_QUIT_MESSAGE)
 				self.noteTopic.setChecked(config.HIDE_TOPIC_MESSAGE)
 				self.noteMode.setChecked(config.HIDE_MODE_DISPLAY)
+				self.inputMe.setChecked(config.ALWAYS_ALLOW_ME)
 
 			else:
 				msg = QMessageBox(self)
