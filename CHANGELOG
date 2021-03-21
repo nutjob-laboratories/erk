@@ -90,6 +90,7 @@ Version 0.860
 	* Added an option for plugins to catch ignored messages
 	* Added option for plugins to catch ignored messages to the "settings" dialog
 	* Changed how some extension options are disabled when --noscripts, --noedit, and --noplugins are used
+	* Bugfix: if an additional plugin directory was added at the commandline and the directory didn't exist, the client would crash
 
 Version 0.850
 	* Changed the splash logo

@@ -183,6 +183,11 @@ if __name__ == '__main__':
 			os.mkdir(args.styles)
 			print("\""+args.styles+"\" directory created!")
 
+	if args.plugins:
+		if not os.path.isdir(args.plugins):
+			os.mkdir(args.plugins)
+			print("\""+args.plugins+"\" directory created!")
+
 	# Handle the log export dialog
 	if args.xlog:
 
