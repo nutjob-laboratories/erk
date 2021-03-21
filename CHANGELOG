@@ -69,6 +69,7 @@ Version 0.860
 	* Changed the name of the input() and output() event methods to line_in() and line_out() respectively
 	* Added a new event: input() (catches user text input)
 	* Added the new plugin guide to the distribution
+	* Added the new plugin guide to the GUI "Help" menu
 
 Version 0.850
 	* Changed the splash logo

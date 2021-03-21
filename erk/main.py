@@ -736,6 +736,9 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,PDF_MENU_ICON,"Scripting & Commands","A guide to scripting and using "+APPLICATION_NAME,25,self.openCommandDocumentation)
 		self.helpMenu.addAction(entry)
 
+		entry = MenuAction(self,PDF_MENU_ICON,"Plugin Guide","A guide to writing and using "+APPLICATION_NAME+" plugins",25,self.openPluginDocumentation)
+		self.helpMenu.addAction(entry)
+
 		self.helpMenu.addSeparator()
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
@@ -851,6 +854,18 @@ class Erk(QMainWindow):
 	def menuIgnore(self):
 		x = Ignore(self)
 		x.show()
+
+	def openPluginDocumentation(self):
+		idir = sys.path[0]
+		DOCUMENTATION_DIRECTORY = os.path.join(idir, "documentation")
+		DOCUMENTATION = os.path.join(DOCUMENTATION_DIRECTORY, "Erk_Plugin_Guide.pdf")
+
+		QDesktopServices.openUrl(QUrl("file:"+DOCUMENTATION))
+
+		x = Blank()
+		x.show()
+		x.close()
+
 
 	def openCommandDocumentation(self):
 		idir = sys.path[0]
