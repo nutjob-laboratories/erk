@@ -101,6 +101,7 @@ Version 0.860
 	* Added an option to allow or forbid the use of the /me command if command use is blocked
 	* Added the option to allow or forbid /me to the "settings" dialog
 	* New plugin event: quit()
+	* New plugin event: ctcp()
 
 Version 0.850
 	* Changed the splash logo

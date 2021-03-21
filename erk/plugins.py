@@ -313,6 +313,14 @@ def quit(client,nick,message):
 			obj.quit(nick,message)
 		obj.irc = None
 
+def ctcp(client,user,target,tag,messagek,message):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"ctcp"):
+			obj.ctcp(user,target,tag,message)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
