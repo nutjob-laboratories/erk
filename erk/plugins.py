@@ -351,16 +351,22 @@ def check_for_bad_input(p):
 
 	return False
 
-def load_plugins(are_plugins_blocked):
+def load_plugins(are_plugins_blocked,additional_locations):
 	global PLUGINS
 
 	PLUGINS = []
 	ERRORS = []
+	DIRECTORIES = []
 
 	if not config.ENABLE_PLUGINS: return []
 	if are_plugins_blocked: return []
 
-	with PikeManager([PLUGIN_DIRECTORY]) as mgr:
+	DIRECTORIES.append(PLUGIN_DIRECTORY)
+	if len(additional_locations)>0:
+		for loc in additional_locations:
+			DIRECTORIES.append(loc)
+
+	with PikeManager(DIRECTORIES) as mgr:
 		classes = mgr.get_classes()
 
 	for c in classes:

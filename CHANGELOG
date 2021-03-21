@@ -86,6 +86,7 @@ Version 0.860
 	* Bugfix: if scripting is disabled via commandline, script options are blocked/hidden in the "connect" dialog
 	* Added a commandline option to block plugins (--noplugins)
 	* Added a commandline option to block plugins, scripts, and styles (--noextensions)
+	* Added a new commandline option to add directories to load plugins from (-P,--plugins)
 
 Version 0.850
 	* Changed the splash logo

@@ -108,6 +108,7 @@ miscgroup.add_argument("-L","--logs", type=str,help="Use an alternate log storag
 miscgroup.add_argument("-S","--scripts", type=str,help="Use an alternate script storage location", metavar="DIRECTORY", default=SCRIPTS_DIRECTORY)
 miscgroup.add_argument("-T","--styles", type=str,help="Use an alternate style storage location", metavar="DIRECTORY", default=STYLES_DIRECTORY)
 miscgroup.add_argument("-M","--macros", type=str,help="Use an alternate macro save file", metavar="FILE", default=MACRO_SAVE_FILE)
+miscgroup.add_argument("-P","--plugins", type=str,help="Add a directory to load plugins from", metavar="DIRECTORY", action='append',default=[])
 
 devgroup = parser.add_argument_group('Tools')
 
@@ -473,6 +474,7 @@ if __name__ == '__main__':
 				args.noedit,
 				args.macros,
 				args.noplugins,
+				args.plugins,
 				)
 			GUI.show()
 		else:
@@ -502,6 +504,7 @@ if __name__ == '__main__':
 					args.noedit,
 					args.macros,
 					args.noplugins,
+					args.plugins,
 					)
 				GUI.show()
 
@@ -595,6 +598,7 @@ if __name__ == '__main__':
 					args.noedit,
 					args.macros,
 					args.noplugins,
+					args.plugins,
 					)
 				GUI.show()
 			else:
@@ -624,6 +628,7 @@ if __name__ == '__main__':
 						args.noedit,
 						args.macros,
 						args.noplugins,
+						args.plugins,
 						)
 					GUI.show()
 				else:

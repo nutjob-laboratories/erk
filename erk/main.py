@@ -347,6 +347,7 @@ class Erk(QMainWindow):
 			block_editor=False,
 			macrofile=MACRO_SAVE_FILE,
 			block_plugins=False,
+			more_plugins=[],
 			parent=None
 		):
 		
@@ -400,6 +401,8 @@ class Erk(QMainWindow):
 		self.macrofile = macrofile
 
 		self.block_plugins = block_plugins
+
+		self.more_plugins = more_plugins
 
 		self.cmdline_script = False
 		self.cmdline_editor = False
@@ -493,7 +496,7 @@ class Erk(QMainWindow):
 
 		# PLUGINS
 
-		plugin_load_errors = plugins.load_plugins(self.block_plugins)
+		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
 
@@ -841,7 +844,7 @@ class Erk(QMainWindow):
 		self.pluginsMenu.addAction(entry)
 
 	def reloadPlugins(self):
-		plugin_load_errors = plugins.load_plugins(self.block_plugins)
+		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
 
