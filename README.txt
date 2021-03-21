@@ -121,7 +121,8 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
                      [-M FILE] [--scripter] [--scripter-edit FILE] [--styler] [--settings]
                      [--export] [--noask] [--nosettings] [--nomenus] [--noconnect]
-                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--qt5menu]
+                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--noplugins]
+                     [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -181,9 +182,8 @@ Disable functionality:
   --nodisplay           Disable connection display
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
+  --noplugins           Disables plugins
   --qt5menu             Disable menu toolbar, and use normal menus
-
-
 ```
 # Frequently asked questions
 

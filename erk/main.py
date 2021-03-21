@@ -346,6 +346,7 @@ class Erk(QMainWindow):
 			no_styles=False,
 			block_editor=False,
 			macrofile=MACRO_SAVE_FILE,
+			block_plugins=False,
 			parent=None
 		):
 		
@@ -398,11 +399,15 @@ class Erk(QMainWindow):
 
 		self.macrofile = macrofile
 
+		self.block_plugins = block_plugins
+
 		self.cmdline_script = False
 		self.cmdline_editor = False
+		self.cmdline_plugins = False
 
 		if self.block_scripts: self.cmdline_script = True
 		if self.block_editor: self.cmdline_editor = True
+		if self.block_plugins: self.cmdline_plugins = True
 
 		self.force_qmenu = force_qmenu
 
@@ -488,7 +493,7 @@ class Erk(QMainWindow):
 
 		# PLUGINS
 
-		plugin_load_errors = plugins.load_plugins()
+		plugin_load_errors = plugins.load_plugins(self.block_plugins)
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
 
@@ -770,7 +775,11 @@ class Erk(QMainWindow):
 
 		# Plugins menu
 
-		if config.ENABLE_PLUGINS:
+		plugins_enabled = True
+		if self.block_plugins: plugins_enabled = False
+		if not config.ENABLE_PLUGINS: plugins_enabled = False
+
+		if plugins_enabled:
 			if config.SHOW_PLUGINS_MENU:
 				if len(plugins.PLUGINS)>0:
 
@@ -832,7 +841,7 @@ class Erk(QMainWindow):
 		self.pluginsMenu.addAction(entry)
 
 	def reloadPlugins(self):
-		plugin_load_errors = plugins.load_plugins()
+		plugin_load_errors = plugins.load_plugins(self.block_plugins)
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
 

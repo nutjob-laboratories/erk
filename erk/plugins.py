@@ -351,13 +351,14 @@ def check_for_bad_input(p):
 
 	return False
 
-def load_plugins():
+def load_plugins(are_plugins_blocked):
 	global PLUGINS
 
 	PLUGINS = []
 	ERRORS = []
 
 	if not config.ENABLE_PLUGINS: return []
+	if are_plugins_blocked: return []
 
 	with PikeManager([PLUGIN_DIRECTORY]) as mgr:
 		classes = mgr.get_classes()

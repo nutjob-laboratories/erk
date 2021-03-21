@@ -127,6 +127,7 @@ disgroup.add_argument( "--noscripts", help=f"Disable scripting", action="store_t
 disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action="store_true")
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
+disgroup.add_argument( "--noplugins", help=f"Disables plugins", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
@@ -464,6 +465,7 @@ if __name__ == '__main__':
 				args.nostyles,
 				args.noedit,
 				args.macros,
+				args.noplugins,
 				)
 			GUI.show()
 		else:
@@ -492,6 +494,7 @@ if __name__ == '__main__':
 					args.nostyles,
 					args.noedit,
 					args.macros,
+					args.noplugins,
 					)
 				GUI.show()
 
@@ -584,6 +587,7 @@ if __name__ == '__main__':
 					args.nostyles,
 					args.noedit,
 					args.macros,
+					args.noplugins,
 					)
 				GUI.show()
 			else:
@@ -612,6 +616,7 @@ if __name__ == '__main__':
 						args.nostyles,
 						args.noedit,
 						args.macros,
+						args.noplugins,
 						)
 					GUI.show()
 				else:

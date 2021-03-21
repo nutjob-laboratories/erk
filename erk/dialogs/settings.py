@@ -39,6 +39,7 @@ from ..files import *
 from .. import config
 from .. import events
 from .. import userinput
+from .. import plugins
 
 from .prefix import Dialog as Prefix
 from .history_size import Dialog as HistorySize
@@ -1028,6 +1029,11 @@ class Dialog(QDialog):
 		self.showPlugins = QCheckBox("Show plugins menu",self)
 		if config.SHOW_PLUGINS_MENU: self.showPlugins.setChecked(True)
 
+		if self.parent!= None:
+			if self.parent.block_plugins:
+				self.enPlugins.setEnabled(False)
+				self.showPlugins.setEnabled(False)
+
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
@@ -1390,6 +1396,8 @@ class Dialog(QDialog):
 		config.DISPLAY_NICKNAME_ON_CHANNEL = self.displayNickname.isChecked()
 
 		if self.parent!= None:
+
+			plugins.load_plugins(self.parent.block_plugins)
 
 			if self.do_rerender: events.rerender_all()
 
