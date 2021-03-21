@@ -1220,6 +1220,8 @@ def action_message(gui,client,target,user,message):
 		nick = user
 		hostmask = None
 
+	if config.PLUGINS_CATCH_IGNORES: plugins.action_message(client,target,user,message)
+
 	ignore = check_for_ignore(user,gui)
 
 	if ignore and not config.IGNORE_PUBLIC:
@@ -1232,7 +1234,7 @@ def action_message(gui,client,target,user,message):
 
 	if ignore: return
 
-	plugins.action_message(client,target,user,message)
+	if not config.PLUGINS_CATCH_IGNORES: plugins.action_message(client,target,user,message)
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1588,6 +1590,8 @@ def notice_message(gui,client,target,user,message):
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.notice(client,target,user,message): return
 
+	if config.PLUGINS_CATCH_IGNORES: plugins.notice(client,target,user,message)
+
 	if len(user.strip())==0:
 		if client.hostname:
 			user = client.hostname
@@ -1606,7 +1610,7 @@ def notice_message(gui,client,target,user,message):
 	if ignore and not config.IGNORE_NOTICE: ignore = False
 	if ignore: return
 
-	plugins.notice(client,target,user,message)
+	if not config.PLUGINS_CATCH_IGNORES: plugins.notice(client,target,user,message)
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1681,6 +1685,8 @@ def private_message(gui,client,user,message):
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.private(client,user,message): return
 
+	if config.PLUGINS_CATCH_IGNORES: plugins.private_message(client,user,message)
+
 	global UNSEEN
 
 	p = user.split('!')
@@ -1695,7 +1701,7 @@ def private_message(gui,client,user,message):
 	if ignore and not config.IGNORE_PRIVATE: ignore = False
 	if ignore: return
 
-	plugins.private_message(client,user,message)
+	if not config.PLUGINS_CATCH_IGNORES: plugins.private_message(client,user,message)
 	
 	msg = Message(CHAT_MESSAGE,user,message)
 
@@ -1814,6 +1820,8 @@ def public_message(gui,client,channel,user,message):
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.public(client,channel,user,message): return
 
+	if config.PLUGINS_CATCH_IGNORES: plugins.public_message(client,channel,user,message)
+
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1828,7 +1836,7 @@ def public_message(gui,client,channel,user,message):
 
 	if ignore: return
 
-	plugins.public_message(client,channel,user,message)
+	if not config.PLUGINS_CATCH_IGNORES: plugins.public_message(client,channel,user,message)
 
 	msg = Message(CHAT_MESSAGE,user,message)
 

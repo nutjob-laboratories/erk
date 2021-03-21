@@ -968,23 +968,23 @@ class Dialog(QDialog):
 		self.scriptMisc = QCheckBox("Enable scripts",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.scriptMisc.setEnabled(False)
+		# if self.parent!= None:
+		# 	if self.parent.cmdline_script:
+		# 		self.scriptMisc.setEnabled(False)
 
 		self.sglobalMisc = QCheckBox("Global aliases",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.sglobalMisc.setEnabled(False)
+		# if self.parent!= None:
+		# 	if self.parent.cmdline_script:
+		# 		self.sglobalMisc.setEnabled(False)
 
 		self.seditMisc = QCheckBox("Enable script editor",self)
 		if config.ENABLE_SCRIPT_EDITOR: self.seditMisc.setChecked(True)
 
 		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.seditMisc.setEnabled(False)
+			# if self.parent.cmdline_script:
+			# 	self.seditMisc.setEnabled(False)
 
 			if self.parent.cmdline_editor:
 				self.seditMisc.setEnabled(False)
@@ -992,23 +992,23 @@ class Dialog(QDialog):
 		self.autoMacros = QCheckBox("Auto-complete macros",self)
 		if config.AUTOCOMPLETE_MACROS: self.autoMacros.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.autoMacros.setEnabled(False)
+		# if self.parent!= None:
+		# 	if self.parent.cmdline_script:
+		# 		self.autoMacros.setEnabled(False)
 
 		self.saveMacros = QCheckBox("Save macros",self)
 		if config.SAVE_MACROS: self.saveMacros.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.saveMacros.setEnabled(False)
+		# if self.parent!= None:
+		# 	if self.parent.cmdline_script:
+		# 		self.saveMacros.setEnabled(False)
 
 		self.enableMacros = QCheckBox("Enable macros",self)
 		if config.ENABLE_MACROS: self.enableMacros.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.cmdline_script:
-				self.enableMacros.setEnabled(False)
+		# if self.parent!= None:
+		# 	if self.parent.cmdline_script:
+		# 		self.enableMacros.setEnabled(False)
 
 		scriptLayout = QVBoxLayout()
 		scriptLayout.addWidget(self.scriptMisc)
@@ -1023,25 +1023,32 @@ class Dialog(QDialog):
 
 		scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
+		if self.parent!= None:
+			if self.parent.cmdline_script:
+				scriptBox.setEnabled(False)
+
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
 
 		self.showPlugins = QCheckBox("Show plugins menu",self)
 		if config.SHOW_PLUGINS_MENU: self.showPlugins.setChecked(True)
 
-		if self.parent!= None:
-			if self.parent.block_plugins:
-				self.enPlugins.setEnabled(False)
-				self.showPlugins.setEnabled(False)
+		self.igPlugins = QCheckBox("Plugins catch ignored messages",self)
+		if config.PLUGINS_CATCH_IGNORES: self.igPlugins.setChecked(True)
 
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
+		plugLayout.addWidget(self.igPlugins)
 
 		plugBox = QGroupBox("Plugins",self)
 		plugBox.setLayout(plugLayout)
 
 		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		if self.parent!= None:
+			if self.parent.block_plugins:
+				plugBox.setEnabled(False)
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(scriptBox)
@@ -1198,6 +1205,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.PLUGINS_CATCH_IGNORES = self.igPlugins.isChecked()
 
 		config.SHOW_PLUGINS_MENU = self.showPlugins.isChecked()
 

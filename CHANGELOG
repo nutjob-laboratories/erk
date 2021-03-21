@@ -87,6 +87,9 @@ Version 0.860
 	* Added a commandline option to block plugins (--noplugins)
 	* Added a commandline option to block plugins, scripts, and styles (--noextensions)
 	* Added a new commandline option to add directories to load plugins from (-P,--plugins)
+	* Added an option for plugins to catch ignored messages
+	* Added option for plugins to catch ignored messages to the "settings" dialog
+	* Changed how some extension options are disabled when --noscripts, --noedit, and --noplugins are used
 
 Version 0.850
 	* Changed the splash logo

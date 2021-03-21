@@ -151,12 +151,15 @@ ENABLE_COMMANDS = True
 ENABLE_PLUGINS = True
 SHOW_PLUGINS_MENU = True
 
+PLUGINS_CATCH_IGNORES = False
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"plugins_catch_ignored_messages": PLUGINS_CATCH_IGNORES,
 		"show_plugins_menu": SHOW_PLUGINS_MENU,
 		"enable_plugins": ENABLE_PLUGINS,
 		"enable_user_commands": ENABLE_COMMANDS,
@@ -264,6 +267,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "plugins_catch_ignored_messages" in data:
+		data["plugins_catch_ignored_messages"] = PLUGINS_CATCH_IGNORES
 
 	if not "show_plugins_menu" in data:
 		data["show_plugins_menu"] = SHOW_PLUGINS_MENU
@@ -493,6 +499,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_COMMANDS
 	global ENABLE_PLUGINS
 	global SHOW_PLUGINS_MENU
+	global PLUGINS_CATCH_IGNORES
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -501,6 +508,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			PLUGINS_CATCH_IGNORES = data["plugins_catch_ignored_messages"]
 			SHOW_PLUGINS_MENU = data["show_plugins_menu"]
 			ENABLE_PLUGINS = data["enable_plugins"]
 			ENABLE_COMMANDS = data["enable_user_commands"]
