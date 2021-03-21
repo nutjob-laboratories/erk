@@ -313,7 +313,7 @@ def quit(client,nick,message):
 			obj.quit(nick,message)
 		obj.irc = None
 
-def ctcp(client,user,target,tag,messagek,message):
+def ctcp(client,user,target,tag,message):
 	for p in PLUGINS:
 		obj = p.obj
 		obj.irc = client
@@ -339,6 +339,8 @@ EVENTS = [
 	"parted",
 	"kick",
 	"kicked",
+	"quit",
+	"ctcp",
 ]
 
 def check_for_bad_input(p):

@@ -59,9 +59,6 @@ def fetch_current_window(gui):
 	return None
 
 def received_unknown_ctcp_message(gui,client,user,channel,tag,message):
-	
-	# if not client.gui.block_plugins:
-	# 	if client.gui.plugins.ctcp(client,user,channel,tag,message): return
 
 	plugins.ctcp(client,user,channel,tag,message)
 
