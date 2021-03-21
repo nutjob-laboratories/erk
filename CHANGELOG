@@ -97,6 +97,7 @@ Version 0.860
 	* Added an icon to the "Last server visited" in the QComboBox in the connection dialog
 	* Added information about disabling command input to the script and command documentation
 	* Added an exception for the "/me" command to command blocking
+	* Bugfix: importing a settings file did not work properly
 
 Version 0.850
 	* Changed the splash logo

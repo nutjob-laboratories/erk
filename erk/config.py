@@ -723,8 +723,18 @@ def check_settings(filename):
 			if "ignore_notice_messages" in data: check = check + 1
 			if "enable_user_ignore" in data: check = check + 1
 			if "macro_interpolation_symbol" in data: check = check + 1
+			if "plugins_catch_ignored_messages" in data: check = check + 1
+			if "show_plugins_menu" in data: check = check + 1
+			if "enable_plugins" in data: check = check + 1
+			if "enable_user_commands" in data: check = check + 1
+			if "write_private_messages_to_console" in data: check = check + 1
+			if "write_notice_messages_to_console" in data: check = check + 1
+			if "ignore_public_messages" in data: check = check + 1
+			if "ignore_private_messages" in data: check = check + 1
+			if "ignore_notice_messages" in data: check = check + 1
+			if "enable_user_ignore" in data: check = check + 1
 
-			if check >= 95:
+			if check >= 100:
 				return True
 			else:
 				return False
