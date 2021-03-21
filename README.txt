@@ -260,7 +260,7 @@ Yes! **Ərk** stores configuration files in a user's "home" directory, on both L
 * `-S`,`--scripts` : This tells **Ərk** to use a user-specified directory for script loading and storage.
 * `-T`,`--styles` : This tells **Ərk** to use a user-specified directory for text style loading and storage.
 * `-M`,`--macros` : This tells **Ərk** to use a user-specified file for macro loading and storage.
-* `-P`,`--plugins`: This tells **Ərk** to load plugins from additional directories. This option can be called multiple times to load plugins from multiple directories.
+* `-P`,`--plugins` : This tells **Ərk** to load plugins from additional directories. This option can be called multiple times to load plugins from multiple directories.
 
 This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to be used for logs.
 
