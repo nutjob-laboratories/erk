@@ -122,7 +122,7 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-M FILE] [--scripter] [--scripter-edit FILE] [--styler] [--settings]
                      [--export] [--noask] [--nosettings] [--nomenus] [--noconnect]
                      [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--noplugins]
-                     [--qt5menu]
+                     [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -183,6 +183,7 @@ Disable functionality:
   --nostyles            Disables style loading and editing
   --noedit              Disables the script editor
   --noplugins           Disables plugins
+  --noextensions        Disables plugins, scripts, and styles
   --qt5menu             Disable menu toolbar, and use normal menus
 ```
 # Frequently asked questions
@@ -206,7 +207,7 @@ No. I'm still adding features and tracking down and squashing bugs.
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
-    python erk.py -o --noscripts --nomenu --nodisplay --nostyles --channel "#erk" irc.efnet.org 6667
+    python erk.py -o --noextensions --nomenu --nodisplay --channel "#erk" irc.efnet.org 6667
 
 And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as over 20 different command-line options.
 

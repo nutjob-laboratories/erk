@@ -128,6 +128,7 @@ disgroup.add_argument( "--nodisplay", help=f"Disable connection display", action
 disgroup.add_argument( "--nostyles", help=f"Disables style loading and editing", action="store_true")
 disgroup.add_argument( "--noedit", help=f"Disables the script editor", action="store_true")
 disgroup.add_argument( "--noplugins", help=f"Disables plugins", action="store_true")
+disgroup.add_argument( "--noextensions", help=f"Disables plugins, scripts, and styles", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
@@ -137,6 +138,12 @@ loaded_config_file = False
 if __name__ == '__main__':
 
 	app = QApplication([])
+
+	# If --noextensions is enabled, turn off stuff
+	if args.noextensions:
+		args.noscripts = True
+		args.noplugins = True
+		args.nostyles = True
 
 	# If the user has passed an alternate configuration file,
 	# and the file doesn't exist, create a new config file

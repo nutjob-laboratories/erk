@@ -85,6 +85,7 @@ Version 0.860
 	* Rearranged the "Extensions" page of the "settings" dialog, putting scripting and plugin settings in different QGroupBoxes
 	* Bugfix: if scripting is disabled via commandline, script options are blocked/hidden in the "connect" dialog
 	* Added a commandline option to block plugins (--noplugins)
+	* Added a commandline option to block plugins, scripts, and styles (--noextensions)
 
 Version 0.850
 	* Changed the splash logo
