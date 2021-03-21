@@ -848,7 +848,7 @@ class Erk(QMainWindow):
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
 
-		self.buildPluginMenu()
+		self.buildMenuInterface()
 
 	def openFile(self,file):
 
