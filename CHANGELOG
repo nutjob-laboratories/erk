@@ -95,6 +95,8 @@ Version 0.860
 	* Added a new commandline option to block use of user commands (--nocommands)
 	* Added a 2px black border to the visited, unvisited, visited ssl, and unvisited ssl icons in the connection dialog to make them more visible
 	* Added an icon to the "Last server visited" in the QComboBox in the connection dialog
+	* Added information about disabling command input to the script and command documentation
+	* Added an exception for the "/me" command to command blocking
 
 Version 0.850
 	* Changed the splash logo

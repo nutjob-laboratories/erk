@@ -491,6 +491,13 @@ def handle_input(window,client,text,force=True):
 	# Strip leading and trailing whitespace
 	text = text.strip()
 
+	# Allow use of the CTCP action command if commands are blocked
+	if not force:
+		tokens = text.split()
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'me' and len(tokens)>=2:
+				force = True
+
 	if not force:
 		if window.type!=config.SERVER_WINDOW:
 			if config.USE_EMOJIS: text = emoji.emojize(text,use_aliases=True)
