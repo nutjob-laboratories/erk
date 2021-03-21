@@ -82,6 +82,7 @@ Version 0.860
 	* New plugin event: kicked()
 	* Added an option to show/hide the plugins menu
 	* Added the show/hide plugins menu option to the "settings" dialog
+	* Rearranged the "Extensions" page of the "settings" dialog, putting scripting and plugin settings in different QGroupBoxes
 
 Version 0.850
 	* Changed the splash logo

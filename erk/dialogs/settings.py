@@ -1009,23 +1009,37 @@ class Dialog(QDialog):
 			if self.parent.cmdline_script:
 				self.enableMacros.setEnabled(False)
 
+		scriptLayout = QVBoxLayout()
+		scriptLayout.addWidget(self.scriptMisc)
+		scriptLayout.addWidget(self.seditMisc)
+		scriptLayout.addWidget(self.sglobalMisc)
+		scriptLayout.addWidget(self.enableMacros)
+		scriptLayout.addWidget(self.saveMacros)
+		scriptLayout.addWidget(self.autoMacros)
+
+		scriptBox = QGroupBox("Scripting",self)
+		scriptBox.setLayout(scriptLayout)
+
+		scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
 
 		self.showPlugins = QCheckBox("Show plugins menu",self)
 		if config.SHOW_PLUGINS_MENU: self.showPlugins.setChecked(True)
 
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.scriptMisc)
-		cpLayout.addWidget(self.seditMisc)
-		cpLayout.addWidget(self.sglobalMisc)
-		cpLayout.addWidget(self.enableMacros)
-		cpLayout.addWidget(self.saveMacros)
-		cpLayout.addWidget(self.autoMacros)
+		plugLayout = QVBoxLayout()
+		plugLayout.addWidget(self.enPlugins)
+		plugLayout.addWidget(self.showPlugins)
 
-		cpLayout.addStretch()
-		cpLayout.addWidget(self.enPlugins)
-		cpLayout.addWidget(self.showPlugins)
+		plugBox = QGroupBox("Plugins",self)
+		plugBox.setLayout(plugLayout)
+
+		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		cpLayout = QVBoxLayout()
+		cpLayout.addWidget(scriptBox)
+		cpLayout.addWidget(plugBox)
 
 		cpLayout.addStretch()
 
