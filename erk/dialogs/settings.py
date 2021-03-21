@@ -1397,7 +1397,7 @@ class Dialog(QDialog):
 
 		if self.parent!= None:
 
-			plugins.load_plugins(self.parent.block_plugins)
+			plugins.load_plugins(self.parent.block_plugins,self.parent.more_plugins)
 
 			if self.do_rerender: events.rerender_all()
 
