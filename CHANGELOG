@@ -106,6 +106,9 @@ Version 0.860
 	* Added two new plugin methods: server() and port()
 	* Added a "blank" plugin to the distribution
 	* Added a new commandline option: --generate (copies the blank plugin to a new file)
+	* Bugfix: some plugin events weren't detected properly
+	* Added a new icon for plugin modules
+	* Changed how plugins were entered into the plugin menu
 
 Version 0.850
 	* Changed the splash logo

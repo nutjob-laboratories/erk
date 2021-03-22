@@ -53,6 +53,8 @@ from .userinput import(
 )
 from .irc import ScriptThreadWindow
 
+PLUGINS = []
+
 class Plugin():
 
 	irc = None
@@ -143,44 +145,6 @@ class Plugin():
 				entry = [scriptID,scriptThread]
 				SCRIPT_THREADS.append(entry)
 
-PLUGINS = []
-
-class PluginEntry():
-	def __init__(self,pclass,pobj):
-		self.pclass = pclass
-		self.obj = pobj
-		self.errors = []
-
-		self.filename = inspect.getfile(pclass)
-		self.directory = os.path.dirname(self.filename)
-		self.basename = os.path.basename(self.filename)
-
-		fname, extension = os.path.splitext(self.filename)
-
-		icon_name = fname+".png"
-		if os.path.isfile(icon_name):
-			self.icon = icon_name
-		else:
-			self.icon = None
-
-		self.number_of_events = 0
-
-	def module_name(self):
-		return self.pclass.__module__
-
-	def class_name(self):
-		return self.pclass.__name__
-
-	def plugin_name(self):
-		return self.obj.name
-
-	def plugin_version(self):
-		return self.obj.version
-
-	def plugin_description(self):
-		if hasattr(self.obj,"description"): return self.obj.description
-		return None
-
 def public_message(client,channel,user,message):
 	for p in PLUGINS:
 		obj = p.obj
@@ -220,8 +184,6 @@ def line_out(client,data):
 		if hasattr(obj,"line_out"):
 			obj.line_out(data)
 		obj.irc = None
-
-# plugins.mode_message(client,channel,user,mset,modes,args)
 
 def mode_message(client,channel,user,mset,modes,args):
 	for p in PLUGINS:
@@ -361,6 +323,8 @@ EVENTS = [
 	"kicked",
 	"quit",
 	"ctcp",
+	"line_in",
+	"line_out",
 ]
 
 def check_for_bad_input(p):
@@ -388,6 +352,42 @@ def check_for_bad_input(p):
 				return True
 
 	return False
+
+class PluginEntry():
+	def __init__(self,pclass,pobj):
+		self.pclass = pclass
+		self.obj = pobj
+		self.errors = []
+
+		self.filename = inspect.getfile(pclass)
+		self.directory = os.path.dirname(self.filename)
+		self.basename = os.path.basename(self.filename)
+
+		fname, extension = os.path.splitext(self.filename)
+
+		icon_name = fname+".png"
+		if os.path.isfile(icon_name):
+			self.icon = icon_name
+		else:
+			self.icon = None
+
+		self.number_of_events = 0
+
+	def module_name(self):
+		return self.pclass.__module__
+
+	def class_name(self):
+		return self.pclass.__name__
+
+	def plugin_name(self):
+		return self.obj.name
+
+	def plugin_version(self):
+		return self.obj.version
+
+	def plugin_description(self):
+		if hasattr(self.obj,"description"): return self.obj.description
+		return None
 
 def load_plugins(are_plugins_blocked,additional_locations):
 	global PLUGINS

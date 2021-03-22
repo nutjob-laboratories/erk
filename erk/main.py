@@ -817,28 +817,32 @@ class Erk(QMainWindow):
 
 		self.pluginsMenu.clear()
 
+		files = {}
 		for p in plugins.PLUGINS:
-
-			name = p.plugin_name()
-			version = p.plugin_version()
-			classname = p.class_name()
-			module = p.module_name()
-
-			description = p.plugin_description()
-
-			if p.icon:
-				ico = p.icon
+			if p.filename in files:
+				files[p.filename].append(p)
 			else:
-				ico = PLUGIN_MENU_ICON
+				files[p.filename] = [p]
 
-			lmbd = (lambda u=p.filename: self.openFile(u))
+		for file in files:
 
-			if description!=None:
-				entry = MenuAction(self,ico,name+" "+version+"&nbsp;&nbsp;",description,25,lmbd)
-			else:
-				entry = MenuAction(self,ico,name+" "+version+"&nbsp;&nbsp;",module+"."+classname,25,lmbd)
+			bn = os.path.basename(file)
+			m = self.pluginsMenu.addMenu(QIcon(PLUGIN_ICON),bn)
 
-			self.pluginsMenu.addAction(entry)
+			for p in files[file]:
+
+				if p.icon:
+					ico = p.icon
+				else:
+					ico = PLUGIN_MENU_ICON
+
+				lmbd = (lambda u=p.filename: self.openFile(u))
+				if p.plugin_description()!=None:
+					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25,lmbd)
+				else:
+					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.module_name()+"."+p.class_name(),25,lmbd)
+
+				m.addAction(entry)
 
 		self.pluginsMenu.addSeparator()
 
