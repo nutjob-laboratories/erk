@@ -104,6 +104,8 @@ Version 0.860
 	* New plugin event: ctcp()
 	* Added a new plugin method: windows()
 	* Added two new plugin methods: server() and port()
+	* Added a "blank" plugin to the distribution
+	* Added a new commandline option: --generate (copies the blank plugin to a new file)
 
 Version 0.850
 	* Changed the splash logo

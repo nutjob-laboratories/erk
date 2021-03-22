@@ -91,8 +91,9 @@ PROFANITY_LIST = os.path.join(DATA_DIRECTORY, "profanity.txt")
 EMOJI_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji2.txt")
 EMOJI_ALIAS_AUTOCOMPLETE_FILE = os.path.join(AUTOCOMPLETE_DIRECTORY, "emoji1.txt")
 
-
 MACRO_SAVE_FILE = os.path.join(SETTINGS_DIRECTORY, "macros.json")
+
+BLANK_PLUGIN_FILE = os.path.join(DATA_DIRECTORY, "plugin.py")
 
 
 def get_list_of_installed_scripts(scriptdir):

@@ -120,9 +120,9 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-u URL] [-a] [-s FILENAME] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
                      [-M FILE] [-P DIRECTORY] [--scripter] [--scripter-edit FILE] [--styler]
-                     [--settings] [--export] [--noask] [--nosettings] [--nomenus]
-                     [--noconnect] [--noscripts] [--nodisplay] [--nostyles] [--noedit]
-                     [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
+                     [--settings] [--export] [--generate FILENAME] [--noask] [--nosettings]
+                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
+                     [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -174,6 +174,7 @@ Tools:
   --styler              Launch the style editor
   --settings            Launch the preferences editor
   --export              Launch the log export tool
+  --generate FILENAME   Create a "blank" plugin for editing
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start
@@ -188,6 +189,7 @@ Disable functionality:
   --nocommands          Disables user input commands
   --noextensions        Disables plugins, scripts, and styles
   --qt5menu             Disable menu toolbar, and use normal menus
+
 ```
 # Frequently asked questions
 

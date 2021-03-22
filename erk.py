@@ -117,6 +117,7 @@ devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a f
 devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
 devgroup.add_argument("--settings", help="Launch the preferences editor", action="store_true")
 devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
+devgroup.add_argument("--generate",type=str,help="Create a \"blank\" plugin for editing", metavar="FILENAME", default='')
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -140,6 +141,18 @@ loaded_config_file = False
 if __name__ == '__main__':
 
 	app = QApplication([])
+
+	# "Generate" a blank plugin
+	if args.generate:
+		if os.path.isfile(args.generate):
+			print("File \""+args.generate+"\" already exists.")
+			sys.exit(1)
+		# Copy the blank plugin in the data directory
+		# to the new location
+		shutil.copy(BLANK_PLUGIN_FILE,args.generate)
+		print("Plugin generated!")
+		sys.exit(0)
+
 
 	# If --noextensions is enabled, turn off stuff
 	if args.noextensions:
