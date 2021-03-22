@@ -102,6 +102,8 @@ Version 0.860
 	* Added the option to allow or forbid /me to the "settings" dialog
 	* New plugin event: quit()
 	* New plugin event: ctcp()
+	* Added a new plugin method: windows()
+	* Added two new plugin methods: server() and port()
 
 Version 0.850
 	* Changed the splash logo

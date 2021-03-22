@@ -57,6 +57,26 @@ class Plugin():
 
 	irc = None
 
+	def server(self):
+		server = None
+		if self.irc:
+			server = self.irc.server
+		return server
+
+	def port(self):
+		port = None
+		if self.irc:
+			port = self.irc.port
+		return port
+
+	def windows(self):
+		retval = []
+		if self.irc:
+			windows = events.fetch_window_list(self.irc)
+			for w in windows:
+				retval.append(w.name)
+		return retval
+
 	def print(self,*args):
 		if self.irc:
 			w = events.fetch_current_window(self.irc.gui)
