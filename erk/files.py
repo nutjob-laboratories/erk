@@ -133,13 +133,6 @@ def get_macros(filename=MACRO_SAVE_FILE):
 			return macros
 	return []
 
-# Plugin template for the editor
-PLUGIN_TEMPLATE_FILE = os.path.join(DATA_DIRECTORY, "plugin_template.txt")
-PLUGIN_TEMPLATE = ''
-f = open(PLUGIN_TEMPLATE_FILE,"r")
-PLUGIN_TEMPLATE = f.read()
-f.close()
-
 # Load in the profanity data file
 f = open(PROFANITY_LIST,"r")
 cursewords = f.read()
