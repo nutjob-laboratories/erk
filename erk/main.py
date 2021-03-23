@@ -836,19 +836,49 @@ class Erk(QMainWindow):
 				else:
 					ico = PLUGIN_MENU_ICON
 
+				if plugins.is_plugin_disabled(p):
+					disabled = True
+				else:
+					disabled = False
+
 				lmbd = (lambda u=p.filename: self.openFile(u))
 				if p.plugin_description()!=None:
 					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25,lmbd)
 				else:
-					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.module_name()+"."+p.class_name(),25,lmbd)
+					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25,lmbd)
 
 				m.addAction(entry)
+
+				m.addSeparator()
+
+				if disabled:
+					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+					entry.triggered.connect(lambda state,u=p: self.enable_plugin(u))
+				else:
+					entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
+					entry.triggered.connect(lambda state,u=p: self.disable_plugin(u))
+
+				m.addAction(entry)
+
+				m.addSeparator()
+
+
 
 		self.pluginsMenu.addSeparator()
 
 		entry = QAction(QIcon(RESTART_ICON),"Reload all plugins",self)
 		entry.triggered.connect(self.reloadPlugins)
 		self.pluginsMenu.addAction(entry)
+
+	def disable_plugin(self,plugin):
+		plugins.disable_plugin(plugin)
+		config.save_settings(self.configfile)
+		self.buildPluginMenu()
+
+	def enable_plugin(self,plugin):
+		plugins.enable_plugin(plugin)
+		config.save_settings(self.configfile)
+		self.buildPluginMenu()
 
 	def reloadPlugins(self):
 		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)

@@ -115,6 +115,10 @@ Version 0.860
 	* New plugin event: invite()
 	* New plugin event: oper()
 	* Bugfix: plugin connect() was being called with an argument, when none is needed
+	* Plugins now have an id() (which consists of the module name, a period, and the class name of the plugin)
+	* Added the disabled plugin list *back* to the config file
+	* Bugfix: scripts no longer trigger the input() plugin event
+	* Plugins can now be en/disabled on a per plugin basis (so, in a multi-class plugin file, one class can be disabled and the other enabled)
 
 Version 0.850
 	* Changed the splash logo

@@ -485,7 +485,7 @@ def handle_macros(window,client,text):
 
 	return text
 
-def handle_input(window,client,text,force=True):
+def handle_input(window,client,text,force=True,is_script=False):
 	if len(text.strip())==0: return
 
 	# Strip leading and trailing whitespace
@@ -518,9 +518,10 @@ def handle_input(window,client,text,force=True):
 		window.input.setFocus()
 		return
 
-	if plugins.input(client,window,text):
-		window.input.setFocus()
-		return
+	if not is_script:
+		if plugins.input(client,window,text):
+			window.input.setFocus()
+			return
 	
 	if window.type==config.CHANNEL_WINDOW:
 		handle_channel_input(window,client,text)
@@ -2094,7 +2095,7 @@ def execute_script_line(data):
 
 	#line = interpolate_for_script(client,line)
 
-	handle_input(window,client,line)
+	handle_input(window,client,line,True,True)
 
 # When a script completes, this is called which deletes the
 # script's thread

@@ -145,8 +145,27 @@ class Plugin():
 				entry = [scriptID,scriptThread]
 				SCRIPT_THREADS.append(entry)
 
+def is_plugin_disabled(entry):
+	for e in config.DISABLED_PLUGINS:
+		if e==entry.id():
+			return True
+	return False
+
+def disable_plugin(entry):
+	for e in config.DISABLED_PLUGINS:
+		if e==entry.id(): return
+	config.DISABLED_PLUGINS.append(entry.id())
+
+def enable_plugin(entry):
+	clean = []
+	for e in config.DISABLED_PLUGINS:
+		if e==entry.id(): continue
+		clean.append(e)
+	config.DISABLED_PLUGINS = clean
+
 def public_message(client,channel,user,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"public"):
@@ -155,6 +174,7 @@ def public_message(client,channel,user,message):
 
 def private_message(client,user,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"private"):
@@ -163,6 +183,7 @@ def private_message(client,user,message):
 
 def action_message(client,target,user,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"action"):
@@ -171,6 +192,7 @@ def action_message(client,target,user,message):
 
 def line_in(client,data):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"line_in"):
@@ -179,6 +201,7 @@ def line_in(client,data):
 
 def line_out(client,data):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"line_out"):
@@ -187,6 +210,7 @@ def line_out(client,data):
 
 def mode_message(client,channel,user,mset,modes,args):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"mode"):
@@ -195,6 +219,7 @@ def mode_message(client,channel,user,mset,modes,args):
 
 def tick(client,uptime):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"tick"):
@@ -208,6 +233,7 @@ def input(client,window,text):
 	else:
 		name = window.name
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"input"):
@@ -217,6 +243,7 @@ def input(client,window,text):
 
 def notice_message(client,target,user,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"notice"):
@@ -225,6 +252,7 @@ def notice_message(client,target,user,message):
 
 def motd(client,smotd):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"motd"):
@@ -233,6 +261,7 @@ def motd(client,smotd):
 
 def registered(client):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"registered"):
@@ -241,6 +270,7 @@ def registered(client):
 
 def join(client,channel,user):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"join"):
@@ -249,6 +279,7 @@ def join(client,channel,user):
 
 def part(client,channel,user):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"part"):
@@ -257,6 +288,7 @@ def part(client,channel,user):
 
 def joined(client,channel):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"joined"):
@@ -265,6 +297,7 @@ def joined(client,channel):
 
 def parted(client,channel):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"parted"):
@@ -273,6 +306,7 @@ def parted(client,channel):
 
 def kick(client,channel,kickee,kicker,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"kick"):
@@ -281,6 +315,7 @@ def kick(client,channel,kickee,kicker,message):
 
 def kicked(client,channel,kicker,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"kicked"):
@@ -289,6 +324,7 @@ def kicked(client,channel,kicker,message):
 
 def quit(client,nick,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"quit"):
@@ -297,6 +333,7 @@ def quit(client,nick,message):
 
 def ctcp(client,user,target,tag,message):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"ctcp"):
@@ -305,6 +342,7 @@ def ctcp(client,user,target,tag,message):
 
 def connect(client):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"connect"):
@@ -313,6 +351,7 @@ def connect(client):
 
 def topic(client,channel,user,topic):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"topic"):
@@ -321,6 +360,7 @@ def topic(client,channel,user,topic):
 
 def nick(client,oldnick,newnick):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"nick"):
@@ -329,6 +369,7 @@ def nick(client,oldnick,newnick):
 
 def invite(client,user,channel):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"invite"):
@@ -337,6 +378,7 @@ def invite(client,user,channel):
 
 def oper(client):
 	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"oper"):
@@ -421,6 +463,9 @@ class PluginEntry():
 
 	def class_name(self):
 		return self.pclass.__name__
+
+	def id(self):
+		return self.pclass.__module__+"."+self.pclass.__name__
 
 	def plugin_name(self):
 		return self.obj.name

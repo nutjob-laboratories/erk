@@ -331,7 +331,7 @@ class IRC_Connection(irc.IRCClient):
 				self.scriptThread.start()
 
 	def execute_script_line(self,line):
-		userinput.handle_input(SCRIPT_WINDOW,self,line)
+		userinput.handle_input(SCRIPT_WINDOW,self,line,True,True)
 
 	def execute_script_end(self,vtable):
 		global SCRIPT_WINDOW
