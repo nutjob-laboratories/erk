@@ -308,7 +308,7 @@ def connect(client):
 		obj = p.obj
 		obj.irc = client
 		if hasattr(obj,"connect"):
-			obj.connect(user)
+			obj.connect()
 		obj.irc = None
 
 def topic(client,channel,user,topic):
@@ -335,6 +335,14 @@ def invite(client,user,channel):
 			obj.invite(user,channel)
 		obj.irc = None
 
+def oper(client):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"oper"):
+			obj.oper()
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -359,6 +367,7 @@ EVENTS = [
 	"topic",
 	"nick",
 	"invite",
+	"oper",
 ]
 
 def check_for_bad_input(p):

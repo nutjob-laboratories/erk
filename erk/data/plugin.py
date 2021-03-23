@@ -165,6 +165,13 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def oper(self):
+		"""
+			Triggers when the user successfully logs into
+			an IRCOp account on the server.
+		"""
+		pass
+
 	def part(self,channel,user):
 		"""
 			Triggers when a user leaves a channel that Ərk

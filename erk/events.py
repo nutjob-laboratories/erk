@@ -1390,6 +1390,8 @@ def erk_nickname_in_use(gui,client,badnick):
 
 def erk_youre_oper(gui,client):
 
+	plugins.oper(client)
+
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )

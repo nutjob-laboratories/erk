@@ -113,6 +113,8 @@ Version 0.860
 	* New plugin event: topic()
 	* New plugin event: nick()
 	* New plugin event: invite()
+	* New plugin event: oper()
+	* Bugfix: plugin connect() was being called with an argument, when none is needed
 
 Version 0.850
 	* Changed the splash logo
