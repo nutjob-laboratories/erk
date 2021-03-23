@@ -109,6 +109,9 @@ Version 0.860
 	* Bugfix: some plugin events weren't detected properly
 	* Added a new icon for plugin modules
 	* Changed how plugins were entered into the plugin menu
+	* New plugin event: connect()
+	* New plugin event: topic()
+	* New plugin event: nick()
 
 Version 0.850
 	* Changed the splash logo

@@ -1162,6 +1162,9 @@ def received_whois(gui,client,whoisdata):
 			gui.current_page.writeText( Message(WHOIS_MESSAGE,whoisdata.nickname, "\x02"+whoisdata.privs+"\x0F"), True )
 
 def topic(gui,client,setter,channel,topic):
+
+	plugins.topic(client,channel,setter,topic)
+
 	p = setter.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1306,6 +1309,8 @@ def action_message(gui,client,target,user,message):
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 def nick(gui,client,oldnick,newnick):
+
+	plugins.nick(client,oldnick,newnick)
 
 	channels = where_is_user(client,oldnick)
 	msg = Message(SYSTEM_MESSAGE,'',oldnick+" is now known as "+newnick,None,TYPE_NICK)

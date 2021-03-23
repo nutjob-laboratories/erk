@@ -303,15 +303,37 @@ def ctcp(client,user,target,tag,message):
 			obj.ctcp(user,target,tag,message)
 		obj.irc = None
 
+def connect(client):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"connect"):
+			obj.connect(user)
+		obj.irc = None
+
+def topic(client,channel,user,topic):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"topic"):
+			obj.connect(channel,user,topic)
+		obj.irc = None
+
+def nick(client,oldnick,newnick):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"nick"):
+			obj.nick(oldnick,newnick)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
 	"action",
 	"input",
-	"output",
 	"mode",
 	"tick",
-	"input",
 	"notice",
 	"motd",
 	"registered",
@@ -325,6 +347,9 @@ EVENTS = [
 	"ctcp",
 	"line_in",
 	"line_out",
+	"connect",
+	"topic",
+	"nick",
 ]
 
 def check_for_bad_input(p):

@@ -15,7 +15,7 @@ class BlankPlugin(Plugin):
 
 	def action(self,target,user,message):
 		"""
-			Triggers when the client receives a CTCP Action message.
+			Triggers when Ərk receives a CTCP Action message.
 
 			target (string): the channel or nickname it was sent to
 			user (string): the user who sent the message
@@ -23,9 +23,17 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def connect(self):
+		"""
+			Triggers when Ərk connects to an IRC server. Please note
+			that you can't issue any IRC commands until registration
+			with the server is complete.
+		"""
+		pass
+
 	def ctcp(self,user,target,tag,message):
 		"""
-			Triggers when the client receives an otherwise unrecognized
+			Triggers when Ərk receives an otherwise unrecognized
 			CTCP message.
 
 			user (string): the user who sent the message
@@ -128,6 +136,16 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def nick(self,oldnick,newnick):
+		"""
+			Triggers whenever someone changes their nickname in
+			Ərk's "presence".
+
+			oldnick (string): the old nickname
+			newnick (string): the new nickname
+		"""
+		pass
+
 	def notice(self,target,user,message):
 		"""
 			Triggers when Ərk receives a notice message.
@@ -188,6 +206,18 @@ class BlankPlugin(Plugin):
 		"""
 			Triggers when Ərk completes connection with
 			an IRC server.
+		"""
+		pass
+
+	def topic(self,channel,user,topic):
+		"""
+			Triggers when Ərk receives a channel topic message. If
+			the user argument is a blank string, then the server
+			set the channel topic.
+
+			channel (string): the channel
+			user (string): the user that set the new channel topic
+			topic (string): the new topic
 		"""
 		pass
 

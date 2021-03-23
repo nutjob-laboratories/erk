@@ -276,6 +276,8 @@ class IRC_Connection(irc.IRCClient):
 
 		irc.IRCClient.connectionMade(self)
 
+		plugins.connect(self)
+
 	def connectionLost(self, reason):
 
 		if hasattr(self,"uptimeTimer"):
