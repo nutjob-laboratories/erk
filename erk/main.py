@@ -844,15 +844,12 @@ class Erk(QMainWindow):
 				else:
 					disabled = False
 
-				lmbd = (lambda u=p.filename: self.openFile(u))
 				if p.plugin_description()!=None:
-					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25,lmbd)
+					entry = MenuNoActionRaw(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
 				else:
-					entry = MenuAction(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25,lmbd)
+					entry = MenuNoActionRaw(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
 
 				m.addAction(entry)
-
-				m.addSeparator()
 
 				if disabled:
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)

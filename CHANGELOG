@@ -125,6 +125,7 @@ Version 0.860
 	* "Special" plugin class attributes are now all uppercase
 	* Added a new module attribute for plugins: PLUGIN (sets the name displayed in the menu)
 	* Fixed a bug in the example plugin code in the documentation
+	* Plugins in the "Plugins" menu are no longer "clickable"
 
 Version 0.850
 	* Changed the splash logo
