@@ -866,9 +866,27 @@ class Erk(QMainWindow):
 
 		self.pluginsMenu.addSeparator()
 
-		entry = QAction(QIcon(RESTART_ICON),"Reload all plugins",self)
+		entry = QAction(QIcon(ENABLE_ICON),"Enable all installed plugins",self)
+		entry.triggered.connect(self.enable_all_plugins)
+		self.pluginsMenu.addAction(entry)
+
+		entry = QAction(QIcon(BAN_ICON),"Disable all installed plugins",self)
+		entry.triggered.connect(self.disable_all_plugins)
+		self.pluginsMenu.addAction(entry)
+
+		entry = QAction(QIcon(REDO_ICON),"Load new plugins",self)
 		entry.triggered.connect(self.reloadPlugins)
 		self.pluginsMenu.addAction(entry)
+
+	def disable_all_plugins(self):
+		plugins.disable_all_plugins()
+		config.save_settings(self.configfile)
+		self.buildPluginMenu()
+
+	def enable_all_plugins(self):
+		plugins.enable_all_plugins()
+		config.save_settings(self.configfile)
+		self.buildPluginMenu()
 
 	def disable_plugin(self,plugin):
 		plugins.disable_plugin(plugin)

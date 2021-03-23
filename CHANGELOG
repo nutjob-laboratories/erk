@@ -119,6 +119,9 @@ Version 0.860
 	* Added the disabled plugin list *back* to the config file
 	* Bugfix: scripts no longer trigger the input() plugin event
 	* Plugins can now be en/disabled on a per plugin basis (so, in a multi-class plugin file, one class can be disabled and the other enabled)
+	* The client can now enable or disable all plugins at once
+	* Added the enable/disable all plugins functionality to the plugins menu
+	* Changed the text of the "Reload Plugins" menu entry to "Load new plugins"
 
 Version 0.850
 	* Changed the splash logo

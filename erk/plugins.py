@@ -156,6 +156,17 @@ def disable_plugin(entry):
 		if e==entry.id(): return
 	config.DISABLED_PLUGINS.append(entry.id())
 
+def enable_all_plugins():
+	for p in PLUGINS:
+		try:
+			config.DISABLED_PLUGINS.remove(p.id())
+		except:
+			pass
+
+def disable_all_plugins():
+	for p in PLUGINS:
+		disable_plugin(p)
+
 def enable_plugin(entry):
 	clean = []
 	for e in config.DISABLED_PLUGINS:
