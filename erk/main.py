@@ -826,8 +826,11 @@ class Erk(QMainWindow):
 
 		for file in files:
 
-			bn = os.path.basename(file)
-			m = self.pluginsMenu.addMenu(QIcon(PLUGIN_ICON),bn)
+			e = (files[file][:1] or [None])[0]
+			pname = e.package
+			if pname==None: pname = os.path.basename(file)
+
+			m = self.pluginsMenu.addMenu(QIcon(PLUGIN_ICON),pname)
 
 			for p in files[file]:
 
@@ -866,11 +869,11 @@ class Erk(QMainWindow):
 
 		self.pluginsMenu.addSeparator()
 
-		entry = QAction(QIcon(ENABLE_ICON),"Enable all installed plugins",self)
+		entry = QAction(QIcon(ENABLE_ICON),"Enable all plugins",self)
 		entry.triggered.connect(self.enable_all_plugins)
 		self.pluginsMenu.addAction(entry)
 
-		entry = QAction(QIcon(BAN_ICON),"Disable all installed plugins",self)
+		entry = QAction(QIcon(BAN_ICON),"Disable all plugins",self)
 		entry.triggered.connect(self.disable_all_plugins)
 		self.pluginsMenu.addAction(entry)
 

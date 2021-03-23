@@ -1,17 +1,19 @@
 from erk import *
 
+PLUGIN = "Generated Plugin"
+
 class BlankPlugin(Plugin):
 	"""
 		This is a basic "blank" Ərk plugin with all the
 		event methods available. Just change the name of
-		the class, change the "name", "version", and
-		"description" class attributes, and you're half-
+		the class, change the "NAME", "VERSION", and
+		"DESCRIPTION" class attributes, and you're half-
 		way to writing an Ərk plugin!
 	"""
 
-	name = "Blank Plugin"
-	version = "1.0"
-	description = "This is a blank plugin"
+	NAME = "Blank Plugin"
+	VERSION = "1.0"
+	DESCRIPTION = "This is a blank plugin"
 
 	def action(self,target,user,message):
 		"""

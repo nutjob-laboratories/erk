@@ -122,6 +122,9 @@ Version 0.860
 	* The client can now enable or disable all plugins at once
 	* Added the enable/disable all plugins functionality to the plugins menu
 	* Changed the text of the "Reload Plugins" menu entry to "Load new plugins"
+	* "Special" plugin class attributes are now all uppercase
+	* Added a new module attribute for plugins: PLUGIN (sets the name displayed in the menu)
+	* Fixed a bug in the example plugin code in the documentation
 
 Version 0.850
 	* Changed the splash logo

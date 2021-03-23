@@ -469,6 +469,12 @@ class PluginEntry():
 
 		self.number_of_events = 0
 
+		module = inspect.getmodule(self.obj)
+		if hasattr(module,"PLUGIN"):
+			self.package = module.PLUGIN
+		else:
+			self.package = None
+
 	def module_name(self):
 		return self.pclass.__module__
 
@@ -479,13 +485,13 @@ class PluginEntry():
 		return self.pclass.__module__+"."+self.pclass.__name__
 
 	def plugin_name(self):
-		return self.obj.name
+		return self.obj.NAME
 
 	def plugin_version(self):
-		return self.obj.version
+		return self.obj.VERSION
 
 	def plugin_description(self):
-		if hasattr(self.obj,"description"): return self.obj.description
+		if hasattr(self.obj,"DESCRIPTION"): return self.obj.DESCRIPTION
 		return None
 
 def load_plugins(are_plugins_blocked,additional_locations):
@@ -518,16 +524,16 @@ def load_plugins(are_plugins_blocked,additional_locations):
 
 		# Make sure the class has any required attributes
 		had_error = False
-		if not hasattr(obj,"name"):
+		if not hasattr(obj,"NAME"):
 			entry.errors.append("No name attribute")
 			had_error = True
 		else:
-			n = obj.name.strip()
+			n = obj.NAME.strip()
 			if len(n)==0:
 				entry.errors.append("Name entry is blank")
 				had_error = True
 
-		if not hasattr(obj,"version"):
+		if not hasattr(obj,"VERSION"):
 			entry.errors.append("No version attribute")
 			had_error = True
 
