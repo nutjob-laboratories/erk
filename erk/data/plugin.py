@@ -58,6 +58,15 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def invite(self,user,channel):
+		"""
+			Triggers when Ərk receives a channel invite.
+
+			user (string): the user that sent the invite
+			channel (string): the channel
+		"""
+		pass
+
 	def join(self,channel,user):
 		"""
 			Triggers when a user joins a channel that Ərk

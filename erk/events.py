@@ -1345,6 +1345,8 @@ def nick(gui,client,oldnick,newnick):
 
 def erk_invited(gui,client,sender,channel):
 
+	plugins.invite(client,sender,channel)
+
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',sender+" invited you to "+channel,None,TYPE_INVITE) )

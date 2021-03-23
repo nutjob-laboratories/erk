@@ -327,6 +327,14 @@ def nick(client,oldnick,newnick):
 			obj.nick(oldnick,newnick)
 		obj.irc = None
 
+def invite(client,user,channel):
+	for p in PLUGINS:
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"invite"):
+			obj.invite(user,channel)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -350,6 +358,7 @@ EVENTS = [
 	"connect",
 	"topic",
 	"nick",
+	"invite",
 ]
 
 def check_for_bad_input(p):

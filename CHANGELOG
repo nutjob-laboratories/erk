@@ -112,6 +112,7 @@ Version 0.860
 	* New plugin event: connect()
 	* New plugin event: topic()
 	* New plugin event: nick()
+	* New plugin event: invite()
 
 Version 0.850
 	* Changed the splash logo
