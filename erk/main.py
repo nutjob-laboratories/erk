@@ -730,6 +730,24 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,HIDE_ICON,"Ignore Manager","Add and remove ignore list entries",25,self.menuIgnore)
 			self.toolsMenu.addAction(entry)
 
+		# Plugins menu
+
+		plugins_enabled = True
+		if self.block_plugins: plugins_enabled = False
+		if not config.ENABLE_PLUGINS: plugins_enabled = False
+
+		if plugins_enabled:
+			if config.SHOW_PLUGINS_MENU:
+				if len(plugins.PLUGINS)>0:
+
+					if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+						self.pluginsMenu = self.menubar.addMenu("Plugins")
+					else:
+						self.pluginsMenu.clear()
+						add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
+
+					self.buildPluginMenu()
+
 		# Help menu
 
 		if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
@@ -778,24 +796,6 @@ class Erk(QMainWindow):
 		helpLink = QAction(QIcon(LINK_ICON),"List of emoji shortcodes",self)
 		helpLink.triggered.connect(lambda state,u="https://www.webfx.com/tools/emoji-cheat-sheet/": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
-
-		# Plugins menu
-
-		plugins_enabled = True
-		if self.block_plugins: plugins_enabled = False
-		if not config.ENABLE_PLUGINS: plugins_enabled = False
-
-		if plugins_enabled:
-			if config.SHOW_PLUGINS_MENU:
-				if len(plugins.PLUGINS)>0:
-
-					if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-						self.pluginsMenu = self.menubar.addMenu("Plugins")
-					else:
-						self.pluginsMenu.clear()
-						add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
-
-					self.buildPluginMenu()
 
 		if not USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
 
@@ -849,6 +849,24 @@ class Erk(QMainWindow):
 				else:
 					entry = MenuNoActionRaw(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
 
+				m.addAction(entry)
+
+				entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;"+p.id()+"</small>" )
+				entry = QWidgetAction(self)
+				entry.setDefaultWidget(entryLabel)
+				m.addAction(entry)
+
+				if p.events==1:
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" event</small>" )
+				else:
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" events</small>" )
+				entry = QWidgetAction(self)
+				entry.setDefaultWidget(entryLabel)
+				m.addAction(entry)
+
+				entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Size: "+str(p.size)+"B</small>" )
+				entry = QWidgetAction(self)
+				entry.setDefaultWidget(entryLabel)
 				m.addAction(entry)
 
 				if disabled:
