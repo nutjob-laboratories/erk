@@ -130,6 +130,7 @@ Version 0.860
 	* Changed plugin menu display, so more information about plugins is shown
 	* Added an option to show/hide plugin details in the plugins menu
 	* Added the show/hide plugin details to the "settings" dialog
+	* Plugin "details" now shows more...details :-P
 
 Version 0.850
 	* Changed the splash logo

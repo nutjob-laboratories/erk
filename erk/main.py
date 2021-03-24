@@ -832,14 +832,12 @@ class Erk(QMainWindow):
 			pname = e.package
 			if pname==None: pname = os.path.basename(file)
 
-			m = self.pluginsMenu.addMenu(QIcon(PLUGIN_ICON),pname)
+			ico = e.icon
+			if ico==None: ico = PLUGIN_MENU_ICON
+
+			m = self.pluginsMenu.addMenu(QIcon(ico),pname)
 
 			for p in files[file]:
-
-				if p.icon:
-					ico = p.icon
-				else:
-					ico = PLUGIN_MENU_ICON
 
 				if plugins.is_plugin_disabled(p):
 					disabled = True
@@ -847,28 +845,35 @@ class Erk(QMainWindow):
 					disabled = False
 
 				if p.plugin_description()!=None:
-					entry = MenuNoActionRaw(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
+					entry = MenuNoActionRaw(self,PLUGIN_ICON,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
 				else:
-					entry = MenuNoActionRaw(self,ico,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
+					entry = MenuNoActionRaw(self,PLUGIN_ICON,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
 
 				m.addAction(entry)
 
 				if config.SHOW_PLUGIN_INFO_IN_MENU:
 
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;"+p.id()+"</small>" )
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>File:</b> "+os.path.basename(file)+"</small>" )
 					entry = QWidgetAction(self)
 					entry.setDefaultWidget(entryLabel)
 					m.addAction(entry)
 
-					if p.events==1:
-						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" event</small>" )
-					else:
-						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" events</small>" )
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Class:</b> "+p.class_name()+"</small>" )
 					entry = QWidgetAction(self)
 					entry.setDefaultWidget(entryLabel)
 					m.addAction(entry)
 
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Size: "+str(p.size)+"B</small>" )
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Size:</b> "+str(convert_size(os.path.getsize(file)))+"</small>" )
+					entry = QWidgetAction(self)
+					entry.setDefaultWidget(entryLabel)
+					m.addAction(entry)
+
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Memory:</b> "+str(convert_size(p.size))+"</small>" )
+					entry = QWidgetAction(self)
+					entry.setDefaultWidget(entryLabel)
+					m.addAction(entry)
+
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Events:</b> "+str(p.events)+"</b></small>" )
 					entry = QWidgetAction(self)
 					entry.setDefaultWidget(entryLabel)
 					m.addAction(entry)

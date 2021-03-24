@@ -476,8 +476,11 @@ class PluginEntry():
 			self.package = None
 
 		self.events = 0
+		self.event_list = []
 		for e in EVENTS:
-			if hasattr(self.obj,e): self.events = self.events + 1
+			if hasattr(self.obj,e):
+				self.events = self.events + 1
+				self.event_list.append(e)
 
 		self.size = get_size(self.obj)
 
