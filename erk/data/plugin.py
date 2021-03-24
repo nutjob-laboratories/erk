@@ -1,6 +1,6 @@
 from erk import *
 
-PLUGIN = "Generated Plugin"
+_ERK_PLUGIN_ = "Generated Plugin"
 
 class BlankPlugin(Plugin):
 	"""

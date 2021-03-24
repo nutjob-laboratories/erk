@@ -131,6 +131,9 @@ Version 0.860
 	* Added an option to show/hide plugin details in the plugins menu
 	* Added the show/hide plugin details to the "settings" dialog
 	* Plugin "details" now shows more...details :-P
+	* Change to the plugin API (PLUGIN module attribute is now _ERK_PLUGIN_)
+	* Plugins can now have individual icons for both the module *and* and classes
+	* Updated the documentation with the new changes
 
 Version 0.850
 	* Changed the splash logo

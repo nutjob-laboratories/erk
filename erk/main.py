@@ -844,10 +844,15 @@ class Erk(QMainWindow):
 				else:
 					disabled = False
 
-				if p.plugin_description()!=None:
-					entry = MenuNoActionRaw(self,PLUGIN_ICON,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
+				if p.class_icon!=None:
+					icon = p.class_icon
 				else:
-					entry = MenuNoActionRaw(self,PLUGIN_ICON,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
+					icon = PLUGIN_ICON
+
+				if p.plugin_description()!=None:
+					entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
+				else:
+					entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
 
 				m.addAction(entry)
 

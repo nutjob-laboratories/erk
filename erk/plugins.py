@@ -470,8 +470,8 @@ class PluginEntry():
 		self.number_of_events = 0
 
 		module = inspect.getmodule(self.obj)
-		if hasattr(module,"PLUGIN"):
-			self.package = module.PLUGIN
+		if hasattr(module,"_ERK_PLUGIN_"):
+			self.package = module._ERK_PLUGIN_
 		else:
 			self.package = None
 
@@ -483,6 +483,12 @@ class PluginEntry():
 				self.event_list.append(e)
 
 		self.size = get_size(self.obj)
+
+		classicon = os.path.join(os.path.dirname(self.filename), self.pclass.__name__+".png")
+		if os.path.isfile(classicon):
+			self.class_icon = classicon
+		else:
+			self.class_icon = None
 
 	def module_name(self):
 		return self.pclass.__module__
