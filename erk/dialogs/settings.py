@@ -1021,10 +1021,14 @@ class Dialog(QDialog):
 		self.igPlugins = QCheckBox("Plugins catch ignored messages",self)
 		if config.PLUGINS_CATCH_IGNORES: self.igPlugins.setChecked(True)
 
+		self.detPlugins = QCheckBox("Show plugin details in menu",self)
+		if config.SHOW_PLUGIN_INFO_IN_MENU: self.detPlugins.setChecked(True)
+
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
 		plugLayout.addWidget(self.igPlugins)
+		plugLayout.addWidget(self.detPlugins)
 
 		plugBox = QGroupBox("Plugins",self)
 		plugBox.setLayout(plugLayout)
@@ -1190,6 +1194,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.SHOW_PLUGIN_INFO_IN_MENU = self.detPlugins.isChecked()
 
 		config.ALWAYS_ALLOW_ME = self.inputMe.isChecked()
 
@@ -1578,6 +1584,7 @@ class Dialog(QDialog):
 				self.noteTopic.setChecked(config.HIDE_TOPIC_MESSAGE)
 				self.noteMode.setChecked(config.HIDE_MODE_DISPLAY)
 				self.inputMe.setChecked(config.ALWAYS_ALLOW_ME)
+				self.detPlugins.setChecked(config.SHOW_PLUGIN_INFO_IN_MENU)
 
 			else:
 				msg = QMessageBox(self)

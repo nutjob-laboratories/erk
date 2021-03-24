@@ -824,6 +824,8 @@ class Erk(QMainWindow):
 			else:
 				files[p.filename] = [p]
 
+		
+
 		for file in files:
 
 			e = (files[file][:1] or [None])[0]
@@ -851,23 +853,25 @@ class Erk(QMainWindow):
 
 				m.addAction(entry)
 
-				entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;"+p.id()+"</small>" )
-				entry = QWidgetAction(self)
-				entry.setDefaultWidget(entryLabel)
-				m.addAction(entry)
+				if config.SHOW_PLUGIN_INFO_IN_MENU:
 
-				if p.events==1:
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" event</small>" )
-				else:
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" events</small>" )
-				entry = QWidgetAction(self)
-				entry.setDefaultWidget(entryLabel)
-				m.addAction(entry)
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;"+p.id()+"</small>" )
+					entry = QWidgetAction(self)
+					entry.setDefaultWidget(entryLabel)
+					m.addAction(entry)
 
-				entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Size: "+str(p.size)+"B</small>" )
-				entry = QWidgetAction(self)
-				entry.setDefaultWidget(entryLabel)
-				m.addAction(entry)
+					if p.events==1:
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" event</small>" )
+					else:
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Catches "+str(p.events)+" events</small>" )
+					entry = QWidgetAction(self)
+					entry.setDefaultWidget(entryLabel)
+					m.addAction(entry)
+
+					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;Size: "+str(p.size)+"B</small>" )
+					entry = QWidgetAction(self)
+					entry.setDefaultWidget(entryLabel)
+					m.addAction(entry)
 
 				if disabled:
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)

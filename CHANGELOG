@@ -128,6 +128,8 @@ Version 0.860
 	* Plugins in the "Plugins" menu are no longer "clickable"
 	* Moved the "Plugins" menu to before the "Help" menu
 	* Changed plugin menu display, so more information about plugins is shown
+	* Added an option to show/hide plugin details in the plugins menu
+	* Added the show/hide plugin details to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo
