@@ -59,6 +59,10 @@ class Plugin():
 
 	irc = None
 
+	def uptime(self):
+		if self.irc: return events.get_uptime(self.irc)
+		return None
+
 	def server(self):
 		server = None
 		if self.irc:

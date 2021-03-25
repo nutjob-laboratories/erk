@@ -136,6 +136,7 @@ Version 0.860
 	* Updated the documentation with the new changes
 	* Two new plugin events: op() and deop()
 	* Two new plugin events: voice() and devoice()
+	* New built-in plugin method: uptime()
 
 Version 0.850
 	* Changed the splash logo

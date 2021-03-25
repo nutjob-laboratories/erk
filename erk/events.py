@@ -1487,6 +1487,9 @@ def erk_joined_channel(gui,client,channel):
 
 	plugins.joined(client,channel)
 
+def get_uptime(client):
+	return client.gui.uptimers[client.id]
+
 def uptime(gui,client,uptime):
 
 	# if not client.gui.block_plugins:
