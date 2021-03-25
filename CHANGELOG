@@ -137,6 +137,8 @@ Version 0.860
 	* Two new plugin events: op() and deop()
 	* Two new plugin events: voice() and devoice()
 	* New built-in plugin method: uptime()
+	* New built-in plugin method: current()
+	* Added a note to the plugin docs that script() executes the Erk script in a separate thread, just like /script
 
 Version 0.850
 	* Changed the splash logo

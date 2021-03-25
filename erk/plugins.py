@@ -83,6 +83,12 @@ class Plugin():
 				retval.append(w.name)
 		return retval
 
+	def current(self):
+		if self.irc:
+			w = events.fetch_current_window(self.irc.gui)
+			if w:
+				return w.name
+
 	def print(self,*args):
 		if self.irc:
 			w = events.fetch_current_window(self.irc.gui)
