@@ -82,6 +82,7 @@
    * Plugins are stored in a user's home directory
    * Most IRC events can be caught
    * [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
+   * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!
 * An extensive set of command-line flags, allowing for _even more_ configuration options
   * Disable most features on startup
   * Connect to an IRC server from the command-line
@@ -232,6 +233,29 @@ When I started writing **Ərk**, one of my goals was to make it as configurable 
  - **`logs`** - This is where **Ərk** stores all chat logs. Logs are stored in JSON, and use a format specific to **Ərk**. If you want to export your logs, use the "Export Log" entry in the "Settings & Tools" menu, or launch **Ərk** with `python erk.py --export` to launch a GUI log export wizard. You can export them to plain text (with your choice of delimiters) or to JSON.
  - **`plugins`** - This is where **Ərk** stores and loads plugins from. Installing a plugin is as easy as placing it in this directory.
 
+## How do you write plugins for Ərk?
+
+It's easy! **Ərk** plugins are written in Python 3, the same language that **Ərk** is written in. At its core, a  plugin is just a Python 3 class that inherits from a parent class built into **Ərk**. Here's a basic example. All it does is print all incoming and outgoing IRC traffic to the console:
+```python
+from erk import *
+
+class ExamplePlugin(Plugin):
+
+  NAME = "Example Plugin"
+  VERSION = "1.0"
+  DESCRIPTION = "Displays all IRC network traffic"
+
+  def line_in(self,data):
+    print("<- "+data)
+
+  def line_out(self,data):
+    print("-> "+data)
+```
+Everything you need to write your own **Ərk** plugins is in the [**Ərk** Plugin Guide](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf), included with every download!
+
+## Some of the options are weird...why is there a profanity filter?!
+Both my parents were teachers, and all of my grandparents were teachers. Having the ability to configure **Ərk** to run in a classroom environment was (and is) one of my goals. That's part of the reason why I've included configuration options to "lock down" **Ərk** while it's running (like the ability to disable command input, remove GUI menus, disable most customization and features, and, yes, hide profanity).
+
 ## Another IRC client? Why not use HexChat?
 
 Honestly? I wanted an IRC client that I liked using, and I wanted an IRC client that I could use in both Windows and Linux. Other than some "connects to every kind of chat network" clients, I didn't have a lot of choices. Since the only kind of chat I regularly use is IRC, I didn't care if the client could connect to Jabber, Facebook, or whatever. That left me (in my opinion) with only one choice: HexChat.
@@ -242,10 +266,12 @@ Since I couldn't find that IRC client, I decided to write my own.
 
 When I decided to write a new IRC client, I wanted it to feature a few things:
 
-* It had to be open source (free as in speech and as in beer)
+* It had to be open source (free as in speech _and_ as in beer)
 * The ability to connect to multiple servers at a time (something almost every open source client does)
 * A full, modern GUI (HexChat is sort of modern, I guess, if was still 1999-2000)
 * Easy to install, easy to run (if you're trying to compile HexChat for Windows, good luck, you'll need it)
+* Cross-platform compatibility; the ability to run on Windows, Linux, and OSX 
+* The ability to extend the client _easily_, without having to track down a bunch of forum and blog posts
 * Focuses on the chat experience (not downloading/uploading files)
 
 **Ərk** is being developed on primarily on Linux (and occasionally on Windows 10), but it uses no Windows-specific or Linux-specific libraries or functionality. It's written in pure Python3 and PyQt5, and installing it as easy as cloning this repository, making sure you have Python3 and the other pre-requisites installed, and executing `python erk.py`. It does IRC, and nothing else, and it looks good doing it.
