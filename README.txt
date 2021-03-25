@@ -200,7 +200,7 @@ The previous name for this client was "Quirc", but after working on it for a whi
 
 ## Can I use **Ərk** to chat on IRC?
 
-Yes! Most basic functionality is done, and it's ready for most IRC stuff.
+Yes! Most basic functionality is done, and it's ready for most IRC stuff. If  you're just looking for a client to chat, and don't really care about the "bells and whistles", then **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
@@ -208,7 +208,8 @@ No. I'm still adding features and tracking down and squashing bugs.
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 
-**Ərk** runs on both Windows and Linux! It's being developed on Windows 10, but it's been tested (and runs great) on Debian, Ubuntu, and Mint Linux. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
+**Ərk** runs on both Windows and Linux! Now, it's being developed primarily on Linux, but when I first started development I was using Windows 10, and **Ərk** runs flawlessly (and identically) on both platforms. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
+My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.9.0, and I use [Sublime Text 3](https://www.sublimetext.com/) for my code editor.
 
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
