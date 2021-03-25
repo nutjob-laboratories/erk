@@ -962,12 +962,16 @@ def mode(gui,client,channel,user,mset,modes,args):
 			if mset:
 				if n:
 					msg = Message(SYSTEM_MESSAGE,'',f"{user} granted {channel} voiced status to {n}",None,TYPE_MODE)
+					if n==client.nickname:
+						plugins.voice(client,user,channel)
 				else:
 					msg = None
 			else:
 				if n:
 					#msg = f"{user} took {channel} operator status from {n}"
 					msg = Message(SYSTEM_MESSAGE,'',f"{user} took {channel} voiced status from {n}",None,TYPE_MODE)
+					if n==client.nickname:
+						plugins.devoice(client,user,channel)
 				else:
 					msg = None
 			if msg:

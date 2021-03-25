@@ -54,6 +54,15 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def devoice(self,user,channel):
+		"""
+			Trigers when Ərk loses voiced status in a channel
+
+			user (string): the user who removed voiced status
+			channel (string): the channel
+		"""
+		pass
+
 	def input(self,window,text):
 		"""
 			Triggers when a user enters text into the text entry
@@ -264,5 +273,14 @@ class BlankPlugin(Plugin):
 
 			uptime (integer): how many seconds Ərk has been connected
 			                  to the server that triggered the event.
+		"""
+		pass
+
+	def voice(self,user,channel):
+		"""
+			Trigers when Ərk gains voiced status in a channel
+
+			user (string): the user who granted voiced status
+			channel (string): the channel
 		"""
 		pass

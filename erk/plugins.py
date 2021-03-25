@@ -414,6 +414,24 @@ def deop(client,user,channel):
 			obj.deop(user,channel)
 		obj.irc = None
 
+def voice(client,user,channel):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"voice"):
+			obj.voice(user,channel)
+		obj.irc = None
+
+def devoice(client,user,channel):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"devoice"):
+			obj.devoice(user,channel)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -441,6 +459,8 @@ EVENTS = [
 	"oper",
 	"op",
 	"deop",
+	"voice",
+	"devoice",
 ]
 
 def check_for_bad_input(p):
