@@ -124,6 +124,10 @@ class Dialog(QDialog):
 		qr_credit.setAlignment(Qt.AlignCenter)
 		qr_credit.setOpenExternalLinks(True)
 
+		pike_credit = QLabel(f"<a href=\"https://github.com/pyarmory/pike\"><small>pike</small></a> <small>by <a href=\"https://github.com/pyarmory\">PyArmory</a></small>")
+		pike_credit.setAlignment(Qt.AlignCenter)
+		pike_credit.setOpenExternalLinks(True)
+
 		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</i></small>")
 		platform_credit.setAlignment(Qt.AlignCenter)
 
@@ -161,6 +165,7 @@ class Dialog(QDialog):
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(qr_credit)
+		creditsLayout.addWidget(pike_credit)
 		creditsBox.setLayout(creditsLayout)
 
 		okButton = QPushButton("Ok")
