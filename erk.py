@@ -198,9 +198,10 @@ if __name__ == '__main__':
 			print("\""+args.styles+"\" directory created!")
 
 	if args.plugins:
-		if not os.path.isdir(args.plugins):
-			os.mkdir(args.plugins)
-			print("\""+args.plugins+"\" directory created!")
+		for p in args.plugins:
+			if not os.path.isdir(p):
+				print("Can't load plugins from \""+p+"\", directory doesn't exist")
+				sys.exit(1)
 
 	# Handle the log export dialog
 	if args.xlog:

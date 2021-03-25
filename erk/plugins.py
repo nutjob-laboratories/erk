@@ -540,6 +540,15 @@ class PluginEntry():
 		else:
 			self.class_icon = None
 
+		if PLUGIN_DIRECTORY in self.filename:
+			# This checks to see if the plugin is just a directory
+			# in the user's HOME plugin directory
+			self.relative_path = os.path.relpath(self.directory,PLUGIN_DIRECTORY)
+			self.is_home_plugin = True
+		else:
+			self.relative_path = None
+			self.is_home_plugin = False
+
 	def module_name(self):
 		return self.pclass.__module__
 

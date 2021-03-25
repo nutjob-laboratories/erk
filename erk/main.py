@@ -883,6 +883,12 @@ class Erk(QMainWindow):
 					entry.setDefaultWidget(entryLabel)
 					m.addAction(entry)
 
+					if not p.is_home_plugin:
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Loaded from an external source</b></small>" )
+						entry = QWidgetAction(self)
+						entry.setDefaultWidget(entryLabel)
+						m.addAction(entry)
+
 				if disabled:
 					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
 					entry.triggered.connect(lambda state,u=p: self.enable_plugin(u))
@@ -904,10 +910,6 @@ class Erk(QMainWindow):
 
 		entry = QAction(QIcon(BAN_ICON),"Disable all plugins",self)
 		entry.triggered.connect(self.disable_all_plugins)
-		self.pluginsMenu.addAction(entry)
-
-		entry = QAction(QIcon(REDO_ICON),"Load new plugins",self)
-		entry.triggered.connect(self.reloadPlugins)
 		self.pluginsMenu.addAction(entry)
 
 	def disable_all_plugins(self):

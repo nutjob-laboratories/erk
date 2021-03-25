@@ -139,6 +139,10 @@ Version 0.860
 	* New built-in plugin method: uptime()
 	* New built-in plugin method: current()
 	* Added a note to the plugin docs that script() executes the Erk script in a separate thread, just like /script
+	* Bugfix: wasn't checking for the existance of plugin directories properly
+	* Plugin details will now show if the plugin was loaded from an external source (ie not from .erk/plugins)
+	* Removed the "reload new plugins" option from the "Plugins" menu
+	* erk.py will now exit if a plugin directory is passed to it that doesn't exist
 
 Version 0.850
 	* Changed the splash logo
