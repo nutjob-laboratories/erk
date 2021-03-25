@@ -396,6 +396,24 @@ def oper(client):
 			obj.oper()
 		obj.irc = None
 
+def op(client,user,channel):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"op"):
+			obj.op(user,channel)
+		obj.irc = None
+
+def deop(client,user,channel):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		obj.irc = client
+		if hasattr(obj,"deop"):
+			obj.deop(user,channel)
+		obj.irc = None
+
 EVENTS = [
 	"public",
 	"private",
@@ -421,6 +439,8 @@ EVENTS = [
 	"nick",
 	"invite",
 	"oper",
+	"op",
+	"deop",
 ]
 
 def check_for_bad_input(p):

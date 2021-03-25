@@ -134,6 +134,7 @@ Version 0.860
 	* Change to the plugin API (PLUGIN module attribute is now _ERK_PLUGIN_)
 	* Plugins can now have individual icons for both the module *and* and classes
 	* Updated the documentation with the new changes
+	* Two new plugin events: op() and deop()
 
 Version 0.850
 	* Changed the splash logo

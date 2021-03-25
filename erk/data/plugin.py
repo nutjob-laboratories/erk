@@ -45,6 +45,15 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def deop(self,user,channel):
+		"""
+			Trigers when Ərk loses channel operator status.
+
+			user (string): the user who removed operator status
+			channel (string): the channel
+		"""
+		pass
+
 	def input(self,window,text):
 		"""
 			Triggers when a user enters text into the text entry
@@ -161,9 +170,18 @@ class BlankPlugin(Plugin):
 		"""
 			Triggers when Ərk receives a notice message.
 
-			target (string): the targer of the message (may be a channel or nickname)
+			target (string): the target of the message (may be a channel or nickname)
 			user (string): the user that sent the message
 			message (string): the message
+		"""
+		pass
+
+	def op(self,user,channel):
+		"""
+			Trigers when Ərk receives channel operator status.
+
+			user (string): the user who granted operator status
+			channel (string): the channel
 		"""
 		pass
 
