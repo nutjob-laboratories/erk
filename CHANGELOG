@@ -144,6 +144,7 @@ Version 0.860
 	* Removed the "reload new plugins" option from the "Plugins" menu
 	* erk.py will now exit if a plugin directory is passed to it that doesn't exist
 	* Added pike (and PyArmory) to the about credits
+	* Added a "reload new plugins" option to the "Settings" menu
 
 Version 0.850
 	* Changed the splash logo

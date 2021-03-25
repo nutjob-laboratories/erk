@@ -692,6 +692,9 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
+			entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
+			self.settingsMenu.addAction(entry)
+
 			self.winsizeMenuEntry = MenuAction(self,RESIZE_WINDOW_ICON,"Window size","Set initial window size",25,self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
 
@@ -900,8 +903,6 @@ class Erk(QMainWindow):
 
 				m.addSeparator()
 
-
-
 		self.pluginsMenu.addSeparator()
 
 		entry = QAction(QIcon(ENABLE_ICON),"Enable all plugins",self)
@@ -936,6 +937,10 @@ class Erk(QMainWindow):
 		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 		if len(plugin_load_errors)>0:
 			ErrorDialog(self,plugin_load_errors)
+
+		x = Blank()
+		x.show()
+		x.close()
 
 		self.buildMenuInterface()
 
