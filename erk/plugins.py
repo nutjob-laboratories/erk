@@ -53,11 +53,32 @@ from .userinput import(
 )
 from .irc import ScriptThreadWindow
 
+from .dialogs.plugin_input import Dialog as GetInput
+
 PLUGINS = []
 
 class Plugin():
 
 	irc = None
+	__class_icon = None
+	__class_file = None
+	__plugin_icon = None
+	__plugin_directory = None
+
+	def ask(self,text):
+		if self.irc:
+			if self.__class_icon:
+				icon = self.__class_icon
+			else:
+				if self.__plugin_icon:
+					icon = self.__plugin_icon
+				else:
+					icon = None
+
+			x = GetInput(self.NAME,text,icon,self.irc.gui)
+			res = x.get_input_information(self.NAME,text,icon,self.irc.gui)
+
+			return res
 
 	def switch(self,window):
 		if self.irc:
@@ -202,68 +223,83 @@ def enable_plugin(entry):
 		clean.append(e)
 	config.DISABLED_PLUGINS = clean
 
+def inject_plugin(obj,p,client):
+	obj.irc = client
+	obj._Plugin__class_icon = p.class_icon
+	obj._Plugin__class_file = p.filename
+	obj._Plugin__plugin_icon = p.icon
+	obj._Plugin__plugin_directory = p.directory
+
+def cleanup_plugin(obj):
+	obj.irc = None
+	obj._Plugin__class_icon = None
+	obj._Plugin__class_file = None
+	obj._Plugin__plugin_icon = None
+	obj._Plugin__plugin_directory = None
+
+
 def public_message(client,channel,user,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"public"):
 			obj.public(channel,user,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def private_message(client,user,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"private"):
 			obj.private(user,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def action_message(client,target,user,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"action"):
 			obj.action(target,user,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def line_in(client,data):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"line_in"):
 			obj.line_in(data)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def line_out(client,data):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"line_out"):
 			obj.line_out(data)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def mode_message(client,channel,user,mset,modes,args):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"mode"):
 			obj.mode(channel,user,mset,modes,args)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def tick(client,uptime):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"tick"):
 			obj.tick(uptime)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def input(client,window,text):
 	result = False
@@ -274,191 +310,191 @@ def input(client,window,text):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"input"):
 			result = obj.input(name,text)
-		obj.irc = None
+		cleanup_plugin(obj)
 		if result: return result
 
 def notice_message(client,target,user,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"notice"):
 			obj.notice(target,user,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def motd(client,smotd):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"motd"):
 			obj.motd(smotd)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def registered(client):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"registered"):
 			obj.registered()
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def join(client,channel,user):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"join"):
 			obj.join(channel,user)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def part(client,channel,user):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"part"):
 			obj.part(channel,user)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def joined(client,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"joined"):
 			obj.joined(channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def parted(client,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"parted"):
 			obj.parted(channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def kick(client,channel,kickee,kicker,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"kick"):
 			obj.kick(channel,kickee,kicker,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def kicked(client,channel,kicker,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"kicked"):
 			obj.kicked(channel,kicker,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def quit(client,nick,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"quit"):
 			obj.quit(nick,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def ctcp(client,user,target,tag,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"ctcp"):
 			obj.ctcp(user,target,tag,message)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def connect(client):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"connect"):
 			obj.connect()
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def topic(client,channel,user,topic):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"topic"):
 			obj.connect(channel,user,topic)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def nick(client,oldnick,newnick):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"nick"):
 			obj.nick(oldnick,newnick)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def invite(client,user,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"invite"):
 			obj.invite(user,channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def oper(client):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"oper"):
 			obj.oper()
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def op(client,user,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"op"):
 			obj.op(user,channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def deop(client,user,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"deop"):
 			obj.deop(user,channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def voice(client,user,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"voice"):
 			obj.voice(user,channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 def devoice(client,user,channel):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj
-		obj.irc = client
+		inject_plugin(obj,p,client)
 		if hasattr(obj,"devoice"):
 			obj.devoice(user,channel)
-		obj.irc = None
+		cleanup_plugin(obj)
 
 EVENTS = [
 	"public",

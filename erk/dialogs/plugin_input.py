@@ -35,8 +35,6 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from ..resources import *
-# from ..objects import *
-# from .. import config
 
 class Dialog(QDialog):
 
@@ -69,14 +67,11 @@ class Dialog(QDialog):
 		else:
 			self.setWindowIcon(QIcon(ERK_ICON))
 
-		# print(self.parent._icon)
-		#print(self.parent)
-
-		nameLayout = QHBoxLayout()
 		self.nameLabel = QLabel(self.text)
 		self.name = QLineEdit()
+
+		nameLayout = QVBoxLayout()
 		nameLayout.addWidget(self.nameLabel)
-		nameLayout.addStretch()
 		nameLayout.addWidget(self.name)
 
 		# Buttons

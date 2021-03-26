@@ -146,6 +146,8 @@ Version 0.860
 	* Added pike (and PyArmory) to the about credits
 	* Added a "reload new plugins" option to the "Settings" menu
 	* New built-in method: switch()
+	* Figured out a way to monkeypatch in various environment settings into running plugin classes
+	* New built-in method: ask()
 
 Version 0.850
 	* Changed the splash logo
