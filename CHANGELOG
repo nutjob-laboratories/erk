@@ -148,6 +148,8 @@ Version 0.860
 	* New built-in method: switch()
 	* Figured out a way to monkeypatch in various environment settings into running plugin classes
 	* New built-in method: ask()
+	* Plugin events are now triggered *AFTER* Erk is done processing the event (so, plugins don't trigger before events seem to occur)
+	* New built-in method: directory()
 
 Version 0.850
 	* Changed the splash logo

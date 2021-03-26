@@ -65,6 +65,9 @@ class Plugin():
 	__plugin_icon = None
 	__plugin_directory = None
 
+	def directory(self):
+		return self.__plugin_directory
+
 	def ask(self,text):
 		if self.irc:
 			if self.__class_icon:

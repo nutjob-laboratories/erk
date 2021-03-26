@@ -868,8 +868,6 @@ def mode(gui,client,channel,user,mset,modes,args):
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.mode(client,channel,user,mset,modes,args)
 
-	plugins.mode_message(client,channel,user,mset,modes,args)
-
 	args = list(args)
 	cleaned = []
 	for a in args:
@@ -1137,6 +1135,8 @@ def mode(gui,client,channel,user,mset,modes,args):
 		else:
 			window.name_display.setText("<b>"+window.name+"</b>")
 
+	plugins.mode_message(client,channel,user,mset,modes,args)
+
 def toggle_channel_mode_display():
 	for window in CHANNELS:
 		if config.DISPLAY_CHANNEL_MODES:
@@ -1172,8 +1172,6 @@ def received_whois(gui,client,whoisdata):
 
 def topic(gui,client,setter,channel,topic):
 
-	plugins.topic(client,channel,setter,topic)
-
 	p = setter.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1197,6 +1195,8 @@ def topic(gui,client,setter,channel,topic):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.topic(client,channel,setter,topic)
+
 def userlist(gui,client,channel,userlist):
 
 	# Update connection display
@@ -1206,8 +1206,6 @@ def userlist(gui,client,channel,userlist):
 	if window: window.writeUserlist(userlist)
 
 def quit(gui,client,nick,message):
-
-	plugins.quit(client,nick,message)
 
 	for channel in where_is_user(client,nick):
 		window = fetch_channel_window(client,channel)
@@ -1223,6 +1221,8 @@ def quit(gui,client,nick,message):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.quit(client,nick,message)
+
 def action_message(gui,client,target,user,message):
 	global UNSEEN
 	p = user.split('!')
@@ -1232,8 +1232,6 @@ def action_message(gui,client,target,user,message):
 	else:
 		nick = user
 		hostmask = None
-
-	if config.PLUGINS_CATCH_IGNORES: plugins.action_message(client,target,user,message)
 
 	ignore = check_for_ignore(user,gui)
 
@@ -1245,9 +1243,9 @@ def action_message(gui,client,target,user,message):
 		if target==client.nickname:
 			ignore = False
 
-	if ignore: return
-
-	if not config.PLUGINS_CATCH_IGNORES: plugins.action_message(client,target,user,message)
+	if ignore:
+		if config.PLUGINS_CATCH_IGNORES: plugins.action_message(client,target,user,message)
+		return
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1299,6 +1297,8 @@ def action_message(gui,client,target,user,message):
 
 						# Update connection display
 						build_connection_display(gui)
+
+			plugins.action_message(client,target,user,message)
 			return
 
 	posted_to_current = False
@@ -1317,9 +1317,9 @@ def action_message(gui,client,target,user,message):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
-def nick(gui,client,oldnick,newnick):
+	plugins.action_message(client,target,user,message)
 
-	plugins.nick(client,oldnick,newnick)
+def nick(gui,client,oldnick,newnick):
 
 	channels = where_is_user(client,oldnick)
 	msg = Message(SYSTEM_MESSAGE,'',oldnick+" is now known as "+newnick,None,TYPE_NICK)
@@ -1351,10 +1351,10 @@ def nick(gui,client,oldnick,newnick):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.nick(client,oldnick,newnick)
+
 
 def erk_invited(gui,client,sender,channel):
-
-	plugins.invite(client,sender,channel)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
@@ -1369,6 +1369,8 @@ def erk_invited(gui,client,sender,channel):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.invite(client,sender,channel)
 
 
 def erk_inviting(gui,client,target,channel):
@@ -1399,8 +1401,6 @@ def erk_nickname_in_use(gui,client,badnick):
 
 def erk_youre_oper(gui,client):
 
-	plugins.oper(client)
-
 	if gui.current_page:
 		if hasattr(gui.current_page,"writeText"):
 			gui.current_page.writeText( Message(SYSTEM_MESSAGE,'',"You are now an operator") )
@@ -1411,6 +1411,8 @@ def erk_youre_oper(gui,client):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.oper(client)
 
 def erk_changed_nick(gui,client,newnick):
 
@@ -1494,8 +1496,6 @@ def uptime(gui,client,uptime):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.tick(client)
-
-	plugins.tick(client,uptime)
 	
 	gui.uptimers[client.id] = uptime
 	gui.total_uptime = gui.total_uptime + 1
@@ -1536,14 +1536,14 @@ def uptime(gui,client,uptime):
 			if w.log_counter >= config.AUTOSAVE_LOG_TIME:
 				w.do_log_save()
 				w.log_counter = 0
+
+	plugins.tick(client,uptime)
 			
 
 def part(gui,client,user,channel):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.part(client,channel,user)
-
-	plugins.part(client,user,channel)
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1565,12 +1565,12 @@ def part(gui,client,user,channel):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.part(client,user,channel)
+
 def join(gui,client,user,channel):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.join(client,channel,user)
-
-	plugins.join(client,user,channel)
 
 	p = user.split('!')
 	if len(p)==2:
@@ -1592,9 +1592,9 @@ def join(gui,client,user,channel):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
-def motd(gui,client,motd):
+	plugins.join(client,user,channel)
 
-	plugins.motd(client,motd)
+def motd(gui,client,motd):
 	
 	window = fetch_console_window(client)
 
@@ -1603,16 +1603,15 @@ def motd(gui,client,motd):
 			# window.writeText( Message(SYSTEM_MESSAGE,'',line) )
 			window.writeText( Message(MOTD_MESSAGE,'',line) )
 
-
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.motd(client,motd)
 
 def notice_message(gui,client,target,user,message):
 
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.notice(client,target,user,message): return
-
-	if config.PLUGINS_CATCH_IGNORES: plugins.notice(client,target,user,message)
 
 	if len(user.strip())==0:
 		if client.hostname:
@@ -1630,9 +1629,9 @@ def notice_message(gui,client,target,user,message):
 
 	ignore = check_for_ignore(user,gui)
 	if ignore and not config.IGNORE_NOTICE: ignore = False
-	if ignore: return
-
-	if not config.PLUGINS_CATCH_IGNORES: plugins.notice(client,target,user,message)
+	if ignore:
+		if config.PLUGINS_CATCH_IGNORES: plugins.notice(client,target,user,message)
+		return
 
 	window = fetch_channel_window(client,target)
 	if window:
@@ -1657,6 +1656,7 @@ def notice_message(gui,client,target,user,message):
 			if window:
 				window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
+		plugins.notice(client,target,user,message)
 		return
 
 
@@ -1683,6 +1683,7 @@ def notice_message(gui,client,target,user,message):
 			if window:
 				window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
+		plugins.notice(client,target,user,message)
 		return
 
 	# Try to write notice to the current window,
@@ -1702,12 +1703,12 @@ def notice_message(gui,client,target,user,message):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.notice(client,target,user,message)
+
 def private_message(gui,client,user,message):
 
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.private(client,user,message): return
-
-	if config.PLUGINS_CATCH_IGNORES: plugins.private_message(client,user,message)
 
 	global UNSEEN
 
@@ -1721,9 +1722,9 @@ def private_message(gui,client,user,message):
 
 	ignore = check_for_ignore(user,gui)
 	if ignore and not config.IGNORE_PRIVATE: ignore = False
-	if ignore: return
-
-	if not config.PLUGINS_CATCH_IGNORES: plugins.private_message(client,user,message)
+	if ignore:
+		if config.PLUGINS_CATCH_IGNORES: plugins.private_message(client,user,message)
+		return
 	
 	msg = Message(CHAT_MESSAGE,user,message)
 
@@ -1790,6 +1791,8 @@ def private_message(gui,client,user,message):
 
 					# Update connection display
 					build_connection_display(gui)
+
+		plugins.private_message(client,user,message)
 		return
 
 	posted_to_current = False
@@ -1811,10 +1814,10 @@ def private_message(gui,client,user,message):
 		# Update connection display
 		build_connection_display(gui)
 
-
-
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.private_message(client,user,message)
 
 def check_for_ignore(user,gui):
 
@@ -1842,8 +1845,6 @@ def public_message(gui,client,channel,user,message):
 	# if not client.gui.block_plugins:
 	# 	if client.gui.plugins.public(client,channel,user,message): return
 
-	if config.PLUGINS_CATCH_IGNORES: plugins.public_message(client,channel,user,message)
-
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1856,9 +1857,9 @@ def public_message(gui,client,channel,user,message):
 
 	if ignore and not config.IGNORE_PUBLIC: ignore = False
 
-	if ignore: return
-
-	if not config.PLUGINS_CATCH_IGNORES: plugins.public_message(client,channel,user,message)
+	if ignore:
+		if config.PLUGINS_CATCH_IGNORES: plugins.public_message(client,channel,user,message)
+		return
 
 	msg = Message(CHAT_MESSAGE,user,message)
 
@@ -1889,12 +1890,12 @@ def public_message(gui,client,channel,user,message):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	plugins.public_message(client,channel,user,message)
+
 def registered(gui,client):
 
 	# if not client.gui.block_plugins:
 	# 	client.gui.plugins.connect(client)
-
-	plugins.registered(client)
 
 	gui.registered(client)
 
@@ -1906,6 +1907,8 @@ def registered(gui,client):
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
+
+	plugins.registered(client)
 
 def disconnect_from_server(client,msg=None):
 
