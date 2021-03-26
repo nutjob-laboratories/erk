@@ -59,6 +59,24 @@ class Plugin():
 
 	irc = None
 
+	def switch(self,window):
+		if self.irc:
+
+			chans = events.fetch_channel_list(self.irc)
+			privs = events.fetch_private_list(self.irc)
+
+			w = None
+
+			if window in chans:
+				w = events.name_to_channel(self.irc,window)
+			elif window in privs:
+				w = events.name_to_private(self.irc,window)
+
+			if w:
+				self.irc.gui.stack.setCurrentWidget(w)
+				return True
+		return False
+
 	def uptime(self):
 		if self.irc: return events.get_uptime(self.irc)
 		return None
