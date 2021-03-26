@@ -90,7 +90,7 @@ congroup.add_argument("-c","--channel", type=str,help="Join channel on connectio
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 congroup.add_argument("-a","--autoscript", help=f"Execute connection script (if one exists)", action="store_true")
-congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILENAME", action='append')
+congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILE", action='append')
 
 displaygroup = parser.add_argument_group('Display')
 
@@ -112,12 +112,11 @@ miscgroup.add_argument("-P","--plugins", type=str,help="Add a directory to load 
 
 devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("--scripter", help="Launch the script editor", action="store_true")
-devgroup.add_argument("--scripter-edit", dest="scripted",type=str,help="Open a file in the script editor", metavar="FILE", default='')
+devgroup.add_argument("--scripter", nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
 devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
 devgroup.add_argument("--settings", help="Launch the preferences editor", action="store_true")
 devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
-devgroup.add_argument("--generate",type=str,help="Create a \"blank\" plugin for editing", metavar="FILENAME", default='')
+devgroup.add_argument("--generate", nargs='?', type=str,help="Create a \"blank\" plugin for editing", metavar="FILE",const=1)
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -144,14 +143,23 @@ if __name__ == '__main__':
 
 	# "Generate" a blank plugin
 	if args.generate:
-		if os.path.isfile(args.generate):
-			print("File \""+args.generate+"\" already exists.")
-			sys.exit(1)
-		# Copy the blank plugin in the data directory
-		# to the new location
-		shutil.copy(BLANK_PLUGIN_FILE,args.generate)
-		print("Plugin generated!")
-		sys.exit(0)
+
+		if args.generate==1:
+			# No argument, so print to STDOUT
+			f = open(BLANK_PLUGIN_FILE,'r+')
+			x = f.read()
+			f.close()
+			print(x)
+			sys.exit(0)
+		else:
+			if os.path.isfile(args.generate):
+				print("File \""+args.generate+"\" already exists.")
+				sys.exit(1)
+			# Copy the blank plugin in the data directory
+			# to the new location
+			shutil.copy(BLANK_PLUGIN_FILE,args.generate)
+			print("Plugin generated!")
+			sys.exit(0)
 
 
 	# If --noextensions is enabled, turn off stuff
@@ -304,46 +312,48 @@ if __name__ == '__main__':
 
 	elif args.scripter:
 
-		erk.config.load_settings(args.config)
+		if args.scripter==1:
 
-		if erk.config.DISPLAY_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
+			erk.config.load_settings(args.config)
+
+			if erk.config.DISPLAY_FONT=='':
+				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+				font = QFont(_fontstr,9)
+			else:
+				f = QFont()
+				f.fromString(erk.config.DISPLAY_FONT)
+				font = f
+
+			app.setFont(font)
+
+			EDITOR = ErkScriptEditor(None,None,args.config,args.scripts,app)
+			EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+			EDITOR.show()
+
 		else:
-			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
-			font = f
 
-		app.setFont(font)
+			file = args.scripter
+			if not os.path.isfile(file):
+				print("\""+file+"\" doesn't exist. Please use --scripter to create a new file.")
+				sys.exit(1)
 
-		EDITOR = ErkScriptEditor(None,None,args.config,args.scripts,app)
-		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
-		EDITOR.show()
+			erk.config.load_settings(args.config)
 
-	elif args.scripted:
+			if erk.config.DISPLAY_FONT=='':
+				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+				font = QFont(_fontstr,9)
+			else:
+				f = QFont()
+				f.fromString(erk.config.DISPLAY_FONT)
+				font = f
 
-		file = args.scripted
-		if not os.path.isfile(file):
-			print("\""+file+"\" doesn't exist. Please use --scripter to create a new file.")
-			sys.exit(1)
+			app.setFont(font)
 
-		erk.config.load_settings(args.config)
-
-		if erk.config.DISPLAY_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
-		else:
-			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
-			font = f
-
-		app.setFont(font)
-
-		EDITOR = ErkScriptEditor(file,None,args.config,args.scripts,app)
-		EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
-		EDITOR.show()
+			EDITOR = ErkScriptEditor(file,None,args.config,args.scripts,app)
+			EDITOR.resize(int(erk.config.DEFAULT_APP_WIDTH),int(erk.config.DEFAULT_APP_HEIGHT))
+			EDITOR.show()
 
 	else:
 

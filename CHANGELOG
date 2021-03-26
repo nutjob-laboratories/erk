@@ -150,6 +150,9 @@ Version 0.860
 	* New built-in method: ask()
 	* Plugin events are now triggered *AFTER* Erk is done processing the event (so, plugins don't trigger before events seem to occur)
 	* New built-in method: directory()
+	* --generate option argument is now optional (with no argument, it will print the plugin skeleton to STDOUT)
+	* Removed --scripter-edit optional argument
+	* --scripter now takes an optional filename (to edit a file)
 
 Version 0.850
 	* Changed the splash logo
