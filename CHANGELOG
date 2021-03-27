@@ -169,6 +169,13 @@ Version 0.860
 	* Removed "settings" folder from distributions
 	* Plugin memory size is now reported more accurately
 	* Added the Python and GPLv3 logos to the documentation
+	* Re-arranged the "tools" menu
+	* Plugin related menu items will no longer appear if plugins are disabled
+	* Added an option to the tools menu to open the user's plugins directory
+	* Built-in method script() will now return True if the execution succeeded, and False if not
+	* script() will fail if scripting is disabled
+	* exec() will also return True if the command was able to be executed, and False if not
+	* Updated the documentation for script() and exec()
 
 Version 0.850
 	* Changed the splash logo

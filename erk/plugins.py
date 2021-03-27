@@ -181,6 +181,9 @@ class Plugin():
 	def script(self,file,arguments=[]):
 		if self.irc:
 
+			if self.irc.gui.block_scripts: return False
+			if not config.ENABLE_SCRIPTS: return False
+
 			window = events.fetch_current_window(self.irc.gui)
 			scriptname = find_script_file(file,self.irc.gui.scriptsdir)
 
@@ -208,6 +211,9 @@ class Plugin():
 				# Store the thread so it doesn't get garbage collected
 				entry = [scriptID,scriptThread]
 				SCRIPT_THREADS.append(entry)
+
+				return True
+		return False
 
 def is_plugin_disabled(entry):
 	for e in config.DISABLED_PLUGINS:

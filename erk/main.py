@@ -692,8 +692,13 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
-			entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
-			self.settingsMenu.addAction(entry)
+			showPlugins = True
+			if self.block_plugins: showPlugins = False
+			if not config.ENABLE_PLUGINS: showPlugins = False
+
+			if showPlugins:
+				entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
+				self.settingsMenu.addAction(entry)
 
 			self.winsizeMenuEntry = MenuAction(self,RESIZE_WINDOW_ICON,"Window size","Set initial window size",25,self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
@@ -726,11 +731,21 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
 			self.toolsMenu.addAction(entry)
 
-		entry = MenuAction(self,EXPORT_MENU_ICON,"Export Logs","Export chat logs to various formats",25,self.menuExportLog)
+		if config.ENABLE_IGNORE:
+			entry = MenuAction(self,HIDE_ICON,"Ignore manager","Add and remove ignore list entries",25,self.menuIgnore)
+			self.toolsMenu.addAction(entry)
+
+		entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
 		self.toolsMenu.addAction(entry)
 
-		if config.ENABLE_IGNORE:
-			entry = MenuAction(self,HIDE_ICON,"Ignore Manager","Add and remove ignore list entries",25,self.menuIgnore)
+		showPlugins = True
+		if self.block_plugins: showPlugins = False
+		if not config.ENABLE_PLUGINS: showPlugins = False
+
+		l = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
+
+		if showPlugins:
+			entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,l)
 			self.toolsMenu.addAction(entry)
 
 		# Plugins menu
