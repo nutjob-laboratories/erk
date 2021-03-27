@@ -1,11 +1,11 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.071"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.181</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.860.182</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.181**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.860.182**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -78,10 +78,11 @@
     * Run scripts on any connection the client is connected to
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
  * Powerful plugin engine
-   * Plugins are written in Python 3
+   * Plugins are written in Python 3, just like **Ərk**
    * Plugins are stored in a user's home directory
+   * Plugins can also be loaded from _anywhere_ in the file system
    * Most IRC events can be caught
-   * [Plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
+   * Obscure blog and forums posts aren't needed, [plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
    * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!
 * An extensive set of command-line flags, allowing for _even more_ configuration options
   * Disable most features on startup
@@ -89,7 +90,7 @@
   * Support for connecting via [IRC URLs](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
 
 # Requirements
-**Ərk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), and [Twisted](https://twistedmatrix.com/trac/). PyQt5 and Twisted can be manually installed, or by using [**pip**](https://pypi.org/project/pip/):
+**Ərk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), and [Twisted](https://twistedmatrix.com/trac/). PyQt5 and Twisted can be installed by using [**pip**](https://pypi.org/project/pip/):
 
     pip install pyqt5
     pip install Twisted
@@ -101,7 +102,12 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
-To run properly on Linux, the latest version of all required software is recommended.  [qt5reactor](https://github.com/twisted/qt5reactor), a requirement for older versions of **Ərk**, is now bundled with the application.
+To run properly on Linux, the latest version of all required software is recommended.  [qt5reactor](https://github.com/twisted/qt5reactor), a requirement for older versions of **Ərk**, is now bundled with the application. There are four libraries that come bundled with **Ərk**:
+
+ - [pike](https://github.com/pyarmory/pike)
+ - [emoji](https://github.com/carpedm20/emoji)
+ - [pyspellchecker](https://github.com/barrust/pyspellchecker)
+ - [qt5reactor](https://github.com/twisted/qt5reactor)
 
 # Install
 
@@ -109,9 +115,7 @@ First, make sure that all the requirements are installed. Next, [download **Ərk
 
     python erk.py
 
-Hit enter, and **Ərk** will start up! Enter the hostname or IP address of the server you'd like to connect to, or click the "Servers" tab and select a server from the built-in list.
-
-**Ərk** does not need to be "installed" to any specific directory to run; it will run from any directory it is extracted to.
+Hit enter, and **Ərk** will start up! Enter the hostname or IP address of the server you'd like to connect to, or select a server from the built-in list. **Ərk** does not need to be "installed" to any specific directory to run; it will run from any directory it is extracted to.
 
 To make things easier, Windows users can create a shortcut to **Ərk** so all you have to do is double click to start chatting. There are many tutorials on how to do this online; a good place to start is [right here](https://therenegadecoder.com/code/how-to-make-a-python-script-shortcut-with-arguments/).
 
@@ -202,7 +206,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. If  yo
 
 ## Is **Ərk** completed?
 
-No. I'm still adding features and tracking down and squashing bugs.
+No. The current version, 0.860.182, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 
@@ -210,7 +214,7 @@ No. I'm still adding features and tracking down and squashing bugs.
 My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.9.0, and I use [Sublime Text 3](https://www.sublimetext.com/) for my code editor.
 
 ## How configurable is **Ərk**?
-*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
+*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and plugins and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
     python erk.py -o --noextensions --nomenu --nodisplay --channel "#erk" irc.efnet.org 6667
 
@@ -245,10 +249,10 @@ class ExamplePlugin(Plugin):
   DESCRIPTION = "Displays all IRC network traffic"
 
   def line_in(self,data):
-    print("<- "+data)
+    print(self.irc.server+":"+str(self.irc.port)+" <- "+data)
 
   def line_out(self,data):
-    print("-> "+data)
+    print(self.irc.server+":"+str(self.irc.port)+" -> "+data)
 ```
 Everything you need to write your own **Ərk** plugins is in the [**Ərk** Plugin Guide](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf), included with every download!
 
@@ -292,9 +296,9 @@ Yes! **Ərk** stores configuration files in a user's "home" directory, on both L
 
 This allows users to set specific configuration files for different users, and can be set in a shortcut or batch file. Configuration and user setting files are JSON, and the text format settings file is CSS. If the filename (or directory name) passed to **Ərk** is not found, **Ərk** will create the file and fill it with default settings, or create the directory to be used for logs.
 
-More command-line settings can be viewed by executing **Ərk** with the `--help` command-line flag.
+More command-line settings can be viewed by executing **Ərk** with the `-h` or `--help` command-line flag.
 
-For an example of how to implement this for multiple users, let's assume we have two users, named Alice and Bob. They're both running **Ərk** on the same computer (which runs Windows), and want to keep their settings and logs separate. **Ərk**, in this example, is installed in "C:\Erk". First, we create a directory for Alice; we'll put it in the root directory of the "C" drive. We'll name Alice's directory "Alice_Erk":
+For an example of how to implement this for multiple users, let's assume we have two users, named Alice and Bob. They're both running **Ərk** on the same computer (which runs Windows), and want to keep their settings and logs separate. **Ərk**, in this example, is installed in `C:\Erk`. First, we create a directory for Alice; we'll put it in the root directory of the "C" drive. We'll name Alice's directory "Alice_Erk":
 
     mkdir C:\Alice_Erk
 

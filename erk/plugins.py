@@ -601,8 +601,6 @@ class PluginEntry():
 				self.events = self.events + 1
 				self.event_list.append(e)
 
-		self.size = get_size(self.obj)
-
 		classicon = os.path.join(os.path.dirname(self.filename), self.pclass.__name__+".png")
 		if os.path.isfile(classicon):
 			self.class_icon = classicon
@@ -617,6 +615,10 @@ class PluginEntry():
 		else:
 			self.relative_path = None
 			self.is_home_plugin = False
+
+		inject_plugin(self.obj,self,None)
+		self.size = get_size(self.obj)
+		cleanup_plugin(self.obj)
 
 	def module_name(self):
 		return self.pclass.__module__

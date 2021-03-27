@@ -167,6 +167,7 @@ Version 0.860
 	* Modified the make script to make moving to new major versions easier
 	* Bugfix: pike library wasn't being included in distributions
 	* Removed "settings" folder from distributions
+	* Plugin memory size is now reported more accurately
 
 Version 0.850
 	* Changed the splash logo
