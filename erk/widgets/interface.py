@@ -1599,52 +1599,53 @@ class SpellTextEdit(QPlainTextEdit):
 							cursor.endEditBlock()
 							return
 
-				if config.AUTOCOMPLETE_EMOJI and config.USE_EMOJIS:
+			if config.AUTOCOMPLETE_EMOJI and config.USE_EMOJIS:
 
-					# Autocomplete emojis
-					cursor.select(QTextCursor.WordUnderCursor)
-					oldpos = cursor.position()
-					cursor.select(QTextCursor.WordUnderCursor)
-					newpos = cursor.selectionStart() - 1
-					cursor.setPosition(newpos,QTextCursor.MoveAnchor)
-					cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
-					self.setTextCursor(cursor)
-					if self.textCursor().hasSelection():
-						text = self.textCursor().selectedText()
-
-						for c in EMOJI_AUTOCOMPLETE:
-
-							# Case sensitive
-							if fnmatch.fnmatchcase(c,f"{text}*"):
-								cursor.beginEditBlock()
-								cursor.insertText(c)
-								cursor.endEditBlock()
-								return
-
-							# Case insensitive
-							if fnmatch.fnmatch(c,f"{text}*"):
-								cursor.beginEditBlock()
-								cursor.insertText(c)
-								cursor.endEditBlock()
-								return
-
-
-			if config.AUTOCOMPLETE_PLUGINS:
-				# Auto-complete commands
-				cursor.select(QTextCursor.BlockUnderCursor)
+				# Autocomplete emojis
+				cursor.select(QTextCursor.WordUnderCursor)
+				oldpos = cursor.position()
+				cursor.select(QTextCursor.WordUnderCursor)
+				newpos = cursor.selectionStart() - 1
+				cursor.setPosition(newpos,QTextCursor.MoveAnchor)
+				cursor.setPosition(oldpos,QTextCursor.KeepAnchor)
 				self.setTextCursor(cursor)
 				if self.textCursor().hasSelection():
 					text = self.textCursor().selectedText()
 
-					for c in plugins.AUTOCOMPLETE:
-						cmd = c[0]
-						rep = c[1]
+					for c in EMOJI_AUTOCOMPLETE:
 
-						if fnmatch.fnmatch(cmd,f"{text}*"):
+						# Case sensitive
+						if fnmatch.fnmatchcase(c,f"{text}*"):
 							cursor.beginEditBlock()
-							cursor.insertText(rep)
+							cursor.insertText(c)
 							cursor.endEditBlock()
 							return
+
+						# Case insensitive
+						if fnmatch.fnmatch(c,f"{text}*"):
+							cursor.beginEditBlock()
+							cursor.insertText(c)
+							cursor.endEditBlock()
+							return
+
+
+			if config.AUTOCOMPLETE_PLUGINS:
+				if not self.parent.parent.block_plugins:
+					# Auto-complete plugin entries
+					cursor.select(QTextCursor.BlockUnderCursor)
+					self.setTextCursor(cursor)
+					if self.textCursor().hasSelection():
+						text = self.textCursor().selectedText()
+
+						for c in plugins.AUTOCOMPLETE:
+							cmd = c[0]
+							rep = c[1]
+
+							if fnmatch.fnmatch(cmd,f"{text}*"):
+								cursor.beginEditBlock()
+								cursor.insertText(rep)
+								cursor.endEditBlock()
+								return
 
 
 
