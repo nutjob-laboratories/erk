@@ -151,23 +151,6 @@ f.close()
 PROFANITY = cursewords.split("\n")
 PROFANITY_SYMBOLS = ["#","!","@","&","%","$","?","+","*"]
 
-# Opens up a zip file containing plugins, and reads the
-# package.txt from each included plugin, and returns an
-# array containing the plugin(s) info
-def get_plugin_info(file):
-	plugins = []
-	arc = zipfile.ZipFile(file)
-	for f in arc.namelist():
-		if os.path.basename(f)=="package.txt":
-			if not os.path.isdir(f):
-				pn = arc.read(f)
-				plugins.append(pn.decode())
-		if os.path.basename(f)==f:
-			fn,ext = os.path.splitext(f)
-			if ext.lower()==".py":
-				plugins.append(f)
-	return plugins
-
 def censorWord(word,punc=True):
 	result = ''
 	last = '+'

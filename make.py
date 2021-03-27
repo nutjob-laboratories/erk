@@ -19,7 +19,6 @@ from erk.strings import *
 # Build distribution zips
 
 os.mkdir("./erk-irc-client")
-os.mkdir("./erk-irc-client/settings")
 
 os.mkdir("./erk-irc-client/documentation")
 shutil.copy("./documentation/Erk_Scripting_and_Commands.pdf", "./erk-irc-client/documentation/Erk_Scripting_and_Commands.pdf")
@@ -34,6 +33,7 @@ shutil.copytree("./erk", "./erk-irc-client/erk",ignore=shutil.ignore_patterns('*
 shutil.copytree("./spellchecker", "./erk-irc-client/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./emoji", "./erk-irc-client/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./qt5reactor", "./erk-irc-client/qt5reactor",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
+shutil.copytree("./pike", "./erk-irc-client/pike",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 
 shutil.copy("./erk.py", "./erk-irc-client/erk.py")
 
@@ -47,8 +47,8 @@ archive_name = f"{NORMAL_APPLICATION_NAME.lower()}-{APPLICATION_MAJOR_VERSION}.z
 
 os.rename('erk_dist.zip', archive_name)
 
-os.remove(f"./downloads/{archive_name}")
-os.remove("./downloads/erk-latest.zip")
+if os.path.isfile(f"./downloads/{archive_name}"): os.remove(f"./downloads/{archive_name}")
+if os.path.isfile(f"./downloads/erk-latest.zip"): os.remove("./downloads/erk-latest.zip")
 
 shutil.copy(archive_name, "./downloads/"+archive_name)
 shutil.copy(archive_name, "./downloads/erk-latest.zip")

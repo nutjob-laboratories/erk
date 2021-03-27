@@ -163,6 +163,10 @@ Version 0.860
 	* New built-in method: help()
 	* Added a new setting to the config file: toggle plugin abilities to add to /help
 	* Added new plugin /help option to the "settings" dialog
+	* Removed some unneeded code from files.py
+	* Modified the make script to make moving to new major versions easier
+	* Bugfix: pike library wasn't being included in distributions
+	* Removed "settings" folder from distributions
 
 Version 0.850
 	* Changed the splash logo
