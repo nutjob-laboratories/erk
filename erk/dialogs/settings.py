@@ -1027,12 +1027,16 @@ class Dialog(QDialog):
 		self.autoPlugins = QCheckBox("Plugins can add to autocomplete",self)
 		if config.AUTOCOMPLETE_PLUGINS: self.autoPlugins.setChecked(True)
 
+		self.helpPlugins = QCheckBox("Plugins can add to /help",self)
+		if config.PLUGIN_HELP: self.helpPlugins.setChecked(True)
+
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
 		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.detPlugins)
 		plugLayout.addWidget(self.autoPlugins)
+		plugLayout.addWidget(self.helpPlugins)
 
 		plugBox = QGroupBox("Plugins",self)
 		plugBox.setLayout(plugLayout)
@@ -1198,6 +1202,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.PLUGIN_HELP = self.helpPlugins.isChecked()
 
 		config.AUTOCOMPLETE_PLUGINS = self.autoPlugins.isChecked()
 
@@ -1592,6 +1598,7 @@ class Dialog(QDialog):
 				self.inputMe.setChecked(config.ALWAYS_ALLOW_ME)
 				self.detPlugins.setChecked(config.SHOW_PLUGIN_INFO_IN_MENU)
 				self.autoPlugins.setChecked(config.AUTOCOMPLETE_PLUGINS)
+				self.helpPlugins.setChecked(config.PLUGIN_HELP)
 
 			else:
 				msg = QMessageBox(self)

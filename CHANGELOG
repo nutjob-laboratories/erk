@@ -161,6 +161,8 @@ Version 0.860
 	* Bugfix: plugin entries would autocomplete if plugins were turned off
 	* Bugfix: notices weren't being handled properly by plugins
 	* New built-in method: help()
+	* Added a new setting to the config file: toggle plugin abilities to add to /help
+	* Added new plugin /help option to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo

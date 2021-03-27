@@ -161,12 +161,15 @@ SHOW_PLUGIN_INFO_IN_MENU = False
 
 AUTOCOMPLETE_PLUGINS = True
 
+PLUGIN_HELP = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"plugins_can_add_to_help": PLUGIN_HELP,
 		"autocomplete_for_plugins": AUTOCOMPLETE_PLUGINS,
 		"show_plugin_details_in_menu_entry": SHOW_PLUGIN_INFO_IN_MENU,
 		"disabled_plugins": DISABLED_PLUGINS,
@@ -279,6 +282,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "plugins_can_add_to_help" in data:
+		data["plugins_can_add_to_help"] = PLUGIN_HELP
 
 	if not "autocomplete_for_plugins" in data:
 		data["autocomplete_for_plugins"] = AUTOCOMPLETE_PLUGINS
@@ -528,6 +534,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global DISABLED_PLUGINS
 	global SHOW_PLUGIN_INFO_IN_MENU
 	global AUTOCOMPLETE_PLUGINS
+	global PLUGIN_HELP
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -536,6 +543,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			PLUGIN_HELP = data["plugins_can_add_to_help"]
 			AUTOCOMPLETE_PLUGINS = data["autocomplete_for_plugins"]
 			SHOW_PLUGIN_INFO_IN_MENU = data["show_plugin_details_in_menu_entry"]
 			DISABLED_PLUGINS = data["disabled_plugins"]
@@ -769,6 +777,7 @@ def check_settings(filename):
 			if "disabled_plugins"in data: check = check + 1
 			if "show_plugin_details_in_menu_entry"in data: check = check + 1
 			if "autocomplete_for_plugins" in data: check = check + 1
+			if "plugins_can_add_to_help" in data: check = check + 1
 
 			if check >= 100:
 				return True

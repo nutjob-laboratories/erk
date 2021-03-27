@@ -583,12 +583,13 @@ def handle_channel_input(window,client,text):
 							hdisplay.append(t)
 
 			if not client.gui.block_plugins:
-				if len(plugins.HELP)>0:
-					for entry in plugins.HELP:
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
-						t = t.replace("%_DESCRIPTION_%",entry[1])
-						hdisplay.append(t)
+				if config.PLUGIN_HELP:
+					if len(plugins.HELP)>0:
+						for entry in plugins.HELP:
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
+							t = t.replace("%_DESCRIPTION_%",entry[1])
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
@@ -691,12 +692,13 @@ def handle_private_input(window,client,text):
 							hdisplay.append(t)
 
 			if not client.gui.block_plugins:
-				if len(plugins.HELP)>0:
-					for entry in plugins.HELP:
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
-						t = t.replace("%_DESCRIPTION_%",entry[1])
-						hdisplay.append(t)
+				if config.PLUGIN_HELP:
+					if len(plugins.HELP)>0:
+						for entry in plugins.HELP:
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
+							t = t.replace("%_DESCRIPTION_%",entry[1])
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
@@ -903,12 +905,13 @@ def handle_common_input(window,client,text):
 							hdisplay.append(t)
 
 			if not client.gui.block_plugins:
-				if len(plugins.HELP)>0:
-					for entry in plugins.HELP:
-						t = HELP_ENTRY
-						t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
-						t = t.replace("%_DESCRIPTION_%",entry[1])
-						hdisplay.append(t)
+				if config.PLUGIN_HELP:
+					if len(plugins.HELP)>0:
+						for entry in plugins.HELP:
+							t = HELP_ENTRY
+							t = t.replace("%_USAGE_%","<b>"+entry[0]+"</b>")
+							t = t.replace("%_DESCRIPTION_%",entry[1])
+							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
 			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
