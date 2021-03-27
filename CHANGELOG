@@ -1,3 +1,6 @@
+Version 0.870
+	* New version
+
 Version 0.860
 	* Removed all plugin-related code and documentation
 	* Config files are now stored in a directory in the user's home directory
