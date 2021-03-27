@@ -1024,11 +1024,15 @@ class Dialog(QDialog):
 		self.detPlugins = QCheckBox("Show plugin details in menu",self)
 		if config.SHOW_PLUGIN_INFO_IN_MENU: self.detPlugins.setChecked(True)
 
+		self.autoPlugins = QCheckBox("Plugins can add to autocomplete",self)
+		if config.AUTOCOMPLETE_PLUGINS: self.autoPlugins.setChecked(True)
+
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
 		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.detPlugins)
+		plugLayout.addWidget(self.autoPlugins)
 
 		plugBox = QGroupBox("Plugins",self)
 		plugBox.setLayout(plugLayout)
@@ -1194,6 +1198,8 @@ class Dialog(QDialog):
 		self.setFixedSize(finalLayout.sizeHint())
 
 	def save(self):
+
+		config.AUTOCOMPLETE_PLUGINS = self.autoPlugins.isChecked()
 
 		config.SHOW_PLUGIN_INFO_IN_MENU = self.detPlugins.isChecked()
 
@@ -1585,6 +1591,7 @@ class Dialog(QDialog):
 				self.noteMode.setChecked(config.HIDE_MODE_DISPLAY)
 				self.inputMe.setChecked(config.ALWAYS_ALLOW_ME)
 				self.detPlugins.setChecked(config.SHOW_PLUGIN_INFO_IN_MENU)
+				self.autoPlugins.setChecked(config.AUTOCOMPLETE_PLUGINS)
 
 			else:
 				msg = QMessageBox(self)

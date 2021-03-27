@@ -153,6 +153,10 @@ Version 0.860
 	* --generate option argument is now optional (with no argument, it will print the plugin skeleton to STDOUT)
 	* Removed --scripter-edit optional argument
 	* --scripter now takes an optional filename (to edit a file)
+	* Plugins can now add entries to the autocompleter
+	* New built-in method: autocomplete()
+	* New option added to config file: toggle on/off plugin autocomplete
+	* Added plugin autocomplete toggle to the "settings" dialog
 
 Version 0.850
 	* Changed the splash logo

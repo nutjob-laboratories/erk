@@ -56,6 +56,7 @@ from .irc import ScriptThreadWindow
 from .dialogs.plugin_input import Dialog as GetInput
 
 PLUGINS = []
+AUTOCOMPLETE = []
 
 class Plugin():
 
@@ -64,6 +65,11 @@ class Plugin():
 	__class_file = None
 	__plugin_icon = None
 	__plugin_directory = None
+
+	def autocomplete(self,entry,replacement):
+
+		e = [entry,replacement]
+		AUTOCOMPLETE.append(e)
 
 	def directory(self):
 		return self.__plugin_directory
