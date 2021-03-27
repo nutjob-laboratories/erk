@@ -57,6 +57,7 @@ from .dialogs.plugin_input import Dialog as GetInput
 
 PLUGINS = []
 AUTOCOMPLETE = []
+HELP = []
 
 class Plugin():
 
@@ -65,6 +66,11 @@ class Plugin():
 	__class_file = None
 	__plugin_icon = None
 	__plugin_directory = None
+
+	def help(self,usage,description):
+
+		e = [usage,description]
+		HELP.append(e)
 
 	def autocomplete(self,entry,replacement):
 
@@ -325,7 +331,7 @@ def input(client,window,text):
 		cleanup_plugin(obj)
 		if result: return result
 
-def notice_message(client,target,user,message):
+def notice(client,target,user,message):
 	for p in PLUGINS:
 		if is_plugin_disabled(p): continue
 		obj = p.obj

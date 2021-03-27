@@ -159,6 +159,8 @@ Version 0.860
 	* Added plugin autocomplete toggle to the "settings" dialog
 	* Bugfix: emojis would only autocomplete if autocomplete nicks was turned on
 	* Bugfix: plugin entries would autocomplete if plugins were turned off
+	* Bugfix: notices weren't being handled properly by plugins
+	* New built-in method: help()
 
 Version 0.850
 	* Changed the splash logo
