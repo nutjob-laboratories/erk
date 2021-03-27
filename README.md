@@ -130,6 +130,14 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
+ ___      _   
+|__ \ _ _| |__  |==============
+/ _  | '_| / /  | Ərk 0.870.000
+\___/|_| |_\_\  |==============
+
+An open source, cross-platform IRC client
+https://github.com/nutjob-laboratories/erk
+
 optional arguments:
   -h, --help            show this help message and exit
 
