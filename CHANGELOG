@@ -168,6 +168,7 @@ Version 0.860
 	* Bugfix: pike library wasn't being included in distributions
 	* Removed "settings" folder from distributions
 	* Plugin memory size is now reported more accurately
+	* Added the Python and GPLv3 logos to the documentation
 
 Version 0.850
 	* Changed the splash logo
