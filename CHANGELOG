@@ -1,6 +1,9 @@
 Version 0.870
 	* New version
 	* Fixed the "Hide manager" menu icon
+	* Added a menu entry to load plugins from a user-selected directory
+	* Bugfix: the script editor now closes properly instead of hanging when launcher as a stand-alone app
+	* Changed the commandline option to launch the script editor: now -e, --edit, and --scripter can be used
 
 Version 0.860
 	* Removed all plugin-related code and documentation

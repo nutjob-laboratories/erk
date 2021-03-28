@@ -216,7 +216,7 @@ class Window(QMainWindow):
 		self.parent = parent
 		self.configfile = configfile
 		self.scriptsdir = scriptsdir
-		self.app = None
+		self.app = app
 
 		self.changed = False
 

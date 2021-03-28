@@ -112,7 +112,7 @@ miscgroup.add_argument("-P","--plugins", type=str,help="Add a directory to load 
 
 devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("--scripter", nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
+devgroup.add_argument("-e","--edit","--scripter", dest="scripter",nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
 devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
 devgroup.add_argument("--settings", help="Launch the preferences editor", action="store_true")
 devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")

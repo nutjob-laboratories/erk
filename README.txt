@@ -124,19 +124,11 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILE] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-P DIRECTORY] [--scripter [FILE]] [--styler] [--settings]
-                     [--export] [--generate [FILE]] [--noask] [--nosettings] [--nomenus]
-                     [--noconnect] [--noscripts] [--nodisplay] [--nostyles] [--noedit]
-                     [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
+                     [-M FILE] [-P DIRECTORY] [-e [FILE]] [--styler] [--settings] [--export]
+                     [--generate [FILE]] [--noask] [--nosettings] [--nomenus] [--noconnect]
+                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--noplugins]
+                     [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
-
- ___      _   
-|__ \ _ _| |__  |==============
-/ _  | '_| / /  | Ərk !_FULL_VERSION_!
-\___/|_| |_\_\  |==============
-
-An open source, cross-platform IRC client
-https://github.com/nutjob-laboratories/erk
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -182,7 +174,8 @@ Configuration:
                         Add a directory to load plugins from
 
 Tools:
-  --scripter [FILE]     Launch the script editor
+  -e [FILE], --edit [FILE], --scripter [FILE]
+                        Launch the script editor
   --styler              Launch the style editor
   --settings            Launch the preferences editor
   --export              Launch the log export tool

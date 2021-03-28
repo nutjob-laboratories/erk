@@ -34,6 +34,7 @@ import os
 from zipfile import ZipFile
 import shutil
 import platform
+from pathlib import Path
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -700,6 +701,9 @@ class Erk(QMainWindow):
 				entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
 				self.settingsMenu.addAction(entry)
 
+				entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
+				self.settingsMenu.addAction(entry)
+
 			self.winsizeMenuEntry = MenuAction(self,RESIZE_WINDOW_ICON,"Window size","Set initial window size",25,self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
 
@@ -742,10 +746,9 @@ class Erk(QMainWindow):
 		if self.block_plugins: showPlugins = False
 		if not config.ENABLE_PLUGINS: showPlugins = False
 
-		l = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
-
 		if showPlugins:
-			entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,l)
+			#l = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
+			entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
 			self.toolsMenu.addAction(entry)
 
 		# Plugins menu
@@ -830,6 +833,20 @@ class Erk(QMainWindow):
 
 				self.spinner.frameChanged.connect(lambda state,b=self.corner_widget: self.corner_widget.setIcon( QIcon(self.spinner.currentPixmap()) ) )
 
+
+	def menuLoadPlugins(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		options |= QFileDialog.ShowDirsOnly
+		options |= QFileDialog.HideNameFilterDetails
+		options |= QFileDialog.ReadOnly
+		folderpath = QFileDialog.getExistingDirectory(self, 'Select Directory', str(Path.home()),options=options)
+		if folderpath:
+			self.more_plugins.append(folderpath)
+			plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
+			if len(plugin_load_errors)>0:
+				ErrorDialog(self,plugin_load_errors)
+			self.buildPluginMenu()
 
 	def buildPluginMenu(self):
 
