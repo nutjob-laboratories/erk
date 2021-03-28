@@ -2050,3 +2050,5 @@ def startup(gui,client):
 	
 	# Update connection display
 	build_connection_display(gui)
+
+	plugins.connecting(client)

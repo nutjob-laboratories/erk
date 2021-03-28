@@ -517,6 +517,24 @@ def devoice(client,user,channel):
 			obj.devoice(user,channel)
 		cleanup_plugin(obj)
 
+def connecting(client):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		inject_plugin(obj,p,client)
+		if hasattr(obj,"connecting"):
+			obj.connecting()
+		cleanup_plugin(obj)
+
+def exit(client):
+	for p in PLUGINS:
+		if is_plugin_disabled(p): continue
+		obj = p.obj
+		inject_plugin(obj,p,client)
+		if hasattr(obj,"exit"):
+			obj.exit()
+		cleanup_plugin(obj)
+
 EVENTS = [
 	"public",
 	"private",
@@ -546,6 +564,8 @@ EVENTS = [
 	"deop",
 	"voice",
 	"devoice",
+	"connecting",
+	"exit",
 ]
 
 def check_for_bad_input(p):

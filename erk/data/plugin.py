@@ -33,6 +33,14 @@ class BlankPlugin(Plugin):
 		"""
 		pass
 
+	def connecting(self):
+		"""
+			Triggers when Ərk starts connecting to an IRC server. The
+			connection hasn't occurred, and registration is not
+			complete, so no commands can be issued.
+		"""
+		pass
+
 	def ctcp(self,user,target,tag,message):
 		"""
 			Triggers when Ərk receives an otherwise unrecognized
@@ -60,6 +68,14 @@ class BlankPlugin(Plugin):
 
 			user (string): the user who removed voiced status
 			channel (string): the channel
+		"""
+		pass
+
+	def exit(self):
+		"""
+			Triggers when Ərk is closing. The irc object is
+			*NOT AVAILABLE*, as all IRC connections are in
+			the process of shutting down.
 		"""
 		pass
 

@@ -1,11 +1,11 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.011</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.014</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.011**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.014**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -207,7 +207,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. If  yo
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.870.011, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.870.014, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 

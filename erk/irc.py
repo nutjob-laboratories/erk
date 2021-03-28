@@ -283,8 +283,6 @@ class IRC_Connection(irc.IRCClient):
 		if hasattr(self,"uptimeTimer"):
 			self.uptimeTimer.stop()
 			self.uptime = 0
-		# else:
-		# 	print("Error connecting to server")
 
 		self.last_tried_nickname = ''
 

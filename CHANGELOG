@@ -14,6 +14,9 @@ Version 0.870
 	* Moved plugin stuff in the "Tools" menu to the "Settings" menu
 	* Plugin menu now appears regardless of whether any plugins are installed or not
 	* Plugin menu stuff is now in the permanent plugin menu
+	* New event method: connecting()
+	* New event method: exit()
+	* Updated the plugin documentation to reflect the new "plugins" menu
 
 Version 0.860
 	* Removed all plugin-related code and documentation

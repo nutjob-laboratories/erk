@@ -151,6 +151,9 @@ class Erk(QMainWindow):
 				config.DEFAULT_APP_WIDTH = self.width()
 				config.DEFAULT_APP_HEIGHT = self.height()
 				config.save_settings(self.configfile)
+
+			plugins.exit(None)
+
 			self.app.quit()
 		else:
 			event.ignore()
