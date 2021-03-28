@@ -680,6 +680,12 @@ def load_plugins(are_plugins_blocked,additional_locations):
 		for loc in additional_locations:
 			DIRECTORIES.append(loc)
 
+	for d in config.ADDITIONAL_PLUGIN_LOCATIONS:
+		DIRECTORIES.append(d)
+
+	# Remove duplicates from the list
+	DIRECTORIES = list(dict.fromkeys(DIRECTORIES))
+
 	with PikeManager(DIRECTORIES) as mgr:
 		classes = mgr.get_classes()
 

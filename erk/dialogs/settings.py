@@ -1066,8 +1066,6 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.pluginsPage)
 
-
-
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
 
@@ -1086,6 +1084,36 @@ class Dialog(QDialog):
 		self.helpPlugins = QCheckBox("Plugins can add to /help",self)
 		if config.PLUGIN_HELP: self.helpPlugins.setChecked(True)
 
+		self.plug_list = QListWidget(self)
+		for e in config.ADDITIONAL_PLUGIN_LOCATIONS:
+			item = QListWidgetItem(e)
+			self.plug_list.addItem(item)
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height() * 8
+		self.plug_list.setMaximumHeight(fheight)
+
+		self.addDirectory = QPushButton("Add directory")
+		self.addDirectory.clicked.connect(self.plugbuttonAdd)
+		self.addDirectory.setAutoDefault(False)
+
+		self.removeDirectory = QPushButton("Remove directory")
+		self.removeDirectory.clicked.connect(self.plugbuttonRemove)
+		self.removeDirectory.setAutoDefault(False)
+
+		aLayout = QHBoxLayout()
+		aLayout.addWidget(self.addDirectory)
+		aLayout.addWidget(self.removeDirectory)
+		
+		bLayout = QVBoxLayout()
+		bLayout.addWidget(self.plug_list)
+		bLayout.addLayout(aLayout)
+
+		plugBox = QGroupBox("Load additional plugins from...",self)
+		plugBox.setLayout(bLayout)
+
+		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.showPlugins)
@@ -1094,7 +1122,8 @@ class Dialog(QDialog):
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
 		plugLayout.addStretch()
-
+		plugLayout.addWidget(plugBox)
+		plugLayout.addStretch()
 
 		if self.parent!= None:
 			if self.parent.block_plugins:
@@ -1104,9 +1133,7 @@ class Dialog(QDialog):
 				self.detPlugins.setEnabled(False)
 				self.autoPlugins.setEnabled(False)
 				self.helpPlugins.setEnabled(False)
-
-
-
+				plugBox.setEnabled(False)
 
 		self.pluginsPage.setLayout(plugLayout)
 
@@ -1187,7 +1214,6 @@ class Dialog(QDialog):
 		cgbLayout.addWidget(self.partMsg)
 		cgbLayout.addStretch()
 
-
 		quitPartBox = QGroupBox("Default Quit/Part Message",self)
 		quitPartBox.setLayout(cgbLayout)
 
@@ -1256,7 +1282,26 @@ class Dialog(QDialog):
 
 		self.setFixedSize(finalLayout.sizeHint())
 
+	def plugbuttonAdd(self):
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		options |= QFileDialog.ShowDirsOnly
+		options |= QFileDialog.HideNameFilterDetails
+		options |= QFileDialog.ReadOnly
+		folderpath = QFileDialog.getExistingDirectory(self, 'Select Directory', str(Path.home()),options=options)
+		if folderpath:
+			self.plug_list.addItem(folderpath)
+
+	def plugbuttonRemove(self):
+		i = self.plug_list.currentRow()
+		self.plug_list.takeItem(i)
+
 	def save(self):
+
+		plugDirectories =  [str(self.plug_list.item(i).text()) for i in range(self.plug_list.count())]
+		# Remove duplicates from the list
+		plugDirectories = list(dict.fromkeys(plugDirectories))
+		config.ADDITIONAL_PLUGIN_LOCATIONS = plugDirectories
 
 		config.PLUGIN_HELP = self.helpPlugins.isChecked()
 

@@ -17,6 +17,9 @@ Version 0.870
 	* New event method: connecting()
 	* New event method: exit()
 	* Updated the plugin documentation to reflect the new "plugins" menu
+	* Added a settings to the config file: a list of directories to also load plugins from
+	* Added a bit to the "plugins" page in the "settings" dialog to set (and remove) directories to load plugins from
+	* The plugins load list is now checked for duplicates (with duplicates being removed) before loading
 
 Version 0.860
 	* Removed all plugin-related code and documentation
