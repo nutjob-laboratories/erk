@@ -160,6 +160,10 @@ class Erk(QMainWindow):
 			events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
 
+			x = Blank()
+			x.show()
+			x.close()
+
 	def refresh_application_title(self,item=None):
 
 		# Fix for no connection
@@ -227,17 +231,25 @@ class Erk(QMainWindow):
 		if hasattr(window,"client"):
 			self.current_client = window.client
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-				self.disconnect.setVisible(True)
+				#self.disconnect.setVisible(True)
+				if not self.is_disconnect_showing:
+					self.buildMenuInterface()
 		else:
 			self.current_client = None
 			if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-				self.disconnect.setVisible(False)
+				#self.disconnect.setVisible(False)
+				if self.is_disconnect_showing:
+					self.is_disconnect_showing = False
+					self.buildMenuInterface()
 
 		if hasattr(window,"name"):
 			if window.name==MASTER_LOG_NAME:
 				self.current_client = None
 				if not DO_NOT_DISPLAY_MENUS_OR_TOOLBAR:
-					self.disconnect.setVisible(False)
+					#self.disconnect.setVisible(False)
+					if self.is_disconnect_showing:
+						self.is_disconnect_showing = False
+						self.buildMenuInterface()
 
 		if hasattr(window,"input"):
 			# Set focus to the input widget
@@ -407,6 +419,8 @@ class Erk(QMainWindow):
 		self.more_plugins = more_plugins
 
 		self.block_commands = block_commands
+
+		self.is_disconnect_showing = False
 
 		self.cmdline_script = False
 		self.cmdline_editor = False
@@ -664,22 +678,21 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,CONNECT_MENU_ICON,"Connect","Connect to an IRC server",25,self.menuCombo)
 		self.mainMenu.addAction(entry)
 
+		c = events.fetch_connections()
+		if len(c)>0:
+			self.disconnect = MenuAction(self,DISCONNECT_MENU_ICON,"Disconnect","Close the current connection",25,self.disconnect_current)
+			self.mainMenu.addAction(self.disconnect)
+			self.is_disconnect_showing = True
+
 		self.mainMenu.addSeparator()
 
-		self.disconnect = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-		self.disconnect.triggered.connect(self.disconnect_current)
-		self.mainMenu.addAction(self.disconnect)
-
 		c = events.fetch_connections()
-		if len(c)==0:
-			self.disconnect.setVisible(False)
-		
-		entry = QAction(QIcon(RESTART_ICON),"Restart",self)
-		entry.triggered.connect(lambda state: restart_program())
-		self.mainMenu.addAction(entry)
+		if len(c)>0:
+			txt = "Disconnect and exit "+APPLICATION_NAME
+		else:
+			txt = "Exit "+APPLICATION_NAME
 
-		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
-		entry.triggered.connect(self.close)
+		entry = MenuAction(self,QUIT_MENU_ICON,"Exit",txt,25,self.close)
 		self.mainMenu.addAction(entry)
 
 		if not self.block_settings:
@@ -693,17 +706,6 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,SETTINGS_MENU_ICON,"Preferences","Change "+APPLICATION_NAME+" settings",25,self.showSettingsDialog)
 			self.settingsMenu.addAction(entry)
 
-			showPlugins = True
-			if self.block_plugins: showPlugins = False
-			if not config.ENABLE_PLUGINS: showPlugins = False
-
-			if showPlugins:
-				entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
-				self.settingsMenu.addAction(entry)
-
-				entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
-				self.settingsMenu.addAction(entry)
-
 			self.winsizeMenuEntry = MenuAction(self,RESIZE_WINDOW_ICON,"Window size","Set initial window size",25,self.menuResize)
 			self.settingsMenu.addAction(self.winsizeMenuEntry)
 
@@ -713,6 +715,21 @@ class Erk(QMainWindow):
 
 			entry = MenuAction(self,FULLSCREEN_WINDOW_ICON,"Full screen","Toggle full screen mode",25,l)
 			self.settingsMenu.addAction(entry)
+
+			showPlugins = True
+			if self.block_plugins: showPlugins = False
+			if not config.ENABLE_PLUGINS: showPlugins = False
+
+			if showPlugins:
+
+				entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
+				self.settingsMenu.addAction(entry)
+
+				entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
+				self.settingsMenu.addAction(entry)
+
+				entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
+				self.settingsMenu.addAction(entry)
 
 		# Tools menu
 		# self.toolsMenu
@@ -742,14 +759,13 @@ class Erk(QMainWindow):
 		entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
 		self.toolsMenu.addAction(entry)
 
-		showPlugins = True
-		if self.block_plugins: showPlugins = False
-		if not config.ENABLE_PLUGINS: showPlugins = False
+		# showPlugins = True
+		# if self.block_plugins: showPlugins = False
+		# if not config.ENABLE_PLUGINS: showPlugins = False
 
-		if showPlugins:
-			#l = lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))
-			entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
-			self.toolsMenu.addAction(entry)
+		# if showPlugins:
+		# 	entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
+		# 	self.toolsMenu.addAction(entry)
 
 		# Plugins menu
 

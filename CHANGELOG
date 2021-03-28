@@ -8,6 +8,10 @@ Version 0.870
 	* Gave scripting it's own tab, and created a plugins tab in the "settings" dialog
 	* Changed the plugin icon from the python image to a puzzle piece
 	* Changed the "load plugin directory" icon to a puzzle piece with a magnifying glass
+	* Removed "restart" option from the main menu
+	* Disconnect entry in the main menu is now a "fancy" menu entry
+	* Redesigned the main menu, using all "fancy" menu entries
+	* Moved plugin stuff in the "Tools" menu to the "Settings" menu
 
 Version 0.860
 	* Removed all plugin-related code and documentation
