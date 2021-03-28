@@ -1,5 +1,6 @@
 Version 0.870
 	* New version
+	* Fixed the "Hide manager" menu icon
 
 Version 0.860
 	* Removed all plugin-related code and documentation

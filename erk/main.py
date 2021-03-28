@@ -732,7 +732,7 @@ class Erk(QMainWindow):
 			self.toolsMenu.addAction(entry)
 
 		if config.ENABLE_IGNORE:
-			entry = MenuAction(self,HIDE_ICON,"Ignore manager","Add and remove ignore list entries",25,self.menuIgnore)
+			entry = MenuAction(self,HIDE_MENU_ICON,"Ignore manager","Add and remove ignore list entries",25,self.menuIgnore)
 			self.toolsMenu.addAction(entry)
 
 		entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
