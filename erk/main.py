@@ -716,20 +716,20 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,FULLSCREEN_WINDOW_ICON,"Full screen","Toggle full screen mode",25,l)
 			self.settingsMenu.addAction(entry)
 
-			showPlugins = True
-			if self.block_plugins: showPlugins = False
-			if not config.ENABLE_PLUGINS: showPlugins = False
+			# showPlugins = True
+			# if self.block_plugins: showPlugins = False
+			# if not config.ENABLE_PLUGINS: showPlugins = False
 
-			if showPlugins:
+			# if showPlugins:
 
-				entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
-				self.settingsMenu.addAction(entry)
+			# 	entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
+			# 	self.settingsMenu.addAction(entry)
 
-				entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
-				self.settingsMenu.addAction(entry)
+			# 	entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
+			# 	self.settingsMenu.addAction(entry)
 
-				entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
-				self.settingsMenu.addAction(entry)
+			# 	entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
+			# 	self.settingsMenu.addAction(entry)
 
 		# Tools menu
 		# self.toolsMenu
@@ -775,15 +775,15 @@ class Erk(QMainWindow):
 
 		if plugins_enabled:
 			if config.SHOW_PLUGINS_MENU:
-				if len(plugins.PLUGINS)>0:
+				#if len(plugins.PLUGINS)>0:
 
-					if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
-						self.pluginsMenu = self.menubar.addMenu("Plugins")
-					else:
-						self.pluginsMenu.clear()
-						add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
+				if USE_QT5_QMENUBAR_INSTEAD_OF_TOOLBAR:
+					self.pluginsMenu = self.menubar.addMenu("Plugins")
+				else:
+					self.pluginsMenu.clear()
+					add_toolbar_menu(self.toolbar,"Plugins",self.pluginsMenu)
 
-					self.buildPluginMenu()
+				self.buildPluginMenu()
 
 		# Help menu
 
@@ -868,98 +868,112 @@ class Erk(QMainWindow):
 
 		self.pluginsMenu.clear()
 
-		files = {}
-		for p in plugins.PLUGINS:
-			if p.filename in files:
-				files[p.filename].append(p)
-			else:
-				files[p.filename] = [p]
+		entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
+		self.pluginsMenu.addAction(entry)
 
-		
+		entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
+		self.pluginsMenu.addAction(entry)
 
-		for file in files:
+		entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
+		self.pluginsMenu.addAction(entry)
 
-			e = (files[file][:1] or [None])[0]
-			pname = e.package
-			if pname==None: pname = os.path.basename(file)
+		if len(plugins.PLUGINS)>0:
 
-			ico = e.icon
-			if ico==None: ico = PLUGIN_MENU_ICON
+			#self.pluginsMenu.addSeparator()
 
-			m = self.pluginsMenu.addMenu(QIcon(ico),pname)
+			e = textSeparator(self,"Loaded Plugins")
+			self.pluginsMenu.addAction(e)
 
-			for p in files[file]:
-
-				if plugins.is_plugin_disabled(p):
-					disabled = True
+			files = {}
+			for p in plugins.PLUGINS:
+				if p.filename in files:
+					files[p.filename].append(p)
 				else:
-					disabled = False
+					files[p.filename] = [p]
 
-				if p.class_icon!=None:
-					icon = p.class_icon
-				else:
-					icon = PLUGIN_ICON
+			for file in files:
 
-				if p.plugin_description()!=None:
-					entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
-				else:
-					entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
+				e = (files[file][:1] or [None])[0]
+				pname = e.package
+				if pname==None: pname = os.path.basename(file)
 
-				m.addAction(entry)
+				ico = e.icon
+				if ico==None: ico = PLUGIN_MENU_ICON
 
-				if config.SHOW_PLUGIN_INFO_IN_MENU:
+				m = self.pluginsMenu.addMenu(QIcon(ico),pname)
 
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>File:</b> "+os.path.basename(file)+"</small>" )
-					entry = QWidgetAction(self)
-					entry.setDefaultWidget(entryLabel)
+				for p in files[file]:
+
+					if plugins.is_plugin_disabled(p):
+						disabled = True
+					else:
+						disabled = False
+
+					if p.class_icon!=None:
+						icon = p.class_icon
+					else:
+						icon = PLUGIN_ICON
+
+					if p.plugin_description()!=None:
+						entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.plugin_description(),25)
+					else:
+						entry = MenuNoActionRaw(self,icon,p.plugin_name()+" "+p.plugin_version()+"&nbsp;&nbsp;",p.id(),25)
+
 					m.addAction(entry)
 
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Class:</b> "+p.class_name()+"</small>" )
-					entry = QWidgetAction(self)
-					entry.setDefaultWidget(entryLabel)
-					m.addAction(entry)
+					if config.SHOW_PLUGIN_INFO_IN_MENU:
 
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Size:</b> "+str(convert_size(os.path.getsize(file)))+"</small>" )
-					entry = QWidgetAction(self)
-					entry.setDefaultWidget(entryLabel)
-					m.addAction(entry)
-
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Memory:</b> "+str(convert_size(p.size))+"</small>" )
-					entry = QWidgetAction(self)
-					entry.setDefaultWidget(entryLabel)
-					m.addAction(entry)
-
-					entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Events:</b> "+str(p.events)+"</b></small>" )
-					entry = QWidgetAction(self)
-					entry.setDefaultWidget(entryLabel)
-					m.addAction(entry)
-
-					if not p.is_home_plugin:
-						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Loaded from an external source</b></small>" )
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>File:</b> "+os.path.basename(file)+"</small>" )
 						entry = QWidgetAction(self)
 						entry.setDefaultWidget(entryLabel)
 						m.addAction(entry)
 
-				if disabled:
-					entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
-					entry.triggered.connect(lambda state,u=p: self.enable_plugin(u))
-				else:
-					entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
-					entry.triggered.connect(lambda state,u=p: self.disable_plugin(u))
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Class:</b> "+p.class_name()+"</small>" )
+						entry = QWidgetAction(self)
+						entry.setDefaultWidget(entryLabel)
+						m.addAction(entry)
 
-				m.addAction(entry)
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Size:</b> "+str(convert_size(os.path.getsize(file)))+"</small>" )
+						entry = QWidgetAction(self)
+						entry.setDefaultWidget(entryLabel)
+						m.addAction(entry)
 
-				m.addSeparator()
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Memory:</b> "+str(convert_size(p.size))+"</small>" )
+						entry = QWidgetAction(self)
+						entry.setDefaultWidget(entryLabel)
+						m.addAction(entry)
 
-		self.pluginsMenu.addSeparator()
+						entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Events:</b> "+str(p.events)+"</b></small>" )
+						entry = QWidgetAction(self)
+						entry.setDefaultWidget(entryLabel)
+						m.addAction(entry)
 
-		entry = QAction(QIcon(ENABLE_ICON),"Enable all plugins",self)
-		entry.triggered.connect(self.enable_all_plugins)
-		self.pluginsMenu.addAction(entry)
+						if not p.is_home_plugin:
+							entryLabel = QLabel( "<small>&nbsp;&nbsp;&nbsp;<b>Loaded from an external source</b></small>" )
+							entry = QWidgetAction(self)
+							entry.setDefaultWidget(entryLabel)
+							m.addAction(entry)
 
-		entry = QAction(QIcon(BAN_ICON),"Disable all plugins",self)
-		entry.triggered.connect(self.disable_all_plugins)
-		self.pluginsMenu.addAction(entry)
+					if disabled:
+						entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
+						entry.triggered.connect(lambda state,u=p: self.enable_plugin(u))
+					else:
+						entry = QAction(QIcon(CHECKED_ICON),"Enabled",self)
+						entry.triggered.connect(lambda state,u=p: self.disable_plugin(u))
+
+					m.addAction(entry)
+
+					m.addSeparator()
+
+			# self.pluginsMenu.addSeparator()
+
+			entry = QAction(QIcon(ENABLE_ICON),"Enable all plugins",self)
+			entry.triggered.connect(self.enable_all_plugins)
+			self.pluginsMenu.addAction(entry)
+
+			entry = QAction(QIcon(BAN_ICON),"Disable all plugins",self)
+			entry.triggered.connect(self.disable_all_plugins)
+			self.pluginsMenu.addAction(entry)
 
 	def disable_all_plugins(self):
 		plugins.disable_all_plugins()

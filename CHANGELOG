@@ -12,6 +12,8 @@ Version 0.870
 	* Disconnect entry in the main menu is now a "fancy" menu entry
 	* Redesigned the main menu, using all "fancy" menu entries
 	* Moved plugin stuff in the "Tools" menu to the "Settings" menu
+	* Plugin menu now appears regardless of whether any plugins are installed or not
+	* Plugin menu stuff is now in the permanent plugin menu
 
 Version 0.860
 	* Removed all plugin-related code and documentation
