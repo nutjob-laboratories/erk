@@ -4,6 +4,10 @@ Version 0.870
 	* Added a menu entry to load plugins from a user-selected directory
 	* Bugfix: the script editor now closes properly instead of hanging when launcher as a stand-alone app
 	* Changed the commandline option to launch the script editor: now -e, --edit, and --scripter can be used
+	* Moved the contents of the "Emoji" tab to the "Text Input" tab in the "settings" dialog
+	* Gave scripting it's own tab, and created a plugins tab in the "settings" dialog
+	* Changed the plugin icon from the python image to a puzzle piece
+	* Changed the "load plugin directory" icon to a puzzle piece with a magnifying glass
 
 Version 0.860
 	* Removed all plugin-related code and documentation

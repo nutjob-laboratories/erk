@@ -831,26 +831,7 @@ class Dialog(QDialog):
 			if self.parent.block_commands:
 				self.inputCommands.setEnabled(False)
 
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.inputCommands)
-		cpLayout.addWidget(self.inputMe)
-		cpLayout.addWidget(histBox)
-		cpLayout.addWidget(autoBox)
-		cpLayout.addStretch()
 
-		self.inputPage.setLayout(cpLayout)
-
-		# EMOJI SETTINGS
-		self.emojiPage = QWidget()
-
-		entry = QListWidgetItem()
-		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Emojis")
-		entry.widget = self.emojiPage
-		entry.setIcon(QIcon(EMOJI_ICON))
-		self.selector.addItem(entry)
-
-		self.stack.addWidget(self.emojiPage)
 
 		self.emojiComplete = QCheckBox("Auto-complete emoji shortcodes",self)
 		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
@@ -858,12 +839,50 @@ class Dialog(QDialog):
 		self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
 		if config.USE_EMOJIS: self.emojiInput.setChecked(True)
 
+		ebLayout = QVBoxLayout()
+		ebLayout.addWidget(self.emojiInput)
+		ebLayout.addWidget(self.emojiComplete)
+
+		emojiBox = QGroupBox("Emojis",self)
+		emojiBox.setLayout(ebLayout)
+
+		emojiBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.emojiInput)
-		cpLayout.addWidget(self.emojiComplete)
+		cpLayout.addWidget(self.inputCommands)
+		cpLayout.addWidget(self.inputMe)
+		cpLayout.addWidget(histBox)
+		cpLayout.addWidget(autoBox)
+		cpLayout.addWidget(emojiBox)
 		cpLayout.addStretch()
 
-		self.emojiPage.setLayout(cpLayout)
+		self.inputPage.setLayout(cpLayout)
+
+		# # EMOJI SETTINGS
+		# self.emojiPage = QWidget()
+
+		# entry = QListWidgetItem()
+		# entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		# entry.setText("Emojis")
+		# entry.widget = self.emojiPage
+		# entry.setIcon(QIcon(EMOJI_ICON))
+		# self.selector.addItem(entry)
+
+		# self.stack.addWidget(self.emojiPage)
+
+		# self.emojiComplete = QCheckBox("Auto-complete emoji shortcodes",self)
+		# if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
+
+		# self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
+		# if config.USE_EMOJIS: self.emojiInput.setChecked(True)
+
+		# cpLayout = QVBoxLayout()
+		# cpLayout.addWidget(self.emojiInput)
+		# cpLayout.addWidget(self.emojiComplete)
+		# cpLayout.addStretch()
+
+		# self.emojiPage.setLayout(cpLayout)
 
 		# Spellcheck settings
 
@@ -966,7 +985,7 @@ class Dialog(QDialog):
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Extensions")
+		entry.setText("Scripting")
 		entry.widget = self.featuresPage
 		entry.setIcon(QIcon(SCRIPT_ICON))
 		self.selector.addItem(entry)
@@ -1002,15 +1021,52 @@ class Dialog(QDialog):
 		scriptLayout.addWidget(self.enableMacros)
 		scriptLayout.addWidget(self.saveMacros)
 		scriptLayout.addWidget(self.autoMacros)
+		scriptLayout.addStretch()
 
-		scriptBox = QGroupBox("Scripting",self)
-		scriptBox.setLayout(scriptLayout)
+		# scriptBox = QGroupBox("Scripting",self)
+		# scriptBox.setLayout(scriptLayout)
 
-		scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		# scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		
 
 		if self.parent!= None:
 			if self.parent.cmdline_script:
-				scriptBox.setEnabled(False)
+				self.scriptMisc.setEnabled(False)
+				self.sglobalMisc.setEnabled(False)
+				self.seditMisc.setEnabled(False)
+				self.autoMacros.setEnabled(False)
+				self.saveMacros.setEnabled(False)
+				self.enableMacros.setEnabled(False)
+
+		# BEGIN PLUGINS
+
+		
+
+		# END PLUGINS
+
+		# cpLayout = QVBoxLayout()
+		# cpLayout.addWidget(scriptBox)
+		# cpLayout.addWidget(plugBox)
+
+		# cpLayout.addStretch()
+
+		self.featuresPage.setLayout(scriptLayout)
+
+		# Plugins page
+
+		self.pluginsPage = QWidget()
+
+		entry = QListWidgetItem()
+		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
+		entry.setText("Plugins")
+		entry.widget = self.pluginsPage
+		entry.setIcon(QIcon(PLUGIN_ICON))
+		self.selector.addItem(entry)
+
+		self.stack.addWidget(self.pluginsPage)
+
+
 
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
@@ -1037,23 +1093,22 @@ class Dialog(QDialog):
 		plugLayout.addWidget(self.detPlugins)
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
+		plugLayout.addStretch()
 
-		plugBox = QGroupBox("Plugins",self)
-		plugBox.setLayout(plugLayout)
-
-		plugBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		if self.parent!= None:
 			if self.parent.block_plugins:
-				plugBox.setEnabled(False)
+				self.enPlugins.setEnabled(False)
+				self.showPlugins.setEnabled(False)
+				self.igPlugins.setEnabled(False)
+				self.detPlugins.setEnabled(False)
+				self.autoPlugins.setEnabled(False)
+				self.helpPlugins.setEnabled(False)
 
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(scriptBox)
-		cpLayout.addWidget(plugBox)
 
-		cpLayout.addStretch()
 
-		self.featuresPage.setLayout(cpLayout)
+
+		self.pluginsPage.setLayout(plugLayout)
 
 		# Miscellaneous settings
 
