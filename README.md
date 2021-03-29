@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
@@ -44,8 +45,9 @@
 * An extensive set of configuration options
   * Almost every part of the interface can be customized
   * Most behaviors can be customized
-  * Over 50 display and configuration options settable in the GUI
-  * Scripting, menus, and more can be disabled from the command-line
+  * Over 80 display and configuration options settable in the GUI
+  * Over 30 different command line options
+  * Scripting, menus, plugins, and more can be disabled from the command line
 * Text colors are customizeable
   * Any text, from nicknames to messages to hyperlinks, can use custom colors
   * Text rendering setting are stored in "style files", and can be shared
@@ -59,7 +61,7 @@
   * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 * Command/nickname auto-completion
   * Type the first few letters of a command or nickname and hit the tab key
-  * Auto-complete works for emoji shortcodes, too
+  * Auto-complete works for emoji shortcodes, custom macros, and plugin commands, too!
 * Optional profanity filter
 * Full IRC color support
   * Colors are rendered in the client (and rendering can be turned off)
@@ -67,6 +69,7 @@
 * Automatic logging of channel and private chats
   * Logging can be switched on and off
   * Logs can be automatically loaded when resuming public or private chats
+  * Features a log export tool that can export to JSON, CSV, or many other formats
 * Powerful scripting engine
   * Almost anything you can do in the client, you can do in a script
   * Scripts can be triggered to execute on server connection or manually
@@ -76,6 +79,7 @@
     * Create, open, and edit scripts
     * Syntax highlighting
     * Run scripts on any connection the client is connected to
+    * Edit and create **Ərk** scripts directly from the command line!
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
  * Powerful plugin engine
    * Plugins are written in Python 3, just like **Ərk**
@@ -84,7 +88,7 @@
    * Most IRC events can be caught
    * Obscure blog and forums posts aren't needed, [plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
    * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!
-* An extensive set of command-line flags, allowing for _even more_ configuration options
+* An extensive set of command line flags, allowing for _even more_ configuration options
   * Disable most features on startup
   * Connect to an IRC server from the command-line
   * Support for connecting via [IRC URLs](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
@@ -102,7 +106,7 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
-To run properly on Linux, the latest version of all required software is recommended.  [qt5reactor](https://github.com/twisted/qt5reactor), a requirement for older versions of **Ərk**, is now bundled with the application. There are four libraries that come bundled with **Ərk**:
+To run properly on Linux, the latest version of all required software is recommended.  There are four libraries that come bundled with **Ərk**:
 
  - [pike](https://github.com/pyarmory/pike)
  - [emoji](https://github.com/carpedm20/emoji)
@@ -203,7 +207,7 @@ The previous name for this client was "Quirc", but after working on it for a whi
 
 ## Can I use **Ərk** to chat on IRC?
 
-Yes! Most basic functionality is done, and it's ready for most IRC stuff. If  you're just looking for a client to chat, and don't really care about the "bells and whistles", then **Ərk** is ready to go!
+Yes! Most basic functionality is done, and it's ready for most IRC stuff. If you're just looking for a client to chat, and don't really care about the "bells and whistles", then **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
@@ -215,11 +219,11 @@ No. The current version, 0.870.017, is still a pre-release. I'm still adding and
 My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.9.0, and I use [Sublime Text 3](https://www.sublimetext.com/) for my code editor.
 
 ## How configurable is **Ərk**?
-*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single chat window with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and plugins and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
+*Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single channel with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and plugins and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
     python erk.py -o --noextensions --nomenu --nodisplay --channel "#erk" irc.efnet.org 6667
 
-And that's only using the command-line options! **Ərk** has over 50 different settings available, as well as over 20 different command-line options.
+And that's only using the command-line options! **Ərk** has over 80 different settings available, as well as over 30 different command-line options.
 
 When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
 
@@ -234,7 +238,7 @@ When I started writing **Ərk**, one of my goals was to make it as configurable 
  - **`scripts`** - Contains connection scripts. Put your **Ərk** scripts in this directory so  that they're easily findable by the client. This is also the default location when you're saving scripts created with the script editor.
  - **`styles`** - Contains any text styles that you've created, as well as the default text style **Ərk** uses.
    - `default.style` - The default text style for **Ərk**. If this file is missing, **Ərk** will re-create it with default settings.
- - **`logs`** - This is where **Ərk** stores all chat logs. Logs are stored in JSON, and use a format specific to **Ərk**. If you want to export your logs, use the "Export Log" entry in the "Settings & Tools" menu, or launch **Ərk** with `python erk.py --export` to launch a GUI log export wizard. You can export them to plain text (with your choice of delimiters) or to JSON.
+ - **`logs`** - This is where **Ərk** stores all chat logs. Logs are stored in JSON, and use a format specific to **Ərk**. If you want to export your logs, use the "Export Log" entry in the "Tools" menu, or launch **Ərk** with `python erk.py --export` to launch a GUI log export wizard. You can export them to plain text (with your choice of delimiters) or to JSON.
  - **`plugins`** - This is where **Ərk** stores and loads plugins from. Installing a plugin is as easy as placing it in this directory.
 
 ## How do you write plugins for Ərk?
@@ -259,6 +263,9 @@ Everything you need to write your own **Ərk** plugins is in the [**Ərk** Plugi
 
 ## Some of the options are weird...why is there a profanity filter?!
 Both my parents were teachers, and all of my grandparents were teachers. Having the ability to configure **Ərk** to run in a classroom environment was (and is) one of my goals. That's part of the reason why I've included configuration options to "lock down" **Ərk** while it's running (like the ability to disable command input, remove GUI menus, disable most customization and features, and, yes, hide profanity).
+
+## Who is writing Ərk?
+Currently, it's just me. My name is Dan Hetrick. I'm 47 years old as of 2021, and I've been a software developer for many years, though no longer professionally. I began writing Quirc, the IRC client that eventually became **Ərk**, in order to learn Python 3, and to learn the ins and outs of the Qt library. Quirc died off, got re-written and/or refactored a few (dozen) times, got renamed once I found out there already was an IRC client named [Quirc](https://quirc.org/), and eventually became **Ərk**! I've been working on this client for a little over 2.5 years as my primary project, and I'm rather proud of it. I use **Ərk** as my primary IRC client, and have for almost 2 years.
 
 ## Another IRC client? Why not use HexChat?
 
