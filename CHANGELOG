@@ -20,6 +20,7 @@ Version 0.870
 	* Added a settings to the config file: a list of directories to also load plugins from
 	* Added a bit to the "plugins" page in the "settings" dialog to set (and remove) directories to load plugins from
 	* The plugins load list is now checked for duplicates (with duplicates being removed) before loading
+	* Bugfix: syntax formatter now handles multi-char macro interpolation symbols
 
 Version 0.860
 	* Removed all plugin-related code and documentation

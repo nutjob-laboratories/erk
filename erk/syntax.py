@@ -117,6 +117,12 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 				c = '\\'+c
 			interp = interp + c
 
+		minterp = ''
+		for c in config.MACRO_INTERPOLATE_SYMBOL:
+			if c in special:
+				c = '\\'+c
+			minterp = minterp + c
+
 		# Channel names
 		rules += [
 			(r'(#\w+)', 0, STYLES['channel']),
@@ -124,6 +130,7 @@ class ErkScriptHighlighter (QSyntaxHighlighter):
 			(r'(\!\w+)', 0, STYLES['channel']),
 			(r'(\+\w+)', 0, STYLES['channel']),
 			(rf'({interp}\w+)', 0, STYLES['alias']),
+			(rf'({minterp}\w+)', 0, STYLES['alias']),
 		]
 
 		# Build a QRegExp for each pattern
