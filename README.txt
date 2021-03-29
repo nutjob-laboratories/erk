@@ -45,20 +45,10 @@
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
-  * Almost every part of the interface can be customized
-  * Most behaviors can be customized
   * Over 80 display and configuration options settable in the GUI
   * Over 30 different command line options
-  * Scripting, menus, plugins, and more can be disabled from the command line
-* Text colors are customizeable
-  * Any text, from nicknames to messages to hyperlinks, can use custom colors
-  * Text rendering setting are stored in "style files", and can be shared
-  * Every text-displaying window can be styled: channels, private chats, and server consoles
-  * Chat styles are "remembered" and loaded automatically
-  * Features a built-in style file editor
-* Built-in [spell checker](https://github.com/barrust/pyspellchecker)
-  * Supports English, Spanish, French, and German
-  * Right click on misspelled words for suggested spellings/words
+* Text colors are customize-able
+* Built-in [spell checker](https://github.com/barrust/pyspellchecker) (supports English, Spanish, French, and German)
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) support
   * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 * Command/nickname auto-completion
@@ -66,27 +56,14 @@
   * Auto-complete works for emoji shortcodes, custom macros, and plugin commands, too!
 * Optional profanity filter
 * Full IRC color support
-  * Colors are rendered in the client (and rendering can be turned off)
-  * Full support for using foreground and background colors in outgoing messages
 * Automatic logging of channel and private chats
-  * Logging can be switched on and off
-  * Logs can be automatically loaded when resuming public or private chats
-  * Features a log export tool that can export to JSON, CSV, or many other formats
 * Powerful scripting engine
-  * Almost anything you can do in the client, you can do in a script
-  * Scripts can be triggered to execute on server connection or manually
-  * Scripts run in a separate thread, so running a script won't interrupt your chatting
-  * Micro-script editor built into the connection dialog
   * A script editor is built into the client
     * Create, open, and edit scripts
     * Syntax highlighting
-    * Run scripts on any connection the client is connected to
-    * Edit and create **Ərk** scripts directly from the command line!
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
  * Powerful plugin engine
    * Plugins are written in Python 3, just like **Ərk**
-   * Plugins are stored in a user's home directory
-   * Plugins can also be loaded from _anywhere_ in the file system
    * Most IRC events can be caught
    * Obscure blog and forums posts aren't needed, [plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
    * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!

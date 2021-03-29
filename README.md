@@ -3,12 +3,12 @@
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.018</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.019</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.018**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.019**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -45,20 +45,10 @@
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
-  * Almost every part of the interface can be customized
-  * Most behaviors can be customized
   * Over 80 display and configuration options settable in the GUI
   * Over 30 different command line options
-  * Scripting, menus, plugins, and more can be disabled from the command line
-* Text colors are customizeable
-  * Any text, from nicknames to messages to hyperlinks, can use custom colors
-  * Text rendering setting are stored in "style files", and can be shared
-  * Every text-displaying window can be styled: channels, private chats, and server consoles
-  * Chat styles are "remembered" and loaded automatically
-  * Features a built-in style file editor
-* Built-in [spell checker](https://github.com/barrust/pyspellchecker)
-  * Supports English, Spanish, French, and German
-  * Right click on misspelled words for suggested spellings/words
+* Text colors are customize-able
+* Built-in [spell checker](https://github.com/barrust/pyspellchecker) (supports English, Spanish, French, and German)
 * [Emoji](https://en.wikipedia.org/wiki/Emoji) support
   * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 * Command/nickname auto-completion
@@ -66,27 +56,14 @@
   * Auto-complete works for emoji shortcodes, custom macros, and plugin commands, too!
 * Optional profanity filter
 * Full IRC color support
-  * Colors are rendered in the client (and rendering can be turned off)
-  * Full support for using foreground and background colors in outgoing messages
 * Automatic logging of channel and private chats
-  * Logging can be switched on and off
-  * Logs can be automatically loaded when resuming public or private chats
-  * Features a log export tool that can export to JSON, CSV, or many other formats
 * Powerful scripting engine
-  * Almost anything you can do in the client, you can do in a script
-  * Scripts can be triggered to execute on server connection or manually
-  * Scripts run in a separate thread, so running a script won't interrupt your chatting
-  * Micro-script editor built into the connection dialog
   * A script editor is built into the client
     * Create, open, and edit scripts
     * Syntax highlighting
-    * Run scripts on any connection the client is connected to
-    * Edit and create **Ərk** scripts directly from the command line!
   * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
  * Powerful plugin engine
    * Plugins are written in Python 3, just like **Ərk**
-   * Plugins are stored in a user's home directory
-   * Plugins can also be loaded from _anywhere_ in the file system
    * Most IRC events can be caught
    * Obscure blog and forums posts aren't needed, [plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
    * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!
@@ -213,7 +190,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. If you
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.870.018, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.870.019, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 

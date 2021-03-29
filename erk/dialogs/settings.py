@@ -1101,9 +1101,14 @@ class Dialog(QDialog):
 		self.removeDirectory.clicked.connect(self.plugbuttonRemove)
 		self.removeDirectory.setAutoDefault(False)
 
+		self.clearDirectories = QPushButton("Clear")
+		self.clearDirectories.clicked.connect(self.plugbuttonClear)
+		self.clearDirectories.setAutoDefault(False)
+
 		aLayout = QHBoxLayout()
 		aLayout.addWidget(self.addDirectory)
 		aLayout.addWidget(self.removeDirectory)
+		aLayout.addWidget(self.clearDirectories)
 		
 		bLayout = QVBoxLayout()
 		bLayout.addWidget(self.plug_list)
@@ -1295,6 +1300,9 @@ class Dialog(QDialog):
 	def plugbuttonRemove(self):
 		i = self.plug_list.currentRow()
 		self.plug_list.takeItem(i)
+
+	def plugbuttonClear(self):
+		self.plug_list.clear()
 
 	def save(self):
 
