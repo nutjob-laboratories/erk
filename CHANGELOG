@@ -31,6 +31,8 @@ Version 0.870
 	* Added settings to limit list searches the channel names and a toggle to mark beginning/end of list searches
 	* Added new list search settings to the "settings" dialog
 	* Bugfix: Horizontal rules in chat (and date markers) are now always rendered in black
+	* Bugfix: config file verification would incorrectly reject proper config files
+	* Bugfix: some settings weren't being imported properly on config file import
 
 Version 0.860
 	* Removed all plugin-related code and documentation

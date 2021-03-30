@@ -1718,7 +1718,7 @@ class Dialog(QDialog):
 				self.autoPlugins.setChecked(config.AUTOCOMPLETE_PLUGINS)
 				self.helpPlugins.setChecked(config.PLUGIN_HELP)
 				self.listMark.setChecked(config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH)
-				self.listLimit.setChecked(LIMIT_LIST_SEARCH_TO_CHANNEL_NAME.PLUGIN_HELP)
+				self.listLimit.setChecked(config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME)
 
 			else:
 				msg = QMessageBox(self)
