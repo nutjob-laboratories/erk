@@ -245,15 +245,15 @@ def render_message(message,client,renderstyle):
 		style = renderstyle["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
 
-		if IS_BACKGROUND_LIGHT==None:
-			test_if_background_is_light(renderstyle["all"])
+		# if IS_BACKGROUND_LIGHT==None:
+		# 	test_if_background_is_light(renderstyle["all"])
 
-		if IS_BACKGROUND_LIGHT==True:
-			output = HORIZONTAL_RULE
-		elif IS_BACKGROUND_LIGHT==False:
-			output = LIGHT_HORIZONTAL_RULE
-		else:
-			output = HORIZONTAL_RULE
+		# if IS_BACKGROUND_LIGHT==True:
+		# 	output = HORIZONTAL_RULE
+		# elif IS_BACKGROUND_LIGHT==False:
+		# 	output = LIGHT_HORIZONTAL_RULE
+		# else:
+		output = HORIZONTAL_RULE
 
 		#output = HORIZONTAL_RULE
 		style = renderstyle["message"]
@@ -265,15 +265,15 @@ def render_message(message,client,renderstyle):
 		style = renderstyle["plugin"]
 	elif message.type==DATE_MESSAGE:
 
-		if IS_BACKGROUND_LIGHT==None:
-			test_if_background_is_light(renderstyle["all"])
+		# if IS_BACKGROUND_LIGHT==None:
+		# 	test_if_background_is_light(renderstyle["all"])
 
-		if IS_BACKGROUND_LIGHT==True:
-			output = DATE_MESSAGE_TEMPLATE
-		elif IS_BACKGROUND_LIGHT==False:
-			output = LIGHT_DATE_MESSAGE_TEMPLATE
-		else:
-			output = DATE_MESSAGE_TEMPLATE
+		# if IS_BACKGROUND_LIGHT==True:
+		# 	output = DATE_MESSAGE_TEMPLATE
+		# elif IS_BACKGROUND_LIGHT==False:
+		# 	output = LIGHT_DATE_MESSAGE_TEMPLATE
+		# else:
+		output = DATE_MESSAGE_TEMPLATE
 
 		#output = DATE_MESSAGE_TEMPLATE
 		style = renderstyle["message"]

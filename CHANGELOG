@@ -30,6 +30,7 @@ Version 0.870
 	* List messages can use HTML in their message portion of the message (unlike anything else but plugin messages)
 	* Added settings to limit list searches the channel names and a toggle to mark beginning/end of list searches
 	* Added new list search settings to the "settings" dialog
+	* Bugfix: Horizontal rules in chat (and date markers) are now always rendered in black
 
 Version 0.860
 	* Removed all plugin-related code and documentation
