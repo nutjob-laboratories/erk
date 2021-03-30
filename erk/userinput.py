@@ -827,7 +827,7 @@ def handle_common_input(window,client,text):
 	if len(tokens)>0:
 		if len(tokens)==1 and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'refresh':
 			client.sendLine("LIST")
-			msg = Message(SYSTEM_MESSAGE,'',"Sent channel list request to the server")
+			msg = Message(LIST_MESSAGE,'',"Sent channel list request to the server")
 			window.writeText(msg,True)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'refresh':

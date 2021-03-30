@@ -34,6 +34,8 @@ Version 0.870
 	* Bugfix: config file verification would incorrectly reject proper config files
 	* Bugfix: some settings weren't being imported properly on config file import
 	* The config file patcher now will patch for *ALL* missing settings
+	* Bugfix: the /refresh command now uses the new list message type
+	* Updated the command documentation to reflect the new channel list search and features
 
 Version 0.860
 	* Removed all plugin-related code and documentation
