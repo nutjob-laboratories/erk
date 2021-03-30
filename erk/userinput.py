@@ -43,7 +43,7 @@ from PyQt5 import QtCore
 from .objects import *
 from .files import *
 from . import config
-from .irc import ScriptThreadWindow
+from .irc import ScriptThreadWindow,SearchListThread,found_in_list
 from . import events
 from . import plugins
 
@@ -60,6 +60,8 @@ CHAT_HELP_ENTRIES = []
 CMDLINE_BLOCK_SCRIPTS = False
 CMDLINE_BLOCK_EDITOR = False
 CMDLINE_BLOCK_STYLES = False
+
+LIST_THREAD = None
 
 def buildHelp():
 
@@ -734,6 +736,7 @@ def handle_console_input(window,client,text):
 	if handle_common_input(window,client,text): return
 
 def handle_common_input(window,client,text):
+	global LIST_THREAD
 
 	tokens = text.split()
 
@@ -837,17 +840,13 @@ def handle_common_input(window,client,text):
 			if len(client.channels)==0:
 				client.list_requested = True
 				client.list_window = window
+				client.list_search = "*"
 				client.sendLine("LIST")
 				return True
 			else:
-				msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
-				window.writeText(msg,True)
-				for e in client.channellist:
-					if len(e.topic.strip())>0:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
-					else:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
-					window.writeText(msg,True)
+				LIST_THREAD = SearchListThread(client.channellist,'*',window)
+				LIST_THREAD.found.connect(found_in_list)
+				LIST_THREAD.start()
 				return True
 
 		if len(tokens)>=2 and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'list':
@@ -860,22 +859,9 @@ def handle_common_input(window,client,text):
 				client.sendLine("LIST")
 				return True
 			else:
-				msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
-				window.writeText(msg,True)
-				msg = Message(PLUGIN_MESSAGE,'',"Channels with <b><i>"+terms+"</i></b> in the name or topic")
-				window.writeText(msg,True)
-				for e in client.channellist:
-
-					found = False
-					if fnmatch.fnmatch(e.name,terms): found = True
-					if fnmatch.fnmatch(e.topic,terms): found = True
-					if not found: continue
-
-					if len(e.topic.strip())>0:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
-					else:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
-					window.writeText(msg,True)
+				LIST_THREAD = SearchListThread(client.channellist,terms,window)
+				LIST_THREAD.found.connect(found_in_list)
+				LIST_THREAD.start()
 				return True
 
 	if len(tokens)>0:

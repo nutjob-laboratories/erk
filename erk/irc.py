@@ -834,21 +834,13 @@ class IRC_Connection(irc.IRCClient):
 		self.channellist.append(e)
 
 		if self.list_requested:
-			
-			found = False
-			if self.list_search!=None:
-				if fnmatch.fnmatch(e.name,self.list_search): found = True
-				if fnmatch.fnmatch(e.topic,self.list_search): found = True
-
-			if self.list_search!=None:
-				if not found: return
-
-			if len(e.topic.strip())>0:
-				msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
-			else:
-				msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
-			self.list_window.writeText(msg,True)
-
+			if self.list_window!=None:
+				if self.list_search=='*':
+					if len(e.topic.strip())>0:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+					else:
+						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+					self.list_window.writeText(msg,True)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
 		server = prefix
@@ -858,17 +850,14 @@ class IRC_Connection(irc.IRCClient):
 
 		self.last_fetch = self.uptime
 
-		if self.list_requested:
-
-			msg = Message(HORIZONTAL_RULE_MESSAGE,'','')
-			self.list_window.writeText(msg,True)
-
-			if self.list_search!=None:
-				msg = Message(PLUGIN_MESSAGE,'',"Channels with <b><i>"+self.list_search+"</i></b> in the name or topic")
-				self.list_window.writeText(msg,True)
-
 	def irc_RPL_LISTEND(self,prefix,params):
 		server = prefix
+
+		if self.list_requested:
+			if self.list_search!='*':
+				self.listhread = SearchListThread(self.channellist,self.list_search,self.list_window)
+				self.listhread.found.connect(found_in_list)
+				self.listhread.start()
 
 		self.list_requested = False
 		self.list_window = None
@@ -1325,6 +1314,39 @@ class UptimeHeartbeat(QThread):
 	def stop(self):
 		self.threadactive = False
 		self.wait()
+
+
+def found_in_list(args):
+	window = args[0]
+	e = args[1]
+
+	if len(e.topic.strip())>0:
+		msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+	else:
+		msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+	window.writeText(msg,True)
+
+
+
+class SearchListThread(QThread):
+
+	found = pyqtSignal(list)
+
+	def __init__(self,list,terms,window,parent=None):
+		super(SearchListThread, self).__init__(parent)
+
+		self.list = list
+		self.terms = terms
+		self.window = window
+
+	def run(self):
+		for e in self.list:
+			found = False
+			if fnmatch.fnmatch(e.name,self.terms): found = True
+			if fnmatch.fnmatch(e.topic,self.terms): found = True
+			if not found: continue
+
+			self.found.emit( [self.window,e]   )
 
 class ScriptThread(QThread):
 

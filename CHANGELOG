@@ -22,6 +22,9 @@ Version 0.870
 	* The plugins load list is now checked for duplicates (with duplicates being removed) before loading
 	* Bugfix: syntax formatter now handles multi-char macro interpolation symbols
 	* Added a "clear all" button to the add/remove plugin directories entry in the "settings" dialog
+	* Channel list searchs are now done in a separate thread (not completely happy with *how* at the moment)
+	* Channel list rendering is now done in a separate thread (as above)
+	* Channel list with *no* search are now printed to the window as the listings come in
 
 Version 0.860
 	* Removed all plugin-related code and documentation
