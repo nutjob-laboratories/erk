@@ -408,24 +408,6 @@ def patch_settings(data):
 	if not "ask_before_quitting" in data:
 		data["ask_before_quitting"] = ASK_BEFORE_QUIT
 
-	if not "display_user_lists" in data:
-		data["display_user_lists"] = DISPLAY_USER_LIST
-
-	if not "show_connection_lost_dialog" in data:
-		data["show_connection_lost_dialog"] = SHOW_CONNECTION_LOST_ERROR
-
-	if not "show_connection_fail_dialog" in data:
-		data["show_connection_fail_dialog"] = SHOW_CONNECTION_FAIL_ERROR
-
-	if not "autosave_logs" in data:
-		data["autosave_logs"] = AUTOSAVE_LOGS
-
-	if not "autosave_log_interval_in_seconds" in data:
-		data["autosave_log_interval_in_seconds"] = AUTOSAVE_LOG_TIME
-
-	if not "autosave_cache_minimum_size" in data:
-		data["autosave_cache_minimum_size"] = AUTOSAVE_CACHE_SIZE
-
 	if not "schwa_corner_animation" in data:
 		data["schwa_corner_animation"] = SCHWA_ANIMATION
 
@@ -434,6 +416,204 @@ def patch_settings(data):
 
 	if not "animate_connecting_messages_in_connection_display" in data:
 		data["animate_connecting_messages_in_connection_display"] = CONNECTION_MESSAGE_ANIMATION
+
+	if not "autosave_cache_minimum_size" in data:
+		data["autosave_cache_minimum_size"] = AUTOSAVE_CACHE_SIZE
+
+	if not "autosave_logs" in data:
+		data["autosave_logs"] = AUTOSAVE_LOGS
+
+	if not "autosave_log_interval_in_seconds" in data:
+		data["autosave_log_interval_in_seconds"] = AUTOSAVE_LOG_TIME
+
+	if not "command_history_length" in data:
+		data["command_history_length"] = HISTORY_LENGTH
+
+	if not "chat_display_widget_spacing" in data:
+		data["chat_display_widget_spacing"] = CHAT_WINDOW_WIDGET_SPACING
+
+	if not "get_hostmasks_on_channel_join" in data:
+		data["get_hostmasks_on_channel_join"] = GET_HOSTMASKS_ON_CHANNEL_JOIN
+
+	if not "save_joined_channels" in data:
+		data["save_joined_channels"] = SAVE_JOINED_CHANNELS
+
+	if not "starting_app_width" in data:
+		data["starting_app_width"] = DEFAULT_APP_WIDTH
+
+	if not "starting_app_height" in data:
+		data["starting_app_height"] = DEFAULT_APP_HEIGHT
+
+	if not "spellcheck_input" in data:
+		data["spellcheck_input"] = SPELLCHECK_INPUT
+
+	if not "spellcheck_language" in data:
+		data["spellcheck_language"] = SPELLCHECK_LANGUAGE
+
+	if not "open_window_for_new_private_messages" in data:
+		data["open_window_for_new_private_messages"] = OPEN_NEW_PRIVATE_MESSAGE_WINDOWS
+
+	if not "minimum_nickname_display_width" in data:
+		data["minimum_nickname_display_width"] = NICK_DISPLAY_WIDTH
+
+	if not "show_timestamps" in data:
+		data["show_timestamps"] = DISPLAY_TIMESTAMP
+
+	if not "use_24hour_clock_for_timestamps" in data:
+		data["use_24hour_clock_for_timestamps"] = USE_24HOUR_CLOCK_FOR_TIMESTAMPS
+
+	if not "display_irc_color_codes" in data:
+		data["display_irc_color_codes"] = DISPLAY_IRC_COLORS
+
+	if not "convert_urls_in_messages_to_links" in data:
+		data["convert_urls_in_messages_to_links"] = CONVERT_URLS_TO_LINKS
+
+	if not "doubleclick_to_switch_chat_windows" in data:
+		data["doubleclick_to_switch_chat_windows"] = DOUBLECLICK_SWITCH
+
+	if not "font" in data:
+		data["font"] = DISPLAY_FONT
+
+	if not "display_connection_uptime" in data:
+		data["display_connection_uptime"] = DISPLAY_CONNECTION_UPTIME
+
+	if not "connection_display_location" in data:
+		data["connection_display_location"] = CONNECTION_DISPLAY_LOCATION
+
+	if not "is_connection_display_moveable" in data:
+		data["is_connection_display_moveable"] = CONNECTION_DISPLAY_MOVE
+
+	if not "connection_display_visible" in data:
+		data["connection_display_visible"] = CONNECTION_DISPLAY_VISIBLE
+
+	if not "display_channel_modes" in data:
+		data["display_channel_modes"] = DISPLAY_CHANNEL_MODES
+
+	if not "switch_to_new_chats" in data:
+		data["switch_to_new_chats"] = SWITCH_TO_NEW_WINDOWS
+
+	if not "autocomplete_nicknames" in data:
+		data["autocomplete_nicknames"] = AUTOCOMPLETE_NICKNAMES
+
+	if not "autocomplete_commands" in data:
+		data["autocomplete_commands"] = AUTOCOMPLETE_COMMANDS
+
+	if not "spellcheck_ignore_nicknames" in data:
+		data["spellcheck_ignore_nicknames"] = SPELLCHECK_IGNORE_NICKS
+
+	if not "use_emoji_shortcodes" in data:
+		data["use_emoji_shortcodes"] = USE_EMOJIS
+
+	if not "autocomplete_emoji" in data:
+		data["autocomplete_emoji"] = AUTOCOMPLETE_EMOJI
+
+	if not "filter_profanity" in data:
+		data["filter_profanity"] = FILTER_PROFANITY
+
+	if not "text_only_channel_user_lists" in data:
+		data["text_only_channel_user_lists"] = PLAIN_USER_LISTS
+
+	if not "display_channel_status" in data:
+		data["display_channel_status"] = DISPLAY_CHANNEL_STATUS_NICK_DISPLAY
+
+	if not "display_nickname_on_channels" in data:
+		data["display_nickname_on_channels"] = DISPLAY_NICKNAME_ON_CHANNEL
+
+	if not "expand_server_node_on_connection" in data:
+		data["expand_server_node_on_connection"] = EXPAND_SERVER_ON_CONNECT
+
+	if not "enable_command_history" in data:
+		data["enable_command_history"] = TRACK_COMMAND_HISTORY
+
+	if not "save_channel_logs" in data:
+		data["save_channel_logs"] = SAVE_CHANNEL_LOGS
+
+	if not "load_channel_logs" in data:
+		data["load_channel_logs"] = LOAD_CHANNEL_LOGS
+
+	if not "maximum_log_display_size" in data:
+		data["maximum_log_display_size"] = LOG_LOAD_SIZE_MAX
+
+	if not "mark_end_of_loaded_log" in data:
+		data["mark_end_of_loaded_log"] = MARK_END_OF_LOADED_LOG
+
+	if not "display_date_and_time_of_channel_log_resume" in data:
+		data["display_date_and_time_of_channel_log_resume"] = DISPLAY_CHAT_RESUME_DATE_TIME
+
+	if not "save_private_logs" in data:
+		data["save_private_logs"] = SAVE_PRIVATE_LOGS
+
+	if not "load_private_logs" in data:
+		data["load_private_logs"] = LOAD_PRIVATE_LOGS
+
+	if not "show_system_messages_prefix" in data:
+		data["show_system_messages_prefix"] = MARK_SYSTEM_MESSAGES_WITH_SYMBOL
+
+	if not "show_timestamps_with_seconds" in data:
+		data["show_timestamps_with_seconds"] = DISPLAY_TIMESTAMP_SECONDS
+
+	if not "automatically_join_on_invite" in data:
+		data["automatically_join_on_invite"] = JOIN_ON_INVITE
+
+	if not "create_links_for_channel_names" in data:
+		data["create_links_for_channel_names"] = CLICKABLE_CHANNELS
+
+	if not "connection_display_width" in data:
+		data["connection_display_width"] = CONNECTION_DISPLAY_WIDTH
+
+	if not "channel_list_refresh_in_seconds" in data:
+		data["channel_list_refresh_in_seconds"] = CHANNEL_LIST_REFRESH_FREQUENCY
+
+	if not "system_message_prefix" in data:
+		data["system_message_prefix"] = SYSTEM_MESSAGE_PREFIX
+
+	if not "automatically_fetch_channel_list" in data:
+		data["automatically_fetch_channel_list"] = AUTOMATICALLY_FETCH_CHANNEL_LIST
+
+	if not "hide_mode_messages" in data:
+		data["hide_mode_messages"] = HIDE_MODE_DISPLAY
+
+	if not "hide_topic_messages" in data:
+		data["hide_topic_messages"] = HIDE_TOPIC_MESSAGE
+
+	if not "hide_quit_messages" in data:
+		data["hide_quit_messages"] = HIDE_QUIT_MESSAGE
+
+	if not "hide_nick_messages" in data:
+		data["hide_nick_messages"] = HIDE_NICK_MESSAGE
+
+	if not "hide_invite_messages" in data:
+		data["hide_invite_messages"] = HIDE_INVITE_MESSAGE
+
+	if not "hide_part_messages" in data:
+		data["hide_part_messages"] = HIDE_PART_MESSAGE
+
+	if not "hide_join_messages" in data:
+		data["hide_join_messages"] = HIDE_JOIN_MESSAGE
+
+	if not "set_application_title_to_current_chat_name" in data:
+		data["set_application_title_to_current_chat_name"] = APP_TITLE_TO_CURRENT_CHAT
+
+	if not "show_channel_topic_in_title" in data:
+		data["show_channel_topic_in_title"] = APP_TITLE_SHOW_TOPIC
+
+	if not "chat_display_info_bar" in data:
+		data["chat_display_info_bar"] = CHAT_DISPLAY_INFO_BAR
+
+	if not "input_command_symbol" in data:
+		data["input_command_symbol"] = INPUT_COMMAND_SYMBOL
+
+	if not "display_dates_in_channel_chat" in data:
+		data["display_dates_in_channel_chat"] = DISPLAY_DATES_IN_CHANNEL_CHAT
+
+	if not "show_connection_lost_dialog" in data:
+		data["show_connection_lost_dialog"] = SHOW_CONNECTION_LOST_ERROR
+
+	if not "show_connection_fail_dialog" in data:
+		data["show_connection_fail_dialog"] = SHOW_CONNECTION_FAIL_ERROR
+
+	if not "display_user_lists" in data:
+		data["display_user_lists"] = DISPLAY_USER_LIST
 
 	return data
 
