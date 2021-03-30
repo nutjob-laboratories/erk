@@ -162,11 +162,12 @@ def render_message(message,client,renderstyle):
 	msg_to_display = message.contents
 
 	if message.type!=PLUGIN_MESSAGE:
-		# First, make sure that the message doesn't contain
-		# any HTML formatting stuff; to do this, we escape all
-		# HTML-relevant stuff so the message is *not* rendered
-		# as HTML
-		msg_to_display = html.escape(msg_to_display)
+		if message.type!=LIST_MESSAGE:
+			# First, make sure that the message doesn't contain
+			# any HTML formatting stuff; to do this, we escape all
+			# HTML-relevant stuff so the message is *not* rendered
+			# as HTML
+			msg_to_display = html.escape(msg_to_display)
 
 	if config.CLICKABLE_CHANNELS:
 		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE and message.type!=PLUGIN_SYSTEM_MESSAGE:
@@ -280,6 +281,9 @@ def render_message(message,client,renderstyle):
 		output = SYSTEM_TEMPLATE
 		style = renderstyle["system"]
 	elif message.type==MOTD_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = renderstyle["server"]
+	elif message.type==LIST_MESSAGE:
 		output = SYSTEM_TEMPLATE
 		style = renderstyle["server"]
 

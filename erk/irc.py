@@ -837,9 +837,9 @@ class IRC_Connection(irc.IRCClient):
 			if self.list_window!=None:
 				if self.list_search=='*':
 					if len(e.topic.strip())>0:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+						msg = Message(LIST_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
 					else:
-						msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+						msg = Message(LIST_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
 					self.list_window.writeText(msg,True)
 
 	def irc_RPL_LISTSTART(self,prefix,params):
@@ -857,6 +857,8 @@ class IRC_Connection(irc.IRCClient):
 			if self.list_search!='*':
 				self.listhread = SearchListThread(self.channellist,self.list_search,self.list_window)
 				self.listhread.found.connect(found_in_list)
+				self.listhread.begin.connect(begin_list)
+				self.listhread.end.connect(end_list)
 				self.listhread.start()
 
 		self.list_requested = False
@@ -1321,16 +1323,41 @@ def found_in_list(args):
 	e = args[1]
 
 	if len(e.topic.strip())>0:
-		msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
+		msg = Message(LIST_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users) - "+e.topic)
 	else:
-		msg = Message(PLUGIN_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
+		msg = Message(LIST_MESSAGE,'',"<a href=\""+e.name+"\">"+e.name+"</a> ("+str(e.count)+" users)")
 	window.writeText(msg,True)
 
+def begin_list(args):
+	window = args.pop(0)
+	terms = args.pop(0)
 
+	if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH:
+		msg = Message(HORIZONTAL_RULE_MESSAGE,'',"")
+		window.writeText(msg,True)
+
+	if not config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME:
+		msg = Message(LIST_MESSAGE,'',"Results for channels with \""+terms+"\" in the name or topic:")
+	else:
+		msg = Message(LIST_MESSAGE,'',"Results for channels with \""+terms+"\" in the name:")
+	window.writeText(msg,True)
+
+def end_list(args):
+	window = args.pop(0)
+	num = args.pop(0)
+
+	msg = Message(LIST_MESSAGE,'',str(num)+" channels found")
+	window.writeText(msg,True)
+
+	if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH:
+		msg = Message(HORIZONTAL_RULE_MESSAGE,'',"")
+		window.writeText(msg,True)
 
 class SearchListThread(QThread):
 
 	found = pyqtSignal(list)
+	begin = pyqtSignal(list)
+	end = pyqtSignal(list)
 
 	def __init__(self,list,terms,window,parent=None):
 		super(SearchListThread, self).__init__(parent)
@@ -1338,15 +1365,20 @@ class SearchListThread(QThread):
 		self.list = list
 		self.terms = terms
 		self.window = window
+		self.counter = 0
 
 	def run(self):
+		self.begin.emit([self.window,self.terms])
 		for e in self.list:
 			found = False
 			if fnmatch.fnmatch(e.name,self.terms): found = True
-			if fnmatch.fnmatch(e.topic,self.terms): found = True
+			if not config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME:
+				if fnmatch.fnmatch(e.topic,self.terms): found = True
+			if found: self.counter = self.counter + 1
 			if not found: continue
 
 			self.found.emit( [self.window,e]   )
+		self.end.emit([self.window,self.counter])
 
 class ScriptThread(QThread):
 

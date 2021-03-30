@@ -25,6 +25,11 @@ Version 0.870
 	* Channel list searchs are now done in a separate thread (not completely happy with *how* at the moment)
 	* Channel list rendering is now done in a separate thread (as above)
 	* Channel list with *no* search are now printed to the window as the listings come in
+	* List messages now have their own "type" for display
+	* List messages use the "server message" style
+	* List messages can use HTML in their message portion of the message (unlike anything else but plugin messages)
+	* Added settings to limit list searches the channel names and a toggle to mark beginning/end of list searches
+	* Added new list search settings to the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

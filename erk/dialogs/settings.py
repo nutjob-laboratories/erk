@@ -1183,12 +1183,19 @@ class Dialog(QDialog):
 		refRateLayout = QHBoxLayout()
 		refRateLayout.addWidget(self.refreshButton)
 		refRateLayout.addWidget(self.listFreq)
-
 		refRateLayout.addStretch()
+
+		self.listMark = QCheckBox("Mark beginning/end of list search",self)
+		if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH: self.listMark.setChecked(True)
+
+		self.listLimit = QCheckBox("Limit searches to channel names",self)
+		if config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME: self.listLimit.setChecked(True)
 
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.listMisc)
 		cgbLayout.addLayout(refRateLayout)
+		cgbLayout.addWidget(self.listMark)
+		cgbLayout.addWidget(self.listLimit)
 
 		listBox = QGroupBox("Channel List",self)
 		listBox.setLayout(cgbLayout)
@@ -1305,6 +1312,9 @@ class Dialog(QDialog):
 		self.plug_list.clear()
 
 	def save(self):
+
+		config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH = self.listMark.isChecked()
+		config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = self.listLimit.isChecked()
 
 		plugDirectories =  [str(self.plug_list.item(i).text()) for i in range(self.plug_list.count())]
 		# Remove duplicates from the list
@@ -1707,6 +1717,8 @@ class Dialog(QDialog):
 				self.detPlugins.setChecked(config.SHOW_PLUGIN_INFO_IN_MENU)
 				self.autoPlugins.setChecked(config.AUTOCOMPLETE_PLUGINS)
 				self.helpPlugins.setChecked(config.PLUGIN_HELP)
+				self.listMark.setChecked(config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH)
+				self.listLimit.setChecked(LIMIT_LIST_SEARCH_TO_CHANNEL_NAME.PLUGIN_HELP)
 
 			else:
 				msg = QMessageBox(self)

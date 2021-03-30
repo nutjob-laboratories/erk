@@ -159,12 +159,17 @@ SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
 SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 
+MARK_BEGINNING_AND_END_OF_LIST_SEARCH = True
+LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = False
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"mark_beginning_and_end_of_list_search": MARK_BEGINNING_AND_END_OF_LIST_SEARCH,
+		"limit_list_search_to_names": LIMIT_LIST_SEARCH_TO_CHANNEL_NAME,
 		"additional_plugin_locations": ADDITIONAL_PLUGIN_LOCATIONS,
 		"plugins_can_add_to_help": PLUGIN_HELP,
 		"autocomplete_for_plugins": AUTOCOMPLETE_PLUGINS,
@@ -279,6 +284,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "mark_beginning_and_end_of_list_search" in data:
+		data["mark_beginning_and_end_of_list_search"] = MARK_BEGINNING_AND_END_OF_LIST_SEARCH
+
+	if not "limit_list_search_to_names" in data:
+		data["limit_list_search_to_names"] = LIMIT_LIST_SEARCH_TO_CHANNEL_NAME
 
 	if not "additional_plugin_locations" in data:
 		data["additional_plugin_locations"] = ADDITIONAL_PLUGIN_LOCATIONS
@@ -536,6 +547,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global AUTOCOMPLETE_PLUGINS
 	global PLUGIN_HELP
 	global ADDITIONAL_PLUGIN_LOCATIONS
+	global MARK_BEGINNING_AND_END_OF_LIST_SEARCH
+	global LIMIT_LIST_SEARCH_TO_CHANNEL_NAME
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -544,6 +557,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			MARK_BEGINNING_AND_END_OF_LIST_SEARCH = data["mark_beginning_and_end_of_list_search"]
+			LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = data["limit_list_search_to_names"]
 			ADDITIONAL_PLUGIN_LOCATIONS = data["additional_plugin_locations"]
 			PLUGIN_HELP = data["plugins_can_add_to_help"]
 			AUTOCOMPLETE_PLUGINS = data["autocomplete_for_plugins"]
@@ -781,6 +796,8 @@ def check_settings(filename):
 			if "autocomplete_for_plugins" in data: check = check + 1
 			if "plugins_can_add_to_help" in data: check = check + 1
 			if "additional_plugin_locations" in data: check = check + 1
+			if "mark_beginning_and_end_of_list_search" in data: check = check + 1
+			if "limit_list_search_to_names" in data: check = check + 1
 
 			if check >= 100:
 				return True

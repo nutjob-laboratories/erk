@@ -43,7 +43,7 @@ from PyQt5 import QtCore
 from .objects import *
 from .files import *
 from . import config
-from .irc import ScriptThreadWindow,SearchListThread,found_in_list
+from .irc import ScriptThreadWindow,SearchListThread,found_in_list,begin_list,end_list
 from . import events
 from . import plugins
 
@@ -842,10 +842,14 @@ def handle_common_input(window,client,text):
 				client.list_window = window
 				client.list_search = "*"
 				client.sendLine("LIST")
+				msg = Message(LIST_MESSAGE,'',"Fetching server channel list, please wait a moment...")
+				window.writeText(msg,True)
 				return True
 			else:
 				LIST_THREAD = SearchListThread(client.channellist,'*',window)
 				LIST_THREAD.found.connect(found_in_list)
+				LIST_THREAD.begin.connect(begin_list)
+				LIST_THREAD.end.connect(end_list)
 				LIST_THREAD.start()
 				return True
 
@@ -857,10 +861,14 @@ def handle_common_input(window,client,text):
 				client.list_window = window
 				client.list_search = terms
 				client.sendLine("LIST")
+				msg = Message(LIST_MESSAGE,'',"Fetching server channel list, please wait a moment...")
+				window.writeText(msg,True)
 				return True
 			else:
 				LIST_THREAD = SearchListThread(client.channellist,terms,window)
 				LIST_THREAD.found.connect(found_in_list)
+				LIST_THREAD.begin.connect(begin_list)
+				LIST_THREAD.end.connect(end_list)
 				LIST_THREAD.start()
 				return True
 
