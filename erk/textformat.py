@@ -163,11 +163,12 @@ def render_message(message,client,renderstyle):
 
 	if message.type!=PLUGIN_MESSAGE:
 		if message.type!=LIST_MESSAGE:
-			# First, make sure that the message doesn't contain
-			# any HTML formatting stuff; to do this, we escape all
-			# HTML-relevant stuff so the message is *not* rendered
-			# as HTML
-			msg_to_display = html.escape(msg_to_display)
+			if message.type!=RAW_SYSTEM_MESSAGE:
+				# First, make sure that the message doesn't contain
+				# any HTML formatting stuff; to do this, we escape all
+				# HTML-relevant stuff so the message is *not* rendered
+				# as HTML
+				msg_to_display = html.escape(msg_to_display)
 
 	if config.CLICKABLE_CHANNELS:
 		if message.type!=SYSTEM_MESSAGE and message.type!=ERROR_MESSAGE and message.type!=PLUGIN_MESSAGE and message.type!=PLUGIN_SYSTEM_MESSAGE:
@@ -244,18 +245,7 @@ def render_message(message,client,renderstyle):
 		output = MESSAGE_TEMPLATE
 		style = renderstyle["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
-
-		# if IS_BACKGROUND_LIGHT==None:
-		# 	test_if_background_is_light(renderstyle["all"])
-
-		# if IS_BACKGROUND_LIGHT==True:
-		# 	output = HORIZONTAL_RULE
-		# elif IS_BACKGROUND_LIGHT==False:
-		# 	output = LIGHT_HORIZONTAL_RULE
-		# else:
 		output = HORIZONTAL_RULE
-
-		#output = HORIZONTAL_RULE
 		style = renderstyle["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
@@ -264,18 +254,7 @@ def render_message(message,client,renderstyle):
 		output = SYSTEM_TEMPLATE
 		style = renderstyle["plugin"]
 	elif message.type==DATE_MESSAGE:
-
-		# if IS_BACKGROUND_LIGHT==None:
-		# 	test_if_background_is_light(renderstyle["all"])
-
-		# if IS_BACKGROUND_LIGHT==True:
-		# 	output = DATE_MESSAGE_TEMPLATE
-		# elif IS_BACKGROUND_LIGHT==False:
-		# 	output = LIGHT_DATE_MESSAGE_TEMPLATE
-		# else:
 		output = DATE_MESSAGE_TEMPLATE
-
-		#output = DATE_MESSAGE_TEMPLATE
 		style = renderstyle["message"]
 	elif message.type==PLUGIN_SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE
@@ -286,6 +265,9 @@ def render_message(message,client,renderstyle):
 	elif message.type==LIST_MESSAGE:
 		output = SYSTEM_TEMPLATE
 		style = renderstyle["server"]
+	elif message.type==RAW_SYSTEM_MESSAGE:
+		output = SYSTEM_TEMPLATE
+		style = renderstyle["system"]
 
 	if style=="":
 		output = output.replace("!INSERT_MESSAGE_TEMPLATE!",MESSAGE_NO_STYLE_TEMPLATE)

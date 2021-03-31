@@ -597,7 +597,7 @@ def handle_channel_input(window,client,text):
 							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
-			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
+			msg = Message(RAW_SYSTEM_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
 
 			return True
@@ -706,7 +706,7 @@ def handle_private_input(window,client,text):
 							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
-			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
+			msg = Message(RAW_SYSTEM_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
 
 			return True
@@ -911,7 +911,7 @@ def handle_common_input(window,client,text):
 							hdisplay.append(t)
 
 			CHAT_HELP_DISPLAY = CHAT_HELP_HTML_TEMPLATE.replace("%_LIST_%","\n".join(hdisplay))
-			msg = Message(PLUGIN_MESSAGE,'',CHAT_HELP_DISPLAY)
+			msg = Message(RAW_SYSTEM_MESSAGE,'',CHAT_HELP_DISPLAY)
 			window.writeText(msg,True)
 
 			return True
@@ -1144,7 +1144,7 @@ def handle_ui_input(window,client,text):
 
 			events.recheck_userlists()
 
-			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is now ignored.")
+			msg = Message(RAW_SYSTEM_MESSAGE,'',f"\"{target}\" is now ignored.")
 			window.writeText(msg,True)
 			return True
 
@@ -1156,11 +1156,11 @@ def handle_ui_input(window,client,text):
 				ilist.append(t)
 
 			if len(ilist)==0:
-				msg = Message(SYSTEM_MESSAGE,'',"No ignored targets.")
+				msg = Message(RAW_SYSTEM_MESSAGE,'',"No ignored targets.")
 				window.writeText(msg,True)
 				return True
 
-			msg = Message(SYSTEM_MESSAGE,'',"Ignored targets: "+", ".join(ilist))
+			msg = Message(RAW_SYSTEM_MESSAGE,'',"Ignored targets: "+", ".join(ilist))
 			window.writeText(msg,True)
 			return True
 
@@ -1193,7 +1193,7 @@ def handle_ui_input(window,client,text):
 
 			events.recheck_userlists()
 
-			msg = Message(SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
+			msg = Message(RAW_SYSTEM_MESSAGE,'',f"\"{target}\" is unignored.")
 			window.writeText(msg,True)
 			return True
 
@@ -1257,7 +1257,7 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'write' and len(tokens)>=2:
 			tokens.pop(0)
 
-			msg = Message(SYSTEM_MESSAGE,'',' '.join(tokens))
+			msg = Message(RAW_SYSTEM_MESSAGE,'',' '.join(tokens))
 			window.writeText(msg,False)
 			return True
 
@@ -1279,12 +1279,12 @@ def handle_ui_input(window,client,text):
 			if len(tokens)>1:
 				last_word = tokens.pop()
 				rep = "Added "+", ".join(tokens)+", and "+last_word+" to dictionary"
-				msg = Message(SYSTEM_MESSAGE,'',rep)
+				msg = Message(RAW_SYSTEM_MESSAGE,'',rep)
 				window.writeText(msg,True)
 			else:
 				word = tokens.pop(0)
 				rep = "Added "+word+" to dictionary"
-				msg = Message(SYSTEM_MESSAGE,'',rep)
+				msg = Message(RAW_SYSTEM_MESSAGE,'',rep)
 				window.writeText(msg,True)
 			return True
 
@@ -1299,7 +1299,7 @@ def handle_ui_input(window,client,text):
 				rep = ", ".join(config.DICTIONARY)
 
 
-			msg = Message(SYSTEM_MESSAGE,'',rep)
+			msg = Message(RAW_SYSTEM_MESSAGE,'',rep)
 			window.writeText(msg,True)
 			return True
 
@@ -1318,12 +1318,12 @@ def handle_ui_input(window,client,text):
 			if len(tokens)>1:
 				last_word = tokens.pop()
 				rep = "Removed "+", ".join(tokens)+", and "+last_word+" from dictionary"
-				msg = Message(SYSTEM_MESSAGE,'',rep)
+				msg = Message(RAW_SYSTEM_MESSAGE,'',rep)
 				window.writeText(msg,True)
 			else:
 				word = tokens.pop(0)
 				rep = "Removed "+word+" from dictionary"
-				msg = Message(SYSTEM_MESSAGE,'',rep)
+				msg = Message(RAW_SYSTEM_MESSAGE,'',rep)
 				window.writeText(msg,True)
 			return True
 
@@ -1348,13 +1348,13 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dump' and len(tokens)==1:
 			if len(VARIABLE_TABLE)>0:
 				if len(VARIABLE_TABLE)==1:
-					msg = Message(SYSTEM_MESSAGE,'',"1 alias defined:")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',"1 alias defined:")
 					window.writeText(msg,True)
 				else:
-					msg = Message(SYSTEM_MESSAGE,'',str(len(VARIABLE_TABLE))+" aliases defined:")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',str(len(VARIABLE_TABLE))+" aliases defined:")
 					window.writeText(msg,True)
 				for key in VARIABLE_TABLE:
-					msg = Message(SYSTEM_MESSAGE,'', config.SCRIPT_INTERPOLATE_SYMBOL+key+" = \""+VARIABLE_TABLE[key]+"\"")
+					msg = Message(RAW_SYSTEM_MESSAGE,'', config.SCRIPT_INTERPOLATE_SYMBOL+key+" = \""+VARIABLE_TABLE[key]+"\"")
 					window.writeText(msg,True)
 			else:
 				msg = Message(ERROR_MESSAGE,'',"No aliases defined.")
@@ -1379,7 +1379,7 @@ def handle_ui_input(window,client,text):
 			for m in MACROS:
 				if m.name==name:
 					m.args = macrohelp
-					msg = Message(SYSTEM_MESSAGE,'',"Usage for macro \""+name+"\" updated")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',"Usage for macro \""+name+"\" updated")
 					window.writeText(msg,True)
 					return True
 
@@ -1418,7 +1418,7 @@ def handle_ui_input(window,client,text):
 				if config.SAVE_MACROS:
 					save_macros(MACROS,client.gui.macrofile)
 
-				msg = Message(SYSTEM_MESSAGE,'',"Macro \""+name+"\" removed")
+				msg = Message(RAW_SYSTEM_MESSAGE,'',"Macro \""+name+"\" removed")
 				window.writeText(msg,True)
 				return True
 			else:
@@ -1449,7 +1449,7 @@ def handle_ui_input(window,client,text):
 			for m in MACROS:
 				if m.name==name:
 					m.help = macrohelp
-					msg = Message(SYSTEM_MESSAGE,'',"Help for macro \""+name+"\" updated")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',"Help for macro \""+name+"\" updated")
 					window.writeText(msg,True)
 					return True
 
@@ -1508,10 +1508,10 @@ def handle_ui_input(window,client,text):
 						NEW_MACROS.append(c)
 
 				if replaced:
-					msg = Message(SYSTEM_MESSAGE,'',"Replaced \""+name+"\" macro")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',"Replaced \""+name+"\" macro")
 					window.writeText(msg,True)
 				else:
-					msg = Message(SYSTEM_MESSAGE,'',"Added \""+name+"\" macro")
+					msg = Message(RAW_SYSTEM_MESSAGE,'',"Added \""+name+"\" macro")
 					window.writeText(msg,True)
 					NEW_MACROS.append(m)
 
@@ -1607,7 +1607,7 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'print' and len(tokens)>1:
 			tokens.pop(0)
 			pm = ' '.join(tokens)
-			msg = Message(SYSTEM_MESSAGE,'',f"{pm}")
+			msg = Message(RAW_SYSTEM_MESSAGE,'',f"{pm}")
 			window.writeText(msg,True)
 			return True
 
@@ -1620,7 +1620,7 @@ def handle_ui_input(window,client,text):
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'echo' and len(tokens)>1:
 			tokens.pop(0)
 			pm = ' '.join(tokens)
-			msg = Message(SYSTEM_MESSAGE,'',f"{pm}")
+			msg = Message(RAW_SYSTEM_MESSAGE,'',f"{pm}")
 			window.writeText(msg,True)
 			return True
 
@@ -1853,11 +1853,11 @@ def handle_ui_input(window,client,text):
 			privates = window.privateList()
 			dl = channels + privates
 			if len(dl>0):
-				msg = Message(SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
+				msg = Message(RAW_SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
 				window.writeText(msg,True)
 				return True
 			else:
-				msg = Message(SYSTEM_MESSAGE,'',"No available chats.")
+				msg = Message(ERROR_MESSAGE,'',"No available chats.")
 				window.writeText(msg,True)
 				return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch':
