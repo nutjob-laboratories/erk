@@ -42,6 +42,7 @@ Version 0.870
 	* Changed how list-search-threads are stored; should be cleaner
 	* Added a settings to make list searches case-sensitive (off by default)
 	* Added the case-sensitive-search setting to the "settings" dialog
+	* Updated the command documentation to show new list search feature
 
 Version 0.860
 	* Removed all plugin-related code and documentation
