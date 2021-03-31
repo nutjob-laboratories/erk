@@ -855,11 +855,12 @@ class IRC_Connection(irc.IRCClient):
 
 		if self.list_requested:
 			if self.list_search!='*':
-				self.listhread = SearchListThread(self.channellist,self.list_search,self.list_window)
-				self.listhread.found.connect(found_in_list)
-				self.listhread.begin.connect(begin_list)
-				self.listhread.end.connect(end_list)
-				self.listhread.start()
+				listhread = SearchListThread(self.channellist,self.list_search,self.list_window)
+				listhread.found.connect(found_in_list)
+				listhread.begin.connect(begin_list)
+				listhread.end.connect(end_list)
+				listhread.start()
+				LIST_THREADS.append(listhread)
 
 		self.list_requested = False
 		self.list_window = None
@@ -1317,6 +1318,7 @@ class UptimeHeartbeat(QThread):
 		self.threadactive = False
 		self.wait()
 
+LIST_THREADS = []
 
 def found_in_list(args):
 	window = args[0]
@@ -1343,8 +1345,11 @@ def begin_list(args):
 	window.writeText(msg,True)
 
 def end_list(args):
+	obj = args.pop(0)
 	window = args.pop(0)
 	num = args.pop(0)
+
+	global LIST_THREADS
 
 	msg = Message(LIST_MESSAGE,'',str(num)+" channels found")
 	window.writeText(msg,True)
@@ -1352,6 +1357,12 @@ def end_list(args):
 	if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH:
 		msg = Message(HORIZONTAL_RULE_MESSAGE,'',"")
 		window.writeText(msg,True)
+
+	clean = []
+	for e in LIST_THREADS:
+		if e.id==obj.id: continue
+		clean.append(e)
+	LIST_THREADS = clean
 
 class SearchListThread(QThread):
 
@@ -1366,19 +1377,30 @@ class SearchListThread(QThread):
 		self.terms = terms
 		self.window = window
 		self.counter = 0
+		self.id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
 
 	def run(self):
 		self.begin.emit([self.window,self.terms])
 		for e in self.list:
 			found = False
-			if fnmatch.fnmatch(e.name,self.terms): found = True
+
+			if config.LIST_SEARCH_CASE_SENSITIVE:
+				TARGET = e.name
+				TOPIC = e.topic
+				TERMS = self.terms
+			else:
+				TARGET = e.name.lower()
+				TOPIC = e.topic.lower()
+				TERMS = self.terms.lower()
+
+			if fnmatch.fnmatch(TARGET,TERMS): found = True
 			if not config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME:
-				if fnmatch.fnmatch(e.topic,self.terms): found = True
+				if fnmatch.fnmatch(TOPIC,TERMS): found = True
 			if found: self.counter = self.counter + 1
 			if not found: continue
 
 			self.found.emit( [self.window,e]   )
-		self.end.emit([self.window,self.counter])
+		self.end.emit([self,self.window,self.counter])
 
 class ScriptThread(QThread):
 

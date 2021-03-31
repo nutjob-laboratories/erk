@@ -1191,11 +1191,15 @@ class Dialog(QDialog):
 		self.listLimit = QCheckBox("Limit searches to channel names",self)
 		if config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME: self.listLimit.setChecked(True)
 
+		self.listCase = QCheckBox("Searches are case sensitive",self)
+		if config.LIST_SEARCH_CASE_SENSITIVE: self.listCase.setChecked(True)
+
 		cgbLayout = QVBoxLayout()
 		cgbLayout.addWidget(self.listMisc)
 		cgbLayout.addLayout(refRateLayout)
 		cgbLayout.addWidget(self.listMark)
 		cgbLayout.addWidget(self.listLimit)
+		cgbLayout.addWidget(self.listCase)
 
 		listBox = QGroupBox("Channel List",self)
 		listBox.setLayout(cgbLayout)
@@ -1312,6 +1316,8 @@ class Dialog(QDialog):
 		self.plug_list.clear()
 
 	def save(self):
+
+		config.LIST_SEARCH_CASE_SENSITIVE = self.listCase.isChecked()
 
 		config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH = self.listMark.isChecked()
 		config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = self.listLimit.isChecked()
@@ -1719,6 +1725,7 @@ class Dialog(QDialog):
 				self.helpPlugins.setChecked(config.PLUGIN_HELP)
 				self.listMark.setChecked(config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH)
 				self.listLimit.setChecked(config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME)
+				self.listCase.setChecked(config.LIST_SEARCH_CASE_SENSITIVE)
 
 			else:
 				msg = QMessageBox(self)

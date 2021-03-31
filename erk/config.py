@@ -162,12 +162,15 @@ SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 MARK_BEGINNING_AND_END_OF_LIST_SEARCH = True
 LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = False
 
+LIST_SEARCH_CASE_SENSITIVE = False
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"case_sensitive_list_search": LIST_SEARCH_CASE_SENSITIVE,
 		"mark_beginning_and_end_of_list_search": MARK_BEGINNING_AND_END_OF_LIST_SEARCH,
 		"limit_list_search_to_names": LIMIT_LIST_SEARCH_TO_CHANNEL_NAME,
 		"additional_plugin_locations": ADDITIONAL_PLUGIN_LOCATIONS,
@@ -284,6 +287,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "case_sensitive_list_search" in data:
+		data["case_sensitive_list_search"] = LIST_SEARCH_CASE_SENSITIVE
 
 	if not "mark_beginning_and_end_of_list_search" in data:
 		data["mark_beginning_and_end_of_list_search"] = MARK_BEGINNING_AND_END_OF_LIST_SEARCH
@@ -729,6 +735,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ADDITIONAL_PLUGIN_LOCATIONS
 	global MARK_BEGINNING_AND_END_OF_LIST_SEARCH
 	global LIMIT_LIST_SEARCH_TO_CHANNEL_NAME
+	global LIST_SEARCH_CASE_SENSITIVE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -737,6 +744,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			LIST_SEARCH_CASE_SENSITIVE = data["case_sensitive_list_search"]
 			MARK_BEGINNING_AND_END_OF_LIST_SEARCH = data["mark_beginning_and_end_of_list_search"]
 			LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = data["limit_list_search_to_names"]
 			ADDITIONAL_PLUGIN_LOCATIONS = data["additional_plugin_locations"]
@@ -972,8 +980,9 @@ def check_settings(filename):
 			if "use_emoji_shortcodes" in data: check = check + 1
 			if "write_notice_messages_to_console" in data: check = check + 1
 			if "write_private_messages_to_console" in data: check = check + 1
+			if "case_sensitive_list_search" in data: check = check + 1
 
-			if check == 109:
+			if check == 110:
 				return True
 			else:
 				return False

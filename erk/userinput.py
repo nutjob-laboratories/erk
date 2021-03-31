@@ -43,7 +43,7 @@ from PyQt5 import QtCore
 from .objects import *
 from .files import *
 from . import config
-from .irc import ScriptThreadWindow,SearchListThread,found_in_list,begin_list,end_list
+from .irc import ScriptThreadWindow,SearchListThread,found_in_list,begin_list,end_list,LIST_THREADS
 from . import events
 from . import plugins
 
@@ -61,7 +61,7 @@ CMDLINE_BLOCK_SCRIPTS = False
 CMDLINE_BLOCK_EDITOR = False
 CMDLINE_BLOCK_STYLES = False
 
-LIST_THREAD = None
+#LIST_THREAD = None
 
 def buildHelp():
 
@@ -739,7 +739,7 @@ def handle_console_input(window,client,text):
 	if handle_common_input(window,client,text): return
 
 def handle_common_input(window,client,text):
-	global LIST_THREAD
+	#global LIST_THREAD
 
 	tokens = text.split()
 
@@ -854,6 +854,7 @@ def handle_common_input(window,client,text):
 				LIST_THREAD.begin.connect(begin_list)
 				LIST_THREAD.end.connect(end_list)
 				LIST_THREAD.start()
+				LIST_THREADS.append(LIST_THREAD)
 				return True
 
 		if len(tokens)>=2 and tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'list':
@@ -873,6 +874,7 @@ def handle_common_input(window,client,text):
 				LIST_THREAD.begin.connect(begin_list)
 				LIST_THREAD.end.connect(end_list)
 				LIST_THREAD.start()
+				LIST_THREADS.append(LIST_THREAD)
 				return True
 
 	if len(tokens)>0:
@@ -1333,10 +1335,6 @@ def handle_ui_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
-	# BEGIN DUMP
-
-	# for key in VARIABLE_TABLE:
-
 	if client.gui.block_scripts:
 		if len(tokens)>0:
 			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dump':
@@ -1360,8 +1358,6 @@ def handle_ui_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"No aliases defined.")
 				window.writeText(msg,True)
 			return True
-
-	# END DUMP
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
