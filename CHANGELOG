@@ -36,6 +36,7 @@ Version 0.870
 	* The config file patcher now will patch for *ALL* missing settings
 	* Bugfix: the /refresh command now uses the new list message type
 	* Updated the command documentation to reflect the new channel list search and features
+	* Added a new command: /dump
 
 Version 0.860
 	* Removed all plugin-related code and documentation

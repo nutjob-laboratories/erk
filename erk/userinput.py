@@ -125,6 +125,7 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
 		config.INPUT_COMMAND_SYMBOL+"cat": config.INPUT_COMMAND_SYMBOL+"cat ",
+		config.INPUT_COMMAND_SYMBOL+"dump": config.INPUT_COMMAND_SYMBOL+"dump",
 	}
 
 	display_edit = True
@@ -200,6 +201,7 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"whois</b> NICKNAME [NICKNAME ...]", "Requests user data" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"who</b> USER", "Requests user data" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"dump</b>", "Displays all defined aliases and their values" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"connectscript</b> SERVER [PORT]", "Loads and executes SERVER:PORT's connection script" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macro</b> COMMAND ARG_COUNT MESSAGE...", "Creates a macro" ],
@@ -395,7 +397,8 @@ PROTECTED_NAMES = [
 		'dictionary',
 		'undictionary',
 		'ignore',
-		'unignore'
+		'unignore',
+		'dump'
 	]
 
 FORBIDDEN_CHARACTERS = [
@@ -1329,6 +1332,36 @@ def handle_ui_input(window,client,text):
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"undictionary WORD [WORD...]")
 			window.writeText(msg,True)
 			return True
+
+	# BEGIN DUMP
+
+	# for key in VARIABLE_TABLE:
+
+	if client.gui.block_scripts:
+		if len(tokens)>0:
+			if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dump':
+				msg = Message(ERROR_MESSAGE,'',"Scripting is disabled")
+				window.writeText(msg,True)
+				return True
+
+	if len(tokens)>0:
+		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'dump' and len(tokens)==1:
+			if len(VARIABLE_TABLE)>0:
+				if len(VARIABLE_TABLE)==1:
+					msg = Message(SYSTEM_MESSAGE,'',"1 alias defined:")
+					window.writeText(msg,True)
+				else:
+					msg = Message(SYSTEM_MESSAGE,'',str(len(VARIABLE_TABLE))+" aliases defined:")
+					window.writeText(msg,True)
+				for key in VARIABLE_TABLE:
+					msg = Message(SYSTEM_MESSAGE,'', config.SCRIPT_INTERPOLATE_SYMBOL+key+" = \""+VARIABLE_TABLE[key]+"\"")
+					window.writeText(msg,True)
+			else:
+				msg = Message(ERROR_MESSAGE,'',"No aliases defined.")
+				window.writeText(msg,True)
+			return True
+
+	# END DUMP
 
 	if client.gui.block_scripts:
 		if len(tokens)>0:
