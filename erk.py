@@ -313,10 +313,10 @@ if __name__ == '__main__':
 		else:
 
 			if not os.path.isfile(args.settings):
-				print("File not found: "+args.settings)
-				sys.exit(1)
-
-			erk.config.load_settings(args.settings)
+				erk.config.load_settings(args.settings)
+				print("\""+args.settings+"\" created!")
+			else:
+				erk.config.load_settings(args.settings)
 
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)

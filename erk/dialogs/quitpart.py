@@ -68,7 +68,7 @@ class Dialog(QDialog):
 		wwidth = fm.horizontalAdvance("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDABCDEFGHIJ")
 
 		nameLayout = QHBoxLayout()
-		self.name = QLineEdit()
+		self.name = QLineEdit(config.DEFAULT_QUIT_PART_MESSAGE)
 		self.name.setPlaceholderText(config.DEFAULT_QUIT_PART_MESSAGE)
 		nameLayout.addWidget(self.name)
 		self.name.setMinimumWidth(wwidth)

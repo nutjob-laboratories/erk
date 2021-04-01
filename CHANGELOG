@@ -47,6 +47,8 @@ Version 0.870
 	* Bugfix: sometimes, quitting without a parting message would not use the default part/quit message
 	* Bugfix: channel parting was not using the proper Twisted method, causing part messages to not always be sent
 	* Bugfix: channel parting was not being handled properly (due to overloading a Twisted method *twice*)
+	* The dialog to change the default quit/part message now allows for directly editing the current quit/part default
+	* The --settings commandline option will now create a new config file if the one passed as an argument doesn't exist
 
 Version 0.860
 	* Removed all plugin-related code and documentation
