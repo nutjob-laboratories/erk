@@ -206,7 +206,7 @@ class Dialog(QDialog):
 
 		self.selector.itemClicked.connect(self.selectorClick)
 
-		self.selector.setStyleSheet("background-color: transparent;")
+		self.selector.setStyleSheet("background-color: transparent; border-width: 0px; border-color: transparent;")
 
 		# Display page
 
