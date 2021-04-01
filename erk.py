@@ -113,10 +113,10 @@ miscgroup.add_argument("-P","--plugins", type=str,help="Add a directory to load 
 devgroup = parser.add_argument_group('Tools')
 
 devgroup.add_argument("-e","--edit","--scripter", dest="scripter",nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
-devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
-devgroup.add_argument("--settings", help="Launch the preferences editor", action="store_true")
-devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
+devgroup.add_argument("--settings", nargs='?', type=str,help="Launch the preferences editor", metavar="FILE",const=1)
 devgroup.add_argument("--generate", nargs='?', type=str,help="Create a \"blank\" plugin for editing", metavar="FILE",const=1)
+devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
+devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')
 
@@ -292,21 +292,45 @@ if __name__ == '__main__':
 
 	elif args.settings:
 
-		erk.config.load_settings(args.config)
+		if args.settings==1:
 
-		if erk.config.DISPLAY_FONT=='':
-			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
-			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
+			erk.config.load_settings(args.config)
+
+			if erk.config.DISPLAY_FONT=='':
+				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+				font = QFont(_fontstr,9)
+			else:
+				f = QFont()
+				f.fromString(erk.config.DISPLAY_FONT)
+				font = f
+
+			app.setFont(font)
+
+			SETTINGS = Settings(args.config,None,app)
+			SETTINGS.show()
+
 		else:
-			f = QFont()
-			f.fromString(erk.config.DISPLAY_FONT)
-			font = f
 
-		app.setFont(font)
+			if not os.path.isfile(args.settings):
+				print("File not found: "+args.settings)
+				sys.exit(1)
 
-		SETTINGS = Settings(args.config,None,app)
-		SETTINGS.show()
+			erk.config.load_settings(args.settings)
+
+			if erk.config.DISPLAY_FONT=='':
+				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+				font = QFont(_fontstr,9)
+			else:
+				f = QFont()
+				f.fromString(erk.config.DISPLAY_FONT)
+				font = f
+
+			app.setFont(font)
+
+			SETTINGS = Settings(args.settings,None,app)
+			SETTINGS.show()
 
 	# Handle launching the script editor
 

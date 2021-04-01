@@ -3,12 +3,12 @@
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.042</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.043</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.042**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.043**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -107,10 +107,10 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILE] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-P DIRECTORY] [-e [FILE]] [--styler] [--settings] [--export]
-                     [--generate [FILE]] [--noask] [--nosettings] [--nomenus] [--noconnect]
-                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--noplugins]
-                     [--nocommands] [--noextensions] [--qt5menu]
+                     [-M FILE] [-P DIRECTORY] [-e [FILE]] [--settings [FILE]]
+                     [--generate [FILE]] [--styler] [--export] [--noask] [--nosettings]
+                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
+                     [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -159,10 +159,10 @@ Configuration:
 Tools:
   -e [FILE], --edit [FILE], --scripter [FILE]
                         Launch the script editor
-  --styler              Launch the style editor
-  --settings            Launch the preferences editor
-  --export              Launch the log export tool
+  --settings [FILE]     Launch the preferences editor
   --generate [FILE]     Create a "blank" plugin for editing
+  --styler              Launch the style editor
+  --export              Launch the log export tool
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start
@@ -190,7 +190,7 @@ Yes! Most basic functionality is done, and it's ready for most IRC stuff. If you
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.870.042, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.870.043, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 

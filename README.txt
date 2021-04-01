@@ -107,10 +107,10 @@ To make things easier, Windows users can create a shortcut to **Ərk** so all yo
 usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]] [-l]
                      [-u URL] [-a] [-s FILE] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
-                     [-M FILE] [-P DIRECTORY] [-e [FILE]] [--styler] [--settings] [--export]
-                     [--generate [FILE]] [--noask] [--nosettings] [--nomenus] [--noconnect]
-                     [--noscripts] [--nodisplay] [--nostyles] [--noedit] [--noplugins]
-                     [--nocommands] [--noextensions] [--qt5menu]
+                     [-M FILE] [-P DIRECTORY] [-e [FILE]] [--settings [FILE]]
+                     [--generate [FILE]] [--styler] [--export] [--noask] [--nosettings]
+                     [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
+                     [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -159,10 +159,10 @@ Configuration:
 Tools:
   -e [FILE], --edit [FILE], --scripter [FILE]
                         Launch the script editor
-  --styler              Launch the style editor
-  --settings            Launch the preferences editor
-  --export              Launch the log export tool
+  --settings [FILE]     Launch the preferences editor
   --generate [FILE]     Create a "blank" plugin for editing
+  --styler              Launch the style editor
+  --export              Launch the log export tool
 
 Disable functionality:
   --noask               Don't ask for a server to connect to on start

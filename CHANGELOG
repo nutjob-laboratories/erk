@@ -43,6 +43,7 @@ Version 0.870
 	* Added a settings to make list searches case-sensitive (off by default)
 	* Added the case-sensitive-search setting to the "settings" dialog
 	* Updated the command documentation to show new list search feature
+	* The --settings commandline option can now accept a filename as an argument (for specific settings file editing)
 
 Version 0.860
 	* Removed all plugin-related code and documentation
