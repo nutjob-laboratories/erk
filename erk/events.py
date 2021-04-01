@@ -494,6 +494,12 @@ def set_fonts_all(font):
 		c.widget.input.setFont(font)
 		c.widget.name_display.setFont(font)
 
+def write_to_console(client,msg):
+	# Write that we left a channel to the console
+	window = fetch_console_window(client)
+	if window:
+		window.writeText( Message(SYSTEM_MESSAGE,'',msg) )
+
 def kicked_channel_window(client,name):
 	global CHANNELS
 
@@ -1444,7 +1450,7 @@ def erk_left_channel(gui,client,channel):
 	
 	window = fetch_console_window(client)
 	if window:
-		window.writeText( Message(SYSTEM_MESSAGE,'',"You left "+channel) )
+		window.writeText( Message(SYSTEM_MESSAGE,'',"Left "+channel) )
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()

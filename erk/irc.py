@@ -364,6 +364,8 @@ class IRC_Connection(irc.IRCClient):
 			clean.append(c)
 		self.autojoin = clean
 
+		events.close_channel_window(self,channel,None)
+
 	def privmsg(self, user, target, msg):
 		pnick = user.split('!')[0]
 		phostmask = user.split('!')[1]
@@ -465,10 +467,7 @@ class IRC_Connection(irc.IRCClient):
 		events.part(self.gui,self,user,channel)
 
 		self.sendLine("NAMES "+channel)
-
-	def left(self,channel):
-		events.close_channel_window(self,channel,None)
-
+		
 	def irc_ERR_NICKNAMEINUSE(self, prefix, params):
 
 		if self.registered:

@@ -46,6 +46,7 @@ Version 0.870
 	* The --settings commandline option can now accept a filename as an argument (for specific settings file editing)
 	* Bugfix: sometimes, quitting without a parting message would not use the default part/quit message
 	* Bugfix: channel parting was not using the proper Twisted method, causing part messages to not always be sent
+	* Bugfix: channel parting was not being handled properly (due to overloading a Twisted method *twice*)
 
 Version 0.860
 	* Removed all plugin-related code and documentation
