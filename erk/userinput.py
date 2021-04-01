@@ -647,14 +647,14 @@ def handle_channel_input(window,client,text):
 	# Handle channel-specific cases of the /part command
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)==1:
-			client.part(window.name,config.DEFAULT_QUIT_PART_MESSAGE)
+			client.leave(window.name,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
 				# channel has not been passed as an argument
 				tokens.pop(0)
 				partmsg = ' '.join(tokens)
-				client.part(window.name,partmsg)
+				client.leave(window.name,partmsg)
 				return True
 
 	if handle_common_input(window,client,text): return
@@ -1051,7 +1051,7 @@ def handle_common_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
 				window.writeText(msg,True)
 				return True
-			client.part(channel,config.DEFAULT_QUIT_PART_MESSAGE)
+			client.leave(channel,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
 			if tokens[1][:1]!='#' and tokens[1][:1]!='&' and tokens[1][:1]!='!' and tokens[1][:1]!='+':
@@ -1066,7 +1066,7 @@ def handle_common_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 			partmsg = ' '.join(tokens)
-			client.part(channel,partmsg)
+			client.leave(channel,partmsg)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part':
 			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"part CHANNEL [MESSAGE]")
