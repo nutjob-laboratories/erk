@@ -260,41 +260,16 @@ class Dialog(QDialog):
 		self.failErrors = QCheckBox("Show connection fail errors",self)
 		if config.SHOW_CONNECTION_FAIL_ERROR: self.failErrors.setChecked(True)
 
-		mpLayout = QVBoxLayout()
-
-		mpLayout.addLayout(fbLay)
-		mpLayout.addWidget(self.nametitleMisc)
-		mpLayout.addWidget(self.topicMisc)
-		mpLayout.addWidget(self.askMisc)
-
-		mpLayout.addWidget(self.lostErrors)
-		mpLayout.addWidget(self.failErrors)
-
-		mpLayout.addStretch()
-
-		self.displayPage.setLayout(mpLayout)
-
-		# MENUBAR PAGE
-
-		self.menubarPage = QWidget()
-
-		entry = QListWidgetItem()
-		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Menu Bar")
-		entry.widget = self.menubarPage
-		entry.setIcon(QIcon(MENU_ICON))
-		self.selector.addItem(entry)
-
-		self.stack.addWidget(self.menubarPage)
-
 		self.showSchwa = QCheckBox("Animated menu bar logo",self)
 		if config.SCHWA_ANIMATION: self.showSchwa.setChecked(True)
-
 
 		self.showMenu = QCheckBox("Moveable menu bar",self)
 		if config.MENU_BAR_MOVABLE: self.showMenu.setChecked(True)
 
-		self.menuMisc = QCheckBox("Use Qt menus rather than a menu bar\n(requires a restart to take effect)",self)
+		if self.parent==None:
+			self.menuMisc = QCheckBox("Use Qt menus rather than a menu bar",self)
+		else:
+			self.menuMisc = QCheckBox("Use Qt menus rather than a menu bar\n(requires a restart to take effect)",self)
 		if config.USE_QMENUBAR_MENUS: self.menuMisc.setChecked(True)
 
 		self.menuMisc.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
@@ -309,14 +284,19 @@ class Dialog(QDialog):
 			self.showSchwa.setEnabled(False)
 			self.showMenu.setEnabled(False)
 
-		mbLay = QVBoxLayout()
-		mbLay.addWidget(self.menuMisc)
-		mbLay.addWidget(self.showMenu)
-		mbLay.addWidget(self.showSchwa)
+		mpLayout = QVBoxLayout()
+		mpLayout.addLayout(fbLay)
+		mpLayout.addWidget(self.menuMisc)
+		mpLayout.addWidget(self.showMenu)
+		mpLayout.addWidget(self.showSchwa)
+		mpLayout.addWidget(self.nametitleMisc)
+		mpLayout.addWidget(self.topicMisc)
+		mpLayout.addWidget(self.askMisc)
+		mpLayout.addWidget(self.lostErrors)
+		mpLayout.addWidget(self.failErrors)
+		mpLayout.addStretch()
 
-		mbLay.addStretch()
-
-		self.menubarPage.setLayout(mbLay)
+		self.displayPage.setLayout(mpLayout)
 
 		# Message settings page
 
@@ -390,8 +370,35 @@ class Dialog(QDialog):
 
 		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
+		self.enabledTimestamp = QCheckBox("Enabled",self)
+		if config.DISPLAY_TIMESTAMP: self.enabledTimestamp.setChecked(True)
+		self.enabledTimestamp.stateChanged.connect(self.setRerender)
+
+		self.twentyfourTimestamp = QCheckBox("Use 24-hour clock",self)
+		if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.twentyfourTimestamp.setChecked(True)
+		self.twentyfourTimestamp.stateChanged.connect(self.setRerender)
+
+		self.secondsTimestamp = QCheckBox("Display seconds",self)
+		if config.DISPLAY_TIMESTAMP_SECONDS: self.secondsTimestamp.setChecked(True)
+		self.secondsTimestamp.stateChanged.connect(self.setRerender)
+
+		ln1 = QHBoxLayout()
+		ln1.addWidget(self.enabledTimestamp)
+		ln1.addWidget(self.twentyfourTimestamp)
+
+		tsBoxLayout = QVBoxLayout()
+		tsBoxLayout.addLayout(ln1)
+		tsBoxLayout.addWidget(self.secondsTimestamp)
+		tsBoxLayout.addStretch()
+
+		tsBox = QGroupBox("Timestamps",self)
+		tsBox.setLayout(tsBoxLayout)
+
+		tsBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		mpLayout = QVBoxLayout()
 		mpLayout.addWidget(clLayout)
+		mpLayout.addWidget(tsBox)
 		mpLayout.addWidget(self.showDates)
 		mpLayout.addWidget(self.showColors)
 		mpLayout.addWidget(self.showLinks)
@@ -859,31 +866,6 @@ class Dialog(QDialog):
 
 		self.inputPage.setLayout(cpLayout)
 
-		# # EMOJI SETTINGS
-		# self.emojiPage = QWidget()
-
-		# entry = QListWidgetItem()
-		# entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		# entry.setText("Emojis")
-		# entry.widget = self.emojiPage
-		# entry.setIcon(QIcon(EMOJI_ICON))
-		# self.selector.addItem(entry)
-
-		# self.stack.addWidget(self.emojiPage)
-
-		# self.emojiComplete = QCheckBox("Auto-complete emoji shortcodes",self)
-		# if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
-
-		# self.emojiInput = QCheckBox("Enable emoji shortcodes",self)
-		# if config.USE_EMOJIS: self.emojiInput.setChecked(True)
-
-		# cpLayout = QVBoxLayout()
-		# cpLayout.addWidget(self.emojiInput)
-		# cpLayout.addWidget(self.emojiComplete)
-		# cpLayout.addStretch()
-
-		# self.emojiPage.setLayout(cpLayout)
-
 		# Spellcheck settings
 
 		self.sclanguage = config.SPELLCHECK_LANGUAGE
@@ -946,39 +928,6 @@ class Dialog(QDialog):
 
 		self.spellcheckPage.setLayout(cpLayout)
 
-		# Timestamp settings
-
-		self.timestampPage = QWidget()
-
-		entry = QListWidgetItem()
-		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Timestamps")
-		entry.widget = self.timestampPage
-		entry.setIcon(QIcon(TIMESTAMP_ICON))
-		self.selector.addItem(entry)
-
-		self.stack.addWidget(self.timestampPage)
-
-		self.enabledTimestamp = QCheckBox("Enabled",self)
-		if config.DISPLAY_TIMESTAMP: self.enabledTimestamp.setChecked(True)
-		self.enabledTimestamp.stateChanged.connect(self.setRerender)
-
-		self.twentyfourTimestamp = QCheckBox("Use 24-hour clock",self)
-		if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS: self.twentyfourTimestamp.setChecked(True)
-		self.twentyfourTimestamp.stateChanged.connect(self.setRerender)
-
-		self.secondsTimestamp = QCheckBox("Display seconds",self)
-		if config.DISPLAY_TIMESTAMP_SECONDS: self.secondsTimestamp.setChecked(True)
-		self.secondsTimestamp.stateChanged.connect(self.setRerender)
-
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.enabledTimestamp)
-		cpLayout.addWidget(self.twentyfourTimestamp)
-		cpLayout.addWidget(self.secondsTimestamp)
-		cpLayout.addStretch()
-
-		self.timestampPage.setLayout(cpLayout)
-
 		# Features settings
 
 		self.featuresPage = QWidget()
@@ -1023,13 +972,6 @@ class Dialog(QDialog):
 		scriptLayout.addWidget(self.autoMacros)
 		scriptLayout.addStretch()
 
-		# scriptBox = QGroupBox("Scripting",self)
-		# scriptBox.setLayout(scriptLayout)
-
-		# scriptBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		
-
 		if self.parent!= None:
 			if self.parent.cmdline_script:
 				self.scriptMisc.setEnabled(False)
@@ -1038,18 +980,6 @@ class Dialog(QDialog):
 				self.autoMacros.setEnabled(False)
 				self.saveMacros.setEnabled(False)
 				self.enableMacros.setEnabled(False)
-
-		# BEGIN PLUGINS
-
-		
-
-		# END PLUGINS
-
-		# cpLayout = QVBoxLayout()
-		# cpLayout.addWidget(scriptBox)
-		# cpLayout.addWidget(plugBox)
-
-		# cpLayout.addStretch()
 
 		self.featuresPage.setLayout(scriptLayout)
 

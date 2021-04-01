@@ -49,6 +49,8 @@ Version 0.870
 	* Bugfix: channel parting was not being handled properly (due to overloading a Twisted method *twice*)
 	* The dialog to change the default quit/part message now allows for directly editing the current quit/part default
 	* The --settings commandline option will now create a new config file if the one passed as an argument doesn't exist
+	* Moved the contents of the "Timestamp" tab to the "Messages" tab in the "settings" dialog
+	* Moved the contents of the "Menu Bar" tab to the "Application" tab in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation
