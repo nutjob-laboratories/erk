@@ -193,6 +193,8 @@ class Dialog(QDialog):
 		if self.parent==None:
 			if self.config!=SETTINGS_FILE:
 				self.setWindowTitle("Editing "+os.path.basename(self.config))
+			else:
+				self.setWindowTitle(APPLICATION_NAME+" Preferences")
 
 
 		self.selector = QListWidget(self)

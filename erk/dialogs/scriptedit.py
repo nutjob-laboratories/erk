@@ -284,6 +284,12 @@ class Window(QMainWindow):
 		self.docButton.setStyleSheet("border: none;")
 		self.docButton.setToolTip("Open connection script")
 
+		if self.parent==None:
+			self.docButton.setVisible(False)
+			self.runButton.setVisible(False)
+			self.servers.setVisible(False)
+			self.status.setVisible(False)
+
 		self.fileMenu = self.menubar.addMenu("File")
 
 		entry = QAction(QIcon(NEWFILE_ICON),"New file",self)
@@ -316,6 +322,8 @@ class Window(QMainWindow):
 		self.fileMenu.addAction(self.setNotifyEnd)
 
 		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
+
+		if self.parent==None: self.setNotifyEnd.setVisible(False)
 
 		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
 		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())

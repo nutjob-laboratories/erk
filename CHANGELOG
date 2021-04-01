@@ -53,6 +53,8 @@ Version 0.870
 	* Moved the contents of the "Menu Bar" tab to the "Application" tab in the "settings" dialog
 	* "Settings" dialog now shows the filename on the save button if the file being edited isn't the default
 	* "Settings" dialog now shows the filename in the title if the file being edited isn't the default
+	* Application name is now shown in the "settings" dialog if being executed with --settings
+	* If the editor is executed with --edit, then unusable widgets (like the server list, run button, etc) are hidden
 
 Version 0.860
 	* Removed all plugin-related code and documentation
