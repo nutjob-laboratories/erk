@@ -1914,6 +1914,9 @@ def disconnect_from_server(client,msg=None):
 
 	client.gui.quitting.append(client.server+str(client.port))
 
+	if msg==None:
+		msg = config.DEFAULT_QUIT_PART_MESSAGE
+
 	client.quit(msg)
 
 def disconnection(gui,client):

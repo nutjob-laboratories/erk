@@ -160,6 +160,10 @@ class Erk(QMainWindow):
 
 	def disconnect_current(self,msg=None):
 		if self.current_client:
+
+			if msg==None:
+				msg = config.DEFAULT_QUIT_PART_MESSAGE
+
 			events.disconnect_from_server(self.current_client,msg)
 			self.current_client = None
 
