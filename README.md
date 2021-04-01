@@ -182,7 +182,7 @@ Disable functionality:
 
 ## What does "erk" mean?
 
-The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when Necrosand (one of the users in `#themaxx` on [EFnet](http://www.efnet.org/), and insists on being called "IRC Champion Necrosand") suggested "Erk", because "that's how you pronouce IRC". And thus **Ərk** was born.
+The previous name for this client was "Quirc", but after working on it for a while, I discovered that there was already an IRC client named [Quirc](https://quirc.org/). I was asking for some name suggestions in IRC, when Necrosand (one of the users in `#themaxx` on [EFnet](http://www.efnet.org/), and someone insists on being called, and wanted to be credited as, "IRC Champion Necrosand") suggested "Erk", because "that's how you pronouce IRC". And thus **Ərk** was born.
 
 ## Can I use **Ərk** to chat on IRC?
 
