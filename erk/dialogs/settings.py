@@ -34,6 +34,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+import os
+
 from ..resources import *
 from ..files import *
 from .. import config
@@ -46,9 +48,7 @@ from .history_size import Dialog as HistorySize
 from .format import Dialog as FormatText
 from .list_time import Dialog as ListTime
 from .quitpart import Dialog as QuitPart
-
 from .autosave_freq import Dialog as Autosave
-
 from .log_size import Dialog as LogSize
 
 class Dialog(QDialog):
@@ -172,6 +172,7 @@ class Dialog(QDialog):
 		self.config = configfile
 		self.parent = parent
 		self.app = app
+		self.saved = False
 
 		self.newfont = None
 
@@ -188,6 +189,11 @@ class Dialog(QDialog):
 
 		self.setWindowTitle("Preferences")
 		self.setWindowIcon(QIcon(SETTINGS_ICON))
+
+		if self.parent==None:
+			if self.config!=SETTINGS_FILE:
+				self.setWindowTitle("Editing "+os.path.basename(self.config))
+
 
 		self.selector = QListWidget(self)
 		self.stack = QStackedWidget(self)
@@ -1198,7 +1204,10 @@ class Dialog(QDialog):
 		saveButton.setAutoDefault(False)
 
 		if self.parent==None:
-			saveButton.setText("Save")
+			if self.config!=SETTINGS_FILE:
+				saveButton.setText("Save "+os.path.basename(self.config))
+			else:
+				saveButton.setText("Save")
 
 		cancelButton = QPushButton("Cancel")
 		cancelButton.clicked.connect(self.close)
@@ -1246,6 +1255,8 @@ class Dialog(QDialog):
 		self.plug_list.clear()
 
 	def save(self):
+
+		self.saved = True
 
 		config.LIST_SEARCH_CASE_SENSITIVE = self.listCase.isChecked()
 

@@ -314,7 +314,6 @@ if __name__ == '__main__':
 
 			if not os.path.isfile(args.settings):
 				erk.config.load_settings(args.settings)
-				print("\""+args.settings+"\" created!")
 			else:
 				erk.config.load_settings(args.settings)
 

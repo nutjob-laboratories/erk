@@ -51,6 +51,8 @@ Version 0.870
 	* The --settings commandline option will now create a new config file if the one passed as an argument doesn't exist
 	* Moved the contents of the "Timestamp" tab to the "Messages" tab in the "settings" dialog
 	* Moved the contents of the "Menu Bar" tab to the "Application" tab in the "settings" dialog
+	* "Settings" dialog now shows the filename on the save button if the file being edited isn't the default
+	* "Settings" dialog now shows the filename in the title if the file being edited isn't the default
 
 Version 0.860
 	* Removed all plugin-related code and documentation
