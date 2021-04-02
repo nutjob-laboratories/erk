@@ -818,6 +818,10 @@ class Erk(QMainWindow):
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
 
+		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk plugin repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
+		self.helpMenu.addAction(helpLink)
+
 		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
 		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
 		self.helpMenu.addAction(helpLink)
@@ -960,6 +964,10 @@ class Erk(QMainWindow):
 							entry = QWidgetAction(self)
 							entry.setDefaultWidget(entryLabel)
 							m.addAction(entry)
+
+						# entry = QAction(QIcon(EDIT_ICON),"Edit "+os.path.basename(file),self)
+						# entry.triggered.connect(lambda state,u=file: self.openFile(u))
+						# m.addAction(entry)
 
 					if disabled:
 						entry = QAction(QIcon(UNCHECKED_ICON),"Enabled",self)
