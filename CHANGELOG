@@ -57,6 +57,9 @@ Version 0.870
 	* If the editor is executed with --edit, then unusable widgets (like the server list, run button, etc) are hidden
 	* Set the border on the tab selector in the "settings" dialog to be 0px wide, and transparent
 	* Added the plugin repo to the help menu
+	* Bugfix: the menu in the style editor was not using the correct icons (and they were also in the wrong format, and the wrong size)
+	* Changed the "load connection script" button icon in the script editor to make the button's function more apparent
+	* All-new icon set: icons are now in the "material design" style
 
 Version 0.860
 	* Removed all plugin-related code and documentation

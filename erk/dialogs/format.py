@@ -738,15 +738,15 @@ class Dialog(QDialog):
 		self.menubar = QMenuBar(self)
 		fileMenu = self.menubar.addMenu ("File")
 
-		entry = MenuAction(self,RESTART_ICON,"Default","Load default style",25,self.doDefaults)
+		entry = MenuAction(self,RELOAD_MENU_ICON,"Default","Load default style",25,self.doDefaults)
 		fileMenu.addAction(entry)
 
 		fileMenu.addSeparator()
 
-		entry = MenuAction(self,OPENFILE_ICON,"Open","Load a style file",25,self.loadStyle)
+		entry = MenuAction(self,OPEN_MENU_ICON,"Open","Load a style file",25,self.loadStyle)
 		fileMenu.addAction(entry)
 
-		entry = MenuAction(self,SAVEASFILE_ICON,"Save as...","Save to a style file",25,self.doSaveAs)
+		entry = MenuAction(self,SAVEAS_MENU_ICON,"Save as...","Save to a style file",25,self.doSaveAs)
 		fileMenu.addAction(entry)
 
 		self.menubar.setStyleSheet(f"QMenuBar {{ background-color:transparent;  }}")

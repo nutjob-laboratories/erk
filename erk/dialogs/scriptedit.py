@@ -271,7 +271,7 @@ class Window(QMainWindow):
 		self.runButton.setIconSize(QSize(height,height))
 		self.runButton.setToolTip("Execute script")
 
-		documentIcon = QIcon(CONNECT_MENU_ICON)
+		documentIcon = QIcon(SCRIPT_ICON)
 
 		self.docButton = QPushButton(documentIcon,'')
 		self.docButton.clicked.connect(self.openAutoscript)
