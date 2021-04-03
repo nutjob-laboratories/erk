@@ -248,14 +248,6 @@ def build_connection_display(gui,new_server=None):
 
 	root = gui.connection_display.invisibleRootItem()
 
-	# # Set main status bar
-	# slist = []
-	# for e in servers:
-	# 	if e[0]=="Connecting...": continue
-	# 	slist.append(e[0]+" ("+e[1].nickname+")")
-	# if len(slist)>0:
-	# 	gui.set_status(f"{', '.join(slist)}")
-
 	# BEGIN STARTER DISPLAY
 
 	if len(CONSOLES)>0 or len(CHANNELS)>0 or len(PRIVATES)>0:
@@ -370,7 +362,7 @@ def build_connection_display(gui,new_server=None):
 				child.erk_channel = True
 				child.setIcon(0,QIcon(CHANNEL_ICON))
 			elif channel.type==config.PRIVATE_WINDOW:
-				child.setIcon(0,QIcon(NICK_ICON))
+				child.setIcon(0,QIcon(PRIVATE_ICON))
 				child.erk_channel = False
 			child.erk_client = s[1]
 			child.erk_widget = channel

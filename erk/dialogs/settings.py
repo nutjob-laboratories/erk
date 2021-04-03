@@ -617,7 +617,7 @@ class Dialog(QDialog):
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Chats")
 		entry.widget = self.channelPage
-		entry.setIcon(QIcon(CHANNEL_ICON))
+		entry.setIcon(QIcon(CHATS_ICON))
 		self.selector.addItem(entry)
 
 		self.stack.addWidget(self.channelPage)
