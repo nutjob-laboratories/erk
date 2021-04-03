@@ -497,7 +497,7 @@ class Window(QMainWindow):
 			fullname = file[0]
 			name = file[1]
 
-			entry = QAction(QIcon(DOCUMENT_ICON),name,self)
+			entry = QAction(QIcon(SCRIPT_ICON),name,self)
 			entry.triggered.connect(lambda state,f=fullname: self.readScript(f))
 			self.installedScripts.addAction(entry)
 

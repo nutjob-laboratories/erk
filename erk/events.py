@@ -708,6 +708,12 @@ def fetch_console_window(client):
 			return window.widget
 	return None
 
+def fetch_console_list():
+	consoles = []
+	for window in CONSOLES:
+		consoles.append(window.widget)
+	return consoles
+
 def fetch_window(client,name):
 	for window in CHANNELS:
 		if window.widget.client.id==client.id:

@@ -63,6 +63,8 @@ Version 0.870
 	* Gave the "chats" tab in the "settings" dialog it's own (new) icon
 	* Gave private chats their own (new) icon in the connection display
 	* Changed the icon of the application page in the "settings" dialog
+	* Changed the icon of the files in the "Installed Scripts" submenu in the script editor
+	* Bugfix: the /switch command was broken in certain circumstances
 
 Version 0.860
 	* Removed all plugin-related code and documentation

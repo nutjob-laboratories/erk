@@ -1848,7 +1848,7 @@ def handle_ui_input(window,client,text):
 			channels = window.channelList()
 			privates = window.privateList()
 			dl = channels + privates
-			if len(dl>0):
+			if len(dl)>0:
 				msg = Message(RAW_SYSTEM_MESSAGE,'',"Available chats: "+', '.join(dl))
 				window.writeText(msg,True)
 				return True
