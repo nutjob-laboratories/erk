@@ -62,6 +62,7 @@ Version 0.870
 	* All-new icon set: icons are now in the "material design" style
 	* Gave the "chats" tab in the "settings" dialog it's own (new) icon
 	* Gave private chats their own (new) icon in the connection display
+	* Changed the icon of the application page in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

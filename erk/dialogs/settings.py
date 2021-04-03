@@ -216,7 +216,7 @@ class Dialog(QDialog):
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Application")
 		entry.widget = self.displayPage
-		entry.setIcon(QIcon(FONT_ICON))
+		entry.setIcon(QIcon(WINDOW_ICON))
 		self.selector.addItem(entry)
 		self.selector.setCurrentItem(entry)
 
