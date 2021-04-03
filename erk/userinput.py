@@ -84,6 +84,7 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"back": config.INPUT_COMMAND_SYMBOL+"back",
 		config.INPUT_COMMAND_SYMBOL+"oper": config.INPUT_COMMAND_SYMBOL+"oper ",
 		config.INPUT_COMMAND_SYMBOL+"switch": config.INPUT_COMMAND_SYMBOL+"switch ",
+		config.INPUT_COMMAND_SYMBOL+"console": config.INPUT_COMMAND_SYMBOL+"console",
 		config.INPUT_COMMAND_SYMBOL+"connect": config.INPUT_COMMAND_SYMBOL+"connect ",
 		config.INPUT_COMMAND_SYMBOL+"reconnect": config.INPUT_COMMAND_SYMBOL+"reconnect ",
 		config.INPUT_COMMAND_SYMBOL+"ssl": config.INPUT_COMMAND_SYMBOL+"ssl ",
@@ -107,20 +108,14 @@ def buildHelp():
 		config.INPUT_COMMAND_SYMBOL+"preferences": config.INPUT_COMMAND_SYMBOL+"preferences",
 		config.INPUT_COMMAND_SYMBOL+"print": config.INPUT_COMMAND_SYMBOL+"print ",
 		config.INPUT_COMMAND_SYMBOL+"echo": config.INPUT_COMMAND_SYMBOL+"echo ",
-
 		config.INPUT_COMMAND_SYMBOL+"script": config.INPUT_COMMAND_SYMBOL+"script ",
-
 		config.INPUT_COMMAND_SYMBOL+"style": config.INPUT_COMMAND_SYMBOL+"style ",
-
 		config.INPUT_COMMAND_SYMBOL+"connectscript": config.INPUT_COMMAND_SYMBOL+"connectscript ",
-
 		config.INPUT_COMMAND_SYMBOL+"edit": config.INPUT_COMMAND_SYMBOL+"edit ",
-
 		config.INPUT_COMMAND_SYMBOL+"macro": config.INPUT_COMMAND_SYMBOL+"macro ",
 		config.INPUT_COMMAND_SYMBOL+"macrohelp": config.INPUT_COMMAND_SYMBOL+"macrohelp ",
 		config.INPUT_COMMAND_SYMBOL+"macrousage": config.INPUT_COMMAND_SYMBOL+"macrousage ",
 		config.INPUT_COMMAND_SYMBOL+"unmacro": config.INPUT_COMMAND_SYMBOL+"unmacro ",
-
 		config.INPUT_COMMAND_SYMBOL+"dictionary": config.INPUT_COMMAND_SYMBOL+"dictionary ",
 		config.INPUT_COMMAND_SYMBOL+"undictionary": config.INPUT_COMMAND_SYMBOL+"undictionary ",
 		config.INPUT_COMMAND_SYMBOL+"write": config.INPUT_COMMAND_SYMBOL+"write ",
@@ -209,6 +204,7 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"macrousage</b> NAME MESSAGE...", "Sets the \"usage\" text for a macro" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"unmacro</b> NAME", "Deletes a macro" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"console</b>", "Switches to the console of the current server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"print</b> MESSAGE", "Prints a message to the current window" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"write</b> MESSAGE", "Prints a message to the current window, and saves it in the log" ],
@@ -290,6 +286,7 @@ def buildHelp():
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"script</b> FILENAME", "Loads a script and executes its contents as commands" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"edit</b> [FILENAME]", "Loads the script editor or uses it to edit a script" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"switch</b> [CHANNEL|USER]", "Switches to a different, open chat (use without argument to list all chats)" ],
+		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"console</b>", "Switches to the console of the current server" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"style</b> FILENAME", "Loads a style file into the current chat" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"preferences</b>", "Opens the preferences dialog" ],
 		[ "<b>"+config.INPUT_COMMAND_SYMBOL+"quit</b> [MESSAGE]", "Disconnects from the current IRC server" ],
@@ -398,7 +395,8 @@ PROTECTED_NAMES = [
 		'undictionary',
 		'ignore',
 		'unignore',
-		'dump'
+		'dump',
+		'console',
 	]
 
 FORBIDDEN_CHARACTERS = [
@@ -1823,6 +1821,16 @@ def handle_ui_input(window,client,text):
 			window.writeText(msg,True)
 			return True
 
+	if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'console' and len(tokens)==1:
+		win = events.fetch_console_window(client)
+		window.parent.stack.setCurrentWidget(win)
+		return True
+
+	if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'console':
+		msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL)
+		window.writeText(msg,True)
+		return True
+
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==2:
 			tokens.pop(0)
@@ -1856,11 +1864,6 @@ def handle_ui_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"No available chats.")
 				window.writeText(msg,True)
 				return True
-		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch':
-			msg = Message(ERROR_MESSAGE,'',"Usage: "+config.INPUT_COMMAND_SYMBOL+"switch [CHAT_NAME]")
-			window.writeText(msg,True)
-			window.writeText(msg,True)
-			return True
 
 	if config.DISABLE_CONNECT_COMMANDS: return False
 

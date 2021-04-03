@@ -66,6 +66,7 @@ Version 0.870
 	* Changed the icon of the files in the "Installed Scripts" submenu in the script editor
 	* Bugfix: the /switch command was broken in certain circumstances
 	* Reverted the "visited" and "unvisited" icons to the ones from the old icon set, as they're more visible/usable
+	* Added a new command: /console (switches to the current server console)
 
 Version 0.860
 	* Removed all plugin-related code and documentation
