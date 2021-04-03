@@ -67,6 +67,8 @@ Version 0.870
 	* Bugfix: the /switch command was broken in certain circumstances
 	* Reverted the "visited" and "unvisited" icons to the ones from the old icon set, as they're more visible/usable
 	* Added a new command: /console (switches to the current server console)
+	* Removed some unused icons from the app
+	* New logo splash (the image that appears when no connection/windows are open)
 
 Version 0.860
 	* Removed all plugin-related code and documentation
