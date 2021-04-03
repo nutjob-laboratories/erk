@@ -335,8 +335,11 @@ class IRC_Connection(irc.IRCClient):
 		global SCRIPT_WINDOW
 		SCRIPT_WINDOW = None
 
-		if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
-			userinput.VARIABLE_TABLE.update(vtable)
+		if config.ENABLE_ALIASES:
+			if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
+				userinput.VARIABLE_TABLE.update(vtable)
+		else:
+			userinput.VARIABLE_TABLE = {}
 
 	def joined(self, channel):
 		self.sendLine(f"MODE {channel}")
@@ -1420,11 +1423,12 @@ class ScriptThread(QThread):
 			line = line.strip()
 			if len(line)==0: continue
 
-			for key in self.vtable:
-				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
+			if config.ENABLE_ALIASES:
+				for key in self.vtable:
+					line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
 
-			for key in self.private_vtable:
-				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
+				for key in self.private_vtable:
+					line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
 
 			tokens = line.split()
 
@@ -1526,14 +1530,31 @@ class ScriptThreadWindow(QThread):
 			line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+'0',' '.join(self.arguments))
 
 			# Interpolate alias variables
-			for key in self.vtable:
-				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
+			if config.ENABLE_ALIASES:
+				for key in self.vtable:
+					line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.vtable[key])
 
 			# Interpolate private alias variables
-			for key in self.private_vtable:
-				line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
+			if config.ENABLE_ALIASES:
+				for key in self.private_vtable:
+					line = line.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,self.private_vtable[key])
 
 			tokens = line.split()
+
+			if not config.ENABLE_ALIASES:
+				if len(tokens)>0:
+					if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'alias':
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}alias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}alias is disabled"])
+						self.had_error = True
+						break
+					if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'_alias':
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}_alias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}_alias is disabled"])
+						self.had_error = True
+						break
+					if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'unalias':
+						self.scriptErr.emit([self.window,f"Error using {config.INPUT_COMMAND_SYMBOL}unalias in {self.scriptname}: {config.INPUT_COMMAND_SYMBOL}unalias is disabled"])
+						self.had_error = True
+						break
 
 			if len(tokens)>0:
 				if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'argcount':

@@ -509,8 +509,9 @@ def handle_input(window,client,text,force=True,is_script=False):
 		return
 
 	if not client.gui.block_scripts:
-		for key in VARIABLE_TABLE:
-			text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
+		if config.ENABLE_ALIASES:
+			for key in VARIABLE_TABLE:
+				text = text.replace(config.SCRIPT_INTERPOLATE_SYMBOL+key,VARIABLE_TABLE[key])
 
 	if not client.gui.block_scripts:
 		if config.ENABLE_MACROS:
@@ -2165,8 +2166,12 @@ def execute_script_end(data):
 		clean.append(e)
 	SCRIPT_THREADS = clean
 
-	if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
-		VARIABLE_TABLE.update(vtable)
+	global VARIABLE_TABLE
+	if config.ENABLE_ALIASES:
+		if config.GLOBALIZE_ALL_SCRIPT_ALIASES:
+			VARIABLE_TABLE.update(vtable)
+	else:
+		VARIABLE_TABLE = {}
 
 # Triggers every time there's a script error
 def execute_script_error(data):
@@ -2188,6 +2193,7 @@ def execute_script_unalias(data):
 	scriptname = data[0]
 	alias = data[1]
 
-	global VARIABLE_TABLE
-	if alias in VARIABLE_TABLE:
-		VARIABLE_TABLE.pop(alias)
+	if config.ENABLE_ALIASES:
+		global VARIABLE_TABLE
+		if alias in VARIABLE_TABLE:
+			VARIABLE_TABLE.pop(alias)

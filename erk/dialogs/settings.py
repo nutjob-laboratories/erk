@@ -952,7 +952,10 @@ class Dialog(QDialog):
 		self.scriptMisc = QCheckBox("Enable scripts",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
 
-		self.sglobalMisc = QCheckBox("Global aliases",self)
+		self.enableAliasMisc = QCheckBox("Enable aliases",self)
+		if config.ENABLE_ALIASES: self.enableAliasMisc.setChecked(True)
+
+		self.sglobalMisc = QCheckBox("Aliases are global",self)
 		if config.GLOBALIZE_ALL_SCRIPT_ALIASES: self.sglobalMisc.setChecked(True)
 
 		self.seditMisc = QCheckBox("Enable script editor",self)
@@ -974,6 +977,7 @@ class Dialog(QDialog):
 		scriptLayout = QVBoxLayout()
 		scriptLayout.addWidget(self.scriptMisc)
 		scriptLayout.addWidget(self.seditMisc)
+		scriptLayout.addWidget(self.enableAliasMisc)
 		scriptLayout.addWidget(self.sglobalMisc)
 		scriptLayout.addWidget(self.enableMacros)
 		scriptLayout.addWidget(self.saveMacros)
@@ -988,6 +992,7 @@ class Dialog(QDialog):
 				self.autoMacros.setEnabled(False)
 				self.saveMacros.setEnabled(False)
 				self.enableMacros.setEnabled(False)
+				self.enableAliasMisc.setEnabled(False)
 
 		self.featuresPage.setLayout(scriptLayout)
 
@@ -1259,6 +1264,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.ENABLE_ALIASES = self.enableAliasMisc.isChecked()
 
 		config.LIST_SEARCH_CASE_SENSITIVE = self.listCase.isChecked()
 
@@ -1669,6 +1676,7 @@ class Dialog(QDialog):
 				self.listMark.setChecked(config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH)
 				self.listLimit.setChecked(config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME)
 				self.listCase.setChecked(config.LIST_SEARCH_CASE_SENSITIVE)
+				self.enableAliasMisc.setChecked(config.ENABLE_ALIASES)
 
 			else:
 				msg = QMessageBox(self)

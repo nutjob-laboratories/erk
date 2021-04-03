@@ -70,6 +70,9 @@ Version 0.870
 	* Removed some unused icons from the app
 	* New logo splash (the image that appears when no connection/windows are open)
 	* Bugfix: setting the history size in the "settings" dialog would do strange things if the "set history size" dialog was canceled out of
+	* Added a new setting to the config file: dis/enable aliases
+	* Added the en/disable alias setting to the "settings" dialog
+	* Changed the wording of "Global aliases" to "Aliases are global" in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation
