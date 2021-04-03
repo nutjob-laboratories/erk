@@ -69,6 +69,7 @@ Version 0.870
 	* Added a new command: /console (switches to the current server console)
 	* Removed some unused icons from the app
 	* New logo splash (the image that appears when no connection/windows are open)
+	* Bugfix: setting the history size in the "settings" dialog would do strange things if the "set history size" dialog was canceled out of
 
 Version 0.860
 	* Removed all plugin-related code and documentation

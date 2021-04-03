@@ -69,7 +69,7 @@ class Dialog(QDialog):
 		info = x.get_entry_information()
 		del x
 
-		if not info: self.historySize = None
+		if not info: return
 		self.historySize = info
 
 		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b>*")
