@@ -73,6 +73,8 @@ Version 0.870
 	* Added a new setting to the config file: dis/enable aliases
 	* Added the en/disable alias setting to the "settings" dialog
 	* Changed the wording of "Global aliases" to "Aliases are global" in the "settings" dialog
+	* Removed all Icons8 icons, and replaced all of them with icons from public domain sources (mostly Google's Material Design)
+	* Removed the Icons8 credit from the "about" dialog, and added a note about public domain sources for icons
 
 Version 0.860
 	* Removed all plugin-related code and documentation

@@ -103,7 +103,7 @@ class Dialog(QDialog):
 		tech_credit.setOpenExternalLinks(True)
 
 
-		icons_credit = QLabel(f"<small>Icons by </small><a href=\"https://icons8.com/\"><small>Icons8</small></a><small> and </small><a href=\"https://material.io/resources/icons/\"><small>Google</small></a>")
+		icons_credit = QLabel(f"<small>Icons by </small></small><a href=\"https://material.io/resources/icons/\"><small>Google</small></a><small> and other public domain sources</small>")
 		icons_credit.setAlignment(Qt.AlignCenter)
 		icons_credit.setOpenExternalLinks(True)
 
