@@ -1009,7 +1009,7 @@ def check_settings(filename):
 			if "enable_plugin_input_event" in data: check = check + 1
 			if "scroll_to_bottom_on_chat_switch" in data: check = check + 1
 
-			if check == 113:
+			if check == 114:
 				return True
 			else:
 				return False
