@@ -35,7 +35,15 @@ globals()["erk.resources.resources"] = __import__("erk.resources.resources")
 ERK_ICON = ":/gui-erk.png"
 LOGO_IMAGE = ":/gui-logo.png"
 LIGHT_LOGO_IMAGE = ":/gui-light_logo.png"
-DEFAULT_FONT = ":/font-DejaVuSansMono.ttf"
+
+DEFAULT_FONT = ":/font-UbuntuMono-Regular.ttf"
+OTHER_FONTS = [
+	":/font-UbuntuMono-Italic.ttf",
+	":/font-UbuntuMono-BoldItalic.ttf",
+	":/font-UbuntuMono-Bold.ttf"
+]
+DEFAULT_FONT_SIZE = 11
+
 BANNER_IMAGE = ":/gui-banner.png"
 USERLIST_OPERATOR_ICON		= ":/gui-ulist_op.png"
 USERLIST_VOICED_ICON		= ":/gui-ulist_voice.png"

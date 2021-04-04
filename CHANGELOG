@@ -83,6 +83,11 @@ Version 0.870
 	* Added new always/never scroll setting to the "settings" dialog
 	* Moved the "Enable commands" and "always allow /me" checkboxes to the bottom of the "Text input" page in the "settings" dialog
 	* Bugfix: config file integrity checks would always fail
+	* New default font: Ubuntu Mono
+	* Altered the font loader to load multiple font styles from the resource file
+	* Added bold, italic, and bold-italic font styles for Ubuntu Mono to the resource file
+	* Changed the default font size to 11pt
+	* Added font credit to the "about" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

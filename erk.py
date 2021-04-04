@@ -219,7 +219,7 @@ if __name__ == '__main__':
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
+			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:
 			f = QFont()
 			f.fromString(erk.config.DISPLAY_FONT)
@@ -277,7 +277,7 @@ if __name__ == '__main__':
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
+			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:
 			f = QFont()
 			f.fromString(erk.config.DISPLAY_FONT)
@@ -299,7 +299,7 @@ if __name__ == '__main__':
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-				font = QFont(_fontstr,9)
+				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
 				f = QFont()
 				f.fromString(erk.config.DISPLAY_FONT)
@@ -320,7 +320,7 @@ if __name__ == '__main__':
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-				font = QFont(_fontstr,9)
+				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
 				f = QFont()
 				f.fromString(erk.config.DISPLAY_FONT)
@@ -342,7 +342,7 @@ if __name__ == '__main__':
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-				font = QFont(_fontstr,9)
+				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
 				f = QFont()
 				f.fromString(erk.config.DISPLAY_FONT)
@@ -366,7 +366,7 @@ if __name__ == '__main__':
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-				font = QFont(_fontstr,9)
+				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
 				f = QFont()
 				f.fromString(erk.config.DISPLAY_FONT)
@@ -386,7 +386,7 @@ if __name__ == '__main__':
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-			font = QFont(_fontstr,9)
+			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:
 			f = QFont()
 			f.fromString(erk.config.DISPLAY_FONT)

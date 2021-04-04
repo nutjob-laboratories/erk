@@ -107,6 +107,10 @@ class Dialog(QDialog):
 		icons_credit.setAlignment(Qt.AlignCenter)
 		icons_credit.setOpenExternalLinks(True)
 
+		font_credit = QLabel(f"<small>Default font by </small></small><a href=\"https://canonical.com/\"><small>Canonical</small></a><small> (<a href=\"https://design.ubuntu.com/font/\">Ubuntu Mono</a>)</small>")
+		font_credit.setAlignment(Qt.AlignCenter)
+		font_credit.setOpenExternalLinks(True)
+
 
 		spellcheck_credit = QLabel(f"<a href=\"https://github.com/barrust/pyspellchecker\"><small>pyspellchecker</small></a><small> by </small><a href=\"mailto:barrust@gmail.com\"><small>Tyler Barrus</small></a>")
 		spellcheck_credit.setAlignment(Qt.AlignCenter)
@@ -162,6 +166,7 @@ class Dialog(QDialog):
 
 		creditsLayout = QVBoxLayout()
 		creditsLayout.addWidget(icons_credit)
+		creditsLayout.addWidget(font_credit)
 		creditsLayout.addWidget(spellcheck_credit)
 		creditsLayout.addWidget(emoji_credit)
 		creditsLayout.addWidget(qr_credit)
