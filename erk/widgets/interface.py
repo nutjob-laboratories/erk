@@ -799,7 +799,12 @@ class Window(QMainWindow):
 		# Move focus back to the input widget
 		self.input.setFocus()
 
-	def do_move_to_bottom(self):
+	def do_move_to_bottom(self,force=False):
+
+		if force:
+			sb = self.chat.verticalScrollBar()
+			sb.setValue(sb.maximum())
+			self.chat.ensureCursorVisible()
 
 		fm = QFontMetrics(self.chat.font())
 		fheight = fm.height() * 2
@@ -809,6 +814,7 @@ class Window(QMainWindow):
 
 		if is_at_bottom:
 			sb.setValue(sb.maximum())
+			self.chat.ensureCursorVisible()
 
 	def clearScreen(self):
 		self.chat.clear()

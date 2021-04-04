@@ -262,6 +262,9 @@ class Erk(QMainWindow):
 			# Set focus to the input widget
 			window.input.setFocus()
 
+			if config.SCROLL_CHAT_TO_BOTTOM:
+				window.do_move_to_bottom(True)
+
 		if hasattr(window,"client"): events.clear_unseen(window)
 		events.build_connection_display(self)
 
@@ -1113,10 +1116,12 @@ class Erk(QMainWindow):
 				self.fullscreen = False
 				self.showNormal()
 				self.winsizeMenuEntry.setEnabled(True)
+				events.move_all_to_bottom()
 			else:
 				self.fullscreen = True
 				self.showFullScreen()
 				self.winsizeMenuEntry.setEnabled(False)
+				events.move_all_to_bottom()
 			x = Blank()
 			x.show()
 			x.close()

@@ -420,6 +420,14 @@ def rerender_all():
 	for c in CONSOLES:
 		c.widget.rerender()
 
+def move_all_to_bottom():
+	for c in CHANNELS:
+		c.widget.do_move_to_bottom(True)
+	for c in PRIVATES:
+		c.widget.do_move_to_bottom(True)
+	for c in CONSOLES:
+		c.widget.do_move_to_bottom(True)
+
 def rerender_userlists():
 	for c in CHANNELS:
 		c.widget.rerender_userlist()

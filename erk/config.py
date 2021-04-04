@@ -168,12 +168,15 @@ ENABLE_ALIASES = True
 
 ENABLE_PLUGIN_INPUT = True
 
+SCROLL_CHAT_TO_BOTTOM = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"scroll_to_bottom_on_chat_switch": SCROLL_CHAT_TO_BOTTOM,
 		"enable_plugin_input_event": ENABLE_PLUGIN_INPUT,
 		"enable_script_aliases": ENABLE_ALIASES,
 		"case_sensitive_list_search": LIST_SEARCH_CASE_SENSITIVE,
@@ -293,6 +296,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "scroll_to_bottom_on_chat_switch" in data:
+		data["scroll_to_bottom_on_chat_switch"] = SCROLL_CHAT_TO_BOTTOM
 
 	if not "enable_plugin_input_event" in data:
 		data["enable_plugin_input_event"] = ENABLE_PLUGIN_INPUT
@@ -750,6 +756,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global LIST_SEARCH_CASE_SENSITIVE
 	global ENABLE_ALIASES
 	global ENABLE_PLUGIN_INPUT
+	global SCROLL_CHAT_TO_BOTTOM
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -758,6 +765,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SCROLL_CHAT_TO_BOTTOM = data["scroll_to_bottom_on_chat_switch"]
 			ENABLE_PLUGIN_INPUT = data["enable_plugin_input_event"]
 			ENABLE_ALIASES = data["enable_script_aliases"]
 			LIST_SEARCH_CASE_SENSITIVE = data["case_sensitive_list_search"]
@@ -999,8 +1007,9 @@ def check_settings(filename):
 			if "case_sensitive_list_search" in data: check = check + 1
 			if "enable_script_aliases" in data: check = check + 1
 			if "enable_plugin_input_event" in data: check = check + 1
+			if "scroll_to_bottom_on_chat_switch" in data: check = check + 1
 
-			if check == 112:
+			if check == 113:
 				return True
 			else:
 				return False

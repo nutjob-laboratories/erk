@@ -79,6 +79,9 @@ Version 0.870
 	* Added the en/disable input event setting to the "settings" dialog
 	* Added the new "disable input event" stuff to the documentation
 	* Added a section to the plugin documentation on malicious input events
+	* Added a setting to always/never scroll to the bottom on chat switch
+	* Added new always/never scroll setting to the "settings" dialog
+	* Moved the "Enable commands" and "always allow /me" checkboxes to the bottom of the "Text input" page in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

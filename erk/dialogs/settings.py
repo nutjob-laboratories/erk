@@ -643,6 +643,9 @@ class Dialog(QDialog):
 		self.displayChange = QCheckBox("Double-click nickname to change nickname",self)
 		if config.DOUBLECLICK_TO_CHANGE_NICK: self.displayChange.setChecked(True)
 
+		self.channelLatest = QCheckBox("Display latest messages on chat switch",self)
+		if config.SCROLL_CHAT_TO_BOTTOM: self.channelLatest.setChecked(True)
+
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayStatus)
@@ -679,6 +682,7 @@ class Dialog(QDialog):
 		cpLayout.addWidget(nickBox)
 		cpLayout.addWidget(userBox)
 		cpLayout.addWidget(chanBox)
+		cpLayout.addWidget(self.channelLatest)
 		cpLayout.addStretch()
 
 		self.channelPage.setLayout(cpLayout)
@@ -865,11 +869,11 @@ class Dialog(QDialog):
 
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(self.inputCommands)
-		cpLayout.addWidget(self.inputMe)
 		cpLayout.addWidget(histBox)
 		cpLayout.addWidget(autoBox)
 		cpLayout.addWidget(emojiBox)
+		cpLayout.addWidget(self.inputCommands)
+		cpLayout.addWidget(self.inputMe)
 		cpLayout.addStretch()
 
 		self.inputPage.setLayout(cpLayout)
@@ -1268,6 +1272,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.SCROLL_CHAT_TO_BOTTOM = self.channelLatest.isChecked()
 
 		config.ENABLE_PLUGIN_INPUT = self.inputPlugins.isChecked()
 
@@ -1684,6 +1690,7 @@ class Dialog(QDialog):
 				self.listCase.setChecked(config.LIST_SEARCH_CASE_SENSITIVE)
 				self.enableAliasMisc.setChecked(config.ENABLE_ALIASES)
 				self.inputPlugins.setChecked(config.ENABLE_PLUGIN_INPUT)
+				self.channelLatest.setChecked(config.SCROLL_CHAT_TO_BOTTOM)
 
 			else:
 				msg = QMessageBox(self)
