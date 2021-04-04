@@ -218,6 +218,8 @@ if __name__ == '__main__':
 
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			for f in OTHER_FONTS:
+				QFontDatabase.addApplicationFont(f)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:
@@ -276,6 +278,8 @@ if __name__ == '__main__':
 
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			for f in OTHER_FONTS:
+				QFontDatabase.addApplicationFont(f)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:
@@ -298,6 +302,8 @@ if __name__ == '__main__':
 
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				for f in OTHER_FONTS:
+					QFontDatabase.addApplicationFont(f)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
@@ -319,6 +325,8 @@ if __name__ == '__main__':
 
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				for f in OTHER_FONTS:
+					QFontDatabase.addApplicationFont(f)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
@@ -341,6 +349,8 @@ if __name__ == '__main__':
 
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				for f in OTHER_FONTS:
+					QFontDatabase.addApplicationFont(f)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
@@ -365,6 +375,8 @@ if __name__ == '__main__':
 
 			if erk.config.DISPLAY_FONT=='':
 				id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+				for f in OTHER_FONTS:
+					QFontDatabase.addApplicationFont(f)
 				_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 				font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 			else:
@@ -385,6 +397,8 @@ if __name__ == '__main__':
 
 		if erk.config.DISPLAY_FONT=='':
 			id = QFontDatabase.addApplicationFont(DEFAULT_FONT)
+			for f in OTHER_FONTS:
+				QFontDatabase.addApplicationFont(f)
 			_fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 			font = QFont(_fontstr,DEFAULT_FONT_SIZE)
 		else:

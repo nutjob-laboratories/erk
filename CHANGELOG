@@ -88,6 +88,12 @@ Version 0.870
 	* Added bold, italic, and bold-italic font styles for Ubuntu Mono to the resource file
 	* Changed the default font size to 11pt
 	* Added font credit to the "about" dialog
+	* Bugfix: entire default font family was not always loaded into memory; this has been fixed
+	* Changed the default font to Fira Mono, and added the font family to the resource file
+	* Changed "about" credit information to the new font
+	* Reset the default font size to 9pt
+	* Subscript of "fancy" menu entries are no longer in italics
+	* Tweaked the "about" dialog a bit
 
 Version 0.860
 	* Removed all plugin-related code and documentation

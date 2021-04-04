@@ -79,9 +79,9 @@ class Dialog(QDialog):
 
 		line1 = QLabel("<big><b>"+APPLICATION_NAME+" Open Source IRC Client</b></big>")
 		line1.setAlignment(Qt.AlignCenter)
-		line2 = QLabel("<b>\"It's How You Say IRC\"</b>")
+		line2 = QLabel("<big><b>\"It's How You Say IRC\"</b></big>")
 		line2.setAlignment(Qt.AlignCenter)
-		line3 = QLabel("<b>Version "+APPLICATION_VERSION+"</b>")
+		line3 = QLabel("<big><b>Version "+APPLICATION_VERSION+"</b></big>")
 		line3.setAlignment(Qt.AlignCenter)
 		line4 = QLabel(f"<big><b><a href=\"https://bit.ly/erk-irc\">https://bit.ly/erk-irc</a></b></big>")
 		line4.setAlignment(Qt.AlignCenter)
@@ -107,7 +107,7 @@ class Dialog(QDialog):
 		icons_credit.setAlignment(Qt.AlignCenter)
 		icons_credit.setOpenExternalLinks(True)
 
-		font_credit = QLabel(f"<small>Default font by </small></small><a href=\"https://canonical.com/\"><small>Canonical</small></a><small> (<a href=\"https://design.ubuntu.com/font/\">Ubuntu Mono</a>)</small>")
+		font_credit = QLabel(f"<small>Default font by </small></small><a href=\"http://www.carrois.com/\"><small>Carrois Apostrophe</small></a><small> (<a href=\"https://bboxtype.com/typefaces/FiraSans/\">Fira Mono</a>)</small>")
 		font_credit.setAlignment(Qt.AlignCenter)
 		font_credit.setOpenExternalLinks(True)
 
@@ -120,7 +120,7 @@ class Dialog(QDialog):
 		emoji_credit.setAlignment(Qt.AlignCenter)
 		emoji_credit.setOpenExternalLinks(True)
 
-		gnu_credit = QLabel(f"<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\"><small>Gnu General Public License 3.0</small></a>")
+		gnu_credit = QLabel(f"<big><b><a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\">Gnu General Public License 3.0</a></b></big>")
 		gnu_credit.setAlignment(Qt.AlignCenter)
 		gnu_credit.setOpenExternalLinks(True)
 
@@ -132,12 +132,12 @@ class Dialog(QDialog):
 		pike_credit.setAlignment(Qt.AlignCenter)
 		pike_credit.setOpenExternalLinks(True)
 
-		platform_credit = QLabel(f"<small><i>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</i></small>")
+		platform_credit = QLabel(f"<small>Running on "+ platform.system().strip() + " " + platform.release().strip() +"</small>")
 		platform_credit.setAlignment(Qt.AlignCenter)
 
 		# QT_VERSION_STR
 
-		qtv_credit = QLabel(f"<small><i>Qt5, version " + str(QT_VERSION_STR) +"</i></small>")
+		qtv_credit = QLabel(f"<small><b>Qt " + str(QT_VERSION_STR) +"</b></small>")
 		qtv_credit.setAlignment(Qt.AlignCenter)
 
 		tv = str(twisted.version)
@@ -145,10 +145,13 @@ class Dialog(QDialog):
 		tv = tv.replace(']','',1)
 		tv = tv.strip()
 
-		twv_credit = QLabel(f"<small><i>" + tv +"</i></small>")
+		tv = tv.split(',')[1].strip()
+		tv = tv.replace('version ','',1)
+
+		twv_credit = QLabel(f"<small><b>Twisted " + tv +"</b></small>")
 		twv_credit.setAlignment(Qt.AlignCenter)
 
-		pyv_credit = QLabel(f"<small><i>Python, version " + platform.python_version().strip() +"</i></small>")
+		pyv_credit = QLabel(f"<small><b>Python " + platform.python_version().strip() +"</b></small>")
 		pyv_credit.setAlignment(Qt.AlignCenter)
 
 		me_credit = QLabel(f"<small>Created and written by <a href=\"https://github.com/danhetrick\">Dan Hetrick</a></small>")
@@ -188,10 +191,11 @@ class Dialog(QDialog):
 		credLayout.addWidget(nutjob)
 		credLayout.addWidget(me_credit)
 		credLayout.addWidget(bitly_credit)
-		credLayout.addWidget(tech_credit)
+		
 		credLayout.addStretch()
 		credLayout.addWidget(creditsBox)
 		credLayout.addStretch()
+		credLayout.addWidget(tech_credit)
 		credLayout.addWidget(pyv_credit)
 		credLayout.addWidget(qtv_credit)
 		credLayout.addWidget(twv_credit)

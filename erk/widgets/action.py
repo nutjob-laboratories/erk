@@ -234,7 +234,7 @@ def menuHtmlSpaced(icon,text,description,icon_size):
 				  <td style="font-weight: bold;"><big>{text}</big></td>
 				</tr>
 				<tr>
-				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				  <td style="font-style: normal; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
 				</tr>
 			  </tbody>
 			</table>
@@ -257,7 +257,7 @@ def menuHtml(icon,text,description,icon_size):
 				  <td style="font-weight: bold;"><big>{text}</big></td>
 				</tr>
 				<tr>
-				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				  <td style="font-style: normal; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
 				</tr>
 			  </tbody>
 			</table>
@@ -306,7 +306,7 @@ def menu4Html(icon,text,description,description2,description3,icon_size):
 				  <td style="font-weight: bold;"><big>{text}</big></td>
 				</tr>
 				<tr>
-				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				  <td style="font-style: normal; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
 				</tr>
 				<tr>
 				  <td style="font-weight: bold;"><small>{description2}&nbsp;&nbsp;</small></td>
@@ -335,7 +335,7 @@ def menu5Html(icon,text,description,description2,description3,description4,icon_
 				  <td style="font-weight: bold;"><big>{text}</big></td>
 				</tr>
 				<tr>
-				  <td style="font-style: italic; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
+				  <td style="font-style: normal; font-weight: normal;"><small>{description}&nbsp;&nbsp;</small></td>
 				</tr>
 				<tr>
 				  <td style="font-weight: normal;"><small>{description2}&nbsp;&nbsp;</small></td>
