@@ -166,12 +166,15 @@ LIST_SEARCH_CASE_SENSITIVE = False
 
 ENABLE_ALIASES = True
 
+ENABLE_PLUGIN_INPUT = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"enable_plugin_input_event": ENABLE_PLUGIN_INPUT,
 		"enable_script_aliases": ENABLE_ALIASES,
 		"case_sensitive_list_search": LIST_SEARCH_CASE_SENSITIVE,
 		"mark_beginning_and_end_of_list_search": MARK_BEGINNING_AND_END_OF_LIST_SEARCH,
@@ -290,6 +293,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_plugin_input_event" in data:
+		data["enable_plugin_input_event"] = ENABLE_PLUGIN_INPUT
 
 	if not "enable_script_aliases" in data:
 		data["enable_script_aliases"] = ENABLE_ALIASES
@@ -743,6 +749,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global LIMIT_LIST_SEARCH_TO_CHANNEL_NAME
 	global LIST_SEARCH_CASE_SENSITIVE
 	global ENABLE_ALIASES
+	global ENABLE_PLUGIN_INPUT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -751,6 +758,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ENABLE_PLUGIN_INPUT = data["enable_plugin_input_event"]
 			ENABLE_ALIASES = data["enable_script_aliases"]
 			LIST_SEARCH_CASE_SENSITIVE = data["case_sensitive_list_search"]
 			MARK_BEGINNING_AND_END_OF_LIST_SEARCH = data["mark_beginning_and_end_of_list_search"]
@@ -990,8 +998,9 @@ def check_settings(filename):
 			if "write_private_messages_to_console" in data: check = check + 1
 			if "case_sensitive_list_search" in data: check = check + 1
 			if "enable_script_aliases" in data: check = check + 1
+			if "enable_plugin_input_event" in data: check = check + 1
 
-			if check == 111:
+			if check == 112:
 				return True
 			else:
 				return False

@@ -1027,6 +1027,9 @@ class Dialog(QDialog):
 		self.helpPlugins = QCheckBox("Plugins can add to /help",self)
 		if config.PLUGIN_HELP: self.helpPlugins.setChecked(True)
 
+		self.inputPlugins = QCheckBox("Enable plugin input events",self)
+		if config.ENABLE_PLUGIN_INPUT: self.inputPlugins.setChecked(True)
+
 		self.plug_list = QListWidget(self)
 		for e in config.ADDITIONAL_PLUGIN_LOCATIONS:
 			item = QListWidgetItem(e)
@@ -1069,6 +1072,7 @@ class Dialog(QDialog):
 		plugLayout.addWidget(self.detPlugins)
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
+		plugLayout.addWidget(self.inputPlugins)
 		plugLayout.addStretch()
 		plugLayout.addWidget(plugBox)
 		plugLayout.addStretch()
@@ -1264,6 +1268,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.ENABLE_PLUGIN_INPUT = self.inputPlugins.isChecked()
 
 		config.ENABLE_ALIASES = self.enableAliasMisc.isChecked()
 
@@ -1677,6 +1683,7 @@ class Dialog(QDialog):
 				self.listLimit.setChecked(config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME)
 				self.listCase.setChecked(config.LIST_SEARCH_CASE_SENSITIVE)
 				self.enableAliasMisc.setChecked(config.ENABLE_ALIASES)
+				self.inputPlugins.setChecked(config.ENABLE_PLUGIN_INPUT)
 
 			else:
 				msg = QMessageBox(self)

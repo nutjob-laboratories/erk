@@ -523,9 +523,10 @@ def handle_input(window,client,text,force=True,is_script=False):
 		return
 
 	if not is_script:
-		if plugins.input(client,window,text):
-			window.input.setFocus()
-			return
+		if config.ENABLE_PLUGIN_INPUT:
+			if plugins.input(client,window,text):
+				window.input.setFocus()
+				return
 	
 	if window.type==config.CHANNEL_WINDOW:
 		handle_channel_input(window,client,text)

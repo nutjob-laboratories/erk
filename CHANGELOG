@@ -75,6 +75,10 @@ Version 0.870
 	* Changed the wording of "Global aliases" to "Aliases are global" in the "settings" dialog
 	* Removed all Icons8 icons, and replaced all of them with icons from public domain sources (mostly Google's Material Design)
 	* Removed the Icons8 credit from the "about" dialog, and added a note about public domain sources for icons
+	* Added a settings to en/disable plugin input events (so, if a plugin has a malicious input event, it can be evaded)
+	* Added the en/disable input event setting to the "settings" dialog
+	* Added the new "disable input event" stuff to the documentation
+	* Added a section to the plugin documentation on malicious input events
 
 Version 0.860
 	* Removed all plugin-related code and documentation
