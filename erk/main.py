@@ -1277,7 +1277,7 @@ class Erk(QMainWindow):
 									menu.addMenu(bannedmenu)
 
 								entry = QAction(QIcon(EXIT_ICON),"Leave channel",self)
-								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: client.leave(name,config.DEFAULT_QUIT_PART_MESSAGE))
+								entry.triggered.connect(lambda state,client=item.erk_client,name=channel: self.doChannelPart(client,name))
 								menu.addAction(entry)
 							else:
 
@@ -1299,6 +1299,10 @@ class Erk(QMainWindow):
 			return True
 
 		return super(Erk, self).eventFilter(source, event)
+
+	def doChannelPart(self,client,channel):
+		client.erk_parted.append(channel)
+		client.leave(channel,config.DEFAULT_QUIT_PART_MESSAGE)
 
 	def edit_style_file_in_window(self,client,name):
 		FormatEditDialog(self,client,name)

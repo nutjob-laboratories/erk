@@ -647,6 +647,7 @@ def handle_channel_input(window,client,text):
 	# Handle channel-specific cases of the /part command
 	if len(tokens)>0:
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)==1:
+			client.erk_parted.append(window.name)
 			client.leave(window.name,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
@@ -654,6 +655,7 @@ def handle_channel_input(window,client,text):
 				# channel has not been passed as an argument
 				tokens.pop(0)
 				partmsg = ' '.join(tokens)
+				client.erk_parted.append(window.name)
 				client.leave(window.name,partmsg)
 				return True
 
@@ -1051,6 +1053,7 @@ def handle_common_input(window,client,text):
 				msg = Message(ERROR_MESSAGE,'',"You are not in "+channel)
 				window.writeText(msg,True)
 				return True
+			client.erk_parted.append(channel)
 			client.leave(channel,config.DEFAULT_QUIT_PART_MESSAGE)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part' and len(tokens)>=2:
@@ -1066,6 +1069,7 @@ def handle_common_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 			partmsg = ' '.join(tokens)
+			client.erk_parted.append(channel)
 			client.leave(channel,partmsg)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'part':

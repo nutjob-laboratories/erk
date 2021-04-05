@@ -207,6 +207,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.last_tried_nickname = ''
 
+		self.erk_parted = []
+
 		# BEGIN SERVER INFO
 
 		self.maxnicklen = 0
@@ -277,6 +279,8 @@ class IRC_Connection(irc.IRCClient):
 		irc.IRCClient.connectionMade(self)
 
 		plugins.connect(self)
+
+		self.parted = []
 
 	def connectionLost(self, reason):
 
@@ -351,7 +355,15 @@ class IRC_Connection(irc.IRCClient):
 
 		self.autojoin.append( [channel,''] )
 
+		clean = []
+		for c in self.erk_parted:
+			if c==channel: continue
+			clean.append(c)
+		self.erk_parted = clean
+
 	def left(self, channel):
+
+		print(self.erk_parted)
 
 		events.erk_left_channel(self.gui,self,channel)
 
@@ -361,11 +373,16 @@ class IRC_Connection(irc.IRCClient):
 			clean.append(c)
 		self.joined_channels = clean
 
-		clean = []
-		for c in self.autojoin:
-			if c[0]==channel: continue
-			clean.append(c)
-		self.autojoin = clean
+		did_we_part = False
+		for c in self.erk_parted:
+			if c==channel: did_we_part = True
+
+		if not did_we_part:
+			clean = []
+			for c in self.autojoin:
+				if c[0]==channel: continue
+				clean.append(c)
+			self.autojoin = clean
 
 		events.close_channel_window(self,channel,None)
 
