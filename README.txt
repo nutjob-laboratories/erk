@@ -108,10 +108,13 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-u URL] [-a] [-s FILE] [-f] [-o] [-W WIDTH] [-H HEIGHT] [-C FILE]
                      [-U FILE] [-Y FILE] [-L DIRECTORY] [-S DIRECTORY] [-T DIRECTORY]
                      [-M FILE] [-P DIRECTORY] [-e [FILE]] [--settings [FILE]]
-                     [--generate [FILE]] [--styler] [--export] [--noask] [--nosettings]
+                     [--generate [FILE]] [--edit-style] [--export] [--noask] [--nosettings]
                      [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
                      [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
+
+An open source, cross-platform IRC client
+https://github.com/nutjob-laboratories/erk
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -157,11 +160,11 @@ Configuration:
                         Add a directory to load plugins from
 
 Tools:
-  -e [FILE], --edit [FILE], --scripter [FILE]
+  -e [FILE], --edit [FILE]
                         Launch the script editor
   --settings [FILE]     Launch the preferences editor
   --generate [FILE]     Create a "blank" plugin for editing
-  --styler              Launch the style editor
+  --edit-style          Launch the style editor
   --export              Launch the log export tool
 
 Disable functionality:

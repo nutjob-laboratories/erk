@@ -96,6 +96,9 @@ Version 0.870
 	* Tweaked the "about" dialog a bit
 	* Bugfix: client wouldn't rejoin channels on reconnection (if the connection was lost)
 	* Changed the menu entries for "Scripter" and "Styler" because the schwa has the potential of being rendered wrong on Windows
+	* Added a schwa to the menu icons for the manuals
+	* Removed the --scripter commandline option
+	* Renamed the --styler commandline option to --edit-style
 
 Version 0.860
 	* Removed all plugin-related code and documentation

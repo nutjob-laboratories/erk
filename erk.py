@@ -112,10 +112,10 @@ miscgroup.add_argument("-P","--plugins", type=str,help="Add a directory to load 
 
 devgroup = parser.add_argument_group('Tools')
 
-devgroup.add_argument("-e","--edit","--scripter", dest="scripter",nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
+devgroup.add_argument("-e","--edit", dest="scripter",nargs='?',type=str,help="Launch the script editor", metavar="FILE",const=1)
 devgroup.add_argument("--settings", nargs='?', type=str,help="Launch the preferences editor", metavar="FILE",const=1)
 devgroup.add_argument("--generate", nargs='?', type=str,help="Create a \"blank\" plugin for editing", metavar="FILE",const=1)
-devgroup.add_argument("--styler", dest="styler", help="Launch the style editor", action="store_true")
+devgroup.add_argument("--edit-style", dest="styler", help="Launch the style editor", action="store_true")
 devgroup.add_argument("--export", dest="xlog", help="Launch the log export tool", action="store_true")
 
 disgroup = parser.add_argument_group('Disable functionality')

@@ -36,14 +36,6 @@ ERK_ICON = ":/gui-erk.png"
 LOGO_IMAGE = ":/gui-logo.png"
 LIGHT_LOGO_IMAGE = ":/gui-light_logo.png"
 
-# DEFAULT_FONT = ":/font-UbuntuMono-Regular.ttf"
-# OTHER_FONTS = [
-# 	":/font-UbuntuMono-Italic.ttf",
-# 	":/font-UbuntuMono-BoldItalic.ttf",
-# 	":/font-UbuntuMono-Bold.ttf"
-# ]
-# DEFAULT_FONT_SIZE = 11
-
 DEFAULT_FONT = ":/font-FiraMono-Regular.ttf"
 OTHER_FONTS = [
 	":/font-FiraMono-Medium.ttf",
