@@ -95,6 +95,7 @@ Version 0.870
 	* Subscript of "fancy" menu entries are no longer in italics
 	* Tweaked the "about" dialog a bit
 	* Bugfix: client wouldn't rejoin channels on reconnection (if the connection was lost)
+	* Changed the menu entries for "Scripter" and "Styler" because the schwa has the potential of being rendered wrong on Windows
 
 Version 0.860
 	* Removed all plugin-related code and documentation

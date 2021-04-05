@@ -730,21 +730,6 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,FULLSCREEN_WINDOW_ICON,"Full screen","Toggle full screen mode",25,l)
 			self.settingsMenu.addAction(entry)
 
-			# showPlugins = True
-			# if self.block_plugins: showPlugins = False
-			# if not config.ENABLE_PLUGINS: showPlugins = False
-
-			# if showPlugins:
-
-			# 	entry = MenuAction(self,RELOAD_MENU_ICON,"Reload plugins","Load any new plugins",25,self.reloadPlugins)
-			# 	self.settingsMenu.addAction(entry)
-
-			# 	entry = MenuAction(self,LOAD_MENU_ICON,"Load plugins","Load plugins from a directory",25,self.menuLoadPlugins)
-			# 	self.settingsMenu.addAction(entry)
-
-			# 	entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
-			# 	self.settingsMenu.addAction(entry)
-
 		# Tools menu
 		# self.toolsMenu
 
@@ -759,11 +744,11 @@ class Erk(QMainWindow):
 		if self.block_scripts: showEditor = False
 
 		if showEditor:
-			entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,SCRIPT_EDITOR_NAME,"Create, edit, and run scripts",25,self.showScriptEditor)
+			entry = MenuAction(self,SCRIPT_EDITOR_MENU_ICON,"Script editor","Create, edit, and run scripts",25,self.showScriptEditor)
 			self.toolsMenu.addAction(entry)
 
 		if not self.block_styles:
-			entry = MenuAction(self,STYLE_MENU_ICON,STYLE_EDITOR_NAME,"Create and edit styles",25,self.showStyleDialog)
+			entry = MenuAction(self,STYLE_MENU_ICON,"Style editor","Create and edit styles",25,self.showStyleDialog)
 			self.toolsMenu.addAction(entry)
 
 		if config.ENABLE_IGNORE:
@@ -772,14 +757,6 @@ class Erk(QMainWindow):
 
 		entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
 		self.toolsMenu.addAction(entry)
-
-		# showPlugins = True
-		# if self.block_plugins: showPlugins = False
-		# if not config.ENABLE_PLUGINS: showPlugins = False
-
-		# if showPlugins:
-		# 	entry = MenuAction(self,DIRECTORY_MENU_ICON,"Open plugins","Open the plugins directory",25,(lambda s=PLUGIN_DIRECTORY: QDesktopServices.openUrl(QUrl("file:"+s))))
-		# 	self.toolsMenu.addAction(entry)
 
 		# Plugins menu
 
