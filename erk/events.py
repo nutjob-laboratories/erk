@@ -177,6 +177,16 @@ def build_connection_display(gui,new_server=None):
 	if gui.seditors!=None:
 		gui.seditors.clientsRefreshed(fetch_connections())
 
+	mbcolor = QColor(config.CONNECTION_DISPLAY_BG_COLOR).name()
+	c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+	luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+	luma = luma*100
+
+	if luma>=40:
+		is_light_colored = True
+	else:
+		is_light_colored = False
+
 	global TRIGGERED
 
 	# get system color from the text formatting
@@ -282,7 +292,10 @@ def build_connection_display(gui,new_server=None):
 			if s[0] == "Connecting...":
 				parent.setForeground(0,QBrush(QColor(connect_color))) 
 
-		parent.setIcon(0,QIcon(CONNECTING_ICON))
+		if is_light_colored:
+			parent.setIcon(0,QIcon(CONNECTING_ICON))
+		else:
+			parent.setIcon(0,QIcon(LIGHT_CONNECTING_ICON))
 		parent.erk_client = s[1]
 		parent.erk_channel = False
 		parent.erk_widget = None
@@ -297,7 +310,10 @@ def build_connection_display(gui,new_server=None):
 					child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
 				else:
 					child.setText(0,"00:00:00")
-				child.setIcon(0,QIcon(CLOCK_ICON))
+				if is_light_colored:
+					child.setIcon(0,QIcon(CLOCK_ICON))
+				else:
+					child.setIcon(0,QIcon(LIGHT_CLOCK_ICON))
 				child.erk_uptime = True
 				child.erk_client = s[1]
 				child.erk_console = False
@@ -318,7 +334,10 @@ def build_connection_display(gui,new_server=None):
 							parent.setText(0,c.widget.client.network+" (away)")
 						else:
 							parent.setText(0,c.widget.client.network)
-						parent.setIcon(0,QIcon(NETWORK_ICON))
+						if is_light_colored:
+							parent.setIcon(0,QIcon(NETWORK_ICON))
+						else:
+							parent.setIcon(0,QIcon(LIGHT_NETWORK_ICON))
 					else:
 						# parent.erk_name = s[0]
 						parent.erk_name = s[1].server
@@ -360,9 +379,15 @@ def build_connection_display(gui,new_server=None):
 			child.setText(0,channel.name)
 			if channel.type==config.CHANNEL_WINDOW:
 				child.erk_channel = True
-				child.setIcon(0,QIcon(CHANNEL_ICON))
+				if is_light_colored:
+					child.setIcon(0,QIcon(CHANNEL_ICON))
+				else:
+					child.setIcon(0,QIcon(LIGHT_CHANNEL_ICON))
 			elif channel.type==config.PRIVATE_WINDOW:
-				child.setIcon(0,QIcon(PRIVATE_ICON))
+				if is_light_colored:
+					child.setIcon(0,QIcon(PRIVATE_ICON))
+				else:
+					child.setIcon(0,QIcon(LIGHT_PRIVATE_ICON))
 				child.erk_channel = False
 			child.erk_client = s[1]
 			child.erk_widget = channel

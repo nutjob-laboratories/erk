@@ -114,6 +114,11 @@ def buildConnectionDisplayWidget(self):
 	
 	# connectionTree.setStyleSheet(STYLES["all"])
 
+	p = connectionTree.palette()
+	p.setColor(QPalette.Base, QColor(config.CONNECTION_DISPLAY_BG_COLOR))
+	p.setColor(QPalette.Text, QColor(config.CONNECTION_DISPLAY_TEXT_COLOR))
+	connectionTree.setPalette(p)
+
 	return [connectionTree,connectionDisplay]
 
 	

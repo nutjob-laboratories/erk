@@ -117,6 +117,8 @@ Version 0.870
 	* Updated the documentation to reflect changed to the GUI
 	* Updated referenced to the "settings" dialog in the documentation to reflect new "settings" layout
 	* Limited the height of the plugin source directory list widget to shrink the "settings" dialog a bit
+	* Added settings to set the background color and text color of the connection display
+	* Added the background/text connection display color setting to the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

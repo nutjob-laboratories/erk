@@ -168,12 +168,17 @@ SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 
 PLUGIN_LOAD_ERRORS = True
 
+CONNECTION_DISPLAY_BG_COLOR = "#FFFFFF"
+CONNECTION_DISPLAY_TEXT_COLOR = "#000000"
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"connection_display_background": CONNECTION_DISPLAY_BG_COLOR,
+		"connection_display_text": CONNECTION_DISPLAY_TEXT_COLOR,
 		"show_plugin_load_errors": PLUGIN_LOAD_ERRORS,
 		"rejoin_channels_on_reconnection": REJOIN_CHANNELS_ON_DISCONNECTIONS,
 		"scroll_to_bottom_on_chat_switch": SCROLL_CHAT_TO_BOTTOM,
@@ -296,6 +301,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "connection_display_text" in data:
+		data["connection_display_text"] = CONNECTION_DISPLAY_TEXT_COLOR
+
+	if not "connection_display_background" in data:
+		data["connection_display_background"] = CONNECTION_DISPLAY_BG_COLOR
 
 	if not "show_plugin_load_errors" in data:
 		data["show_plugin_load_errors"] = PLUGIN_LOAD_ERRORS
@@ -765,6 +776,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global SCROLL_CHAT_TO_BOTTOM
 	global REJOIN_CHANNELS_ON_DISCONNECTIONS
 	global PLUGIN_LOAD_ERRORS
+	global CONNECTION_DISPLAY_BG_COLOR
+	global CONNECTION_DISPLAY_TEXT_COLOR
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -773,6 +786,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			CONNECTION_DISPLAY_BG_COLOR = data["connection_display_background"]
+			CONNECTION_DISPLAY_TEXT_COLOR = data["connection_display_text"]
 			PLUGIN_LOAD_ERRORS = data["show_plugin_load_errors"]
 			REJOIN_CHANNELS_ON_DISCONNECTIONS = data["rejoin_channels_on_reconnection"]
 			SCROLL_CHAT_TO_BOTTOM = data["scroll_to_bottom_on_chat_switch"]
@@ -1020,8 +1035,10 @@ def check_settings(filename):
 			if "scroll_to_bottom_on_chat_switch" in data: check = check + 1
 			if "rejoin_channels_on_reconnection" in data: check = check + 1
 			if "show_plugin_load_errors" in data: check = check + 1
+			if "connection_display_background" in data: check = check + 1
+			if "connection_display_text" in data: check = check + 1
 
-			if check == 115:
+			if check == 117:
 				return True
 			else:
 				return False

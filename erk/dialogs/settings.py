@@ -165,6 +165,26 @@ class Dialog(QDialog):
 		event.accept()
 		self.close()
 
+	def backgroundColor(self):
+		newcolor = QColorDialog.getColor(QColor(self.connection_background_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.connection_background_color = ncolor
+			self.setBg.setStyleSheet(f'background-color: {ncolor};')
+
+			self.bgLabel.setText("Background color: <b>"+ncolor+"</b>")
+
+	def textColor(self):
+		newcolor = QColorDialog.getColor(QColor(self.connection_text_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.connection_text_color = ncolor
+			self.setFg.setStyleSheet(f'background-color: {ncolor};')
+
+			self.fgLabel.setText("Text color: <b>"+ncolor+"</b>")
+
 
 	def __init__(self,configfile=USER_FILE,parent=None,app=None):
 		super(Dialog,self).__init__(parent)
@@ -715,6 +735,41 @@ class Dialog(QDialog):
 		if config.CONNECTION_DISPLAY_LOCATION=="left": self.leftRadio.setChecked(True)
 		if config.CONNECTION_DISPLAY_LOCATION=="right": self.rightRadio.setChecked(True)
 
+		self.connection_background_color = config.CONNECTION_DISPLAY_BG_COLOR
+		self.connection_text_color = config.CONNECTION_DISPLAY_TEXT_COLOR
+
+		self.setBg = QPushButton("")
+		self.setBg.clicked.connect(self.backgroundColor)
+		self.setBg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_BG_COLOR};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setBg.setFixedSize(fheight +10,fheight + 10)
+		#self.setBg.setIcon(QIcon(FORMAT_ICON))
+
+		self.bgLabel = QLabel("Background color: <b>"+config.CONNECTION_DISPLAY_BG_COLOR+"</b>")
+
+		bgColorLayout = QHBoxLayout()
+		bgColorLayout.addWidget(self.setBg)
+		bgColorLayout.addWidget(self.bgLabel)
+
+		self.setFg = QPushButton("")
+		self.setFg.clicked.connect(self.textColor)
+		self.setFg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_TEXT_COLOR};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setFg.setFixedSize(fheight +10,fheight + 10)
+		#self.setFg.setIcon(QIcon(FORMAT_ICON))
+
+		self.fgLabel = QLabel("Text color: <b>"+config.CONNECTION_DISPLAY_TEXT_COLOR+"</b>")
+
+		fgColorLayout = QHBoxLayout()
+		fgColorLayout.addWidget(self.setFg)
+		fgColorLayout.addWidget(self.fgLabel)
+
+
+
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay:
 				self.enableConnection.setEnabled(False)
@@ -726,6 +781,11 @@ class Dialog(QDialog):
 				self.animateConnection.setEnabled(False)
 				self.leftRadio.setEnabled(False)
 				self.rightRadio.setEnabled(False)
+
+				self.setBg.setEnabled(False)
+				bgLabel.setEnabled(False)
+				self.setfg.setEnabled(False)
+				fgLabel.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -755,6 +815,9 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.expandConnection)
 		cpLayout.addWidget(self.unseenConnection)
 		cpLayout.addWidget(self.animateConnection)
+
+		cpLayout.addLayout(bgColorLayout)
+		cpLayout.addLayout(fgColorLayout)
 
 		cpLayout.addStretch()
 
@@ -1315,6 +1378,9 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.CONNECTION_DISPLAY_BG_COLOR = self.connection_background_color
+		config.CONNECTION_DISPLAY_TEXT_COLOR = self.connection_text_color
+
 		config.PLUGIN_LOAD_ERRORS = self.errorPlugins.isChecked()
 
 		config.REJOIN_CHANNELS_ON_DISCONNECTIONS = self.rejoinMisc.isChecked()
@@ -1582,6 +1648,8 @@ class Dialog(QDialog):
 				self.parent.addDockWidget(Qt.RightDockWidgetArea,self.parent.connection_dock)
 				self.parent.connection_dock.show()
 
+			self.parent.setConnectionColors(config.CONNECTION_DISPLAY_BG_COLOR,config.CONNECTION_DISPLAY_TEXT_COLOR)
+
 			events.build_connection_display(self.parent)
 
 			userinput.buildHelp()
@@ -1739,6 +1807,14 @@ class Dialog(QDialog):
 				self.channelLatest.setChecked(config.SCROLL_CHAT_TO_BOTTOM)
 				self.rejoinMisc.setChecked(config.REJOIN_CHANNELS_ON_DISCONNECTIONS)
 				self.errorPlugins.setChecked(config.PLUGIN_LOAD_ERRORS)
+
+				self.connection_background_color = config.CONNECTION_DISPLAY_BG_COLOR
+				self.connection_text_color = config.CONNECTION_DISPLAY_TEXT_COLOR
+				self.setFg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_TEXT_COLOR};')
+				self.setBg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_BG_COLOR};')
+
+				self.bgLabel.setText("Background color: <b>"+config.CONNECTION_DISPLAY_BG_COLOR+"</b>")
+				self.fgLabel.setText("Text color: <b>"+config.CONNECTION_DISPLAY_TEXT_COLOR+"</b>")
 
 			else:
 				msg = QMessageBox(self)

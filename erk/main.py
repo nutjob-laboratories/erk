@@ -649,6 +649,13 @@ class Erk(QMainWindow):
 
 		# self.tray.setContextMenu(self.trayMenu)
 
+	def setConnectionColors(self,bgcolor,fgcolor):
+		p = self.connection_display.palette()
+		p.setColor(QPalette.Base, QColor(bgcolor))
+		p.setColor(QPalette.Text, QColor(fgcolor))
+		self.connection_display.setPalette(p)
+		#events.build_connection_display(self)
+
 	def spellcheck_language(self,setting):
 
 		if config.SPELLCHECK_LANGUAGE=="en": self.spell_en.setIcon(QIcon(RUNCHECKED_ICON))
