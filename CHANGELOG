@@ -102,6 +102,9 @@ Version 0.870
 	* Removed the "channels" entry in the user config file, as it's no longer used
 	* Added a setting to toggle joining channels on reconnection (after losing a connection)
 	* Added the "rejoin channels" setting to the "settings" dialog (on the "miscellaneous" tab)
+	* Added a setting to toggle plugin load error display
+	* Added show/hide plugin load error toggle to the "settings" dialog
+	* Reloading plugins now clears the plugin autocomplete and plugin help tables
 
 Version 0.860
 	* Removed all plugin-related code and documentation

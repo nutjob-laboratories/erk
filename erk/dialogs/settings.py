@@ -1034,6 +1034,9 @@ class Dialog(QDialog):
 		self.inputPlugins = QCheckBox("Enable plugin input events",self)
 		if config.ENABLE_PLUGIN_INPUT: self.inputPlugins.setChecked(True)
 
+		self.errorPlugins = QCheckBox("Display plugin loading errors",self)
+		if config.PLUGIN_LOAD_ERRORS: self.errorPlugins.setChecked(True)
+
 		self.plug_list = QListWidget(self)
 		for e in config.ADDITIONAL_PLUGIN_LOCATIONS:
 			item = QListWidgetItem(e)
@@ -1071,6 +1074,7 @@ class Dialog(QDialog):
 
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
+		plugLayout.addWidget(self.errorPlugins)
 		plugLayout.addWidget(self.showPlugins)
 		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.detPlugins)
@@ -1090,6 +1094,7 @@ class Dialog(QDialog):
 				self.autoPlugins.setEnabled(False)
 				self.helpPlugins.setEnabled(False)
 				plugBox.setEnabled(False)
+				self.errorPlugins.setEnabled(False)
 
 		self.pluginsPage.setLayout(plugLayout)
 
@@ -1278,6 +1283,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.PLUGIN_LOAD_ERRORS = self.errorPlugins.isChecked()
 
 		config.REJOIN_CHANNELS_ON_DISCONNECTIONS = self.rejoinMisc.isChecked()
 
@@ -1700,6 +1707,7 @@ class Dialog(QDialog):
 				self.inputPlugins.setChecked(config.ENABLE_PLUGIN_INPUT)
 				self.channelLatest.setChecked(config.SCROLL_CHAT_TO_BOTTOM)
 				self.rejoinMisc.setChecked(config.REJOIN_CHANNELS_ON_DISCONNECTIONS)
+				self.errorPlugins.setChecked(config.PLUGIN_LOAD_ERRORS)
 
 			else:
 				msg = QMessageBox(self)

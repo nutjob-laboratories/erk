@@ -530,7 +530,8 @@ class Erk(QMainWindow):
 
 		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 		if len(plugin_load_errors)>0:
-			ErrorDialog(self,plugin_load_errors)
+			if config.PLUGIN_LOAD_ERRORS:
+				ErrorDialog(self,plugin_load_errors)
 
 		# PLUGINS
 
@@ -856,7 +857,8 @@ class Erk(QMainWindow):
 			self.more_plugins.append(folderpath)
 			plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 			if len(plugin_load_errors)>0:
-				ErrorDialog(self,plugin_load_errors)
+				if config.PLUGIN_LOAD_ERRORS:
+					ErrorDialog(self,plugin_load_errors)
 			self.buildPluginMenu()
 
 	def buildPluginMenu(self):
@@ -997,7 +999,8 @@ class Erk(QMainWindow):
 	def reloadPlugins(self):
 		plugin_load_errors = plugins.load_plugins(self.block_plugins,self.more_plugins)
 		if len(plugin_load_errors)>0:
-			ErrorDialog(self,plugin_load_errors)
+			if config.PLUGIN_LOAD_ERRORS:
+				ErrorDialog(self,plugin_load_errors)
 
 		x = Blank()
 		x.show()

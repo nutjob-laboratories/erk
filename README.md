@@ -3,12 +3,12 @@
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.096</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.870.097</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.096**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.870.097**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -45,7 +45,7 @@
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
-  * Over 80 display and configuration options settable in the GUI
+  * Over 90 display and configuration options settable in the GUI
   * Over 30 different command line options
 * Text colors are customize-able
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker) (supports English, Spanish, French, and German)
@@ -53,7 +53,7 @@
   * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
 * Command/nickname auto-completion
   * Type the first few letters of a command or nickname and hit the tab key
-  * Auto-complete works for emoji shortcodes, custom macros, and plugin commands, too!
+  * Auto-complete works for emoji shortcodes, custom macros, and plugin-based commands, too!
 * Optional profanity filter
 * Full IRC color support
 * Automatic logging of channel and private chats
@@ -189,23 +189,23 @@ The previous name for this client was "Quirc", but after working on it for a whi
 
 ## Can I use **Ərk** to chat on IRC?
 
-Yes! Most basic functionality is done, and it's ready for most IRC stuff. If you're just looking for a client to chat, and don't really care about the "bells and whistles", then **Ərk** is ready to go!
+Yes! All basic IRC functionality is in and working. **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.870.096, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.870.097, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 
 **Ərk** runs on both Windows and Linux! Now, it's being developed primarily on Linux, but when I first started development I was using Windows 10, and **Ərk** runs flawlessly (and identically) on both platforms. I can't think of a reason why **Ərk** wouldn't run on OSX, but I don't have access to an Apple computer to test this.
-My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.9.0, and I use [Sublime Text 3](https://www.sublimetext.com/) for my code editor.
+My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.9.0, and I use [Sublime Text 3](https://www.sublimetext.com/) for my code editor; I'm currently using [Linux Mint](https://linuxmint.com/) 20.1 as my operating system, with [Cinnamon](https://github.com/linuxmint/cinnamon) as my desktop environment.
 
 ## How configurable is **Ərk**?
 *Super* configurable. You can customize just about every aspect of **Ərk** to make it look and behave *exactly* how you want it. For example, if you wanted to run **Ərk** in such a way that it only displays a single channel with no menus or settings or whatnot, with the window always on top of all others, disabling all extraneous stuff like scripts and plugins and styles, and automatically connects to your favorite channel, "#erk", on EFnet? You could use:
 
     python erk.py -o --noextensions --nomenu --nodisplay --channel "#erk" irc.efnet.org 6667
 
-And that's only using the command-line options! **Ərk** has over 80 different settings available, as well as over 30 different command-line options.
+And that's only using the command-line options! **Ərk** has over 90 different configuration options available, as well as over 30 different command-line options.
 
 When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
 

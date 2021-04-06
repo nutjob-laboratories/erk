@@ -667,10 +667,14 @@ class PluginEntry():
 
 def load_plugins(are_plugins_blocked,additional_locations):
 	global PLUGINS
+	global AUTOCOMPLETE
+	global HELP
 
 	PLUGINS = []
 	ERRORS = []
 	DIRECTORIES = []
+	AUTOCOMPLETE = []
+	HELP = []
 
 	if not config.ENABLE_PLUGINS: return []
 	if are_plugins_blocked: return []

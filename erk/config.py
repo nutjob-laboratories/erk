@@ -153,24 +153,20 @@ SHOW_PLUGIN_INFO_IN_MENU = False
 AUTOCOMPLETE_PLUGINS = True
 PLUGIN_HELP = True
 ADDITIONAL_PLUGIN_LOCATIONS = []
+MARK_BEGINNING_AND_END_OF_LIST_SEARCH = True
+LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = False
+LIST_SEARCH_CASE_SENSITIVE = False
+ENABLE_ALIASES = True
+ENABLE_PLUGIN_INPUT = True
+SCROLL_CHAT_TO_BOTTOM = True
+REJOIN_CHANNELS_ON_DISCONNECTIONS = True
 
 SCRIPT_SYNTAX_COMMENTS = 'darkMagenta'
 SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
 SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 
-MARK_BEGINNING_AND_END_OF_LIST_SEARCH = True
-LIMIT_LIST_SEARCH_TO_CHANNEL_NAME = False
-
-LIST_SEARCH_CASE_SENSITIVE = False
-
-ENABLE_ALIASES = True
-
-ENABLE_PLUGIN_INPUT = True
-
-SCROLL_CHAT_TO_BOTTOM = True
-
-REJOIN_CHANNELS_ON_DISCONNECTIONS = True
+PLUGIN_LOAD_ERRORS = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -178,6 +174,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"show_plugin_load_errors": PLUGIN_LOAD_ERRORS,
 		"rejoin_channels_on_reconnection": REJOIN_CHANNELS_ON_DISCONNECTIONS,
 		"scroll_to_bottom_on_chat_switch": SCROLL_CHAT_TO_BOTTOM,
 		"enable_plugin_input_event": ENABLE_PLUGIN_INPUT,
@@ -299,6 +296,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "show_plugin_load_errors" in data:
+		data["show_plugin_load_errors"] = PLUGIN_LOAD_ERRORS
 
 	if not "rejoin_channels_on_reconnection" in data:
 		data["rejoin_channels_on_reconnection"] = REJOIN_CHANNELS_ON_DISCONNECTIONS
@@ -764,6 +764,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_PLUGIN_INPUT
 	global SCROLL_CHAT_TO_BOTTOM
 	global REJOIN_CHANNELS_ON_DISCONNECTIONS
+	global PLUGIN_LOAD_ERRORS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -772,6 +773,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			PLUGIN_LOAD_ERRORS = data["show_plugin_load_errors"]
 			REJOIN_CHANNELS_ON_DISCONNECTIONS = data["rejoin_channels_on_reconnection"]
 			SCROLL_CHAT_TO_BOTTOM = data["scroll_to_bottom_on_chat_switch"]
 			ENABLE_PLUGIN_INPUT = data["enable_plugin_input_event"]
@@ -1017,8 +1019,9 @@ def check_settings(filename):
 			if "enable_plugin_input_event" in data: check = check + 1
 			if "scroll_to_bottom_on_chat_switch" in data: check = check + 1
 			if "rejoin_channels_on_reconnection" in data: check = check + 1
+			if "show_plugin_load_errors" in data: check = check + 1
 
-			if check == 114:
+			if check == 115:
 				return True
 			else:
 				return False
