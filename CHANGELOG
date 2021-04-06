@@ -109,6 +109,7 @@ Version 0.870
 	* Added a bit of documentation to the "plugins" tab about how to use the "add plugins locations" tool
 	* EVERY tab in the "settings" dialog is now a tabs bar (makes the dialog look more "unified" and consistant)
 	* "Tab-ified" the "applications", "messages", "hide & ignore", and "logs" tabs in the "settings" dialog
+	* "Tab-ified" the "chats", "text input", and "misc" tabs in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

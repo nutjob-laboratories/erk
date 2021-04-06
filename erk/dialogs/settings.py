@@ -589,11 +589,6 @@ class Dialog(QDialog):
 		slLayout.addLayout(ltLayout)
 		slLayout.addStretch()
 
-		# saveLayout = QGroupBox("Save",self)
-		# saveLayout.setLayout(slLayout)
-
-		# saveLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		loadLoglay = QVBoxLayout()
 		loadLoglay.addWidget(self.chanloadLog)
 		loadLoglay.addWidget(self.privloadLog)
@@ -601,16 +596,6 @@ class Dialog(QDialog):
 		loadLoglay.addWidget(self.resumeLog)
 		loadLoglay.addLayout(llLayout)
 		loadLoglay.addStretch()
-
-		# loadLayout = QGroupBox("Load",self)
-		# loadLayout.setLayout(loadLoglay)
-
-		# loadLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		# mpLayout = QVBoxLayout()
-		# mpLayout.addWidget(saveLayout)
-		# mpLayout.addWidget(loadLayout)
-		# mpLayout.addStretch()
 
 		self.loadPage.setLayout(loadLoglay)
 
@@ -621,10 +606,14 @@ class Dialog(QDialog):
 		# Channel settings
 
 		self.channelPage = QWidget()
+		self.nickPage = QWidget()
+		self.infoPage = QWidget()
 
 		self.channelTabs = QTabWidget()
 
 		self.channelTabs.addTab(self.channelPage, QIcon(CHATS_ICON), "Chats")
+		self.channelTabs.addTab(self.nickPage, QIcon(NICK_ICON), "Nick Display")
+		self.channelTabs.addTab(self.infoPage, QIcon(CHANNEL_ICON), "Channel")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -641,10 +630,10 @@ class Dialog(QDialog):
 		self.channelModes = QCheckBox("Show modes",self)
 		if config.DISPLAY_CHANNEL_MODES: self.channelModes.setChecked(True)
 
-		self.textUserlist = QCheckBox("Text-only",self)
+		self.textUserlist = QCheckBox("Text-only user list",self)
 		if config.PLAIN_USER_LISTS: self.textUserlist.setChecked(True)
 
-		self.displayUserlists = QCheckBox("Display",self)
+		self.displayUserlists = QCheckBox("Display user list",self)
 		if config.DISPLAY_USER_LIST: self.displayUserlists.setChecked(True)
 
 		self.displayStatus = QCheckBox("Display channel status",self)
@@ -663,40 +652,22 @@ class Dialog(QDialog):
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayStatus)
 		nnbLay.addWidget(self.displayChange)
+		nnbLay.addStretch()
 
-		nickBox = QGroupBox("Nickname Display",self)
-		nickBox.setLayout(nnbLay)
-
-		nickBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		ubLay = QHBoxLayout()
-		ubLay.addStretch()
-		ubLay.addWidget(self.displayUserlists)
-		ubLay.addWidget(self.textUserlist)
-		ubLay.addStretch()
-
-		userBox = QGroupBox("Channel User Lists",self)
-		userBox.setLayout(ubLay)
-
-		userBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		cbLay = QHBoxLayout()
-		cbLay.addStretch()
+		cbLay = QVBoxLayout()
 		cbLay.addWidget(self.channelInfo)
 		cbLay.addWidget(self.channelModes)
 		cbLay.addStretch()
 
-		chanBox = QGroupBox("Channel Information",self)
-		chanBox.setLayout(cbLay)
-
-		chanBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(nickBox)
-		cpLayout.addWidget(userBox)
-		cpLayout.addWidget(chanBox)
+		cpLayout.addWidget(self.displayUserlists)
+		cpLayout.addWidget(self.textUserlist)
 		cpLayout.addWidget(self.channelLatest)
 		cpLayout.addStretch()
+
+		self.infoPage.setLayout(cbLay)
+
+		self.nickPage.setLayout(nnbLay)
 
 		self.channelPage.setLayout(cpLayout)
 
@@ -793,10 +764,14 @@ class Dialog(QDialog):
 		# Input settings
 
 		self.inputPage = QWidget()
+		self.historyPage = QWidget()
+		self.emojiPage = QWidget()
 
 		self.inputTabs = QTabWidget()
 
 		self.inputTabs.addTab(self.inputPage, QIcon(ENTRY_ICON), "Text Input")
+		self.inputTabs.addTab(self.emojiPage, QIcon(EMOJI_ICON), "Emojis")
+		self.inputTabs.addTab(self.historyPage, QIcon(HISTORY_LENGTH_ICON), "History")
 
 		self.resetHistory = False
 		self.historySize = None
@@ -834,32 +809,16 @@ class Dialog(QDialog):
 		histLayout = QVBoxLayout()
 		histLayout.addWidget(self.trackInput)
 		histLayout.addLayout(histEdLayout)
+		histLayout.addStretch()
 
-		histBox = QGroupBox("Input History",self)
-		histBox.setLayout(histLayout)
-
-		histBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		self.nickComplete = QCheckBox("Nicknames",self)
+		self.nickComplete = QCheckBox("Auto-complete nicknames",self)
 		if config.AUTOCOMPLETE_NICKNAMES: self.nickComplete.setChecked(True)
 
-		self.cmdComplete = QCheckBox("Commands",self)
+		self.cmdComplete = QCheckBox("Auto-complete commands",self)
 		if config.AUTOCOMPLETE_COMMANDS: self.cmdComplete.setChecked(True)
 
-		self.channelComplete = QCheckBox("Channels",self)
+		self.channelComplete = QCheckBox("Auto-complete channels",self)
 		if config.AUTOCOMPLETE_CHANNELS: self.channelComplete.setChecked(True)
-
-		autoLayout = QHBoxLayout()
-		autoLayout.addStretch()
-		autoLayout.addWidget(self.cmdComplete)
-		autoLayout.addWidget(self.nickComplete)
-		autoLayout.addWidget(self.channelComplete)
-		autoLayout.addStretch()
-
-		autoBox = QGroupBox("Auto-Complete",self)
-		autoBox.setLayout(autoLayout)
-
-		autoBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		self.inputCommands = QCheckBox("Enable command input",self)
 		if config.ENABLE_COMMANDS: self.inputCommands.setChecked(True)
@@ -880,20 +839,19 @@ class Dialog(QDialog):
 		ebLayout = QVBoxLayout()
 		ebLayout.addWidget(self.emojiInput)
 		ebLayout.addWidget(self.emojiComplete)
-
-		emojiBox = QGroupBox("Emojis",self)
-		emojiBox.setLayout(ebLayout)
-
-		emojiBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
+		ebLayout.addStretch()
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(histBox)
-		cpLayout.addWidget(autoBox)
-		cpLayout.addWidget(emojiBox)
 		cpLayout.addWidget(self.inputCommands)
 		cpLayout.addWidget(self.inputMe)
+		cpLayout.addWidget(self.cmdComplete)
+		cpLayout.addWidget(self.nickComplete)
+		cpLayout.addWidget(self.channelComplete)
 		cpLayout.addStretch()
+
+		self.emojiPage.setLayout(ebLayout)
+
+		self.historyPage.setLayout(histLayout)
 
 		self.inputPage.setLayout(cpLayout)
 
@@ -1151,10 +1109,12 @@ class Dialog(QDialog):
 		self.initial_fetch_list = config.AUTOMATICALLY_FETCH_CHANNEL_LIST
 
 		self.miscPage = QWidget()
+		self.listPage = QWidget()
 
 		self.miscTabs = QTabWidget()
 
 		self.miscTabs.addTab(self.miscPage, QIcon(MISC_ICON), "Miscellaneous")
+		self.miscTabs.addTab(self.listPage, QIcon(CHANNEL_ICON), "Channel Search")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -1202,17 +1162,18 @@ class Dialog(QDialog):
 		self.listCase = QCheckBox("Searches are case sensitive",self)
 		if config.LIST_SEARCH_CASE_SENSITIVE: self.listCase.setChecked(True)
 
-		cgbLayout = QVBoxLayout()
-		cgbLayout.addWidget(self.listMisc)
-		cgbLayout.addLayout(refRateLayout)
-		cgbLayout.addWidget(self.listMark)
-		cgbLayout.addWidget(self.listLimit)
-		cgbLayout.addWidget(self.listCase)
+		chListLayout = QVBoxLayout()
+		chListLayout.addWidget(self.listMisc)
+		chListLayout.addLayout(refRateLayout)
+		chListLayout.addWidget(self.listMark)
+		chListLayout.addWidget(self.listLimit)
+		chListLayout.addWidget(self.listCase)
+		chListLayout.addStretch()
 
-		listBox = QGroupBox("Channel List",self)
-		listBox.setLayout(cgbLayout)
+		# listBox = QGroupBox("Channel List",self)
+		# listBox.setLayout(cgbLayout)
 
-		listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		# listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
 		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
@@ -1249,7 +1210,7 @@ class Dialog(QDialog):
 		quitPartBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(listBox)
+		#cpLayout.addWidget(listBox)
 		cpLayout.addWidget(quitPartBox)
 		cpLayout.addWidget(self.buttonsMisc)
 		cpLayout.addWidget(self.switchMisc)
@@ -1258,6 +1219,8 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.joinMisc)
 		cpLayout.addWidget(self.rejoinMisc)
 		cpLayout.addStretch()
+
+		self.listPage.setLayout(chListLayout)
 
 		self.miscPage.setLayout(cpLayout)
 
