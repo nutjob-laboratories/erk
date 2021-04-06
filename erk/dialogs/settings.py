@@ -745,7 +745,6 @@ class Dialog(QDialog):
 		fm = QFontMetrics(self.font())
 		fheight = fm.height()
 		self.setBg.setFixedSize(fheight +10,fheight + 10)
-		#self.setBg.setIcon(QIcon(FORMAT_ICON))
 
 		self.bgLabel = QLabel("Background color: <b>"+config.CONNECTION_DISPLAY_BG_COLOR+"</b>")
 
@@ -760,15 +759,12 @@ class Dialog(QDialog):
 		fm = QFontMetrics(self.font())
 		fheight = fm.height()
 		self.setFg.setFixedSize(fheight +10,fheight + 10)
-		#self.setFg.setIcon(QIcon(FORMAT_ICON))
 
 		self.fgLabel = QLabel("Text color: <b>"+config.CONNECTION_DISPLAY_TEXT_COLOR+"</b>")
 
 		fgColorLayout = QHBoxLayout()
 		fgColorLayout.addWidget(self.setFg)
 		fgColorLayout.addWidget(self.fgLabel)
-
-
 
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay:
@@ -781,11 +777,10 @@ class Dialog(QDialog):
 				self.animateConnection.setEnabled(False)
 				self.leftRadio.setEnabled(False)
 				self.rightRadio.setEnabled(False)
-
 				self.setBg.setEnabled(False)
-				bgLabel.setEnabled(False)
+				self.bgLabel.setEnabled(False)
 				self.setfg.setEnabled(False)
-				fgLabel.setEnabled(False)
+				self.fgLabel.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -815,10 +810,8 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.expandConnection)
 		cpLayout.addWidget(self.unseenConnection)
 		cpLayout.addWidget(self.animateConnection)
-
 		cpLayout.addLayout(bgColorLayout)
 		cpLayout.addLayout(fgColorLayout)
-
 		cpLayout.addStretch()
 
 		self.connectionPage.setLayout(cpLayout)
