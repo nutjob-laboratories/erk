@@ -209,6 +209,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.erk_parted = []
 
+		self.erk_keys = []
+
 		# BEGIN SERVER INFO
 
 		self.maxnicklen = 0
@@ -311,14 +313,15 @@ class IRC_Connection(irc.IRCClient):
 
 		self.registered = True
 
-		if len(self.autojoin)>0:
-			for channel in self.autojoin:
-				chan = channel[0]
-				key = channel[1]
-				if len(key)>0:
-					self.sendLine(f"JOIN {chan} {key}")
-				else:
-					self.sendLine(f"JOIN {chan}")
+		if config.REJOIN_CHANNELS_ON_DISCONNECTIONS:
+			if len(self.autojoin)>0:
+				for channel in self.autojoin:
+					chan = channel[0]
+					key = channel[1]
+					if len(key)>0:
+						self.sendLine(f"JOIN {chan} {key}")
+					else:
+						self.sendLine(f"JOIN {chan}")
 
 		# Execute auto-script
 		if self.kwargs['script']!=None:
@@ -353,7 +356,16 @@ class IRC_Connection(irc.IRCClient):
 
 		events.erk_joined_channel(self.gui,self,channel)
 
-		self.autojoin.append( [channel,''] )
+		key = ''
+		clean = []
+		for c in self.erk_keys:
+			if c[0]==channel:
+				key = c[1]
+				continue
+			clean.append(c)
+		self.erk_keys = clean
+
+		self.autojoin.append( [channel,key] )
 
 		clean = []
 		for c in self.erk_parted:

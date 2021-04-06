@@ -368,7 +368,6 @@ def get_user(filename=USER_FILE):
 			"last_server": '',
 			"last_port": "6667",
 			"last_password": '',
-			"channels": [],
 			"ssl": False,
 			"reconnect": True,
 			"autojoin": False,

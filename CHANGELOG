@@ -99,6 +99,9 @@ Version 0.870
 	* Added a schwa to the menu icons for the manuals
 	* Removed the --scripter commandline option
 	* Renamed the --styler commandline option to --edit-style
+	* Removed the "channels" entry in the user config file, as it's no longer used
+	* Added a setting to toggle joining channels on reconnection (after losing a connection)
+	* Added the "rejoin channels" setting to the "settings" dialog (on the "miscellaneous" tab)
 
 Version 0.860
 	* Removed all plugin-related code and documentation

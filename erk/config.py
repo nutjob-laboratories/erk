@@ -170,12 +170,15 @@ ENABLE_PLUGIN_INPUT = True
 
 SCROLL_CHAT_TO_BOTTOM = True
 
+REJOIN_CHANNELS_ON_DISCONNECTIONS = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"rejoin_channels_on_reconnection": REJOIN_CHANNELS_ON_DISCONNECTIONS,
 		"scroll_to_bottom_on_chat_switch": SCROLL_CHAT_TO_BOTTOM,
 		"enable_plugin_input_event": ENABLE_PLUGIN_INPUT,
 		"enable_script_aliases": ENABLE_ALIASES,
@@ -296,6 +299,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "rejoin_channels_on_reconnection" in data:
+		data["rejoin_channels_on_reconnection"] = REJOIN_CHANNELS_ON_DISCONNECTIONS
 
 	if not "scroll_to_bottom_on_chat_switch" in data:
 		data["scroll_to_bottom_on_chat_switch"] = SCROLL_CHAT_TO_BOTTOM
@@ -757,6 +763,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_ALIASES
 	global ENABLE_PLUGIN_INPUT
 	global SCROLL_CHAT_TO_BOTTOM
+	global REJOIN_CHANNELS_ON_DISCONNECTIONS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -765,6 +772,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			REJOIN_CHANNELS_ON_DISCONNECTIONS = data["rejoin_channels_on_reconnection"]
 			SCROLL_CHAT_TO_BOTTOM = data["scroll_to_bottom_on_chat_switch"]
 			ENABLE_PLUGIN_INPUT = data["enable_plugin_input_event"]
 			ENABLE_ALIASES = data["enable_script_aliases"]
@@ -1008,8 +1016,9 @@ def check_settings(filename):
 			if "enable_script_aliases" in data: check = check + 1
 			if "enable_plugin_input_event" in data: check = check + 1
 			if "scroll_to_bottom_on_chat_switch" in data: check = check + 1
+			if "rejoin_channels_on_reconnection" in data: check = check + 1
 
-			if check == 113:
+			if check == 114:
 				return True
 			else:
 				return False

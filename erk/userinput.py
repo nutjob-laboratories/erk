@@ -1082,6 +1082,7 @@ def handle_common_input(window,client,text):
 			tokens.pop(0)
 			channel = tokens.pop(0)
 			key = tokens.pop(0)
+			client.erk_keys.append([channel,key])
 			client.join(channel,key)
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'join' and len(tokens)==2:

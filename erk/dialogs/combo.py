@@ -120,7 +120,6 @@ class Dialog(QDialog):
 			"last_server": self.host.text(),
 			"last_port": self.port.text(),
 			"last_password": self.password.text(),
-			"channels": [], # channel autojoins
 			"ssl": self.CONNECT_VIA_SSL,
 			"reconnect": self.RECONNECT_OPTION,
 			"autojoin": True,
@@ -134,7 +133,7 @@ class Dialog(QDialog):
 		save_user(user,self.userfile)
 
 		# Don't autojoin channels
-		channels = self.user_info["channels"]
+		channels = []
 
 		if not self.block_scripts:
 
@@ -812,7 +811,6 @@ class Dialog(QDialog):
 			"last_server": self.host.text(),
 			"last_port": self.port.text(),
 			"last_password": self.password.text(),
-			"channels": [], # channel autojoins
 			"ssl": self.CONNECT_VIA_SSL,
 			"reconnect": self.RECONNECT_OPTION,
 			"autojoin": True,

@@ -1164,6 +1164,11 @@ class Dialog(QDialog):
 		self.joinMisc = QCheckBox("Auto-join on channel invite",self)
 		if config.JOIN_ON_INVITE: self.joinMisc.setChecked(True)
 
+		self.rejoinMisc = QCheckBox("Re-join channels upon reconnecting",self)
+		if config.REJOIN_CHANNELS_ON_DISCONNECTIONS: self.rejoinMisc.setChecked(True)
+
+		self.rejoinMisc.setStyleSheet("QCheckBox { text-align: left top; } QCheckBox::indicator { subcontrol-origin: padding; subcontrol-position: left top; }")
+
 		self.partMsg = QLabel("<b>"+str(config.DEFAULT_QUIT_PART_MESSAGE)+"</b>")
 
 		self.setPartMsg = QPushButton("")
@@ -1194,8 +1199,9 @@ class Dialog(QDialog):
 
 		cpLayout.addWidget(self.fetchMisc)
 		cpLayout.addWidget(self.joinMisc)
-		cpLayout.addWidget(QLabel(' '))
-		cpLayout.addWidget(QLabel(' '))
+		cpLayout.addWidget(self.rejoinMisc)
+		# cpLayout.addWidget(QLabel(' '))
+		# cpLayout.addWidget(QLabel(' '))
 		cpLayout.addStretch()
 
 		self.miscPage.setLayout(cpLayout)
@@ -1272,6 +1278,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.REJOIN_CHANNELS_ON_DISCONNECTIONS = self.rejoinMisc.isChecked()
 
 		config.SCROLL_CHAT_TO_BOTTOM = self.channelLatest.isChecked()
 
@@ -1691,6 +1699,7 @@ class Dialog(QDialog):
 				self.enableAliasMisc.setChecked(config.ENABLE_ALIASES)
 				self.inputPlugins.setChecked(config.ENABLE_PLUGIN_INPUT)
 				self.channelLatest.setChecked(config.SCROLL_CHAT_TO_BOTTOM)
+				self.rejoinMisc.setChecked(config.REJOIN_CHANNELS_ON_DISCONNECTIONS)
 
 			else:
 				msg = QMessageBox(self)
