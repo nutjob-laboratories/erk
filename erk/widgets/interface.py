@@ -362,8 +362,6 @@ class Window(QMainWindow):
 		self.chat.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.chat.customContextMenuRequested.connect(self.chatMenu)
 
-		#self.chat.setStyleSheet(self.styles["all"])
-
 		background_color,text_color = self.parse_colors(self.styles["all"])
 		p = self.chat.palette()
 		p.setColor(QPalette.Base, QColor(background_color))
@@ -378,14 +376,15 @@ class Window(QMainWindow):
 			self.topic.setReadOnly(True)
 
 			col = self.parent.palette().color(QPalette.Background).name()
-			self.topic.setStyleSheet(f"border: 0px; background-color: {col};")
+			self.topic.setFrame(False)
+			p = self.topic.palette()
+			p.setColor(QPalette.Base, QColor(col))
+			self.topic.setPalette(p)
 
 			self.userlist = QListWidget(self)
 			self.userlist.setFocusPolicy(Qt.NoFocus)
 			self.userlist.itemDoubleClicked.connect(self._handleDoubleClick)
 			self.userlist.installEventFilter(self)
-
-			#self.userlist.setStyleSheet(self.styles["all"])
 
 			background_color,text_color = self.parse_colors(self.styles["all"])
 			p = self.userlist.palette()

@@ -121,6 +121,7 @@ Version 0.870
 	* Added the background/text connection display color setting to the "settings" dialog
 	* Bugfix: settings dialog would error out if the connection display was disabled
 	* Bugfix: context menus are fixed for the chat display; menu hovering and highlights work again
+	* Bugfix: fixed the context menu bug for the topic editor
 
 Version 0.860
 	* Removed all plugin-related code and documentation
