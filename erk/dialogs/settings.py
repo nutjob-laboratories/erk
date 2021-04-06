@@ -612,8 +612,8 @@ class Dialog(QDialog):
 		self.channelTabs = QTabWidget()
 
 		self.channelTabs.addTab(self.channelPage, QIcon(CHATS_ICON), "Chats")
-		self.channelTabs.addTab(self.nickPage, QIcon(NICK_ICON), "Nick Display")
 		self.channelTabs.addTab(self.infoPage, QIcon(CHANNEL_ICON), "Channel")
+		self.channelTabs.addTab(self.nickPage, QIcon(NICK_ICON), "Nick Display")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -1170,11 +1170,6 @@ class Dialog(QDialog):
 		chListLayout.addWidget(self.listCase)
 		chListLayout.addStretch()
 
-		# listBox = QGroupBox("Channel List",self)
-		# listBox.setLayout(cgbLayout)
-
-		# listBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		self.fetchMisc = QCheckBox("Fetch hostmasks on channel join",self)
 		if config.GET_HOSTMASKS_ON_CHANNEL_JOIN: self.fetchMisc.setChecked(True)
 		self.fetchMisc.stateChanged.connect(self.setRerender)
@@ -1210,7 +1205,6 @@ class Dialog(QDialog):
 		quitPartBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		cpLayout = QVBoxLayout()
-		#cpLayout.addWidget(listBox)
 		cpLayout.addWidget(quitPartBox)
 		cpLayout.addWidget(self.buttonsMisc)
 		cpLayout.addWidget(self.switchMisc)
