@@ -113,9 +113,6 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
-An open source, cross-platform IRC client
-https://github.com/nutjob-laboratories/erk
-
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -162,7 +159,8 @@ Configuration:
 Tools:
   -e [FILE], --edit [FILE]
                         Launch the script editor
-  --settings [FILE]     Launch the preferences editor
+  --settings [FILE], --preferences [FILE]
+                        Launch the preferences editor
   --generate [FILE]     Create a "blank" plugin for editing
   --edit-style          Launch the style editor
   --export              Launch the log export tool

@@ -354,9 +354,6 @@ class Dialog(QDialog):
 		if config.FILTER_PROFANITY: self.hideProfanity.setChecked(True)
 		self.hideProfanity.stateChanged.connect(self.setRerender)
 
-		self.openNew = QCheckBox("Open new chat for private messages",self)
-		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.openNew.setChecked(True)
-
 		self.channelLinks = QCheckBox("Convert channel names to links",self)
 		if config.CLICKABLE_CHANNELS: self.channelLinks.setChecked(True)
 		self.channelLinks.stateChanged.connect(self.setRerender)
@@ -416,7 +413,6 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.showColors)
 		mpLayout.addWidget(self.showLinks)
 		mpLayout.addWidget(self.hideProfanity)
-		mpLayout.addWidget(self.openNew)
 		mpLayout.addWidget(self.channelLinks)
 		mpLayout.addWidget(self.writePrivate)
 		mpLayout.addWidget(self.writeNotice)
@@ -648,6 +644,9 @@ class Dialog(QDialog):
 		self.channelLatest = QCheckBox("Display latest messages on chat switch",self)
 		if config.SCROLL_CHAT_TO_BOTTOM: self.channelLatest.setChecked(True)
 
+		self.openNew = QCheckBox("Open new chat for private messages",self)
+		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.openNew.setChecked(True)
+
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayStatus)
@@ -663,6 +662,7 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.displayUserlists)
 		cpLayout.addWidget(self.textUserlist)
 		cpLayout.addWidget(self.channelLatest)
+		cpLayout.addWidget(self.openNew)
 		cpLayout.addStretch()
 
 		self.infoPage.setLayout(cbLay)
@@ -924,10 +924,14 @@ class Dialog(QDialog):
 		# Features settings
 
 		self.featuresPage = QWidget()
+		self.aliasPage = QWidget()
+		self.macroPage = QWidget()
 
 		self.featuresTabs = QTabWidget()
 
 		self.featuresTabs.addTab(self.featuresPage, QIcon(SCRIPT_ICON), "Scripting")
+		self.featuresTabs.addTab(self.aliasPage, QIcon(EDIT_ICON), "Aliases")
+		self.featuresTabs.addTab(self.macroPage, QIcon(MISC_ICON), "Macros")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -938,7 +942,7 @@ class Dialog(QDialog):
 
 		self.stack.addWidget(self.featuresTabs)
 
-		self.scriptMisc = QCheckBox("Enable scripts",self)
+		self.scriptMisc = QCheckBox("Enable scripting",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
 
 		self.enableAliasMisc = QCheckBox("Enable aliases",self)
@@ -966,11 +970,6 @@ class Dialog(QDialog):
 		scriptLayout = QVBoxLayout()
 		scriptLayout.addWidget(self.scriptMisc)
 		scriptLayout.addWidget(self.seditMisc)
-		scriptLayout.addWidget(self.enableAliasMisc)
-		scriptLayout.addWidget(self.sglobalMisc)
-		scriptLayout.addWidget(self.enableMacros)
-		scriptLayout.addWidget(self.saveMacros)
-		scriptLayout.addWidget(self.autoMacros)
 		scriptLayout.addStretch()
 
 		if self.parent!= None:
@@ -982,6 +981,21 @@ class Dialog(QDialog):
 				self.saveMacros.setEnabled(False)
 				self.enableMacros.setEnabled(False)
 				self.enableAliasMisc.setEnabled(False)
+
+		aliasLayout = QVBoxLayout()
+		aliasLayout.addWidget(self.enableAliasMisc)
+		aliasLayout.addWidget(self.sglobalMisc)
+		aliasLayout.addStretch()
+		
+		macroLayout = QVBoxLayout()
+		macroLayout.addWidget(self.enableMacros)
+		macroLayout.addWidget(self.saveMacros)
+		macroLayout.addWidget(self.autoMacros)
+		macroLayout.addStretch()
+
+		self.macroPage.setLayout(macroLayout)
+
+		self.aliasPage.setLayout(aliasLayout)
 
 		self.featuresPage.setLayout(scriptLayout)
 
