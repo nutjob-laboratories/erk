@@ -1003,10 +1003,12 @@ class Dialog(QDialog):
 
 		self.pluginsPage = QWidget()
 		self.pluginsFiles = QWidget()
+		self.pluginsMenu = QWidget()
 
 		self.pluginsTabs = QTabWidget()
 
 		self.pluginsTabs.addTab(self.pluginsPage, QIcon(PLUGIN_ICON), "Plugins")
+		self.pluginsTabs.addTab(self.pluginsMenu, QIcon(MENU_ICON), "Menu")
 		self.pluginsTabs.addTab(self.pluginsFiles, QIcon(DIRECTORY_ICON), "Sources")
 
 		entry = QListWidgetItem()
@@ -1076,8 +1078,8 @@ class Dialog(QDialog):
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.errorPlugins)
-		plugLayout.addWidget(self.showPlugins)
-		plugLayout.addWidget(self.detPlugins)
+		# plugLayout.addWidget(self.showPlugins)
+		# plugLayout.addWidget(self.detPlugins)
 		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
@@ -1115,6 +1117,13 @@ class Dialog(QDialog):
 		plugLocLayout.addStretch()
 		plugLocLayout.addWidget(plugBox)
 		#plugLocLayout.addStretch()
+
+		plugMenuLayout = QVBoxLayout()
+		plugMenuLayout.addWidget(self.showPlugins)
+		plugMenuLayout.addWidget(self.detPlugins)
+		plugMenuLayout.addStretch()
+
+		self.pluginsMenu.setLayout(plugMenuLayout)
 
 		self.pluginsFiles.setLayout(plugLocLayout)
 

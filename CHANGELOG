@@ -113,6 +113,9 @@ Version 0.870
 	* Moved the "open new chat for private messages" option to the "chats" tab in the "settings" dialog
 	* "Tab-ified" the "scripting" tab in the "settings" menu
 	* Added an alternate name for the --settings option (--preferences, due to how that's how the dialog is referenced to in the GUI)
+	* Added a tab ("menus") to the "plugins" tab in the "settings" dialog, and added the plugin menu settings to it
+	* Updated the documentation to reflect changed to the GUI
+	* Updated referenced to the "settings" dialog in the documentation to reflect new "settings" layout
 
 Version 0.860
 	* Removed all plugin-related code and documentation
