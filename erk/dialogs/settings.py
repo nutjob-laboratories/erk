@@ -211,10 +211,12 @@ class Dialog(QDialog):
 		# Display page
 
 		self.displayPage = QWidget()
+		self.menuPage = QWidget()
 
 		self.displayTabs = QTabWidget()
 
 		self.displayTabs.addTab(self.displayPage, QIcon(WINDOW_ICON), "Application")
+		self.displayTabs.addTab(self.menuPage, QIcon(MENU_ICON), "Menu")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -298,9 +300,6 @@ class Dialog(QDialog):
 
 		mpLayout = QVBoxLayout()
 		mpLayout.addLayout(fbLay)
-		mpLayout.addWidget(self.menuMisc)
-		mpLayout.addWidget(self.showMenu)
-		mpLayout.addWidget(self.showSchwa)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
 		mpLayout.addWidget(self.askMisc)
@@ -308,15 +307,27 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.failErrors)
 		mpLayout.addStretch()
 
+		menuPageLayout = QVBoxLayout()
+		menuPageLayout.addWidget(self.menuMisc)
+		menuPageLayout.addWidget(self.showMenu)
+		menuPageLayout.addWidget(self.showSchwa)
+		menuPageLayout.addStretch()
+
+		self.menuPage.setLayout(menuPageLayout)
+
 		self.displayPage.setLayout(mpLayout)
 
 		# Message settings page
 
 		self.messagesPage = QWidget()
+		self.systemMessPage = QWidget()
+		self.timestampPage = QWidget()
 
 		self.messagesTabs = QTabWidget()
 
 		self.messagesTabs.addTab(self.messagesPage, QIcon(MESSAGE_ICON), "Messages")
+		self.messagesTabs.addTab(self.systemMessPage, QIcon(MISC_ICON), "System")
+		self.messagesTabs.addTab(self.timestampPage, QIcon(CLOCK_ICON), "Timestamps")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -380,11 +391,7 @@ class Dialog(QDialog):
 		tsLay = QVBoxLayout()
 		tsLay.addWidget(self.addPrefixes)
 		tsLay.addLayout(psLayout)
-
-		clLayout = QGroupBox("System Messages",self)
-		clLayout.setLayout(tsLay)
-
-		clLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		tsLay.addStretch()
 
 		self.enabledTimestamp = QCheckBox("Enabled",self)
 		if config.DISPLAY_TIMESTAMP: self.enabledTimestamp.setChecked(True)
@@ -398,23 +405,13 @@ class Dialog(QDialog):
 		if config.DISPLAY_TIMESTAMP_SECONDS: self.secondsTimestamp.setChecked(True)
 		self.secondsTimestamp.stateChanged.connect(self.setRerender)
 
-		ln1 = QHBoxLayout()
-		ln1.addWidget(self.enabledTimestamp)
-		ln1.addWidget(self.twentyfourTimestamp)
-
 		tsBoxLayout = QVBoxLayout()
-		tsBoxLayout.addLayout(ln1)
+		tsBoxLayout.addWidget(self.enabledTimestamp)
+		tsBoxLayout.addWidget(self.twentyfourTimestamp)
 		tsBoxLayout.addWidget(self.secondsTimestamp)
 		tsBoxLayout.addStretch()
 
-		tsBox = QGroupBox("Timestamps",self)
-		tsBox.setLayout(tsBoxLayout)
-
-		tsBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
 		mpLayout = QVBoxLayout()
-		mpLayout.addWidget(clLayout)
-		mpLayout.addWidget(tsBox)
 		mpLayout.addWidget(self.showDates)
 		mpLayout.addWidget(self.showColors)
 		mpLayout.addWidget(self.showLinks)
@@ -423,17 +420,23 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.channelLinks)
 		mpLayout.addWidget(self.writePrivate)
 		mpLayout.addWidget(self.writeNotice)
-		#mpLayout.addStretch()
+		mpLayout.addStretch()
+
+		self.timestampPage.setLayout(tsBoxLayout)
+
+		self.systemMessPage.setLayout(tsLay)
 
 		self.messagesPage.setLayout(mpLayout)
 
 		# HIDE NOTIFICATIONS PAGE
 
 		self.notificationsPage = QWidget()
+		self.hidePage = QWidget()
 
 		self.notificationsTabs = QTabWidget()
 
-		self.notificationsTabs.addTab(self.notificationsPage, QIcon(HIDE_ICON), "Hide && Ignore")
+		self.notificationsTabs.addTab(self.notificationsPage, QIcon(HIDE_ICON), "Ignore")
+		self.notificationsTabs.addTab(self.hidePage, QIcon(HIDE_ICON), "Hide")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -461,11 +464,8 @@ class Dialog(QDialog):
 		c1.addWidget(self.notePublic)
 		c1.addWidget(self.notePrivate)
 		c1.addWidget(self.noteNotice)
+		c1.addStretch()
 
-		ignoreBox = QGroupBox("User Ignore",self)
-		ignoreBox.setLayout(c1)
-
-		ignoreBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		self.noteJoin = QCheckBox("JOIN messages",self)
 		if config.HIDE_JOIN_MESSAGE: self.noteJoin.setChecked(True)
@@ -500,35 +500,24 @@ class Dialog(QDialog):
 		hc1.addWidget(self.notePart)
 		hc1.addWidget(self.noteInvite)
 		hc1.addWidget(self.noteNick)
+		hc1.addWidget(self.noteQuit)
+		hc1.addWidget(self.noteTopic)
+		hc1.addWidget(self.noteMode)
+		hc1.addStretch()
 
-		hc2 = QVBoxLayout()
-		hc2.addWidget(self.noteQuit)
-		hc2.addWidget(self.noteTopic)
-		hc2.addWidget(self.noteMode)
+		self.hidePage.setLayout(hc1)
 
-		hideLayout = QHBoxLayout()
-		hideLayout.addLayout(hc1)
-		hideLayout.addLayout(hc2)
-
-		hideBox = QGroupBox("Hide All...",self)
-		hideBox.setLayout(hideLayout)
-
-		hideBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
-
-		cpLayout = QVBoxLayout()
-		cpLayout.addWidget(ignoreBox)
-		cpLayout.addWidget(hideBox)
-		cpLayout.addStretch()
-
-		self.notificationsPage.setLayout(cpLayout)
+		self.notificationsPage.setLayout(c1)
 
 		# LOGS PAGE
 
 		self.logsPage = QWidget()
+		self.loadPage = QWidget()
 
 		self.logsTabs = QTabWidget()
 
-		self.logsTabs.addTab(self.logsPage, QIcon(LOG_ICON), "Logs")
+		self.logsTabs.addTab(self.logsPage, QIcon(EXPORT_ICON), "Save")
+		self.logsTabs.addTab(self.loadPage, QIcon(LOG_ICON), "Load")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -598,11 +587,12 @@ class Dialog(QDialog):
 		slLayout.addWidget(self.chansaveLog)
 		slLayout.addWidget(self.privsaveLog)
 		slLayout.addLayout(ltLayout)
+		slLayout.addStretch()
 
-		saveLayout = QGroupBox("Save",self)
-		saveLayout.setLayout(slLayout)
+		# saveLayout = QGroupBox("Save",self)
+		# saveLayout.setLayout(slLayout)
 
-		saveLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		# saveLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
 		loadLoglay = QVBoxLayout()
 		loadLoglay.addWidget(self.chanloadLog)
@@ -610,18 +600,21 @@ class Dialog(QDialog):
 		loadLoglay.addWidget(self.markLog)
 		loadLoglay.addWidget(self.resumeLog)
 		loadLoglay.addLayout(llLayout)
+		loadLoglay.addStretch()
 
-		loadLayout = QGroupBox("Load",self)
-		loadLayout.setLayout(loadLoglay)
+		# loadLayout = QGroupBox("Load",self)
+		# loadLayout.setLayout(loadLoglay)
 
-		loadLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+		# loadLayout.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
 
-		mpLayout = QVBoxLayout()
-		mpLayout.addWidget(saveLayout)
-		mpLayout.addWidget(loadLayout)
-		mpLayout.addStretch()
+		# mpLayout = QVBoxLayout()
+		# mpLayout.addWidget(saveLayout)
+		# mpLayout.addWidget(loadLayout)
+		# mpLayout.addStretch()
 
-		self.logsPage.setLayout(mpLayout)
+		self.loadPage.setLayout(loadLoglay)
+
+		self.logsPage.setLayout(slLayout)
 
 		# LOGS PAGE
 
@@ -1264,8 +1257,6 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.fetchMisc)
 		cpLayout.addWidget(self.joinMisc)
 		cpLayout.addWidget(self.rejoinMisc)
-		# cpLayout.addWidget(QLabel(' '))
-		# cpLayout.addWidget(QLabel(' '))
 		cpLayout.addStretch()
 
 		self.miscPage.setLayout(cpLayout)
