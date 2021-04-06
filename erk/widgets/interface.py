@@ -255,6 +255,20 @@ class Window(QMainWindow):
 			else:
 				self.topic.show()
 
+	def parse_colors(self,style):
+		background_color = "#FFFFFF"
+		text_color = "#000000"
+		ps = style.split(";")
+		for e in ps:
+			px = e.split(':')
+			if len(px)==2:
+				if px[0].strip().lower()=='background-color':
+					background_color = px[1].strip()
+				if px[0].strip().lower()=='color':
+					text_color = px[1].strip()
+
+		return background_color,text_color
+
 	def __init__(self,name,client,wtype,app,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -348,7 +362,14 @@ class Window(QMainWindow):
 		self.chat.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.chat.customContextMenuRequested.connect(self.chatMenu)
 
-		self.chat.setStyleSheet(self.styles["all"])
+		#self.chat.setStyleSheet(self.styles["all"])
+
+		background_color,text_color = self.parse_colors(self.styles["all"])
+		p = self.chat.palette()
+		p.setColor(QPalette.Base, QColor(background_color))
+		p.setColor(QPalette.Text, QColor(text_color))
+		self.chat.setPalette(p)
+
 
 		if self.type==config.CHANNEL_WINDOW:
 
@@ -364,7 +385,13 @@ class Window(QMainWindow):
 			self.userlist.itemDoubleClicked.connect(self._handleDoubleClick)
 			self.userlist.installEventFilter(self)
 
-			self.userlist.setStyleSheet(self.styles["all"])
+			#self.userlist.setStyleSheet(self.styles["all"])
+
+			background_color,text_color = self.parse_colors(self.styles["all"])
+			p = self.userlist.palette()
+			p.setColor(QPalette.Base, QColor(background_color))
+			p.setColor(QPalette.Text, QColor(text_color))
+			self.userlist.setPalette(p)
 
 			# Make sure that user status icons are just a little
 			# bigger than the user entry text
@@ -387,7 +414,13 @@ class Window(QMainWindow):
 		self.input.keyUp.connect(self.keyPressUp)
 		self.input.keyDown.connect(self.keyPressDown)
 
-		self.input.setStyleSheet(self.styles["all"])
+		#self.input.setStyleSheet(self.styles["all"])
+
+		background_color,text_color = self.parse_colors(self.styles["all"])
+		p = self.input.palette()
+		p.setColor(QPalette.Base, QColor(background_color))
+		p.setColor(QPalette.Text, QColor(text_color))
+		self.input.setPalette(p)
 
 		# Text input widget should only be one line
 		fm = self.input.fontMetrics()
@@ -614,10 +647,23 @@ class Window(QMainWindow):
 	def restoreStyle(self):
 		self.styles = get_text_format_settings(self.parent.stylefile)
 
-		self.chat.setStyleSheet(self.styles["all"])
-		self.input.setStyleSheet(self.styles["all"])
+		background_color,text_color = self.parse_colors(self.styles["all"])
+
+		p = self.chat.palette()
+		p.setColor(QPalette.Base, QColor(background_color))
+		p.setColor(QPalette.Text, QColor(text_color))
+		self.chat.setPalette(p)
+
+		p = self.input.palette()
+		p.setColor(QPalette.Base, QColor(background_color))
+		p.setColor(QPalette.Text, QColor(text_color))
+		self.input.setPalette(p)
+
 		if hasattr(self,"userlist"):
-			self.userlist.setStyleSheet(self.styles["all"])
+			p = self.userlist.palette()
+			p.setColor(QPalette.Base, QColor(background_color))
+			p.setColor(QPalette.Text, QColor(text_color))
+			self.userlist.setPalette(p)
 
 		self.rerender()
 		self.rerender_userlist()
@@ -636,10 +682,23 @@ class Window(QMainWindow):
 		if sfile!=None:
 			self.styles = get_text_format_settings(style_file)
 
-			self.chat.setStyleSheet(self.styles["all"])
-			self.input.setStyleSheet(self.styles["all"])
+			background_color,text_color = self.parse_colors(self.styles["all"])
+
+			p = self.chat.palette()
+			p.setColor(QPalette.Base, QColor(background_color))
+			p.setColor(QPalette.Text, QColor(text_color))
+			self.chat.setPalette(p)
+
+			p = self.input.palette()
+			p.setColor(QPalette.Base, QColor(background_color))
+			p.setColor(QPalette.Text, QColor(text_color))
+			self.input.setPalette(p)
+
 			if hasattr(self,"userlist"):
-				self.userlist.setStyleSheet(self.styles["all"])
+				p = self.userlist.palette()
+				p.setColor(QPalette.Base, QColor(background_color))
+				p.setColor(QPalette.Text, QColor(text_color))
+				self.userlist.setPalette(p)
 
 			self.rerender()
 			self.rerender_userlist()
