@@ -1049,6 +1049,10 @@ class Dialog(QDialog):
 			item = QListWidgetItem(e)
 			self.plug_list.addItem(item)
 
+		fm = QFontMetrics(self.font())
+		fheight = fm.height() * 7
+		self.plug_list.setMaximumHeight(fheight)
+
 		self.addDirectory = QPushButton("Add directory")
 		self.addDirectory.clicked.connect(self.plugbuttonAdd)
 		self.addDirectory.setAutoDefault(False)
@@ -1078,8 +1082,6 @@ class Dialog(QDialog):
 		plugLayout = QVBoxLayout()
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.errorPlugins)
-		# plugLayout.addWidget(self.showPlugins)
-		# plugLayout.addWidget(self.detPlugins)
 		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
@@ -1116,7 +1118,6 @@ class Dialog(QDialog):
 		plugLocLayout.addWidget(self.pluginFilesInfo)
 		plugLocLayout.addStretch()
 		plugLocLayout.addWidget(plugBox)
-		#plugLocLayout.addStretch()
 
 		plugMenuLayout = QVBoxLayout()
 		plugMenuLayout.addWidget(self.showPlugins)

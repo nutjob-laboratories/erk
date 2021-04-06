@@ -116,6 +116,7 @@ Version 0.870
 	* Added a tab ("menus") to the "plugins" tab in the "settings" dialog, and added the plugin menu settings to it
 	* Updated the documentation to reflect changed to the GUI
 	* Updated referenced to the "settings" dialog in the documentation to reflect new "settings" layout
+	* Limited the height of the plugin source directory list widget to shrink the "settings" dialog a bit
 
 Version 0.860
 	* Removed all plugin-related code and documentation
