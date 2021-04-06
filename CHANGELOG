@@ -105,6 +105,9 @@ Version 0.870
 	* Added a setting to toggle plugin load error display
 	* Added show/hide plugin load error toggle to the "settings" dialog
 	* Reloading plugins now clears the plugin autocomplete and plugin help tables
+	* Changed the "plugins" tab in the "settings" display into a set of tabbed pages
+	* Added a bit of documentation to the "plugins" tab about how to use the "add plugins locations" tool
+	* EVERY tab in the "settings" dialog is now a tabs bar (makes the dialog look more "unified" and consistant)
 
 Version 0.860
 	* Removed all plugin-related code and documentation

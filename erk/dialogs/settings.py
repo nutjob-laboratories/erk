@@ -212,16 +212,20 @@ class Dialog(QDialog):
 
 		self.displayPage = QWidget()
 
+		self.displayTabs = QTabWidget()
+
+		self.displayTabs.addTab(self.displayPage, QIcon(WINDOW_ICON), "Application")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Application")
-		entry.widget = self.displayPage
+		entry.widget = self.displayTabs
 		entry.setIcon(QIcon(WINDOW_ICON))
 		self.selector.addItem(entry)
 		self.selector.setCurrentItem(entry)
 
-		self.stack.addWidget(self.displayPage)
-		self.stack.setCurrentWidget(self.displayPage)
+		self.stack.addWidget(self.displayTabs)
+		self.stack.setCurrentWidget(self.displayTabs)
 
 		f = self.font()
 		fs = f.toString()
@@ -310,14 +314,18 @@ class Dialog(QDialog):
 
 		self.messagesPage = QWidget()
 
+		self.messagesTabs = QTabWidget()
+
+		self.messagesTabs.addTab(self.messagesPage, QIcon(MESSAGE_ICON), "Messages")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Messages")
-		entry.widget = self.messagesPage
+		entry.widget = self.messagesTabs
 		entry.setIcon(QIcon(MESSAGE_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.messagesPage)
+		self.stack.addWidget(self.messagesTabs)
 
 		self.showDates = QCheckBox("Display dates in channel chat",self)
 		if config.DISPLAY_DATES_IN_CHANNEL_CHAT: self.showDates.setChecked(True)
@@ -415,7 +423,7 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.channelLinks)
 		mpLayout.addWidget(self.writePrivate)
 		mpLayout.addWidget(self.writeNotice)
-		mpLayout.addStretch()
+		#mpLayout.addStretch()
 
 		self.messagesPage.setLayout(mpLayout)
 
@@ -423,14 +431,18 @@ class Dialog(QDialog):
 
 		self.notificationsPage = QWidget()
 
+		self.notificationsTabs = QTabWidget()
+
+		self.notificationsTabs.addTab(self.notificationsPage, QIcon(HIDE_ICON), "Hide && Ignore")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Hide & Ignore")
-		entry.widget = self.notificationsPage
+		entry.widget = self.notificationsTabs
 		entry.setIcon(QIcon(HIDE_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.notificationsPage)
+		self.stack.addWidget(self.notificationsTabs)
 
 		self.noteIgnore = QCheckBox("Enabled",self)
 		if config.ENABLE_IGNORE: self.noteIgnore.setChecked(True)
@@ -514,14 +526,18 @@ class Dialog(QDialog):
 
 		self.logsPage = QWidget()
 
+		self.logsTabs = QTabWidget()
+
+		self.logsTabs.addTab(self.logsPage, QIcon(LOG_ICON), "Logs")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Logs")
-		entry.widget = self.logsPage
+		entry.widget = self.logsTabs
 		entry.setIcon(QIcon(LOG_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.logsPage)
+		self.stack.addWidget(self.logsTabs)
 
 		self.chansaveLog = QCheckBox("Save channel chat",self)
 		if config.SAVE_CHANNEL_LOGS: self.chansaveLog.setChecked(True)
@@ -613,14 +629,18 @@ class Dialog(QDialog):
 
 		self.channelPage = QWidget()
 
+		self.channelTabs = QTabWidget()
+
+		self.channelTabs.addTab(self.channelPage, QIcon(CHATS_ICON), "Chats")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Chats")
-		entry.widget = self.channelPage
+		entry.widget = self.channelTabs
 		entry.setIcon(QIcon(CHATS_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.channelPage)
+		self.stack.addWidget(self.channelTabs)
 
 		self.channelInfo = QCheckBox("Show name && topic",self)
 		if config.CHAT_DISPLAY_INFO_BAR: self.channelInfo.setChecked(True)
@@ -691,14 +711,18 @@ class Dialog(QDialog):
 
 		self.connectionPage = QWidget()
 
+		self.connectionTabs = QTabWidget()
+
+		self.connectionTabs.addTab(self.connectionPage, QIcon(CONNECTION_DISPLAY_ICON), "Connection Display")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Connection Display")
-		entry.widget = self.connectionPage
+		entry.widget = self.connectionTabs
 		entry.setIcon(QIcon(CONNECTION_DISPLAY_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.connectionPage)
+		self.stack.addWidget(self.connectionTabs)
 
 		self.enableConnection = QCheckBox("Enabled",self)
 		if config.CONNECTION_DISPLAY_VISIBLE: self.enableConnection.setChecked(True)
@@ -777,17 +801,21 @@ class Dialog(QDialog):
 
 		self.inputPage = QWidget()
 
+		self.inputTabs = QTabWidget()
+
+		self.inputTabs.addTab(self.inputPage, QIcon(ENTRY_ICON), "Text Input")
+
 		self.resetHistory = False
 		self.historySize = None
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
-		entry.setText("Text input")
-		entry.widget = self.inputPage
+		entry.setText("Text Input")
+		entry.widget = self.inputTabs
 		entry.setIcon(QIcon(ENTRY_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.inputPage)
+		self.stack.addWidget(self.inputTabs)
 
 		self.trackInput = QCheckBox("Track input history",self)
 		if config.TRACK_COMMAND_HISTORY: self.trackInput.setChecked(True)
@@ -850,8 +878,6 @@ class Dialog(QDialog):
 			if self.parent.block_commands:
 				self.inputCommands.setEnabled(False)
 
-
-
 		self.emojiComplete = QCheckBox("Auto-complete emoji shortcodes",self)
 		if config.AUTOCOMPLETE_EMOJI: self.emojiComplete.setChecked(True)
 
@@ -884,14 +910,18 @@ class Dialog(QDialog):
 
 		self.spellcheckPage = QWidget()
 
+		self.spellTabs = QTabWidget()
+
+		self.spellTabs.addTab(self.spellcheckPage, QIcon(SPELLCHECK_ICON), "Spellcheck")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Spellcheck")
-		entry.widget = self.spellcheckPage
+		entry.widget = self.spellTabs
 		entry.setIcon(QIcon(SPELLCHECK_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.spellcheckPage)
+		self.stack.addWidget(self.spellTabs)
 
 		self.enabledSpellcheck = QCheckBox("Enabled",self)
 		if config.SPELLCHECK_INPUT: self.enabledSpellcheck.setChecked(True)
@@ -944,14 +974,18 @@ class Dialog(QDialog):
 
 		self.featuresPage = QWidget()
 
+		self.featuresTabs = QTabWidget()
+
+		self.featuresTabs.addTab(self.featuresPage, QIcon(SCRIPT_ICON), "Scripting")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Scripting")
-		entry.widget = self.featuresPage
+		entry.widget = self.featuresTabs
 		entry.setIcon(QIcon(SCRIPT_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.featuresPage)
+		self.stack.addWidget(self.featuresTabs)
 
 		self.scriptMisc = QCheckBox("Enable scripts",self)
 		if config.ENABLE_SCRIPTS: self.scriptMisc.setChecked(True)
@@ -1003,15 +1037,21 @@ class Dialog(QDialog):
 		# Plugins page
 
 		self.pluginsPage = QWidget()
+		self.pluginsFiles = QWidget()
+
+		self.pluginsTabs = QTabWidget()
+
+		self.pluginsTabs.addTab(self.pluginsPage, QIcon(PLUGIN_ICON), "Plugins")
+		self.pluginsTabs.addTab(self.pluginsFiles, QIcon(DIRECTORY_ICON), "Sources")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Plugins")
-		entry.widget = self.pluginsPage
+		entry.widget = self.pluginsTabs
 		entry.setIcon(QIcon(PLUGIN_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.pluginsPage)
+		self.stack.addWidget(self.pluginsTabs)
 
 		self.enPlugins = QCheckBox("Enable plugins",self)
 		if config.ENABLE_PLUGINS: self.enPlugins.setChecked(True)
@@ -1041,10 +1081,6 @@ class Dialog(QDialog):
 		for e in config.ADDITIONAL_PLUGIN_LOCATIONS:
 			item = QListWidgetItem(e)
 			self.plug_list.addItem(item)
-
-		fm = QFontMetrics(self.font())
-		fheight = fm.height() * 8
-		self.plug_list.setMaximumHeight(fheight)
 
 		self.addDirectory = QPushButton("Add directory")
 		self.addDirectory.clicked.connect(self.plugbuttonAdd)
@@ -1076,13 +1112,11 @@ class Dialog(QDialog):
 		plugLayout.addWidget(self.enPlugins)
 		plugLayout.addWidget(self.errorPlugins)
 		plugLayout.addWidget(self.showPlugins)
-		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.detPlugins)
+		plugLayout.addWidget(self.igPlugins)
 		plugLayout.addWidget(self.autoPlugins)
 		plugLayout.addWidget(self.helpPlugins)
 		plugLayout.addWidget(self.inputPlugins)
-		plugLayout.addStretch()
-		plugLayout.addWidget(plugBox)
 		plugLayout.addStretch()
 
 		if self.parent!= None:
@@ -1098,20 +1132,45 @@ class Dialog(QDialog):
 
 		self.pluginsPage.setLayout(plugLayout)
 
+		self.pluginFilesInfo = QLabel("""
+			<center><big><b>Plugin Sources</b></big></center><br>
+			<small>
+
+			Plugins can be loaded from any directory, not just <b>.erk/plugins</b> in your home directory. Here you can select any other directories
+			you'd like to load plugins from. Click the "Add Directory" button to add a directory. Select a directory, and click the "Remove Directory"
+			button to remove it from the list. Click "Clear" to remove all directories from the list.
+
+			</small>
+			""")
+		self.pluginFilesInfo.setWordWrap(True)
+		self.pluginFilesInfo.setAlignment(Qt.AlignJustify)
+
+		plugLocLayout = QVBoxLayout()
+		plugLocLayout.addWidget(self.pluginFilesInfo)
+		plugLocLayout.addStretch()
+		plugLocLayout.addWidget(plugBox)
+		#plugLocLayout.addStretch()
+
+		self.pluginsFiles.setLayout(plugLocLayout)
+
 		# Miscellaneous settings
 
 		self.initial_fetch_list = config.AUTOMATICALLY_FETCH_CHANNEL_LIST
 
 		self.miscPage = QWidget()
 
+		self.miscTabs = QTabWidget()
+
+		self.miscTabs.addTab(self.miscPage, QIcon(MISC_ICON), "Miscellaneous")
+
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
 		entry.setText("Miscellaneous")
-		entry.widget = self.miscPage
+		entry.widget = self.miscTabs
 		entry.setIcon(QIcon(MISC_ICON))
 		self.selector.addItem(entry)
 
-		self.stack.addWidget(self.miscPage)
+		self.stack.addWidget(self.miscTabs)
 
 		self.buttonsMisc = QCheckBox("Show \"Run Script\" and \"Disconnect\"\nbuttons on server displays",self)
 		if config.SHOW_CONSOLE_BUTTONS: self.buttonsMisc.setChecked(True)
