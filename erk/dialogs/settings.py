@@ -185,6 +185,26 @@ class Dialog(QDialog):
 
 			self.fgLabel.setText("Text color: <b>"+ncolor+"</b>")
 
+	def syntaxBackground(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_background_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_background_color = ncolor
+			self.setSyntaxBg.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxBgLabel.setText("Background color: <b>"+ncolor+"</b>")
+
+	def syntaxText(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_text_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_text_color = ncolor
+			self.setSyntaxFg.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxFgLabel.setText("Text color: <b>"+ncolor+"</b>")
+
 
 	def __init__(self,configfile=USER_FILE,parent=None,app=None):
 		super(Dialog,self).__init__(parent)
@@ -980,14 +1000,14 @@ class Dialog(QDialog):
 		# Features settings
 
 		self.featuresPage = QWidget()
-		self.aliasPage = QWidget()
-		self.macroPage = QWidget()
+		self.scriptFeatures = QWidget()
+		self.highlightPage = QWidget()
 
 		self.featuresTabs = QTabWidget()
 
 		self.featuresTabs.addTab(self.featuresPage, QIcon(SCRIPT_ICON), "Scripting")
-		self.featuresTabs.addTab(self.aliasPage, QIcon(EDIT_ICON), "Aliases")
-		self.featuresTabs.addTab(self.macroPage, QIcon(MISC_ICON), "Macros")
+		self.featuresTabs.addTab(self.scriptFeatures, QIcon(FEATURES_ICON), "Features")
+		self.featuresTabs.addTab(self.highlightPage, QIcon(MISC_ICON), "Highlighting")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -1038,20 +1058,53 @@ class Dialog(QDialog):
 				self.enableMacros.setEnabled(False)
 				self.enableAliasMisc.setEnabled(False)
 
-		aliasLayout = QVBoxLayout()
-		aliasLayout.addWidget(self.enableAliasMisc)
-		aliasLayout.addWidget(self.sglobalMisc)
-		aliasLayout.addStretch()
+		featuresLayout = QVBoxLayout()
+		featuresLayout.addWidget(self.enableAliasMisc)
+		featuresLayout.addWidget(self.sglobalMisc)
+		featuresLayout.addWidget(self.enableMacros)
+		featuresLayout.addWidget(self.saveMacros)
+		featuresLayout.addWidget(self.autoMacros)
+		featuresLayout.addStretch()
+
+		self.syntax_background_color = config.SCRIPT_SYNTAX_BACKGROUND
+		self.syntax_text_color = config.SCRIPT_SYNTAX_TEXT
+
+		self.setSyntaxBg = QPushButton("")
+		self.setSyntaxBg.clicked.connect(self.syntaxBackground)
+		self.setSyntaxBg.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_BACKGROUND};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setSyntaxBg.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxBgLabel = QLabel("Background color: <b>"+config.SCRIPT_SYNTAX_BACKGROUND+"</b>")
+
+		syntaxBgLayout = QHBoxLayout()
+		syntaxBgLayout.addWidget(self.setSyntaxBg)
+		syntaxBgLayout.addWidget(self.syntaxBgLabel)
+
+		self.setSyntaxFg = QPushButton("")
+		self.setSyntaxFg.clicked.connect(self.syntaxText)
+		self.setSyntaxFg.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_TEXT};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setSyntaxFg.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxFgLabel = QLabel("Text color: <b>"+config.SCRIPT_SYNTAX_TEXT+"</b>")
+
+		syntaxFgLayout = QHBoxLayout()
+		syntaxFgLayout.addWidget(self.setSyntaxFg)
+		syntaxFgLayout.addWidget(self.syntaxFgLabel)
 		
-		macroLayout = QVBoxLayout()
-		macroLayout.addWidget(self.enableMacros)
-		macroLayout.addWidget(self.saveMacros)
-		macroLayout.addWidget(self.autoMacros)
-		macroLayout.addStretch()
+		syntaxLayout = QVBoxLayout()
+		syntaxLayout.addLayout(syntaxBgLayout)
+		syntaxLayout.addLayout(syntaxFgLayout)
+		syntaxLayout.addStretch()
 
-		self.macroPage.setLayout(macroLayout)
+		self.highlightPage.setLayout(syntaxLayout)
 
-		self.aliasPage.setLayout(aliasLayout)
+		self.scriptFeatures.setLayout(featuresLayout)
 
 		self.featuresPage.setLayout(scriptLayout)
 
@@ -1370,6 +1423,9 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.SCRIPT_SYNTAX_BACKGROUND = self.syntax_background_color
+		config.SCRIPT_SYNTAX_TEXT = self.syntax_text_color
 
 		config.CONNECTION_DISPLAY_BG_COLOR = self.connection_background_color
 		config.CONNECTION_DISPLAY_TEXT_COLOR = self.connection_text_color
@@ -1805,9 +1861,16 @@ class Dialog(QDialog):
 				self.connection_text_color = config.CONNECTION_DISPLAY_TEXT_COLOR
 				self.setFg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_TEXT_COLOR};')
 				self.setBg.setStyleSheet(f'background-color: {config.CONNECTION_DISPLAY_BG_COLOR};')
-
 				self.bgLabel.setText("Background color: <b>"+config.CONNECTION_DISPLAY_BG_COLOR+"</b>")
 				self.fgLabel.setText("Text color: <b>"+config.CONNECTION_DISPLAY_TEXT_COLOR+"</b>")
+
+				self.syntax_background_color = config.SCRIPT_SYNTAX_BACKGROUND
+				self.syntax_text_color = config.SCRIPT_SYNTAX_TEXT
+				self.setSyntaxFg.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_TEXT};')
+				self.setSyntaxBg.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_BACKGROUND};')
+				self.syntaxBgLabel.setText("Background color: <b>"+config.SCRIPT_SYNTAX_BACKGROUND+"</b>")
+				self.syntaxFgLabel.setText("Text color: <b>"+config.SCRIPT_SYNTAX_BACKGROUND+"</b>")
+
 
 			else:
 				msg = QMessageBox(self)

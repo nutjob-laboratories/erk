@@ -123,6 +123,8 @@ Version 0.870
 	* Bugfix: context menus are fixed for the chat display; menu hovering and highlights work again
 	* Bugfix: fixed the context menu bug for the topic editor
 	* Added settings for the script syntax highlighter (background and text color) to the config file
+	* Rearranged the "scripting" tab in the "settings" dialog to add a new tab: "Highlighting"
+	* Added controls to set the background and text color to the "Highlighting" tab in the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

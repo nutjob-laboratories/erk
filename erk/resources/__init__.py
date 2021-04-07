@@ -160,6 +160,7 @@ ENABLE_ICON = ":/gui-enable.png"
 VISITED_SSL_ICON = ":/gui-visited_ssl.png"
 UNVISITED_SSL_ICON = ":/gui-unvisited_ssl.png"
 PRIVATE_ICON = ":/gui-private.png"
+FEATURES_ICON = ":/gui-features.png"
 
 LIGHT_CHANNEL_ICON = ":/gui-light_channel.png"
 LIGHT_CLOCK_ICON = ":/gui-light_clock.png"
