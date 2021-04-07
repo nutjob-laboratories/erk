@@ -125,6 +125,15 @@ Version 0.870
 	* Added settings for the script syntax highlighter (background and text color) to the config file
 	* Rearranged the "scripting" tab in the "settings" dialog to add a new tab: "Highlighting"
 	* Added controls to set the background and text color to the "Highlighting" tab in the "settings" dialog
+	* All syntax highlighting colors for scripts can now be edited with the "settings" dialog
+	* Rearranged some settings on the "scripting" tab in the "settings" dialog
+	* Added a new setting: toggle topic editing on and off
+	* Added en/disable topic editor setting to the "settings" dialog
+	* The IRC color context menus (for the text input widget) now only display if IRC colors are enabled
+	* Added a setting to en/disable the user list context menu
+	* Added the dis/enable user list context menu setting to the "settings" dialog
+	* Added a setting to dis/enable the connection display context menu
+	* Added the en/disable connection display context menu setting to the "settings" dialog
 
 Version 0.860
 	* Removed all plugin-related code and documentation

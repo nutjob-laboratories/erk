@@ -45,7 +45,7 @@
 * Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
 * A built-in list of over 80 IRC servers to connect to
 * An extensive set of configuration options
-  * Over 90 display and configuration options settable in the GUI
+  * Over 100 display and configuration options settable in the GUI
   * Over 30 different command line options
 * Text colors are customize-able
 * Built-in [spell checker](https://github.com/barrust/pyspellchecker) (supports English, Spanish, French, and German)
@@ -203,7 +203,7 @@ My current development "environment" is Python 3.8.5, Qt 5.15.2, and Twisted 18.
 
     python erk.py -o --noextensions --nomenu --nodisplay --channel "#erk" irc.efnet.org 6667
 
-And that's only using the command-line options! **Ərk** has over 90 different configuration options available, as well as over 30 different command-line options.
+And that's only using the command-line options! **Ərk** has over 100 different configuration options available, as well as over 30 different command-line options.
 
 When I started writing **Ərk**, one of my goals was to make it as configurable as possible. I wanted an IRC client that gave the user the tools to make the client look and behave *exactly* how the user wanted.
 

@@ -437,6 +437,13 @@ def resize_font_fix():
 		c.widget.chat.zoomOut()
 		c.widget.chat.moveCursor(QTextCursor.End)
 
+def reset_topic_editor():
+	for c in CHANNELS:
+		if config.ENABLE_TOPIC_EDITOR:
+			c.widget.topic.is_enabled = True
+		else:
+			c.widget.topic.is_enabled = False
+
 def rerender_all():
 	for c in CHANNELS:
 		c.widget.rerender()

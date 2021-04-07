@@ -1170,6 +1170,9 @@ class Erk(QMainWindow):
 		# User List Menu
 		if (event.type() == QtCore.QEvent.ContextMenu and source is self.connection_display):
 
+			if not config.ENABLE_CONNECTION_CONTEXT:
+				return super(Erk, self).eventFilter(source, event)
+
 			item = source.itemAt(event.pos())
 			if item is None: return True
 

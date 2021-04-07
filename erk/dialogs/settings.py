@@ -205,6 +205,46 @@ class Dialog(QDialog):
 
 			self.syntaxFgLabel.setText("Text color: <b>"+ncolor+"</b>")
 
+	def syntaxComment(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_comment_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_comment_color = ncolor
+			self.setSyntaxComment.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxCommentLabel.setText("Comments: <b>"+ncolor+"</b>")
+
+	def syntaxCommand(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_command_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_command_color = ncolor
+			self.setSyntaxCommand.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxCommandLabel.setText("Commands: <b>"+ncolor+"</b>")
+
+	def syntaxTarget(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_target_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_target_color = ncolor
+			self.setSyntaxTarget.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxTargetLabel.setText("Channels: <b>"+ncolor+"</b>")
+
+	def syntaxAlias(self):
+		newcolor = QColorDialog.getColor(QColor(self.syntax_alias_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.syntax_alias_color = ncolor
+			self.setSyntaxAlias.setStyleSheet(f'background-color: {ncolor};')
+
+			self.syntaxAliasLabel.setText("Aliases: <b>"+ncolor+"</b>")
+
 
 	def __init__(self,configfile=USER_FILE,parent=None,app=None):
 		super(Dialog,self).__init__(parent)
@@ -687,6 +727,12 @@ class Dialog(QDialog):
 		self.openNew = QCheckBox("Open new chat for private messages",self)
 		if config.OPEN_NEW_PRIVATE_MESSAGE_WINDOWS: self.openNew.setChecked(True)
 
+		self.channelTopic = QCheckBox("Enable topic editor",self)
+		if config.ENABLE_TOPIC_EDITOR: self.channelTopic.setChecked(True)
+
+		self.channelUserMenu = QCheckBox("Enable user list context menu",self)
+		if config.ENABLE_USERLIST_MENU: self.channelUserMenu.setChecked(True)
+
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayStatus)
@@ -696,11 +742,13 @@ class Dialog(QDialog):
 		cbLay = QVBoxLayout()
 		cbLay.addWidget(self.channelInfo)
 		cbLay.addWidget(self.channelModes)
+		cbLay.addWidget(self.channelTopic)
 		cbLay.addStretch()
 
 		cpLayout = QVBoxLayout()
 		cpLayout.addWidget(self.displayUserlists)
 		cpLayout.addWidget(self.textUserlist)
+		cpLayout.addWidget(self.channelUserMenu)
 		cpLayout.addWidget(self.channelLatest)
 		cpLayout.addWidget(self.openNew)
 		cpLayout.addStretch()
@@ -748,6 +796,9 @@ class Dialog(QDialog):
 
 		self.animateConnection = QCheckBox("Animate connection notification",self)
 		if config.CONNECTION_MESSAGE_ANIMATION: self.animateConnection.setChecked(True)
+
+		self.menuConnection = QCheckBox("Enable context menu",self)
+		if config.ENABLE_CONNECTION_CONTEXT: self.menuConnection.setChecked(True)
 
 		self.leftRadio = QRadioButton("Left")
 		self.rightRadio = QRadioButton("Right")
@@ -801,6 +852,7 @@ class Dialog(QDialog):
 				self.bgLabel.setEnabled(False)
 				self.setfg.setEnabled(False)
 				self.fgLabel.setEnabled(False)
+				self.menuConnection.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -824,6 +876,7 @@ class Dialog(QDialog):
 		cpLayout = QVBoxLayout()
 		cpLayout.addLayout(clLayoutH)
 		cpLayout.addWidget(self.enableConnection)
+		cpLayout.addWidget(self.menuConnection)
 		cpLayout.addWidget(self.floatConnection)
 		cpLayout.addWidget(self.uptimesConnection)
 		cpLayout.addWidget(self.doubleConnection)
@@ -1058,12 +1111,28 @@ class Dialog(QDialog):
 				self.enableMacros.setEnabled(False)
 				self.enableAliasMisc.setEnabled(False)
 
+		aliasLayout = QVBoxLayout()
+		aliasLayout.addWidget(self.enableAliasMisc)
+		aliasLayout.addWidget(self.sglobalMisc)
+
+		aliasBox = QGroupBox("Aliases",self)
+		aliasBox.setLayout(aliasLayout)
+
+		aliasBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
+		macroLayout = QVBoxLayout()
+		macroLayout.addWidget(self.enableMacros)
+		macroLayout.addWidget(self.saveMacros)
+		macroLayout.addWidget(self.autoMacros)
+
+		macroBox = QGroupBox("Macros",self)
+		macroBox.setLayout(macroLayout)
+
+		macroBox.setStyleSheet("QGroupBox { font: bold; } QGroupBox::title { subcontrol-position: top center; }")
+
 		featuresLayout = QVBoxLayout()
-		featuresLayout.addWidget(self.enableAliasMisc)
-		featuresLayout.addWidget(self.sglobalMisc)
-		featuresLayout.addWidget(self.enableMacros)
-		featuresLayout.addWidget(self.saveMacros)
-		featuresLayout.addWidget(self.autoMacros)
+		featuresLayout.addWidget(aliasBox)
+		featuresLayout.addWidget(macroBox)
 		featuresLayout.addStretch()
 
 		self.syntax_background_color = config.SCRIPT_SYNTAX_BACKGROUND
@@ -1087,8 +1156,6 @@ class Dialog(QDialog):
 		self.setSyntaxFg.clicked.connect(self.syntaxText)
 		self.setSyntaxFg.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_TEXT};')
 
-		fm = QFontMetrics(self.font())
-		fheight = fm.height()
 		self.setSyntaxFg.setFixedSize(fheight +10,fheight + 10)
 
 		self.syntaxFgLabel = QLabel("Text color: <b>"+config.SCRIPT_SYNTAX_TEXT+"</b>")
@@ -1096,10 +1163,86 @@ class Dialog(QDialog):
 		syntaxFgLayout = QHBoxLayout()
 		syntaxFgLayout.addWidget(self.setSyntaxFg)
 		syntaxFgLayout.addWidget(self.syntaxFgLabel)
-		
+
+
+		self.syntax_comment_color = config.SCRIPT_SYNTAX_COMMENTS
+
+		self.setSyntaxComment = QPushButton("")
+		self.setSyntaxComment.clicked.connect(self.syntaxComment)
+		self.setSyntaxComment.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_COMMENTS};')
+
+		self.setSyntaxComment.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxCommentLabel = QLabel("Comments: <b>"+config.SCRIPT_SYNTAX_COMMENTS+"</b>")
+
+		syntaxCommentLayout = QHBoxLayout()
+		syntaxCommentLayout.addWidget(self.setSyntaxComment)
+		syntaxCommentLayout.addWidget(self.syntaxCommentLabel)
+
+		self.syntax_command_color = config.SCRIPT_SYNTAX_COMMANDS
+
+		self.setSyntaxCommand = QPushButton("")
+		self.setSyntaxCommand.clicked.connect(self.syntaxCommand)
+		self.setSyntaxCommand.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_COMMANDS};')
+
+		self.setSyntaxCommand.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxCommandLabel = QLabel("Commands: <b>"+config.SCRIPT_SYNTAX_COMMANDS+"</b>")
+
+		syntaxCommandLayout = QHBoxLayout()
+		syntaxCommandLayout.addWidget(self.setSyntaxCommand)
+		syntaxCommandLayout.addWidget(self.syntaxCommandLabel)
+
+		self.syntax_target_color = config.SCRIPT_SYNTAX_TARGETS
+
+		self.setSyntaxTarget = QPushButton("")
+		self.setSyntaxTarget.clicked.connect(self.syntaxTarget)
+		self.setSyntaxTarget.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_TARGETS};')
+
+		self.setSyntaxTarget.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxTargetLabel = QLabel("Channels: <b>"+config.SCRIPT_SYNTAX_TARGETS+"</b>")
+
+		syntaxTargetLayout = QHBoxLayout()
+		syntaxTargetLayout.addWidget(self.setSyntaxTarget)
+		syntaxTargetLayout.addWidget(self.syntaxTargetLabel)
+
+
+		self.syntax_alias_color = config.SCRIPT_SYNTAX_ALIAS
+
+		self.setSyntaxAlias = QPushButton("")
+		self.setSyntaxAlias.clicked.connect(self.syntaxAlias)
+		self.setSyntaxAlias.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_ALIAS};')
+
+		self.setSyntaxAlias.setFixedSize(fheight +10,fheight + 10)
+
+		self.syntaxAliasLabel = QLabel("Aliases: <b>"+config.SCRIPT_SYNTAX_ALIAS+"</b>")
+
+		syntaxAliasLayout = QHBoxLayout()
+		syntaxAliasLayout.addWidget(self.setSyntaxAlias)
+		syntaxAliasLayout.addWidget(self.syntaxAliasLabel)
+
+
+		self.syntaxInfo = QLabel("""
+			<small>
+
+			These are the colors used to highlight Ərk scripts in the script editor, and in the connection dialog. If the editor or the
+			connection dialog are open when you are changing colors, you will have to restart the editor or close and re-open the connection
+			dialog to see any changes.
+
+			</small><br>
+			""")
+		self.syntaxInfo.setWordWrap(True)
+		self.syntaxInfo.setAlignment(Qt.AlignJustify)
+
 		syntaxLayout = QVBoxLayout()
+		syntaxLayout.addWidget(self.syntaxInfo)
 		syntaxLayout.addLayout(syntaxBgLayout)
 		syntaxLayout.addLayout(syntaxFgLayout)
+		syntaxLayout.addLayout(syntaxCommentLayout)
+		syntaxLayout.addLayout(syntaxCommandLayout)
+		syntaxLayout.addLayout(syntaxTargetLayout)
+		syntaxLayout.addLayout(syntaxAliasLayout)
 		syntaxLayout.addStretch()
 
 		self.highlightPage.setLayout(syntaxLayout)
@@ -1424,6 +1567,20 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.ENABLE_CONNECTION_CONTEXT = self.menuConnection.isChecked()
+
+		config.ENABLE_USERLIST_MENU = self.channelUserMenu.isChecked()
+
+		config.ENABLE_TOPIC_EDITOR = self.channelTopic.isChecked()
+
+		config.SCRIPT_SYNTAX_ALIAS = self.syntax_alias_color
+
+		config.SCRIPT_SYNTAX_TARGETS = self.syntax_target_color
+
+		config.SCRIPT_SYNTAX_COMMENTS = self.syntax_comment_color
+
+		config.SCRIPT_SYNTAX_COMMANDS = self.syntax_command_color
+
 		config.SCRIPT_SYNTAX_BACKGROUND = self.syntax_background_color
 		config.SCRIPT_SYNTAX_TEXT = self.syntax_text_color
 
@@ -1703,6 +1860,7 @@ class Dialog(QDialog):
 
 			userinput.buildHelp()
 			events.reload_commands_all()
+			events.reset_topic_editor()
 
 		config.save_settings(self.config)
 
@@ -1871,6 +2029,25 @@ class Dialog(QDialog):
 				self.syntaxBgLabel.setText("Background color: <b>"+config.SCRIPT_SYNTAX_BACKGROUND+"</b>")
 				self.syntaxFgLabel.setText("Text color: <b>"+config.SCRIPT_SYNTAX_BACKGROUND+"</b>")
 
+				self.syntax_comment_color = config.SCRIPT_SYNTAX_COMMENTS
+				self.setSyntaxComment.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_COMMENTS};')
+				self.syntaxCommentLabel.setText("Comments: <b>"+config.SCRIPT_SYNTAX_COMMENTS+"</b>")
+
+				self.syntax_command_color = config.SCRIPT_SYNTAX_COMMANDS
+				self.setSyntaxCommand.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_COMMANDS};')
+				self.syntaxCommandLabel.setText("Commands: <b>"+config.SCRIPT_SYNTAX_COMMANDS+"</b>")
+
+				self.syntax_target_color = config.SCRIPT_SYNTAX_TARGETS
+				self.setSyntaxTarget.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_TARGETS};')
+				self.syntaxTargetLabel.setText("Channels: <b>"+config.SCRIPT_SYNTAX_TARGETS+"</b>")
+
+				self.syntax_alias_color = config.SCRIPT_SYNTAX_ALIAS
+				self.setSyntaxAlias.setStyleSheet(f'background-color: {config.SCRIPT_SYNTAX_ALIAS};')
+				self.syntaxAliasLabel.setText("Aliases: <b>"+config.SCRIPT_SYNTAX_ALIAS+"</b>")
+
+				self.channelTopic.setChecked(config.ENABLE_TOPIC_EDITOR)
+				self.channelUserMenu.setChecked(config.ENABLE_USERLIST_MENU)
+				self.menuConnection.setChecked(config.ENABLE_CONNECTION_CONTEXT)
 
 			else:
 				msg = QMessageBox(self)

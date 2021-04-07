@@ -127,7 +127,6 @@ SCRIPT_INTERPOLATE_SYMBOL = '$'
 GLOBALIZE_ALL_SCRIPT_ALIASES = True
 USE_QMENUBAR_MENUS = False
 ENABLE_SCRIPT_EDITOR = True
-
 AUTOCOMPLETE_MACROS = True
 SAVE_MACROS = True
 SAVE_SCRIPT_ON_CLOSE = True
@@ -163,13 +162,16 @@ REJOIN_CHANNELS_ON_DISCONNECTIONS = True
 PLUGIN_LOAD_ERRORS = True
 CONNECTION_DISPLAY_BG_COLOR = "#FFFFFF"
 CONNECTION_DISPLAY_TEXT_COLOR = "#000000"
-
 SCRIPT_SYNTAX_COMMENTS = 'darkMagenta'
 SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
 SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
 SCRIPT_SYNTAX_BACKGROUND = "#FFFFFF"
 SCRIPT_SYNTAX_TEXT = "#000000"
+ENABLE_TOPIC_EDITOR = True
+ENABLE_USERLIST_MENU = True
+
+ENABLE_CONNECTION_CONTEXT = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -177,6 +179,9 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"enable_connection_display_context_menu": ENABLE_CONNECTION_CONTEXT,
+		"enable_userlist_menu": ENABLE_USERLIST_MENU,
+		"enable_topic_editor": ENABLE_TOPIC_EDITOR,
 		"script_syntax_color_background": SCRIPT_SYNTAX_BACKGROUND,
 		"script_syntax_color_text": SCRIPT_SYNTAX_TEXT,
 		"connection_display_background": CONNECTION_DISPLAY_BG_COLOR,
@@ -303,6 +308,15 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "enable_connection_display_context_menu" in data:
+		data["enable_connection_display_context_menu"] = ENABLE_CONNECTION_CONTEXT
+
+	if not "enable_userlist_menu" in data:
+		data["enable_userlist_menu"] = ENABLE_USERLIST_MENU
+
+	if not "enable_topic_editor" in data:
+		data["enable_topic_editor"] = ENABLE_TOPIC_EDITOR
 
 	if not "script_syntax_color_background" in data:
 		data["script_syntax_color_background"] = SCRIPT_SYNTAX_BACKGROUND
@@ -788,6 +802,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global CONNECTION_DISPLAY_TEXT_COLOR
 	global SCRIPT_SYNTAX_BACKGROUND
 	global SCRIPT_SYNTAX_TEXT
+	global ENABLE_TOPIC_EDITOR
+	global ENABLE_USERLIST_MENU
+	global ENABLE_CONNECTION_CONTEXT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -796,6 +813,9 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ENABLE_CONNECTION_CONTEXT = data["enable_connection_display_context_menu"]
+			ENABLE_USERLIST_MENU = data["enable_userlist_menu"]
+			ENABLE_TOPIC_EDITOR = data["enable_topic_editor"]
 			SCRIPT_SYNTAX_BACKGROUND = data["script_syntax_color_background"]
 			SCRIPT_SYNTAX_TEXT = data["script_syntax_color_text"]
 			CONNECTION_DISPLAY_BG_COLOR = data["connection_display_background"]
@@ -1051,8 +1071,11 @@ def check_settings(filename):
 			if "connection_display_text" in data: check = check + 1
 			if "script_syntax_color_background" in data: check = check + 1
 			if "script_syntax_color_text" in data: check = check + 1
+			if "enable_topic_editor" in data: check = check + 1
+			if "enable_userlist_menu" in data: check = check + 1
+			if "enable_connection_display_context_menu" in data: check = check + 1
 
-			if check == 119:
+			if check == 122:
 				return True
 			else:
 				return False
