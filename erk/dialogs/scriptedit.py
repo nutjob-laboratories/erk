@@ -228,6 +228,11 @@ class Window(QMainWindow):
 		self.editor = QPlainTextEdit(self)
 		self.highlight = ErkScriptHighlighter(self.editor.document(),self.configfile)
 
+		p = self.editor.palette()
+		p.setColor(QPalette.Base, QColor(config.SCRIPT_SYNTAX_BACKGROUND))
+		p.setColor(QPalette.Text, QColor(config.SCRIPT_SYNTAX_TEXT))
+		self.editor.setPalette(p)
+
 		self.setWindowIcon(QIcon(SCRIPTEDIT_ICON))
 
 		self.editor.textChanged.connect(self.docModified)

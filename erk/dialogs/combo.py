@@ -469,6 +469,11 @@ class Dialog(QDialog):
 		self.highlight = syntax.ErkScriptHighlighter(self.scriptedit.document(),self.config_file)
 		self.scriptedit.setPlaceholderText("Enter your connection script here.")
 
+		p = self.scriptedit.palette()
+		p.setColor(QPalette.Base, QColor(config.SCRIPT_SYNTAX_BACKGROUND))
+		p.setColor(QPalette.Text, QColor(config.SCRIPT_SYNTAX_TEXT))
+		self.scriptedit.setPalette(p)
+
 		self.scripttabinfo = QLabel("<small><center><i>Most commands usable in the client can be used. Insert comments between \"</i><b>/*</b><i>\" and \"</i><b>*/</b><i>\". To pause the script, call the \"</i><b>/wait</b><i>\" command with the number of seconds to pause as the only argument.</i></center></small>")
 		self.scripttabinfo.setWordWrap(True)
 		self.scripttabinfo.setAlignment(Qt.AlignJustify)

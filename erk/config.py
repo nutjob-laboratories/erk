@@ -160,16 +160,16 @@ ENABLE_ALIASES = True
 ENABLE_PLUGIN_INPUT = True
 SCROLL_CHAT_TO_BOTTOM = True
 REJOIN_CHANNELS_ON_DISCONNECTIONS = True
+PLUGIN_LOAD_ERRORS = True
+CONNECTION_DISPLAY_BG_COLOR = "#FFFFFF"
+CONNECTION_DISPLAY_TEXT_COLOR = "#000000"
 
 SCRIPT_SYNTAX_COMMENTS = 'darkMagenta'
 SCRIPT_SYNTAX_COMMANDS = 'darkBlue'
 SCRIPT_SYNTAX_TARGETS = 'darkRed'
 SCRIPT_SYNTAX_ALIAS = 'darkGreen'
-
-PLUGIN_LOAD_ERRORS = True
-
-CONNECTION_DISPLAY_BG_COLOR = "#FFFFFF"
-CONNECTION_DISPLAY_TEXT_COLOR = "#000000"
+SCRIPT_SYNTAX_BACKGROUND = "#FFFFFF"
+SCRIPT_SYNTAX_TEXT = "#000000"
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -177,6 +177,8 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"script_syntax_color_background": SCRIPT_SYNTAX_BACKGROUND,
+		"script_syntax_color_text": SCRIPT_SYNTAX_TEXT,
 		"connection_display_background": CONNECTION_DISPLAY_BG_COLOR,
 		"connection_display_text": CONNECTION_DISPLAY_TEXT_COLOR,
 		"show_plugin_load_errors": PLUGIN_LOAD_ERRORS,
@@ -301,6 +303,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "script_syntax_color_background" in data:
+		data["script_syntax_color_background"] = SCRIPT_SYNTAX_BACKGROUND
+
+	if not "script_syntax_color_text" in data:
+		data["script_syntax_color_text"] = SCRIPT_SYNTAX_TEXT
 
 	if not "connection_display_text" in data:
 		data["connection_display_text"] = CONNECTION_DISPLAY_TEXT_COLOR
@@ -778,6 +786,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global PLUGIN_LOAD_ERRORS
 	global CONNECTION_DISPLAY_BG_COLOR
 	global CONNECTION_DISPLAY_TEXT_COLOR
+	global SCRIPT_SYNTAX_BACKGROUND
+	global SCRIPT_SYNTAX_TEXT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -786,6 +796,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SCRIPT_SYNTAX_BACKGROUND = data["script_syntax_color_background"]
+			SCRIPT_SYNTAX_TEXT = data["script_syntax_color_text"]
 			CONNECTION_DISPLAY_BG_COLOR = data["connection_display_background"]
 			CONNECTION_DISPLAY_TEXT_COLOR = data["connection_display_text"]
 			PLUGIN_LOAD_ERRORS = data["show_plugin_load_errors"]
@@ -1037,8 +1049,10 @@ def check_settings(filename):
 			if "show_plugin_load_errors" in data: check = check + 1
 			if "connection_display_background" in data: check = check + 1
 			if "connection_display_text" in data: check = check + 1
+			if "script_syntax_color_background" in data: check = check + 1
+			if "script_syntax_color_text" in data: check = check + 1
 
-			if check == 117:
+			if check == 119:
 				return True
 			else:
 				return False

@@ -122,6 +122,7 @@ Version 0.870
 	* Bugfix: settings dialog would error out if the connection display was disabled
 	* Bugfix: context menus are fixed for the chat display; menu hovering and highlights work again
 	* Bugfix: fixed the context menu bug for the topic editor
+	* Added settings for the script syntax highlighter (background and text color) to the config file
 
 Version 0.860
 	* Removed all plugin-related code and documentation
