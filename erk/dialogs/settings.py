@@ -1561,6 +1561,12 @@ class Dialog(QDialog):
 			self.selector.setCurrentRow(9,QItemSelectionModel.SelectCurrent)
 			self.featuresTabs.setCurrentIndex(2)
 
+		if self.opento=="scriptfeatures":
+			self.stack.setCurrentWidget(self.featuresTabs)
+			self.selector.clearSelection()
+			self.selector.setCurrentRow(9,QItemSelectionModel.SelectCurrent)
+			self.featuresTabs.setCurrentIndex(1)
+
 	def plugbuttonAdd(self):
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog

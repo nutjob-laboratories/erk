@@ -219,6 +219,8 @@ class Window(QMainWindow):
 		self.scriptsdir = scriptsdir
 		self.app = app
 
+		self.__erk_settings = None
+
 		self.changed = False
 
 		self.id = uuid.uuid1()
@@ -353,6 +355,10 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.openHighlight)
 		editMenu.addAction(entry)
 
+		entry = QAction(QIcon(SCRIPT_ICON),"Scripting Features",self)
+		entry.triggered.connect(self.openFeatures)
+		editMenu.addAction(entry)
+
 		editMenu.addSeparator()
 
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
@@ -482,7 +488,15 @@ class Window(QMainWindow):
 
 		self.editor.setFocus()
 
+	def openFeatures(self):
+		if self.__erk_settings!=None:
+			self.__erk_settings.close()
+		self.__erk_settings = Settings(self.configfile,self.parent,None,"scriptfeatures")
+		self.__erk_settings.show()
+
 	def openHighlight(self):
+		if self.__erk_settings!=None:
+			self.__erk_settings.close()
 		self.__erk_settings = Settings(self.configfile,self.parent,None,"highlight")
 		self.__erk_settings.show()
 
