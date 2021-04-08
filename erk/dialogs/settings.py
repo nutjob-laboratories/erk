@@ -762,10 +762,12 @@ class Dialog(QDialog):
 		# Connection display settings
 
 		self.connectionPage = QWidget()
+		self.customConnectionPage = QWidget()
 
 		self.connectionTabs = QTabWidget()
 
 		self.connectionTabs.addTab(self.connectionPage, QIcon(CONNECTION_DISPLAY_ICON), "Connection Display")
+		self.connectionTabs.addTab(self.customConnectionPage, QIcon(FORMAT_ICON), "Appearance")
 
 		entry = QListWidgetItem()
 		entry.setTextAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
@@ -873,21 +875,27 @@ class Dialog(QDialog):
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay: clLayout.setEnabled(False)
 
-		cpLayout = QVBoxLayout()
-		cpLayout.addLayout(clLayoutH)
-		cpLayout.addWidget(self.enableConnection)
-		cpLayout.addWidget(self.menuConnection)
-		cpLayout.addWidget(self.floatConnection)
-		cpLayout.addWidget(self.uptimesConnection)
-		cpLayout.addWidget(self.doubleConnection)
-		cpLayout.addWidget(self.expandConnection)
-		cpLayout.addWidget(self.unseenConnection)
-		cpLayout.addWidget(self.animateConnection)
-		cpLayout.addLayout(bgColorLayout)
-		cpLayout.addLayout(fgColorLayout)
-		cpLayout.addStretch()
+		condisLayout = QVBoxLayout()
+		condisLayout.addLayout(clLayoutH)
+		condisLayout.addWidget(self.enableConnection)
+		condisLayout.addWidget(self.menuConnection)
+		condisLayout.addWidget(self.floatConnection)
+		condisLayout.addWidget(self.uptimesConnection)
+		condisLayout.addWidget(self.doubleConnection)
+		condisLayout.addWidget(self.expandConnection)
+		condisLayout.addStretch()
 
-		self.connectionPage.setLayout(cpLayout)
+		appearanceLayout = QVBoxLayout()
+		appearanceLayout.addWidget(self.unseenConnection)
+		appearanceLayout.addWidget(self.animateConnection)
+		appearanceLayout.addLayout(bgColorLayout)
+		appearanceLayout.addLayout(fgColorLayout)
+		appearanceLayout.addStretch()
+
+
+		self.customConnectionPage.setLayout(appearanceLayout)
+
+		self.connectionPage.setLayout(condisLayout)
 
 
 		# Input settings

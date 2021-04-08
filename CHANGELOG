@@ -134,6 +134,7 @@ Version 0.870
 	* Added the dis/enable user list context menu setting to the "settings" dialog
 	* Added a setting to dis/enable the connection display context menu
 	* Added the en/disable connection display context menu setting to the "settings" dialog
+	* Added a tab to the "Connection display" tab in the "settings" dialog, and moved some settings to it
 
 Version 0.860
 	* Removed all plugin-related code and documentation
