@@ -1060,6 +1060,9 @@ class Erk(QMainWindow):
 		FormatTextDialog(self)
 
 	def showScriptEditor(self):
+		if self.seditors:
+			self.seditors.close()
+		
 		self.seditors = ScriptEditor(None,self,self.configfile,self.scriptsdir,None)
 		self.seditors.resize(640,480)
 

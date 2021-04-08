@@ -54,6 +54,7 @@ from .alias import Dialog as InsertAlias
 from .part_channel import Dialog as InsertPart
 from .smsgbox import Dialog as ScriptBox
 from .new_macro import Dialog as NewMacro
+from .settings import Dialog as Settings
 
 class Window(QMainWindow):
 
@@ -348,6 +349,12 @@ class Window(QMainWindow):
 
 		editMenu = self.menubar.addMenu("Edit")
 
+		entry = QAction(QIcon(FORMAT_ICON),"Syntax Highlighting",self)
+		entry.triggered.connect(self.openHighlight)
+		editMenu.addAction(entry)
+
+		editMenu.addSeparator()
+
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
 		entry.triggered.connect(self.editor.selectAll)
 		entry.setShortcut("Ctrl+A")
@@ -474,6 +481,10 @@ class Window(QMainWindow):
 		self.setCentralWidget(fL)
 
 		self.editor.setFocus()
+
+	def openHighlight(self):
+		self.__erk_settings = Settings(self.configfile,self.parent,None,"highlight")
+		self.__erk_settings.show()
 
 	def toggleNotifyEnd(self):
 		if config.NOTIFY_SCRIPT_END:

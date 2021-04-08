@@ -246,13 +246,14 @@ class Dialog(QDialog):
 			self.syntaxAliasLabel.setText("Aliases: <b>"+ncolor+"</b>")
 
 
-	def __init__(self,configfile=USER_FILE,parent=None,app=None):
+	def __init__(self,configfile=USER_FILE,parent=None,app=None,opento=None):
 		super(Dialog,self).__init__(parent)
 
 		self.config = configfile
 		self.parent = parent
 		self.app = app
 		self.saved = False
+		self.opento = opento
 
 		self.newfont = None
 
@@ -1553,6 +1554,12 @@ class Dialog(QDialog):
 		self.setLayout(finalLayout)
 
 		self.setFixedSize(finalLayout.sizeHint())
+
+		if self.opento=="highlight":
+			self.stack.setCurrentWidget(self.featuresTabs)
+			self.selector.clearSelection()
+			self.selector.setCurrentRow(9,QItemSelectionModel.SelectCurrent)
+			self.featuresTabs.setCurrentIndex(2)
 
 	def plugbuttonAdd(self):
 		options = QFileDialog.Options()

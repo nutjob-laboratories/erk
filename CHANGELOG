@@ -135,6 +135,8 @@ Version 0.870
 	* Added a setting to dis/enable the connection display context menu
 	* Added the en/disable connection display context menu setting to the "settings" dialog
 	* Added a tab to the "Connection display" tab in the "settings" dialog, and moved some settings to it
+	* Added a link in the script editor to the specific page in the "settings" dialog to edit syntax highlighting colors
+	* Only one instance of the script editor is now allowed
 
 Version 0.860
 	* Removed all plugin-related code and documentation
