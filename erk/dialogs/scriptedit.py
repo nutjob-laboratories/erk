@@ -325,20 +325,6 @@ class Window(QMainWindow):
 
 		self.fileMenu.addSeparator()
 
-		self.setNotifyEnd = QAction(QIcon(UNCHECKED_ICON),"Notify on end of execution",self)
-		self.setNotifyEnd.triggered.connect(lambda state: self.toggleNotifyEnd())
-		self.fileMenu.addAction(self.setNotifyEnd)
-
-		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
-
-		if self.parent==None: self.setNotifyEnd.setVisible(False)
-
-		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
-		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
-		self.fileMenu.addAction(self.setSaveClose)
-
-		if config.SAVE_SCRIPT_ON_CLOSE: self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
-
 		self.installedScripts = self.fileMenu.addMenu("Installed scripts")
 		self.installedScripts.setIcon(QIcon(DIRECTORY_ICON))
 		self.buildInstalledScriptsMenu()
@@ -349,17 +335,27 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.close)
 		self.fileMenu.addAction(entry)
 
-		editMenu = self.menubar.addMenu("Edit")
+		self.settingsMenu = self.menubar.addMenu("Settings")
 
-		entry = QAction(QIcon(FORMAT_ICON),"Syntax Highlighting",self)
-		entry.triggered.connect(self.openHighlight)
-		editMenu.addAction(entry)
+		self.setNotifyEnd = QAction(QIcon(UNCHECKED_ICON),"Notify on end of execution",self)
+		self.setNotifyEnd.triggered.connect(lambda state: self.toggleNotifyEnd())
+		self.settingsMenu.addAction(self.setNotifyEnd)
 
-		entry = QAction(QIcon(SCRIPT_ICON),"Scripting Features",self)
+		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
+
+		if self.parent==None: self.setNotifyEnd.setVisible(False)
+
+		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
+		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
+		self.settingsMenu.addAction(self.setSaveClose)
+
+		if config.SAVE_SCRIPT_ON_CLOSE: self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
+
+		entry = QAction(QIcon(SCRIPT_ICON),"Scripting settings",self)
 		entry.triggered.connect(self.openFeatures)
-		editMenu.addAction(entry)
+		self.settingsMenu.addAction(entry)
 
-		editMenu.addSeparator()
+		editMenu = self.menubar.addMenu("Edit")
 
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
 		entry.triggered.connect(self.editor.selectAll)
@@ -491,13 +487,7 @@ class Window(QMainWindow):
 	def openFeatures(self):
 		if self.__erk_settings!=None:
 			self.__erk_settings.close()
-		self.__erk_settings = Settings(self.configfile,self.parent,None,"scriptfeatures")
-		self.__erk_settings.show()
-
-	def openHighlight(self):
-		if self.__erk_settings!=None:
-			self.__erk_settings.close()
-		self.__erk_settings = Settings(self.configfile,self.parent,None,"highlight")
+		self.__erk_settings = Settings(self.configfile,self.parent,None,"scriptsettings")
 		self.__erk_settings.show()
 
 	def toggleNotifyEnd(self):

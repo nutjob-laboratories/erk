@@ -138,6 +138,8 @@ Version 0.870
 	* Added a link in the script editor to the specific page in the "settings" dialog to edit syntax highlighting colors
 	* Only one instance of the script editor is now allowed
 	* Added a link in the script editor to the scripting features page in the "settings" dialog
+	* Added a new menu to the script editor ("Settings") and moved related menu items to it
+	* Removed the link to the highlight page in the settings dialog in the editor, and added a general "scripting settings" link
 
 Version 0.860
 	* Removed all plugin-related code and documentation
