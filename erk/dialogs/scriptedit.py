@@ -335,26 +335,6 @@ class Window(QMainWindow):
 		entry.triggered.connect(self.close)
 		self.fileMenu.addAction(entry)
 
-		self.settingsMenu = self.menubar.addMenu("Settings")
-
-		self.setNotifyEnd = QAction(QIcon(UNCHECKED_ICON),"Notify on end of execution",self)
-		self.setNotifyEnd.triggered.connect(lambda state: self.toggleNotifyEnd())
-		self.settingsMenu.addAction(self.setNotifyEnd)
-
-		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
-
-		if self.parent==None: self.setNotifyEnd.setVisible(False)
-
-		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
-		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
-		self.settingsMenu.addAction(self.setSaveClose)
-
-		if config.SAVE_SCRIPT_ON_CLOSE: self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
-
-		entry = QAction(QIcon(SCRIPT_ICON),"Scripting settings",self)
-		entry.triggered.connect(self.openFeatures)
-		self.settingsMenu.addAction(entry)
-
 		editMenu = self.menubar.addMenu("Edit")
 
 		entry = QAction(QIcon(SELECTALL_ICON),"Select All",self)
@@ -406,6 +386,26 @@ class Window(QMainWindow):
 		self.menuZoomOut.triggered.connect(self.editor.zoomOut)
 		self.menuZoomOut.setShortcut("Ctrl+-")
 		editMenu.addAction(self.menuZoomOut)
+
+		self.settingsMenu = self.menubar.addMenu("Settings")
+
+		self.setNotifyEnd = QAction(QIcon(UNCHECKED_ICON),"Notify on end of execution",self)
+		self.setNotifyEnd.triggered.connect(lambda state: self.toggleNotifyEnd())
+		self.settingsMenu.addAction(self.setNotifyEnd)
+
+		if config.NOTIFY_SCRIPT_END: self.setNotifyEnd.setIcon(QIcon(CHECKED_ICON))
+
+		if self.parent==None: self.setNotifyEnd.setVisible(False)
+
+		self.setSaveClose = QAction(QIcon(UNCHECKED_ICON),"Ask to save on file close",self)
+		self.setSaveClose.triggered.connect(lambda state: self.toggleSaveClose())
+		self.settingsMenu.addAction(self.setSaveClose)
+
+		if config.SAVE_SCRIPT_ON_CLOSE: self.setSaveClose.setIcon(QIcon(CHECKED_ICON))
+
+		entry = QAction(QIcon(SCRIPT_ICON),"Scripting settings",self)
+		entry.triggered.connect(self.openFeatures)
+		self.settingsMenu.addAction(entry)
 
 
 		insertMenu = self.menubar.addMenu("Insert Command")
