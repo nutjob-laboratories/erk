@@ -85,6 +85,10 @@ To connect to IRC servers via SSL, two additional libraries are needed:
 
 **Ərk** is being developed with Python 3.7 on Windows 10, and Python 3.8.5 on Linux Mint.
 
+If you're running Windows, and you're getting errors when trying to run **Ərk**, you may have to install another library, [pywin32](https://pypi.org/project/pywin32/). You can also install this with [**pip**](https://pypi.org/project/pip/):
+
+    pip install pywin32
+
 To run properly on Linux, the latest version of all required software is recommended.  There are four libraries that come bundled with **Ərk**:
 
  - [pike](https://github.com/pyarmory/pike)
