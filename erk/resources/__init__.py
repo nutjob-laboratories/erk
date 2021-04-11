@@ -167,3 +167,6 @@ LIGHT_CLOCK_ICON = ":/gui-light_clock.png"
 LIGHT_CONNECTING_ICON = ":/gui-light_connecting.png"
 LIGHT_NETWORK_ICON = ":/gui-light_network.png"
 LIGHT_PRIVATE_ICON = ":/gui-light_private.png"
+
+HORIZONTAL_DOTTED_BACKGROUND = ":/gui-horizontal_dotted.png"
+LIGHT_HORIZONTAL_DOTTED_BACKGROUND = ":/gui-light_horizontal_dotted.png"

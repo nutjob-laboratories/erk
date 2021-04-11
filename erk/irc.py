@@ -1366,7 +1366,7 @@ def begin_list(args):
 	terms = args.pop(0)
 
 	if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH:
-		msg = Message(HORIZONTAL_RULE_MESSAGE,'',"")
+		msg = Message(HARD_HORIZONTAL_RULE_MESSAGE,'',"")
 		window.writeText(msg,True)
 
 	if not config.LIMIT_LIST_SEARCH_TO_CHANNEL_NAME:
@@ -1386,7 +1386,7 @@ def end_list(args):
 	window.writeText(msg,True)
 
 	if config.MARK_BEGINNING_AND_END_OF_LIST_SEARCH:
-		msg = Message(HORIZONTAL_RULE_MESSAGE,'',"")
+		msg = Message(HARD_HORIZONTAL_RULE_MESSAGE,'',"")
 		window.writeText(msg,True)
 
 	clean = []

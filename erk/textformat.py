@@ -61,6 +61,16 @@ HORIZONTAL_RULE = f'''
 <table width="100%" border="0">
 	<tbody>
 		<tr>
+			<td style="background-image: url({HORIZONTAL_DOTTED_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+HARD_HORIZONTAL_RULE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
 			<td style="background-image: url({HORIZONTAL_RULE_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
 			</td>
 		</tr>
@@ -81,6 +91,16 @@ DATE_MESSAGE_TEMPLATE = f'''
 </table>'''
 
 LIGHT_HORIZONTAL_RULE = f'''
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td style="background-image: url({LIGHT_HORIZONTAL_DOTTED_BACKGROUND}); background-repeat: repeat-x;">&nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>'''
+
+HARD_LIGHT_HORIZONTAL_RULE = f'''
 <table width="100%" border="0">
 	<tbody>
 		<tr>
@@ -131,8 +151,6 @@ MESSAGE_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;"><
 MESSAGE_NO_STYLE_TEMPLATE = """<td style="text-align: left; vertical-align: top;">!MESSAGE!</td>"""
 
 
-IS_BACKGROUND_LIGHT = None
-
 def test_if_background_is_light(style):
 
 	bg = None
@@ -149,11 +167,10 @@ def test_if_background_is_light(style):
 		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
 		luma = luma*100
 
-		global IS_BACKGROUND_LIGHT
 		if luma>=40:
-			IS_BACKGROUND_LIGHT = True
+			return True
 		else:
-			IS_BACKGROUND_LIGHT = False
+			return False
 
 
 
@@ -245,7 +262,20 @@ def render_message(message,client,renderstyle):
 		output = MESSAGE_TEMPLATE
 		style = renderstyle["message"]
 	elif message.type==HORIZONTAL_RULE_MESSAGE:
-		output = HORIZONTAL_RULE
+
+		if test_if_background_is_light(renderstyle["all"]):
+			output = HORIZONTAL_RULE
+		else:
+			output = LIGHT_HORIZONTAL_RULE
+
+		style = renderstyle["message"]
+	elif message.type==HARD_HORIZONTAL_RULE_MESSAGE:
+
+		if test_if_background_is_light(renderstyle["all"]):
+			output = HARD_HORIZONTAL_RULE
+		else:
+			output = HARD_LIGHT_HORIZONTAL_RULE
+
 		style = renderstyle["message"]
 	elif message.type==WHOIS_MESSAGE:
 		output = MESSAGE_TEMPLATE
@@ -254,7 +284,13 @@ def render_message(message,client,renderstyle):
 		output = SYSTEM_TEMPLATE
 		style = renderstyle["plugin"]
 	elif message.type==DATE_MESSAGE:
-		output = DATE_MESSAGE_TEMPLATE
+
+		if test_if_background_is_light(renderstyle["all"]):
+			output = DATE_MESSAGE_TEMPLATE
+		else:
+			output = LIGHT_DATE_MESSAGE_TEMPLATE
+
+		#output = DATE_MESSAGE_TEMPLATE
 		style = renderstyle["message"]
 	elif message.type==PLUGIN_SYSTEM_MESSAGE:
 		output = SYSTEM_TEMPLATE

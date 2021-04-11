@@ -142,6 +142,10 @@ Version 0.870
 	* Removed the link to the highlight page in the settings dialog in the editor, and added a general "scripting settings" link
 	* Removed a long unusued settings from the user config file
 	* Changed the generated header for style files: added a new logo, and removed references to QSS
+	* Restored "light" horizontal rules for dark backgrounds (for both dividers and date/time markers)
+	* Increased the opacity of the images used for the horizontal rules to 100%, which removed some inadvertant rendering artifacts
+	* Changed the primary "horizontal rule" message to a dotted line (rather than a solid line)
+	* Added a new message type (HARD_HORIZONTAL_RULE) that doesn't use the dotted line
 
 Version 0.860
 	* Removed all plugin-related code and documentation
