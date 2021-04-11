@@ -140,6 +140,8 @@ Version 0.870
 	* Added a link in the script editor to the scripting features page in the "settings" dialog
 	* Added a new menu to the script editor ("Settings") and moved related menu items to it
 	* Removed the link to the highlight page in the settings dialog in the editor, and added a general "scripting settings" link
+	* Removed a long unusued settings from the user config file
+	* Changed the generated header for style files: added a new logo, and removed references to QSS
 
 Version 0.860
 	* Removed all plugin-related code and documentation
