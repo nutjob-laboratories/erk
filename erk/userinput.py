@@ -1222,7 +1222,7 @@ def handle_ui_input(window,client,text):
 
 			f = find_cat_file(filename,client.gui.scriptsdir)
 			if f!=None:
-				with open(f) as fp:
+				with open(f,"r",errors="ignore") as fp:
 					lines = fp.readlines()
 					for line in lines:
 						client.msg(target,line)
@@ -1798,7 +1798,7 @@ def handle_ui_input(window,client,text):
 				base_scriptname = os.path.basename(scriptname)
 
 				# Read in the script
-				s = open(scriptname,"r")
+				s = open(scriptname,"r",errors="ignore")
 				script = s.read()
 				s.close()
 
@@ -2129,7 +2129,7 @@ def execute_script(filename,window,client):
 		base_scriptname = os.path.basename(scriptname)
 
 		# Read in the script
-		s = open(scriptname,"r")
+		s = open(scriptname,"r",errors="ignore")
 		script = s.read()
 		s.close()
 
