@@ -52,6 +52,17 @@ UNSEEN = []
 
 TRIGGERED = []
 
+WINDOW = None
+
+def setFocus(gui):
+	global WINDOW
+
+	if WINDOW==None: return
+	
+	if hasattr(WINDOW,"input"):
+		WINDOW.input.setFocus()
+		WINDOW = None
+
 def fetch_current_window(gui):
 	if gui.current_page:
 		window = fetch_window(gui.current_page.client,gui.current_page.name)

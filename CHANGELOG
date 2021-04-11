@@ -147,6 +147,7 @@ Version 0.870
 	* Changed the primary "horizontal rule" message to a dotted line (rather than a solid line)
 	* Added a new message type (HARD_HORIZONTAL_RULE) that doesn't use the dotted line
 	* Bugfix: two HARD_HORIZONTAL_RULES will no longer be displayed consecutively
+	* Bugfix: using /switch and /console now properly sets focus on the new window's text input widget
 
 Version 0.860
 	* Removed all plugin-related code and documentation

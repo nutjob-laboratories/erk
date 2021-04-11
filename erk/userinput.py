@@ -1831,6 +1831,7 @@ def handle_ui_input(window,client,text):
 	if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'console' and len(tokens)==1:
 		win = events.fetch_console_window(client)
 		window.parent.stack.setCurrentWidget(win)
+		events.WINDOW = win
 		return True
 
 	if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'console':
@@ -1858,6 +1859,7 @@ def handle_ui_input(window,client,text):
 				window.writeText(msg,True)
 				return True
 			window.parent.stack.setCurrentWidget(swin)
+			events.WINDOW = swin
 			return True
 		if tokens[0].lower()==config.INPUT_COMMAND_SYMBOL+'switch' and len(tokens)==1:
 			channels = window.channelList()

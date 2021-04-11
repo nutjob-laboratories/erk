@@ -290,6 +290,9 @@ class IRC_Connection(irc.IRCClient):
 			self.uptimeTimer.stop()
 			self.uptime = 0
 
+		if hasattr(self,"fastTimer"):
+			self.fastTimer.stop()
+
 		self.last_tried_nickname = ''
 
 		self.registered = False
@@ -303,6 +306,9 @@ class IRC_Connection(irc.IRCClient):
 
 		irc.IRCClient.connectionLost(self, reason)
 
+	def fast_beat(self):
+		events.setFocus(self.gui)
+
 	def signedOn(self):
 
 		events.registered(self.gui,self)
@@ -310,6 +316,10 @@ class IRC_Connection(irc.IRCClient):
 		self.uptimeTimer = UptimeHeartbeat()
 		self.uptimeTimer.beat.connect(self.uptime_beat)
 		self.uptimeTimer.start()
+
+		self.fastTimer = FastHeartbeat(0.05)
+		self.fastTimer.beat.connect(self.fast_beat)
+		self.fastTimer.start()
 
 		self.registered = True
 
@@ -1343,6 +1353,24 @@ class UptimeHeartbeat(QThread):
 	def run(self):
 		while self.threadactive:
 			time.sleep(1)
+			self.beat.emit()
+
+	def stop(self):
+		self.threadactive = False
+		self.wait()
+
+class FastHeartbeat(QThread):
+
+	beat = pyqtSignal()
+
+	def __init__(self,time,parent=None):
+		super(FastHeartbeat, self).__init__(parent)
+		self.threadactive = True
+		self.time = time
+
+	def run(self):
+		while self.threadactive:
+			time.sleep(self.time)
 			self.beat.emit()
 
 	def stop(self):
