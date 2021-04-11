@@ -126,13 +126,13 @@ def save_macros(macros,filename=MACRO_SAVE_FILE):
 		entry = [e.name,e.argcount,e.command,e.args,e.help]
 		state.append(entry)
 
-	with open(filename, "w") as write_data:
+	with open(filename, "w",encoding="utf-8",errors="ignore") as write_data:
 		json.dump(state, write_data, indent=4, sort_keys=True)
 
 def get_macros(filename=MACRO_SAVE_FILE):
 	#if filename==None: filename=USER_FILE
 	if os.path.isfile(filename):
-		with open(filename, "r") as read_user:
+		with open(filename, "r",encoding="utf-8",errors="ignore") as read_user:
 			data = json.load(read_user)
 
 			macros = []
@@ -144,7 +144,7 @@ def get_macros(filename=MACRO_SAVE_FILE):
 	return []
 
 # Load in the profanity data file
-f = open(PROFANITY_LIST,"r")
+f = open(PROFANITY_LIST,"r",errors="ignore")
 cursewords = f.read()
 f.close()
 
@@ -282,7 +282,7 @@ def save_auto_script(ip,port,script,scriptdir):
 	global AUTO_SCRIPT_CACHE
 	if scriptname in AUTO_SCRIPT_CACHE: AUTO_SCRIPT_CACHE[scriptname] = script
 
-	f=open(scriptname, "w")
+	f=open(scriptname, "w",encoding="utf-8",errors="ignore")
 	f.write(script)
 	f.close()
 
@@ -291,7 +291,7 @@ def load_auto_script(ip,port,scriptdir):
 	scriptname = os.path.join(scriptdir, fname)
 	if scriptname in AUTO_SCRIPT_CACHE: return AUTO_SCRIPT_CACHE[scriptname]
 	if os.path.isfile(scriptname):
-		f=open(scriptname, "r")
+		f=open(scriptname, "r",encoding="utf-8",errors="ignore")
 		code = f.read()
 		f.close()
 
@@ -355,7 +355,7 @@ def patch_user(data):
 def get_user(filename=USER_FILE):
 	#if filename==None: filename=USER_FILE
 	if os.path.isfile(filename):
-		with open(filename, "r") as read_user:
+		with open(filename, "r",encoding="utf-8",errors="ignore") as read_user:
 			data = json.load(read_user)
 			data = patch_user(data)
 			return data
@@ -381,7 +381,7 @@ def get_user(filename=USER_FILE):
 
 def save_user(user,filename=USER_FILE):
 	if filename==None: filename=USER_FILE
-	with open(filename, "w") as write_data:
+	with open(filename, "w", encoding="utf-8",errors="ignore") as write_data:
 		json.dump(user, write_data, indent=4, sort_keys=True)
 
 def write_style_file(style,filename=STYLE_FILE):
@@ -427,7 +427,7 @@ def write_style_file(style,filename=STYLE_FILE):
 			output = output + "\t" + s + ";\n"
 		output = output + "}\n\n"
 
-	f=open(filename, "w")
+	f=open(filename, "w",encoding="utf-8",errors="ignore")
 	f.write(output)
 	f.close()
 
@@ -468,7 +468,7 @@ def patch_style_file(filename,data):
 def read_style_file(filename=STYLE_FILE):
 
 	# Read in the file
-	f=open(filename, "r")
+	f=open(filename, "r",encoding="utf-8",errors="ignore")
 	text = f.read()
 	f.close()
 
@@ -575,7 +575,7 @@ def saveLog(network,name,logs,logdir=LOG_DIRECTORY):
 	for e in logs:
 		slog.append(e)
 
-	with open(logfile, "w") as writelog:
+	with open(logfile, "w",encoding="utf-8",errors="ignore") as writelog:
 		json.dump(slog, writelog, indent=4, sort_keys=True)
 
 # Loads an AoA from disk and returns it
@@ -584,7 +584,7 @@ def loadLog(network,name,logdir=LOG_DIRECTORY):
 	logfile = os.path.join(logdir,f)
 
 	if os.path.isfile(logfile):
-		with open(logfile, "r") as logentries:
+		with open(logfile, "r",encoding="utf-8",errors="ignore") as logentries:
 			data = json.load(logentries)
 			return data
 	else:
@@ -600,7 +600,7 @@ def readLog(network,name,logdir):
 # Loads an AoA from disk, converts it to a string
 def dumpLog(filename,delimiter,linedelim="\n",epoch=True):
 	if os.path.isfile(filename):
-		with open(filename, "r") as logentries:
+		with open(filename, "r",encoding="utf-8",errors="ignore") as logentries:
 			logs = json.load(logentries)
 	if logs:
 		out = []
@@ -622,7 +622,7 @@ def dumpLog(filename,delimiter,linedelim="\n",epoch=True):
 # Loads an AoA from disk, converts it to a JSON string
 def dumpLogJson(filename,epoch=True):
 	if os.path.isfile(filename):
-		with open(filename, "r") as logentries:
+		with open(filename, "r",encoding="utf-8",errors="ignore") as logentries:
 			logs = json.load(logentries)
 	if logs:
 		out = []
