@@ -172,9 +172,17 @@ def test_if_background_is_light(style):
 		else:
 			return False
 
-
+LAST_MESSAGE_TYPE = None
 
 def render_message(message,client,renderstyle):
+
+	global LAST_MESSAGE_TYPE
+
+	if LAST_MESSAGE_TYPE==HARD_HORIZONTAL_RULE_MESSAGE:
+		if message.type==HARD_HORIZONTAL_RULE_MESSAGE:
+			return None
+
+	LAST_MESSAGE_TYPE = message.type
 
 	msg_to_display = message.contents
 
