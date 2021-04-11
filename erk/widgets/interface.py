@@ -806,6 +806,7 @@ class Window(QMainWindow):
 		self.channel_topic = topic
 		self.topic.setText(topic)
 		self.topic.setCursorPosition(0)
+		self.topic.setToolTip(topic)
 
 		self.parent.refresh_application_title()
 
