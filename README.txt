@@ -2,7 +2,7 @@
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
-  <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.860.186"><b>Download last stable release</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.870.138"><b>Download last stable release</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk !_FULL_VERSION_!</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
