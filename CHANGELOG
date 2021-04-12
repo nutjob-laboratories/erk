@@ -4,6 +4,7 @@ Version 0.875
 	* Bugfix: errors are now ignored on file reading/writing, due to "ignorable" errors being thrown on Windows
 	* Topic editor now shows the full topic in a tool tip
 	* Bugfix: disconnect menu item didn't appear until a channel was joined; it appears on connection now
+	* Bugfix: --last commandline flag was broken
 
 Version 0.870
 	* New version

@@ -619,10 +619,6 @@ if __name__ == '__main__':
 					pword = None
 				else:
 					pword = u["last_password"]
-				if u["autojoin"]:
-					c = u["channels"]
-				else:
-					c = []
 				if args.channel:
 					for ch in args.channel:
 						p = ch.split(':')
@@ -640,7 +636,7 @@ if __name__ == '__main__':
 						u["username"],
 						u["realname"],
 						u["reconnect"],
-						c,
+						[],
 						u["failreconnect"],
 						False,
 						autoscript,
