@@ -170,8 +170,8 @@ SCRIPT_SYNTAX_BACKGROUND = "#FFFFFF"
 SCRIPT_SYNTAX_TEXT = "#000000"
 ENABLE_TOPIC_EDITOR = True
 ENABLE_USERLIST_MENU = True
-
 ENABLE_CONNECTION_CONTEXT = True
+DISPLAY_MODES_ON_CHANNEL = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -179,6 +179,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"display_user_modes_on_channels": DISPLAY_MODES_ON_CHANNEL,
 		"enable_connection_display_context_menu": ENABLE_CONNECTION_CONTEXT,
 		"enable_userlist_menu": ENABLE_USERLIST_MENU,
 		"enable_topic_editor": ENABLE_TOPIC_EDITOR,
@@ -308,6 +309,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "display_user_modes_on_channels" in data:
+		data["display_user_modes_on_channels"] = DISPLAY_MODES_ON_CHANNEL
 
 	if not "enable_connection_display_context_menu" in data:
 		data["enable_connection_display_context_menu"] = ENABLE_CONNECTION_CONTEXT
@@ -805,6 +809,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ENABLE_TOPIC_EDITOR
 	global ENABLE_USERLIST_MENU
 	global ENABLE_CONNECTION_CONTEXT
+	global DISPLAY_MODES_ON_CHANNEL
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -813,6 +818,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			DISPLAY_MODES_ON_CHANNEL = data["display_user_modes_on_channels"]
 			ENABLE_CONNECTION_CONTEXT = data["enable_connection_display_context_menu"]
 			ENABLE_USERLIST_MENU = data["enable_userlist_menu"]
 			ENABLE_TOPIC_EDITOR = data["enable_topic_editor"]
@@ -1074,8 +1080,9 @@ def check_settings(filename):
 			if "enable_topic_editor" in data: check = check + 1
 			if "enable_userlist_menu" in data: check = check + 1
 			if "enable_connection_display_context_menu" in data: check = check + 1
+			if "display_user_modes_on_channels" in data: check = check + 1
 
-			if check == 122:
+			if check == 123:
 				return True
 			else:
 				return False

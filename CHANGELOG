@@ -5,6 +5,9 @@ Version 0.875
 	* Topic editor now shows the full topic in a tool tip
 	* Bugfix: disconnect menu item didn't appear until a channel was joined; it appears on connection now
 	* Bugfix: --last commandline flag was broken
+	* Added a user mode display to channel windows
+	* Added a settings to the config file to toggle the user mode display
+	* Added the toggle user mode display setting to the "settings" dialog
 
 Version 0.870
 	* New version

@@ -269,6 +269,17 @@ class Window(QMainWindow):
 
 		return background_color,text_color
 
+	def update_user_modes(self):
+		if config.DISPLAY_MODES_ON_CHANNEL:
+			if len(self.client.user_modes)>0:
+				self.mode_display.setText("+"+self.client.user_modes+" ")
+				self.mode_display.show()
+			else:
+				self.mode_display.setText("")
+				self.mode_display.hide()
+		else:
+			self.mode_display.hide()
+
 	def __init__(self,name,client,wtype,app,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -550,9 +561,16 @@ class Window(QMainWindow):
 
 			self.nick_display = QLabel(" <b>"+self.client.nickname+"</b> ")
 
+			if len(self.client.user_modes)>0:
+				self.mode_display = QLabel("+"+self.client.user_modes+" ")
+			else:
+				self.mode_display = QLabel("")
+				self.mode_display.hide()
+
 			self.nick_display.installEventFilter(self)
 
 			if not config.DISPLAY_NICKNAME_ON_CHANNEL: self.nick_display.hide()
+			if not config.DISPLAY_MODES_ON_CHANNEL: self.mode_display.hide()
 
 			nicknameLayout = QHBoxLayout()
 			nicknameLayout.addWidget(self.op_icon)
@@ -561,6 +579,7 @@ class Window(QMainWindow):
 			nicknameLayout.addWidget(self.admin_icon)
 			nicknameLayout.addWidget(self.halfop_icon)
 			nicknameLayout.addWidget(self.nick_display)
+			nicknameLayout.addWidget(self.mode_display)
 			nicknameLayout.setAlignment(Qt.AlignVCenter)
 
 			inputLayout = QHBoxLayout()

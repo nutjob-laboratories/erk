@@ -916,6 +916,10 @@ def user_away(gui,client,user,msg):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+def update_all_mode_displays():
+	for window in CHANNELS:
+		window.widget.update_user_modes()
+
 def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
@@ -937,11 +941,24 @@ def mode(gui,client,channel,user,mset,modes,args):
 	if channel==client.nickname:
 		if mset:
 			msg = Message(SYSTEM_MESSAGE,'',"Mode +"+modes+" set on "+channel,None,TYPE_MODE)
+
+			for m in modes:
+				if not m in client.user_modes: client.user_modes = client.user_modes + m
+
 		else:
 			msg = Message(SYSTEM_MESSAGE,'',"Mode -"+modes+" set on "+channel,None,TYPE_MODE)
+
+			for m in modes:
+				if m in client.user_modes: client.user_modes = client.user_modes.replace(m,'')
+
 		window = fetch_console_window(client)
 		if window:
 			window.writeText( msg )
+
+		for window in CHANNELS:
+			if window.widget.client.id==client.id:
+				window.widget.update_user_modes()
+
 		return
 
 	reportadd = []

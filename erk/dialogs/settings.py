@@ -734,8 +734,12 @@ class Dialog(QDialog):
 		self.channelUserMenu = QCheckBox("Enable user list context menu",self)
 		if config.ENABLE_USERLIST_MENU: self.channelUserMenu.setChecked(True)
 
+		self.displayUserModes = QCheckBox("Display user modes",self)
+		if config.DISPLAY_MODES_ON_CHANNEL: self.displayUserModes.setChecked(True)
+
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
+		nnbLay.addWidget(self.displayUserModes)
 		nnbLay.addWidget(self.displayStatus)
 		nnbLay.addWidget(self.displayChange)
 		nnbLay.addStretch()
@@ -1594,6 +1598,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.DISPLAY_MODES_ON_CHANNEL = self.displayUserModes.isChecked()
+
 		config.ENABLE_CONNECTION_CONTEXT = self.menuConnection.isChecked()
 
 		config.ENABLE_USERLIST_MENU = self.channelUserMenu.isChecked()
@@ -1888,6 +1894,7 @@ class Dialog(QDialog):
 			userinput.buildHelp()
 			events.reload_commands_all()
 			events.reset_topic_editor()
+			events.update_all_mode_displays()
 
 		config.save_settings(self.config)
 
@@ -2075,6 +2082,8 @@ class Dialog(QDialog):
 				self.channelTopic.setChecked(config.ENABLE_TOPIC_EDITOR)
 				self.channelUserMenu.setChecked(config.ENABLE_USERLIST_MENU)
 				self.menuConnection.setChecked(config.ENABLE_CONNECTION_CONTEXT)
+
+				self.displayUserModes.setChecked(config.DISPLAY_MODES_ON_CHANNEL)
 
 			else:
 				msg = QMessageBox(self)

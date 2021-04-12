@@ -211,6 +211,8 @@ class IRC_Connection(irc.IRCClient):
 
 		self.erk_keys = []
 
+		self.user_modes = ''
+
 		# BEGIN SERVER INFO
 
 		self.maxnicklen = 0
