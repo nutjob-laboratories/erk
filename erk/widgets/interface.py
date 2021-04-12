@@ -196,7 +196,10 @@ class Window(QMainWindow):
 	def resizeEvent(self, event):
 
 		if self.type==config.CHANNEL_WINDOW:
-       
+
+			# Make sure the topic displays correctly
+			self.topic.refresh()
+	   
 			# QSplitter dynamically changes widget sizes on a resize
 			# event; this makes the userlist widget get wider or less wide
 			# depending on the new widget size. This code makes sure that
@@ -825,7 +828,6 @@ class Window(QMainWindow):
 		self.channel_topic = topic
 		self.topic.setText(topic)
 		self.topic.setCursorPosition(0)
-		self.topic.setToolTip(topic)
 
 		self.parent.refresh_application_title()
 
@@ -1574,10 +1576,26 @@ class TopicEdit(QLineEdit):
 		self.parent = parent
 		self.is_enabled = True
 
+	def refresh(self):
+		self.setText(self.parent.channel_topic)
+
+	def setText(self,text,elide=True):
+		if elide:
+			metrics = QFontMetrics(self.font())
+			elided  = metrics.elidedText(text, Qt.ElideRight, self.width())
+			QLineEdit.setText(self,elided)
+			if len(elided)!=len(text):
+				self.setToolTip(text)
+			else:
+				self.setToolTip('')
+		else:
+			QLineEdit.setText(self,text)
+
 	def mousePressEvent(self, e, Parent=None):
 		super(QLineEdit, self).mousePressEvent(e) #required to deselect on 2e click
 		if not self.is_enabled: return
 		if self.readyToEdit:
+			self.setText(self.parent.channel_topic,False)
 			self.setReadOnly(False)
 			self.selectAll()
 			self.readyToEdit = False
@@ -1585,6 +1603,7 @@ class TopicEdit(QLineEdit):
 	def focusOutEvent(self, e):
 		super(QLineEdit, self).focusOutEvent(e) #required to remove cursor on focusOut
 		self.setText(self.parent.channel_topic)
+
 		self.deselect()
 		self.readyToEdit = True
 		self.setReadOnly(True)

@@ -8,6 +8,7 @@ Version 0.875
 	* Added a user mode display to channel windows
 	* Added a settings to the config file to toggle the user mode display
 	* Added the toggle user mode display setting to the "settings" dialog
+	* Channel topic display now elides text that is longer than the widget width; if elided, the full topic is displayed in a tool tip
 
 Version 0.870
 	* New version
