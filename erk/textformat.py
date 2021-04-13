@@ -232,7 +232,8 @@ def render_message(message,client,renderstyle):
 		if string_has_irc_formatting_codes(msg_to_display):
 			msg_to_display = convert_irc_color_to_html(msg_to_display)
 	else:
-		msg_to_display = strip_color(msg_to_display)
+		if string_has_irc_formatting_codes(msg_to_display):
+			msg_to_display = strip_color(msg_to_display)
 
 	if config.FILTER_PROFANITY: msg_to_display = filterProfanityFromText(msg_to_display)
 

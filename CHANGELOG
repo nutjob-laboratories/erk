@@ -9,6 +9,7 @@ Version 0.875
 	* Added a settings to the config file to toggle the user mode display
 	* Added the toggle user mode display setting to the "settings" dialog
 	* Channel topic display now elides text that is longer than the widget width; if elided, the full topic is displayed in a tool tip
+	* If IRC colors are turned off, the presence of IRC colors is checked before attempting to strip IRC colors
 
 Version 0.870
 	* New version
