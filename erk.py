@@ -61,7 +61,6 @@ from erk.common import *
 from erk.dialogs.settings import Dialog as Settings
 from erk.dialogs.scriptedit import Window as ErkScriptEditor
 from erk.dialogs.export_log import Dialog as ExportLog
-
 from erk.dialogs.format import Dialog as FormatText
 
 # Handle commandline arguments
@@ -69,13 +68,17 @@ from erk.dialogs.format import Dialog as FormatText
 parser = argparse.ArgumentParser(
 	prog=f"python {PROGRAM_FILENAME}",
 	formatter_class=argparse.RawDescriptionHelpFormatter,
-	description=f''' ___      _   
-|__ \ _ _| |__	|==============
-/ _  | '_| / /	| {APPLICATION_NAME} {APPLICATION_VERSION}
-\___/|_| |_\_\\	|==============
+	description=f'''
+██████╗ ██████╗ ██╗  ██╗
+╚════██╗██╔══██╗██║ ██╔╝ ╔═══════════════╗
+███████║██████╔╝█████╔╝	 ║ {APPLICATION_NAME} {APPLICATION_VERSION} ║
+██╔══██║██╔══██╗██╔═██╗  ╚═══════════════╝
+ █████╔╝██║  ██║██║  ██╗
+ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 
 An open source, cross-platform IRC client
 https://github.com/nutjob-laboratories/erk
+https://github.com/nutjob-laboratories/erk-plugins
 ''',
 )
 
