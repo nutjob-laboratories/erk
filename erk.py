@@ -70,7 +70,7 @@ parser = argparse.ArgumentParser(
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	description=f'''
 ██████╗ ██████╗ ██╗  ██╗
-╚════██╗██╔══██╗██║ ██╔╝ ╔═══════════════╗
+╚═══╗██╗██╔══██╗██║ ██╔╝ ╔═══════════════╗
 ███████║██████╔╝█████╔╝	 ║ {APPLICATION_NAME} {APPLICATION_VERSION} ║
 ██╔══██║██╔══██╗██╔═██╗  ╚═══════════════╝
  █████╔╝██║  ██║██║  ██╗
