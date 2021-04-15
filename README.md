@@ -117,6 +117,17 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
+██████╗ ██████╗ ██╗  ██╗
+╚═══╗██╗██╔══██╗██║ ██╔╝
+███████║██████╔╝█████╔╝
+██╔══██║██╔══██╗██╔═██╗
+ █████╔╝██║  ██║██║  ██╗
+ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+
+An open source, cross-platform IRC client
+https://github.com/nutjob-laboratories/erk
+https://github.com/nutjob-laboratories/erk-plugins
+
 optional arguments:
   -h, --help            show this help message and exit
 
@@ -133,7 +144,7 @@ Connection:
   -u URL, --url URL     Use an IRC URL to connect
   -a, --autoscript      Execute connection script (if one exists)
   -s FILE, --script FILE
-                        Execute a custom server script on connection
+                        Execute a custom script on connection
 
 Display:
   -f, --fullscreen      Open in fullscreen mode
