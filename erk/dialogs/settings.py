@@ -629,6 +629,12 @@ class Dialog(QDialog):
 		self.autoLogLabel = QLabel("Autosave logs every <b>"+str(config.AUTOSAVE_LOG_TIME)+"</b> seconds")
 		if config.AUTOSAVE_LOGS: self.autoLog.setChecked(True)
 
+		self.servSaveLog = QCheckBox("Save server logs",self)
+		if config.SAVE_SERVER_LOGS: self.servSaveLog.setChecked(True)
+
+		self.servLoadLog = QCheckBox("Load server logs",self)
+		if config.LOAD_SERVER_LOGS: self.servLoadLog.setChecked(True)
+
 		self.hsButton = QPushButton("")
 		self.hsButton.clicked.connect(self.setSaveFreq)
 		self.hsButton.setAutoDefault(False)
@@ -663,12 +669,14 @@ class Dialog(QDialog):
 		slLayout = QVBoxLayout()
 		slLayout.addWidget(self.chansaveLog)
 		slLayout.addWidget(self.privsaveLog)
+		slLayout.addWidget(self.servSaveLog)
 		slLayout.addLayout(ltLayout)
 		slLayout.addStretch()
 
 		loadLoglay = QVBoxLayout()
 		loadLoglay.addWidget(self.chanloadLog)
 		loadLoglay.addWidget(self.privloadLog)
+		loadLoglay.addWidget(self.servLoadLog)
 		loadLoglay.addWidget(self.markLog)
 		loadLoglay.addWidget(self.resumeLog)
 		loadLoglay.addLayout(llLayout)
@@ -1598,6 +1606,10 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.LOAD_SERVER_LOGS = self.servLoadLog.isChecked()
+
+		config.SAVE_SERVER_LOGS = self.servSaveLog.isChecked()
+
 		config.DISPLAY_MODES_ON_CHANNEL = self.displayUserModes.isChecked()
 
 		config.ENABLE_CONNECTION_CONTEXT = self.menuConnection.isChecked()
@@ -2084,6 +2096,9 @@ class Dialog(QDialog):
 				self.menuConnection.setChecked(config.ENABLE_CONNECTION_CONTEXT)
 
 				self.displayUserModes.setChecked(config.DISPLAY_MODES_ON_CHANNEL)
+
+				self.servSaveLog.setChecked(config.SAVE_SERVER_LOGS)
+				self.servLoadLog.setChecked(config.LOAD_SERVER_LOGS)
 
 			else:
 				msg = QMessageBox(self)

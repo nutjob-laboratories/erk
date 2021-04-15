@@ -16,6 +16,10 @@ Version 0.875
 	* If the user has connection script execution turned on in the user settings, autoscript will automatically load with the --last commandline option
 	* Edited some of the error messages in the launcher to reflect current terminology
 	* Changed the title of the "Export As..." log export filename dialog
+	* "Resumed at" message now uses 24hr clock only if that option is turned on for timestamps
+	* Server logs can now be optionally saved, loaded, and exported
+	* Added an option to load and save server logs to the config file
+	* Added the server log settings to the "settings" dialog
 
 Version 0.870
 	* New version

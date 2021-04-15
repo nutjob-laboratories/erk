@@ -78,6 +78,13 @@ class Window(QMainWindow):
 							saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 							self.newLog = []
 
+			if self.type==config.SERVER_WINDOW:
+				if config.SAVE_SERVER_LOGS:
+					if len(self.newLog)>0:
+						if len(self.newLog)>=config.AUTOSAVE_CACHE_SIZE:
+							saveLog('#'+self.client.server+":"+str(self.client.port),None,self.newLog,self.parent.logdir)
+							self.newLog = []
+
 	def closeEvent(self, event):
 		# Logs
 		if self.type==config.CHANNEL_WINDOW:
@@ -87,6 +94,10 @@ class Window(QMainWindow):
 		if self.type==config.PRIVATE_WINDOW:
 			if config.SAVE_PRIVATE_LOGS:
 				saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
+
+		if self.type==config.SERVER_WINDOW:
+			if config.SAVE_SERVER_LOGS:
+				saveLog('#'+self.client.server+":"+str(self.client.port),None,self.newLog,self.parent.logdir)
 
 	def handleTopicInput(self):
 		self.client.topic(self.name,self.topic.text())
@@ -625,26 +636,48 @@ class Window(QMainWindow):
 		if self.type==config.CHANNEL_WINDOW:
 			if config.LOAD_CHANNEL_LOGS:
 				load_log_from_disk = True
+				main_name = self.client.network
+				sub_name = self.name
 
 		if self.type==config.PRIVATE_WINDOW:
 			if config.LOAD_PRIVATE_LOGS:
 				load_log_from_disk = True
+				main_name = self.client.network
+				sub_name = self.name
+
+		if self.type==config.SERVER_WINDOW:
+			if config.LOAD_SERVER_LOGS:
+				load_log_from_disk = True
+				main_name = '#'+self.client.server+":"+str(self.client.port)
+				sub_name = None
 
 		if load_log_from_disk:
-			loadLog = readLog(self.client.network,self.name,self.parent.logdir)
+			loadLog = readLog(main_name,sub_name,self.parent.logdir)
 			if len(loadLog)>config.LOG_LOAD_SIZE_MAX:
 				loadLog = trimLog(loadLog,config.LOG_LOAD_SIZE_MAX)
 
 			if len(loadLog)>0:
 				self.log = loadLog + self.log
-				if config.MARK_END_OF_LOADED_LOG:
-					self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
 
-				if config.DISPLAY_CHAT_RESUME_DATE_TIME:
-					t = datetime.timestamp(datetime.now())
-					pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
-					m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
+				if self.type==config.SERVER_WINDOW:
+					if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
+						cdate = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y - %H:%M:%S')
+					else:
+						cdate = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%A %B %d, %Y - %I:%M:%S %p')
+					m = Message(DATE_MESSAGE,'',cdate)
 					self.writeText(m)
+				else:
+					if config.MARK_END_OF_LOADED_LOG:
+						self.log.append(Message(HORIZONTAL_RULE_MESSAGE,'',''))
+
+					if config.DISPLAY_CHAT_RESUME_DATE_TIME:
+						t = datetime.timestamp(datetime.now())
+						if config.USE_24HOUR_CLOCK_FOR_TIMESTAMPS:
+							pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %H:%M:%S')
+						else:
+							pretty_timestamp = datetime.fromtimestamp(t).strftime('%m/%d/%Y, %I:%M:%S %p')
+						m = Message(SYSTEM_MESSAGE,'',"Resumed on "+pretty_timestamp)
+						self.writeText(m)
 
 				self.rerender()
 

@@ -133,11 +133,22 @@ class Dialog(QDialog):
 						netname = p[0]
 						channel = p[1]
 
-						netname = netname.upper()
+						is_a_server_log = False
+						if len(netname)>1:
+							if netname[0]=='#':
+								is_a_server_log = True
+								netname = netname[1:]
 
-						item = QListWidgetItem(channel+" ("+netname+")")
-						item.file = log
-						self.packlist.addItem(item)
+						if is_a_server_log:
+							item = QListWidgetItem(netname+":"+channel+" (SERVER)")
+							item.file = log
+							self.packlist.addItem(item)
+						else:
+							netname = netname.upper()
+
+							item = QListWidgetItem(channel+" ("+netname+")")
+							item.file = log
+							self.packlist.addItem(item)
 
 		delimLayout = QFormLayout()
 
