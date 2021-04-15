@@ -117,17 +117,6 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
                      [SERVER] [PORT]
 
-██████╗ ██████╗ ██╗  ██╗
-╚═══╗██╗██╔══██╗██║ ██╔╝
-███████║██████╔╝█████╔╝
-██╔══██║██╔══██╗██╔═██╗
- █████╔╝██║  ██║██║  ██╗
- ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-
-An open source, cross-platform IRC client
-https://github.com/nutjob-laboratories/erk
-https://github.com/nutjob-laboratories/erk-plugins
-
 optional arguments:
   -h, --help            show this help message and exit
 
