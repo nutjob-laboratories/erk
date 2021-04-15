@@ -12,6 +12,10 @@ Version 0.875
 	* If IRC colors are turned off, the presence of IRC colors is checked before attempting to strip IRC colors
 	* Bugfix: the schwa in the style file generator ASCII art was backwards (ugh)
 	* Changed the ASCII art for the help menu
+	* If the main dialog is now passed a list() of ConnectInfo() object, it will connect to *all* of them, in sequence
+	* If the user has connection script execution turned on in the user settings, autoscript will automatically load with the --last commandline option
+	* Edited some of the error messages in the launcher to reflect current terminology
+	* Changed the title of the "Export As..." log export filename dialog
 
 Version 0.870
 	* New version

@@ -603,7 +603,12 @@ class Erk(QMainWindow):
 		self.resize(appwidth,appheight)
 
 		if info:
-			self.connectToIRCServer(info)
+
+			if type(info)==type(list()):
+				for i in info:
+					self.connectToIRCServer(i)
+			else:
+				self.connectToIRCServer(info)
 
 		self.starter = QTextBrowser(self)
 		self.starter.name = MASTER_LOG_NAME

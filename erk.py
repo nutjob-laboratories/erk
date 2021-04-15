@@ -93,7 +93,7 @@ congroup.add_argument("-c","--channel", type=str,help="Join channel on connectio
 congroup.add_argument("-l","--last", help=f"Automatically connect to the last server connected to", action="store_true")
 congroup.add_argument("-u","--url", type=str,help="Use an IRC URL to connect", metavar="URL", default='')
 congroup.add_argument("-a","--autoscript", help=f"Execute connection script (if one exists)", action="store_true")
-congroup.add_argument("-s","--script", type=str,help="Execute a custom server script on connection", metavar="FILE", action='append')
+congroup.add_argument("-s","--script", type=str,help="Execute a custom script on connection", metavar="FILE", action='append')
 
 displaygroup = parser.add_argument_group('Display')
 
@@ -245,10 +245,8 @@ if __name__ == '__main__':
 			if not do_json:
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
-				fileName, _ = QFileDialog.getSaveFileName(None,"Save export As...",INSTALL_DIRECTORY,"Text File (*.txt);;All Files (*)", options=options)
+				fileName, _ = QFileDialog.getSaveFileName(None,"Export Log As...",INSTALL_DIRECTORY,"Text File (*.txt)", options=options)
 				if fileName:
-					# extension = os.path.splitext(fileName)[1]
-					# if extension.lower()!='txt': fileName = fileName + ".txt"
 					efl = len("txt")+1
 					if fileName[-efl:].lower()!=f".txt": fileName = fileName+f".txt"
 					dump = dumpLog(elog,dlog,llog,do_epoch)
@@ -258,10 +256,8 @@ if __name__ == '__main__':
 			else:
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
-				fileName, _ = QFileDialog.getSaveFileName(None,"Save export As...",INSTALL_DIRECTORY,"JSON File (*.json);;All Files (*)", options=options)
+				fileName, _ = QFileDialog.getSaveFileName(None,"Export Log As...",INSTALL_DIRECTORY,"JSON File (*.json)", options=options)
 				if fileName:
-					# extension = os.path.splitext(fileName)[1]
-					# if extension.lower()!='json': fileName = fileName + ".json"
 					efl = len("json")+1
 					if fileName[-efl:].lower()!=f".json": fileName = fileName+f".json"
 					dump = dumpLogJson(elog,do_epoch)
@@ -371,7 +367,7 @@ if __name__ == '__main__':
 
 			file = args.scripter
 			if not os.path.isfile(file):
-				print("\""+file+"\" doesn't exist. Please use --scripter to create a new file.")
+				print("\""+file+"\" doesn't exist. Please use --edit to create a new file.")
 				sys.exit(1)
 
 			erk.config.load_settings(args.config)
@@ -461,10 +457,10 @@ if __name__ == '__main__':
 
 			if args.noscripts:
 				if args.autoscript:
-					print("Server script cannot execute: scripting has been disabled")
+					print("Connection script cannot execute: scripting has been disabled")
 					sys.exit(1)
 				if args.script!=None:
-					print("Server script cannot execute: scripting has been disabled")
+					print("Script cannot execute: scripting has been disabled")
 					sys.exit(1)
 
 			autoscript = None
@@ -595,8 +591,18 @@ if __name__ == '__main__':
 						sys.exit(1)
 
 				autoscript = None
-				if args.autoscript:
+
+				# If the user has the autoscript option enabled in
+				# their user file, then load the appropriate connection script
+				if u["auto_script"]:
 					autoscript = load_auto_script(u["last_server"],u["last_port"],args.scripts)
+
+				# If the connection script isn't already loaded (or isn't going to be loaded)
+				# and the user turned on autoscript with the commandline flag, then
+				# load the appropriate connection script
+				if autoscript==None:
+					if args.autoscript:
+						autoscript = load_auto_script(u["last_server"],u["last_port"],args.scripts)
 
 				if args.script:
 					for s in args.script:
