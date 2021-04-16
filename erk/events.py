@@ -147,6 +147,17 @@ def clear_unseen(window):
 	except:
 		pass
 
+def clear_current_unseen(gui):
+	global UNSEEN
+	clean = []
+	if gui.current_page:
+		for w in UNSEEN:
+			if gui.current_page.client.id==w.client.id:
+				if gui.current_page.name==w.name:
+					continue
+			clean.append(w)
+	UNSEEN = clean
+
 def window_has_unseen(window,gui):
 
 	# Never mark the current window as having unseen messages
@@ -202,32 +213,26 @@ def build_connection_display(gui,new_server=None):
 
 	# get system color from the text formatting
 	# use orange if one is not found
-	unseen_color = "#FF8C00"
-	unseen_back = "#000000"
-	connect_color = "#006400"
-	for key in textformat.STYLES:
-		if key==config.UNSEEN_ANIMATION_COLOR:
-			for e in textformat.STYLES[key].split(';'):
-				l = e.strip()
-				l2 = l.split(':')
-				if len(l2)==2:
-					if l2[0].lower()=='color':
-						unseen_color = l2[1].strip()
-		if key=='all':
-			for e in textformat.STYLES[key].split(';'):
-				l = e.strip()
-				l2 = l.split(':')
-				if len(l2)==2:
-					if l2[0].lower()=='color':
-						unseen_back = l2[1].strip()
+	unseen_color = config.UNSEEN_MESSAGE_COLOR
+	unseen_back = config.CONNECTION_DISPLAY_TEXT_COLOR
+	connect_color = config.CONNECTING_ANIMATION_COLOR
+	
+	# for key in textformat.STYLES:
+	# 	if key==config.UNSEEN_ANIMATION_COLOR:
+	# 		for e in textformat.STYLES[key].split(';'):
+	# 			l = e.strip()
+	# 			l2 = l.split(':')
+	# 			if len(l2)==2:
+	# 				if l2[0].lower()=='color':
+	# 					unseen_color = l2[1].strip()
 
-		if key==config.CONNECTION_ANIMATION_COLOR:
-			for e in textformat.STYLES[key].split(';'):
-				l = e.strip()
-				l2 = l.split(':')
-				if len(l2)==2:
-					if l2[0].lower()=='color':
-						connect_color = l2[1].strip()
+	# 	if key==config.CONNECTION_ANIMATION_COLOR:
+	# 		for e in textformat.STYLES[key].split(';'):
+	# 			l = e.strip()
+	# 			l2 = l.split(':')
+	# 			if len(l2)==2:
+	# 				if l2[0].lower()=='color':
+	# 					connect_color = l2[1].strip()
 
 	# Make a list of expanded server nodes, and make sure they
 	# are still expanded when we rewrite the display
@@ -846,6 +851,9 @@ def open_private_window(client,target):
 			client.gui.stack.setCurrentWidget(newchan)
 			newchan.input.setFocus()
 
+			# Set the current page
+			client.gui.current_page = newchan
+
 		PRIVATES.append( Window(index,newchan) )
 
 		# Update connection display
@@ -1340,6 +1348,9 @@ def action_message(gui,client,target,user,message):
 				if config.SWITCH_TO_NEW_WINDOWS:
 					gui.stack.setCurrentWidget(newchan)
 
+					# Set the current page
+					gui.current_page = newchan
+
 				#gui.setWindowTitle(nick)
 
 				PRIVATES.append( Window(index,newchan) )
@@ -1539,6 +1550,9 @@ def erk_joined_channel(gui,client,channel):
 		gui.stack.setCurrentWidget(newchan)
 		newchan.input.setFocus()
 
+		# Set the current page
+		gui.current_page = newchan
+
 	#gui.setWindowTitle(channel)
 
 	CHANNELS.append( Window(index,newchan) )
@@ -1552,6 +1566,8 @@ def erk_joined_channel(gui,client,channel):
 	window = fetch_console_window(client)
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"Joined "+channel) )
+
+	
 
 	# Update connection display
 	build_connection_display(gui)
@@ -1823,6 +1839,9 @@ def private_message(gui,client,user,message):
 			if config.SWITCH_TO_NEW_WINDOWS:
 				gui.stack.setCurrentWidget(newchan)
 				newchan.input.setFocus()
+
+				# Set the current page
+				gui.current_page = newchan
 
 			#gui.setWindowTitle(nick)
 
@@ -2115,6 +2134,9 @@ def startup(gui,client):
 
 	if config.SWITCH_TO_NEW_WINDOWS:
 		gui.stack.setCurrentWidget(newconsole)
+
+		# Set the current page
+		gui.current_page = newconsole
 
 	if client.hostname:
 		gui.setWindowTitle(client.hostname)

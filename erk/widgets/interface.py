@@ -680,6 +680,7 @@ class Window(QMainWindow):
 						self.writeText(m)
 
 				self.rerender()
+				self.chat.moveCursor(QTextCursor.End)
 
 		interface = QWidget()
 		interface.setLayout(finalLayout)
@@ -687,7 +688,7 @@ class Window(QMainWindow):
 
 		self.input.setFocus()
 
-		self.chat.moveCursor(QTextCursor.End)
+		# self.chat.moveCursor(QTextCursor.End)
 
 	# BEGIN GUI METHODS
 

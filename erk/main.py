@@ -266,6 +266,7 @@ class Erk(QMainWindow):
 				window.do_move_to_bottom(True)
 
 		if hasattr(window,"client"): events.clear_unseen(window)
+		
 		events.build_connection_display(self)
 
 		self.refresh_application_title()

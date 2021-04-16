@@ -21,6 +21,9 @@ Version 0.875
 	* Added an option to load and save server logs to the config file
 	* Added the server log settings to the "settings" dialog
 	* Bugfix: users could "drag" the cursor "down" on the text input widget, making all text afterwards "invisible"
+	* Bugfix: "unseen messages" and "connecting" text animation in the connection display now uses the set text color as its base
+	* Animation color settings for "unseen messages" and "connecting" in the connection display are now set in the config file
+	* Added the ability to set the "unseen" and "connecting" animation colors to the "settings" dialog
 
 Version 0.870
 	* New version

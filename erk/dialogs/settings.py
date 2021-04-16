@@ -245,6 +245,26 @@ class Dialog(QDialog):
 
 			self.syntaxAliasLabel.setText("Aliases: <b>"+ncolor+"</b>")
 
+	def unseenColor(self):
+		newcolor = QColorDialog.getColor(QColor(self.unseen_message_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.unseen_message_color = ncolor
+			self.setUnseen.setStyleSheet(f'background-color: {ncolor};')
+
+			self.unseenLabel.setText("Unseen messages color: <b>"+ncolor+"</b>")
+
+	def connectingColor(self):
+		newcolor = QColorDialog.getColor(QColor(self.connecting_anim_color))
+
+		if newcolor.isValid():
+			ncolor = newcolor.name()
+			self.connecting_anim_color = ncolor
+			self.setConnecting.setStyleSheet(f'background-color: {ncolor};')
+
+			self.connectingLabel.setText("Connecting color: <b>"+ncolor+"</b>")
+
 
 	def __init__(self,configfile=USER_FILE,parent=None,app=None,opento=None):
 		super(Dialog,self).__init__(parent)
@@ -852,6 +872,38 @@ class Dialog(QDialog):
 		fgColorLayout.addWidget(self.setFg)
 		fgColorLayout.addWidget(self.fgLabel)
 
+		self.unseen_message_color = config.UNSEEN_MESSAGE_COLOR
+		self.connecting_anim_color = config.CONNECTING_ANIMATION_COLOR
+
+		self.setUnseen = QPushButton("")
+		self.setUnseen.clicked.connect(self.unseenColor)
+		self.setUnseen.setStyleSheet(f'background-color: {config.UNSEEN_MESSAGE_COLOR};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setUnseen.setFixedSize(fheight +10,fheight + 10)
+
+		self.unseenLabel = QLabel("Unseen messages color: <b>"+config.UNSEEN_MESSAGE_COLOR+"</b>")
+
+		unseenColorLayout = QHBoxLayout()
+		unseenColorLayout.addWidget(self.setUnseen)
+		unseenColorLayout.addWidget(self.unseenLabel)
+
+		self.setConnecting = QPushButton("")
+		self.setConnecting.clicked.connect(self.connectingColor)
+		self.setConnecting.setStyleSheet(f'background-color: {config.CONNECTING_ANIMATION_COLOR};')
+
+		fm = QFontMetrics(self.font())
+		fheight = fm.height()
+		self.setConnecting.setFixedSize(fheight +10,fheight + 10)
+
+		self.connectingLabel = QLabel("Connecting color: <b>"+config.CONNECTING_ANIMATION_COLOR+"</b>")
+
+		connectingColorLayout = QHBoxLayout()
+		connectingColorLayout.addWidget(self.setConnecting)
+		connectingColorLayout.addWidget(self.connectingLabel)
+
+
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay:
 				self.enableConnection.setEnabled(False)
@@ -868,6 +920,10 @@ class Dialog(QDialog):
 				self.setfg.setEnabled(False)
 				self.fgLabel.setEnabled(False)
 				self.menuConnection.setEnabled(False)
+				self.setConnecting.setEnabled(False)
+				self.connectingLabel.setEnabled(False)
+				self.setUnseen.setEnabled(False)
+				self.unseenLabel.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -899,10 +955,12 @@ class Dialog(QDialog):
 		condisLayout.addStretch()
 
 		appearanceLayout = QVBoxLayout()
-		appearanceLayout.addWidget(self.unseenConnection)
-		appearanceLayout.addWidget(self.animateConnection)
 		appearanceLayout.addLayout(bgColorLayout)
 		appearanceLayout.addLayout(fgColorLayout)
+		appearanceLayout.addWidget(self.unseenConnection)
+		appearanceLayout.addLayout(unseenColorLayout)
+		appearanceLayout.addWidget(self.animateConnection)
+		appearanceLayout.addLayout(connectingColorLayout)
 		appearanceLayout.addStretch()
 
 
@@ -1606,6 +1664,9 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.UNSEEN_MESSAGE_COLOR = self.unseen_message_color
+		config.CONNECTING_ANIMATION_COLOR = self.connecting_anim_color
+
 		config.LOAD_SERVER_LOGS = self.servLoadLog.isChecked()
 
 		config.SAVE_SERVER_LOGS = self.servSaveLog.isChecked()
@@ -2099,6 +2160,13 @@ class Dialog(QDialog):
 
 				self.servSaveLog.setChecked(config.SAVE_SERVER_LOGS)
 				self.servLoadLog.setChecked(config.LOAD_SERVER_LOGS)
+
+				self.unseen_message_color = config.UNSEEN_MESSAGE_COLOR
+				self.connecting_anim_color = config.CONNECTING_ANIMATION_COLOR
+				self.setConnecting.setStyleSheet(f'background-color: {config.CONNECTING_ANIMATION_COLOR};')
+				self.setUnseen.setStyleSheet(f'background-color: {config.UNSEEN_MESSAGE_COLOR};')
+				self.unseenLabel.setText("Unseen messages color: <b>"+config.UNSEEN_MESSAGE_COLOR+"</b>")
+				self.connectingLabel.setText("Connecting color: <b>"+config.CONNECTING_ANIMATION_COLOR+"</b>")
 
 			else:
 				msg = QMessageBox(self)

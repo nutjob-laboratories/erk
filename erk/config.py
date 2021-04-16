@@ -112,10 +112,8 @@ AUTOSAVE_LOG_TIME = 300
 AUTOSAVE_CACHE_SIZE = 10
 UNSEEN_MESSAGE_ANIMATION = True
 UNSEEN_ANIMATION_LENGTH = 500
-UNSEEN_ANIMATION_COLOR = 'system'
 CONNECTION_MESSAGE_ANIMATION = True
 CONNECTION_ANIMATION_LENGTH = 1000
-CONNECTION_ANIMATION_COLOR = 'system'
 SCHWA_ANIMATION = True
 ASK_BEFORE_QUIT = True
 MENU_BAR_MOVABLE = True
@@ -172,9 +170,11 @@ ENABLE_TOPIC_EDITOR = True
 ENABLE_USERLIST_MENU = True
 ENABLE_CONNECTION_CONTEXT = True
 DISPLAY_MODES_ON_CHANNEL = True
-
 LOAD_SERVER_LOGS = True
 SAVE_SERVER_LOGS = True
+
+UNSEEN_MESSAGE_COLOR = "#FF8C00"
+CONNECTING_ANIMATION_COLOR = "#FF8C00"
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -182,6 +182,8 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"unseen_messages_animation_color": UNSEEN_MESSAGE_COLOR,
+		"connecting_animation_color": CONNECTING_ANIMATION_COLOR,
 		"load_server_logs": LOAD_SERVER_LOGS,
 		"save_server_logs": SAVE_SERVER_LOGS,
 		"display_user_modes_on_channels": DISPLAY_MODES_ON_CHANNEL,
@@ -314,6 +316,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "unseen_messages_animation_color" in data:
+		data["unseen_messages_animation_color"] = UNSEEN_MESSAGE_COLOR
+
+	if not "connecting_animation_color" in data:
+		data["connecting_animation_color"] = CONNECTING_ANIMATION_COLOR
 
 	if not "load_server_logs" in data:
 		data["load_server_logs"] = LOAD_SERVER_LOGS
@@ -823,6 +831,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global DISPLAY_MODES_ON_CHANNEL
 	global LOAD_SERVER_LOGS
 	global SAVE_SERVER_LOGS
+	global UNSEEN_MESSAGE_COLOR
+	global CONNECTING_ANIMATION_COLOR
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -831,6 +841,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			UNSEEN_MESSAGE_COLOR = data["unseen_messages_animation_color"]
+			CONNECTING_ANIMATION_COLOR = data["connecting_animation_color"]
 			LOAD_SERVER_LOGS = data["load_server_logs"]
 			SAVE_SERVER_LOGS = data["save_server_logs"]
 			DISPLAY_MODES_ON_CHANNEL = data["display_user_modes_on_channels"]
@@ -1098,8 +1110,10 @@ def check_settings(filename):
 			if "display_user_modes_on_channels" in data: check = check + 1
 			if "load_server_logs" in data: check = check + 1
 			if "save_server_logs" in data: check = check + 1
+			if "unseen_messages_animation_color" in data: check = check + 1
+			if "connecting_animation_color" in data: check = check + 1
 
-			if check == 125:
+			if check == 127:
 				return True
 			else:
 				return False
