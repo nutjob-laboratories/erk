@@ -20,6 +20,7 @@ Version 0.875
 	* Server logs can now be optionally saved, loaded, and exported
 	* Added an option to load and save server logs to the config file
 	* Added the server log settings to the "settings" dialog
+	* Bugfix: users could "drag" the cursor "down" on the text input widget, making all text afterwards "invisible"
 
 Version 0.870
 	* New version
