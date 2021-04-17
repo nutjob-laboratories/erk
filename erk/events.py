@@ -2066,6 +2066,9 @@ def connection(gui,client):
 	window = fetch_console_window(client)
 	window.writeText( Message(SYSTEM_MESSAGE,'',"Connected to "+client.server+":"+str(client.port)+"!") )
 
+	# Force a scroll to bottom
+	window.do_move_to_bottom(True)
+
 	# Update connection display
 	build_connection_display(gui,client)
 

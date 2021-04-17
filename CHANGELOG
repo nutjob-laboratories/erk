@@ -27,6 +27,7 @@ Version 0.875
 	* Added a setting to the config file to set the width of the cursor, in pixels
 	* Added the ability to set the cursor width to the "settings" dialog
 	* Removed the "*" from changed settings in the "settings" dialog
+	* Bugfix: server consoles weren't scrolling to the bottom while connecting
 
 Version 0.870
 	* New version
