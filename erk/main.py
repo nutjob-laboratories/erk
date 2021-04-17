@@ -374,6 +374,8 @@ class Erk(QMainWindow):
 			more_plugins=[],
 			block_commands=False,
 			block_logs=False,
+			block_load=False,
+			block_write=False,
 			parent=None
 		):
 		
@@ -435,6 +437,9 @@ class Erk(QMainWindow):
 		self.is_disconnect_showing = False
 
 		self.block_logs = block_logs
+
+		self.block_load = block_load
+		self.block_write = block_write
 
 		self.cmdline_script = False
 		self.cmdline_editor = False

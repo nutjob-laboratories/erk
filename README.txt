@@ -115,7 +115,7 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [--generate [FILE]] [--edit-style] [--export] [--noask] [--nosettings]
                      [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
                      [--noedit] [--noplugins] [--nocommands] [--noextensions] [--nologs]
-                     [--qt5menu]
+                     [--noload] [--nowrite] [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -183,6 +183,8 @@ Disable functionality:
   --nocommands          Disables user input commands
   --noextensions        Disables plugins, scripts, and styles
   --nologs              Disables reading and writing logs
+  --noload              Disables log loading
+  --nowrite             Disables log writing
   --qt5menu             Disable menu toolbar, and use normal menus
 ```
 # Frequently asked questions

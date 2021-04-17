@@ -729,6 +729,25 @@ class Dialog(QDialog):
 				self.markLog.setEnabled(False)
 				self.resumeLog.setEnabled(False)
 
+			if self.parent.block_load:
+				self.chanloadLog.setEnabled(False)
+				self.privloadLog.setEnabled(False)
+				self.servLoadLog.setEnabled(False)
+				self.markLog.setEnabled(False)
+				self.resumeLog.setEnabled(False)
+				self.slsButton.setEnabled(False)
+				self.logSizeLabel.setEnabled(False)
+
+			if self.parent.block_write:
+				self.chansaveLog.setEnabled(False)
+				self.privsaveLog.setEnabled(False)
+				self.servSaveLog.setEnabled(False)
+				self.autoLog.setEnabled(False)
+				self.autoLogLabel.setEnabled(False)
+				self.hsButton.setEnabled(False)
+
+
+
 		self.loadPage.setLayout(loadLoglay)
 
 		self.logsPage.setLayout(slLayout)
@@ -2018,6 +2037,7 @@ class Dialog(QDialog):
 			userinput.buildHelp()
 			events.reload_commands_all()
 			events.reset_topic_editor()
+			events.refresh_all_topics()
 			events.update_all_mode_displays()
 
 		config.save_settings(self.config)

@@ -415,6 +415,10 @@ def set_cursor_width():
 	for c in CONSOLES:
 		c.widget.resetCursorWidth()
 
+def refresh_all_topics():
+	for c in CHANNELS:
+		c.widget.topic.refresh()
+
 def apply_style(style):
 	for c in CHANNELS:
 		if not c.widget.custom_style:

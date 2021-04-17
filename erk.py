@@ -135,6 +135,8 @@ disgroup.add_argument( "--noplugins", help=f"Disables plugins", action="store_tr
 disgroup.add_argument( "--nocommands", help=f"Disables user input commands", action="store_true")
 disgroup.add_argument( "--noextensions", help=f"Disables plugins, scripts, and styles", action="store_true")
 disgroup.add_argument( "--nologs", help=f"Disables reading and writing logs", action="store_true")
+disgroup.add_argument( "--noload", help=f"Disables log loading", action="store_true")
+disgroup.add_argument( "--nowrite", help=f"Disables log writing", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
@@ -544,6 +546,8 @@ if __name__ == '__main__':
 				args.plugins,
 				args.nocommands,
 				args.nologs,
+				args.noload,
+				args.nowrite,
 				)
 			GUI.show()
 		else:
@@ -576,6 +580,8 @@ if __name__ == '__main__':
 					args.plugins,
 					args.nocommands,
 					args.nologs,
+					args.noload,
+					args.nowrite,
 					)
 				GUI.show()
 
@@ -678,6 +684,8 @@ if __name__ == '__main__':
 					args.plugins,
 					args.nocommands,
 					args.nologs,
+					args.noload,
+					args.nowrite,
 					)
 				GUI.show()
 			else:
@@ -710,6 +718,8 @@ if __name__ == '__main__':
 						args.plugins,
 						args.nocommands,
 						args.nologs,
+						args.noload,
+						args.nowrite,
 						)
 					GUI.show()
 				else:
