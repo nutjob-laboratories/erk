@@ -63,6 +63,9 @@ class Window(QMainWindow):
 			self.name_display.setText("<b>"+ip+":"+port+"</b>")
 
 	def do_log_save(self):
+
+		if self.parent.block_logs: return
+
 		if config.AUTOSAVE_LOGS:
 			if self.type==config.CHANNEL_WINDOW:
 				if config.SAVE_CHANNEL_LOGS:
@@ -86,18 +89,20 @@ class Window(QMainWindow):
 							self.newLog = []
 
 	def closeEvent(self, event):
-		# Logs
-		if self.type==config.CHANNEL_WINDOW:
-			if config.SAVE_CHANNEL_LOGS:
-				saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 
-		if self.type==config.PRIVATE_WINDOW:
-			if config.SAVE_PRIVATE_LOGS:
-				saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
+		if not self.parent.block_logs:
+			# Logs
+			if self.type==config.CHANNEL_WINDOW:
+				if config.SAVE_CHANNEL_LOGS:
+					saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
 
-		if self.type==config.SERVER_WINDOW:
-			if config.SAVE_SERVER_LOGS:
-				saveLog('#'+self.client.server+":"+str(self.client.port),None,self.newLog,self.parent.logdir)
+			if self.type==config.PRIVATE_WINDOW:
+				if config.SAVE_PRIVATE_LOGS:
+					saveLog(self.client.network,self.name,self.newLog,self.parent.logdir)
+
+			if self.type==config.SERVER_WINDOW:
+				if config.SAVE_SERVER_LOGS:
+					saveLog('#'+self.client.server+":"+str(self.client.port),None,self.newLog,self.parent.logdir)
 
 	def handleTopicInput(self):
 		self.client.topic(self.name,self.topic.text())
@@ -655,6 +660,8 @@ class Window(QMainWindow):
 				load_log_from_disk = True
 				main_name = '#'+self.client.server+":"+str(self.client.port)
 				sub_name = None
+
+		if self.parent.block_logs: load_log_from_disk = False
 
 		if load_log_from_disk:
 			loadLog = readLog(main_name,sub_name,self.parent.logdir)

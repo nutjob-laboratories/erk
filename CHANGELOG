@@ -29,6 +29,7 @@ Version 0.875
 	* Removed the "*" from changed settings in the "settings" dialog
 	* Bugfix: server consoles weren't scrolling to the bottom while connecting
 	* Added a readme to the distribution file
+	* Added a commandline flag to disable log reading/writing
 
 Version 0.870
 	* New version

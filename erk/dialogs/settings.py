@@ -713,6 +713,22 @@ class Dialog(QDialog):
 		loadLoglay.addLayout(llLayout)
 		loadLoglay.addStretch()
 
+		if self.parent!=None:
+			if self.parent.block_logs:
+				self.autoLog.setEnabled(False)
+				self.autoLogLabel.setEnabled(False)
+				self.hsButton.setEnabled(False)
+				self.slsButton.setEnabled(False)
+				self.logSizeLabel.setEnabled(False)
+				self.chansaveLog.setEnabled(False)
+				self.privsaveLog.setEnabled(False)
+				self.servSaveLog.setEnabled(False)
+				self.chanloadLog.setEnabled(False)
+				self.privloadLog.setEnabled(False)
+				self.servLoadLog.setEnabled(False)
+				self.markLog.setEnabled(False)
+				self.resumeLog.setEnabled(False)
+
 		self.loadPage.setLayout(loadLoglay)
 
 		self.logsPage.setLayout(slLayout)

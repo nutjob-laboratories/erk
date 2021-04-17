@@ -266,7 +266,7 @@ class Erk(QMainWindow):
 				window.do_move_to_bottom(True)
 
 		if hasattr(window,"client"): events.clear_unseen(window)
-		
+
 		events.build_connection_display(self)
 
 		self.refresh_application_title()
@@ -373,6 +373,7 @@ class Erk(QMainWindow):
 			block_plugins=False,
 			more_plugins=[],
 			block_commands=False,
+			block_logs=False,
 			parent=None
 		):
 		
@@ -433,13 +434,17 @@ class Erk(QMainWindow):
 
 		self.is_disconnect_showing = False
 
+		self.block_logs = block_logs
+
 		self.cmdline_script = False
 		self.cmdline_editor = False
 		self.cmdline_plugins = False
+		self.cmdline_logs = False
 
 		if self.block_scripts: self.cmdline_script = True
 		if self.block_editor: self.cmdline_editor = True
 		if self.block_plugins: self.cmdline_plugins = True
+		if self.block_logs: self.cmdline_logs = True
 
 		self.force_qmenu = force_qmenu
 

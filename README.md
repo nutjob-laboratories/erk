@@ -3,12 +3,12 @@
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
   <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.870.138"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.875.026</b></a><br>
+  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.875.027</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
   <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
 </p>
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.875.026**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.875.027**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -114,7 +114,8 @@ usage: python erk.py [-h] [--ssl] [--reconnect] [-p PASSWORD] [-c CHANNEL[:KEY]]
                      [-M FILE] [-P DIRECTORY] [-e [FILE]] [--settings [FILE]]
                      [--generate [FILE]] [--edit-style] [--export] [--noask] [--nosettings]
                      [--nomenus] [--noconnect] [--noscripts] [--nodisplay] [--nostyles]
-                     [--noedit] [--noplugins] [--nocommands] [--noextensions] [--qt5menu]
+                     [--noedit] [--noplugins] [--nocommands] [--noextensions] [--nologs]
+                     [--qt5menu]
                      [SERVER] [PORT]
 
 optional arguments:
@@ -181,6 +182,7 @@ Disable functionality:
   --noplugins           Disables plugins
   --nocommands          Disables user input commands
   --noextensions        Disables plugins, scripts, and styles
+  --nologs              Disables reading and writing logs
   --qt5menu             Disable menu toolbar, and use normal menus
 ```
 # Frequently asked questions
@@ -195,7 +197,7 @@ Yes! All basic IRC functionality is in and working. **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.875.026, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.875.027, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 
