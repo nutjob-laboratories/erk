@@ -34,6 +34,8 @@ Version 0.875
 	* Bugfix: unseen messages notification could be triggered upon connection and joining a channel for the first time
 	* Topic editor no longer elides if it is hidden
 	* Added commandline flags to disable log loading (--noload) and writing (--nowrite)
+	* Bugfix: setting a channel mode did not always trigger the "unseen message" animation
+	* Bugfix: mode notification weren't always being written to the console
 
 Version 0.870
 	* New version

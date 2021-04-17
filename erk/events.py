@@ -954,15 +954,28 @@ def mode(gui,client,channel,user,mset,modes,args):
 			for m in modes:
 				if m in client.user_modes: client.user_modes = client.user_modes.replace(m,'')
 
-		window = fetch_console_window(client)
-		if window:
-			window.writeText( msg )
+		console_window = fetch_console_window(client)
+		if console_window: console_window.writeText( msg )
 
 		for window in CHANNELS:
 			if window.widget.client.id==client.id:
 				window.widget.update_user_modes()
 
 		return
+
+	# Write mode notification to the console
+	if mset:
+		if len(args)>0:
+			msg = Message(SYSTEM_MESSAGE,'',user+" set mode +"+modes+" "+' '.join(args)+" on "+channel,None,TYPE_MODE)
+		else:
+			msg = Message(SYSTEM_MESSAGE,'',user+" set mode +"+modes+" on "+channel,None,TYPE_MODE)
+	else:
+		if len(args)>0:
+			msg = Message(SYSTEM_MESSAGE,'',user+" set mode -"+modes+" "+' '.join(args)+" on "+channel,None,TYPE_MODE)
+		else:
+			msg = Message(SYSTEM_MESSAGE,'',user+" set mode -"+modes+" on "+channel,None,TYPE_MODE)
+	console_window = fetch_console_window(client)
+	if console_window: console_window.writeText( msg )
 
 	reportadd = []
 	reportremove = []
@@ -1189,9 +1202,6 @@ def mode(gui,client,channel,user,mset,modes,args):
 			msg = Message(SYSTEM_MESSAGE,'',f"{user} set +{''.join(reportadd)} in {channel}",None,TYPE_MODE)
 			window.writeText( msg )
 
-			if not window_has_unseen(window,gui):
-				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-					UNSEEN.append(window)
 		else:
 
 			for m in reportremove:
@@ -1201,16 +1211,16 @@ def mode(gui,client,channel,user,mset,modes,args):
 			msg = Message(SYSTEM_MESSAGE,'',f"{user} set -{''.join(reportremove)} in {channel}",None,TYPE_MODE)
 			window.writeText( msg )
 
-			if not window_has_unseen(window,gui):
-				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-					UNSEEN.append(window)
-
 	if config.DISPLAY_CHANNEL_MODES:
 		# Change the channel's name display
 		if len(window.modeson)>0:
 			window.name_display.setText("<b>"+window.name+"</b> <i>+"+window.modeson+"</i>")
 		else:
 			window.name_display.setText("<b>"+window.name+"</b>")
+
+	if not window_has_unseen(window,gui):
+		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+			UNSEEN.append(window)
 
 	plugins.mode_message(client,channel,user,mset,modes,args)
 
