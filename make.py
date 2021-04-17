@@ -29,7 +29,6 @@ shutil.copy("./documentation/rfc2812.pdf", "./erk-irc-client/documentation/rfc28
 os.system("sh compile_resources.sh")
 
 shutil.copytree("./erk", "./erk-irc-client/erk",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
-
 shutil.copytree("./spellchecker", "./erk-irc-client/spellchecker",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./emoji", "./erk-irc-client/emoji",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
 shutil.copytree("./qt5reactor", "./erk-irc-client/qt5reactor",ignore=shutil.ignore_patterns('*.pyc', 'tmp*',"__pycache__"))
@@ -38,6 +37,8 @@ shutil.copytree("./pike", "./erk-irc-client/pike",ignore=shutil.ignore_patterns(
 shutil.copy("./erk.py", "./erk-irc-client/erk.py")
 
 shutil.copy("./LICENSE", "./erk-irc-client/LICENSE")
+
+shutil.copy("./README_DIST.md", "./erk-irc-client/README.md")
 
 os.system("cd erk-irc-client; zip -r ../erk_dist.zip . ; cd ..")
 

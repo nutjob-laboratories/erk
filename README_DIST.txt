@@ -1,76 +1,12 @@
+Ərk !_FULL_VERSION_!
+An open source IRC client for Linux and Windows
 
-<p align="center">
-  <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
-  <b>Ərk IRC Client</b><br>
-  <a href="https://github.com/nutjob-laboratories/erk/releases/tag/0.870.138"><b>Download last stable release</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/raw/master/downloads/erk-latest.zip"><b>Download Ərk 0.875.026</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf"><b>View Ərk command and scripting documentation</b></a><br>
-  <a href="https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf"><b>View Ərk plugin documentation</b></a>
-</p>
+ [Official Ərk repository](https://github.com/nutjob-laboratories/erk)
+ [Official Ərk plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.875.026**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **!_FULL_VERSION_!**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
-
-# Screenshots
-<center><p align="center">
-<table style="width: 100%" border="0">
-      <tbody>
-        <tr>
-          <td>
-            <table style="width: 100%" border="0">
-              <tbody>
-                <tr>
-                  <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot.png"></a><br>
-  <b>Ərk connected to EFnet on Windows 10</b></td>
-                  <td style="text-align: center; vertical-align: middle;"><a href="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux_full.png"><img src="https://github.com/nutjob-laboratories/erk/raw/master/images/screenshot_linux.png"></a><br>
-  <b>Ərk connected to EFnet on Linux Mint</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-</p></center>
-
-# Features
-
-* **Ərk** does chat, and _only_ chat.
-  * **No** [DCC file transfer](https://en.wikipedia.org/wiki/Direct_Client-to-Client) support
-  * **No** [Bittorrent](https://en.wikipedia.org/wiki/BitTorrent) client
-  * Just plain ol' fashioned IRC
-* Runs on Windows and Linux
-* Supports multiple connections (you can chat on more than one IRC server at a time)
-* Open source ([GPL 3](https://www.gnu.org/licenses/gpl-3.0.en.html))
-* A built-in list of over 80 IRC servers to connect to
-* An extensive set of configuration options
-  * Over 100 display and configuration options settable in the GUI
-  * Over 30 different command line options
-* Text colors are customize-able
-* Built-in [spell checker](https://github.com/barrust/pyspellchecker) (supports English, Spanish, French, and German)
-* [Emoji](https://en.wikipedia.org/wiki/Emoji) support
-  * Insert emojis into chat by using shortcodes (such as `:joy:` :joy:, `:yum:` :yum:, etc.)
-* Command/nickname auto-completion
-  * Type the first few letters of a command or nickname and hit the tab key
-  * Auto-complete works for emoji shortcodes, custom macros, and plugin-based commands, too!
-* Optional profanity filter
-* Full IRC color support
-* Automatic logging of channel and private chats
-* Powerful scripting engine
-  * A script editor is built into the client
-    * Create, open, and edit scripts
-    * Syntax highlighting
-  * [Scripting and command documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Scripting_and_Commands.pdf) is included
- * Powerful plugin engine
-   * Plugins are written in Python 3, just like **Ərk**
-   * Most IRC events can be caught
-   * Obscure blog and forums posts aren't needed, [plugin documentation](https://github.com/nutjob-laboratories/erk/blob/master/documentation/Erk_Plugin_Guide.pdf) (with everything you need to know to write **Ərk** plugins) is included
-   * [Check out the official plugin repository](https://github.com/nutjob-laboratories/erk-plugins)! If you've got a plugin that you've written and want to include in the repository, send a pull request!
-* An extensive set of command line flags, allowing for _even more_ configuration options
-  * Disable most features on startup
-  * Connect to an IRC server from the command-line
-  * Support for connecting via [IRC URLs](https://www.w3.org/Addressing/draft-mirashi-url-irc-01.txt)
 
 # Requirements
 **Ərk** requires Python 3, [PyQt5](https://pypi.org/project/PyQt5/), and [Twisted](https://twistedmatrix.com/trac/). PyQt5 and Twisted can be installed by using [**pip**](https://pypi.org/project/pip/):
@@ -195,7 +131,7 @@ Yes! All basic IRC functionality is in and working. **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.875.026, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, !_FULL_VERSION_!, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 
