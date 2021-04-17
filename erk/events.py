@@ -1186,7 +1186,8 @@ def mode(gui,client,channel,user,mset,modes,args):
 			window.writeText( msg )
 
 			if not window_has_unseen(window,gui):
-				UNSEEN.append(window)
+				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+					UNSEEN.append(window)
 		else:
 
 			for m in reportremove:
@@ -1197,7 +1198,8 @@ def mode(gui,client,channel,user,mset,modes,args):
 			window.writeText( msg )
 
 			if not window_has_unseen(window,gui):
-				UNSEEN.append(window)
+				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+					UNSEEN.append(window)
 
 	if config.DISPLAY_CHANNEL_MODES:
 		# Change the channel's name display
@@ -1257,7 +1259,8 @@ def topic(gui,client,setter,channel,topic):
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"",None,TYPE_TOPIC) )
 
 		if not window_has_unseen(window,gui):
-			UNSEEN.append(window)
+			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+				UNSEEN.append(window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1287,7 +1290,8 @@ def quit(gui,client,nick,message):
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC",None,TYPE_QUIT) )
 
 		if not window_has_unseen(window,gui):
-			UNSEEN.append(window)
+			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+				UNSEEN.append(window)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1383,7 +1387,8 @@ def action_message(gui,client,target,user,message):
 
 	if not posted_to_current:
 		if not window_has_unseen(window,gui):
-			UNSEEN.append(window)
+			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+				UNSEEN.append(window)
 
 		# Update connection display
 		build_connection_display(gui)
@@ -1635,7 +1640,8 @@ def part(gui,client,user,channel):
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel",None,TYPE_PART) )
 
 	if not window_has_unseen(window,gui):
-		UNSEEN.append(window)
+		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+			UNSEEN.append(window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1662,7 +1668,8 @@ def join(gui,client,user,channel):
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel",None,TYPE_JOIN) )
 
 	if not window_has_unseen(window,gui):
-		UNSEEN.append(window)
+		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+			UNSEEN.append(window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1724,7 +1731,8 @@ def notice_message(gui,client,target,user,message):
 
 		if not posted_to_current:
 			if not window_has_unseen(window,gui):
-				UNSEEN.append(window)
+				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+					UNSEEN.append(window)
 
 			# Update connection display
 			build_connection_display(gui)
@@ -1751,7 +1759,8 @@ def notice_message(gui,client,target,user,message):
 
 		if not posted_to_current:
 			if not window_has_unseen(window,gui):
-				UNSEEN.append(window)
+				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+					UNSEEN.append(window)
 
 			# Update connection display
 			build_connection_display(gui)

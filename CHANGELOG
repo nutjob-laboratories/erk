@@ -31,6 +31,7 @@ Version 0.875
 	* Added a readme to the distribution file
 	* Added a commandline flag to disable log reading/writing
 	* Bugfix: better solution to the "drag" issue on the text input widget (widget is "reset" every time a key is pressed in the widget)
+	* Bugfix: unseen messages notification could be triggered upon connection and joining a channel for the first time
 
 Version 0.870
 	* New version
