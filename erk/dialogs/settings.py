@@ -50,6 +50,7 @@ from .list_time import Dialog as ListTime
 from .quitpart import Dialog as QuitPart
 from .autosave_freq import Dialog as Autosave
 from .log_size import Dialog as LogSize
+from .cursor_width import Dialog as CursorWidth
 
 class Dialog(QDialog):
 
@@ -62,7 +63,7 @@ class Dialog(QDialog):
 		self.systemPrefix = info
 		self.do_rerender = True
 
-		self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b>*")
+		self.prefDisplay.setText("Prefix: <b>"+self.systemPrefix+"</b>")
 
 	def setHistory(self):
 		x = HistorySize()
@@ -72,7 +73,7 @@ class Dialog(QDialog):
 		if not info: return
 		self.historySize = info
 
-		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b>*")
+		self.historyLabel.setText("Command history: <b>"+str(self.historySize)+" lines</b>")
 
 	def selectorClick(self,item):
 		self.stack.setCurrentWidget(item.widget)
@@ -113,7 +114,7 @@ class Dialog(QDialog):
 			font_name = pfs[0]
 			font_size = pfs[1]
 
-			self.fontLabel.setText(f"Font: <b>{font_name}, {font_size} pt</b>*")
+			self.fontLabel.setText(f"Font: <b>{font_name}, {font_size} pt</b>")
 
 	def menuFormat(self):
 		x = FormatText(self.parent)
@@ -138,7 +139,7 @@ class Dialog(QDialog):
 		if not info: return None
 		self.configRefresh = info
 
-		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds*")
+		self.listFreq.setText("Refresh list every <b>"+str(self.configRefresh)+"</b> seconds")
 
 
 	def setSaveFreq(self):
@@ -147,7 +148,7 @@ class Dialog(QDialog):
 		f = x.get_entry_information()
 		if f:
 			self.autosave_time = f
-			self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds*")
+			self.autoLogLabel.setText("Autosave logs every <b>"+str(self.autosave_time)+"</b> seconds")
 
 
 	def setLogSize(self):
@@ -155,7 +156,7 @@ class Dialog(QDialog):
 		info = x.get_entry_information()
 		if info:
 			self.logDisplayLines = info
-			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display*")
+			self.logSizeLabel.setText("Load <b>"+str(self.logDisplayLines)+"</b> lines for display")
 
 	def closeEvent(self, event):
 
@@ -264,6 +265,16 @@ class Dialog(QDialog):
 			self.setConnecting.setStyleSheet(f'background-color: {ncolor};')
 
 			self.connectingLabel.setText("Connecting color: <b>"+ncolor+"</b>")
+
+	def setLogSize(self):
+		x = CursorWidth()
+		info = x.get_entry_information()
+		if info:
+			self.cursor_width = info
+			if self.cursor_width>1:
+				self.cursorWidthLabel.setText("Cursor width: <b>"+str(self.cursor_width)+" pixels</b>")
+			else:
+				self.cursorWidthLabel.setText("Cursor width: <b>"+str(self.cursor_width)+" pixel</b>")
 
 
 	def __init__(self,configfile=USER_FILE,parent=None,app=None,opento=None):
@@ -765,6 +776,26 @@ class Dialog(QDialog):
 		self.displayUserModes = QCheckBox("Display user modes",self)
 		if config.DISPLAY_MODES_ON_CHANNEL: self.displayUserModes.setChecked(True)
 
+		self.cursor_width = config.CURSOR_WIDTH
+
+		if self.cursor_width>1:
+			self.cursorWidthLabel = QLabel("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixels</b>")
+		else:
+			self.cursorWidthLabel = QLabel("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixel</b>")
+
+		self.cursorWidthButton = QPushButton("")
+		self.cursorWidthButton.clicked.connect(self.setLogSize)
+		self.cursorWidthButton.setAutoDefault(False)
+
+		self.cursorWidthButton.setFixedSize(fheight +10,fheight + 10)
+		self.cursorWidthButton.setIcon(QIcon(EDIT_ICON))
+		self.cursorWidthButton.setToolTip("Set cursor width")
+
+		cursorWidthLayout = QHBoxLayout()
+		cursorWidthLayout.addWidget(self.cursorWidthButton)
+		cursorWidthLayout.addWidget(self.cursorWidthLabel)
+		cursorWidthLayout.addStretch()
+
 		nnbLay = QVBoxLayout()
 		nnbLay.addWidget(self.displayNickname)
 		nnbLay.addWidget(self.displayUserModes)
@@ -784,6 +815,7 @@ class Dialog(QDialog):
 		cpLayout.addWidget(self.channelUserMenu)
 		cpLayout.addWidget(self.channelLatest)
 		cpLayout.addWidget(self.openNew)
+		cpLayout.addLayout(cursorWidthLayout)
 		cpLayout.addStretch()
 
 		self.infoPage.setLayout(cbLay)
@@ -1664,6 +1696,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.CURSOR_WIDTH = self.cursor_width
+
 		config.UNSEEN_MESSAGE_COLOR = self.unseen_message_color
 		config.CONNECTING_ANIMATION_COLOR = self.connecting_anim_color
 
@@ -1933,6 +1967,7 @@ class Dialog(QDialog):
 			events.rerender_channel_nickname()
 			self.parent.refresh_application_title()
 			events.resetinput_all()
+			events.set_cursor_width()
 
 			if config.CONNECTION_DISPLAY_VISIBLE:
 				self.parent.connection_dock.show()
@@ -2167,6 +2202,12 @@ class Dialog(QDialog):
 				self.setUnseen.setStyleSheet(f'background-color: {config.UNSEEN_MESSAGE_COLOR};')
 				self.unseenLabel.setText("Unseen messages color: <b>"+config.UNSEEN_MESSAGE_COLOR+"</b>")
 				self.connectingLabel.setText("Connecting color: <b>"+config.CONNECTING_ANIMATION_COLOR+"</b>")
+
+				self.cursor_width = config.CURSOR_WIDTH
+				if self.cursor_width>1:
+					self.cursorWidthLabel.setText("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixels</b>")
+				else:
+					self.cursorWidthLabel.setText("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixel</b>")
 
 			else:
 				msg = QMessageBox(self)

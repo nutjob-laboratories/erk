@@ -216,23 +216,6 @@ def build_connection_display(gui,new_server=None):
 	unseen_color = config.UNSEEN_MESSAGE_COLOR
 	unseen_back = config.CONNECTION_DISPLAY_TEXT_COLOR
 	connect_color = config.CONNECTING_ANIMATION_COLOR
-	
-	# for key in textformat.STYLES:
-	# 	if key==config.UNSEEN_ANIMATION_COLOR:
-	# 		for e in textformat.STYLES[key].split(';'):
-	# 			l = e.strip()
-	# 			l2 = l.split(':')
-	# 			if len(l2)==2:
-	# 				if l2[0].lower()=='color':
-	# 					unseen_color = l2[1].strip()
-
-	# 	if key==config.CONNECTION_ANIMATION_COLOR:
-	# 		for e in textformat.STYLES[key].split(';'):
-	# 			l = e.strip()
-	# 			l2 = l.split(':')
-	# 			if len(l2)==2:
-	# 				if l2[0].lower()=='color':
-	# 					connect_color = l2[1].strip()
 
 	# Make a list of expanded server nodes, and make sure they
 	# are still expanded when we rewrite the display
@@ -423,6 +406,14 @@ def build_connection_display(gui,new_server=None):
 							child.setFont(0,f)
 
 							continue
+
+def set_cursor_width():
+	for c in CHANNELS:
+		c.widget.resetCursorWidth()
+	for c in PRIVATES:
+		c.widget.resetCursorWidth()
+	for c in CONSOLES:
+		c.widget.resetCursorWidth()
 
 def apply_style(style):
 	for c in CHANNELS:

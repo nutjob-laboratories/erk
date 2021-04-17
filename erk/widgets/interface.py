@@ -294,6 +294,9 @@ class Window(QMainWindow):
 		else:
 			self.mode_display.hide()
 
+	def resetCursorWidth(self):
+		self.input.setCursorWidth(config.CURSOR_WIDTH)
+
 	def __init__(self,name,client,wtype,app,parent=None):
 		super(Window, self).__init__(parent)
 
@@ -439,6 +442,8 @@ class Window(QMainWindow):
 		self.input.returnPressed.connect(self.handleUserInput)
 		self.input.keyUp.connect(self.keyPressUp)
 		self.input.keyDown.connect(self.keyPressDown)
+
+		self.input.setCursorWidth(config.CURSOR_WIDTH)
 
 		#self.input.setStyleSheet(self.styles["all"])
 

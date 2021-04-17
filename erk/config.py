@@ -172,9 +172,10 @@ ENABLE_CONNECTION_CONTEXT = True
 DISPLAY_MODES_ON_CHANNEL = True
 LOAD_SERVER_LOGS = True
 SAVE_SERVER_LOGS = True
-
 UNSEEN_MESSAGE_COLOR = "#FF8C00"
 CONNECTING_ANIMATION_COLOR = "#FF8C00"
+
+CURSOR_WIDTH = 1
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -182,6 +183,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"cursor_width": CURSOR_WIDTH,
 		"unseen_messages_animation_color": UNSEEN_MESSAGE_COLOR,
 		"connecting_animation_color": CONNECTING_ANIMATION_COLOR,
 		"load_server_logs": LOAD_SERVER_LOGS,
@@ -316,6 +318,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "cursor_width" in data:
+		data["cursor_width"] = CURSOR_WIDTH
 
 	if not "unseen_messages_animation_color" in data:
 		data["unseen_messages_animation_color"] = UNSEEN_MESSAGE_COLOR
@@ -833,6 +838,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SAVE_SERVER_LOGS
 	global UNSEEN_MESSAGE_COLOR
 	global CONNECTING_ANIMATION_COLOR
+	global CURSOR_WIDTH
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -841,6 +847,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			CURSOR_WIDTH = data["cursor_width"]
 			UNSEEN_MESSAGE_COLOR = data["unseen_messages_animation_color"]
 			CONNECTING_ANIMATION_COLOR = data["connecting_animation_color"]
 			LOAD_SERVER_LOGS = data["load_server_logs"]
@@ -1112,8 +1119,9 @@ def check_settings(filename):
 			if "save_server_logs" in data: check = check + 1
 			if "unseen_messages_animation_color" in data: check = check + 1
 			if "connecting_animation_color" in data: check = check + 1
+			if "cursor_width" in data: check = check + 1
 
-			if check == 127:
+			if check == 128:
 				return True
 			else:
 				return False

@@ -24,6 +24,9 @@ Version 0.875
 	* Bugfix: "unseen messages" and "connecting" text animation in the connection display now uses the set text color as its base
 	* Animation color settings for "unseen messages" and "connecting" in the connection display are now set in the config file
 	* Added the ability to set the "unseen" and "connecting" animation colors to the "settings" dialog
+	* Added a setting to the config file to set the width of the cursor, in pixels
+	* Added the ability to set the cursor width to the "settings" dialog
+	* Removed the "*" from changed settings in the "settings" dialog
 
 Version 0.870
 	* New version
