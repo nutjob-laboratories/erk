@@ -30,6 +30,7 @@ Version 0.875
 	* Bugfix: server consoles weren't scrolling to the bottom while connecting
 	* Added a readme to the distribution file
 	* Added a commandline flag to disable log reading/writing
+	* Bugfix: better solution to the "drag" issue on the text input widget (widget is "reset" every time a key is pressed in the widget)
 
 Version 0.870
 	* New version

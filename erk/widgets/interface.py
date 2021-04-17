@@ -1680,16 +1680,16 @@ class SpellTextEdit(QPlainTextEdit):
 
 	def keyPressEvent(self,event):
 
+		# BUGFIX: the user can "drag" the view "down"
+		# with the mouse; this resets the widget to
+		# "normal" every time the user presses a key
+		# Man, I wish Qt had a rich-text-enabled QLineEdit :-(
+		sb = self.verticalScrollBar()
+		sb.setValue(sb.minimum())
+		self.ensureCursorVisible()
+
 		if event.key() == Qt.Key_Return:
 			self.returnPressed.emit()
-
-			# BUGFIX: the user can "drag" the view "down"
-			# with the mouse; this resets the widget to
-			# "normal" after the user hits enter
-			sb = self.verticalScrollBar()
-			sb.setValue(sb.minimum())
-			self.ensureCursorVisible()
-
 		elif event.key() == Qt.Key_Up:
 			self.keyUp.emit()
 		elif event.key() == Qt.Key_Down:
