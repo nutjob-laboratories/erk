@@ -38,6 +38,8 @@ from ..strings import *
 from ..files import *
 from .. import config
 
+from ..resources import *
+
 def clearQTreeWidget(tree):
 	iterator = QTreeWidgetItemIterator(tree, QTreeWidgetItemIterator.All)
 	while iterator.value():
@@ -99,25 +101,56 @@ def buildConnectionDisplayWidget(self):
 
 	connectionDisplay.setWindowTitle("Connections")
 
-	# connectionDisplay.setFeatures(
-	# 	QDockWidget.DockWidgetMovable |
-	# 	QDockWidget.DockWidgetFloatable
-	# 	)
+	mbcolor = QColor(config.CONNECTION_DISPLAY_BG_COLOR).name()
+	c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+	luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+	luma = luma*100
 
-	# connectionDisplay.setFeatures( QDockWidget.NoDockWidgetFeatures )
-	# connectionDisplay.setTitleBarWidget(QWidget())
+	if luma>=40:
+		is_light_colored = True
+	else:
+		is_light_colored = False
 
-	# STYLES = get_text_format_settings()
+	CONNECTION_DISPLAY_SS = f"""
+		QTreeWidget {{
+		    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+		    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+		}}
 
+		QTreeWidget::branch:has-children:!has-siblings:closed,
+		QTreeWidget::branch:closed:has-children:has-siblings {{
+		        border-image: none;
+		        image: url({CONNECTION_CLOSED});
+		}}
 
-	# STYLES = get_text_format_settings(self.stylefile)
-	
-	# connectionTree.setStyleSheet(STYLES["all"])
+		QTreeWidget::branch:open:has-children:!has-siblings,
+		QTreeWidget::branch:open:has-children:has-siblings  {{
+		        border-image: none;
+		        image: url({CONNECTION_OPEN});
+		}}"""
 
-	p = connectionTree.palette()
-	p.setColor(QPalette.Base, QColor(config.CONNECTION_DISPLAY_BG_COLOR))
-	p.setColor(QPalette.Text, QColor(config.CONNECTION_DISPLAY_TEXT_COLOR))
-	connectionTree.setPalette(p)
+	LIGHT_CONNECTION_DISPLAY_SS = f"""
+		QTreeWidget {{
+		    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+		    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+		}}
+
+		QTreeWidget::branch:has-children:!has-siblings:closed,
+		QTreeWidget::branch:closed:has-children:has-siblings {{
+		        border-image: none;
+		        image: url({LIGHT_CONNECTION_CLOSED});
+		}}
+
+		QTreeWidget::branch:open:has-children:!has-siblings,
+		QTreeWidget::branch:open:has-children:has-siblings  {{
+		        border-image: none;
+		        image: url({LIGHT_CONNECTION_OPEN});
+		}}"""
+
+	if is_light_colored:
+		connectionTree.setStyleSheet(CONNECTION_DISPLAY_SS)
+	else:
+		connectionTree.setStyleSheet(LIGHT_CONNECTION_DISPLAY_SS)
 
 	return [connectionTree,connectionDisplay]
 

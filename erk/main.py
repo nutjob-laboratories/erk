@@ -666,11 +666,57 @@ class Erk(QMainWindow):
 		# self.tray.setContextMenu(self.trayMenu)
 
 	def setConnectionColors(self,bgcolor,fgcolor):
-		p = self.connection_display.palette()
-		p.setColor(QPalette.Base, QColor(bgcolor))
-		p.setColor(QPalette.Text, QColor(fgcolor))
-		self.connection_display.setPalette(p)
-		#events.build_connection_display(self)
+
+		mbcolor = QColor(bgcolor).name()
+		c = tuple(int(mbcolor[i:i + 2], 16) / 255. for i in (1, 3, 5))
+		luma = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+		luma = luma*100
+
+		if luma>=40:
+			is_light_colored = True
+		else:
+			is_light_colored = False
+
+		CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {bgcolor};
+			    color: {fgcolor};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({CONNECTION_CLOSED});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({CONNECTION_OPEN});
+			}}"""
+
+		LIGHT_CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {bgcolor};
+			    color: {fgcolor};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({LIGHT_CONNECTION_CLOSED});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({LIGHT_CONNECTION_OPEN});
+			}}"""
+
+		if is_light_colored:
+			self.connection_display.setStyleSheet(CONNECTION_DISPLAY_SS)
+		else:
+			self.connection_display.setStyleSheet(LIGHT_CONNECTION_DISPLAY_SS)
 
 	def spellcheck_language(self,setting):
 

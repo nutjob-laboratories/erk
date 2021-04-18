@@ -168,3 +168,10 @@ LIGHT_NETWORK_ICON = ":/gui-light_network.png"
 LIGHT_PRIVATE_ICON = ":/gui-light_private.png"
 HORIZONTAL_DOTTED_BACKGROUND = ":/gui-horizontal_dotted.png"
 LIGHT_HORIZONTAL_DOTTED_BACKGROUND = ":/gui-light_horizontal_dotted.png"
+
+CONNECTION_OPEN = ":/open.png"
+CONNECTION_CLOSED = ":/closed.png"
+
+LIGHT_CONNECTION_OPEN = ":/light_open.png"
+LIGHT_CONNECTION_CLOSED = ":/light_closed.png"
+

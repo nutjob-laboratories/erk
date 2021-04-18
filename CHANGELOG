@@ -36,6 +36,9 @@ Version 0.875
 	* Added commandline flags to disable log loading (--noload) and writing (--nowrite)
 	* Bugfix: setting a channel mode did not always trigger the "unseen message" animation
 	* Bugfix: mode notification weren't always being written to the console
+	* Connection display colors are now set with a stylesheet
+	* Open/close node icons are now visible (and custom) on the connection display
+	* Open/close node icons on the connection display now change color depending on the darkness of the background color (just like icons)
 
 Version 0.870
 	* New version
