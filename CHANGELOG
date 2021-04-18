@@ -39,6 +39,10 @@ Version 0.875
 	* Connection display colors are now set with a stylesheet
 	* Open/close node icons are now visible (and custom) on the connection display
 	* Open/close node icons on the connection display now change color depending on the darkness of the background color (just like icons)
+	* Added an option to the config file to toggle collapsability on and off in the connection display
+	* Added an option to toggle branch line display in the connection display
+	* Added the toggles for collapsability and branches to the "settings" dialog
+	* The "arrow" changes to a "dot" when collapsability is turned off on the connection display
 
 Version 0.870
 	* New version

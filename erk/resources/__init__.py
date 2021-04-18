@@ -175,3 +175,15 @@ CONNECTION_CLOSED = ":/closed.png"
 LIGHT_CONNECTION_OPEN = ":/light_open.png"
 LIGHT_CONNECTION_CLOSED = ":/light_closed.png"
 
+BRANCH_END = ":/branch-end.png"
+BRANCH_MORE = ":/branch-more.png"
+BRANCH_LINE = ":/vline.png"
+
+LIGHT_BRANCH_END = ":/light_branch-end.png"
+LIGHT_BRANCH_MORE = ":/light_branch-more.png"
+LIGHT_BRANCH_LINE = ":/light_vline.png"
+
+BLANK_IMAGE = ":/gui-blank.png"
+
+DOT_ICON = ":/dot.png"
+LIGHT_DOT_ICON = ":/light_dot.png"

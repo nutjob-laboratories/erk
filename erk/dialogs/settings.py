@@ -970,6 +970,11 @@ class Dialog(QDialog):
 		connectingColorLayout.addWidget(self.setConnecting)
 		connectingColorLayout.addWidget(self.connectingLabel)
 
+		self.collapseConnection = QCheckBox("Entries are collapsable",self)
+		if config.CONNECTION_DISPLAY_COLLAPSE: self.collapseConnection.setChecked(True)
+
+		self.branchConnection = QCheckBox("Display branches",self)
+		if config.CONNECTION_DISPLAY_BRANCHES: self.branchConnection.setChecked(True)
 
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay:
@@ -991,6 +996,8 @@ class Dialog(QDialog):
 				self.connectingLabel.setEnabled(False)
 				self.setUnseen.setEnabled(False)
 				self.unseenLabel.setEnabled(False)
+				self.collapseConnection.setEnabled(False)
+				self.branchConnection.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -1019,6 +1026,8 @@ class Dialog(QDialog):
 		condisLayout.addWidget(self.uptimesConnection)
 		condisLayout.addWidget(self.doubleConnection)
 		condisLayout.addWidget(self.expandConnection)
+		condisLayout.addWidget(self.collapseConnection)
+		condisLayout.addWidget(self.branchConnection)
 		condisLayout.addStretch()
 
 		appearanceLayout = QVBoxLayout()
@@ -1731,6 +1740,10 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.CONNECTION_DISPLAY_COLLAPSE = self.collapseConnection.isChecked()
+
+		config.CONNECTION_DISPLAY_BRANCHES = self.branchConnection.isChecked()
+
 		config.CURSOR_WIDTH = self.cursor_width
 
 		config.UNSEEN_MESSAGE_COLOR = self.unseen_message_color
@@ -2030,6 +2043,8 @@ class Dialog(QDialog):
 				self.parent.addDockWidget(Qt.RightDockWidgetArea,self.parent.connection_dock)
 				self.parent.connection_dock.show()
 
+			self.parent.connection_display.setItemsExpandable(config.CONNECTION_DISPLAY_COLLAPSE)
+
 			self.parent.setConnectionColors(config.CONNECTION_DISPLAY_BG_COLOR,config.CONNECTION_DISPLAY_TEXT_COLOR)
 
 			events.build_connection_display(self.parent)
@@ -2244,6 +2259,9 @@ class Dialog(QDialog):
 					self.cursorWidthLabel.setText("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixels</b>")
 				else:
 					self.cursorWidthLabel.setText("Cursor width: <b>"+str(config.CURSOR_WIDTH)+" pixel</b>")
+
+				self.collapseConnection.setChecked(config.CONNECTION_DISPLAY_COLLAPSE)
+				self.branchConnection.setChecked(config.CONNECTION_DISPLAY_BRANCHES)
 
 			else:
 				msg = QMessageBox(self)

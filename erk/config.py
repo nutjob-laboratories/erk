@@ -177,12 +177,17 @@ CONNECTING_ANIMATION_COLOR = "#FF8C00"
 CURSOR_WIDTH = 1
 DO_NOT_TRIGGER_UNSEEN_TIME = 10
 
+CONNECTION_DISPLAY_BRANCHES = False
+CONNECTION_DISPLAY_COLLAPSE = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"connection_display_visible_branches": CONNECTION_DISPLAY_BRANCHES,
+		"connection_display_collapsable": CONNECTION_DISPLAY_COLLAPSE,
 		"cursor_width": CURSOR_WIDTH,
 		"unseen_messages_animation_color": UNSEEN_MESSAGE_COLOR,
 		"connecting_animation_color": CONNECTING_ANIMATION_COLOR,
@@ -318,6 +323,12 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "connection_display_visible_branches" in data:
+		data["connection_display_visible_branches"] = CONNECTION_DISPLAY_BRANCHES
+
+	if not "connection_display_collapsable" in data:
+		data["connection_display_collapsable"] = CONNECTION_DISPLAY_COLLAPSE
 
 	if not "cursor_width" in data:
 		data["cursor_width"] = CURSOR_WIDTH
@@ -839,6 +850,8 @@ def load_settings(filename=SETTINGS_FILE):
 	global UNSEEN_MESSAGE_COLOR
 	global CONNECTING_ANIMATION_COLOR
 	global CURSOR_WIDTH
+	global CONNECTION_DISPLAY_BRANCHES
+	global CONNECTION_DISPLAY_COLLAPSE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -847,6 +860,8 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			CONNECTION_DISPLAY_BRANCHES = data["connection_display_visible_branches"]
+			CONNECTION_DISPLAY_COLLAPSE = data["connection_display_collapsable"]
 			CURSOR_WIDTH = data["cursor_width"]
 			UNSEEN_MESSAGE_COLOR = data["unseen_messages_animation_color"]
 			CONNECTING_ANIMATION_COLOR = data["connecting_animation_color"]
@@ -1120,8 +1135,10 @@ def check_settings(filename):
 			if "unseen_messages_animation_color" in data: check = check + 1
 			if "connecting_animation_color" in data: check = check + 1
 			if "cursor_width" in data: check = check + 1
+			if "connection_display_visible_branches" in data: check = check + 1
+			if "connection_display_collapsable" in data: check = check + 1
 
-			if check == 128:
+			if check == 130:
 				return True
 			else:
 				return False

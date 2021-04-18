@@ -677,41 +677,123 @@ class Erk(QMainWindow):
 		else:
 			is_light_colored = False
 
-		CONNECTION_DISPLAY_SS = f"""
-			QTreeWidget {{
-			    background-color: {bgcolor};
-			    color: {fgcolor};
-			}}
+		if config.CONNECTION_DISPLAY_COLLAPSE:
+			if is_light_colored:
+				OPEN_ICON = CONNECTION_OPEN
+				CLOSE_ICON = CONNECTION_CLOSED
+			else:
+				OPEN_ICON = LIGHT_CONNECTION_OPEN
+				CLOSE_ICON = LIGHT_CONNECTION_CLOSED
+		else:
+			if is_light_colored:
+				OPEN_ICON = DOT_ICON
+				CLOSE_ICON = DOT_ICON
+			else:
+				OPEN_ICON = LIGHT_DOT_ICON
+				CLOSE_ICON = LIGHT_DOT_ICON
 
-			QTreeWidget::branch:has-children:!has-siblings:closed,
-			QTreeWidget::branch:closed:has-children:has-siblings {{
-			        border-image: none;
-			        image: url({CONNECTION_CLOSED});
-			}}
+		if config.CONNECTION_DISPLAY_BRANCHES:
+			CONNECTION_DISPLAY_SS = f"""
+				QTreeWidget {{
+				    background-color: {bgcolor};
+				    color: {fgcolor};
+				}}
 
-			QTreeWidget::branch:open:has-children:!has-siblings,
-			QTreeWidget::branch:open:has-children:has-siblings  {{
-			        border-image: none;
-			        image: url({CONNECTION_OPEN});
-			}}"""
+				QTreeWidget::branch:has-children:!has-siblings:closed,
+				QTreeWidget::branch:closed:has-children:has-siblings {{
+				        border-image: none;
+				        image: url({CLOSE_ICON});
+				}}
 
-		LIGHT_CONNECTION_DISPLAY_SS = f"""
-			QTreeWidget {{
-			    background-color: {bgcolor};
-			    color: {fgcolor};
-			}}
+				QTreeWidget::branch:open:has-children:!has-siblings,
+				QTreeWidget::branch:open:has-children:has-siblings  {{
+				        border-image: none;
+				        image: url({OPEN_ICON});
+				}}
 
-			QTreeWidget::branch:has-children:!has-siblings:closed,
-			QTreeWidget::branch:closed:has-children:has-siblings {{
-			        border-image: none;
-			        image: url({LIGHT_CONNECTION_CLOSED});
-			}}
+				QTreeWidget::branch:has-siblings:!adjoins-item {{
+				    border-image: url({BRANCH_LINE}) 0;
+				}}
 
-			QTreeWidget::branch:open:has-children:!has-siblings,
-			QTreeWidget::branch:open:has-children:has-siblings  {{
-			        border-image: none;
-			        image: url({LIGHT_CONNECTION_OPEN});
-			}}"""
+				QTreeWidget::branch:has-siblings:adjoins-item {{
+				    border-image: url({BRANCH_MORE}) 0;
+
+				}}
+
+				QTreeWidget::branch:!has-children:!has-siblings:adjoins-item {{
+				    border-image: url({BRANCH_END}) 0;
+				}}
+				"""
+
+			LIGHT_CONNECTION_DISPLAY_SS = f"""
+				QTreeWidget {{
+				    background-color: {bgcolor};
+				    color: {fgcolor};
+				}}
+
+				QTreeWidget::branch:has-children:!has-siblings:closed,
+				QTreeWidget::branch:closed:has-children:has-siblings {{
+				        border-image: none;
+				        image: url({CLOSE_ICON});
+				}}
+
+				QTreeWidget::branch:open:has-children:!has-siblings,
+				QTreeWidget::branch:open:has-children:has-siblings  {{
+				        border-image: none;
+				        image: url({OPEN_ICON});
+				}}
+
+				QTreeWidget::branch:has-siblings:!adjoins-item {{
+				    border-image: url({LIGHT_BRANCH_LINE}) 0;
+				}}
+
+				QTreeWidget::branch:has-siblings:adjoins-item {{
+				    border-image: url({LIGHT_BRANCH_MORE}) 0;
+
+				}}
+
+				QTreeWidget::branch:!has-children:!has-siblings:adjoins-item {{
+				    border-image: url({LIGHT_BRANCH_END}) 0;
+				}}
+				"""
+		else:
+			CONNECTION_DISPLAY_SS = f"""
+				QTreeWidget {{
+				    background-color: {bgcolor};
+				    color: {fgcolor};
+				}}
+
+				QTreeWidget::branch:has-children:!has-siblings:closed,
+				QTreeWidget::branch:closed:has-children:has-siblings {{
+				        border-image: none;
+				        image: url({CLOSE_ICON});
+				}}
+
+				QTreeWidget::branch:open:has-children:!has-siblings,
+				QTreeWidget::branch:open:has-children:has-siblings  {{
+				        border-image: none;
+				        image: url({OPEN_ICON});
+				}}
+				"""
+
+			LIGHT_CONNECTION_DISPLAY_SS = f"""
+				QTreeWidget {{
+				    background-color: {bgcolor};
+				    color: {fgcolor};
+				}}
+
+				QTreeWidget::branch:has-children:!has-siblings:closed,
+				QTreeWidget::branch:closed:has-children:has-siblings {{
+				        border-image: none;
+				        image: url({CLOSE_ICON});
+				}}
+
+				QTreeWidget::branch:open:has-children:!has-siblings,
+				QTreeWidget::branch:open:has-children:has-siblings  {{
+				        border-image: none;
+				        image: url({OPEN_ICON});
+				}}
+				"""
 
 		if is_light_colored:
 			self.connection_display.setStyleSheet(CONNECTION_DISPLAY_SS)

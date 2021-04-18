@@ -111,46 +111,140 @@ def buildConnectionDisplayWidget(self):
 	else:
 		is_light_colored = False
 
-	CONNECTION_DISPLAY_SS = f"""
-		QTreeWidget {{
-		    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
-		    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
-		}}
+	# USERLIST_NORMAL_ICON
 
-		QTreeWidget::branch:has-children:!has-siblings:closed,
-		QTreeWidget::branch:closed:has-children:has-siblings {{
-		        border-image: none;
-		        image: url({CONNECTION_CLOSED});
-		}}
+	connectionTree.setItemsExpandable(config.CONNECTION_DISPLAY_COLLAPSE)
 
-		QTreeWidget::branch:open:has-children:!has-siblings,
-		QTreeWidget::branch:open:has-children:has-siblings  {{
-		        border-image: none;
-		        image: url({CONNECTION_OPEN});
-		}}"""
-
-	LIGHT_CONNECTION_DISPLAY_SS = f"""
-		QTreeWidget {{
-		    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
-		    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
-		}}
-
-		QTreeWidget::branch:has-children:!has-siblings:closed,
-		QTreeWidget::branch:closed:has-children:has-siblings {{
-		        border-image: none;
-		        image: url({LIGHT_CONNECTION_CLOSED});
-		}}
-
-		QTreeWidget::branch:open:has-children:!has-siblings,
-		QTreeWidget::branch:open:has-children:has-siblings  {{
-		        border-image: none;
-		        image: url({LIGHT_CONNECTION_OPEN});
-		}}"""
-
-	if is_light_colored:
-		connectionTree.setStyleSheet(CONNECTION_DISPLAY_SS)
+	if config.CONNECTION_DISPLAY_COLLAPSE:
+		if is_light_colored:
+			OPEN_ICON = CONNECTION_OPEN
+			CLOSE_ICON = CONNECTION_CLOSED
+		else:
+			OPEN_ICON = LIGHT_CONNECTION_OPEN
+			CLOSE_ICON = LIGHT_CONNECTION_CLOSED
 	else:
-		connectionTree.setStyleSheet(LIGHT_CONNECTION_DISPLAY_SS)
+		if is_light_colored:
+			OPEN_ICON = DOT_ICON
+			CLOSE_ICON = DOT_ICON
+		else:
+			OPEN_ICON = LIGHT_DOT_ICON
+			CLOSE_ICON = LIGHT_DOT_ICON
+
+	if config.CONNECTION_DISPLAY_BRANCHES:
+
+		CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+			    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({CLOSE_ICON});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({OPEN_ICON});
+			}}
+
+			QTreeWidget::branch:has-siblings:!adjoins-item {{
+			    border-image: url({BRANCH_LINE}) 0;
+			}}
+
+			QTreeWidget::branch:has-siblings:adjoins-item {{
+			    border-image: url({BRANCH_MORE}) 0;
+
+			}}
+
+			QTreeWidget::branch:!has-children:!has-siblings:adjoins-item {{
+			    border-image: url({BRANCH_END}) 0;
+			}}
+			"""
+
+		LIGHT_CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+			    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({CLOSE_ICON});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({OPEN_ICON});
+			}}
+
+			QTreeWidget::branch:has-siblings:!adjoins-item {{
+			    border-image: url({LIGHT_BRANCH_LINE}) 0;
+			}}
+
+			QTreeWidget::branch:has-siblings:adjoins-item {{
+			    border-image: url({LIGHT_BRANCH_MORE}) 0;
+
+			}}
+
+			QTreeWidget::branch:!has-children:!has-siblings:adjoins-item {{
+			    border-image: url({LIGHT_BRANCH_END}) 0;
+			}}
+			"""
+
+		if is_light_colored:
+			connectionTree.setStyleSheet(CONNECTION_DISPLAY_SS)
+		else:
+			connectionTree.setStyleSheet(LIGHT_CONNECTION_DISPLAY_SS)
+
+	else:
+
+		CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+			    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({CLOSE_ICON});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({OPEN_ICON});
+			}}
+			"""
+
+		LIGHT_CONNECTION_DISPLAY_SS = f"""
+			QTreeWidget {{
+			    background-color: {config.CONNECTION_DISPLAY_BG_COLOR};
+			    color: {config.CONNECTION_DISPLAY_TEXT_COLOR};
+			}}
+
+			QTreeWidget::branch:has-children:!has-siblings:closed,
+			QTreeWidget::branch:closed:has-children:has-siblings {{
+			        border-image: none;
+			        image: url({CLOSE_ICON});
+			}}
+
+			QTreeWidget::branch:open:has-children:!has-siblings,
+			QTreeWidget::branch:open:has-children:has-siblings  {{
+			        border-image: none;
+			        image: url({OPEN_ICON});
+			}}
+			"""
+
+		if is_light_colored:
+			connectionTree.setStyleSheet(CONNECTION_DISPLAY_SS)
+		else:
+			connectionTree.setStyleSheet(LIGHT_CONNECTION_DISPLAY_SS)
 
 	return [connectionTree,connectionDisplay]
 
