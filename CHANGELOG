@@ -43,6 +43,7 @@ Version 0.875
 	* Added an option to toggle branch line display in the connection display
 	* Added the toggles for collapsability and branches to the "settings" dialog
 	* The "arrow" changes to a "dot" when collapsability is turned off on the connection display
+	* Selected chats (channels or private) are now underlined when active in the connection display
 
 Version 0.870
 	* New version

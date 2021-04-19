@@ -403,6 +403,7 @@ def build_connection_display(gui,new_server=None):
 						if gui.current_page.client.id==s[1].id:
 							f = child.font(0)
 							f.setBold(True)
+							f.setUnderline(True)
 							child.setFont(0,f)
 
 							continue
