@@ -176,9 +176,12 @@ UNSEEN_MESSAGE_COLOR = "#FF8C00"
 CONNECTING_ANIMATION_COLOR = "#FF8C00"
 CURSOR_WIDTH = 1
 DO_NOT_TRIGGER_UNSEEN_TIME = 10
-
 CONNECTION_DISPLAY_BRANCHES = False
 CONNECTION_DISPLAY_COLLAPSE = True
+UNDERLINE_CURRENT_CHAT = True
+BOLD_CURRENT_CHAT = True
+
+ITALIC_CURRENT_CHAT = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -186,6 +189,9 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"connection_display_italic_current_chat": ITALIC_CURRENT_CHAT,
+		"connection_display_bold_current_chat": BOLD_CURRENT_CHAT,
+		"connection_display_underline_current_chat": UNDERLINE_CURRENT_CHAT,
 		"connection_display_visible_branches": CONNECTION_DISPLAY_BRANCHES,
 		"connection_display_collapsable": CONNECTION_DISPLAY_COLLAPSE,
 		"cursor_width": CURSOR_WIDTH,
@@ -323,6 +329,15 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "connection_display_italic_current_chat" in data:
+		data["connection_display_italic_current_chat"] = ITALIC_CURRENT_CHAT
+
+	if not "connection_display_bold_current_chat" in data:
+		data["connection_display_bold_current_chat"] = BOLD_CURRENT_CHAT
+
+	if not "connection_display_underline_current_chat" in data:
+		data["connection_display_underline_current_chat"] = UNDERLINE_CURRENT_CHAT
 
 	if not "connection_display_visible_branches" in data:
 		data["connection_display_visible_branches"] = CONNECTION_DISPLAY_BRANCHES
@@ -852,6 +867,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global CURSOR_WIDTH
 	global CONNECTION_DISPLAY_BRANCHES
 	global CONNECTION_DISPLAY_COLLAPSE
+	global BOLD_CURRENT_CHAT
+	global UNDERLINE_CURRENT_CHAT
+	global ITALIC_CURRENT_CHAT
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -860,6 +878,9 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ITALIC_CURRENT_CHAT = data["connection_display_italic_current_chat"]
+			BOLD_CURRENT_CHAT = data["connection_display_bold_current_chat"]
+			UNDERLINE_CURRENT_CHAT = data["connection_display_underline_current_chat"]
 			CONNECTION_DISPLAY_BRANCHES = data["connection_display_visible_branches"]
 			CONNECTION_DISPLAY_COLLAPSE = data["connection_display_collapsable"]
 			CURSOR_WIDTH = data["cursor_width"]
@@ -1137,8 +1158,11 @@ def check_settings(filename):
 			if "cursor_width" in data: check = check + 1
 			if "connection_display_visible_branches" in data: check = check + 1
 			if "connection_display_collapsable" in data: check = check + 1
+			if "connection_display_bold_current_chat" in data: check = check + 1
+			if "connection_display_underline_current_chat" in data: check = check + 1
+			if "connection_display_italic_current_chat" in data: check = check + 1
 
-			if check == 130:
+			if check == 133:
 				return True
 			else:
 				return False

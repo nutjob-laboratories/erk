@@ -44,6 +44,11 @@ Version 0.875
 	* Added the toggles for collapsability and branches to the "settings" dialog
 	* The "arrow" changes to a "dot" when collapsability is turned off on the connection display
 	* Selected chats (channels or private) are now underlined when active in the connection display
+	* Selected consoles are now underlined when active in the connection display
+	* Added settings to toggle underline and bold (in the connection display) to the config file
+	* Added the toggle underline/bold settings to the "settings" dialog
+	* Added an option to italicize the current chat (in the connection display) to the config file, for completeness :-)
+	* Added the toggle italics setting to the "settings" dialog
 
 Version 0.870
 	* New version

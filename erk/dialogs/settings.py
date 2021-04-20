@@ -976,6 +976,15 @@ class Dialog(QDialog):
 		self.branchConnection = QCheckBox("Display branches",self)
 		if config.CONNECTION_DISPLAY_BRANCHES: self.branchConnection.setChecked(True)
 
+		self.underlineConnection = QCheckBox("Current display is underlined",self)
+		if config.UNDERLINE_CURRENT_CHAT: self.underlineConnection.setChecked(True)
+
+		self.boldConnection = QCheckBox("Current display is in bold",self)
+		if config.BOLD_CURRENT_CHAT: self.boldConnection.setChecked(True)
+
+		self.italicConnection = QCheckBox("Current display is in italics",self)
+		if config.ITALIC_CURRENT_CHAT: self.italicConnection.setChecked(True)
+
 		if self.parent!= None:
 			if self.parent.block_connectiondisplay:
 				self.enableConnection.setEnabled(False)
@@ -998,6 +1007,9 @@ class Dialog(QDialog):
 				self.unseenLabel.setEnabled(False)
 				self.collapseConnection.setEnabled(False)
 				self.branchConnection.setEnabled(False)
+				self.underlineConnection.setEnabled(False)
+				self.boldConnection.setEnabled(False)
+				self.italicConnection.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -1027,7 +1039,6 @@ class Dialog(QDialog):
 		condisLayout.addWidget(self.doubleConnection)
 		condisLayout.addWidget(self.expandConnection)
 		condisLayout.addWidget(self.collapseConnection)
-		condisLayout.addWidget(self.branchConnection)
 		condisLayout.addStretch()
 
 		appearanceLayout = QVBoxLayout()
@@ -1037,6 +1048,10 @@ class Dialog(QDialog):
 		appearanceLayout.addLayout(unseenColorLayout)
 		appearanceLayout.addWidget(self.animateConnection)
 		appearanceLayout.addLayout(connectingColorLayout)
+		appearanceLayout.addWidget(self.branchConnection)
+		appearanceLayout.addWidget(self.underlineConnection)
+		appearanceLayout.addWidget(self.boldConnection)
+		appearanceLayout.addWidget(self.italicConnection)
 		appearanceLayout.addStretch()
 
 
@@ -1740,6 +1755,11 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.ITALIC_CURRENT_CHAT = self.italicConnection.isChecked()
+
+		config.UNDERLINE_CURRENT_CHAT = self.underlineConnection.isChecked()
+		config.BOLD_CURRENT_CHAT = self.boldConnection.isChecked()
+
 		config.CONNECTION_DISPLAY_COLLAPSE = self.collapseConnection.isChecked()
 
 		config.CONNECTION_DISPLAY_BRANCHES = self.branchConnection.isChecked()
@@ -2262,6 +2282,11 @@ class Dialog(QDialog):
 
 				self.collapseConnection.setChecked(config.CONNECTION_DISPLAY_COLLAPSE)
 				self.branchConnection.setChecked(config.CONNECTION_DISPLAY_BRANCHES)
+
+				self.underlineConnection.setChecked(config.UNDERLINE_CURRENT_CHAT)
+				self.boldConnection.setChecked(config.BOLD_CURRENT_CHAT)
+
+				self.italicConnection.setChecked(config.ITALIC_CURRENT_CHAT)
 
 			else:
 				msg = QMessageBox(self)

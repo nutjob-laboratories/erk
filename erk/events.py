@@ -354,7 +354,9 @@ def build_connection_display(gui,new_server=None):
 								if gui.current_page.client.id==s[1].id:
 									f = parent.font(0)
 									f.setItalic(False)
-									f.setBold(True)
+									if config.BOLD_CURRENT_CHAT: f.setBold(True)
+									if config.UNDERLINE_CURRENT_CHAT: f.setUnderline(True)
+									if config.ITALIC_CURRENT_CHAT: f.setItalic(True)
 									parent.setFont(0,f)
 
 		for channel in s[2]:
@@ -402,8 +404,9 @@ def build_connection_display(gui,new_server=None):
 					if gui.current_page.name==channel.name:
 						if gui.current_page.client.id==s[1].id:
 							f = child.font(0)
-							f.setBold(True)
-							f.setUnderline(True)
+							if config.BOLD_CURRENT_CHAT: f.setBold(True)
+							if config.UNDERLINE_CURRENT_CHAT: f.setUnderline(True)
+							if config.ITALIC_CURRENT_CHAT: f.setItalic(True)
 							child.setFont(0,f)
 
 							continue
