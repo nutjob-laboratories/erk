@@ -49,6 +49,9 @@ Version 0.875
 	* Added the toggle underline/bold settings to the "settings" dialog
 	* Added an option to italicize the current chat (in the connection display) to the config file, for completeness :-)
 	* Added the toggle italics setting to the "settings" dialog
+	* Changed the private chat icon to a "user" type icon, to make it more apparent it's a private chat
+	* Changed the "format" and "style editor" icons, as the old one looked a little sketchy in the GUI
+	* Changed the "user" icon to be the same as the "private chat" icon
 
 Version 0.870
 	* New version
