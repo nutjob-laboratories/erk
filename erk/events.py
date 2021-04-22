@@ -2010,12 +2010,6 @@ def registered(gui,client):
 
 	window = fetch_console_window(client)
 	window.writeText( Message(SYSTEM_MESSAGE,'',"Registered with "+client.server+":"+str(client.port)+"!") )
-
-	# Load custom style, if there is one
-	f = encodeStyleName(client.network,None)
-	styleFileName = os.path.join(gui.styledir,f)
-	if os.path.isfile(styleFileName):
-		window.loadNewStyle(styleFileName,True)
 	
 	# Update connection display
 	build_connection_display(gui)
@@ -2134,6 +2128,14 @@ def server_options(gui,client,options):
 		if change:
 			user_info["history"] = newhistory
 			save_user(user_info,gui.userfile)
+
+		# Now that we know the network name,
+		# if the console has a custom style
+		# set, load it in
+		f = encodeStyleName(client.network,None)
+		styleFileName = os.path.join(gui.styledir,f)
+		if os.path.isfile(styleFileName):
+			window.loadNewStyle(styleFileName,True)
 
 	window.update_server_name()
 
