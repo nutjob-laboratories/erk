@@ -2010,6 +2010,12 @@ def registered(gui,client):
 
 	window = fetch_console_window(client)
 	window.writeText( Message(SYSTEM_MESSAGE,'',"Registered with "+client.server+":"+str(client.port)+"!") )
+
+	# Load custom style, if there is one
+	f = encodeStyleName(client.network,None)
+	styleFileName = os.path.join(gui.styledir,f)
+	if os.path.isfile(styleFileName):
+		window.loadNewStyle(styleFileName,True)
 	
 	# Update connection display
 	build_connection_display(gui)

@@ -52,6 +52,7 @@ Version 0.875
 	* Changed the private chat icon to a "user" type icon, to make it more apparent it's a private chat
 	* Changed the "format" and "style editor" icons, as the old one looked a little sketchy in the GUI
 	* Changed the "user" icon to be the same as the "private chat" icon
+	* Bugfix: console style files are now loaded automatically
 
 Version 0.870
 	* New version
