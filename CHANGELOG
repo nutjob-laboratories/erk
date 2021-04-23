@@ -54,6 +54,8 @@ Version 0.875
 	* Changed the "user" icon to be the same as the "private chat" icon
 	* Bugfix: console style files are now loaded automatically
 	* Bugfix: unseen messages are now handled properly, so the flag shouldn't be raised on windows that are active and displayed
+	* Added an option to display connection uptime in seconds (in the connection display) to the config file
+	* Added the new uptime option to the "settings" dialog
 
 Version 0.870
 	* New version

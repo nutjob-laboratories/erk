@@ -887,6 +887,9 @@ class Dialog(QDialog):
 		self.uptimesConnection = QCheckBox("Display uptimes",self)
 		if config.DISPLAY_CONNECTION_UPTIME: self.uptimesConnection.setChecked(True)
 
+		self.secondsConnection = QCheckBox("Show uptimes in seconds only",self)
+		if config.SHOW_UPTIME_IN_SECONDS: self.secondsConnection.setChecked(True)
+
 		self.doubleConnection = QCheckBox("Double-click to switch chats",self)
 		if config.DOUBLECLICK_SWITCH: self.doubleConnection.setChecked(True)
 
@@ -1010,6 +1013,7 @@ class Dialog(QDialog):
 				self.underlineConnection.setEnabled(False)
 				self.boldConnection.setEnabled(False)
 				self.italicConnection.setEnabled(False)
+				self.secondsConnection.setEnabled(False)
 
 		cgbLayout = QHBoxLayout()
 		cgbLayout.addStretch()
@@ -1036,6 +1040,7 @@ class Dialog(QDialog):
 		condisLayout.addWidget(self.menuConnection)
 		condisLayout.addWidget(self.floatConnection)
 		condisLayout.addWidget(self.uptimesConnection)
+		condisLayout.addWidget(self.secondsConnection)
 		condisLayout.addWidget(self.doubleConnection)
 		condisLayout.addWidget(self.expandConnection)
 		condisLayout.addWidget(self.collapseConnection)
@@ -1755,6 +1760,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.SHOW_UPTIME_IN_SECONDS = self.secondsConnection.isChecked()
+
 		config.ITALIC_CURRENT_CHAT = self.italicConnection.isChecked()
 
 		config.UNDERLINE_CURRENT_CHAT = self.underlineConnection.isChecked()
@@ -2287,6 +2294,8 @@ class Dialog(QDialog):
 				self.boldConnection.setChecked(config.BOLD_CURRENT_CHAT)
 
 				self.italicConnection.setChecked(config.ITALIC_CURRENT_CHAT)
+
+				self.secondsConnection.setChecked(config.SHOW_UPTIME_IN_SECONDS)
 
 			else:
 				msg = QMessageBox(self)

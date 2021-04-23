@@ -320,9 +320,15 @@ def build_connection_display(gui,new_server=None):
 			if config.DISPLAY_CONNECTION_UPTIME:
 				child = QTreeWidgetItem(parent)
 				if s[1].id in gui.uptimers:
-					child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
+					if config.SHOW_UPTIME_IN_SECONDS:
+						child.setText(0,str(gui.uptimers[s[1].id]))
+					else:
+						child.setText(0,prettyUptime(gui.uptimers[s[1].id]))
 				else:
-					child.setText(0,"00:00:00")
+					if config.SHOW_UPTIME_IN_SECONDS:
+						child.setText(0,"0")
+					else:
+						child.setText(0,"00:00:00")
 				if is_light_colored:
 					child.setIcon(0,QIcon(CLOCK_ICON))
 				else:
@@ -1558,8 +1564,6 @@ def erk_joined_channel(gui,client,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',"Joined "+channel) )
 
-	
-
 	# Update connection display
 	build_connection_display(gui)
 
@@ -1588,7 +1592,10 @@ def uptime(gui,client,uptime):
 				if hasattr(item,"erk_uptime"):
 					if item.erk_uptime:
 						if item.erk_client.id==client.id:
-							item.setText(0,prettyUptime(uptime))
+							if config.SHOW_UPTIME_IN_SECONDS:
+								item.setText(0,str(uptime))
+							else:
+								item.setText(0,prettyUptime(uptime))
 				iterator += 1
 			else:
 				break

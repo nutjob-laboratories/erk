@@ -180,8 +180,9 @@ CONNECTION_DISPLAY_BRANCHES = False
 CONNECTION_DISPLAY_COLLAPSE = True
 UNDERLINE_CURRENT_CHAT = True
 BOLD_CURRENT_CHAT = True
-
 ITALIC_CURRENT_CHAT = False
+
+SHOW_UPTIME_IN_SECONDS = False
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -189,6 +190,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"connection_display_uptime_in_seconds": SHOW_UPTIME_IN_SECONDS,
 		"connection_display_italic_current_chat": ITALIC_CURRENT_CHAT,
 		"connection_display_bold_current_chat": BOLD_CURRENT_CHAT,
 		"connection_display_underline_current_chat": UNDERLINE_CURRENT_CHAT,
@@ -329,6 +331,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "connection_display_uptime_in_seconds" in data:
+		data["connection_display_uptime_in_seconds"] = SHOW_UPTIME_IN_SECONDS
 
 	if not "connection_display_italic_current_chat" in data:
 		data["connection_display_italic_current_chat"] = ITALIC_CURRENT_CHAT
@@ -870,6 +875,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global BOLD_CURRENT_CHAT
 	global UNDERLINE_CURRENT_CHAT
 	global ITALIC_CURRENT_CHAT
+	global SHOW_UPTIME_IN_SECONDS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -878,6 +884,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SHOW_UPTIME_IN_SECONDS = data["connection_display_uptime_in_seconds"]
 			ITALIC_CURRENT_CHAT = data["connection_display_italic_current_chat"]
 			BOLD_CURRENT_CHAT = data["connection_display_bold_current_chat"]
 			UNDERLINE_CURRENT_CHAT = data["connection_display_underline_current_chat"]
@@ -1161,8 +1168,9 @@ def check_settings(filename):
 			if "connection_display_bold_current_chat" in data: check = check + 1
 			if "connection_display_underline_current_chat" in data: check = check + 1
 			if "connection_display_italic_current_chat" in data: check = check + 1
+			if "connection_display_uptime_in_seconds" in data: check = check + 1
 
-			if check == 133:
+			if check == 134:
 				return True
 			else:
 				return False
