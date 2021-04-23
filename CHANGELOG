@@ -53,6 +53,7 @@ Version 0.875
 	* Changed the "format" and "style editor" icons, as the old one looked a little sketchy in the GUI
 	* Changed the "user" icon to be the same as the "private chat" icon
 	* Bugfix: console style files are now loaded automatically
+	* Bugfix: unseen messages are now handled properly, so the flag shouldn't be raised on windows that are active and displayed
 
 Version 0.870
 	* New version

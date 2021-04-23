@@ -54,6 +54,20 @@ TRIGGERED = []
 
 WINDOW = None
 
+def add_to_unseen_messages(client,gui,window):
+	global UNSEEN
+	posted_to_current = False
+	if gui.current_page:
+		if gui.current_page.name==window.name:
+			if gui.current_page.client.id==client.id:
+				posted_to_current = True
+
+	if not posted_to_current:
+		if not window_has_unseen(window,gui):
+			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
+				UNSEEN.append(window)
+				build_connection_display(gui)
+
 def setFocus(gui):
 	global WINDOW
 
@@ -883,16 +897,10 @@ def channel_has_hostmask(gui,client,channel,user):
 	return True
 
 def line_output(gui,client,line):
-	
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.line_out(client,line)
 
 	plugins.line_out(client,line)
 
 def line_input(gui,client,line):
-	
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.line_in(client,line)
 
 	plugins.line_in(client,line)
 
@@ -930,9 +938,6 @@ def update_all_mode_displays():
 def mode(gui,client,channel,user,mset,modes,args):
 	
 	if len(modes)<1: return
-
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.mode(client,channel,user,mset,modes,args)
 
 	args = list(args)
 	cleaned = []
@@ -1222,9 +1227,7 @@ def mode(gui,client,channel,user,mset,modes,args):
 		else:
 			window.name_display.setText("<b>"+window.name+"</b>")
 
-	if not window_has_unseen(window,gui):
-		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-			UNSEEN.append(window)
+	add_to_unseen_messages(client,gui,window)
 
 	plugins.mode_message(client,channel,user,mset,modes,args)
 
@@ -1276,9 +1279,7 @@ def topic(gui,client,setter,channel,topic):
 		window.setTopic(topic)
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" set the topic to \""+topic+"\"",None,TYPE_TOPIC) )
 
-		if not window_has_unseen(window,gui):
-			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-				UNSEEN.append(window)
+		add_to_unseen_messages(client,gui,window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1307,9 +1308,7 @@ def quit(gui,client,nick,message):
 			else:
 				window.writeText( Message(SYSTEM_MESSAGE,'',nick+" quit IRC",None,TYPE_QUIT) )
 
-		if not window_has_unseen(window,gui):
-			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-				UNSEEN.append(window)
+			add_to_unseen_messages(client,gui,window)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1382,34 +1381,12 @@ def action_message(gui,client,target,user,message):
 				if window:
 					window.writeText( Message(ACTION_MESSAGE,user,message) )
 
-					posted_to_current = False
-					if gui.current_page:
-						if gui.current_page.name==SERVER_CONSOLE_NAME:
-							if gui.current_page.client.id==client.id:
-								posted_to_current = True
-
-					if not posted_to_current:
-						UNSEEN.append(window)
-
-						# Update connection display
-						build_connection_display(gui)
+					add_to_unseen_messages(client,gui,window)
 
 			plugins.action_message(client,target,user,message)
 			return
 
-	posted_to_current = False
-	if gui.current_page:
-		if gui.current_page.name==target:
-			if gui.current_page.client.id==client.id:
-				posted_to_current = True
-
-	if not posted_to_current:
-		if not window_has_unseen(window,gui):
-			if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-				UNSEEN.append(window)
-
-		# Update connection display
-		build_connection_display(gui)
+		add_to_unseen_messages(client,gui,window)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1595,9 +1572,6 @@ def get_uptime(client):
 	return client.gui.uptimers[client.id]
 
 def uptime(gui,client,uptime):
-
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.tick(client)
 	
 	gui.uptimers[client.id] = uptime
 	gui.total_uptime = gui.total_uptime + 1
@@ -1644,9 +1618,6 @@ def uptime(gui,client,uptime):
 
 def part(gui,client,user,channel):
 
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.part(client,channel,user)
-
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1657,9 +1628,7 @@ def part(gui,client,user,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" left the channel",None,TYPE_PART) )
 
-	if not window_has_unseen(window,gui):
-		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-			UNSEEN.append(window)
+		add_to_unseen_messages(client,gui,window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1672,9 +1641,6 @@ def part(gui,client,user,channel):
 
 def join(gui,client,user,channel):
 
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.join(client,channel,user)
-
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1685,9 +1651,7 @@ def join(gui,client,user,channel):
 	if window:
 		window.writeText( Message(SYSTEM_MESSAGE,'',nick+" joined the channel",None,TYPE_JOIN) )
 
-	if not window_has_unseen(window,gui):
-		if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-			UNSEEN.append(window)
+		add_to_unseen_messages(client,gui,window)
 
 	window = fetch_console_window(client)
 	if window:
@@ -1704,7 +1668,6 @@ def motd(gui,client,motd):
 
 	if window:
 		for line in motd:
-			# window.writeText( Message(SYSTEM_MESSAGE,'',line) )
 			window.writeText( Message(MOTD_MESSAGE,'',line) )
 
 	if gui.current_page:
@@ -1714,8 +1677,6 @@ def motd(gui,client,motd):
 
 def notice_message(gui,client,target,user,message):
 
-	# if not client.gui.block_plugins:
-	# 	if client.gui.plugins.notice(client,target,user,message): return
 
 	if len(user.strip())==0:
 		if client.hostname:
@@ -1741,19 +1702,7 @@ def notice_message(gui,client,target,user,message):
 	if window:
 		window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
-		posted_to_current = False
-		if gui.current_page:
-			if gui.current_page.name==target:
-				if gui.current_page.client.id==client.id:
-					posted_to_current = True
-
-		if not posted_to_current:
-			if not window_has_unseen(window,gui):
-				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-					UNSEEN.append(window)
-
-			# Update connection display
-			build_connection_display(gui)
+		add_to_unseen_messages(client,gui,window)
 
 		# Always write notice to the console window
 		if config.WRITE_NOTICE_TO_CONSOLE:
@@ -1769,19 +1718,7 @@ def notice_message(gui,client,target,user,message):
 	if window:
 		window.writeText( Message(NOTICE_MESSAGE,user,message) )
 
-		posted_to_current = False
-		if gui.current_page:
-			if gui.current_page.name==nick:
-				if gui.current_page.client.id==client.id:
-					posted_to_current = True
-
-		if not posted_to_current:
-			if not window_has_unseen(window,gui):
-				if gui.uptimers[client.id]>config.DO_NOT_TRIGGER_UNSEEN_TIME:
-					UNSEEN.append(window)
-
-			# Update connection display
-			build_connection_display(gui)
+		add_to_unseen_messages(client,gui,window)
 
 		# Always write notice to the console window
 		if config.WRITE_NOTICE_TO_CONSOLE:
@@ -1813,9 +1750,6 @@ def notice_message(gui,client,target,user,message):
 
 def private_message(gui,client,user,message):
 
-	# if not client.gui.block_plugins:
-	# 	if client.gui.plugins.private(client,user,message): return
-
 	global UNSEEN
 
 	p = user.split('!')
@@ -1837,6 +1771,8 @@ def private_message(gui,client,user,message):
 	window = fetch_private_window(client,nick)
 	if window:
 		window.writeText(msg)
+
+		add_to_unseen_messages(client,gui,window)
 
 		if config.WRITE_PRIVATE_TO_CONSOLE:
 			window = fetch_console_window(client)
@@ -1860,6 +1796,8 @@ def private_message(gui,client,user,message):
 
 				# Set the current page
 				gui.current_page = newchan
+			else:
+				add_to_unseen_messages(client,gui,newchan)
 
 			#gui.setWindowTitle(nick)
 
@@ -1882,46 +1820,10 @@ def private_message(gui,client,user,message):
 			if window:
 				window.writeText(msg)
 
-				posted_to_current = False
-				if gui.current_page:
-					if gui.current_page.name==SERVER_CONSOLE_NAME:
-						if gui.current_page.client.id==client.id:
-							posted_to_current = True
-
-				if not posted_to_current:
-
-					found = False
-					for w in UNSEEN:
-						if w.client.id==window.client.id:
-							if w.name==window.name:
-								found = True
-
-					if not found: UNSEEN.append(window)
-
-					# Update connection display
-					build_connection_display(gui)
+				add_to_unseen_messages(client,gui,window)
 
 		plugins.private_message(client,user,message)
 		return
-
-	posted_to_current = False
-	if gui.current_page:
-		if gui.current_page.name==nick:
-			if gui.current_page.client.id==client.id:
-				posted_to_current = True
-
-	if not posted_to_current:
-		
-		found = False
-		for w in UNSEEN:
-			if w.client.id==window.client.id:
-				if w.name==window.name:
-					found = True
-
-		if not found: UNSEEN.append(window)
-
-		# Update connection display
-		build_connection_display(gui)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -1951,9 +1853,6 @@ def check_for_ignore(user,gui):
 
 def public_message(gui,client,channel,user,message):
 
-	# if not client.gui.block_plugins:
-	# 	if client.gui.plugins.public(client,channel,user,message): return
-
 	p = user.split('!')
 	if len(p)==2:
 		nick = p[0]
@@ -1976,25 +1875,7 @@ def public_message(gui,client,channel,user,message):
 	if window:
 		window.writeText(msg)
 
-	posted_to_current = False
-	if gui.current_page:
-		if gui.current_page.name==channel:
-			if gui.current_page.client.id==client.id:
-				posted_to_current = True
-
-	if not posted_to_current:
-		if window:
-			global UNSEEN
-			found = False
-			for w in UNSEEN:
-				if w.client.id==window.client.id:
-					if w.name==window.name:
-						found = True
-
-			if not found: UNSEEN.append(window)
-
-			# Update connection display
-			build_connection_display(gui)
+		add_to_unseen_messages(client,gui,window)
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -2002,9 +1883,6 @@ def public_message(gui,client,channel,user,message):
 	plugins.public_message(client,channel,user,message)
 
 def registered(gui,client):
-
-	# if not client.gui.block_plugins:
-	# 	client.gui.plugins.connect(client)
 
 	gui.registered(client)
 
