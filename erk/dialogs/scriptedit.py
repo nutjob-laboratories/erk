@@ -140,6 +140,12 @@ class Window(QMainWindow):
 	def saveOnClose(self):
 		if config.SAVE_SCRIPT_ON_CLOSE:
 			if self.changed:
+
+				# If this is not an existing file, and the editor
+				# is empty, don't prompt to save
+				if not self.filename:
+					if len(self.editor.toPlainText().strip())==0: return
+
 				options = QFileDialog.Options()
 				options |= QFileDialog.DontUseNativeDialog
 				if self.filename:

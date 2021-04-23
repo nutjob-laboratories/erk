@@ -56,6 +56,7 @@ Version 0.875
 	* Bugfix: unseen messages are now handled properly, so the flag shouldn't be raised on windows that are active and displayed
 	* Added an option to display connection uptime in seconds (in the connection display) to the config file
 	* Added the new uptime option to the "settings" dialog
+	* Script editor will no longer prompt to save on exit if there isn't any code in the editor, and there's no filename set
 
 Version 0.870
 	* New version
