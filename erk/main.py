@@ -653,7 +653,7 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.menuCombo)
 		self.trayMenu.addAction(entry)
 
-		entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+		entry = QAction(QIcon(OPTIONS_ICON),"Preferences",self)
 		entry.triggered.connect(self.showSettingsDialog)
 		self.trayMenu.addAction(entry)
 
