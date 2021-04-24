@@ -57,6 +57,10 @@ Version 0.875
 	* Added an option to display connection uptime in seconds (in the connection display) to the config file
 	* Added the new uptime option to the "settings" dialog
 	* Script editor will no longer prompt to save on exit if there isn't any code in the editor, and there's no filename set
+	* Application now "spawns" a system tray icon
+	* Added a setting to the config file to toggle the system tray icon
+	* Added the systray icon toggle to the "settings" dialog
+	* Added a small menu to the systray icon (connect, preferences, exit)
 
 Version 0.870
 	* New version

@@ -375,6 +375,9 @@ class Dialog(QDialog):
 		self.askMisc = QCheckBox("Ask before quitting",self)
 		if config.ASK_BEFORE_QUIT: self.askMisc.setChecked(True)
 
+		self.systrayMisc = QCheckBox("System tray icon",self)
+		if config.SYSTRAY_ICON: self.systrayMisc.setChecked(True)
+
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
 		fbLay.addWidget(self.fontLabel)
@@ -414,6 +417,7 @@ class Dialog(QDialog):
 		mpLayout.addLayout(fbLay)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
+		mpLayout.addWidget(self.systrayMisc)
 		mpLayout.addWidget(self.askMisc)
 		mpLayout.addWidget(self.lostErrors)
 		mpLayout.addWidget(self.failErrors)
@@ -1760,6 +1764,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.SYSTRAY_ICON = self.systrayMisc.isChecked()
+
 		config.SHOW_UPTIME_IN_SECONDS = self.secondsConnection.isChecked()
 
 		config.ITALIC_CURRENT_CHAT = self.italicConnection.isChecked()
@@ -2082,6 +2088,11 @@ class Dialog(QDialog):
 			events.refresh_all_topics()
 			events.update_all_mode_displays()
 
+			if config.SYSTRAY_ICON:
+				self.parent.tray.show()
+			else:
+				self.parent.tray.hide()
+
 		config.save_settings(self.config)
 
 		self.close()
@@ -2296,6 +2307,8 @@ class Dialog(QDialog):
 				self.italicConnection.setChecked(config.ITALIC_CURRENT_CHAT)
 
 				self.secondsConnection.setChecked(config.SHOW_UPTIME_IN_SECONDS)
+
+				self.systrayMisc.setChecked(config.SYSTRAY_ICON)
 
 			else:
 				msg = QMessageBox(self)

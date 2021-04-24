@@ -643,27 +643,29 @@ class Erk(QMainWindow):
 			self.showFullScreen()
 
 		# System Tray
-		# self.tray = QSystemTrayIcon() 
-		# self.tray.setIcon(QIcon(ERK_ICON)) 
-		# self.tray.setVisible(True)
+		self.tray = QSystemTrayIcon() 
+		self.tray.setIcon(QIcon(ERK_ICON)) 
+		self.tray.setVisible(True)
 
-		# self.trayMenu = QMenu()
+		self.trayMenu = QMenu()
 
-		# entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
-		# entry.triggered.connect(self.menuCombo)
-		# self.trayMenu.addAction(entry)
+		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
+		entry.triggered.connect(self.menuCombo)
+		self.trayMenu.addAction(entry)
 
-		# entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
-		# entry.triggered.connect(self.showSettingsDialog)
-		# self.trayMenu.addAction(entry)
+		entry = QAction(QIcon(SETTINGS_ICON),"Preferences",self)
+		entry.triggered.connect(self.showSettingsDialog)
+		self.trayMenu.addAction(entry)
 
-		# insertNoTextSeparator(self,self.trayMenu)
+		self.trayMenu.addSeparator()
 
-		# entry = QAction(QIcon(QUIT_ICON),"Exit",self)
-		# entry.triggered.connect(self.close)
-		# self.trayMenu.addAction(entry)
+		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
+		entry.triggered.connect(self.close)
+		self.trayMenu.addAction(entry)
 
-		# self.tray.setContextMenu(self.trayMenu)
+		self.tray.setContextMenu(self.trayMenu)
+
+		if not config.SYSTRAY_ICON: self.tray.hide()
 
 	def setConnectionColors(self,bgcolor,fgcolor):
 
