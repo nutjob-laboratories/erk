@@ -646,13 +646,33 @@ class Erk(QMainWindow):
 		self.tray = QSystemTrayIcon() 
 		self.tray.setIcon(QIcon(ERK_ICON)) 
 		self.tray.setVisible(True)
+		self.tray.setToolTip(APPLICATION_NAME+" IRC client")
 
 		self.trayMenu = QMenu()
 		self.tray.setContextMenu(self.trayMenu)
 
+		self.tray.activated.connect(self.clickTray)
+
 		self.buildSystrayMenu()
 
 		if not config.SYSTRAY_ICON: self.tray.hide()
+
+		self.hidden = False
+
+	def clickTray(self,reason):
+		if reason==QSystemTrayIcon.Trigger:
+			# icon was clicked
+			if config.CLICK_SYSTRAY_TO_HIDE:
+				if self.hidden:
+					self.hidden = False
+					self.show()
+				else:
+					self.hidden = True
+					self.hide()
+
+		if reason==QSystemTrayIcon.MiddleClick:
+			# icon was middle clicked
+			pass
 
 	def setConnectionColors(self,bgcolor,fgcolor):
 

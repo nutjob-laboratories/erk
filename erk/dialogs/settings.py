@@ -378,6 +378,9 @@ class Dialog(QDialog):
 		self.systrayMisc = QCheckBox("System tray icon",self)
 		if config.SYSTRAY_ICON: self.systrayMisc.setChecked(True)
 
+		self.trayClickMisc = QCheckBox("Click tray icon to hide/show application",self)
+		if config.CLICK_SYSTRAY_TO_HIDE: self.trayClickMisc.setChecked(True)
+
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
 		fbLay.addWidget(self.fontLabel)
@@ -418,6 +421,7 @@ class Dialog(QDialog):
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
 		mpLayout.addWidget(self.systrayMisc)
+		mpLayout.addWidget(self.trayClickMisc)
 		mpLayout.addWidget(self.askMisc)
 		mpLayout.addWidget(self.lostErrors)
 		mpLayout.addWidget(self.failErrors)
@@ -1764,6 +1768,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.CLICK_SYSTRAY_TO_HIDE = self.trayClickMisc.isChecked()
+
 		config.SYSTRAY_ICON = self.systrayMisc.isChecked()
 
 		config.SHOW_UPTIME_IN_SECONDS = self.secondsConnection.isChecked()
@@ -2309,6 +2315,8 @@ class Dialog(QDialog):
 				self.secondsConnection.setChecked(config.SHOW_UPTIME_IN_SECONDS)
 
 				self.systrayMisc.setChecked(config.SYSTRAY_ICON)
+
+				self.trayClickMisc.setChecked(config.CLICK_SYSTRAY_TO_HIDE)
 
 			else:
 				msg = QMessageBox(self)

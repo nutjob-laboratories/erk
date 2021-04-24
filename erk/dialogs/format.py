@@ -486,9 +486,6 @@ class TextStyler(QWidget):
 
 class Dialog(QDialog):
 
-	def closeEvent(self,event):
-		event.accept()
-
 	def doApply(self):
 		
 		self.styles['system'] = self.syswid.exportQss()
@@ -651,7 +648,7 @@ class Dialog(QDialog):
 			self.filename = get_complete_style_name(self.network,name,self.parent.styledir)
 			#print(self.filename)
 		else:
-			self.setWindowTitle(STYLE_EDITOR_NAME)
+			self.setWindowTitle("Style Editor")
 			if self.parent!=None:
 				self.filename = parent.stylefile
 			else:

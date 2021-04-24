@@ -182,8 +182,9 @@ UNDERLINE_CURRENT_CHAT = True
 BOLD_CURRENT_CHAT = True
 ITALIC_CURRENT_CHAT = False
 SHOW_UPTIME_IN_SECONDS = False
-
 SYSTRAY_ICON = True
+
+CLICK_SYSTRAY_TO_HIDE = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -191,6 +192,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"system_tray_icon_click_to_hide_or_show": CLICK_SYSTRAY_TO_HIDE,
 		"system_tray_icon": SYSTRAY_ICON,
 		"connection_display_uptime_in_seconds": SHOW_UPTIME_IN_SECONDS,
 		"connection_display_italic_current_chat": ITALIC_CURRENT_CHAT,
@@ -333,6 +335,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "system_tray_icon_click_to_hide_or_show" in data:
+		data["system_tray_icon_click_to_hide_or_show"] = CLICK_SYSTRAY_TO_HIDE
 
 	if not "system_tray_icon" in data:
 		data["system_tray_icon"] = SYSTRAY_ICON
@@ -882,6 +887,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global ITALIC_CURRENT_CHAT
 	global SHOW_UPTIME_IN_SECONDS
 	global SYSTRAY_ICON
+	global CLICK_SYSTRAY_TO_HIDE
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -890,6 +896,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			CLICK_SYSTRAY_TO_HIDE = data["system_tray_icon_click_to_hide_or_show"]
 			SYSTRAY_ICON = data["system_tray_icon"]
 			SHOW_UPTIME_IN_SECONDS = data["connection_display_uptime_in_seconds"]
 			ITALIC_CURRENT_CHAT = data["connection_display_italic_current_chat"]
@@ -1177,8 +1184,9 @@ def check_settings(filename):
 			if "connection_display_italic_current_chat" in data: check = check + 1
 			if "connection_display_uptime_in_seconds" in data: check = check + 1
 			if "system_tray_icon" in data: check = check + 1
+			if "system_tray_icon_click_to_hide_or_show" in data: check = check + 1
 
-			if check == 135:
+			if check == 136:
 				return True
 			else:
 				return False

@@ -64,6 +64,12 @@ Version 0.875
 	* Bugfix: preferences menu item in the system tray menu had the wrong icon
 	* Added more entries to the system tray icon menu, making it more useful
 	* Reworked the systray menu; consolidated entries, and made the menu more compact
+	* Removed the old tool name (Styler, with the schwa) from the style editor
+	* Removed an unused event function from the style editor
+	* Added a tool tip to the systray icon with the application name
+	* Clicking the system tray icon can now hide/show the application
+	* Added a settings to toggle the hide/show control to the config file
+	* Added the hide/show on tray click setting to the "settings" dialog
 
 Version 0.870
 	* New version
