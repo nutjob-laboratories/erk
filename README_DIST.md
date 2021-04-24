@@ -1,10 +1,10 @@
-Ərk 0.875.057
+Ərk 0.875.058
 An open source IRC client for Linux and Windows
 
  [Official Ərk repository](https://github.com/nutjob-laboratories/erk)
  [Official Ərk plugin repository](https://github.com/nutjob-laboratories/erk-plugins)
 
-**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.875.057**.
+**Ərk** is a graphical open source [Internet relay chat](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client. The current development version is **0.875.058**.
 
 **Ərk** is fully functional and ready for your use on Windows or Linux. Bugs are being fixed all the time, and features are still being tweaked, but it's ready.
 
@@ -135,7 +135,7 @@ Yes! All basic IRC functionality is in and working. **Ərk** is ready to go!
 
 ## Is **Ərk** completed?
 
-No. The current version, 0.875.057, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
+No. The current version, 0.875.058, is still a pre-release. I'm still adding and tweaking features, and catching and fixing as many bugs as I can. The final version, **Ərk** 1.0, will come eventually, and we're more than half-way there!
 
 ## Does **Ərk** run on Windows? Does it run on Linux?
 

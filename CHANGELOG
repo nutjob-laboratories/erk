@@ -63,6 +63,7 @@ Version 0.875
 	* Added a small menu to the systray icon (connect, preferences, exit)
 	* Bugfix: preferences menu item in the system tray menu had the wrong icon
 	* Added more entries to the system tray icon menu, making it more useful
+	* Reworked the systray menu; consolidated entries, and made the menu more compact
 
 Version 0.870
 	* New version

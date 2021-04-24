@@ -828,45 +828,49 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.showSettingsDialog)
 		self.trayMenu.addAction(entry)
 
+		toolsMenu = self.trayMenu.addMenu(QIcon(SETTINGS_ICON),"Tools")
+
 		entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
 		entry.triggered.connect(self.showScriptEditor)
-		self.trayMenu.addAction(entry)
+		toolsMenu.addAction(entry)
 
 		entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
 		entry.triggered.connect(self.showStyleDialog)
-		self.trayMenu.addAction(entry)
+		toolsMenu.addAction(entry)
 
 		entry = QAction(QIcon(HIDE_ICON),"Ignore manager",self)
 		entry.triggered.connect(self.menuIgnore)
-		self.trayMenu.addAction(entry)
+		toolsMenu.addAction(entry)
 
 		self.trayMenu.addSeparator()
-
-		entry = QAction(QIcon(PDF_ICON),"Command documentation",self)
-		entry.triggered.connect(self.openCommandDocumentation)
-		self.trayMenu.addAction(entry)
-
-		entry = QAction(QIcon(PDF_ICON),"Plugin documentation",self)
-		entry.triggered.connect(self.openPluginDocumentation)
-		self.trayMenu.addAction(entry)
 
 		entry = QAction(QIcon(ABOUT_ICON),"About "+APPLICATION_NAME,self)
 		entry.triggered.connect(self.menuAbout)
 		self.trayMenu.addAction(entry)
 
-		self.trayMenu.addSeparator()
+		docsMenu = self.trayMenu.addMenu(QIcon(PDF_ICON),"Documentation")
+
+		entry = QAction(QIcon(PDF_ICON),"Command documentation",self)
+		entry.triggered.connect(self.openCommandDocumentation)
+		docsMenu.addAction(entry)
+
+		entry = QAction(QIcon(PDF_ICON),"Plugin documentation",self)
+		entry.triggered.connect(self.openPluginDocumentation)
+		docsMenu.addAction(entry)
+		
+		linksMenu = self.trayMenu.addMenu(QIcon(LINK_ICON),"Links")
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
-		self.trayMenu.addAction(helpLink)
+		linksMenu.addAction(helpLink)
 
 		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk plugin repository",self)
 		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
-		self.trayMenu.addAction(helpLink)
+		linksMenu.addAction(helpLink)
 
 		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
 		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
-		self.trayMenu.addAction(helpLink)
+		linksMenu.addAction(helpLink)
 
 		self.trayMenu.addSeparator()
 
