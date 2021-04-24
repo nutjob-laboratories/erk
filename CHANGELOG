@@ -62,6 +62,7 @@ Version 0.875
 	* Added the systray icon toggle to the "settings" dialog
 	* Added a small menu to the systray icon (connect, preferences, exit)
 	* Bugfix: preferences menu item in the system tray menu had the wrong icon
+	* Added more entries to the system tray icon menu, making it more useful
 
 Version 0.870
 	* New version

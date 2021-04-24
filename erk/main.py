@@ -648,22 +648,9 @@ class Erk(QMainWindow):
 		self.tray.setVisible(True)
 
 		self.trayMenu = QMenu()
-
-		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
-		entry.triggered.connect(self.menuCombo)
-		self.trayMenu.addAction(entry)
-
-		entry = QAction(QIcon(OPTIONS_ICON),"Preferences",self)
-		entry.triggered.connect(self.showSettingsDialog)
-		self.trayMenu.addAction(entry)
-
-		self.trayMenu.addSeparator()
-
-		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
-		entry.triggered.connect(self.close)
-		self.trayMenu.addAction(entry)
-
 		self.tray.setContextMenu(self.trayMenu)
+
+		self.buildSystrayMenu()
 
 		if not config.SYSTRAY_ICON: self.tray.hide()
 
@@ -828,6 +815,64 @@ class Erk(QMainWindow):
 		self.seditors.resize(640,480)
 
 		self.seditors.clientsRefreshed(events.fetch_connections())
+
+	def buildSystrayMenu(self):
+
+		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
+		entry.triggered.connect(self.menuCombo)
+		self.trayMenu.addAction(entry)
+
+		self.trayMenu.addSeparator()
+
+		entry = QAction(QIcon(OPTIONS_ICON),"Preferences",self)
+		entry.triggered.connect(self.showSettingsDialog)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
+		entry.triggered.connect(self.showScriptEditor)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
+		entry.triggered.connect(self.showStyleDialog)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(HIDE_ICON),"Ignore manager",self)
+		entry.triggered.connect(self.menuIgnore)
+		self.trayMenu.addAction(entry)
+
+		self.trayMenu.addSeparator()
+
+		entry = QAction(QIcon(PDF_ICON),"Command documentation",self)
+		entry.triggered.connect(self.openCommandDocumentation)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(PDF_ICON),"Plugin documentation",self)
+		entry.triggered.connect(self.openPluginDocumentation)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(ABOUT_ICON),"About "+APPLICATION_NAME,self)
+		entry.triggered.connect(self.menuAbout)
+		self.trayMenu.addAction(entry)
+
+		self.trayMenu.addSeparator()
+
+		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk": self.open_link_in_browser(u))
+		self.trayMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"Official Ərk plugin repository",self)
+		helpLink.triggered.connect(lambda state,u="https://github.com/nutjob-laboratories/erk-plugins": self.open_link_in_browser(u))
+		self.trayMenu.addAction(helpLink)
+
+		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
+		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
+		self.trayMenu.addAction(helpLink)
+
+		self.trayMenu.addSeparator()
+
+		entry = QAction(QIcon(QUIT_ICON),"Exit",self)
+		entry.triggered.connect(self.close)
+		self.trayMenu.addAction(entry)
 
 	def buildMenuInterface(self):
 
