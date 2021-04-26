@@ -838,6 +838,8 @@ class Erk(QMainWindow):
 
 	def buildSystrayMenu(self):
 
+		self.trayMenu.clear()
+
 		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
 		entry.triggered.connect(self.menuCombo)
 		self.trayMenu.addAction(entry)
@@ -848,19 +850,64 @@ class Erk(QMainWindow):
 		entry.triggered.connect(self.showSettingsDialog)
 		self.trayMenu.addAction(entry)
 
-		toolsMenu = self.trayMenu.addMenu(QIcon(SETTINGS_ICON),"Tools")
+		showEditor = True
+		if self.block_editor: showEditor = False
+		if self.block_scripts: showEditor = False
 
-		entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
-		entry.triggered.connect(self.showScriptEditor)
-		toolsMenu.addAction(entry)
+		showStyles = True
+		if self.block_styles: showStyles = False
+		
+		showIgnore = True
+		if not config.ENABLE_IGNORE: showIgnore = False
 
-		entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
-		entry.triggered.connect(self.showStyleDialog)
-		toolsMenu.addAction(entry)
+		if showEditor or showStyles or showIgnore:
+			toolsMenu = self.trayMenu.addMenu(QIcon(SETTINGS_ICON),"Tools")
 
-		entry = QAction(QIcon(HIDE_ICON),"Ignore manager",self)
-		entry.triggered.connect(self.menuIgnore)
-		toolsMenu.addAction(entry)
+		if showEditor:
+			entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
+			entry.triggered.connect(self.showScriptEditor)
+			toolsMenu.addAction(entry)
+
+		if showStyles:
+			entry = QAction(QIcon(FORMAT_ICON),"Style editor",self)
+			entry.triggered.connect(self.showStyleDialog)
+			toolsMenu.addAction(entry)
+
+		if showIgnore:
+			entry = QAction(QIcon(HIDE_ICON),"Ignore manager",self)
+			entry.triggered.connect(self.menuIgnore)
+			toolsMenu.addAction(entry)
+
+		plugins_enabled = True
+		if self.block_plugins: plugins_enabled = False
+		if not config.ENABLE_PLUGINS: plugins_enabled = False
+
+		if plugins_enabled:
+			if config.SHOW_PLUGINS_MENU:
+
+				pluginsMenu = self.trayMenu.addMenu(QIcon(PLUGIN_ICON),"Plugins")
+
+				entry = QAction(QIcon(REDO_ICON),"Reload plugins",self)
+				entry.triggered.connect(self.reloadPlugins)
+				pluginsMenu.addAction(entry)
+
+				entry = QAction(QIcon(LOAD_MENU_ICON),"Load plugins",self)
+				entry.triggered.connect(self.menuLoadPlugins)
+				pluginsMenu.addAction(entry)
+
+				entry = QAction(QIcon(DIRECTORY_ICON),"Open plugin directory",self)
+				entry.triggered.connect((lambda : QDesktopServices.openUrl(QUrl("file:"+PLUGIN_DIRECTORY))))
+				pluginsMenu.addAction(entry)
+
+				pluginsMenu.addSeparator()
+
+				entry = QAction(QIcon(ENABLE_ICON),"Enable all plugins",self)
+				entry.triggered.connect(self.enable_all_plugins)
+				pluginsMenu.addAction(entry)
+
+				entry = QAction(QIcon(BAN_ICON),"Disable all plugins",self)
+				entry.triggered.connect(self.disable_all_plugins)
+				pluginsMenu.addAction(entry)
 
 		self.trayMenu.addSeparator()
 

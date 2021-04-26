@@ -2099,6 +2099,8 @@ class Dialog(QDialog):
 			else:
 				self.parent.tray.hide()
 
+			self.parent.buildSystrayMenu()
+
 		config.save_settings(self.config)
 
 		self.close()

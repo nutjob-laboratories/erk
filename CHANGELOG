@@ -70,6 +70,8 @@ Version 0.875
 	* Clicking the system tray icon can now hide/show the application
 	* Added a settings to toggle the hide/show control to the config file
 	* Added the hide/show on tray click setting to the "settings" dialog
+	* Added plugin "stuff" to the systray icon menu
+	* Bugfix: systray icon menu would show tools that are disabled
 
 Version 0.870
 	* New version
