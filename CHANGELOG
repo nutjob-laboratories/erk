@@ -73,6 +73,8 @@ Version 0.875
 	* Added plugin "stuff" to the systray icon menu
 	* Bugfix: systray icon menu would show tools that are disabled
 	* Added a new commandline flag (--nosystray) to disable the system tray icon
+	* Changed the text in the "disconnect" menu entry
+	* Added a new menu entry: "disconnect from all servers" (only appears if connected to more than one server)
 
 Version 0.870
 	* New version

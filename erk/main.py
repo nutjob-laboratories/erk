@@ -171,6 +171,17 @@ class Erk(QMainWindow):
 			x.show()
 			x.close()
 
+	def disconnect_all(self):
+
+		for connection in events.fetch_connections():
+			events.disconnect_from_server(connection,config.DEFAULT_QUIT_PART_MESSAGE)
+
+		self.current_client = None
+		x = Blank()
+		x.show()
+		x.close()
+
+
 	def refresh_application_title(self,item=None):
 
 		# Fix for no connection
@@ -969,9 +980,16 @@ class Erk(QMainWindow):
 
 		c = events.fetch_connections()
 		if len(c)>0:
-			self.disconnect = MenuAction(self,DISCONNECT_MENU_ICON,"Disconnect","Close the current connection",25,self.disconnect_current)
+			if len(c)>1:
+				self.disconnect = MenuAction(self,DISCONNECT_MENU_ICON,"Disconnect","Disconnect from the current server",25,self.disconnect_current)
+			else:
+				self.disconnect = MenuAction(self,DISCONNECT_MENU_ICON,"Disconnect","Disconnect from the server",25,self.disconnect_current)
 			self.mainMenu.addAction(self.disconnect)
 			self.is_disconnect_showing = True
+
+			if len(c)>1:
+				self.disconnect = MenuAction(self,EXIT_MENU_ICON,"Disconnect all","Disconnect from all servers",25,self.disconnect_all)
+				self.mainMenu.addAction(self.disconnect)
 
 		self.mainMenu.addSeparator()
 

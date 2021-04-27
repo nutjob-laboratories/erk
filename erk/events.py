@@ -1971,6 +1971,9 @@ def disconnection(gui,client):
 	# Update connection display
 	build_connection_display(gui)
 
+	# Rebuild the menus
+	gui.buildMenuInterface()
+
 def connection(gui,client):
 	global CONNECTIONS
 	CONNECTIONS.append(client)
@@ -1984,10 +1987,8 @@ def connection(gui,client):
 	# Update connection display
 	build_connection_display(gui,client)
 
-	# Rebuild the main menu, so that the
-	# "disconnect" menu item appears
-	if not gui.is_disconnect_showing:
-		gui.buildMenuInterface()
+	# Rebuild the menus
+	gui.buildMenuInterface()
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
