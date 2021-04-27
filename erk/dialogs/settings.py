@@ -381,6 +381,11 @@ class Dialog(QDialog):
 		self.trayClickMisc = QCheckBox("Click tray icon to hide/show application",self)
 		if config.CLICK_SYSTRAY_TO_HIDE: self.trayClickMisc.setChecked(True)
 
+		if self.parent!=None:
+			if self.parent.block_systray:
+				self.systrayMisc.setEnabled(False)
+				self.trayClickMisc.setEnabled(False)
+
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
 		fbLay.addWidget(self.fontLabel)
@@ -2095,11 +2100,12 @@ class Dialog(QDialog):
 			events.update_all_mode_displays()
 
 			if config.SYSTRAY_ICON:
-				self.parent.tray.show()
+				if not self.parent.block_systray:
+					self.parent.tray.show()
 			else:
 				self.parent.tray.hide()
 
-			self.parent.buildSystrayMenu()
+			if not self.parent.block_systray: self.parent.buildSystrayMenu()
 
 		config.save_settings(self.config)
 

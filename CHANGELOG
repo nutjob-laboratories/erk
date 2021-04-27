@@ -72,6 +72,7 @@ Version 0.875
 	* Added the hide/show on tray click setting to the "settings" dialog
 	* Added plugin "stuff" to the systray icon menu
 	* Bugfix: systray icon menu would show tools that are disabled
+	* Added a new commandline flag (--nosystray) to disable the system tray icon
 
 Version 0.870
 	* New version

@@ -376,6 +376,7 @@ class Erk(QMainWindow):
 			block_logs=False,
 			block_load=False,
 			block_write=False,
+			block_systray=False,
 			parent=None
 		):
 		
@@ -440,6 +441,8 @@ class Erk(QMainWindow):
 
 		self.block_load = block_load
 		self.block_write = block_write
+
+		self.block_systray = block_systray
 
 		self.cmdline_script = False
 		self.cmdline_editor = False
@@ -658,6 +661,8 @@ class Erk(QMainWindow):
 		if not config.SYSTRAY_ICON: self.tray.hide()
 
 		self.hidden = False
+
+		if self.block_systray: self.tray.hide()
 
 	def clickTray(self,reason):
 		if reason==QSystemTrayIcon.Trigger:
