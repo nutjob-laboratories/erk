@@ -282,6 +282,11 @@ class Erk(QMainWindow):
 
 		self.refresh_application_title()
 
+		try:
+			self.buildSystrayMenu()
+		except:
+			pass
+
 	def connectionNodeSingleClicked(self,item,column):
 		if config.DOUBLECLICK_SWITCH: return
 		if hasattr(item,"erk_widget"):
@@ -852,13 +857,70 @@ class Erk(QMainWindow):
 
 		self.seditors.clientsRefreshed(events.fetch_connections())
 
+	def menuSwitch(self,client):
+		win = events.fetch_console_window(client)
+		self.stack.setCurrentWidget(win)
+		events.WINDOW = win
+
 	def buildSystrayMenu(self):
 
 		self.trayMenu.clear()
 
+		c = events.fetch_connections()
+
+		if len(c)>0:
+
+			for s in c:
+				active = False
+				if self.current_client!=None:
+					if self.current_client.id == s.id:
+						active = True
+
+				if s.hostname:
+					name = s.hostname
+				else:
+					name = s.server+":"+str(s.port)
+
+				nickname = s.nickname
+
+				if active:
+					entry = QAction(QIcon(RCHECKED_ICON),name+" ("+nickname+")",self)
+				else:
+					entry = QAction(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")",self)
+
+
+				entry.triggered.connect(lambda state,u=s: self.menuSwitch(u))
+			
+				self.trayMenu.addAction(entry)
+
+			self.trayMenu.addSeparator()
+
 		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
 		entry.triggered.connect(self.menuCombo)
 		self.trayMenu.addAction(entry)
+
+		
+		if len(c)>0:
+			if len(c)>1:
+				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from current server",self)
+			else:
+				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from server",self)
+			entry.triggered.connect(self.disconnect_current)
+			self.trayMenu.addAction(entry)
+
+			if len(c)>1:
+				entry = QAction(QIcon(BAN_ICON),"Disconnect all servers",self)
+				entry.triggered.connect(self.disconnect_all)
+				self.trayMenu.addAction(entry)
+
+		# Set the tooltip
+		if len(c)>0:
+			if len(c)==1:
+				self.tray.setToolTip("1 active connection")
+			else:
+				self.tray.setToolTip( str(len(c))+" active connections")
+		else:
+			self.tray.setToolTip(APPLICATION_NAME+" IRC client")
 
 		self.trayMenu.addSeparator()
 

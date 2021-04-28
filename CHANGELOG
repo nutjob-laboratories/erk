@@ -75,6 +75,10 @@ Version 0.875
 	* Added a new commandline flag (--nosystray) to disable the system tray icon
 	* Changed the text in the "disconnect" menu entry
 	* Added a new menu entry: "disconnect from all servers" (only appears if connected to more than one server)
+	* Added a disconnect all entry to the systray icon menu
+	* Systray icon tool tip is now updated to show the number of active connections
+	* Added a list of active connections to the systray icon menu, allowing users to select a connection (and switch to that connection's console)
+	* Added a "disconnect selected connection" option to the systray icon menu
 
 Version 0.870
 	* New version

@@ -1973,6 +1973,7 @@ def disconnection(gui,client):
 
 	# Rebuild the menus
 	gui.buildMenuInterface()
+	gui.buildSystrayMenu()
 
 def connection(gui,client):
 	global CONNECTIONS
@@ -1989,6 +1990,7 @@ def connection(gui,client):
 
 	# Rebuild the menus
 	gui.buildMenuInterface()
+	gui.buildSystrayMenu()
 
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
@@ -2027,6 +2029,9 @@ def server_options(gui,client,options):
 
 	# Update connection display
 	build_connection_display(gui)
+
+	# Update systray menu
+	gui.buildSystrayMenu()
 
 def banlist(gui,client,channel,banlist):
 	
