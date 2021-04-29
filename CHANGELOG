@@ -84,6 +84,8 @@ Version 0.875
 	* Changed the systray tool tip display to show either what server the client is connected to (if there's only one) or how many servers the client is connected to
 	* Added the "export log" tool to the systray "tools" submenu
 	* Added "minimize" and "maximize" window options to the systray menu
+	* Removed the "About" entry from the systray menu
+	* Removed a separator from the systray menu
 
 Version 0.870
 	* New version

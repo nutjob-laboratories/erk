@@ -1022,12 +1022,6 @@ class Erk(QMainWindow):
 				entry.triggered.connect(self.disable_all_plugins)
 				pluginsMenu.addAction(entry)
 
-		self.trayMenu.addSeparator()
-
-		entry = QAction(QIcon(ABOUT_ICON),"About "+APPLICATION_NAME,self)
-		entry.triggered.connect(self.menuAbout)
-		self.trayMenu.addAction(entry)
-
 		docsMenu = self.trayMenu.addMenu(QIcon(PDF_ICON),"Documentation")
 
 		entry = QAction(QIcon(PDF_ICON),"Command documentation",self)
