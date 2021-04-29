@@ -862,6 +862,24 @@ class Erk(QMainWindow):
 		self.stack.setCurrentWidget(win)
 		events.WINDOW = win
 
+		# Bring window to the front
+		self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+		self.activateWindow()
+
+	def menuMax(self):
+
+		if self.windowState() == Qt.WindowMaximized:
+			self.setWindowState(Qt.WindowNoState)
+		else:
+			self.setWindowState(Qt.WindowMaximized)
+
+	def menuMin(self):
+
+		if self.windowState() == Qt.WindowMinimized:
+			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+		else:
+			self.setWindowState(Qt.WindowMinimized)
+
 	def buildSystrayMenu(self):
 
 		self.trayMenu.clear()
@@ -902,7 +920,14 @@ class Erk(QMainWindow):
 		
 		if len(c)>0:
 			if len(c)>1:
-				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from current server",self)
+
+				if self.current_client!=None:
+					if self.current_client.hostname:
+						dname = self.current_client.hostname
+					else:
+						dname = self.current_client.server +":"+ str(self.current_client.port)
+
+				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from "+dname,self)
 			else:
 				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from server",self)
 			entry.triggered.connect(self.disconnect_current)
@@ -916,9 +941,16 @@ class Erk(QMainWindow):
 		# Set the tooltip
 		if len(c)>0:
 			if len(c)==1:
-				self.tray.setToolTip("1 active connection")
+
+				if self.current_client!=None:
+					if self.current_client.hostname:
+						dname = self.current_client.hostname
+					else:
+						dname = self.current_client.server +":"+ str(self.current_client.port)
+
+				self.tray.setToolTip("Connected to "+dname)
 			else:
-				self.tray.setToolTip( str(len(c))+" active connections")
+				self.tray.setToolTip( "Connected to "+str(len(c))+" servers")
 		else:
 			self.tray.setToolTip(APPLICATION_NAME+" IRC client")
 
@@ -938,8 +970,7 @@ class Erk(QMainWindow):
 		showIgnore = True
 		if not config.ENABLE_IGNORE: showIgnore = False
 
-		if showEditor or showStyles or showIgnore:
-			toolsMenu = self.trayMenu.addMenu(QIcon(SETTINGS_ICON),"Tools")
+		toolsMenu = self.trayMenu.addMenu(QIcon(SETTINGS_ICON),"Tools")
 
 		if showEditor:
 			entry = QAction(QIcon(SCRIPT_ICON),"Script editor",self)
@@ -955,6 +986,10 @@ class Erk(QMainWindow):
 			entry = QAction(QIcon(HIDE_ICON),"Ignore manager",self)
 			entry.triggered.connect(self.menuIgnore)
 			toolsMenu.addAction(entry)
+
+		entry = QAction(QIcon(EXPORT_ICON),"Export logs",self)
+		entry.triggered.connect(self.menuExportLog)
+		toolsMenu.addAction(entry)
 
 		plugins_enabled = True
 		if self.block_plugins: plugins_enabled = False
@@ -1016,6 +1051,16 @@ class Erk(QMainWindow):
 		helpLink = QAction(QIcon(LINK_ICON),"GNU General Public License 3",self)
 		helpLink.triggered.connect(lambda state,u="https://www.gnu.org/licenses/gpl-3.0.en.html": self.open_link_in_browser(u))
 		linksMenu.addAction(helpLink)
+
+		self.trayMenu.addSeparator()
+
+		entry = QAction(QIcon(MAXIMIZE_ICON),"Maximize window",self)
+		entry.triggered.connect(self.menuMax)
+		self.trayMenu.addAction(entry)
+
+		entry = QAction(QIcon(MINIMIZE_ICON),"Minimize window",self)
+		entry.triggered.connect(self.menuMin)
+		self.trayMenu.addAction(entry)
 
 		self.trayMenu.addSeparator()
 

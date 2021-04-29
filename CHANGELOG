@@ -79,6 +79,11 @@ Version 0.875
 	* Systray icon tool tip is now updated to show the number of active connections
 	* Added a list of active connections to the systray icon menu, allowing users to select a connection (and switch to that connection's console)
 	* Added a "disconnect selected connection" option to the systray icon menu
+	* Clicking on a server in the systray icon menu now brings the Erk window to the front (and unminimizes it)
+	* The "disconnect from current" menu entry (for the systray menu) now specifies what server it will disconnect
+	* Changed the systray tool tip display to show either what server the client is connected to (if there's only one) or how many servers the client is connected to
+	* Added the "export log" tool to the systray "tools" submenu
+	* Added "minimize" and "maximize" window options to the systray menu
 
 Version 0.870
 	* New version
