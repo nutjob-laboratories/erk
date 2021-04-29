@@ -86,6 +86,8 @@ Version 0.875
 	* Added "minimize" and "maximize" window options to the systray menu
 	* Removed the "About" entry from the systray menu
 	* Removed a separator from the systray menu
+	* Bugfix: --nomenus now also blocks the systray menu
+	* Bugfix: --nosettings now also prevents the "preferences" entry in the systray menu from displaying
 
 Version 0.870
 	* New version

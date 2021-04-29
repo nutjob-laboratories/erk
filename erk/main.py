@@ -667,12 +667,12 @@ class Erk(QMainWindow):
 		self.tray.setVisible(True)
 		self.tray.setToolTip(APPLICATION_NAME+" IRC client")
 
-		self.trayMenu = QMenu()
-		self.tray.setContextMenu(self.trayMenu)
+		if not self.block_toolbar:
+			self.trayMenu = QMenu()
+			self.tray.setContextMenu(self.trayMenu)
+			self.buildSystrayMenu()
 
 		self.tray.activated.connect(self.clickTray)
-
-		self.buildSystrayMenu()
 
 		if not config.SYSTRAY_ICON: self.tray.hide()
 
@@ -882,6 +882,8 @@ class Erk(QMainWindow):
 
 	def buildSystrayMenu(self):
 
+		if self.block_toolbar: return
+
 		self.trayMenu.clear()
 
 		c = events.fetch_connections()
@@ -956,9 +958,10 @@ class Erk(QMainWindow):
 
 		self.trayMenu.addSeparator()
 
-		entry = QAction(QIcon(OPTIONS_ICON),"Preferences",self)
-		entry.triggered.connect(self.showSettingsDialog)
-		self.trayMenu.addAction(entry)
+		if not self.block_settings:
+			entry = QAction(QIcon(OPTIONS_ICON),"Preferences",self)
+			entry.triggered.connect(self.showSettingsDialog)
+			self.trayMenu.addAction(entry)
 
 		showEditor = True
 		if self.block_editor: showEditor = False
