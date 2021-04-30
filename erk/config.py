@@ -185,12 +185,15 @@ SHOW_UPTIME_IN_SECONDS = False
 SYSTRAY_ICON = True
 CLICK_SYSTRAY_TO_HIDE = True
 
+SYSTRAY_MENU = True
+
 def save_settings(filename=SETTINGS_FILE):
 
 	if filename==None: filename = SETTINGS_FILE
 
 	settings = {
 
+		"system_tray_icon_menu": SYSTRAY_MENU,
 		"system_tray_icon_click_to_hide_or_show": CLICK_SYSTRAY_TO_HIDE,
 		"system_tray_icon": SYSTRAY_ICON,
 		"connection_display_uptime_in_seconds": SHOW_UPTIME_IN_SECONDS,
@@ -334,6 +337,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "system_tray_icon_menu" in data:
+		data["system_tray_icon_menu"] = SYSTRAY_MENU
 
 	if not "system_tray_icon_click_to_hide_or_show" in data:
 		data["system_tray_icon_click_to_hide_or_show"] = CLICK_SYSTRAY_TO_HIDE
@@ -887,6 +893,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SHOW_UPTIME_IN_SECONDS
 	global SYSTRAY_ICON
 	global CLICK_SYSTRAY_TO_HIDE
+	global SYSTRAY_MENU
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -895,6 +902,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SYSTRAY_MENU = data["system_tray_icon_menu"]
 			CLICK_SYSTRAY_TO_HIDE = data["system_tray_icon_click_to_hide_or_show"]
 			SYSTRAY_ICON = data["system_tray_icon"]
 			SHOW_UPTIME_IN_SECONDS = data["connection_display_uptime_in_seconds"]
@@ -1184,8 +1192,9 @@ def check_settings(filename):
 			if "connection_display_uptime_in_seconds" in data: check = check + 1
 			if "system_tray_icon" in data: check = check + 1
 			if "system_tray_icon_click_to_hide_or_show" in data: check = check + 1
+			if "system_tray_icon_menu" in data: check = check + 1
 
-			if check == 136:
+			if check == 137:
 				return True
 			else:
 				return False

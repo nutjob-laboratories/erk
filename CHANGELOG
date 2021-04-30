@@ -88,6 +88,9 @@ Version 0.875
 	* Removed a separator from the systray menu
 	* Bugfix: --nomenus now also blocks the systray menu
 	* Bugfix: --nosettings now also prevents the "preferences" entry in the systray menu from displaying
+	* Added a setting to toggle the systray icon menu on/off to the config file
+	* Added systray menu toggle to the "settings" dialog
+	* Moved system tray icon settings to their own page in the "settings" dialog, on the "Application" page
 
 Version 0.870
 	* New version

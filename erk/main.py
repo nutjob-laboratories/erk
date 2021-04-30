@@ -886,6 +886,8 @@ class Erk(QMainWindow):
 
 		self.trayMenu.clear()
 
+		if not config.SYSTRAY_MENU: return
+
 		c = events.fetch_connections()
 
 		if len(c)>0:

@@ -324,10 +324,12 @@ class Dialog(QDialog):
 
 		self.displayPage = QWidget()
 		self.menuPage = QWidget()
+		self.trayPage = QWidget()
 
 		self.displayTabs = QTabWidget()
 
 		self.displayTabs.addTab(self.displayPage, QIcon(WINDOW_ICON), "Application")
+		self.displayTabs.addTab(self.trayPage, QIcon(SYSTRAY_ICON), "System Tray")
 		self.displayTabs.addTab(self.menuPage, QIcon(MENU_ICON), "Menu")
 
 		entry = QListWidgetItem()
@@ -381,10 +383,14 @@ class Dialog(QDialog):
 		self.trayClickMisc = QCheckBox("Click tray icon to hide/show application",self)
 		if config.CLICK_SYSTRAY_TO_HIDE: self.trayClickMisc.setChecked(True)
 
+		self.trayMenuMisc = QCheckBox("Right click icon for menu",self)
+		if config.SYSTRAY_MENU: self.trayMenuMisc.setChecked(True)
+
 		if self.parent!=None:
 			if self.parent.block_systray:
 				self.systrayMisc.setEnabled(False)
 				self.trayClickMisc.setEnabled(False)
+				self.trayMenuMisc.setEnabled(False)
 
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
@@ -425,8 +431,6 @@ class Dialog(QDialog):
 		mpLayout.addLayout(fbLay)
 		mpLayout.addWidget(self.nametitleMisc)
 		mpLayout.addWidget(self.topicMisc)
-		mpLayout.addWidget(self.systrayMisc)
-		mpLayout.addWidget(self.trayClickMisc)
 		mpLayout.addWidget(self.askMisc)
 		mpLayout.addWidget(self.lostErrors)
 		mpLayout.addWidget(self.failErrors)
@@ -437,6 +441,14 @@ class Dialog(QDialog):
 		menuPageLayout.addWidget(self.showMenu)
 		menuPageLayout.addWidget(self.showSchwa)
 		menuPageLayout.addStretch()
+
+		trayPageLayout = QVBoxLayout()
+		trayPageLayout.addWidget(self.systrayMisc)
+		trayPageLayout.addWidget(self.trayClickMisc)
+		trayPageLayout.addWidget(self.trayMenuMisc)
+		trayPageLayout.addStretch()
+
+		self.trayPage.setLayout(trayPageLayout)
 
 		self.menuPage.setLayout(menuPageLayout)
 
@@ -1773,6 +1785,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.SYSTRAY_MENU = self.trayMenuMisc.isChecked()
+
 		config.CLICK_SYSTRAY_TO_HIDE = self.trayClickMisc.isChecked()
 
 		config.SYSTRAY_ICON = self.systrayMisc.isChecked()
@@ -2325,6 +2339,8 @@ class Dialog(QDialog):
 				self.systrayMisc.setChecked(config.SYSTRAY_ICON)
 
 				self.trayClickMisc.setChecked(config.CLICK_SYSTRAY_TO_HIDE)
+
+				self.trayMenuMisc.setChecked(config.SYSTRAY_MENU)
 
 			else:
 				msg = QMessageBox(self)

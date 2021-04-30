@@ -191,3 +191,5 @@ LIGHT_DOT_ICON = ":/light_dot.png"
 
 MAXIMIZE_ICON = ":/gui-maximize.png"
 MINIMIZE_ICON = ":/gui-minimize.png"
+
+SYSTRAY_ICON = ":/gui-systray.png"
