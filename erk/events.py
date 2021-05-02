@@ -1531,6 +1531,9 @@ def erk_left_channel(gui,client,channel):
 
 	plugins.parted(client,channel)
 
+	# Update the system tray menu
+	gui.buildSystrayMenu()
+
 def erk_joined_channel(gui,client,channel):
 	global CHANNELS
 	
@@ -1571,6 +1574,9 @@ def erk_joined_channel(gui,client,channel):
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
 	plugins.joined(client,channel)
+
+	# Update the system tray menu
+	gui.buildSystrayMenu()
 
 def get_uptime(client):
 	return client.gui.uptimers[client.id]

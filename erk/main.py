@@ -858,6 +858,11 @@ class Erk(QMainWindow):
 		self.seditors.clientsRefreshed(events.fetch_connections())
 
 	def menuSwitch(self,client):
+
+		if self.hidden:
+			self.show()
+			self.hidden = False
+
 		win = events.fetch_console_window(client)
 		self.stack.setCurrentWidget(win)
 		events.WINDOW = win
@@ -879,6 +884,40 @@ class Erk(QMainWindow):
 			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
 		else:
 			self.setWindowState(Qt.WindowMinimized)
+
+	def menuChanSwitch(self,client,channel):
+
+		if self.hidden:
+			self.show()
+			self.hidden = False
+
+		win = events.fetch_channel_window(client,channel)
+		if win:
+			self.stack.setCurrentWidget(win)
+			events.WINDOW = win
+
+			# Bring window to the front
+			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+			self.activateWindow()
+		else:
+			self.buildSystrayMenu()
+
+	def menuPrivSwitch(self,client,channel):
+
+		if self.hidden:
+			self.show()
+			self.hidden = False
+
+		win = events.fetch_private_window(client,channel)
+		if win:
+			self.stack.setCurrentWidget(win)
+			events.WINDOW = win
+
+			# Bring window to the front
+			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+			self.activateWindow()
+		else:
+			self.buildSystrayMenu()
 
 	def buildSystrayMenu(self):
 
@@ -906,21 +945,29 @@ class Erk(QMainWindow):
 				nickname = s.nickname
 
 				if active:
-					entry = QAction(QIcon(RCHECKED_ICON),name+" ("+nickname+")",self)
+					menu = self.trayMenu.addMenu(QIcon(RCHECKED_ICON),name+" ("+nickname+")")
 				else:
-					entry = QAction(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")",self)
+					menu = self.trayMenu.addMenu(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")")
 
-
+				entry = QAction(QIcon(CONSOLE_ICON),"Server console",self)
 				entry.triggered.connect(lambda state,u=s: self.menuSwitch(u))
-			
-				self.trayMenu.addAction(entry)
+				menu.addAction(entry)
+
+				for chan in events.fetch_channel_list(s):
+					entry = QAction(QIcon(CHANNEL_ICON),chan,self)
+					entry.triggered.connect(lambda state,u=s,x=chan: self.menuChanSwitch(u,x))
+					menu.addAction(entry)
+
+				for chan in events.fetch_private_list(s):
+					entry = QAction(QIcon(PRIVATE_ICON),chan,self)
+					entry.triggered.connect(lambda state,u=s,x=chan: self.menuPrivSwitch(u,x))
+					menu.addAction(entry)
 
 			self.trayMenu.addSeparator()
 
 		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
 		entry.triggered.connect(self.menuCombo)
 		self.trayMenu.addAction(entry)
-
 		
 		if len(c)>0:
 			if len(c)>1:
