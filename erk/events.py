@@ -1513,6 +1513,9 @@ def erk_changed_nick(gui,client,newnick):
 	if gui.current_page:
 		if hasattr(gui.current_page,"input"): gui.current_page.input.setFocus()
 
+	# Update systray menu
+	gui.buildSystrayMenu()
+
 def erk_channel_list(client):
 	result = []
 	for window in CHANNELS:
