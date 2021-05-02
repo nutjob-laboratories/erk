@@ -949,7 +949,7 @@ class Erk(QMainWindow):
 				else:
 					menu = self.trayMenu.addMenu(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")")
 
-				entry = QAction(QIcon(CONSOLE_ICON),"Server console",self)
+				entry = QAction(QIcon(CONSOLE_ICON),name,self)
 				entry.triggered.connect(lambda state,u=s: self.menuSwitch(u))
 				menu.addAction(entry)
 
