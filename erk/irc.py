@@ -387,8 +387,6 @@ class IRC_Connection(irc.IRCClient):
 
 	def left(self, channel):
 
-		print(self.erk_parted)
-
 		events.erk_left_channel(self.gui,self,channel)
 
 		clean = []

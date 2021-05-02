@@ -944,6 +944,8 @@ class Erk(QMainWindow):
 
 				nickname = s.nickname
 
+				
+
 				if active:
 					menu = self.trayMenu.addMenu(QIcon(RCHECKED_ICON),name+" ("+nickname+")")
 				else:
@@ -962,6 +964,20 @@ class Erk(QMainWindow):
 					entry = QAction(QIcon(PRIVATE_ICON),chan,self)
 					entry.triggered.connect(lambda state,u=s,x=chan: self.menuPrivSwitch(u,x))
 					menu.addAction(entry)
+
+				menu.addSeparator()
+
+				entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
+				entry.triggered.connect(lambda state,client=s: self.menuNick(client))
+				menu.addAction(entry)
+
+				entry = QAction(QIcon(CHANNEL_ICON),"Join channel",self)
+				entry.triggered.connect(lambda state,client=s: self.menuJoin(client))
+				menu.addAction(entry)
+
+				entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+				entry.triggered.connect(lambda state,client=s: events.disconnect_from_server(client))
+				menu.addAction(entry)
 
 			self.trayMenu.addSeparator()
 
@@ -999,7 +1015,9 @@ class Erk(QMainWindow):
 					else:
 						dname = self.current_client.server +":"+ str(self.current_client.port)
 
-				self.tray.setToolTip("Connected to "+dname)
+					self.tray.setToolTip("Connected to "+dname)
+				else:
+					self.tray.setToolTip("Connected to 1 server")
 			else:
 				self.tray.setToolTip( "Connected to "+str(len(c))+" servers")
 		else:

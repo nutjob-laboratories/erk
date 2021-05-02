@@ -2,6 +2,9 @@ Version 0.880
 	* Changed the images for the radio checked and unchecked icons (for menus)
 	* Changed the images for the check and unchecked checkboxes (for menus)
 	* Added a channel/private chat list to the systray menu
+	* Added an option to disconnect from the server to the channel/private chat list in the systray menu
+	* Removed an unneeded print() from irc.py
+	* Added options to change nicks and join channels to the systray menu
 
 Version 0.875
 	* New version
