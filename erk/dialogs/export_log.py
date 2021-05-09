@@ -32,6 +32,7 @@
 import sys
 import os
 from pathlib import Path
+import operator
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -123,6 +124,9 @@ class Dialog(QDialog):
 
 		self.packlist = QListWidget(self)
 
+		servers = []
+		others = []
+
 		for x in os.listdir(self.logdir):
 			if x.endswith(".json"):
 				log = os.path.join(self.logdir, x)
@@ -142,13 +146,27 @@ class Dialog(QDialog):
 						if is_a_server_log:
 							item = QListWidgetItem(netname+":"+channel+" (SERVER)")
 							item.file = log
-							self.packlist.addItem(item)
+							servers.append(item)
 						else:
 							netname = netname.upper()
 
 							item = QListWidgetItem(channel+" ("+netname+")")
 							item.file = log
-							self.packlist.addItem(item)
+							item.network = netname
+							item.channel = channel
+							others.append(item)
+
+		# Sort channel/chat logs by network, THEN chat name
+		others = sorted(others,key=operator.attrgetter("network","channel"))
+		# Sort servers by name
+		servers = sorted(servers, key=lambda obj: obj.text())
+
+		# Add the now sorted logs to the list widget
+		for e in others:
+			self.packlist.addItem(e)
+
+		for e in servers:
+			self.packlist.addItem(e)
 
 		delimLayout = QFormLayout()
 

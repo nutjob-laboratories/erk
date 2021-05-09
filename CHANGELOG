@@ -6,6 +6,7 @@ Version 0.880
 	* Removed an unneeded print() from irc.py
 	* Added options to change nicks and join channels to the systray menu
 	* Bugfix: nickname in systray menu wasn't always being updated properly
+	* In the log export tool, logs are now sorted by network and name
 
 Version 0.875
 	* New version
