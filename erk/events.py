@@ -68,6 +68,9 @@ def add_to_unseen_messages(client,gui,window):
 				UNSEEN.append(window)
 				build_connection_display(gui)
 
+				if config.MARK_UNSEEN_SYSTRAY:
+					gui.buildSystrayMenu()
+
 def setFocus(gui):
 	global WINDOW
 

@@ -386,11 +386,15 @@ class Dialog(QDialog):
 		self.trayMenuMisc = QCheckBox("Right click icon for menu",self)
 		if config.SYSTRAY_MENU: self.trayMenuMisc.setChecked(True)
 
+		self.trayUnread = QCheckBox("Mark chats with unread messages in menu",self)
+		if config.MARK_UNSEEN_SYSTRAY: self.trayUnread.setChecked(True)
+
 		if self.parent!=None:
 			if self.parent.block_systray:
 				self.systrayMisc.setEnabled(False)
 				self.trayClickMisc.setEnabled(False)
 				self.trayMenuMisc.setEnabled(False)
+				self.trayUnread.setEnabled(False)
 
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
@@ -446,6 +450,7 @@ class Dialog(QDialog):
 		trayPageLayout.addWidget(self.systrayMisc)
 		trayPageLayout.addWidget(self.trayClickMisc)
 		trayPageLayout.addWidget(self.trayMenuMisc)
+		trayPageLayout.addWidget(self.trayUnread)
 		trayPageLayout.addStretch()
 
 		self.trayPage.setLayout(trayPageLayout)
@@ -1785,6 +1790,8 @@ class Dialog(QDialog):
 
 		self.saved = True
 
+		config.MARK_UNSEEN_SYSTRAY = self.trayUnread.isChecked()
+
 		config.SYSTRAY_MENU = self.trayMenuMisc.isChecked()
 
 		config.CLICK_SYSTRAY_TO_HIDE = self.trayClickMisc.isChecked()
@@ -2341,6 +2348,8 @@ class Dialog(QDialog):
 				self.trayClickMisc.setChecked(config.CLICK_SYSTRAY_TO_HIDE)
 
 				self.trayMenuMisc.setChecked(config.SYSTRAY_MENU)
+
+				self.trayUnread.setChecked(config.MARK_UNSEEN_SYSTRAY)
 
 			else:
 				msg = QMessageBox(self)

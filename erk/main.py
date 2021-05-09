@@ -956,12 +956,40 @@ class Erk(QMainWindow):
 				menu.addAction(entry)
 
 				for chan in events.fetch_channel_list(s):
-					entry = QAction(QIcon(CHANNEL_ICON),chan,self)
+
+					if events.window_has_unseen(events.fetch_channel_window(s,chan),self):
+						has_unseen = True
+					else:
+						has_unseen = False
+
+					if config.MARK_UNSEEN_SYSTRAY:
+						if has_unseen:
+							icon = UNREAD_ICON
+						else:
+							icon = CHANNEL_ICON
+					else:
+						icon = CHANNEL_ICON
+
+					entry = QAction(QIcon(icon),chan,self)
 					entry.triggered.connect(lambda state,u=s,x=chan: self.menuChanSwitch(u,x))
 					menu.addAction(entry)
 
 				for chan in events.fetch_private_list(s):
-					entry = QAction(QIcon(PRIVATE_ICON),chan,self)
+
+					if events.window_has_unseen(events.fetch_private_window(s,chan),self):
+						has_unseen = True
+					else:
+						has_unseen = False
+
+					if config.MARK_UNSEEN_SYSTRAY:
+						if has_unseen:
+							icon = UNREAD_ICON
+						else:
+							icon = PRIVATE_ICON
+					else:
+						icon = PRIVATE_ICON
+
+					entry = QAction(QIcon(icon),chan,self)
 					entry.triggered.connect(lambda state,u=s,x=chan: self.menuPrivSwitch(u,x))
 					menu.addAction(entry)
 

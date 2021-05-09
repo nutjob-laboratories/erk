@@ -7,6 +7,9 @@ Version 0.880
 	* Added options to change nicks and join channels to the systray menu
 	* Bugfix: nickname in systray menu wasn't always being updated properly
 	* In the log export tool, logs are now sorted by network and name
+	* Chats with unread messages are now marked in the systray menu
+	* Added a toggle for marking unread messages in the systray menu
+	* Added the systray unread message toggle to the "settings" dialog
 
 Version 0.875
 	* New version

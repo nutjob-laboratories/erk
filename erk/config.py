@@ -184,8 +184,9 @@ ITALIC_CURRENT_CHAT = False
 SHOW_UPTIME_IN_SECONDS = False
 SYSTRAY_ICON = True
 CLICK_SYSTRAY_TO_HIDE = True
-
 SYSTRAY_MENU = True
+
+MARK_UNSEEN_SYSTRAY = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -193,6 +194,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"system_tray_mark_unread": MARK_UNSEEN_SYSTRAY,
 		"system_tray_icon_menu": SYSTRAY_MENU,
 		"system_tray_icon_click_to_hide_or_show": CLICK_SYSTRAY_TO_HIDE,
 		"system_tray_icon": SYSTRAY_ICON,
@@ -337,6 +339,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "system_tray_mark_unread" in data:
+		data["system_tray_mark_unread"] = MARK_UNSEEN_SYSTRAY
 
 	if not "system_tray_icon_menu" in data:
 		data["system_tray_icon_menu"] = SYSTRAY_MENU
@@ -894,6 +899,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SYSTRAY_ICON
 	global CLICK_SYSTRAY_TO_HIDE
 	global SYSTRAY_MENU
+	global MARK_UNSEEN_SYSTRAY
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -902,6 +908,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			MARK_UNSEEN_SYSTRAY = data["system_tray_mark_unread"]
 			SYSTRAY_MENU = data["system_tray_icon_menu"]
 			CLICK_SYSTRAY_TO_HIDE = data["system_tray_icon_click_to_hide_or_show"]
 			SYSTRAY_ICON = data["system_tray_icon"]
@@ -1193,8 +1200,9 @@ def check_settings(filename):
 			if "system_tray_icon" in data: check = check + 1
 			if "system_tray_icon_click_to_hide_or_show" in data: check = check + 1
 			if "system_tray_icon_menu" in data: check = check + 1
+			if "system_tray_mark_unread" in data: check = check + 1
 
-			if check == 137:
+			if check == 138:
 				return True
 			else:
 				return False

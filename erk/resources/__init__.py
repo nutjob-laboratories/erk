@@ -193,3 +193,5 @@ MAXIMIZE_ICON = ":/gui-maximize.png"
 MINIMIZE_ICON = ":/gui-minimize.png"
 
 SYSTRAY_ICON = ":/gui-systray.png"
+
+UNREAD_ICON = ":/gui-unread.png"
