@@ -185,8 +185,11 @@ SHOW_UPTIME_IN_SECONDS = False
 SYSTRAY_ICON = True
 CLICK_SYSTRAY_TO_HIDE = True
 SYSTRAY_MENU = True
-
 MARK_UNSEEN_SYSTRAY = True
+SYSTRAY_ALLOW_DISCONNECT = True
+SYSTRAY_ALLOW_CONNECT = True
+
+SYSTRAY_SHOW_CONNECTIONS = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -194,6 +197,9 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"system_tray_display_connections": SYSTRAY_SHOW_CONNECTIONS,
+		"system_tray_allow_connect": SYSTRAY_ALLOW_CONNECT,
+		"system_tray_allow_disconnect": SYSTRAY_ALLOW_DISCONNECT,
 		"system_tray_mark_unread": MARK_UNSEEN_SYSTRAY,
 		"system_tray_icon_menu": SYSTRAY_MENU,
 		"system_tray_icon_click_to_hide_or_show": CLICK_SYSTRAY_TO_HIDE,
@@ -339,6 +345,15 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "system_tray_display_connections" in data:
+		data["system_tray_display_connections"] = SYSTRAY_SHOW_CONNECTIONS
+
+	if not "system_tray_allow_connect" in data:
+		data["system_tray_allow_connect"] = SYSTRAY_ALLOW_CONNECT
+
+	if not "system_tray_allow_disconnect" in data:
+		data["system_tray_allow_disconnect"] = SYSTRAY_ALLOW_DISCONNECT
 
 	if not "system_tray_mark_unread" in data:
 		data["system_tray_mark_unread"] = MARK_UNSEEN_SYSTRAY
@@ -900,6 +915,9 @@ def load_settings(filename=SETTINGS_FILE):
 	global CLICK_SYSTRAY_TO_HIDE
 	global SYSTRAY_MENU
 	global MARK_UNSEEN_SYSTRAY
+	global SYSTRAY_ALLOW_DISCONNECT
+	global SYSTRAY_ALLOW_CONNECT
+	global SYSTRAY_SHOW_CONNECTIONS
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -908,6 +926,9 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			SYSTRAY_SHOW_CONNECTIONS = data["system_tray_display_connections"]
+			SYSTRAY_ALLOW_CONNECT = data["system_tray_allow_connect"]
+			SYSTRAY_ALLOW_DISCONNECT = data["system_tray_allow_disconnect"]
 			MARK_UNSEEN_SYSTRAY = data["system_tray_mark_unread"]
 			SYSTRAY_MENU = data["system_tray_icon_menu"]
 			CLICK_SYSTRAY_TO_HIDE = data["system_tray_icon_click_to_hide_or_show"]
@@ -1201,8 +1222,11 @@ def check_settings(filename):
 			if "system_tray_icon_click_to_hide_or_show" in data: check = check + 1
 			if "system_tray_icon_menu" in data: check = check + 1
 			if "system_tray_mark_unread" in data: check = check + 1
+			if "system_tray_allow_disconnect" in data: check = check + 1
+			if "system_tray_allow_connect" in data: check = check + 1
+			if "system_tray_display_connections" in data: check = check + 1
 
-			if check == 138:
+			if check == 141:
 				return True
 			else:
 				return False

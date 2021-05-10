@@ -927,113 +927,117 @@ class Erk(QMainWindow):
 
 		if not config.SYSTRAY_MENU: return
 
-		c = events.fetch_connections()
+		if config.SYSTRAY_SHOW_CONNECTIONS:
 
-		if len(c)>0:
+			c = events.fetch_connections()
 
-			for s in c:
-				active = False
-				if self.current_client!=None:
-					if self.current_client.id == s.id:
-						active = True
+			if len(c)>0:
+				for s in c:
+					active = False
+					if self.current_client!=None:
+						if self.current_client.id == s.id:
+							active = True
 
-				if s.hostname:
-					name = s.hostname
-				else:
-					name = s.server+":"+str(s.port)
-
-				nickname = s.nickname
-
-				
-
-				if active:
-					menu = self.trayMenu.addMenu(QIcon(RCHECKED_ICON),name+" ("+nickname+")")
-				else:
-					menu = self.trayMenu.addMenu(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")")
-
-				entry = QAction(QIcon(CONSOLE_ICON),name,self)
-				entry.triggered.connect(lambda state,u=s: self.menuSwitch(u))
-				menu.addAction(entry)
-
-				for chan in events.fetch_channel_list(s):
-
-					if events.window_has_unseen(events.fetch_channel_window(s,chan),self):
-						has_unseen = True
+					if s.hostname:
+						name = s.hostname
 					else:
-						has_unseen = False
+						name = s.server+":"+str(s.port)
 
-					if config.MARK_UNSEEN_SYSTRAY:
-						if has_unseen:
-							icon = UNREAD_ICON
+					nickname = s.nickname
+
+					if active:
+						menu = self.trayMenu.addMenu(QIcon(RCHECKED_ICON),name+" ("+nickname+")")
+					else:
+						menu = self.trayMenu.addMenu(QIcon(RUNCHECKED_ICON),name+" ("+nickname+")")
+
+					entry = QAction(QIcon(CONSOLE_ICON),name,self)
+					entry.triggered.connect(lambda state,u=s: self.menuSwitch(u))
+					menu.addAction(entry)
+
+					for chan in events.fetch_channel_list(s):
+
+						if events.window_has_unseen(events.fetch_channel_window(s,chan),self):
+							has_unseen = True
+						else:
+							has_unseen = False
+
+						if config.MARK_UNSEEN_SYSTRAY:
+							if has_unseen:
+								icon = UNREAD_ICON
+							else:
+								icon = CHANNEL_ICON
 						else:
 							icon = CHANNEL_ICON
-					else:
-						icon = CHANNEL_ICON
 
-					entry = QAction(QIcon(icon),chan,self)
-					entry.triggered.connect(lambda state,u=s,x=chan: self.menuChanSwitch(u,x))
-					menu.addAction(entry)
+						entry = QAction(QIcon(icon),chan,self)
+						entry.triggered.connect(lambda state,u=s,x=chan: self.menuChanSwitch(u,x))
+						menu.addAction(entry)
 
-				for chan in events.fetch_private_list(s):
+					for chan in events.fetch_private_list(s):
 
-					if events.window_has_unseen(events.fetch_private_window(s,chan),self):
-						has_unseen = True
-					else:
-						has_unseen = False
+						if events.window_has_unseen(events.fetch_private_window(s,chan),self):
+							has_unseen = True
+						else:
+							has_unseen = False
 
-					if config.MARK_UNSEEN_SYSTRAY:
-						if has_unseen:
-							icon = UNREAD_ICON
+						if config.MARK_UNSEEN_SYSTRAY:
+							if has_unseen:
+								icon = UNREAD_ICON
+							else:
+								icon = PRIVATE_ICON
 						else:
 							icon = PRIVATE_ICON
-					else:
-						icon = PRIVATE_ICON
 
-					entry = QAction(QIcon(icon),chan,self)
-					entry.triggered.connect(lambda state,u=s,x=chan: self.menuPrivSwitch(u,x))
+						entry = QAction(QIcon(icon),chan,self)
+						entry.triggered.connect(lambda state,u=s,x=chan: self.menuPrivSwitch(u,x))
+						menu.addAction(entry)
+
+					menu.addSeparator()
+
+					entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
+					entry.triggered.connect(lambda state,client=s: self.menuNick(client))
 					menu.addAction(entry)
 
-				menu.addSeparator()
+					entry = QAction(QIcon(CHANNEL_ICON),"Join channel",self)
+					entry.triggered.connect(lambda state,client=s: self.menuJoin(client))
+					menu.addAction(entry)
 
-				entry = QAction(QIcon(NICK_ICON),"Change nickname",self)
-				entry.triggered.connect(lambda state,client=s: self.menuNick(client))
-				menu.addAction(entry)
+					if config.SYSTRAY_ALLOW_DISCONNECT:
+						entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
+						entry.triggered.connect(lambda state,client=s: events.disconnect_from_server(client))
+						menu.addAction(entry)
 
-				entry = QAction(QIcon(CHANNEL_ICON),"Join channel",self)
-				entry.triggered.connect(lambda state,client=s: self.menuJoin(client))
-				menu.addAction(entry)
+				self.trayMenu.addSeparator()
 
-				entry = QAction(QIcon(DISCONNECT_ICON),"Disconnect",self)
-				entry.triggered.connect(lambda state,client=s: events.disconnect_from_server(client))
-				menu.addAction(entry)
-
-			self.trayMenu.addSeparator()
-
-		entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
-		entry.triggered.connect(self.menuCombo)
-		self.trayMenu.addAction(entry)
-		
-		if len(c)>0:
-			if len(c)>1:
-
-				if self.current_client!=None:
-					if self.current_client.hostname:
-						dname = self.current_client.hostname
-					else:
-						dname = self.current_client.server +":"+ str(self.current_client.port)
-
-				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from "+dname,self)
-			else:
-				entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from server",self)
-			entry.triggered.connect(self.disconnect_current)
+		if config.SYSTRAY_ALLOW_CONNECT:
+			entry = QAction(QIcon(CONNECT_MENU_ICON),"Connect to a server",self)
+			entry.triggered.connect(self.menuCombo)
 			self.trayMenu.addAction(entry)
 
-			if len(c)>1:
-				entry = QAction(QIcon(BAN_ICON),"Disconnect all servers",self)
-				entry.triggered.connect(self.disconnect_all)
+		if config.SYSTRAY_ALLOW_DISCONNECT:
+			c = events.fetch_connections()
+			if len(c)>0:
+				if len(c)>1:
+
+					if self.current_client!=None:
+						if self.current_client.hostname:
+							dname = self.current_client.hostname
+						else:
+							dname = self.current_client.server +":"+ str(self.current_client.port)
+
+					entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from "+dname,self)
+				else:
+					entry = QAction(QIcon(DISCONNECT_MENU_ICON),"Disconnect from server",self)
+				entry.triggered.connect(self.disconnect_current)
 				self.trayMenu.addAction(entry)
 
+				if len(c)>1:
+					entry = QAction(QIcon(BAN_ICON),"Disconnect all servers",self)
+					entry.triggered.connect(self.disconnect_all)
+					self.trayMenu.addAction(entry)
+
 		# Set the tooltip
+		c = events.fetch_connections()
 		if len(c)>0:
 			if len(c)==1:
 

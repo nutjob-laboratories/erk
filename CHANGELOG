@@ -10,6 +10,12 @@ Version 0.880
 	* Chats with unread messages are now marked in the systray menu
 	* Added a toggle for marking unread messages in the systray menu
 	* Added the systray unread message toggle to the "settings" dialog
+	* Added a setting to en/disable disconnection from the systray menu
+	* Added the disconnection toggle to the "settings" dialog
+	* Added a setting to en/disable connection from the systray menu
+	* Added the connection toggle to the "settings" dialog
+	* Added a setting to toggle connection/chat display in the systray menu
+	* Added the connection/chat display setting to the "settings" dialog
 
 Version 0.875
 	* New version

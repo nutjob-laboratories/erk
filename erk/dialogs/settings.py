@@ -389,12 +389,24 @@ class Dialog(QDialog):
 		self.trayUnread = QCheckBox("Mark chats with unread messages in menu",self)
 		if config.MARK_UNSEEN_SYSTRAY: self.trayUnread.setChecked(True)
 
+		self.trayDisconnect = QCheckBox("Enable disconnection from menu",self)
+		if config.SYSTRAY_ALLOW_DISCONNECT: self.trayDisconnect.setChecked(True)
+
+		self.trayConnect = QCheckBox("Enable connection from menu",self)
+		if config.SYSTRAY_ALLOW_CONNECT: self.trayConnect.setChecked(True)
+
+		self.trayDisplay = QCheckBox("Show active connections and chats in menu",self)
+		if config.SYSTRAY_SHOW_CONNECTIONS: self.trayDisplay.setChecked(True)
+
 		if self.parent!=None:
 			if self.parent.block_systray:
 				self.systrayMisc.setEnabled(False)
 				self.trayClickMisc.setEnabled(False)
 				self.trayMenuMisc.setEnabled(False)
 				self.trayUnread.setEnabled(False)
+				self.trayDisconnect.setEnabled(False)
+				self.trayConnect.setEnabled(False)
+				self.trayDisplay.setEnabled(False)
 
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)
@@ -450,7 +462,10 @@ class Dialog(QDialog):
 		trayPageLayout.addWidget(self.systrayMisc)
 		trayPageLayout.addWidget(self.trayClickMisc)
 		trayPageLayout.addWidget(self.trayMenuMisc)
+		trayPageLayout.addWidget(self.trayDisplay)
 		trayPageLayout.addWidget(self.trayUnread)
+		trayPageLayout.addWidget(self.trayDisconnect)
+		trayPageLayout.addWidget(self.trayConnect)
 		trayPageLayout.addStretch()
 
 		self.trayPage.setLayout(trayPageLayout)
@@ -1789,6 +1804,12 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+		
+		config.SYSTRAY_SHOW_CONNECTIONS = self.trayDisplay.isChecked()
+
+		config.SYSTRAY_ALLOW_CONNECT = self.trayConnect.isChecked()
+
+		config.SYSTRAY_ALLOW_DISCONNECT = self.trayDisconnect.isChecked()
 
 		config.MARK_UNSEEN_SYSTRAY = self.trayUnread.isChecked()
 
@@ -2350,6 +2371,12 @@ class Dialog(QDialog):
 				self.trayMenuMisc.setChecked(config.SYSTRAY_MENU)
 
 				self.trayUnread.setChecked(config.MARK_UNSEEN_SYSTRAY)
+
+				self.trayDisconnect.setChecked(config.SYSTRAY_ALLOW_DISCONNECT)
+
+				self.trayConnect.setChecked(config.SYSTRAY_ALLOW_CONNECT)
+
+				self.trayDisplay.setChecked(config.SYSTRAY_SHOW_CONNECTIONS)
 
 			else:
 				msg = QMessageBox(self)
