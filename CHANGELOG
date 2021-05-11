@@ -16,6 +16,8 @@ Version 0.880
 	* Added the connection toggle to the "settings" dialog
 	* Added a setting to toggle connection/chat display in the systray menu
 	* Added the connection/chat display setting to the "settings" dialog
+	* Added a toggle for topic eliding to the config file
+	* Added the elide toggle to the "settings" dialog
 
 Version 0.875
 	* New version

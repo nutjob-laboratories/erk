@@ -856,6 +856,9 @@ class Dialog(QDialog):
 		self.displayUserModes = QCheckBox("Display user modes",self)
 		if config.DISPLAY_MODES_ON_CHANNEL: self.displayUserModes.setChecked(True)
 
+		self.channelElide = QCheckBox("Elide long topics",self)
+		if config.ELIDE_TOPIC: self.channelElide.setChecked(True)
+
 		self.cursor_width = config.CURSOR_WIDTH
 
 		if self.cursor_width>1:
@@ -887,6 +890,7 @@ class Dialog(QDialog):
 		cbLay.addWidget(self.channelInfo)
 		cbLay.addWidget(self.channelModes)
 		cbLay.addWidget(self.channelTopic)
+		cbLay.addWidget(self.channelElide)
 		cbLay.addStretch()
 
 		cpLayout = QVBoxLayout()
@@ -1804,6 +1808,8 @@ class Dialog(QDialog):
 	def save(self):
 
 		self.saved = True
+
+		config.ELIDE_TOPIC = self.channelElide.isChecked()
 		
 		config.SYSTRAY_SHOW_CONNECTIONS = self.trayDisplay.isChecked()
 
@@ -2377,6 +2383,8 @@ class Dialog(QDialog):
 				self.trayConnect.setChecked(config.SYSTRAY_ALLOW_CONNECT)
 
 				self.trayDisplay.setChecked(config.SYSTRAY_SHOW_CONNECTIONS)
+
+				self.channelElide.setChecked(config.ELIDE_TOPIC)
 
 			else:
 				msg = QMessageBox(self)

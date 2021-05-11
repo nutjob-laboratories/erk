@@ -188,8 +188,9 @@ SYSTRAY_MENU = True
 MARK_UNSEEN_SYSTRAY = True
 SYSTRAY_ALLOW_DISCONNECT = True
 SYSTRAY_ALLOW_CONNECT = True
-
 SYSTRAY_SHOW_CONNECTIONS = True
+
+ELIDE_TOPIC = True
 
 def save_settings(filename=SETTINGS_FILE):
 
@@ -197,6 +198,7 @@ def save_settings(filename=SETTINGS_FILE):
 
 	settings = {
 
+		"elide_topic_display": ELIDE_TOPIC,
 		"system_tray_display_connections": SYSTRAY_SHOW_CONNECTIONS,
 		"system_tray_allow_connect": SYSTRAY_ALLOW_CONNECT,
 		"system_tray_allow_disconnect": SYSTRAY_ALLOW_DISCONNECT,
@@ -345,6 +347,9 @@ def save_settings(filename=SETTINGS_FILE):
 		json.dump(settings, write_data, indent=4, sort_keys=True)
 
 def patch_settings(data):
+
+	if not "elide_topic_display" in data:
+		data["elide_topic_display"] = ELIDE_TOPIC
 
 	if not "system_tray_display_connections" in data:
 		data["system_tray_display_connections"] = SYSTRAY_SHOW_CONNECTIONS
@@ -918,6 +923,7 @@ def load_settings(filename=SETTINGS_FILE):
 	global SYSTRAY_ALLOW_DISCONNECT
 	global SYSTRAY_ALLOW_CONNECT
 	global SYSTRAY_SHOW_CONNECTIONS
+	global ELIDE_TOPIC
 
 	# Load in settings if the settings file exists...
 	if os.path.isfile(filename):
@@ -926,6 +932,7 @@ def load_settings(filename=SETTINGS_FILE):
 
 			data = patch_settings(data)
 
+			ELIDE_TOPIC = data["elide_topic_display"]
 			SYSTRAY_SHOW_CONNECTIONS = data["system_tray_display_connections"]
 			SYSTRAY_ALLOW_CONNECT = data["system_tray_allow_connect"]
 			SYSTRAY_ALLOW_DISCONNECT = data["system_tray_allow_disconnect"]
@@ -1225,8 +1232,9 @@ def check_settings(filename):
 			if "system_tray_allow_disconnect" in data: check = check + 1
 			if "system_tray_allow_connect" in data: check = check + 1
 			if "system_tray_display_connections" in data: check = check + 1
+			if "elide_topic_display" in data: check = check + 1
 
-			if check == 141:
+			if check == 142:
 				return True
 			else:
 				return False

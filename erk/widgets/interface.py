@@ -216,7 +216,9 @@ class Window(QMainWindow):
 		if self.type==config.CHANNEL_WINDOW:
 
 			# Make sure the topic displays correctly
-			if config.CHAT_DISPLAY_INFO_BAR: self.topic.refresh()
+			if config.CHAT_DISPLAY_INFO_BAR:
+				if config.ELIDE_TOPIC:
+					self.topic.refresh()
 	   
 			# QSplitter dynamically changes widget sizes on a resize
 			# event; this makes the userlist widget get wider or less wide
@@ -1631,14 +1633,17 @@ class TopicEdit(QLineEdit):
 		self.setText(self.parent.channel_topic)
 
 	def setText(self,text,elide=True):
-		if elide:
-			metrics = QFontMetrics(self.font())
-			elided  = metrics.elidedText(text, Qt.ElideRight, self.width())
-			QLineEdit.setText(self,elided)
-			if len(elided)!=len(text):
-				self.setToolTip(text)
+		if config.ELIDE_TOPIC:
+			if elide:
+				metrics = QFontMetrics(self.font())
+				elided  = metrics.elidedText(text, Qt.ElideRight, self.width())
+				QLineEdit.setText(self,elided)
+				if len(elided)!=len(text):
+					self.setToolTip(text)
+				else:
+					self.setToolTip('')
 			else:
-				self.setToolTip('')
+				QLineEdit.setText(self,text)
 		else:
 			QLineEdit.setText(self,text)
 
