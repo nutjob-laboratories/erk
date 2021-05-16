@@ -1089,9 +1089,15 @@ class Erk(QMainWindow):
 			entry.triggered.connect(self.menuIgnore)
 			toolsMenu.addAction(entry)
 
-		entry = QAction(QIcon(EXPORT_ICON),"Export logs",self)
-		entry.triggered.connect(self.menuExportLog)
-		toolsMenu.addAction(entry)
+		show_export = True
+		if self.block_logs: show_export = False
+		if self.block_load: show_export = False
+		if self.block_write: show_export = False
+
+		if show_export:
+			entry = QAction(QIcon(EXPORT_ICON),"Export logs",self)
+			entry.triggered.connect(self.menuExportLog)
+			toolsMenu.addAction(entry)
 
 		plugins_enabled = True
 		if self.block_plugins: plugins_enabled = False
@@ -1251,8 +1257,14 @@ class Erk(QMainWindow):
 			entry = MenuAction(self,HIDE_MENU_ICON,"Ignore manager","Add and remove ignore list entries",25,self.menuIgnore)
 			self.toolsMenu.addAction(entry)
 
-		entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
-		self.toolsMenu.addAction(entry)
+		show_export = True
+		if self.block_logs: show_export = False
+		if self.block_load: show_export = False
+		if self.block_write: show_export = False
+
+		if show_export:
+			entry = MenuAction(self,EXPORT_MENU_ICON,"Export logs","Export chat logs to various formats",25,self.menuExportLog)
+			self.toolsMenu.addAction(entry)
 
 		# Plugins menu
 

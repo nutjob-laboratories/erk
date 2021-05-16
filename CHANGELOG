@@ -18,6 +18,7 @@ Version 0.880
 	* Added the connection/chat display setting to the "settings" dialog
 	* Added a toggle for topic eliding to the config file
 	* Added the elide toggle to the "settings" dialog
+	* The log export tool won't appear in menus if log reading/writing is disabled
 
 Version 0.875
 	* New version
