@@ -393,6 +393,7 @@ class Erk(QMainWindow):
 			block_load=False,
 			block_write=False,
 			block_systray=False,
+			block_traymenu=False,
 			parent=None
 		):
 		
@@ -459,6 +460,8 @@ class Erk(QMainWindow):
 		self.block_write = block_write
 
 		self.block_systray = block_systray
+
+		self.block_traymenu = block_traymenu
 
 		self.cmdline_script = False
 		self.cmdline_editor = False
@@ -667,7 +670,11 @@ class Erk(QMainWindow):
 		self.tray.setVisible(True)
 		self.tray.setToolTip(APPLICATION_NAME+" IRC client")
 
-		if not self.block_toolbar:
+		do_systray_menu = True
+		if self.block_traymenu: do_systray_menu = False
+		if self.block_toolbar: do_systray_menu = False
+
+		if do_systray_menu:
 			self.trayMenu = QMenu()
 			self.tray.setContextMenu(self.trayMenu)
 			self.buildSystrayMenu()
@@ -922,6 +929,7 @@ class Erk(QMainWindow):
 	def buildSystrayMenu(self):
 
 		if self.block_toolbar: return
+		if self.block_traymenu: return
 
 		self.trayMenu.clear()
 

@@ -407,6 +407,12 @@ class Dialog(QDialog):
 				self.trayDisconnect.setEnabled(False)
 				self.trayConnect.setEnabled(False)
 				self.trayDisplay.setEnabled(False)
+			if self.parent.block_traymenu:
+				self.trayMenuMisc.setEnabled(False)
+				self.trayUnread.setEnabled(False)
+				self.trayDisconnect.setEnabled(False)
+				self.trayConnect.setEnabled(False)
+				self.trayDisplay.setEnabled(False)
 
 		fbLay = QHBoxLayout()
 		fbLay.addWidget(fontButton)

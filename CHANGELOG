@@ -19,6 +19,7 @@ Version 0.880
 	* Added a toggle for topic eliding to the config file
 	* Added the elide toggle to the "settings" dialog
 	* The log export tool won't appear in menus if log reading/writing is disabled
+	* Added a commandline flag (--notraymenu) to disable the systray menu
 
 Version 0.875
 	* New version

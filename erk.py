@@ -138,6 +138,7 @@ disgroup.add_argument( "--nologs", help=f"Disables reading and writing logs", ac
 disgroup.add_argument( "--noload", help=f"Disables log loading", action="store_true")
 disgroup.add_argument( "--nowrite", help=f"Disables log writing", action="store_true")
 disgroup.add_argument( "--nosystray", help=f"Disables system tray icon", action="store_true")
+disgroup.add_argument( "--notraymenu", help=f"Disables system tray menu", action="store_true")
 disgroup.add_argument( "--qt5menu", help=f"Disable menu toolbar, and use normal menus", action="store_true")
 
 args = parser.parse_args()
@@ -550,6 +551,7 @@ if __name__ == '__main__':
 				args.noload,
 				args.nowrite,
 				args.nosystray,
+				args.notraymenu,
 				)
 			GUI.show()
 		else:
@@ -585,6 +587,7 @@ if __name__ == '__main__':
 					args.noload,
 					args.nowrite,
 					args.nosystray,
+					args.notraymenu,
 					)
 				GUI.show()
 
@@ -690,6 +693,7 @@ if __name__ == '__main__':
 					args.noload,
 					args.nowrite,
 					args.nosystray,
+					args.notraymenu,
 					)
 				GUI.show()
 			else:
@@ -725,6 +729,7 @@ if __name__ == '__main__':
 						args.noload,
 						args.nowrite,
 						args.nosystray,
+						args.notraymenu,
 						)
 					GUI.show()
 				else:
