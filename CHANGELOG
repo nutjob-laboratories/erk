@@ -20,6 +20,7 @@ Version 0.880
 	* Added the elide toggle to the "settings" dialog
 	* The log export tool won't appear in menus if log reading/writing is disabled
 	* Added a commandline flag (--notraymenu) to disable the systray menu
+	* Chats with unseen messages are now marked in the systray menu even if the chat is active and the window is "hidden"
 
 Version 0.875
 	* New version

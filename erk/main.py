@@ -694,9 +694,11 @@ class Erk(QMainWindow):
 				if self.hidden:
 					self.hidden = False
 					self.show()
+					events.clear_current_unseen(self)
 				else:
 					self.hidden = True
 					self.hide()
+				self.buildSystrayMenu()
 
 		if reason==QSystemTrayIcon.MiddleClick:
 			# icon was middle clicked
@@ -903,6 +905,9 @@ class Erk(QMainWindow):
 			self.stack.setCurrentWidget(win)
 			events.WINDOW = win
 
+			events.clear_current_unseen(self)
+			self.buildSystrayMenu()
+
 			# Bring window to the front
 			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
 			self.activateWindow()
@@ -919,6 +924,9 @@ class Erk(QMainWindow):
 		if win:
 			self.stack.setCurrentWidget(win)
 			events.WINDOW = win
+
+			events.clear_current_unseen(self)
+			self.buildSystrayMenu()
 
 			# Bring window to the front
 			self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
