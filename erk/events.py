@@ -61,7 +61,8 @@ def add_to_unseen_messages(client,gui,window):
 		if gui.current_page.name==window.name:
 			if gui.current_page.client.id==client.id:
 				if not gui.hidden:
-					posted_to_current = True
+					if gui.windowState() != Qt.WindowMinimized:
+						posted_to_current = True
 
 	if not posted_to_current:
 		if not window_has_unseen(window,gui):
@@ -183,7 +184,8 @@ def window_has_unseen(window,gui):
 		if gui.current_page.client.id==window.client.id:
 			if gui.current_page.name==window.name:
 				if not gui.hidden:
-					return False
+					if gui.windowState() != Qt.WindowMinimized:
+						return False
 
 	for w in UNSEEN:
 		if w.client.id==window.client.id:

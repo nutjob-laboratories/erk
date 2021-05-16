@@ -95,6 +95,10 @@ class Erk(QMainWindow):
 		if event.type() == QEvent.WindowStateChange:
 			if event.oldState() and Qt.WindowMinimized:
 				events.resize_font_fix()
+
+				events.clear_current_unseen(self)
+				self.buildSystrayMenu()
+
 			elif event.oldState() == Qt.WindowNoState:
 				events.resize_font_fix()
 			elif self.windowState() == Qt.WindowMaximized:
