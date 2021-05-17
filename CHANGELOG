@@ -22,6 +22,7 @@ Version 0.880
 	* Added a commandline flag (--notraymenu) to disable the systray menu
 	* Chats with unseen messages are now marked in the systray menu even if the chat is active and the window is "hidden"
 	* Chats with unseen messages are now marked in the systray menu even if the chat is active and the window is minimized
+	* Bugfix: chats with unseen messages were not properly marked as such if the GUI was minimized or hidden
 
 Version 0.875
 	* New version
