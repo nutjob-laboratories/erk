@@ -23,6 +23,9 @@ Version 0.880
 	* Chats with unseen messages are now marked in the systray menu even if the chat is active and the window is "hidden"
 	* Chats with unseen messages are now marked in the systray menu even if the chat is active and the window is minimized
 	* Bugfix: chats with unseen messages were not properly marked as such if the GUI was minimized or hidden
+	* Added a "stack" to the Plugin class (a shared List, allowing separate plugins to share data)
+	* Added documentation for the "stack" to the Plugin documentation
+	* Re-worded some passages in the Plugin documentation
 
 Version 0.875
 	* New version

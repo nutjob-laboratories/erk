@@ -58,6 +58,7 @@ from .dialogs.plugin_input import Dialog as GetInput
 PLUGINS = []
 AUTOCOMPLETE = []
 HELP = []
+STACK = []
 
 class Plugin():
 
@@ -250,6 +251,7 @@ def inject_plugin(obj,p,client):
 	obj._Plugin__class_file = p.filename
 	obj._Plugin__plugin_icon = p.icon
 	obj._Plugin__plugin_directory = p.directory
+	obj.stack = STACK
 
 def cleanup_plugin(obj):
 	obj.irc = None
@@ -257,6 +259,7 @@ def cleanup_plugin(obj):
 	obj._Plugin__class_file = None
 	obj._Plugin__plugin_icon = None
 	obj._Plugin__plugin_directory = None
+	obj.stack = None
 
 
 def public_message(client,channel,user,message):
