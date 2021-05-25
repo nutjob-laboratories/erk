@@ -26,6 +26,7 @@ Version 0.880
 	* Added a "stack" to the Plugin class (a shared List, allowing separate plugins to share data)
 	* Added documentation for the "stack" to the Plugin documentation
 	* Re-worded some passages in the Plugin documentation
+	* Changed the "stack" from a shared List to a shared Dictionary (which makes more sense, on reflection)
 
 Version 0.875
 	* New version

@@ -58,7 +58,7 @@ from .dialogs.plugin_input import Dialog as GetInput
 PLUGINS = []
 AUTOCOMPLETE = []
 HELP = []
-STACK = []
+STACK = {}
 
 class Plugin():
 
