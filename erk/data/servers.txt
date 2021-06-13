@@ -60,6 +60,7 @@ open.ircnet.net:6667:IRCNet:normal
 irc.irctoo.net:6667:Irctoo.net:normal
 irc.kbfail.net:6667:KBFail:normal
 irc.krstarica.com:6667:Krstarica:normal
+irc.libera.chat:6697:Libera.Chat:ssl
 irc.librairc.net:6667:LibraIRC:normal
 irc.mindforge.org:6667:MindForge:normal
 irc.mixxnet.net:6667:MIXXnet:normal
