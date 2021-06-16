@@ -1888,7 +1888,12 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1906,7 +1911,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1926,7 +1936,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1938,7 +1953,12 @@ def handle_ui_input(window,client,text):
 			port = 6667
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1956,7 +1976,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1976,7 +2001,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,password,False,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 
@@ -1988,7 +2018,12 @@ def handle_ui_input(window,client,text):
 			port = 6697
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -2006,7 +2041,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -2026,7 +2066,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],False,[],False,False,script)
 			window.doConnect(info)
 			return True
 
@@ -2038,7 +2083,12 @@ def handle_ui_input(window,client,text):
 			port = 6697
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 
@@ -2056,7 +2106,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,None,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 
@@ -2076,7 +2131,12 @@ def handle_ui_input(window,client,text):
 
 			user = get_user(client.gui.userfile)
 
-			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False)
+			if user["auto_script"]:
+				script = load_auto_script(server,port,client.gui.scriptsdir)
+			else:
+				script = None
+
+			info = ConnectInfo(server,port,password,True,user["nickname"],user["alternate"],user["username"],user["realname"],True,[],True,False,script)
 			window.doConnect(info)
 			return True
 

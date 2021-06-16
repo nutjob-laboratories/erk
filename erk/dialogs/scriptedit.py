@@ -157,7 +157,7 @@ class Window(QMainWindow):
 					efl = len(SCRIPT_FILE_EXTENSION)+1
 					if fileName[-efl:].lower()!=f".{SCRIPT_FILE_EXTENSION}": fileName = fileName+f".{SCRIPT_FILE_EXTENSION}"
 					self.filename = fileName
-					code = open(self.filename,"w")
+					code = open(self.filename,"w",encoding="utf-8",errors="ignore")
 					code.write(self.editor.toPlainText())
 					code.close()
 
@@ -252,7 +252,7 @@ class Window(QMainWindow):
 		if self.filename:
 			f = find_script_file(self.filename,self.scriptsdir)
 			if f!=None:
-				x = open(f,mode="r",encoding="latin-1")
+				x = open(f,mode="r",encoding="utf-8",errors="ignore")
 				source_code = str(x.read())
 				x.close()
 				self.editor.setPlainText(source_code)
@@ -529,7 +529,7 @@ class Window(QMainWindow):
 
 	def readScript(self,filename):
 		self.saveOnClose()
-		x = open(filename,mode="r",encoding="latin-1")
+		x = open(filename,mode="r",encoding="utf-8",errors="ignore")
 		source_code = str(x.read())
 		x.close()
 		self.editor.setPlainText(source_code)
@@ -744,7 +744,7 @@ class Window(QMainWindow):
 			efl = len(SCRIPT_FILE_EXTENSION)+1
 			if fileName[-efl:].lower()!=f".{SCRIPT_FILE_EXTENSION}": fileName = fileName+f".{SCRIPT_FILE_EXTENSION}"
 			self.filename = fileName
-			code = open(self.filename,"w")
+			code = open(self.filename,"w",encoding="utf-8",errors="ignore")
 			code.write(self.editor.toPlainText())
 			code.close()
 			self.changed = False
@@ -765,7 +765,7 @@ class Window(QMainWindow):
 		self.menuSaveAs.setShortcut("Ctrl+S")
 
 	def openFile(self,filename):
-		x = open(filename,mode="r",encoding="latin-1")
+		x = open(filename,mode="r",encoding="utf-8",errors="ignore")
 		source_code = str(x.read())
 		x.close()
 		self.editor.setPlainText(source_code)
@@ -781,7 +781,7 @@ class Window(QMainWindow):
 		options |= QFileDialog.DontUseNativeDialog
 		fileName, _ = QFileDialog.getOpenFileName(self,"Open Script", self.scriptsdir, f"{APPLICATION_NAME} Script (*.{SCRIPT_FILE_EXTENSION});;All Files (*)", options=options)
 		if fileName:
-			script = open(fileName,"r")
+			script = open(fileName,"r",encoding="utf-8",errors="ignore")
 			self.editor.setPlainText(script.read())
 			script.close()
 			self.filename = fileName
@@ -792,7 +792,7 @@ class Window(QMainWindow):
 			self.menuSaveAs.setShortcut(QKeySequence())
 
 	def doFileSave(self):
-		code = open(self.filename,"w")
+		code = open(self.filename,"w",encoding="utf-8",errors="ignore")
 		code.write(self.editor.toPlainText())
 		code.close()
 		self.changed = False
