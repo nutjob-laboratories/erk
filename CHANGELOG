@@ -31,6 +31,7 @@ Version 0.880
 	* Added Libera.Chat to the server/network list
 	* Bugfix: scripts weren't always UTF-8 encoded in the script editor
 	* Connection command (/connect, etc) now will load and use connection scripts (if the option is turned on in the connection dialog)
+	* Errors are no longer written to the current page if the current page does not share the client connection that the error occurred on
 
 Version 0.875
 	* New version

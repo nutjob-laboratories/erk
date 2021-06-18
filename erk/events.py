@@ -922,8 +922,12 @@ def line_input(gui,client,line):
 def received_error(gui,client,error):
 
 	if gui.current_page:
-		if hasattr(gui.current_page,"writeText"):
-			gui.current_page.writeText( Message(ERROR_MESSAGE,'',error), True )
+		# Only write to the current page if it shares the client
+		# connection that the error occured on
+		if hasattr(gui.current_page,"client"):
+			if gui.current_page.client.id==client.id:
+				if hasattr(gui.current_page,"writeText"):
+					gui.current_page.writeText( Message(ERROR_MESSAGE,'',error), True )
 
 	window = fetch_console_window(client)
 	if window:
