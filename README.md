@@ -1,4 +1,4 @@
-
+<b>Development on Ərk has concluded, and will no longer be worked on. Please check out <a href="https://github.com/nutjob-laboratories/merk">MERK, the spiritual succesor to Ərk.</b><br><br>
 <p align="center">
   <img src="https://github.com/nutjob-laboratories/erk/raw/master/images/logo_200x200.png"><br>
   <b>Ərk IRC Client</b><br>
